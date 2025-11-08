@@ -13,8 +13,9 @@ if (!serviceAccountKey) {
 if (!admin.apps.length) {
   try {
     admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(serviceAccountKey)),
-      databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
+      // 3. "Dùng chìa khóa"
+      credential: admin.credential.cert(JSON.parse(serviceAccountKey))
+      // 4. (ĐÃ XÓA DÒNG 'databaseURL' BỊ SAI Ở ĐÂY)
     });
     console.log('[AdminSDK] Firebase Admin initialized.');
   } catch (e: any) {
@@ -22,6 +23,6 @@ if (!admin.apps.length) {
   }
 }
 
-// 3. "Gửi" các "đồ nghề" cho các API Route xài
+// 5. "Gửi" các "đồ nghề" cho các API Route xài
 export const adminDb = admin.firestore(); // "Tủ" (Firestore)
-export const FieldValue = admin.firestore.FieldValue; // 💖 CÔNG CỤ MỚI 💖
+export const FieldValue = admin.firestore.FieldValue; // Công cụ "Dấu thời gian"

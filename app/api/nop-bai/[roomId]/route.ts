@@ -2,7 +2,6 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '../../../../utils/supabaseClient' 
-// 1. 💖 "TRIỆU HỒI" CẢ 2 "ĐỒ NGHỀ" 💖
 import { adminDb, FieldValue } from '../../../../utils/firebaseAdmin' 
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
@@ -16,12 +15,19 @@ export async function POST(
 ) {
   try {
     const roomId = params.roomId
-    const studentAnswers: StudentAnswers = await request.json()
+    // "Bóc tách" gói nộp bài
+    const { userId, userEmail, ...studentAnswers } = await request.json();
+    
+    // (Lấy danh sách ID câu hỏi mà HV đã làm)
     const studentAnswerKeys = Object.keys(studentAnswers); 
 
+    if (!userId || !userEmail) {
+      throw new Error('Bài nộp không hợp lệ, thiếu thông tin học viên (userId/userEmail).')
+    }
+    
     console.log(`[API Chấm Bài] Nhận được bài làm cho phòng: ${roomId}`)
 
-    // 2. DÙNG "TỔNG ĐÀI ADMIN" (adminDb)
+    // 1. "Mở khóa" Firestore, lấy thông tin phòng thi
     const roomRef = adminDb.collection('exam_rooms').doc(roomId)
     const roomSnap = await roomRef.get()
     
@@ -33,11 +39,31 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Phòng thi hạng: ${licenseId}`)
 
-    // 3. "Mở khóa" Supabase (Giữ nguyên)
+    // 2. 💖 (BƯỚC SỬA 1) LẤY DANH SÁCH MÔN HỌC (subjects)
+    //    (Dùng 'licenseId' để lấy các 'subject_id' liên quan)
+    
+    const { data: subjects, error: subjectError } = await supabase
+      .from('subjects')
+      .select('id') // (Chỉ cần lấy ID môn học)
+      .eq('license_id', licenseId);
+
+    if (subjectError) throw subjectError;
+    if (!subjects || subjects.length === 0) {
+      throw new Error(`Không tìm thấy môn học (subjects) nào cho hạng bằng ${licenseId}`);
+    }
+
+    // (Tạo 1 mảng các ID môn học: [ 'subject_id_1', 'subject_id_2' ])
+    const subjectIds = subjects.map(s => s.id); 
+    console.log(`[API Chấm Bài] Hạng bằng này có các môn: ${subjectIds.join(', ')}`)
+
+    // 3. 💖 (BƯỚC SỬA 2) LẤY "ĐÁP ÁN ĐÚNG" (master data)
+    //    (Dùng 'subjectIds' thay vì 'licenseId')
+    
     const { data: correctAnswers, error: supabaseError } = await supabase
       .from('questions')
       .select('id, correct_answer_id') 
-      .eq('license_id', licenseId) 
+      // (Sửa 'license_id' thành 'subject_id')
+      .in('subject_id', subjectIds) 
       .in('id', studentAnswerKeys) 
     
     if (supabaseError) throw supabaseError
@@ -59,28 +85,23 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Điểm số: ${score} / ${totalQuestions}`)
 
-    // 5. LƯU KẾT QUẢ VÀO FIRESTORE
-    const { userId, userEmail, ...actualAnswers } = studentAnswers;
+    // 5. LƯU KẾT QUẢ VÀO FIRESTORE (Giữ nguyên)
+    const resultId = `${roomId}_${userId}`;
+    const resultRef = adminDb.collection('exam_results').doc(resultId);
 
-    if (userId && userEmail) {
-      const resultId = `${roomId}_${userId}`;
-      const resultRef = adminDb.collection('exam_results').doc(resultId);
+    await resultRef.set({
+      roomId: roomId,
+      licenseId: licenseId,
+      studentId: userId,
+      studentEmail: userEmail,
+      score: score,
+      totalQuestions: totalQuestions,
+      submittedAnswers: studentAnswers, // (Lưu lại bài làm của HV)
+      submitted_at: FieldValue.serverTimestamp()
+    });
 
-      await resultRef.set({
-        roomId: roomId,
-        licenseId: licenseId,
-        studentId: userId,
-        studentEmail: userEmail,
-        score: score,
-        totalQuestions: totalQuestions,
-        submittedAnswers: actualAnswers,
-        // 3. 💖 DÙNG "CÔNG CỤ" MỚI (ĐÃ SỬA) 💖
-        submitted_at: FieldValue.serverTimestamp()
-      });
-
-      console.log(`[API Chấm Bài] Đã lưu kết quả cho: ${userEmail}`)
-    }
-
+    console.log(`[API Chấm Bài] Đã lưu kết quả cho: ${userEmail}`)
+    
     // 6. TRẢ KẾT QUẢ (Giữ nguyên)
     return NextResponse.json({
       message: 'Nộp bài thành công!',
