@@ -1,39 +1,35 @@
-// 'use client' (Rất quan trọng)
-// File này quản lý trạng thái đăng nhập,
-// nó cần chạy ở phía Client (trình duyệt).
+// 'use client'
 'use client'
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import { auth, db } from '@/utils/firebaseClient' // "Tổng đài" Firebase
+import { auth, db } from '../utils/firebaseClient' // (Sửa đường dẫn ../)
 
-// 1. Định nghĩa "kiểu" của người dùng trong "biệt thự"
+// 1. Định nghĩa "kiểu" của người dùng (THÊM fullName)
 interface AuthUser {
   uid: string
   email: string | null
-  role: string // 'hoc_vien', 'giao_vien', 'admin', 'lanh_dao'
+  role: string 
+  fullName: string // 💖 "HỌ VÀ TÊN" 💖
 }
 
 // 2. Định nghĩa "kiểu" của "Bộ não" (Context)
 interface AuthContextType {
-  user: AuthUser | null // Người dùng đang đăng nhập (hoặc null)
-  loading: boolean // Trạng thái đang tải (kiểm tra xem ai đăng nhập)
+  user: AuthUser | null 
+  loading: boolean 
 }
 
 // 3. Tạo "Bộ não" (Context)
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // 4. Tạo "Nhà cung cấp" (AuthProvider)
-//    Đây là "cái máy" sẽ "bơm" thông tin đăng nhập cho toàn bộ "biệt thự"
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null)
-  const [loading, setLoading] = useState(true) // Ban đầu luôn tải
+  const [loading, setLoading] = useState(true) 
 
-  // 5. "Phép thuật" tự động "lắng nghe"
-  //    Nó sẽ tự chạy 1 lần khi "biệt thự" tải
+  // 5. "Phép thuật" tự động "lắng nghe" (ĐÃ NÂNG CẤP)
   useEffect(() => {
-    // "Lắng nghe" dịch vụ "Bảo vệ" của Firebase
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
       if (firebaseUser) {
         // --- Có người đăng nhập! ---
@@ -42,23 +38,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Lấy "hồ sơ" vai trò từ "Tủ" Firestore
         const userDocRef = doc(db, 'users', firebaseUser.uid)
         const userDoc = await getDoc(userDocRef)
+        
+        let authUser: AuthUser; // (Khai báo ở ngoài)
 
         if (userDoc.exists()) {
           // Nếu có "hồ sơ"
           const userData = userDoc.data()
-          const authUser: AuthUser = {
+          authUser = {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
-            role: userData.role || 'hoc_vien' // Mặc định là 'hoc_vien'
+            role: userData.role || 'hoc_vien',
+            fullName: userData.fullName || 'Người dùng mới' // 💖 LẤY "HỌ TÊN" 💖
           }
           setUser(authUser)
-          console.log('Vai trò người dùng:', authUser.role)
+          console.log(`Vai trò: ${authUser.role}, Tên: ${authUser.fullName}`)
         } else {
-          // Nếu không có "hồ sơ" (tài khoản cũ?) -> Gán tạm
-           const authUser: AuthUser = {
+          // Nếu không có "hồ sơ"
+           authUser = {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
-            role: 'hoc_vien' // Mặc định là 'hoc_vien'
+            role: 'hoc_vien',
+            fullName: 'Người dùng (chưa có hồ sơ)' // (Tạm)
           }
           setUser(authUser)
           console.warn('Không tìm thấy hồ sơ vai trò (role) cho user này!')
@@ -71,11 +71,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false) // Tải xong!
     })
 
-    // "Tắt tai nghe" khi "rời khỏi biệt thự"
+    // "Tắt tai nghe"
     return () => unsubscribe()
   }, [])
 
-  // 6. "Bơm" dữ liệu (user, loading) cho "biệt thự"
+  // 6. "Bơm" dữ liệu
   return (
     <AuthContext.Provider value={{ user, loading }}>
       {children}
@@ -84,7 +84,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 }
 
 // 7. Tạo một "Móc" (hook)
-//    Giúp các "căn phòng" (component) dễ dàng "hút" dữ liệu từ "Bộ não"
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (context === undefined) {

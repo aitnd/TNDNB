@@ -4,19 +4,24 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation' 
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth, db } from '../../utils/firebaseClient' // (Sửa đường dẫn ../)
+import { auth, db } from '../../utils/firebaseClient' 
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { useAuth } from '../../context/AuthContext' // (Sửa đường dẫn ../)
+import { useAuth } from '../../context/AuthContext' 
 
-// 1. "Triệu hồi" file CSS Module
+// "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
 
 export default function LoginPage() {
+  // THÊM "NÃO" MỚI: fullName
+  const [fullName, setFullName] = useState('') 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null) 
   const [loading, setLoading] = useState(false)
   
+  // (State mới để phân biệt Đăng nhập / Đăng ký)
+  const [isRegistering, setIsRegistering] = useState(false) 
+
   const router = useRouter() 
   const { user } = useAuth() 
 
@@ -29,7 +34,7 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password)
       console.log('Đăng nhập thành công, điều hướng...')
-      router.push('/quan-ly') // Đẩy về trang "Quản lý"
+      router.push('/quan-ly') 
 
     } catch (err: any) {
       console.error(err)
@@ -38,7 +43,7 @@ export default function LoginPage() {
     }
   }
 
-  // --- HÀM XỬ LÝ ĐĂNG KÝ (Tạm thời) ---
+  // --- HÀM XỬ LÝ ĐĂNG KÝ (Nâng cấp) ---
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -46,6 +51,12 @@ export default function LoginPage() {
 
     if (password.length < 6) {
       setError('Mật khẩu phải có ít nhất 6 ký tự.')
+      setLoading(false)
+      return
+    }
+    // (Kiểm tra Họ tên)
+    if (fullName.length < 3) {
+      setError('Vui lòng nhập Họ và Tên đầy đủ.')
       setLoading(false)
       return
     }
@@ -60,6 +71,7 @@ export default function LoginPage() {
       const userDocRef = doc(db, 'users', user.uid)
       await setDoc(userDocRef, {
         email: user.email,
+        fullName: fullName, // 💖 LƯU "HỌ VÀ TÊN" 💖
         role: 'hoc_vien', // Mặc định là 'hoc_vien'
         createdAt: serverTimestamp()
       })
@@ -75,7 +87,7 @@ export default function LoginPage() {
     }
   }
 
-  // Nếu "Bộ não" báo đã đăng nhập rồi, "đá" về trang quản lý
+  // (Logic "đá" về trang quản lý - Giữ nguyên)
   if (user && !loading) {
     router.push('/quan-ly')
     return (
@@ -85,21 +97,37 @@ export default function LoginPage() {
     )
   }
 
-  // 2. GIAO DIỆN FORM (Đã dùng CSS Module)
+  // 2. GIAO DIỆN FORM (Đã cập nhật)
   return (
     <div className={styles.container}>
       <div className={styles.formBox}>
         <h1 className={styles.title}>
-          Đăng nhập Hệ thống
+          {isRegistering ? 'Đăng ký Tài khoản' : 'Đăng nhập Hệ thống'}
         </h1>
         
-        <form onSubmit={handleLogin}>
+        <form onSubmit={isRegistering ? handleRegister : handleLogin}>
+          
+          {/* 💖 ẨN/HIỆN Ô "HỌ VÀ TÊN" 💖 */}
+          {isRegistering && (
+            <div className={styles.formGroup}>
+              <label htmlFor="fullName" className={styles.label}>
+                Họ và Tên
+              </label>
+              <input
+                type="text"
+                id="fullName"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                className={styles.input}
+                placeholder="Nguyễn Văn A"
+              />
+            </div>
+          )}
+
           {/* Ô Email */}
           <div className={styles.formGroup}>
-            <label 
-              htmlFor="email" 
-              className={styles.label}
-            >
+            <label htmlFor="email" className={styles.label}>
               Email
             </label>
             <input
@@ -115,10 +143,7 @@ export default function LoginPage() {
 
           {/* Ô Mật khẩu */}
           <div className={styles.formGroup}>
-            <label 
-              htmlFor="password" 
-              className={styles.label}
-            >
+            <label htmlFor="password" className={styles.label}>
               Mật khẩu
             </label>
             <input
@@ -139,22 +164,35 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Các nút bấm */}
+          {/* Các nút bấm (Đã cập nhật) */}
           <div className={styles.buttonContainer}>
-            <button
-              type="submit"
-              disabled={loading}
-              className={`${styles.button} ${styles.buttonPrimary}`}
-            >
-              {loading ? 'Đang xử lý...' : 'Đăng nhập'}
-            </button>
+            {isRegistering ? (
+              // (Nút khi đang Đăng ký)
+              <button
+                type="submit"
+                disabled={loading}
+                className={`${styles.button} ${styles.buttonPrimary}`}
+              >
+                {loading ? 'Đang xử lý...' : 'Đăng ký'}
+              </button>
+            ) : (
+              // (Nút khi đang Đăng nhập)
+              <button
+                type="submit"
+                disabled={loading}
+                className={`${styles.button} ${styles.buttonPrimary}`}
+              >
+                {loading ? 'Đang xử lý...' : 'Đăng nhập'}
+              </button>
+            )}
+            
             <button
               type="button"
-              onClick={handleRegister}
+              onClick={() => setIsRegistering(!isRegistering)}
               disabled={loading}
               className={`${styles.button} ${styles.buttonSecondary}`}
             >
-              {loading ? 'Đang xử lý...' : 'Đăng ký (Test)'}
+              {isRegistering ? 'Quay lại Đăng nhập' : 'Tạo tài khoản mới (Đăng ký)'}
             </button>
           </div>
         </form>

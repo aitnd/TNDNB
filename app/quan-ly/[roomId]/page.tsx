@@ -3,21 +3,35 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useAuth } from '@/context/AuthContext'
-import { db } from '@/utils/firebaseClient' // "Tổng đài" Firebase
+import { useAuth } from '../../../context/AuthContext'
+import { db } from '../../../utils/firebaseClient'
+// 💖 THÊM 'collection', 'query' 💖
+import { doc, onSnapshot, updateDoc, Timestamp, DocumentData, serverTimestamp, collection, query } from 'firebase/firestore'
+import ProtectedRoute from '../../../components/ProtectedRoute'
+import styles from './page.module.css' 
 
-// 💖 THÊM 'serverTimestamp' VÀO ĐÂY 💖
-import { doc, onSnapshot, updateDoc, Timestamp, DocumentData, serverTimestamp } from 'firebase/firestore'
-import ProtectedRoute from '@/components/ProtectedRoute' // "Lính gác"
-
-// Định nghĩa "kiểu" của Phòng thi (đọc từ Firestore)
+// --- (Định nghĩa "kiểu" - Giữ nguyên) ---
 interface ExamRoom {
   id: string;
   license_id: string;
+  license_name: string; 
+  room_name: string; 
   teacher_name: string;
   status: 'waiting' | 'in_progress' | 'finished';
   created_at: Timestamp;
 }
+
+// 💖 "KIỂU" MỚI: DÀNH CHO LIVE DASHBOARD 💖
+interface Participant {
+  id: string; // (Chính là user.uid)
+  fullName: string;
+  email: string;
+  status: 'waiting' | 'submitted';
+  score?: number; // (Sẽ xuất hiện khi 'submitted')
+  totalQuestions?: number;
+  joinedAt: Timestamp;
+}
+
 
 // --- Component "Nội dung" (Bên trong "Lính gác") ---
 function RoomControlDashboard() {
@@ -30,9 +44,12 @@ function RoomControlDashboard() {
   const [room, setRoom] = useState<ExamRoom | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isStarting, setIsStarting] = useState(false) // Trạng thái "đang phát đề"
+  const [isStarting, setIsStarting] = useState(false) 
 
-  // 1. "Phép thuật" Realtime (useEffect)
+  // 1. 💖 "NÃO" MỚI: LIVE DASHBOARD (Req 3.3) 💖
+  const [participants, setParticipants] = useState<Participant[]>([])
+
+  // 2. "Phép thuật" 1: (Lắng nghe Phòng thi) - (Giữ nguyên)
   useEffect(() => {
     if (!roomId || !user) return
 
@@ -44,7 +61,6 @@ function RoomControlDashboard() {
         const roomData = { id: docSnap.id, ...docSnap.data() } as ExamRoom
         setRoom(roomData)
         setLoading(false)
-
         if (roomData.status === 'in_progress') {
           console.log('[GV] Phòng này đã được phát đề.')
         }
@@ -53,7 +69,6 @@ function RoomControlDashboard() {
         setLoading(false)
       }
     }, (err) => {
-      console.error('[GV] Lỗi khi "lắng nghe" phòng:', err)
       setError('Lỗi kết nối thời gian thực.')
       setLoading(false)
     })
@@ -61,7 +76,45 @@ function RoomControlDashboard() {
     return () => unsubscribe()
   }, [roomId, user])
 
-  // 2. HÀM XỬ LÝ "PHÁT ĐỀ" (Nghiệp vụ chính)
+
+  // 3. 💖 "PHÉP THUẬT" 2: (Lắng nghe Học viên) (Req 3.3) 💖
+  useEffect(() => {
+    if (!roomId) return;
+
+    console.log(`[GV] Bắt đầu "lắng nghe" ngăn con 'participants' của phòng: ${roomId}`)
+    
+    // 3.1. Tạo "câu truy vấn" (query) đến "ngăn con"
+    const participantsRef = collection(db, 'exam_rooms', roomId, 'participants');
+    // (Sắp xếp theo thời gian vào)
+    const q = query(participantsRef, /* orderBy('joinedAt', 'asc') */); 
+
+    // 3.2. "Gắn tai nghe"
+    const unsubscribe = onSnapshot(q, 
+      (querySnapshot) => {
+        // "Có biến!" (Học viên vừa vào/nộp bài)
+        const participantList: Participant[] = [];
+        querySnapshot.forEach((doc) => {
+          participantList.push({
+            id: doc.id,
+            ...doc.data()
+          } as Participant);
+        });
+        
+        setParticipants(participantList);
+        console.log('[GV] Đã cập nhật Live Dashboard:', participantList);
+      },
+      (err) => {
+        console.error('[GV] Lỗi khi "lắng nghe" participants:', err)
+        setError('Lỗi kết nối Dashboard thời gian thực.')
+      }
+    );
+
+    // 3.3. "Tháo tai nghe"
+    return () => unsubscribe();
+  }, [roomId]); // (Chỉ phụ thuộc vào roomId)
+
+
+  // 4. HÀM XỬ LÝ "PHÁT ĐỀ" (Logic giữ nguyên)
   const handleStartExam = async () => {
     if (!room) return
     setIsStarting(true)
@@ -69,30 +122,21 @@ function RoomControlDashboard() {
     console.log(`[GV] Yêu cầu "phát đề" cho hạng: ${room.license_id}`)
 
     try {
-      // 2.1. "Gõ cửa" "Phòng bí mật" (API) để "xin" bộ đề
-      //    (Dùng link tương đối /api/... để nó tự hiểu)
       const res = await fetch(`/api/thi/${room.license_id}`)
-      
       if (!res.ok) {
-        // Nếu "phòng bí mật" báo lỗi (lỗi 500, 404)
         const errorData = await res.json()
         throw new Error(errorData.error || `Lỗi máy chủ: ${res.status}`)
       }
-      
       const examData = await res.json()
-
       console.log('[GV] "Xin" đề từ API thành công!')
 
-      // 2.2. "Bật công tắc" trên Firestore
       const roomRef = doc(db, 'exam_rooms', roomId)
       await updateDoc(roomRef, {
         status: 'in_progress',
-        exam_data: examData, // Lưu bộ đề đã "trộn"
-        started_at: serverTimestamp() // (Giờ đã hợp lệ!)
+        exam_data: examData, 
+        started_at: serverTimestamp()
       })
-
-      console.log('[GV] "PHÁT ĐỀ" THÀNH CÔNG! Học viên sẽ nhận được đề.')
-      
+      console.log('[GV] "PHÁT ĐỀ" THÀNH CÔNG!')
     } catch (err: any) {
       console.error('[GV] Lỗi khi "phát đề":', err)
       setError(err.message)
@@ -100,25 +144,20 @@ function RoomControlDashboard() {
     }
   }
   
-  // 3. GIAO DIỆN
-  // (Phần giao diện không thay đổi... giữ nguyên)
+  // 5. GIAO DIỆN (Đã cập nhật)
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <h1 className="text-3xl font-bold text-blue-600">
-          Đang tải phòng điều khiển...
-        </h1>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Đang tải phòng điều khiển...</h1>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-8">
-        <h1 className="text-3xl font-bold text-red-600">
-          Lỗi: {error}
-        </h1>
+      <div className={styles.container}>
+        <h1 className={styles.titleError}>Lỗi: {error}</h1>
       </div>
     )
   }
@@ -128,65 +167,112 @@ function RoomControlDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-3xl mx-auto rounded-lg bg-white p-6 shadow-md">
-        <h1 className="text-3xl font-bold text-blue-800 mb-4">
-          Phòng Điều Khiển
-        </h1>
-        <p className="text-lg">
-          <span className="font-semibold">Hạng thi:</span> {room.license_id}
-        </p>
-        <p className="text-lg">
-          <span className="font-semibold">Giáo viên:</span> {room.teacher_name}
-        </p>
-        <p className="text-lg">
-          <span className="font-semibold">ID Phòng:</span> {room.id}
-        </p>
-        
-        <div className="my-6 border-t border-b border-gray-200 py-4">
-          <h2 className="text-2xl font-semibold">Trạng thái</h2>
-          {room.status === 'waiting' && (
-            <p className="text-2xl font-bold text-yellow-600">ĐANG CHỜ</p>
-          )}
-          {room.status === 'in_progress' && (
-            <p className="text-2xl font-bold text-green-600">ĐANG THI</p>
-          )}
-          {room.status === 'finished' && (
-            <p className="text-2xl font-bold text-gray-500">ĐÃ KẾT THÚC</p>
-          )}
-        </div>
-        
-        {/* Nút "PHÁT ĐỀ" (Chỉ hiện khi đang "chờ") */}
+    <div className={styles.container}>
+      <h1 className={styles.title}>
+        Phòng: {room.room_name}
+      </h1>
+      <p className={styles.info}>
+        <span className={styles.label}>Hạng thi:</span> {room.license_name}
+      </p>
+      <p className={styles.info}>
+        <span className={styles.label}>Giáo viên:</span> {room.teacher_name}
+      </p>
+      <p className={styles.info}>
+        <span className={styles.label}>ID Phòng:</span> {room.id}
+      </p>
+      
+      <div className={styles.statusBox}>
+        <h2 className={styles.label}>Trạng thái</h2>
         {room.status === 'waiting' && (
-          <button
-            onClick={handleStartExam}
-            disabled={isStarting}
-            className="w-full rounded-md bg-green-600 px-6 py-3 text-xl font-semibold text-white shadow-lg hover:bg-green-700 disabled:opacity-50"
-          >
-            {isStarting ? 'Đang trộn đề...' : 'BẮT ĐẦU PHÁT ĐỀ'}
-          </button>
+          <p className={`${styles.status} ${styles.statusWaiting}`}>ĐANG CHỜ</p>
         )}
-        
-        {/* Nút "ĐÓNG PHÒNG" (Chỉ hiện khi "đang thi") */}
         {room.status === 'in_progress' && (
-          <button
-            // (Chúng ta sẽ làm hàm 'handleFinishExam' sau)
-            className="w-full rounded-md bg-red-600 px-6 py-3 text-xl font-semibold text-white shadow-lg hover:bg-red-700 disabled:opacity-50"
-          >
-            ĐÓNG PHÒNG THI (Sắp có...)
-          </button>
+          <p className={`${styles.status} ${styles.statusInProgress}`}>ĐANG THI</p>
         )}
-        
+        {room.status === 'finished' && (
+          <p className={`${styles.status} ${styles.statusFinished}`}>ĐÃ KẾT THÚC</p>
+        )}
       </div>
+      
+      {/* Nút "PHÁT ĐỀ" */}
+      {room.status === 'waiting' && (
+        <button
+          onClick={handleStartExam}
+          disabled={isStarting}
+          className={`${styles.button} ${styles.buttonStart}`}
+        >
+          {isStarting ? 'Đang trộn đề...' : 'BẮT ĐẦU PHÁT ĐỀ'}
+        </button>
+      )}
+      
+      {/* Nút "ĐÓNG PHÒNG" */}
+      {room.status === 'in_progress' && (
+        <button
+          className={`${styles.button} ${styles.buttonStop}`}
+        >
+          ĐÓNG PHÒNG THI (Sắp có...)
+        </button>
+      )}
+      
+      {/* 6. 💖 BẢNG LIVE DASHBOARD (Req 3.3) 💖 */}
+      <div className={styles.dashboard}>
+        <h2 className={styles.dashboardTitle}>
+          Bảng điều khiển (Realtime) - ({participants.length} người tham gia)
+        </h2>
+        
+        <table className={styles.participantTable}>
+          <thead>
+            <tr>
+              <th>Họ và Tên</th>
+              <th>Email</th>
+              <th>Trạng thái</th>
+              <th>Kết quả</th>
+            </tr>
+          </thead>
+          <tbody>
+            {participants.length === 0 ? (
+              <tr>
+                <td colSpan={4} style={{textAlign: 'center'}}>Đang chờ học viên vào phòng...</td>
+              </tr>
+            ) : (
+              participants.map((p) => (
+                <tr key={p.id}>
+                  <td>{p.fullName}</td>
+                  <td>{p.email}</td>
+                  <td>
+                    {p.status === 'waiting' && (
+                      <span className={`${styles.pill} ${styles.pillWaiting}`}>
+                        Đang chờ
+                      </span>
+                    )}
+                    {p.status === 'submitted' && (
+                      <span className={`${styles.pill} ${styles.pillSubmitted}`}>
+                        Đã nộp bài
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    {/* (Chỉ hiển thị điểm nếu đã nộp) */}
+                    {p.status === 'submitted' ? (
+                      <strong>{p.score} / {p.totalQuestions}</strong>
+                    ) : (
+                      '...'
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
     </div>
   )
 }
 
-
 // --- Component "Vỏ Bọc" (Bảo vệ) ---
 export default function QuanLyRoomPage() {
   return (
-    // "Lính gác" sẽ kiểm tra
     <ProtectedRoute allowedRoles={['giao_vien', 'admin', 'lanh_dao']}>
       <RoomControlDashboard /> 
     </ProtectedRoute>

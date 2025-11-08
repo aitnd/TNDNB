@@ -3,16 +3,19 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useAuth } from '../../../context/AuthContext' // (3 dấu ../)
-import { db } from '../../../utils/firebaseClient' // (3 dấu ../)
-import { doc, onSnapshot, DocumentData } from 'firebase/firestore'
-import styles from './page.module.css' // (Triệu hồi CSS MỚI)
-import Link from 'next/link' // (Triệu hồi Link)
+import { useAuth } from '../../../context/AuthContext'
+import { db } from '../../../utils/firebaseClient'
+import { doc, onSnapshot, DocumentData, setDoc, serverTimestamp } from 'firebase/firestore'
+import styles from './page.module.css'
+import Link from 'next/link'
 
-// --- (Định nghĩa "kiểu" - Giữ nguyên) ---
+// 1. 💖 SỬA LỖI Ở ĐÂY 💖
+// (Thêm 'license_name' và 'room_name' vào "định nghĩa")
 interface ExamRoom {
   id: string;
   license_id: string;
+  license_name: string; // (Thêm dòng này)
+  room_name: string; // (Thêm dòng này)
   teacher_name: string;
   status: 'waiting' | 'in_progress' | 'finished';
   exam_data?: any; 
@@ -27,23 +30,18 @@ export default function ExamRoomPage() {
   const { user, loading: authLoading } = useAuth() 
   const roomId = params.roomId as string
 
-  // "Não" trạng thái
+  // "Não" trạng thái (Giữ nguyên)
   const [room, setRoom] = useState<ExamRoom | null>(null) 
   const [questions, setQuestions] = useState<Question[]>([]) 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  // 1. "NÃO" MỚI: LƯU BÀI LÀM CỦA HỌC VIÊN
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({})
-  
-  // 2. "NÃO" MỚI: TRẠNG THÁI NỘP BÀI
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [finalScore, setFinalScore] = useState<{ score: number, total: number } | null>(null)
 
-  // 3. "Phép thuật" Realtime (useEffect) - (Giữ nguyên)
+  // 3. "Phép thuật" Realtime (Lắng nghe phòng) - (Giữ nguyên)
   useEffect(() => {
     if (!roomId || !user) return 
-
     console.log(`[HV] Bắt đầu "lắng nghe" phòng thi: ${roomId}`)
     const roomRef = doc(db, 'exam_rooms', roomId)
 
@@ -53,7 +51,6 @@ export default function ExamRoomPage() {
           const roomData = { id: docSnap.id, ...docSnap.data() } as ExamRoom
           setRoom(roomData)
           setLoading(false)
-
           if (roomData.status === 'in_progress' && roomData.exam_data) {
             console.log('[HV] Giáo viên đã phát đề! Tải bộ đề...')
             setQuestions(roomData.exam_data.questions || [])
@@ -76,15 +73,27 @@ export default function ExamRoomPage() {
   }, [roomId, user, router])
 
 
-  // 4. HÀM MỚI: KHI HỌC VIÊN CHỌN ĐÁP ÁN
+  // 4. "GHI DANH" KHI VÀO PHÒNG (Giữ nguyên)
+  useEffect(() => {
+    if (user && roomId) {
+      console.log(`[HV] Ghi danh vào phòng ${roomId}...`)
+      const participantRef = doc(db, 'exam_rooms', roomId, 'participants', user.uid);
+      setDoc(participantRef, {
+        fullName: user.fullName,
+        email: user.email,
+        status: 'waiting', 
+        joinedAt: serverTimestamp()
+      }, { merge: true }); 
+    }
+  }, [roomId, user]); 
+
+
+  // 5. HÀM CHỌN ĐÁP ÁN (Giữ nguyên)
   const handleSelectAnswer = (questionId: string, answerId: string) => {
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: answerId 
-    }));
+    setSelectedAnswers(prev => ({ ...prev, [questionId]: answerId }));
   }
 
-  // 5. HÀM MỚI: KHI HỌC VIÊN "NỘP BÀI"
+  // 6. HÀM NỘP BÀI (Giữ nguyên)
   const handleSubmitExam = async () => {
     if (!user || !room) return;
 
@@ -113,10 +122,7 @@ export default function ExamRoomPage() {
       });
       
       const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.error || 'Lỗi khi nộp bài.');
-      }
+      if (!res.ok) throw new Error(result.error || 'Lỗi khi nộp bài.');
 
       console.log('[HV] Nộp bài thành công! Kết quả:', result)
       setFinalScore({ score: result.score, total: result.totalQuestions });
@@ -128,8 +134,7 @@ export default function ExamRoomPage() {
     }
   }
 
-
-  // 6. GIAO DIỆN
+  // 7. GIAO DIỆN
 
   if (loading || authLoading) {
     return (
@@ -138,7 +143,6 @@ export default function ExamRoomPage() {
       </div>
     )
   }
-
   if (error) {
     return (
       <div className={styles.errorContainer}>
@@ -147,28 +151,29 @@ export default function ExamRoomPage() {
     )
   }
   
-  // 6.1. TRẠNG THÁI "CHỜ"
+  // 7.1. TRẠNG THÁI "CHỜ" (Đã sửa)
   if (room && room.status === 'waiting') {
     return (
       <div className={styles.errorContainer} style={{backgroundColor: '#f3f4f6'}}>
         <h1 className={styles.title} style={{color: '#1e3a8a'}}>
-          Phòng Thi: {room.license_id}
+          {/* (Hiển thị Tên Phòng) */}
+          Phòng Thi: {room.room_name} 
         </h1>
+        <p style={{fontSize: '1.2rem', color: '#555'}}>
+          {/* (Hiển thị Tên Hạng Bằng) */}
+          (Hạng thi: {room.license_name})
+        </p>
         <p style={{fontSize: '1.2rem', color: '#555'}}>Giáo viên: {room.teacher_name}</p>
         <div style={{margin: '2rem 0', width: '3rem', height: '3rem', borderTop: '4px solid #004a99', borderBottom: '4px solid #004a99', borderRadius: '50%', animation: 'spin 1s linear infinite'}}></div>
         <p style={{fontSize: '1.5rem', fontWeight: 600}}>Đang chờ giáo viên phát đề...</p>
-        
         <style jsx global>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
+          @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         `}</style>
       </div>
     )
   }
 
-  // 6.2. TRẠNG THÁI "ĐÃ NỘP BÀI" (Màn hình Kết quả)
+  // 7.2. TRẠNG THÁI "ĐÃ NỘP BÀI" (Giữ nguyên)
   if (finalScore) {
      return (
       <div className={styles.errorContainer} style={{backgroundColor: '#f3f4f6'}}>
@@ -186,17 +191,17 @@ export default function ExamRoomPage() {
     )
   }
 
-  // 6.3. TRẠNG THÁI "LÀM BÀI"
+  // 7.3. TRẠNG THÁI "LÀM BÀI" (Đã sửa)
   if (room && room.status === 'in_progress' && questions.length > 0) {
     return (
       <div className={styles.container}>
         <h1 className={styles.title} style={{textAlign: 'center', fontSize: '2rem'}}>
-          Đề Thi: {room.license_id}
+          {/* (Hiển thị Tên Hạng Bằng) */}
+          Đề Thi: {room.license_name}
         </h1>
         <p className={styles.subtitle} style={{textAlign: 'center'}}>
           (Tổng cộng: {questions.length} câu)
         </p>
-
         <form onSubmit={(e) => e.preventDefault()}>
           <div style={{display: 'flex', flexDirection: 'column', gap: '2.5rem'}}>
             {questions.map((q, index) => (
@@ -209,7 +214,6 @@ export default function ExamRoomPage() {
                     <img src={q.image} alt={`Hình ảnh cho câu ${index + 1}`} style={{maxWidth: '300px', borderRadius: '5px', border: '1px solid #eee'}} />
                   </div>
                 )}
-                
                 <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem'}}>
                   {q.answers.map((answer) => (
                     <label 
@@ -231,13 +235,12 @@ export default function ExamRoomPage() {
               </div>
             ))}
           </div>
-
           <div className={styles.backButtonContainer} style={{marginTop: '2.5rem'}}>
             <button 
               onClick={handleSubmitExam}
               disabled={isSubmitting}
               className={styles.backButton} 
-              style={{backgroundColor: '#16a34a'}} // (Màu xanh lá)
+              style={{backgroundColor: '#16a34a'}}
             >
               {isSubmitting ? 'Đang chấm bài...' : 'NỘP BÀI'}
             </button>
@@ -247,7 +250,7 @@ export default function ExamRoomPage() {
     )
   }
 
-  // 6.4. Trạng thái không xác định
+  // 7.4. Trạng thái không xác định
   return (
     <div className={styles.errorContainer}>
       <h1 className={styles.errorTitle}>Trạng thái phòng thi không xác định.</h1>

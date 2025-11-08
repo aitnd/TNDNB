@@ -1,0 +1,132 @@
+/* === Trang điểm cho Trang Phòng Điều Khiển === */
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}
+.titleError {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #9b2c2c;
+}
+
+.info {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+.label {
+    font-weight: 600;
+    color: #555;
+}
+
+.statusBox {
+    margin: 2rem 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 1.5rem 0;
+}
+.status {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+.statusWaiting {
+    color: #d97706; /* (Màu vàng) */
+}
+.statusInProgress {
+    color: #16a34a; /* (Màu xanh lá) */
+}
+.statusFinished {
+    color: #777; /* (Màu xám) */
+}
+
+.button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: white;
+}
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.buttonStart {
+    background-color: #16a34a; /* (Xanh lá) */
+}
+.buttonStart:hover:not(:disabled) {
+    background-color: #14833a;
+}
+
+.buttonStop {
+    background-color: #d9534f; /* (Đỏ) */
+}
+.buttonStop:hover:not(:disabled) {
+    background-color: #c9302c;
+}
+
+/* === 💖 CSS MỚI CHO LIVE DASHBOARD (Req 3.3) 💖 === */
+.dashboard {
+    margin-top: 2.5rem;
+    border-top: 1px solid #eee;
+    padding-top: 2rem;
+}
+.dashboardTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.participantTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+.participantTable th,
+.participantTable td {
+    border: 1px solid #ddd;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+}
+.participantTable th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+.participantTable td strong {
+    color: #1e3a8a;
+    font-size: 1.1rem;
+}
+
+.pill {
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px; /* (Bo tròn) */
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.pillWaiting {
+    background-color: #fef3c7; /* (Nền vàng) */
+    color: #92400e; /* (Chữ vàng đậm) */
+}
+.pillSubmitted {
+    background-color: #d1fae5; /* (Nền xanh lá) */
+    color: #065f46; /* (Chữ xanh đậm) */
+}

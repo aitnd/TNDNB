@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '../../../../utils/supabaseClient' 
 import { adminDb, FieldValue } from '../../../../utils/firebaseAdmin' 
+import { doc } from 'firebase/firestore'; // (Chỉ cần 'doc')
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
 type StudentAnswers = Record<string, string>
@@ -15,10 +16,7 @@ export async function POST(
 ) {
   try {
     const roomId = params.roomId
-    // "Bóc tách" gói nộp bài
     const { userId, userEmail, ...studentAnswers } = await request.json();
-    
-    // (Lấy danh sách ID câu hỏi mà HV đã làm)
     const studentAnswerKeys = Object.keys(studentAnswers); 
 
     if (!userId || !userEmail) {
@@ -31,38 +29,28 @@ export async function POST(
     const roomRef = adminDb.collection('exam_rooms').doc(roomId)
     const roomSnap = await roomRef.get()
     
-    if (!roomSnap.exists) {
-      throw new Error('Phòng thi không tồn tại.')
-    }
+    if (!roomSnap.exists) throw new Error('Phòng thi không tồn tại.')
     const roomData = roomSnap.data()
     const licenseId = roomData?.license_id 
 
     console.log(`[API Chấm Bài] Phòng thi hạng: ${licenseId}`)
 
-    // 2. 💖 (BƯỚC SỬA 1) LẤY DANH SÁCH MÔN HỌC (subjects)
-    //    (Dùng 'licenseId' để lấy các 'subject_id' liên quan)
-    
+    // 2. LẤY DANH SÁCH MÔN HỌC (subjects)
     const { data: subjects, error: subjectError } = await supabase
       .from('subjects')
-      .select('id') // (Chỉ cần lấy ID môn học)
+      .select('id') 
       .eq('license_id', licenseId);
 
     if (subjectError) throw subjectError;
     if (!subjects || subjects.length === 0) {
       throw new Error(`Không tìm thấy môn học (subjects) nào cho hạng bằng ${licenseId}`);
     }
-
-    // (Tạo 1 mảng các ID môn học: [ 'subject_id_1', 'subject_id_2' ])
     const subjectIds = subjects.map(s => s.id); 
-    console.log(`[API Chấm Bài] Hạng bằng này có các môn: ${subjectIds.join(', ')}`)
 
-    // 3. 💖 (BƯỚC SỬA 2) LẤY "ĐÁP ÁN ĐÚNG" (master data)
-    //    (Dùng 'subjectIds' thay vì 'licenseId')
-    
+    // 3. LẤY "ĐÁP ÁN ĐÚNG" (master data)
     const { data: correctAnswers, error: supabaseError } = await supabase
       .from('questions')
       .select('id, correct_answer_id') 
-      // (Sửa 'license_id' thành 'subject_id')
       .in('subject_id', subjectIds) 
       .in('id', studentAnswerKeys) 
     
@@ -85,10 +73,9 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Điểm số: ${score} / ${totalQuestions}`)
 
-    // 5. LƯU KẾT QUẢ VÀO FIRESTORE (Giữ nguyên)
+    // 5. LƯU KẾT QUẢ VÀO FIRESTORE (Ngăn 'exam_results')
     const resultId = `${roomId}_${userId}`;
     const resultRef = adminDb.collection('exam_results').doc(resultId);
-
     await resultRef.set({
       roomId: roomId,
       licenseId: licenseId,
@@ -96,12 +83,26 @@ export async function POST(
       studentEmail: userEmail,
       score: score,
       totalQuestions: totalQuestions,
-      submittedAnswers: studentAnswers, // (Lưu lại bài làm của HV)
+      submittedAnswers: studentAnswers,
       submitted_at: FieldValue.serverTimestamp()
     });
-
     console.log(`[API Chấm Bài] Đã lưu kết quả cho: ${userEmail}`)
     
+    // 5.5. 💖 CẬP NHẬT "NGĂN CON" 'participants' (Req 3.3) 💖
+    //     (Cập nhật trạng thái và điểm số để Giáo viên "nghe" realtime)
+    try {
+      const participantRef = adminDb.collection('exam_rooms').doc(roomId).collection('participants').doc(userId);
+      await participantRef.update({
+        status: 'submitted',
+        score: score,
+        totalQuestions: totalQuestions
+      });
+      console.log(`[API Chấm Bài] Đã cập nhật trạng thái 'participants' cho: ${userEmail}`)
+    } catch (participantError) {
+      // (Bỏ qua lỗi này nếu học viên "lén" nộp bài mà chưa "ghi danh")
+      console.warn(`[API Chấm Bài] Lỗi (nhẹ): Không thể cập nhật 'participants': ${participantError}`)
+    }
+
     // 6. TRẢ KẾT QUẢ (Giữ nguyên)
     return NextResponse.json({
       message: 'Nộp bài thành công!',
