@@ -2,8 +2,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '../../../../utils/supabaseClient' 
-// 1. 💖 "TRIỆU HỒI" TỔNG ĐÀI ADMIN 💖
-import { adminDb } from '../../../../utils/firebaseAdmin' 
+// 1. 💖 "TRIỆU HỒI" CẢ 2 "ĐỒ NGHỀ" 💖
+import { adminDb, FieldValue } from '../../../../utils/firebaseAdmin' 
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
 type StudentAnswers = Record<string, string>
@@ -21,8 +21,7 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Nhận được bài làm cho phòng: ${roomId}`)
 
-    // 2. 💖 DÙNG "TỔNG ĐÀI ADMIN" (adminDb) 💖
-    //    (Nó sẽ "bỏ qua" (bypass) Luật Bảo vệ)
+    // 2. DÙNG "TỔNG ĐÀI ADMIN" (adminDb)
     const roomRef = adminDb.collection('exam_rooms').doc(roomId)
     const roomSnap = await roomRef.get()
     
@@ -30,7 +29,7 @@ export async function POST(
       throw new Error('Phòng thi không tồn tại.')
     }
     const roomData = roomSnap.data()
-    const licenseId = roomData?.license_id // (Thêm ? cho an toàn)
+    const licenseId = roomData?.license_id 
 
     console.log(`[API Chấm Bài] Phòng thi hạng: ${licenseId}`)
 
@@ -60,12 +59,11 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Điểm số: ${score} / ${totalQuestions}`)
 
-    // 5. LƯU KẾT QUẢ VÀO FIRESTORE (DÙNG "TỔNG ĐÀI ADMIN")
+    // 5. LƯU KẾT QUẢ VÀO FIRESTORE
     const { userId, userEmail, ...actualAnswers } = studentAnswers;
 
     if (userId && userEmail) {
       const resultId = `${roomId}_${userId}`;
-      // 💖 DÙNG "TỔNG ĐÀI ADMIN" (adminDb) 💖
       const resultRef = adminDb.collection('exam_results').doc(resultId);
 
       await resultRef.set({
@@ -76,7 +74,8 @@ export async function POST(
         score: score,
         totalQuestions: totalQuestions,
         submittedAnswers: actualAnswers,
-        submitted_at: admin.firestore.FieldValue.serverTimestamp() // (Cú pháp Admin)
+        // 3. 💖 DÙNG "CÔNG CỤ" MỚI (ĐÃ SỬA) 💖
+        submitted_at: FieldValue.serverTimestamp()
       });
 
       console.log(`[API Chấm Bài] Đã lưu kết quả cho: ${userEmail}`)
