@@ -1,1 +1,76 @@
-@import "tailwindcss";
+/* === PHẦN 1: TRIỆU HỒI (IMPORTS) === */
+/* (Tất cả @import BẮT BUỘC phải nằm ở đây, trên đầu) */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+/* (Nếu bạn có @import font Roboto, nó cũng nên ở đây) */
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap'); */
+
+
+/* === PHẦN 2: TAILWIND CSS (Đã xóa 3 dòng lỗi) === */
+/* (Trong Tailwind v4+, các luật 'base', 'components', 'utilities'
+   được tự động thêm. Chúng ta không cần khai báo @tailwind nữa.) */
+
+
+/* === PHẦN 3: STYLE CHUNG (NẾU CÓ) === */
+:root {
+    --mau-chinh: #004a99;
+    --mau-nen-phu: #e6f0ff;
+}
+
+
+/* === PHẦN 7: STYLE CHO NỘI DUNG BÀI VIẾT (TỪ TRÌNH SOẠN THẢO) === */
+.post-content {
+    line-height: 1.7; /* Giãn dòng cho dễ đọc */
+    font-size: 1.1rem; /* Cỡ chữ lớn hơn 1 chút */
+    color: #333;
+}
+
+/* Các đoạn văn */
+.post-content p {
+    margin-bottom: 1.5rem;
+}
+
+/* Tiêu đề (do trình soạn thảo tạo ra) */
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+    color: #1e3a8a; /* (Màu xanh đậm) */
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.post-content h1 { font-size: 2rem; }
+.post-content h2 { font-size: 1.75rem; }
+.post-content h3 { font-size: 1.5rem; }
+
+/* In đậm, in nghiêng */
+.post-content strong {
+    font-weight: 700;
+}
+.post-content em {
+    font-style: italic;
+}
+
+/* Danh sách (có dấu chấm, số) */
+.post-content ul,
+.post-content ol {
+    margin-left: 1.5rem; /* Thụt lề */
+    margin-bottom: 1.5rem;
+}
+.post-content ul li {
+    list-style-type: disc; /* Dấu chấm */
+    margin-bottom: 0.5rem;
+}
+.post-content ol li {
+    list-style-type: decimal; /* Dấu số */
+    margin-bottom: 0.5rem;
+}
+
+/* Trích dẫn (blockquote) */
+.post-content blockquote {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    border-left: 4px solid var(--mau-nen-phu); /* (Dùng biến màu cũ) */
+    font-style: italic;
+    color: #555;
+}
