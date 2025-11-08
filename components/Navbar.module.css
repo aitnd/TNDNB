@@ -1,0 +1,82 @@
+/* "Trang điểm" riêng cho Navbar */
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 1rem 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #004a99;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-right: 1rem;
+}
+.logo:hover {
+    text-decoration: none;
+}
+
+.navLinks {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.navLinks li {
+    margin-left: 1.5rem;
+}
+
+.navLinks a,
+.navLinks button {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    
+    /* Style cho button (nếu là button) */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: inherit; /* Giữ nguyên cỡ chữ */
+    font-family: inherit;
+}
+
+.navLinks a:hover,
+.navLinks button:hover {
+    color: #004a99;
+    text-decoration: none;
+}
+
+/* Style cho các nút "đặc biệt" */
+.ctaButton {
+    color: #ffffff !important;
+    background-color: #004a99;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.ctaButton:hover {
+    background-color: #003366;
+    color: #ffffff !important;
+}
+
+.adminButton {
+    background-color: #d9534f;
+}
+.adminButton:hover {
+    background-color: #c9302c;
+}
