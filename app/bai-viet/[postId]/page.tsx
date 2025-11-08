@@ -1,8 +1,10 @@
 import { supabase } from '../../../utils/supabaseClient' // (Lưu ý: 3 dấu ../)
-import Image from 'next/image'
 import Link from 'next/link'
 
-// 1. Định nghĩa "kiểu" của Bài viết (giống trang chủ)
+// 1. "Triệu hồi" file CSS Module
+import styles from './page.module.css' 
+
+// 2. Định nghĩa "kiểu" của Bài viết (Logic giữ nguyên)
 type Post = {
   id: string;
   created_at: string;
@@ -13,7 +15,7 @@ type Post = {
   is_featured: boolean;
 }
 
-// 2. "Phép thuật": LẤY CHI TIẾT BÀI VIẾT (Chạy ở Máy chủ)
+// 3. "Phép thuật": LẤY CHI TIẾT BÀI VIẾT (Logic giữ nguyên)
 async function getPostDetails(postId: string): Promise<Post | null> {
   console.log(`[Server] Đang lấy chi tiết bài viết ID: ${postId}`)
   
@@ -21,7 +23,7 @@ async function getPostDetails(postId: string): Promise<Post | null> {
     .from('posts')
     .select('*')
     .eq('id', postId) // Lấy bài viết có ID trùng khớp
-    .single() // (Quan trọng: Chỉ lấy 1 bài duy nhất)
+    .single() // (Chỉ lấy 1 bài duy nhất)
 
   if (error) {
     console.error('Lỗi lấy chi tiết bài viết:', error)
@@ -30,39 +32,41 @@ async function getPostDetails(postId: string): Promise<Post | null> {
   return data
 }
 
-// 3. TRANG ĐỌC BÀI VIẾT (SERVER COMPONENT)
+// 4. TRANG ĐỌC BÀI VIẾT (Giao diện đã cập nhật CSS Module)
 export default async function PostPage({ params }: { params: { postId: string } }) {
   
-  // 4. "Chờ" máy chủ lấy bài viết
+  // 5. "Chờ" máy chủ lấy bài viết
   const post = await getPostDetails(params.postId)
 
-  // 5. Xử lý nếu không tìm thấy
+  // 6. Xử lý nếu không tìm thấy (Giao diện 404 đã cập nhật)
   if (!post) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-3xl font-bold text-red-600">Lỗi 404</h1>
-        <p className="text-lg mt-4">Không tìm thấy bài viết này.</p>
-        <Link href="/" className="mt-6 inline-block rounded-md bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700">
-          Quay về Trang chủ
-        </Link>
+      <div className={styles.errorContainer}>
+        <h1 className={styles.errorTitle}>Lỗi 404</h1>
+        <p className={styles.errorMessage}>Không tìm thấy bài viết này.</p>
+        <div className={styles.backButtonContainer} style={{borderTop: 'none', marginTop: '1.5rem'}}>
+          <Link href="/" className={styles.backButton}>
+            Quay về Trang chủ
+          </Link>
+        </div>
       </div>
     )
   }
 
-  // 6. "Vẽ" Giao diện (khi tìm thấy bài viết)
+  // 7. "Vẽ" Giao diện (Giao diện bài viết đã cập nhật)
   return (
-    <div className="bg-white max-w-4xl mx-auto my-12 p-6 md:p-10 shadow-lg rounded-lg">
+    <div className={styles.container}>
       
       {/* Tiêu đề */}
-      <h1 className="text-4xl font-bold text-blue-900 mb-4">
+      <h1 className={styles.title}>
         {post.title}
       </h1>
 
       {/* Thông tin phụ (Ngày đăng) */}
-      <p className="text-sm text-gray-500 mb-6 border-b pb-4">
+      <p className={styles.meta}>
         Đăng ngày: {new Date(post.created_at).toLocaleDateString('vi-VN')}
         {' | '}
-        <span className="font-semibold capitalize">{post.category_id.replace('-', ' ')}</span>
+        <span>{post.category_id.replace('-', ' ')}</span>
       </p>
 
       {/* Ảnh bìa (nếu có) */}
@@ -70,23 +74,22 @@ export default async function PostPage({ params }: { params: { postId: string } 
         <img
           src={post.image_url}
           alt={post.title}
-          className="w-full h-auto max-h-96 object-cover rounded-md mb-8"
+          className={styles.image}
         />
       )}
 
       {/* NỘI DUNG CHÍNH (RẤT QUAN TRỌNG)
-        Chúng ta dùng 'dangerouslySetInnerHTML' để "vẽ" HTML
-        (vì 'post.content' là HTML thô từ Trình soạn thảo).
-        Điều này là an toàn VÌ chúng ta tin tưởng 100%
-        nội dung này (do chính Admin viết ra).
+        Chúng ta dùng class "post-content" (đã định nghĩa trong 'globals.css')
+        để "vẽ" HTML thô từ Trình soạn thảo.
       */}
       <div
         className="post-content"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
       
-      <div className="mt-12 border-t pt-6 text-center">
-        <Link href="/" className="rounded-md bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700">
+      {/* Nút Quay về */}
+      <div className={styles.backButtonContainer}>
+        <Link href="/" className={styles.backButton}>
           « Quay về Trang chủ
         </Link>
       </div>

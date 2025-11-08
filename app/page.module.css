@@ -1,0 +1,182 @@
+/* === Trang điểm cho Trang Chủ === */
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 2rem auto; /* (Căn giữa, có khoảng cách trên/dưới) */
+}
+
+/* 1. Bố cục 2 cột */
+.layoutGrid {
+    display: grid;
+    /* (Trên máy tính: 2 cột, cột trái 2fr, cột phải 1fr) */
+    grid-template-columns: 2fr 1fr; 
+    gap: 2rem; /* (Khoảng cách giữa 2 cột) */
+}
+
+/* (Trên điện thoại: 1 cột) */
+@media (max-width: 768px) {
+    .layoutGrid {
+        grid-template-columns: 1fr; 
+    }
+}
+
+/* 2. Cột trái (Main Content) */
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* (Khoảng cách giữa các box tin) */
+}
+
+/* 3. Cột phải (Sidebar) */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* (Khoảng cách giữa các widget) */
+}
+
+/* 4. "Box" chung (Widget) */
+.widgetBox {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.widgetTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #004a99; /* (Màu xanh chủ đạo) */
+    padding: 1rem 1.5rem;
+    border-bottom: 2px solid #e6f0ff; /* (Màu xanh nhạt) */
+    margin-bottom: 1.5rem;
+}
+
+/* 5. Box "Tin Tiêu Điểm" (Cột trái) */
+.newsGrid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* (3 cột bằng nhau) */
+    gap: 1.5rem;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.newsItemSmall {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.newsItemSmall img {
+    width: 100%;
+    height: 160px; /* (Cố định chiều cao ảnh) */
+    object-fit: cover; /* (Ảnh không bị méo) */
+}
+.newsItemSmall h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #333;
+    padding: 0.75rem;
+    margin: 0;
+}
+.newsItemSmall h3 a:hover {
+    color: #004a99;
+    text-decoration: underline;
+}
+
+/* (Trên điện thoại: 1 cột) */
+@media (max-width: 768px) {
+    .newsGrid3 {
+        grid-template-columns: 1fr; 
+    }
+}
+
+/* 6. Box "Tin Tức Mới" (Cột trái) */
+.newsList {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.newsItemLarge {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+}
+.newsItemLarge:last-child {
+    border-bottom: none;
+}
+
+.newsItemLarge img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+.newsItemLarge div { /* (Nội dung chữ) */
+    flex: 1;
+}
+.newsItemLarge h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+.newsItemLarge h3 a:hover {
+    color: #004a99;
+}
+.newsItemLarge p {
+    font-size: 0.875rem;
+    color: #777;
+    margin: 0.25rem 0 0 0;
+}
+
+/* 7. Box "Sidebar" chung (Cột phải) */
+.sidebarWidget {
+    padding: 1.5rem;
+}
+
+.sidebarTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #004a99;
+    border-bottom: 2px solid #e6f0ff;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* 8. Box "Bảng tin" (Sidebar) */
+.linkList {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.linkList a {
+    display: flex;
+    align-items: flex-start;
+    color: #333;
+}
+.linkList a:hover {
+    color: #004a99;
+}
+.linkList a i { /* (Icon Font Awesome) */
+    color: #004a99;
+    margin-right: 0.5rem;
+    margin-top: 5px; /* (Căn icon) */
+    font-size: 0.8rem;
+}
+
+/* 9. Box "Video" (Sidebar) */
+.videoContainer {
+    width: 100%;
+    height: 200px;
+    border-radius: 5px;
+    overflow: hidden; /* (Bo góc cho video) */
+}

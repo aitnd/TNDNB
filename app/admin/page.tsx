@@ -4,15 +4,16 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic' // "Triệu hồi" công cụ Import "động"
-import { useAuth } from '@/context/AuthContext' 
-import ProtectedRoute from '@/components/ProtectedRoute' 
-import { supabase } from '@/utils/supabaseClient' 
+import { useAuth } from '../../context/AuthContext' 
+import ProtectedRoute from '../../components/ProtectedRoute' 
+import { supabase } from '../../utils/supabaseClient' 
 
-// 1. 💖 "TRIỆU HỒI" TRÌNH SOẠN THẢO (Bỏ qua lỗi Types) 💖
-//    Tụi mình "bịt" lỗi "is not a module" bằng @ts-ignore
-//    và "bắt" nó chỉ chạy ở Trình duyệt (ssr: false)
+// 1. "TRIỆU HỒI" TRÌNH SOẠN THẢO (Bỏ qua lỗi Types) 
 // @ts-ignore 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+
+// 2. "Triệu hồi" file CSS Module
+import styles from './page.module.css' 
 
 // Định nghĩa "kiểu" của Danh mục (từ Supabase)
 type Category = {
@@ -29,9 +30,9 @@ function AdminDashboard() {
   const [categories, setCategories] = useState<Category[]>([]) 
   const [loadingCategories, setLoadingCategories] = useState(true)
 
-  // 2. 💖 "NÃO" CỦA BÀI VIẾT 💖
+  // "Não" của Bài viết
   const [title, setTitle] = useState('')
-  const [content, setContent] = useState('') // "Não" chứa code HTML
+  const [content, setContent] = useState('') 
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
   
@@ -39,7 +40,6 @@ function AdminDashboard() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [formSuccess, setFormSuccess] = useState<string | null>(null)
-
 
   // 3. "Phép thuật": Tự động lấy "Danh mục" từ Supabase
   useEffect(() => {
@@ -54,7 +54,6 @@ function AdminDashboard() {
         console.error('Lỗi khi lấy danh mục:', error)
       } else {
         setCategories(data as Category[])
-        // Tự động chọn danh mục đầu tiên
         if (data && data.length > 0) {
           setCategoryId(data[0].id)
         }
@@ -62,10 +61,9 @@ function AdminDashboard() {
       setLoadingCategories(false)
     }
     fetchCategories()
-  }, []) // Chạy 1 lần duy nhất
-
+  }, []) 
   
-  // 4. 💖 "PHÉP THUẬT" NÚT "ĐĂNG BÀI" 💖
+  // 4. HÀM "ĐĂNG BÀI" (Logic giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -81,22 +79,18 @@ function AdminDashboard() {
     console.log('Đang cất bài viết vào Supabase...')
 
     try {
-      // 5. "CẤT" VÀO "KHO" SUPABASE
       const { data, error } = await supabase
-        .from('posts') // Vào "ngăn" posts
+        .from('posts') 
         .insert([
           {
             title: title,
             content: content,
             category_id: categoryId,
             is_featured: isFeatured,
-            // (id, created_at tự tạo)
           }
         ])
 
-      if (error) {
-        throw error // Ném lỗi cho 'catch' ở dưới bắt
-      }
+      if (error) throw error 
 
       console.log('Đăng bài thành công!', data)
       setFormSuccess('Đăng bài thành công!')
@@ -113,25 +107,23 @@ function AdminDashboard() {
     }
   }
 
-
-  // 6. GIAO DIỆN FORM (Đã "nối não")
+  // 5. GIAO DIỆN FORM (Đã dùng CSS Module)
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-blue-800 mb-6">
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <h1 className={styles.title}>
           Trang Quản trị Nội dung (Admin)
         </h1>
         
-        {/* === FORM ĐĂNG BÀI VIẾT MỚI === */}
-        <div className="rounded-lg bg-white p-6 shadow-md">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+        <div className={styles.formBox}>
+          <h2 className={styles.formTitle}>
             Tạo bài viết mới
           </h2>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className={styles.form}>
             {/* Tiêu đề */}
-            <div className="mb-4">
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className={styles.formGroup}>
+              <label htmlFor="title" className={styles.label}>
                 Tiêu đề bài viết
               </label>
               <input
@@ -139,14 +131,14 @@ function AdminDashboard() {
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                className={styles.input}
                 placeholder="Thông báo tuyển sinh..."
               />
             </div>
 
             {/* Danh mục (Lấy từ Supabase) */}
-            <div className="mb-4">
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className={styles.formGroup}>
+              <label htmlFor="category" className={styles.label}>
                 Danh mục
               </label>
               <select
@@ -154,7 +146,7 @@ function AdminDashboard() {
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
                 disabled={loadingCategories}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                className={styles.select}
               >
                 {loadingCategories ? (
                   <option>Đang tải danh mục...</option>
@@ -169,24 +161,22 @@ function AdminDashboard() {
             </div>
 
             {/* Checkbox "Tin tiêu điểm" */}
-            <div className="mb-4">
-              <div className="flex items-center">
-                <input
-                  id="is_featured"
-                  type="checkbox"
-                  checked={isFeatured}
-                  onChange={(e) => setIsFeatured(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <label htmlFor="is_featured" className="ml-2 block text-sm text-gray-900">
-                  Đánh dấu là "Tin tiêu điểm"
-                </label>
-              </div>
+            <div className={styles.checkboxGroup}>
+              <input
+                id="is_featured"
+                type="checkbox"
+                checked={isFeatured}
+                onChange={(e) => setIsFeatured(e.target.checked)}
+                className={styles.checkbox}
+              />
+              <label htmlFor="is_featured" className={styles.label}>
+                Đánh dấu là "Tin tiêu điểm"
+              </label>
             </div>
 
-            {/* 💖 TRÌNH SOẠN THẢO "XỊN" 💖 */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            {/* TRÌNH SOẠN THẢO "XỊN" */}
+            <div className={styles.formGroup}>
+              <label className={styles.label}>
                 Nội dung bài viết
               </label>
               {/* @ts-ignore (Bỏ qua lỗi "is not a module") */}
@@ -194,33 +184,28 @@ function AdminDashboard() {
                 theme="snow" 
                 value={content} 
                 onChange={setContent} 
-                className="bg-white"
+                className={styles.quillEditor}
               />
             </div>
 
             {/* Thông báo Lỗi/Thành công */}
             {formError && (
-              <div className="my-4 rounded-md bg-red-100 p-3 text-center text-sm text-red-700">
-                {formError}
-              </div>
+              <div className={styles.error}>{formError}</div>
             )}
             {formSuccess && (
-              <div className="my-4 rounded-md bg-green-100 p-3 text-center text-sm text-green-700">
-                {formSuccess}
-              </div>
+              <div className={styles.success}>{formSuccess}</div>
             )}
 
             {/* Nút bấm */}
-            <div className="text-right">
+            <div className={styles.buttonContainer}>
               <button
                 type="submit"
                 disabled={isSubmitting || loadingCategories}
-                className="rounded-md bg-blue-600 px-6 py-2 text-lg font-semibold text-white shadow-sm hover:bg-blue-700 disabled:opacity-50"
+                className={styles.button}
               >
                 {isSubmitting ? 'Đang đăng...' : 'Đăng bài'}
               </button>
             </div>
-
           </form>
         </div>
       </div>
