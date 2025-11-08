@@ -8,7 +8,7 @@ import { auth } from '../utils/firebaseClient'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 
-// 1. "Triệu hồi" file CSS Module
+// "Triệu hồi" file CSS Module
 import styles from './Navbar.module.css' 
 
 export default function Navbar() {
@@ -24,7 +24,6 @@ export default function Navbar() {
     }
   }
 
-  // 2. Dùng `className={styles.navbar}` thay vì `className="..."`
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -34,7 +33,7 @@ export default function Navbar() {
             Trường dạy nghề thủy nội địa Ninh Bình
           </Link>
 
-          {/* 2. Menu (ĐÃ THÊM LINK "HỌC PHÍ") */}
+          {/* 2. Menu (ĐÃ THÊM LINK "LIÊN HỆ") */}
           <ul className={styles.navLinks}>
             <li>
               <Link href="/">Trang chủ</Link>
@@ -42,7 +41,15 @@ export default function Navbar() {
             <li>
               <Link href="/hoc-phi">Học phí</Link>
             </li>
-            {/* (Mình sẽ thêm link 'Liên hệ' ở đây sau) */}
+            <li>
+              <Link href="/lien-he">Liên hệ</Link>
+            </li>
+            {/* (Anh có thể thêm link "Ôn thi" tĩnh ở đây nếu muốn) */}
+            {/*
+            <li>
+              <Link href="https://web-on-tap.vercel.app/" target="_blank">Ôn thi</Link>
+            </li>
+            */}
             
             {/* Link "thông minh" */}
             {user ? (
