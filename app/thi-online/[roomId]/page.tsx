@@ -3,20 +3,20 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useAuth } from '@/context/AuthContext'
-import { db } from '@/utils/firebaseClient'
+import { useAuth } from '../../../context/AuthContext' // (3 dấu ../)
+import { db } from '../../../utils/firebaseClient' // (3 dấu ../)
 import { doc, onSnapshot, DocumentData } from 'firebase/firestore'
+import styles from './page.module.css' // (Triệu hồi CSS MỚI)
+import Link from 'next/link' // (Triệu hồi Link)
 
-// Định nghĩa "kiểu" của Phòng thi (đọc từ Firestore)
+// --- (Định nghĩa "kiểu" - Giữ nguyên) ---
 interface ExamRoom {
   id: string;
   license_id: string;
   teacher_name: string;
   status: 'waiting' | 'in_progress' | 'finished';
-  exam_data?: any; // Bộ đề thi (JSON) sẽ xuất hiện ở đây
+  exam_data?: any; 
 }
-
-// (Chúng ta sẽ copy-paste các "kiểu" này từ file API cũ)
 type Answer = { id: string; text: string }
 type Question = { id: string; text: string; image: string | null; answers: Answer[] }
 
@@ -24,147 +24,207 @@ type Question = { id: string; text: string; image: string | null; answers: Answe
 export default function ExamRoomPage() {
   const router = useRouter()
   const params = useParams()
-  const { user, loading: authLoading } = useAuth() // "Bộ não" Auth
-  const roomId = params.roomId as string // ID của phòng thi
+  const { user, loading: authLoading } = useAuth() 
+  const roomId = params.roomId as string
 
   // "Não" trạng thái
-  const [room, setRoom] = useState<ExamRoom | null>(null) // Thông tin phòng
-  const [questions, setQuestions] = useState<Question[]>([]) // Bộ đề
+  const [room, setRoom] = useState<ExamRoom | null>(null) 
+  const [questions, setQuestions] = useState<Question[]>([]) 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // 1. "Phép thuật" Realtime (useEffect)
-  //    "Lắng nghe" CHỈ 1 document (phòng thi) này
+  // 1. "NÃO" MỚI: LƯU BÀI LÀM CỦA HỌC VIÊN
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({})
+  
+  // 2. "NÃO" MỚI: TRẠNG THÁI NỘP BÀI
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [finalScore, setFinalScore] = useState<{ score: number, total: number } | null>(null)
+
+  // 3. "Phép thuật" Realtime (useEffect) - (Giữ nguyên)
   useEffect(() => {
-    if (!roomId || !user) return // Chờ có ID phòng và ID người dùng
+    if (!roomId || !user) return 
 
-    console.log(`Bắt đầu "lắng nghe" phòng thi: ${roomId}`)
-
-    // 1.1. Tạo "đường dẫn" (tham chiếu) tới phòng thi
+    console.log(`[HV] Bắt đầu "lắng nghe" phòng thi: ${roomId}`)
     const roomRef = doc(db, 'exam_rooms', roomId)
 
-    // 1.2. "Gắn tai nghe" (onSnapshot)
     const unsubscribe = onSnapshot(roomRef,
       (docSnap) => {
         if (docSnap.exists()) {
-          // "Có biến!" (Phòng thi có cập nhật)
           const roomData = { id: docSnap.id, ...docSnap.data() } as ExamRoom
           setRoom(roomData)
           setLoading(false)
-          console.log('Thông tin phòng thi đã cập nhật:', roomData.status)
 
-          // 1.3. 💖 PHÉP THUẬT XẢY RA Ở ĐÂY 💖
-          // Nếu "công tắc" bật (giáo viên phát đề)
           if (roomData.status === 'in_progress' && roomData.exam_data) {
-            console.log('Giáo viên đã phát đề! Tải bộ đề...')
+            console.log('[HV] Giáo viên đã phát đề! Tải bộ đề...')
             setQuestions(roomData.exam_data.questions || [])
-            // (Chúng ta sẽ thêm logic đếm giờ ở đây sau)
           }
-
           if (roomData.status === 'finished') {
             alert('Phòng thi này đã kết thúc.')
             router.push('/quan-ly')
           }
-
         } else {
-          // Lỗi: Không tìm thấy phòng
-          console.error('Không tìm thấy phòng thi này!')
           setError('Không tìm thấy phòng thi. Vui lòng kiểm tra lại.')
           setLoading(false)
         }
       },
       (err) => {
-        // "Lỗi!" (Mất mạng, không có quyền...)
-        console.error('Lỗi khi "lắng nghe" phòng:', err)
         setError('Lỗi kết nối thời gian thực.')
         setLoading(false)
       }
     )
-
-    // "Tháo tai nghe" khi "ra khỏi phòng"
     return () => unsubscribe()
+  }, [roomId, user, router])
 
-  }, [roomId, user, router]) // Chạy lại nếu ID phòng thay đổi
 
-  // 2. GIAO DIỆN
+  // 4. HÀM MỚI: KHI HỌC VIÊN CHỌN ĐÁP ÁN
+  const handleSelectAnswer = (questionId: string, answerId: string) => {
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: answerId 
+    }));
+  }
 
-  // 2.1. Đang tải (chờ Auth hoặc chờ "tai nghe")
+  // 5. HÀM MỚI: KHI HỌC VIÊN "NỘP BÀI"
+  const handleSubmitExam = async () => {
+    if (!user || !room) return;
+
+    const answeredCount = Object.keys(selectedAnswers).length;
+    if (answeredCount < questions.length) {
+      if (!confirm(`Bạn mới trả lời ${answeredCount} / ${questions.length} câu. Bạn có chắc chắn muốn nộp bài không?`)) {
+        return; 
+      }
+    }
+
+    setIsSubmitting(true)
+    setError(null)
+    console.log(`[HV] Đang nộp bài cho phòng: ${roomId}`)
+
+    try {
+      const submission = {
+        ...selectedAnswers,
+        userId: user.uid,
+        userEmail: user.email,
+      };
+
+      const res = await fetch(`/api/nop-bai/${roomId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submission)
+      });
+      
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error || 'Lỗi khi nộp bài.');
+      }
+
+      console.log('[HV] Nộp bài thành công! Kết quả:', result)
+      setFinalScore({ score: result.score, total: result.totalQuestions });
+
+    } catch (err: any) {
+      console.error('[HV] Lỗi khi nộp bài:', err)
+      setError(err.message)
+      setIsSubmitting(false)
+    }
+  }
+
+
+  // 6. GIAO DIỆN
+
   if (loading || authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <h1 className="text-3xl font-bold text-blue-600">
-          Đang vào phòng thi...
-        </h1>
+      <div className={styles.container} style={{justifyContent: 'center', alignItems: 'center'}}>
+        <h1 className={styles.title} style={{fontSize: '1.5rem'}}>Đang vào phòng thi...</h1>
       </div>
     )
   }
 
-  // 2.2. Bị Lỗi
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-8">
-        <h1 className="text-3xl font-bold text-red-600">
-          Lỗi: {error}
-        </h1>
+      <div className={styles.errorContainer}>
+        <h1 className={styles.errorTitle}>Lỗi: {error}</h1>
       </div>
     )
   }
   
-  // 2.3. TRẠNG THÁI "CHỜ"
+  // 6.1. TRẠNG THÁI "CHỜ"
   if (room && room.status === 'waiting') {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-8">
-        <h1 className="mb-4 text-4xl font-bold text-blue-800">
+      <div className={styles.errorContainer} style={{backgroundColor: '#f3f4f6'}}>
+        <h1 className={styles.title} style={{color: '#1e3a8a'}}>
           Phòng Thi: {room.license_id}
         </h1>
-        <p className="mb-8 text-xl text-gray-700">
-          Giáo viên: {room.teacher_name}
-        </p>
-        <div className="animate-spin h-12 w-12 rounded-full border-t-4 border-b-4 border-blue-600"></div>
-        <p className="mt-8 text-2xl font-semibold text-gray-800">
-          Đang chờ giáo viên phát đề...
-        </p>
+        <p style={{fontSize: '1.2rem', color: '#555'}}>Giáo viên: {room.teacher_name}</p>
+        <div style={{margin: '2rem 0', width: '3rem', height: '3rem', borderTop: '4px solid #004a99', borderBottom: '4px solid #004a99', borderRadius: '50%', animation: 'spin 1s linear infinite'}}></div>
+        <p style={{fontSize: '1.5rem', fontWeight: 600}}>Đang chờ giáo viên phát đề...</p>
+        
+        <style jsx global>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     )
   }
 
-  // 2.4. TRẠNG THÁI "LÀM BÀI"
+  // 6.2. TRẠNG THÁI "ĐÃ NỘP BÀI" (Màn hình Kết quả)
+  if (finalScore) {
+     return (
+      <div className={styles.errorContainer} style={{backgroundColor: '#f3f4f6'}}>
+        <h1 className={styles.title} style={{color: '#16a34a'}}>Nộp bài thành công!</h1>
+        <p style={{fontSize: '1.2rem', color: '#555', marginTop: '1rem'}}>
+          Kết quả của bạn là:
+        </p>
+        <p style={{fontSize: '4rem', fontWeight: 'bold', color: '#1e3a8a', margin: '1rem 0'}}>
+          {finalScore.score} / {finalScore.total}
+        </p>
+        <Link href="/quan-ly" className={styles.backButton}>
+          Quay về Trang Quản lý
+        </Link>
+      </div>
+    )
+  }
+
+  // 6.3. TRẠNG THÁI "LÀM BÀI"
   if (room && room.status === 'in_progress' && questions.length > 0) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4 md:p-12">
-        <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-xl">
-          <h1 className="text-3xl font-bold text-center text-blue-800 mb-4">
-            Đề Thi: {room.license_id}
-          </h1>
-          <p className="text-center text-lg text-gray-700 mb-10">
-            (Tổng cộng: {questions.length} câu)
-          </p>
+      <div className={styles.container}>
+        <h1 className={styles.title} style={{textAlign: 'center', fontSize: '2rem'}}>
+          Đề Thi: {room.license_id}
+        </h1>
+        <p className={styles.subtitle} style={{textAlign: 'center'}}>
+          (Tổng cộng: {questions.length} câu)
+        </p>
 
-          {/* (Đây là giao diện làm bài giống hệt trang lỗi thời cũ) */}
-          <div className="space-y-10">
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div style={{display: 'flex', flexDirection: 'column', gap: '2.5rem'}}>
             {questions.map((q, index) => (
-              <div key={q.id} className="border-b border-gray-200 pb-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div key={q.id} style={{borderBottom: '1px solid #eee', paddingBottom: '1.5rem'}}>
+                <h2 style={{fontSize: '1.2rem', fontWeight: 600, marginBottom: '1rem'}}>
                   Câu {index + 1}: {q.text}
                 </h2>
                 {q.image && (
-                  <div className="my-4">
-                    <img src={q.image} alt={`Hình ảnh cho câu ${index + 1}`} className="rounded-lg max-w-sm mx-auto" />
+                  <div style={{margin: '1rem 0'}}>
+                    <img src={q.image} alt={`Hình ảnh cho câu ${index + 1}`} style={{maxWidth: '300px', borderRadius: '5px', border: '1px solid #eee'}} />
                   </div>
                 )}
-                <div className="space-y-3 mt-4">
+                
+                <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem'}}>
                   {q.answers.map((answer) => (
                     <label 
                       key={answer.id} 
-                      className="flex items-center p-3 rounded-lg border border-gray-300 hover:bg-gray-100 cursor-pointer"
+                      style={{display: 'flex', alignItems: 'center', padding: '0.75rem', borderRadius: '5px', border: '1px solid #ddd', cursor: 'pointer', backgroundColor: selectedAnswers[q.id] === answer.id ? '#e6f0ff' : '#fff'}}
                     >
                       <input
                         type="radio"
                         name={`question_${q.id}`}
                         value={answer.id}
-                        className="h-5 w-5 text-blue-600 focus:ring-blue-500"
+                        onChange={() => handleSelectAnswer(q.id, answer.id)}
+                        checked={selectedAnswers[q.id] === answer.id}
+                        style={{width: '1.2rem', height: '1.2rem'}}
                       />
-                      <span className="ml-4 text-gray-800">{answer.text}</span>
+                      <span style={{marginLeft: '1rem', color: '#333'}}>{answer.text}</span>
                     </label>
                   ))}
                 </div>
@@ -172,24 +232,25 @@ export default function ExamRoomPage() {
             ))}
           </div>
 
-          {/* Nút "Nộp bài" (bước tiếp theo) */}
-          <div className="mt-12 text-center">
-            <button className="px-10 py-4 bg-green-600 text-white font-bold rounded-lg text-xl shadow-lg hover:bg-green-700 transition-colors">
-              Nộp Bài
+          <div className={styles.backButtonContainer} style={{marginTop: '2.5rem'}}>
+            <button 
+              onClick={handleSubmitExam}
+              disabled={isSubmitting}
+              className={styles.backButton} 
+              style={{backgroundColor: '#16a34a'}} // (Màu xanh lá)
+            >
+              {isSubmitting ? 'Đang chấm bài...' : 'NỘP BÀI'}
             </button>
           </div>
-
-        </div>
+        </form>
       </div>
     )
   }
 
-  // 2.5. Trạng thái không xác định
+  // 6.4. Trạng thái không xác định
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <h1 className="text-3xl font-bold text-gray-600">
-        Trạng thái phòng thi không xác định.
-      </h1>
+    <div className={styles.errorContainer}>
+      <h1 className={styles.errorTitle}>Trạng thái phòng thi không xác định.</h1>
     </div>
   )
 }
