@@ -1,0 +1,88 @@
+/* === CSS cho Dashboard Phòng thi (Giáo viên) === */
+
+.listContainer {
+    margin-top: 2rem;
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.listTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+/* (Dùng 'table' cho Dashboard) */
+.roomTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+.roomTable th,
+.roomTable td {
+    border: 1px solid #ddd;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+}
+.roomTable th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+.roomTable td {
+    font-size: 0.9rem;
+}
+
+.roomName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #004a99;
+}
+.licenseName {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* (Style cho "Trạng thái" - 'pill') */
+.pill {
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px; /* (Bo tròn) */
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.pillWaiting {
+    background-color: #fef3c7; /* (Nền vàng) */
+    color: #92400e; /* (Chữ vàng đậm) */
+}
+.pillInProgress {
+    background-color: #d1fae5; /* (Nền xanh lá) */
+    color: #065f46; /* (Chữ xanh đậm) */
+}
+.pillFinished {
+    background-color: #e5e7eb; /* (Nền xám) */
+    color: #374151; /* (Chữ xám đậm) */
+}
+
+/* (Nút "Đóng phòng") */
+.closeButton {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 0.875rem;
+}
+.closeButton:hover {
+    background-color: #c9302c;
+}
+.closeButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #999;
+}

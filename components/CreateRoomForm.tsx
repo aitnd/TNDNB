@@ -3,10 +3,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '../utils/supabaseClient' // (Sửa đường dẫn ../)
-import { db } from '../utils/firebaseClient' // (Sửa đường dẫn ../)
+import { supabase } from '../utils/supabaseClient' 
+import { db } from '../utils/firebaseClient' 
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
-import { useAuth } from '../context/AuthContext' // (Sửa đường dẫn ../)
+import { useAuth } from '../context/AuthContext' 
 
 // (Import CSS Module)
 import styles from '../app/admin/page.module.css' // (Dùng chung CSS với trang Admin)
@@ -25,8 +25,6 @@ export default function CreateRoomForm() {
   // "Não" trạng thái
   const [licenses, setLicenses] = useState<License[]>([]) 
   const [selectedLicenseId, setSelectedLicenseId] = useState<string>('') 
-  
-  // 💖 "NÃO" MỚI (Req 3.2) 💖
   const [roomName, setRoomName] = useState('') // Tên phòng (do GV gõ)
 
   const [loadingLicenses, setLoadingLicenses] = useState(true)
@@ -77,10 +75,10 @@ export default function CreateRoomForm() {
       const roomCollection = collection(db, 'exam_rooms')
       const newRoomDoc = await addDoc(roomCollection, {
         license_id: selectedLicenseId, // (ID để "trộn" đề)
-        license_name: licenseFullName, // 💖 TÊN ĐẦY ĐỦ (Req 3.1) 💖
-        room_name: roomName, // 💖 TÊN PHÒNG (Req 3.2) 💖
+        license_name: licenseFullName, // (Tên đầy đủ)
+        room_name: roomName, // (Tên phòng)
         teacher_id: user.uid,
-        teacher_name: user.fullName, // 💖 LẤY TÊN GIÁO VIÊN 💖
+        teacher_name: user.fullName, // (Tên giáo viên)
         status: 'waiting', 
         created_at: serverTimestamp(),
       })
@@ -104,7 +102,7 @@ export default function CreateRoomForm() {
       </h2>
       <form onSubmit={handleCreateRoom} className={styles.form}>
         
-        {/* 💖 (Req 3.2) Thêm Ô "Tên Phòng Thi" 💖 */}
+        {/* Ô "Tên Phòng Thi" */}
         <div className={styles.formGroup}>
           <label htmlFor="roomName" className={styles.label}>
             Tên phòng thi (Ví dụ: "Thi thử M1 - Lần 1")
@@ -120,7 +118,7 @@ export default function CreateRoomForm() {
         </div>
 
         <div className={styles.formGroup}>
-          {/* 💖 (Req 1) Bỏ chữ "(Lấy từ Supabase)" 💖 */}
+          {/* (Bỏ chữ "(Lấy từ Supabase)") */}
           <label htmlFor="license" className={styles.label}>
             Chọn Hạng Bằng:
           </label>
@@ -134,8 +132,9 @@ export default function CreateRoomForm() {
               className={styles.select}
             >
               {licenses.map((license) => (
+                // 💖 SỬA LỖI Ở DÒNG NÀY (Đã bỏ ID) 💖
                 <option key={license.id} value={license.id}>
-                  {license.name} (ID: {license.id})
+                  {license.name}
                 </option>
               ))}
             </select>

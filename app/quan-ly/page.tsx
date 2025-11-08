@@ -2,21 +2,21 @@
 'use client'
 
 import React from 'react'
-import { useAuth } from '../../context/AuthContext' // (Sửa đường dẫn ../)
-import ProtectedRoute from '../../components/ProtectedRoute' // (Sửa đường dẫn ../)
-import { auth } from '../../utils/firebaseClient' // (Sửa đường dẫn ../)
+import { useAuth } from '../../context/AuthContext' 
+import ProtectedRoute from '../../components/ProtectedRoute' 
+import { auth } from '../../utils/firebaseClient' 
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 
-// (Sửa đường dẫn ../)
 import CreateRoomForm from '../../components/CreateRoomForm' 
-// (Sửa đường dẫn ../ và import "default")
 import JoinRoomList from '../../components/JoinRoomList' 
+// 💖 1. "TRIỆU HỒI" DASHBOARD MỚI CỦA GIÁO VIÊN 💖
+import TeacherRoomList from '../../components/TeacherRoomList'
 
-// (Import CSS Module cho trang này)
+// (Import CSS Module)
 import styles from './page.module.css' 
 
-// 1. TẠO "NỘI DUNG" TRANG
+// 2. TẠO "NỘI DUNG" TRANG
 function QuanLyDashboard() {
   const { user } = useAuth() 
   const router = useRouter()
@@ -61,12 +61,11 @@ function QuanLyDashboard() {
           </button>
         </div>
 
-        {/* 💖 (Req 2) Chào mừng "Họ và Tên" 💖 */}
+        {/* Thông tin người dùng (Họ và Tên) */}
         {user && (
           <div className={styles.userInfoBox}>
             <p>
               Chào mừng,{' '}
-              {/* (Hiển thị Tên, nếu không có thì mới hiện Email) */}
               <strong>{user.fullName || user.email}</strong>!
             </p>
             <p>
@@ -80,11 +79,18 @@ function QuanLyDashboard() {
 
         {/* --- CHỨC NĂNG CỦA GIÁO VIÊN / ADMIN / LÃNH ĐẠO --- */}
         {user && user.role !== 'hoc_vien' && (
-          <CreateRoomForm />
+          <>
+            {/* (Form tạo phòng) */}
+            <CreateRoomForm />
+            
+            {/* 💖 2. "VẼ" DASHBOARD MỚI RA (Req 2+3) 💖 */}
+            <TeacherRoomList />
+          </>
         )}
 
         {/* --- CHỨC NĂNG CỦA HỌC VIÊN --- */}
         {user && user.role === 'hoc_vien' && (
+          // (Req 1: File này đã được cập nhật ở Bước 2)
           <JoinRoomList />
         )}
 
@@ -93,7 +99,7 @@ function QuanLyDashboard() {
   )
 }
 
-// 2. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
+// 3. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
 export default function QuanLyPage() {
   return (
     <ProtectedRoute>

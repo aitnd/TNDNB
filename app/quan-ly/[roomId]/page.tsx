@@ -5,22 +5,33 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../../../context/AuthContext'
 import { db } from '../../../utils/firebaseClient'
-import { doc, onSnapshot, updateDoc, Timestamp, DocumentData, serverTimestamp } from 'firebase/firestore'
+// 💖 THÊM 'collection', 'query' 💖
+import { doc, onSnapshot, updateDoc, Timestamp, DocumentData, serverTimestamp, collection, query } from 'firebase/firestore'
 import ProtectedRoute from '../../../components/ProtectedRoute'
-
-// 1. "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
 
-// 2. Định nghĩa "kiểu" của Phòng thi (Nâng cấp)
+// --- (Định nghĩa "kiểu" - Giữ nguyên) ---
 interface ExamRoom {
   id: string;
   license_id: string;
-  license_name: string; // 💖 TÊN ĐẦY ĐỦ (Req 3.1) 💖
-  room_name: string; // 💖 TÊN PHÒNG (Req 3.2) 💖
+  license_name: string; 
+  room_name: string; 
   teacher_name: string;
   status: 'waiting' | 'in_progress' | 'finished';
   created_at: Timestamp;
 }
+
+// 💖 "KIỂU" MỚI: DÀNH CHO LIVE DASHBOARD 💖
+interface Participant {
+  id: string; // (Chính là user.uid)
+  fullName: string;
+  email: string;
+  status: 'waiting' | 'submitted';
+  score?: number; // (Sẽ xuất hiện khi 'submitted')
+  totalQuestions?: number;
+  joinedAt: Timestamp;
+}
+
 
 // --- Component "Nội dung" (Bên trong "Lính gác") ---
 function RoomControlDashboard() {
@@ -35,7 +46,10 @@ function RoomControlDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [isStarting, setIsStarting] = useState(false) 
 
-  // 3. "Phép thuật" Realtime (useEffect) - (Nâng cấp)
+  // 1. 💖 "NÃO" MỚI: LIVE DASHBOARD (Req 3.3) 💖
+  const [participants, setParticipants] = useState<Participant[]>([])
+
+  // 2. "Phép thuật" 1: (Lắng nghe Phòng thi) - (Giữ nguyên)
   useEffect(() => {
     if (!roomId || !user) return
 
@@ -47,7 +61,6 @@ function RoomControlDashboard() {
         const roomData = { id: docSnap.id, ...docSnap.data() } as ExamRoom
         setRoom(roomData)
         setLoading(false)
-
         if (roomData.status === 'in_progress') {
           console.log('[GV] Phòng này đã được phát đề.')
         }
@@ -56,13 +69,50 @@ function RoomControlDashboard() {
         setLoading(false)
       }
     }, (err) => {
-      console.error('[GV] Lỗi khi "lắng nghe" phòng:', err)
       setError('Lỗi kết nối thời gian thực.')
       setLoading(false)
     })
 
     return () => unsubscribe()
   }, [roomId, user])
+
+
+  // 3. 💖 "PHÉP THUẬT" 2: (Lắng nghe Học viên) (Req 3.3) 💖
+  useEffect(() => {
+    if (!roomId) return;
+
+    console.log(`[GV] Bắt đầu "lắng nghe" ngăn con 'participants' của phòng: ${roomId}`)
+    
+    // 3.1. Tạo "câu truy vấn" (query) đến "ngăn con"
+    const participantsRef = collection(db, 'exam_rooms', roomId, 'participants');
+    // (Sắp xếp theo thời gian vào)
+    const q = query(participantsRef, /* orderBy('joinedAt', 'asc') */); 
+
+    // 3.2. "Gắn tai nghe"
+    const unsubscribe = onSnapshot(q, 
+      (querySnapshot) => {
+        // "Có biến!" (Học viên vừa vào/nộp bài)
+        const participantList: Participant[] = [];
+        querySnapshot.forEach((doc) => {
+          participantList.push({
+            id: doc.id,
+            ...doc.data()
+          } as Participant);
+        });
+        
+        setParticipants(participantList);
+        console.log('[GV] Đã cập nhật Live Dashboard:', participantList);
+      },
+      (err) => {
+        console.error('[GV] Lỗi khi "lắng nghe" participants:', err)
+        setError('Lỗi kết nối Dashboard thời gian thực.')
+      }
+    );
+
+    // 3.3. "Tháo tai nghe"
+    return () => unsubscribe();
+  }, [roomId]); // (Chỉ phụ thuộc vào roomId)
+
 
   // 4. HÀM XỬ LÝ "PHÁT ĐỀ" (Logic giữ nguyên)
   const handleStartExam = async () => {
@@ -94,7 +144,7 @@ function RoomControlDashboard() {
     }
   }
   
-  // 5. GIAO DIỆN (Đã cập nhật CSS Module)
+  // 5. GIAO DIỆN (Đã cập nhật)
 
   if (loading) {
     return (
@@ -118,12 +168,9 @@ function RoomControlDashboard() {
 
   return (
     <div className={styles.container}>
-      {/* 💖 (Req 3.2) Hiển thị Tên Phòng 💖 */}
       <h1 className={styles.title}>
         Phòng: {room.room_name}
       </h1>
-      
-      {/* 💖 (Req 3.1) Hiển thị Tên Hạng Bằng 💖 */}
       <p className={styles.info}>
         <span className={styles.label}>Hạng thi:</span> {room.license_name}
       </p>
@@ -167,12 +214,61 @@ function RoomControlDashboard() {
         </button>
       )}
       
-      {/* (Live Dashboard (Req 3.3) sẽ được thêm vào đây ở bước sau) */}
+      {/* 6. 💖 BẢNG LIVE DASHBOARD (Req 3.3) 💖 */}
+      <div className={styles.dashboard}>
+        <h2 className={styles.dashboardTitle}>
+          Bảng điều khiển (Realtime) - ({participants.length} người tham gia)
+        </h2>
+        
+        <table className={styles.participantTable}>
+          <thead>
+            <tr>
+              <th>Họ và Tên</th>
+              <th>Email</th>
+              <th>Trạng thái</th>
+              <th>Kết quả</th>
+            </tr>
+          </thead>
+          <tbody>
+            {participants.length === 0 ? (
+              <tr>
+                <td colSpan={4} style={{textAlign: 'center'}}>Đang chờ học viên vào phòng...</td>
+              </tr>
+            ) : (
+              participants.map((p) => (
+                <tr key={p.id}>
+                  <td>{p.fullName}</td>
+                  <td>{p.email}</td>
+                  <td>
+                    {p.status === 'waiting' && (
+                      <span className={`${styles.pill} ${styles.pillWaiting}`}>
+                        Đang chờ
+                      </span>
+                    )}
+                    {p.status === 'submitted' && (
+                      <span className={`${styles.pill} ${styles.pillSubmitted}`}>
+                        Đã nộp bài
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    {/* (Chỉ hiển thị điểm nếu đã nộp) */}
+                    {p.status === 'submitted' ? (
+                      <strong>{p.score} / {p.totalQuestions}</strong>
+                    ) : (
+                      '...'
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
     </div>
   )
 }
-
 
 // --- Component "Vỏ Bọc" (Bảo vệ) ---
 export default function QuanLyRoomPage() {

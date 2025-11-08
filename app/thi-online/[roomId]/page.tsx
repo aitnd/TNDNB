@@ -5,17 +5,17 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../../../context/AuthContext'
 import { db } from '../../../utils/firebaseClient'
+// 💖 THÊM 'setDoc', 'serverTimestamp' 💖
 import { doc, onSnapshot, DocumentData, setDoc, serverTimestamp } from 'firebase/firestore'
 import styles from './page.module.css'
 import Link from 'next/link'
 
-// 1. 💖 SỬA LỖI Ở ĐÂY 💖
-// (Thêm 'license_name' và 'room_name' vào "định nghĩa")
+// --- (Định nghĩa "kiểu" - Giữ nguyên) ---
 interface ExamRoom {
   id: string;
   license_id: string;
-  license_name: string; // (Thêm dòng này)
-  room_name: string; // (Thêm dòng này)
+  license_name: string; 
+  room_name: string; 
   teacher_name: string;
   status: 'waiting' | 'in_progress' | 'finished';
   exam_data?: any; 
@@ -73,19 +73,26 @@ export default function ExamRoomPage() {
   }, [roomId, user, router])
 
 
-  // 4. "GHI DANH" KHI VÀO PHÒNG (Giữ nguyên)
+  // 4. 💖 "PHÉP THUẬT" MỚI: "GHI DANH" KHI VÀO PHÒNG 💖
   useEffect(() => {
+    // (Chỉ "ghi danh" 1 lần khi 'user' và 'roomId' đã sẵn sàng)
     if (user && roomId) {
       console.log(`[HV] Ghi danh vào phòng ${roomId}...`)
+      
+      // (Tạo đường dẫn đến "ngăn con" participants, 
+      //  dùng 'user.uid' làm ID document)
       const participantRef = doc(db, 'exam_rooms', roomId, 'participants', user.uid);
+      
+      // (Dùng 'setDoc' với 'merge: true' để "ghi đè" 
+      //  hoặc "tạo mới" thông tin)
       setDoc(participantRef, {
         fullName: user.fullName,
         email: user.email,
-        status: 'waiting', 
+        status: 'waiting', // (Trạng thái ban đầu)
         joinedAt: serverTimestamp()
-      }, { merge: true }); 
+      }, { merge: true }); // (Merge = true rất quan trọng)
     }
-  }, [roomId, user]); 
+  }, [roomId, user]); // (Phụ thuộc vào roomId và user)
 
 
   // 5. HÀM CHỌN ĐÁP ÁN (Giữ nguyên)
@@ -134,8 +141,7 @@ export default function ExamRoomPage() {
     }
   }
 
-  // 7. GIAO DIỆN
-
+  // 7. GIAO DIỆN (Giữ nguyên toàn bộ)
   if (loading || authLoading) {
     return (
       <div className={styles.container} style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -143,6 +149,7 @@ export default function ExamRoomPage() {
       </div>
     )
   }
+  // (Phần còn lại của giao diện không thay đổi...)
   if (error) {
     return (
       <div className={styles.errorContainer}>
@@ -150,17 +157,13 @@ export default function ExamRoomPage() {
       </div>
     )
   }
-  
-  // 7.1. TRẠNG THÁI "CHỜ" (Đã sửa)
   if (room && room.status === 'waiting') {
     return (
       <div className={styles.errorContainer} style={{backgroundColor: '#f3f4f6'}}>
         <h1 className={styles.title} style={{color: '#1e3a8a'}}>
-          {/* (Hiển thị Tên Phòng) */}
           Phòng Thi: {room.room_name} 
         </h1>
         <p style={{fontSize: '1.2rem', color: '#555'}}>
-          {/* (Hiển thị Tên Hạng Bằng) */}
           (Hạng thi: {room.license_name})
         </p>
         <p style={{fontSize: '1.2rem', color: '#555'}}>Giáo viên: {room.teacher_name}</p>
@@ -172,8 +175,6 @@ export default function ExamRoomPage() {
       </div>
     )
   }
-
-  // 7.2. TRẠNG THÁI "ĐÃ NỘP BÀI" (Giữ nguyên)
   if (finalScore) {
      return (
       <div className={styles.errorContainer} style={{backgroundColor: '#f3f4f6'}}>
@@ -190,13 +191,10 @@ export default function ExamRoomPage() {
       </div>
     )
   }
-
-  // 7.3. TRẠNG THÁI "LÀM BÀI" (Đã sửa)
   if (room && room.status === 'in_progress' && questions.length > 0) {
     return (
       <div className={styles.container}>
         <h1 className={styles.title} style={{textAlign: 'center', fontSize: '2rem'}}>
-          {/* (Hiển thị Tên Hạng Bằng) */}
           Đề Thi: {room.license_name}
         </h1>
         <p className={styles.subtitle} style={{textAlign: 'center'}}>
@@ -249,8 +247,6 @@ export default function ExamRoomPage() {
       </div>
     )
   }
-
-  // 7.4. Trạng thái không xác định
   return (
     <div className={styles.errorContainer}>
       <h1 className={styles.errorTitle}>Trạng thái phòng thi không xác định.</h1>
