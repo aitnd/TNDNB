@@ -1,0 +1,83 @@
+/* === Trang điểm cho Trang Học Phí === */
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+/* === Bảng học phí === */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem 1rem;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+
+/* (Dòng tiêu đề mục I, II, III) */
+.sectionHeader td {
+    background-color: #e6f0ff; /* (Màu xanh nhạt) */
+    font-weight: 700;
+    color: #004a99;
+}
+
+.table td:last-child {
+    text-align: right;
+    font-weight: 500;
+    color: #9b2c2c; /* (Màu đỏ) */
+}
+
+/* === Ghi chú === */
+.notes {
+    margin-top: 2rem;
+    background-color: #fffbe6;
+    border: 1px solid #ffe58f;
+    padding: 1rem 1.5rem;
+    border-radius: 5px;
+}
+
+.notes h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #d97706;
+    margin-bottom: 0.5rem;
+}
+
+.notes ul {
+    list-style-position: inside;
+    padding-left: 0.5rem;
+    margin: 0;
+}
+.notes li {
+    font-size: 0.9rem;
+    color: #555;
+}

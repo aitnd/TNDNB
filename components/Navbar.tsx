@@ -34,12 +34,15 @@ export default function Navbar() {
             Trường dạy nghề thủy nội địa Ninh Bình
           </Link>
 
-          {/* 2. Menu */}
+          {/* 2. Menu (ĐÃ THÊM LINK "HỌC PHÍ") */}
           <ul className={styles.navLinks}>
             <li>
               <Link href="/">Trang chủ</Link>
             </li>
-            {/* (Mình sẽ thêm link 'Học phí', 'Liên hệ' ở đây sau) */}
+            <li>
+              <Link href="/hoc-phi">Học phí</Link>
+            </li>
+            {/* (Mình sẽ thêm link 'Liên hệ' ở đây sau) */}
             
             {/* Link "thông minh" */}
             {user ? (
