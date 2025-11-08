@@ -4,9 +4,9 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic' // "Triệu hồi" công cụ Import "động"
-import { useAuth } from '../../context/AuthContext' 
-import ProtectedRoute from '../../components/ProtectedRoute' 
-import { supabase } from '../../utils/supabaseClient'
+import { useAuth } from '@/context/AuthContext' 
+import ProtectedRoute from '@/components/ProtectedRoute' 
+import { supabase } from '@/utils/supabaseClient' 
 
 // 1. 💖 "TRIỆU HỒI" TRÌNH SOẠN THẢO (Bỏ qua lỗi Types) 💖
 //    Tụi mình "bịt" lỗi "is not a module" bằng @ts-ignore
