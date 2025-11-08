@@ -1,7 +1,9 @@
+/** @type {import('postcss-load-config').Config} */
 const config = {
   plugins: {
-    "@tailwindcss/postcss": {},
+    // "Dạy" PostCSS cách "hiểu" Tailwind v4
+    '@tailwindcss/postcss': {}, 
   },
-};
+}
 
-export default config;
+export default config
