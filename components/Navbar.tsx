@@ -54,8 +54,7 @@ export default function Navbar() {
             Trường dạy nghề thủy nội địa Ninh Bình
           </Link>
 
-          {/* 💖 ĐÃ THÊM LINK "CHƯƠNG TRÌNH ĐÀO TẠO" 💖 */}
-          {/* (Em tạm bỏ 'Tin tức', 'Tuyển sinh' để giống ảnh mẫu) */}
+          {/* 💖 SỬA LỖI LINK (TRỎ VỀ LOBBY) 💖 */}
           <ul className={styles.navLinks}>
             <li>
               <Link href="/">Trang chủ</Link>
@@ -63,11 +62,10 @@ export default function Navbar() {
             <li>
               <Link href="/gioi-thieu">Giới thiệu</Link>
             </li>
-            {/* <li><Link href="/danh-muc/tuyen-sinh">Tuyển sinh</Link></li> */}
-            {/* <li><Link href="/danh-muc/tin-tuc-su-kien">Tin tức</Link></li> */}
             
             <li>
-              <Link href="/chuong-trinh-dao-tao/maytruong-h1">Chương trình đào tạo</Link>
+              {/* (Trỏ về trang Lobby '/chuong-trinh-dao-tao' thay vì M1) */}
+              <Link href="/chuong-trinh-dao-tao">Chương trình đào tạo</Link>
             </li>
 
             <li>

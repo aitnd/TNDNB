@@ -1,0 +1,65 @@
+/* === Trang điểm cho Trang "Lobby" Chương trình Đào tạo === */
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e6f0ff;
+    padding-bottom: 1rem;
+}
+
+.categoryTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+/* (Bố cục Lưới) */
+.grid {
+    display: grid;
+    /* (2 cột trên desktop) */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+/* (1 cột trên mobile) */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr; 
+    }
+}
+
+/* (Nút bấm (Link) của từng Hạng bằng) */
+.linkItem {
+    display: block;
+    padding: 1.25rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #004a99;
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.linkItem:hover {
+    background-color: #e6f0ff;
+    border-color: #004a99;
+    box-shadow: 0 2px 5px rgba(0,74,153,0.1);
+    text-decoration: none;
+}
