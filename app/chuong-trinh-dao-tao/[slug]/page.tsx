@@ -5,7 +5,7 @@ import Link from 'next/link' // (Triệu hồi Link)
 // --- (CƠ SỞ DỮ LIỆU "TĨNH") ---
 const CURRICULUM_DATA: Record<string, any> = {
   
-  // (Dữ liệu cho Hạng M1 - Đã có)
+  // (Dữ liệu Hạng M1 - Đã có)
   'maytruong-h1': {
     title: 'GCNKNCM MÁY TRƯỞNG HẠNG NHẤT',
     subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
@@ -63,7 +63,7 @@ const CURRICULUM_DATA: Record<string, any> = {
     ]
   },
   
-  // 💖 (DỮ LIỆU MỚI CHO T1) 💖
+  // (Dữ liệu T1 - Đã có)
   'thuyentruong-h1': {
     title: '4- GCNKNCM THUYỀN TRƯỞNG HẠNG NHẤT',
     subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
@@ -85,7 +85,7 @@ const CURRICULUM_DATA: Record<string, any> = {
     ]
   },
   
-  // 💖 (DỮ LIỆU MỚI CHO T2) 💖
+  // (Dữ liệu T2 - Đã có)
   'thuyentruong-h2': {
     title: '3- GCNKNCM THUYỀN TRƯỞNG HẠNG NHÌ',
     subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
@@ -107,7 +107,7 @@ const CURRICULUM_DATA: Record<string, any> = {
     ]
   },
   
-  // 💖 (DỮ LIỆU MỚI CHO T3) 💖
+  // (Dữ liệu T3 - Đã có)
   'thuyentruong-h3': {
     title: '2- GCNKNCM THUYỀN TRƯỞNG HẠNG BA',
     subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
@@ -127,6 +127,27 @@ const CURRICULUM_DATA: Record<string, any> = {
       { stt: 1, noi_dung: "Lý thuyết tổng hợp", hinh_thuc: "Trắc nghiệm" },
       { stt: 2, noi_dung: "Lý thuyết chuyên môn", hinh_thuc: "Vấn đáp" },
       { stt: 3, noi_dung: "Điều động tàu", hinh_thuc: "Thực hành" },
+    ]
+  },
+  
+  // 💖 (DỮ LIỆU MỚI CHO "THỢ MÁY" - thomay) 💖
+  'thomay': {
+    title: 'CHỨNG CHỈ THỢ MÁY',
+    subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
+    modules: [
+      { ma: "MĐ 01", ten: "An toàn cơ bản, đạo đức nghề nghiệp và bảo vệ môi trường", thoi_gian: "50" },
+      { ma: "MH 02", ten: "Pháp luật về giao thông đường thủy nội địa", thoi_gian: "15" },
+      { ma: "MĐ 03", ten: "Máy tàu thủy", thoi_gian: "60" },
+      { ma: "MĐ 04", ten: "Vận hành, sửa chữa điện tàu", thoi_gian: "30" },
+      { ma: "MĐ 05", ten: "Thực hành vận hành máy tàu", thoi_gian: "85" },
+    ],
+    module_total: "240",
+    final_tests: [
+      // (Em tạm "phỏng đoán" Bảng 2 của Thợ máy, 
+      //  anh sửa lại nếu cần nhé)
+      { stt: 1, noi_dung: "Lý thuyết tổng hợp", hinh_thuc: "Trắc nghiệm" },
+      { stt: 2, noi_dung: "Lý thuyết chuyên môn", hinh_thuc: "Vấn đáp" },
+      { stt: 3, noi_dung: "Thực hành vận hành máy", hinh_thuc: "Thực hành" },
     ]
   }
 };

@@ -22,7 +22,7 @@ export default function ChuongTrinhDaoTaoLobby() {
         </Link>
       </div>
 
-      {/* 💖 (Phần Thuyền trưởng - ĐÃ THÊM LINK) 💖 */}
+      {/* (Phần Thuyền trưởng) */}
       <h2 className={styles.categoryTitle}>Thuyền trưởng</h2>
       <div className={styles.grid}>
         <Link href="/chuong-trinh-dao-tao/thuyentruong-h1" className={styles.linkItem}>
@@ -36,16 +36,16 @@ export default function ChuongTrinhDaoTaoLobby() {
         </Link>
       </div>
 
-      {/* (Phần Chứng chỉ) */}
+      {/* 💖 (Phần Chứng chỉ - ĐÃ THÊM "THỢ MÁY") 💖 */}
       <h2 className={styles.categoryTitle}>Chứng chỉ chuyên môn</h2>
       <div className={styles.grid}>
-        {/* (Anh copy-paste thêm các chứng chỉ còn lại vào đây sau) */}
-        <Link href="/chuong-trinh-dao-tao/chung-chi-thuy-thu" className={styles.linkItem}>
+        <Link href="/chuong-trinh-dao-tao/thuythu" className={styles.linkItem}>
           Chứng chỉ Thủy thủ
         </Link>
-        <Link href="/chuong-trinh-dao-tao/chung-chi-tho-may" className={styles.linkItem}>
+        <Link href="/chuong-trinh-dao-tao/thomay" className={styles.linkItem}>
           Chứng chỉ Thợ máy
         </Link>
+        {/* (Anh copy-paste thêm các chứng chỉ còn lại vào đây sau) */}
       </div>
 
     </div>
