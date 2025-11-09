@@ -30,32 +30,41 @@
 .label {
     font-weight: 600;
     color: #555;
+    margin-bottom: 0.25rem; /* (Thêm margin bottom) */
 }
 
+/* 💖 (Req 1) CHIA 2 CỘT CHO STATUS BOX 💖 */
 .statusBox {
     margin: 2rem 0;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     padding: 1.5rem 0;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
 }
+.statusLeft {
+    flex: 1; /* (Phần Trạng thái) */
+}
+.statusRight {
+    flex-shrink: 0; /* (Phần Nút bấm) */
+}
+
 .status {
     font-size: 1.8rem;
     font-weight: 700;
 }
-.statusWaiting {
-    color: #d97706; /* (Màu vàng) */
-}
-.statusInProgress {
-    color: #16a34a; /* (Màu xanh lá) */
-}
-.statusFinished {
-    color: #777; /* (Màu xám) */
-}
+.statusWaiting { color: #d97706; }
+.statusInProgress { color: #16a34a; }
+.statusFinished { color: #777; }
 
+/* 💖 (Req 1+2) THU GỌN NÚT BẤM 💖 */
 .button {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.25rem;
+    /* (Không 'width: 100%' nữa) */
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem; /* (Nhỏ lại) */
     font-weight: 600;
     border-radius: 5px;
     border: none;
@@ -69,20 +78,16 @@
 }
 
 .buttonStart {
-    background-color: #16a34a; /* (Xanh lá) */
+    background-color: #16a34a; 
 }
 .buttonStart:hover:not(:disabled) {
     background-color: #14833a;
 }
 
-.buttonStop {
-    background-color: #d9534f; /* (Đỏ) */
-}
-.buttonStop:hover:not(:disabled) {
-    background-color: #c9302c;
-}
+/* 💖 (Req 2) ĐÃ XÓA '.buttonStop' 💖 */
 
-/* === 💖 CSS MỚI CHO LIVE DASHBOARD (Req 3.3) 💖 === */
+
+/* === CSS CHO LIVE DASHBOARD (Giữ nguyên) === */
 .dashboard {
     margin-top: 2.5rem;
     border-top: 1px solid #eee;
@@ -117,16 +122,20 @@
 
 .pill {
     padding: 0.25rem 0.75rem;
-    border-radius: 99px; /* (Bo tròn) */
+    border-radius: 99px;
     font-size: 0.875rem;
     font-weight: 500;
     white-space: nowrap;
 }
 .pillWaiting {
-    background-color: #fef3c7; /* (Nền vàng) */
-    color: #92400e; /* (Chữ vàng đậm) */
+    background-color: #fef3c7; 
+    color: #92400e; 
+}
+.pillInProgress {
+    background-color: #dbeafe; 
+    color: #1e40af; 
 }
 .pillSubmitted {
-    background-color: #d1fae5; /* (Nền xanh lá) */
-    color: #065f46; /* (Chữ xanh đậm) */
+    background-color: #d1fae5; 
+    color: #065f46; 
 }

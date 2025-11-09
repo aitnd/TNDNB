@@ -1,3 +1,4 @@
+// File: components/TeacherRoomList.tsx
 // Đánh dấu đây là "Client Component"
 'use client'
 
@@ -5,19 +6,16 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../utils/firebaseClient'
-// (Import "đồ nghề" Realtime và "Đóng phòng")
 import { collection, query, where, onSnapshot, Timestamp, doc, updateDoc, orderBy } from 'firebase/firestore'
-
-// (Import CSS Module)
 import styles from './TeacherRoomList.module.css' 
 
-// (Định nghĩa "kiểu" của Phòng thi - Giống JoinRoomList)
+// (Định nghĩa "kiểu" - Giữ nguyên)
 interface ExamRoom {
   id: string;
   license_id: string;
   license_name: string;
   room_name: string;
-  teacher_id: string; // (Thêm teacher_id để lọc)
+  teacher_id: string; 
   teacher_name: string;
   status: 'waiting' | 'in_progress' | 'finished';
   created_at: Timestamp;
@@ -30,24 +28,21 @@ export default function TeacherRoomList() {
   // "Não" trạng thái
   const [rooms, setRooms] = useState<ExamRoom[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null) // (Lỗi sẽ được lưu ở đây)
 
-  // 1. "Phép thuật" Realtime (Nâng cấp Req 2+3)
+  // 1. "Phép thuật" Realtime (Nâng cấp)
   useEffect(() => {
-    if (!user) return; // (Chờ "Bộ não" Auth)
+    if (!user) return; 
 
     console.log(`[GV] Bắt đầu "lắng nghe" Dashboard... Vai trò: ${user.role}`)
     
-    // 1.1. Tạo "câu truy vấn" (query)
     const roomCollection = collection(db, 'exam_rooms');
     let q; // (Biến query)
     
-    // 💖 (Req 3) Phân quyền Admin / Giáo viên 💖
+    // (Phân quyền Admin / Giáo viên)
     if (user.role === 'admin' || user.role === 'lanh_dao') {
-      // (Admin/Lãnh đạo: Thấy HẾT TẤT CẢ các phòng)
       q = query(roomCollection, orderBy('created_at', 'desc'));
     } else {
-      // (Giáo viên: Chỉ thấy phòng CỦA MÌNH)
       q = query(
         roomCollection, 
         where('teacher_id', '==', user.uid),
@@ -55,9 +50,10 @@ export default function TeacherRoomList() {
       );
     }
 
-    // 1.2. "Gắn tai nghe" (onSnapshot)
+    // "Gắn tai nghe" (onSnapshot)
     const unsubscribe = onSnapshot(q, 
       (querySnapshot) => {
+        // "Có biến!" (Có dữ liệu mới)
         const roomList: ExamRoom[] = []
         querySnapshot.forEach((doc) => {
           roomList.push({ id: doc.id, ...doc.data() } as ExamRoom)
@@ -65,36 +61,25 @@ export default function TeacherRoomList() {
         
         setRooms(roomList) 
         setLoading(false)
+        
+        // 💖 SỬA LỖI Ở ĐÂY (Vấn đề B): XÓA LỖI CŨ KHI TẢI THÀNH CÔNG 💖
+        setError(null) 
+        
         console.log('[GV] Đã cập nhật Dashboard:', roomList.length)
       }, 
       (err) => {
+        // (Nếu "tai nghe" thật sự bị lỗi - Mất mạng, Lỗi Bảo mật...)
         console.error('Lỗi khi "lắng nghe" Dashboard:', err)
         setError('Không thể tải danh sách phòng thi.')
         setLoading(false)
       }
     )
-    return () => unsubscribe()
+    return () => unsubscribe() // (Tháo tai nghe khi rời)
   }, [user]) // (Chạy lại nếu 'user' thay đổi)
 
-  // 2. 💖 HÀM MỚI: "ĐÓNG PHÒNG" (Req 3) 💖
-  const handleCloseRoom = async (roomId: string) => {
-    if (!confirm('Bạn có chắc chắn muốn "Đóng" phòng thi này không? (Học viên sẽ không thể vào thi nữa)')) {
-      return;
-    }
+  // (Hàm "Đóng phòng" - Đã bị xóa)
 
-    console.log(`[GV/Admin] Yêu cầu đóng phòng: ${roomId}`)
-    const roomRef = doc(db, 'exam_rooms', roomId);
-    try {
-      await updateDoc(roomRef, {
-        status: 'finished'
-      });
-      console.log('Đóng phòng thành công!')
-    } catch (err: any) {
-      setError(err.message || 'Lỗi khi đóng phòng.')
-    }
-  }
-
-  // 3. HÀM MỚI: (Vào xem phòng chi tiết)
+  // 3. HÀM (Vào xem phòng chi tiết)
   const handleViewRoom = (roomId: string) => {
     router.push(`/quan-ly/${roomId}`)
   }
@@ -103,13 +88,20 @@ export default function TeacherRoomList() {
   return (
     <div className={styles.listContainer}>
       <h2 className={styles.listTitle}>
-        Dashboard: Danh sách Phòng thi
+        Danh sách Phòng thi
       </h2>
 
+      {/* (Chỉ hiện "Đang tải..." lúc đầu) */}
       {loading && <p>Đang tải danh sách phòng...</p>}
-      {error && <p style={{color: 'red'}}>{error}</p>}
+      
+      {/* 💖 SỬA LỖI (Vấn đề B): Lỗi CHỈ hiện khi CÓ lỗi 💖 */}
+      {error && !loading && (
+        <p style={{color: 'red', marginBottom: '1rem'}}>{error}</p>
+      )}
 
-      {!loading && rooms.length === 0 && (
+      {/* (Chỉ hiện "Không có phòng" khi: 
+          KHÔNG Lỗi VÀ KHÔNG Loading VÀ List rỗng) */}
+      {!loading && rooms.length === 0 && !error && (
         <p>
           {user?.role === 'admin' ? 'Chưa có phòng thi nào trong hệ thống.' : 'Bạn chưa tạo phòng thi nào.'}
         </p>
@@ -121,7 +113,6 @@ export default function TeacherRoomList() {
           <thead>
             <tr>
               <th>Tên Phòng</th>
-              <th>Hạng Bằng</th>
               <th>Giáo viên</th>
               <th>Trạng thái</th>
               <th>Hành động</th>
@@ -150,21 +141,14 @@ export default function TeacherRoomList() {
                   )}
                 </td>
                 {/* Hành động */}
-                <td style={{display: 'flex', gap: '0.5rem'}}>
+                <td style={{display: 'flex', gap: '0.5rem', flexWrap: 'wrap'}}>
                   <button
                     onClick={() => handleViewRoom(room.id)}
-                    className={styles.closeButton}
-                    style={{backgroundColor: '#004a99'}} // (Màu xanh)
+                    className={styles.actionButton}
                   >
                     Xem
                   </button>
-                  <button
-                    onClick={() => handleCloseRoom(room.id)}
-                    className={styles.closeButton}
-                    disabled={room.status === 'finished'} // (Nếu đã "Kết thúc" thì vô hiệu hóa)
-                  >
-                    Đóng
-                  </button>
+                  {/* (Đã xóa nút "Đóng") */}
                 </td>
               </tr>
             ))}

@@ -5,12 +5,12 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../../../context/AuthContext'
 import { db } from '../../../utils/firebaseClient'
-// 💖 THÊM 'setDoc', 'serverTimestamp' 💖
-import { doc, onSnapshot, DocumentData, setDoc, serverTimestamp } from 'firebase/firestore'
+// 💖 THÊM 'getDoc' 💖
+import { doc, onSnapshot, DocumentData, setDoc, serverTimestamp, getDoc } from 'firebase/firestore'
 import styles from './page.module.css'
 import Link from 'next/link'
 
-// --- (Định nghĩa "kiểu" - Giữ nguyên) ---
+// (Định nghĩa "kiểu" - Giữ nguyên)
 interface ExamRoom {
   id: string;
   license_id: string;
@@ -30,7 +30,7 @@ export default function ExamRoomPage() {
   const { user, loading: authLoading } = useAuth() 
   const roomId = params.roomId as string
 
-  // "Não" trạng thái (Giữ nguyên)
+  // (Não trạng thái - Giữ nguyên)
   const [room, setRoom] = useState<ExamRoom | null>(null) 
   const [questions, setQuestions] = useState<Question[]>([]) 
   const [loading, setLoading] = useState(true)
@@ -73,24 +73,32 @@ export default function ExamRoomPage() {
   }, [roomId, user, router])
 
 
-  // 4. 💖 "PHÉP THUẬT" MỚI: "GHI DANH" KHI VÀO PHÒNG 💖
+  // 4. 💖 "GHI DANH" KHI VÀO PHÒNG (NÂNG CẤP) 💖
   useEffect(() => {
-    // (Chỉ "ghi danh" 1 lần khi 'user' và 'roomId' đã sẵn sàng)
     if (user && roomId) {
-      console.log(`[HV] Ghi danh vào phòng ${roomId}...`)
-      
-      // (Tạo đường dẫn đến "ngăn con" participants, 
-      //  dùng 'user.uid' làm ID document)
-      const participantRef = doc(db, 'exam_rooms', roomId, 'participants', user.uid);
-      
-      // (Dùng 'setDoc' với 'merge: true' để "ghi đè" 
-      //  hoặc "tạo mới" thông tin)
-      setDoc(participantRef, {
-        fullName: user.fullName,
-        email: user.email,
-        status: 'waiting', // (Trạng thái ban đầu)
-        joinedAt: serverTimestamp()
-      }, { merge: true }); // (Merge = true rất quan trọng)
+      const runAsync = async () => {
+        console.log(`[HV] Ghi danh vào phòng ${roomId}...`)
+        const participantRef = doc(db, 'exam_rooms', roomId, 'participants', user.uid);
+        
+        // (Kiểm tra trạng thái hiện tại trước)
+        const docSnap = await getDoc(participantRef);
+        
+        // (Chỉ "ghi danh" (set) nếu là 'người mới'
+        //  hoặc nếu trạng thái đang là 'waiting'
+        //  -> Tránh F5 "reset" trạng thái 'in_progress')
+        if (!docSnap.exists() || docSnap.data().status === 'waiting') {
+          console.log('[HV] Ghi danh MỚI hoặc "waiting"... Đặt trạng thái.')
+          await setDoc(participantRef, {
+            fullName: user.fullName,
+            email: user.email,
+            status: 'waiting', 
+            joinedAt: serverTimestamp()
+          }, { merge: true });
+        } else {
+          console.log(`[HV] Đã "ghi danh" (trạng thái: ${docSnap.data().status}). Không ghi đè.`)
+        }
+      }
+      runAsync();
     }
   }, [roomId, user]); // (Phụ thuộc vào roomId và user)
 
@@ -116,24 +124,16 @@ export default function ExamRoomPage() {
     console.log(`[HV] Đang nộp bài cho phòng: ${roomId}`)
 
     try {
-      const submission = {
-        ...selectedAnswers,
-        userId: user.uid,
-        userEmail: user.email,
-      };
-
+      const submission = { ...selectedAnswers, userId: user.uid, userEmail: user.email };
       const res = await fetch(`/api/nop-bai/${roomId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submission)
       });
-      
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Lỗi khi nộp bài.');
-
       console.log('[HV] Nộp bài thành công! Kết quả:', result)
       setFinalScore({ score: result.score, total: result.totalQuestions });
-
     } catch (err: any) {
       console.error('[HV] Lỗi khi nộp bài:', err)
       setError(err.message)
@@ -142,6 +142,7 @@ export default function ExamRoomPage() {
   }
 
   // 7. GIAO DIỆN (Giữ nguyên toàn bộ)
+  // (Phần JSX từ đây trở xuống không thay đổi)
   if (loading || authLoading) {
     return (
       <div className={styles.container} style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -149,7 +150,6 @@ export default function ExamRoomPage() {
       </div>
     )
   }
-  // (Phần còn lại của giao diện không thay đổi...)
   if (error) {
     return (
       <div className={styles.errorContainer}>

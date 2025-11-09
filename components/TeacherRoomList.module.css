@@ -15,7 +15,6 @@
     margin-bottom: 1.5rem;
 }
 
-/* (Dùng 'table' cho Dashboard) */
 .roomTable {
     width: 100%;
     border-collapse: collapse;
@@ -25,7 +24,7 @@
     border: 1px solid #ddd;
     padding: 0.75rem 1rem;
     text-align: left;
-    vertical-align: middle;
+    vertical-align: top; /* (Sửa lỗi lệch) */
 }
 .roomTable th {
     background-color: #f3f4f6;
@@ -48,27 +47,27 @@
 /* (Style cho "Trạng thái" - 'pill') */
 .pill {
     padding: 0.25rem 0.75rem;
-    border-radius: 99px; /* (Bo tròn) */
+    border-radius: 99px; 
     font-size: 0.875rem;
     font-weight: 500;
     white-space: nowrap;
 }
 .pillWaiting {
-    background-color: #fef3c7; /* (Nền vàng) */
-    color: #92400e; /* (Chữ vàng đậm) */
+    background-color: #fef3c7; 
+    color: #92400e; 
 }
 .pillInProgress {
-    background-color: #d1fae5; /* (Nền xanh lá) */
-    color: #065f46; /* (Chữ xanh đậm) */
+    background-color: #dbeafe; 
+    color: #1e40af; 
 }
 .pillFinished {
-    background-color: #e5e7eb; /* (Nền xám) */
-    color: #374151; /* (Chữ xám đậm) */
+    background-color: #e5e7eb; 
+    color: #374151; 
 }
 
-/* (Nút "Đóng phòng") */
-.closeButton {
-    background-color: #d9534f;
+/* 💖 (Req 2) SỬA TÊN CSS NÚT BẤM 💖 */
+.actionButton {
+    background-color: #004a99; /* (Màu xanh) */
     color: white;
     border: none;
     padding: 0.5rem 0.75rem;
@@ -78,10 +77,10 @@
     transition: background-color 0.3s;
     font-size: 0.875rem;
 }
-.closeButton:hover {
-    background-color: #c9302c;
+.actionButton:hover {
+    background-color: #003366;
 }
-.closeButton:disabled {
+.actionButton:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: #999;
