@@ -1,52 +1,15 @@
-// Đánh dấu đây là "Client Component"
+// Đánh dấu đây là "Client Component" (BẮT BUỘC cho FB SDK)
 'use client'
 
 import React, { useEffect } from 'react'
 import Link from 'next/link'
-import styles from './page.module.css' 
-
-// (Đây là component "Tĩnh" của Sidebar, copy từ trang chủ)
-// (Chúng ta có thể đưa Sidebar ra thành component riêng sau)
-const Sidebar = () => (
-  <aside className={styles.sidebar}>
-    
-    {/* Box Bảng tin */}
-    <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-      <h3 className={styles.sidebarTitle}>Bảng tin</h3>
-      <ul className={styles.linkList}>
-        <li><Link href="#">
-          <i className="fas fa-caret-right"></i> Thông báo tuyển sinh TMT, CCCM
-        </Link></li>
-        <li><Link href="#">
-          <i className="fas fa-caret-right"></i> Thông báo VEC v/v hồ sơ...
-        </Link></li>
-        <li><Link href="#">
-          <i className="fas fa-caret-right"></i> Tuyển dụng nhân viên 2025
-        </Link></li>
-      </ul>
-    </div>
-
-    {/* Box Video */}
-    <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-      <h3 className={styles.sidebarTitle}>Video</h3>
-      <div className={styles.videoContainer}>
-        <iframe 
-            width="100%" 
-            height="100%" 
-            src="https://www.youtube.com/embed/VIDEO_ID_CUA_BAN" 
-            frameBorder="0"
-            allowFullScreen
-        ></iframe>
-      </div>
-    </div>
-  </aside>
-)
+import styles from './page.module.css' // (CSS Trang Liên hệ)
+import Sidebar from '../../components/Sidebar' // (Sidebar Dùng chung)
 
 export default function LienHePage() {
   
   // "Phép thuật" để tải SDK Facebook
   useEffect(() => {
-    // Kiểm tra xem SDK đã được tải chưa
     if (document.getElementById('fb-sdk')) return; 
     
     const script = document.createElement('script');
@@ -55,11 +18,10 @@ export default function LienHePage() {
     script.async = true;
     script.defer = true;
     script.crossOrigin = 'anonymous';
-    script.nonce = 'FB-NONCE'; // (Giá trị nonce nên được tạo ngẫu nhiên)
+    script.nonce = 'FB-NONCE'; 
     
-    // Tìm 'fb-root' và chèn script vào
     document.getElementById('fb-root')?.appendChild(script);
-  }, []); // (Chạy 1 lần duy nhất khi trang tải)
+  }, []); // (Chạy 1 lần)
 
   return (
     <>
@@ -88,8 +50,7 @@ export default function LienHePage() {
             <div className={styles.fbCommentsContainer}>
               {/* QUAN TRỌNG: 
                 1. Anh PHẢI thay 'tndnb.vercel.app' bằng URL chính xác đã deploy.
-                2. Plugin này chỉ hiển thị trên web đã deploy,
-                   KHÔNG hiển thị ở localhost.
+                2. Plugin này chỉ hiển thị trên web đã deploy.
               */}
               <div className="fb-comments" 
                    data-href="https://tndnb.vercel.app/lien-he" 

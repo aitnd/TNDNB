@@ -71,7 +71,7 @@ export default function LoginPage() {
       const userDocRef = doc(db, 'users', user.uid)
       await setDoc(userDocRef, {
         email: user.email,
-        fullName: fullName, // 💖 LƯU "HỌ VÀ TÊN" 💖
+        fullName: fullName, // 💖 LƯU "HỌ VÀ TÊN" (Req 2) 💖
         role: 'hoc_vien', // Mặc định là 'hoc_vien'
         createdAt: serverTimestamp()
       })
@@ -107,7 +107,7 @@ export default function LoginPage() {
         
         <form onSubmit={isRegistering ? handleRegister : handleLogin}>
           
-          {/* 💖 ẨN/HIỆN Ô "HỌ VÀ TÊN" 💖 */}
+          {/* 💖 ẨN/HIỆN Ô "HỌ VÀ TÊN" (Req 2) 💖 */}
           {isRegistering && (
             <div className={styles.formGroup}>
               <label htmlFor="fullName" className={styles.label}>

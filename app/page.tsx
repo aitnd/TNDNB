@@ -1,11 +1,12 @@
 import { supabase } from '../utils/supabaseClient' // "Tổng đài" Supabase
 import Link from 'next/link'
-import Image from 'next/image'
 
 // 1. "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
+// 2. 💖 "TRIỆU HỒI" SIDEBAR DÙNG CHUNG 💖
+import Sidebar from '../components/Sidebar' 
 
-// 2. Định nghĩa "kiểu" của Bài viết (đọc từ Supabase)
+// (Định nghĩa "kiểu" Post - Giữ nguyên)
 type Post = {
   id: string;
   created_at: string;
@@ -16,17 +17,15 @@ type Post = {
   is_featured: boolean;
 }
 
-// 3. "Phép thuật": TỰ ĐỘNG LẤY TIN TỨC (Chạy ở Máy chủ)
-
-// Hàm lấy "Tin Tiêu Điểm"
+// (Hàm lấy Tin Tiêu Điểm - Giữ nguyên)
 async function getFeaturedPosts(): Promise<Post[]> {
   console.log('[Server] Đang lấy Tin Tiêu Điểm...')
   const { data, error } = await supabase
     .from('posts')
     .select('*')
-    .eq('is_featured', true) // Lấy tin có "dấu" Tiêu điểm
+    .eq('is_featured', true) 
     .order('created_at', { ascending: false })
-    .limit(3) // Lấy 3 tin mới nhất
+    .limit(3) 
 
   if (error) {
     console.error('Lỗi lấy Tin Tiêu Điểm:', error)
@@ -35,16 +34,16 @@ async function getFeaturedPosts(): Promise<Post[]> {
   return data || []
 }
 
-// Hàm lấy "Tin Tức Mới"
+// (Hàm lấy Tin Tức Mới - Giữ nguyên)
 async function getLatestNews(): Promise<Post[]> {
   console.log('[Server] Đang lấy Tin Tức Mới...')
   const { data, error } = await supabase
     .from('posts')
     .select('*')
-    .eq('category_id', 'tin-tuc-su-kien') // Lấy tin thuộc "Tin tức"
-    .eq('is_featured', false) // Bỏ qua tin đã ở "Tiêu điểm"
+    .eq('category_id', 'tin-tuc-su-kien') 
+    .eq('is_featured', false) 
     .order('created_at', { ascending: false })
-    .limit(5) // Lấy 5 tin mới nhất
+    .limit(5) 
 
   if (error) {
     console.error('Lỗi lấy Tin Tức Mới:', error)
@@ -53,14 +52,14 @@ async function getLatestNews(): Promise<Post[]> {
   return data || []
 }
 
-// 4. TRANG CHỦ (SERVER COMPONENT)
+// 3. TRANG CHỦ (SERVER COMPONENT)
 export default async function HomePage() {
   
-  // 5. "Chờ" máy chủ lấy 2 loại tin
+  // 4. "Chờ" máy chủ lấy 2 loại tin
   const featuredPosts = await getFeaturedPosts()
   const latestNews = await getLatestNews()
 
-  // 6. "Vẽ" Giao diện (Đã dùng CSS Module)
+  // 5. "Vẽ" Giao diện (Đã dùng CSS Module)
   return (
     <div className={styles.container}>
       {/* BỐ CỤC 2 CỘT */}
@@ -81,7 +80,6 @@ export default async function HomePage() {
                       alt={post.title}
                     />
                     <h3>
-                      {/* (Link bài viết chi tiết) */}
                       <Link href={`/bai-viet/${post.id}`}>
                         {post.title}
                       </Link>
@@ -125,49 +123,9 @@ export default async function HomePage() {
         </main>
 
         {/* ===== CỘT PHẢI (SIDEBAR) ===== */}
-        {/* (Sidebar này mình làm TĨNH) */}
-        <aside className={styles.sidebar}>
+        {/* 💖 6. "TRIỆU HỒI" SIDEBAR DÙNG CHUNG 💖 */}
+        <Sidebar />
 
-          {/* Box Văn bản pháp quy (search) */}
-          {/* (Mình sẽ làm lại Form này bằng CSS Module ở bước sau nếu cần) */}
-          <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-            <h3 className={styles.sidebarTitle}>Văn bản pháp quy</h3>
-            <form>
-              <input type="text" placeholder="Tìm văn bản..." style={{width: '100%', padding: '0.5rem', marginBottom: '0.5rem'}} />
-              <button type="submit" style={{width: '100%', padding: '0.5rem'}}>Xem tiếp</button>
-            </form>
-          </div>
-            
-          {/* Box Bảng tin */}
-          <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-            <h3 className={styles.sidebarTitle}>Bảng tin</h3>
-            <ul className={styles.linkList}>
-              <li><Link href="#">
-                <i className="fas fa-caret-right"></i> Thông báo tuyển sinh TMT, CCCM
-              </Link></li>
-              <li><Link href="#">
-                <i className="fas fa-caret-right"></i> Thông báo VEC v/v hồ sơ...
-              </Link></li>
-              <li><Link href="#">
-                <i className="fas fa-caret-right"></i> Tuyển dụng nhân viên 2025
-              </Link></li>
-            </ul>
-          </div>
-
-          {/* Box Video */}
-          <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-            <h3 className={styles.sidebarTitle}>Video</h3>
-            <div className={styles.videoContainer}>
-              <iframe 
-                  width="100%" 
-                  height="100%" 
-                  src="https://www.youtube.com/embed/VIDEO_ID_CUA_BAN" 
-                  frameBorder="0"
-                  allowFullScreen
-              ></iframe>
-            </div>
-          </div>
-        </aside>
       </div>
     </div>
   )

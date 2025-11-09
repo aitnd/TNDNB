@@ -1,6 +1,7 @@
 // File: utils/firebaseAdmin.ts
 
 import * as admin from 'firebase-admin'
+import { getFirestore } from 'firebase-admin/firestore'; // (Import 'getFirestore')
 
 // 1. Đọc "Chìa khóa Kho" từ "Két sắt" Vercel
 const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
@@ -24,5 +25,5 @@ if (!admin.apps.length) {
 }
 
 // 5. "Gửi" các "đồ nghề" cho các API Route xài
-export const adminDb = admin.firestore(); // "Tủ" (Firestore)
+export const adminDb = getFirestore(); // (Dùng 'getFirestore()' thay vì admin.firestore())
 export const FieldValue = admin.firestore.FieldValue; // Công cụ "Dấu thời gian"

@@ -1,9 +1,9 @@
 // File: app/api/nop-bai/[roomId]/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '../../../../utils/supabaseClient' 
+// 1. 💖 "TRIỆU HỒI" ĐÚNG "ĐỒ NGHỀ" ADMIN 💖
 import { adminDb, FieldValue } from '../../../../utils/firebaseAdmin' 
-import { doc } from 'firebase/firestore'; // (Chỉ cần 'doc')
+import { FieldPath } from 'firebase-admin/firestore' // (Import FieldPath của Admin)
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
 type StudentAnswers = Record<string, string>
@@ -25,7 +25,7 @@ export async function POST(
     
     console.log(`[API Chấm Bài] Nhận được bài làm cho phòng: ${roomId}`)
 
-    // 1. "Mở khóa" Firestore, lấy thông tin phòng thi
+    // 2. "Mở khóa" Firestore, lấy thông tin phòng thi (Dùng Admin SDK)
     const roomRef = adminDb.collection('exam_rooms').doc(roomId)
     const roomSnap = await roomRef.get()
     
@@ -35,29 +35,26 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Phòng thi hạng: ${licenseId}`)
 
-    // 2. LẤY DANH SÁCH MÔN HỌC (subjects)
-    const { data: subjects, error: subjectError } = await supabase
-      .from('subjects')
-      .select('id') 
-      .eq('license_id', licenseId);
+    // 3. 💖 LẤY "ĐÁP ÁN ĐÚNG" (DÙNG CÚ PHÁP ADMIN "XỊN") 💖
+    const questionsRef = adminDb.collection('questions_master');
+    // (Đây là cú pháp query của Admin SDK)
+    const q = questionsRef
+      .where('license_id', '==', licenseId) // (Lọc theo hạng bằng)
+      .where(FieldPath.documentId(), 'in', studentAnswerKeys) // (Lọc theo các câu đã nộp)
+      
+    const questionsSnapshot = await q.get(); // (Chạy "câu hỏi")
 
-    if (subjectError) throw subjectError;
-    if (!subjects || subjects.length === 0) {
-      throw new Error(`Không tìm thấy môn học (subjects) nào cho hạng bằng ${licenseId}`);
+    if (questionsSnapshot.empty) {
+      throw new Error('Không thể lấy đáp án từ CSDL Firestore (questions_master).');
     }
-    const subjectIds = subjects.map(s => s.id); 
 
-    // 3. LẤY "ĐÁP ÁN ĐÚNG" (master data)
-    const { data: correctAnswers, error: supabaseError } = await supabase
-      .from('questions')
-      .select('id, correct_answer_id') 
-      .in('subject_id', subjectIds) 
-      .in('id', studentAnswerKeys) 
-    
-    if (supabaseError) throw supabaseError
-    if (!correctAnswers) {
-      throw new Error('Không thể lấy đáp án từ CSDL Supabase.')
-    }
+    const correctAnswers: CorrectAnswer[] = [];
+    questionsSnapshot.forEach(doc => {
+      correctAnswers.push({
+        id: doc.id,
+        correct_answer_id: doc.data().correct_answer_id
+      });
+    });
 
     // 4. "CHẤM BÀI" (Giữ nguyên)
     let score = 0
@@ -84,12 +81,11 @@ export async function POST(
       score: score,
       totalQuestions: totalQuestions,
       submittedAnswers: studentAnswers,
-      submitted_at: FieldValue.serverTimestamp()
+      submitted_at: FieldValue.serverTimestamp() // (Dùng FieldValue của Admin)
     });
     console.log(`[API Chấm Bài] Đã lưu kết quả cho: ${userEmail}`)
     
-    // 5.5. 💖 CẬP NHẬT "NGĂN CON" 'participants' (Req 3.3) 💖
-    //     (Cập nhật trạng thái và điểm số để Giáo viên "nghe" realtime)
+    // 6. CẬP NHẬT "NGĂN CON" 'participants' (Cho Live Dashboard)
     try {
       const participantRef = adminDb.collection('exam_rooms').doc(roomId).collection('participants').doc(userId);
       await participantRef.update({
@@ -99,11 +95,10 @@ export async function POST(
       });
       console.log(`[API Chấm Bài] Đã cập nhật trạng thái 'participants' cho: ${userEmail}`)
     } catch (participantError) {
-      // (Bỏ qua lỗi này nếu học viên "lén" nộp bài mà chưa "ghi danh")
       console.warn(`[API Chấm Bài] Lỗi (nhẹ): Không thể cập nhật 'participants': ${participantError}`)
     }
 
-    // 6. TRẢ KẾT QUẢ (Giữ nguyên)
+    // 7. TRẢ KẾT QUẢ (Giữ nguyên)
     return NextResponse.json({
       message: 'Nộp bài thành công!',
       score: score,

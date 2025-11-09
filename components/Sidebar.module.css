@@ -1,0 +1,102 @@
+/* === Trang điểm cho Sidebar Dùng chung === */
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* (Khoảng cách giữa các widget) */
+}
+
+.widgetBox {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sidebarWidget {
+    padding: 1.5rem;
+}
+
+/* (Xóa padding cho widget chứa ảnh banner) */
+.widgetBox.bannerBox {
+    padding: 0;
+    overflow: hidden; /* (Giữ bo góc cho ảnh) */
+}
+.bannerImage {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+.sidebarTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #004a99;
+    border-bottom: 2px solid #e6f0ff;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* Box Search (Pháp quy) */
+.searchForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.searchForm input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+.searchForm button {
+    background-color: #004a99;
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.searchForm button:hover {
+    background-color: #003366;
+}
+
+/* Box Bảng tin (Link list) */
+.linkList {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.linkList a {
+    display: flex;
+    align-items: flex-start;
+    color: #333;
+    text-decoration: none;
+}
+.linkList a:hover {
+    color: #004a99;
+    text-decoration: underline;
+}
+.linkList a i {
+    color: #004a99;
+    margin-right: 0.5rem;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+
+/* Box Video */
+.videoContainer {
+    width: 100%;
+    height: 200px;
+    border-radius: 5px;
+    overflow: hidden;
+}

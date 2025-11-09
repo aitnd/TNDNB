@@ -4,9 +4,9 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import { auth, db } from '../utils/firebaseClient' // (Sửa đường dẫn ../)
+import { auth, db } from '../utils/firebaseClient' 
 
-// 1. Định nghĩa "kiểu" của người dùng (THÊM fullName)
+// 1. Định nghĩa "kiểu" của người dùng (THÊM fullName - Req 2)
 interface AuthUser {
   uid: string
   email: string | null
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
             role: userData.role || 'hoc_vien',
-            fullName: userData.fullName || 'Người dùng mới' // 💖 LẤY "HỌ TÊN" 💖
+            fullName: userData.fullName || 'Người dùng mới' // 💖 LẤY "HỌ TÊN" (Req 2) 💖
           }
           setUser(authUser)
           console.log(`Vai trò: ${authUser.role}, Tên: ${authUser.fullName}`)

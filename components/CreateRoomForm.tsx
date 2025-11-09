@@ -3,58 +3,74 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '../utils/supabaseClient' 
+// 1. 💖 BỎ (import { supabase }) 💖
+// import { supabase } from '../utils/supabaseClient' 
+
+// 2. 💖 "TRIỆU HỒI" ĐỒ NGHỀ FIRESTORE 💖
 import { db } from '../utils/firebaseClient' 
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp, query, getDocs, orderBy } from 'firebase/firestore'
 import { useAuth } from '../context/AuthContext' 
 
-// (Import CSS Module)
-import styles from '../app/admin/page.module.css' // (Dùng chung CSS với trang Admin)
+import styles from '../app/admin/page.module.css' 
 
-// Định nghĩa "kiểu" của Hạng Bằng (từ Supabase)
+// 3. 💖 "KIỂU" HẠNG BẰNG (Đọc từ Firestore) 💖
 type License = {
-  id: string
-  name: string
-  display_order: number
+  id: string; // (Đây là ID document, ví dụ: 'maytruong-h1')
+  name: string;
+  display_order: number;
 }
 
 export default function CreateRoomForm() {
   const { user } = useAuth() 
   const router = useRouter() 
 
-  // "Não" trạng thái
+  // (Não trạng thái - Giữ nguyên)
   const [licenses, setLicenses] = useState<License[]>([]) 
   const [selectedLicenseId, setSelectedLicenseId] = useState<string>('') 
-  const [roomName, setRoomName] = useState('') // Tên phòng (do GV gõ)
+  const [roomName, setRoomName] = useState('') 
 
   const [loadingLicenses, setLoadingLicenses] = useState(true)
   const [isCreating, setIsCreating] = useState(false) 
   const [error, setError] = useState<string | null>(null)
 
-  // 1. Lấy danh sách Hạng Bằng từ Supabase
+  // 4. 💖 HÀM LẤY HẠNG BẰNG (ĐÃ "PHẪU THUẬT" 100%) 💖
   useEffect(() => {
     async function fetchLicenses() {
-      console.log('Đang gọi Supabase để lấy Hạng Bằng...')
+      console.log('[GV] Đang gọi "kho" Firestore để lấy Hạng Bằng...')
       
-      const { data, error } = await supabase
-        .from('licenses')
-        .select('*')
-        .order('display_order', { ascending: true })
+      try {
+        // (Truy vấn collection 'licenses', sắp xếp theo 'display_order')
+        const licensesRef = collection(db, 'licenses');
+        const q = query(licensesRef, orderBy('display_order', 'asc'));
+        const querySnapshot = await getDocs(q);
+        
+        const data: License[] = [];
+        querySnapshot.forEach((doc) => {
+          // (ID là 'doc.id', data là 'doc.data()')
+          data.push({
+            id: doc.id,
+            ...doc.data()
+          } as License);
+        });
 
-      if (error) {
-        setError('Không thể tải danh sách hạng bằng từ Supabase.')
-      } else {
-        setLicenses(data as License[])
+        setLicenses(data)
         if (data && data.length > 0) {
           setSelectedLicenseId(data[0].id) // (Chọn ID đầu tiên)
         }
+
+      } catch (err: any) {
+         console.error('Lỗi khi lấy Hạng Bằng (Firestore):', err)
+         setError('Không thể tải danh sách hạng bằng từ Firestore.')
+      } finally {
+        setLoadingLicenses(false)
       }
-      setLoadingLicenses(false)
     }
+
     fetchLicenses()
   }, []) // Chạy 1 lần duy nhất
 
-  // 2. HÀM XỬ LÝ "TẠO PHÒNG THI" (Nâng cấp)
+  // 5. HÀM TẠO PHÒNG THI (Giữ nguyên)
+  //    (Vì hàm này VỐN DĨ đã dùng Firestore, nên không cần sửa)
   const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user || !selectedLicenseId || !roomName) {
@@ -66,26 +82,22 @@ export default function CreateRoomForm() {
     setError(null)
     console.log(`Đang tạo phòng thi [${roomName}]...`)
 
-    // (Tìm "Tên đầy đủ" của hạng bằng đã chọn)
     const selectedLicense = licenses.find(l => l.id === selectedLicenseId);
     const licenseFullName = selectedLicense ? selectedLicense.name : selectedLicenseId;
 
     try {
-      // 3. GHI VÀO "TỦ" FIRESTORE
       const roomCollection = collection(db, 'exam_rooms')
       const newRoomDoc = await addDoc(roomCollection, {
-        license_id: selectedLicenseId, // (ID để "trộn" đề)
-        license_name: licenseFullName, // (Tên đầy đủ)
-        room_name: roomName, // (Tên phòng)
+        license_id: selectedLicenseId, 
+        license_name: licenseFullName, 
+        room_name: roomName, 
         teacher_id: user.uid,
-        teacher_name: user.fullName, // (Tên giáo viên)
+        teacher_name: user.fullName, 
         status: 'waiting', 
         created_at: serverTimestamp(),
       })
 
       console.log('Tạo phòng thi trên Firestore thành công! ID:', newRoomDoc.id)
-      
-      // 4. "Đẩy" giáo viên vào phòng quản lý
       router.push(`/quan-ly/${newRoomDoc.id}`)
 
     } catch (err: any) {
@@ -94,7 +106,7 @@ export default function CreateRoomForm() {
     }
   }
 
-  // 3. GIAO DIỆN (Đã cập nhật)
+  // 6. GIAO DIỆN (Giữ nguyên)
   return (
     <div className={styles.formBox}>
       <h2 className={styles.formTitle}>
@@ -102,7 +114,6 @@ export default function CreateRoomForm() {
       </h2>
       <form onSubmit={handleCreateRoom} className={styles.form}>
         
-        {/* Ô "Tên Phòng Thi" */}
         <div className={styles.formGroup}>
           <label htmlFor="roomName" className={styles.label}>
             Tên phòng thi (Ví dụ: "Thi thử M1 - Lần 1")
@@ -118,7 +129,6 @@ export default function CreateRoomForm() {
         </div>
 
         <div className={styles.formGroup}>
-          {/* (Bỏ chữ "(Lấy từ Supabase)") */}
           <label htmlFor="license" className={styles.label}>
             Chọn Hạng Bằng:
           </label>
@@ -132,7 +142,6 @@ export default function CreateRoomForm() {
               className={styles.select}
             >
               {licenses.map((license) => (
-                // 💖 SỬA LỖI Ở DÒNG NÀY (Đã bỏ ID) 💖
                 <option key={license.id} value={license.id}>
                   {license.name}
                 </option>

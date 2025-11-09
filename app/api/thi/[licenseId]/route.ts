@@ -1,15 +1,17 @@
-// "Phòng máy chủ bí mật" - Nơi "trộn" đề
+// File: app/api/thi/[licenseId]/route.ts
 
-import { NextRequest, NextResponse } from 'next/server' 
-import { supabase } from '@/utils/supabaseClient'
+import { NextRequest, NextResponse } from 'next/server'
+// 1. 💖 "TRIỆU HỒI" ĐÚNG "ĐỒ NGHỀ" ADMIN 💖
+import { adminDb } from '../../../../utils/firebaseAdmin' 
+import { FieldPath } from 'firebase-admin/firestore' // (Import FieldPath của Admin)
 
-// --- CÔNG THỨC TRỘN ĐỀ ---
+// --- CÔNG THỨC TRỘN ĐỀ (Giữ nguyên) ---
 const CONG_THUC_TRON_DE: Record<string, number> = {
   'default_so_cau_moi_mon': 5, 
   'maytruong-h1': 3, 
 };
 
-// Hàm "xáo" bài
+// Hàm "xáo" bài (Giữ nguyên)
 function xaoTronBai(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -19,79 +21,65 @@ function xaoTronBai(array: any[]) {
 }
 
 // --- HÀM API CHÍNH (GET) ---
-// 💖 SỬA LẠI CHỮ KÝ HÀM (DÙNG "any" ĐỂ BỎ QUA LỖI BUILD) 💖
 export async function GET(
-  request: NextRequest, 
-  context: any // Dùng "any" để "ép" Vercel biên dịch
+  request: NextRequest,
+  { params }: { params: { licenseId: string } }
 ) {
   try {
-    // 💖 Lấy 'licenseId' từ 'context.params' 💖
-    const licenseId = context.params.licenseId 
-    
-    console.log(`[API] Bắt đầu "trộn" đề cho hạng: ${licenseId}`)
+    const licenseId = params.licenseId
+    console.log(`[API Trộn Đề] Bắt đầu "trộn" đề cho hạng: ${licenseId}`)
 
-    // 1. Lấy "danh sách môn"
-    const { data: subjects, error: subjectError } = await supabase
-      .from('subjects')
-      .select('id, name')
-      .eq('license_id', licenseId)
-
-    if (subjectError) throw subjectError
-    if (!subjects || subjects.length === 0) {
-      throw new Error(`Không tìm thấy "môn học" cho hạng [${licenseId}]!`)
-    }
-    console.log(`[API] Tìm thấy ${subjects.length} môn học.`)
-
-    // 2. Lấy "công thức" (số câu)
-    const soCauMoiMon = CONG_THUC_TRON_DE[licenseId] || CONG_THUC_TRON_DE['default_so_cau_moi_mon'];
-
-    let deThiCuoiCung: any[] = [];
-
-    // 3. Vòng lặp: Lấy "câu hỏi" cho TỪNG MÔN
-    for (const monHoc of subjects) {
-      console.log(`[API] ...Đang lấy ${soCauMoiMon} câu cho môn [${monHoc.name}]`)
+    // 2. 💖 LẤY "KHO" CÂU HỎI (DÙNG CÚ PHÁP ADMIN "XỊN") 💖
+    const questionsRef = adminDb.collection('questions_master');
+    // (Đây là cú pháp query của Admin SDK)
+    const q = questionsRef
+      .where('license_id', '==', licenseId) // (Lọc theo đúng hạng bằng)
       
-      const { data: questions, error: questionError } = await supabase
-        .from('questions')
-        .select('id, text, image, subject_id') 
-        .eq('subject_id', monHoc.id)
-        
-      if (questionError) throw questionError
+    // (Chạy "câu hỏi")
+    const questionsSnapshot = await q.get();
 
-      const cauHoiDaXao = xaoTronBai(questions || []);
-      const cauHoiDaChon = cauHoiDaXao.slice(0, soCauMoiMon);
-
-      const cauHoiHoanChinh = [];
-      for (const cauHoi of cauHoiDaChon) {
-        const { data: answers, error: answerError } = await supabase
-          .from('answers')
-          .select('id, text')
-          .eq('question_id', cauHoi.id) 
-
-        if (answerError) throw answerError;
-
-        cauHoiHoanChinh.push({
-          ...cauHoi,
-          answers: xaoTronBai(answers || []) 
-        });
-      }
-      deThiCuoiCung.push(...cauHoiHoanChinh);
+    if (questionsSnapshot.empty) {
+      throw new Error(`Không tìm thấy câu hỏi (questions_master) nào cho hạng bằng ${licenseId}`);
     }
 
-    // 4. "Xáo" lần cuối
-    deThiCuoiCung = xaoTronBai(deThiCuoiCung);
-    console.log(`[API] "Trộn" đề thành công! Gửi ${deThiCuoiCung.length} câu.`)
+    let allQuestions: any[] = [];
+    questionsSnapshot.forEach(doc => {
+      allQuestions.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
 
-    // 5. "Gửi" bộ đề
+    console.log(`[API Trộn Đề] Tìm thấy ${allQuestions.length} câu hỏi gốc.`)
+
+    // 3. "TRỘN" ĐỀ (Giữ nguyên)
+    let deThiCuoiCung = xaoTronBai(allQuestions);
+    
+    // (TODO: Giới hạn số câu)
+    // deThiCuoiCung = deThiCuoiCung.slice(0, 30); 
+
+    // 4. "LỌC" ĐÁP ÁN ĐÚNG (Giữ nguyên)
+    const deThiAnToan = deThiCuoiCung.map(q => {
+      const { correct_answer_id, ...safeQuestion } = q;
+      if (safeQuestion.answers) {
+        safeQuestion.answers = xaoTronBai(safeQuestion.answers);
+      }
+      return safeQuestion;
+    });
+
+
+    console.log(`[API Trộn Đề] "Trộn" đề thành công! Gửi ${deThiAnToan.length} câu.`)
+
+    // 5. "Gửi" bộ đề (Giữ nguyên)
     return NextResponse.json({
-      licenseName: subjects.map(s => s.name).join(' - '), 
-      questions: deThiCuoiCung,
+      licenseName: allQuestions[0]?.license_name || licenseId, 
+      questions: deThiAnToan,
     })
 
   } catch (error: any) {
-    console.error('[API] Lỗi nghiêm trọng tại "phòng bí mật":', error)
+    console.error('[API Trộn Đề] Lỗi nghiêm trọng:', error)
     return NextResponse.json(
-      { error: error.message || "Lỗi không xác định từ máy chủ." },
+      { error: error.message || "Lỗi không xác định khi trộn đề." },
       { status: 500 } 
     )
   }
