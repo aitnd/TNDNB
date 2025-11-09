@@ -8,11 +8,14 @@ import { useAuth } from '../../context/AuthContext'
 import ProtectedRoute from '../../components/ProtectedRoute' 
 import { supabase } from '../../utils/supabaseClient' 
 
-// 1. 💖 "TRIỆU HỒI" TRÌNH SOẠN THẢO "SUNEDITOR" (MỚI) 💖
+// 1. "TRIỆU HỒI" TRÌNH SOẠN THẢO "SUNEDITOR" (MỚI)
 const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
 import 'suneditor/dist/css/suneditor.min.css'; // (CSS của nó)
 
-// 2. "Triệu hồi" file CSS Module
+// 2. 💖 "TRIỆU HỒI" NGÔN NGỮ TỪ 'suneditor/src/lang' (Sửa lỗi) 💖
+import vi from 'suneditor/src/lang/en';
+
+// 3. "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
 
 // (Định nghĩa "kiểu" Category - Giữ nguyên)
@@ -37,7 +40,7 @@ function AdminDashboard() {
   const [formError, setFormError] = useState<string | null>(null)
   const [formSuccess, setFormSuccess] = useState<string | null>(null)
 
-  // 3. "Phép thuật": Lấy "Danh mục" (Giữ nguyên)
+  // 4. "Phép thuật": Lấy "Danh mục" (Giữ nguyên)
   useEffect(() => {
     async function fetchCategories() {
       console.log('[Admin] Đang lấy danh mục từ Supabase...')
@@ -59,7 +62,7 @@ function AdminDashboard() {
     fetchCategories()
   }, []) 
   
-  // 4. HÀM "ĐĂNG BÀI" (Giữ nguyên)
+  // 5. HÀM "ĐĂNG BÀI" (Giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -155,13 +158,13 @@ function AdminDashboard() {
               </label>
             </div>
             
-            {/* 💖 TRÌNH SOẠN THẢO "SUNEDITOR" (MỚI) 💖 */}
+            {/* 💖 TRÌNH SOẠN THẢO "SUNEDITOR" (ĐÃ SỬA LỖI "lang") 💖 */}
             <div className={styles.formGroup}>
               <label className={styles.label}>
                 Nội dung bài viết
               </label>
               <SunEditor 
-                lang="vi"
+                lang={vi} 
                 setContents={content}
                 onChange={setContent}
                 setOptions={{
