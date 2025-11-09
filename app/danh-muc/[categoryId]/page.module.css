@@ -1,0 +1,86 @@
+/* === Trang điểm cho Trang Danh mục === */
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 2rem auto; 
+}
+
+/* 1. Bố cục 2 cột */
+.layoutGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; 
+    gap: 2rem; 
+}
+@media (max-width: 768px) {
+    .layoutGrid {
+        grid-template-columns: 1fr; 
+    }
+}
+
+/* 2. Cột trái (Main Content) */
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; 
+}
+
+/* 3. "Box" chung (Widget) */
+.widgetBox {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.widgetTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #004a99; 
+    padding: 1rem 1.5rem;
+    border-bottom: 2px solid #e6f0ff; 
+    margin-bottom: 1.5rem;
+}
+
+/* 4. Box "Tin Tức" (Danh sách) */
+.newsList {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.newsItemLarge {
+    display: flex;
+    gap: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+}
+.newsItemLarge:last-child {
+    border-bottom: none;
+}
+
+.newsItemLarge img {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+.newsItemLarge div { /* (Nội dung chữ) */
+    flex: 1;
+}
+.newsItemLarge h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+.newsItemLarge h3 a:hover {
+    color: #004a99;
+}
+.newsItemLarge p {
+    font-size: 0.875rem;
+    color: #777;
+    margin: 0.25rem 0 0 0;
+}

@@ -1,0 +1,34 @@
+/* === Trang điểm cho Trang Giới thiệu === */
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e6f0ff;
+    padding-bottom: 1rem;
+}
+
+.content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 1rem;
+}

@@ -1,12 +1,78 @@
-/* "Trang điểm" riêng cho Navbar */
-.navbar {
+/* === (CSS MỚI) PHẦN 1: THANH TOP (Đăng nhập) === */
+.headerTop {
+    background-color: #f3f4f6; /* (Màu xám nhạt) */
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.5rem 0;
+    font-size: 0.875rem; /* (Chữ nhỏ) */
+}
+
+.topContainer {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-end; /* (Đẩy sang phải) */
+    align-items: center;
+}
+
+.topLinks {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.topLinks li {
+    margin-left: 1rem;
+}
+
+.topLinks a,
+.topLinks button {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.topLinks a:hover,
+.topLinks button:hover {
+    color: #004a99;
+    text-decoration: none;
+}
+
+/* (Nút Admin/Vào thi - NHỎ LẠI) */
+.ctaButton {
+    color: #ffffff !important;
+    background-color: #004a99;
+    padding: 0.25rem 0.75rem; /* (Nút nhỏ lại) */
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.ctaButton:hover {
+    background-color: #003366;
+    color: #ffffff !important;
+}
+.adminButton {
+    background-color: #d9534f;
+}
+.adminButton:hover {
+    background-color: #c9302c;
+}
+
+/* === PHẦN 2: THANH CHÍNH (Logo & Menu) === */
+.mainNav {
     background-color: #ffffff;
-    border-bottom: 1px solid #ddd;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     padding: 1rem 0;
 }
 
-.container {
+.mainContainer {
     width: 90%;
     max-width: 1100px;
     margin: 0 auto;
@@ -39,44 +105,16 @@
     margin-left: 1.5rem;
 }
 
-.navLinks a,
-.navLinks button {
+.navLinks a {
     text-decoration: none;
     color: #333;
     font-weight: 500;
     transition: color 0.3s ease;
     white-space: nowrap;
-    
-    /* Style cho button (nếu là button) */
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: inherit; /* Giữ nguyên cỡ chữ */
-    font-family: inherit;
+    font-size: 1rem; /* (Giữ chữ to, rõ ràng) */
 }
 
-.navLinks a:hover,
-.navLinks button:hover {
+.navLinks a:hover {
     color: #004a99;
     text-decoration: none;
-}
-
-/* Style cho các nút "đặc biệt" */
-.ctaButton {
-    color: #ffffff !important;
-    background-color: #004a99;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-.ctaButton:hover {
-    background-color: #003366;
-    color: #ffffff !important;
-}
-
-.adminButton {
-    background-color: #d9534f;
-}
-.adminButton:hover {
-    background-color: #c9302c;
 }

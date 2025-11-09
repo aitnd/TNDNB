@@ -1,0 +1,74 @@
+/* === Trang điểm cho Trang Chi tiết Chương trình Đào tạo === */
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+    font-weight: 500;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* === Bảng (Dùng chung cho cả 2) === */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    border: 1px solid #ccc; /* (Thêm viền ngoài) */
+}
+
+.table th,
+.table td {
+    border: 1px solid #ccc;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.table th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+    color: #004a99;
+}
+
+/* (Căn cột STT và Thời gian) */
+.table th:first-child,
+.table td:first-child {
+    text-align: center;
+    width: 10%;
+}
+.table th:last-child,
+.table td:last-child {
+    text-align: center;
+    width: 25%;
+}
+
+.totalRow td {
+    font-weight: 700;
+    background-color: #f3f4f6;
+}
