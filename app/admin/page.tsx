@@ -8,14 +8,14 @@ import { useAuth } from '../../context/AuthContext'
 import ProtectedRoute from '../../components/ProtectedRoute' 
 import { supabase } from '../../utils/supabaseClient' 
 
-// 1. 💖 THÊM DÒNG NÀY ĐỂ "BỊT" LỖI TYPE 💖
-// @ts-ignore
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+// 1. 💖 "TRIỆU HỒI" TRÌNH SOẠN THẢO "SUNEDITOR" (MỚI) 💖
+const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
+import 'suneditor/dist/css/suneditor.min.css'; // (CSS của nó)
 
 // 2. "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
 
-// Định nghĩa "kiểu" của Danh mục (từ Supabase)
+// (Định nghĩa "kiểu" Category - Giữ nguyên)
 type Category = {
   id: string;
   name: string;
@@ -26,23 +26,18 @@ function AdminDashboard() {
   const { user } = useAuth()
   const router = useRouter()
 
-  // "Não" trạng thái
+  // (Não trạng thái - Giữ nguyên)
   const [categories, setCategories] = useState<Category[]>([]) 
   const [loadingCategories, setLoadingCategories] = useState(true)
-
-  // "Não" của Bài viết
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('') 
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
-  
-  // Trạng thái Form
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [formSuccess, setFormSuccess] = useState<string | null>(null)
 
-
-  // 3. "Phép thuật": Tự động lấy "Danh mục" từ Supabase
+  // 3. "Phép thuật": Lấy "Danh mục" (Giữ nguyên)
   useEffect(() => {
     async function fetchCategories() {
       console.log('[Admin] Đang lấy danh mục từ Supabase...')
@@ -64,7 +59,7 @@ function AdminDashboard() {
     fetchCategories()
   }, []) 
   
-  // 4. HÀM "ĐĂNG BÀI"
+  // 4. HÀM "ĐĂNG BÀI" (Giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -76,33 +71,19 @@ function AdminDashboard() {
       setIsSubmitting(false)
       return
     }
-
     console.log('Đang cất bài viết vào Supabase...')
-
     try {
-      // 5. "CẤT" VÀO "KHO" SUPABASE
       const { data, error } = await supabase
-        .from('posts') // Vào "ngăn" posts
+        .from('posts') 
         .insert([
-          {
-            title: title,
-            content: content,
-            category_id: categoryId,
-            is_featured: isFeatured,
-          }
+          { title: title, content: content, category_id: categoryId, is_featured: isFeatured }
         ])
-
-      if (error) {
-        throw error 
-      }
-
+      if (error) throw error 
       console.log('Đăng bài thành công!', data)
       setFormSuccess('Đăng bài thành công!')
-      // "Xóa" form
       setTitle('')
       setContent('')
       setIsFeatured(false)
-
     } catch (err: any) {
       console.error('Lỗi khi đăng bài:', err)
       setFormError(err.message || 'Lỗi không xác định khi đăng bài.')
@@ -111,22 +92,19 @@ function AdminDashboard() {
     }
   }
 
-
-  // 6. GIAO DIỆN FORM (Đã "nối não")
+  // 6. GIAO DIỆN FORM (Đã thay thế Trình soạn thảo)
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <h1 className={styles.title}>
           Trang Quản trị Nội dung (Admin)
         </h1>
-        
         <div className={styles.formBox}>
           <h2 className={styles.formTitle}>
             Tạo bài viết mới
           </h2>
-
           <form onSubmit={handleSubmit} className={styles.form}>
-            {/* Tiêu đề */}
+            {/* (Tiêu đề) */}
             <div className={styles.formGroup}>
               <label htmlFor="title" className={styles.label}>
                 Tiêu đề bài viết
@@ -140,8 +118,7 @@ function AdminDashboard() {
                 placeholder="Thông báo tuyển sinh..."
               />
             </div>
-
-            {/* Danh mục (Lấy từ Supabase) */}
+            {/* (Danh mục) */}
             <div className={styles.formGroup}>
               <label htmlFor="category" className={styles.label}>
                 Danh mục
@@ -164,8 +141,7 @@ function AdminDashboard() {
                 )}
               </select>
             </div>
-
-            {/* Checkbox "Tin tiêu điểm" */}
+            {/* (Checkbox) */}
             <div className={styles.checkboxGroup}>
               <input
                 id="is_featured"
@@ -178,30 +154,42 @@ function AdminDashboard() {
                 Đánh dấu là "Tin tiêu điểm"
               </label>
             </div>
-
-            {/* 💖 TRÌNH SOẠN THẢO "XỊN" 💖 */}
+            
+            {/* 💖 TRÌNH SOẠN THẢO "SUNEDITOR" (MỚI) 💖 */}
             <div className={styles.formGroup}>
               <label className={styles.label}>
                 Nội dung bài viết
               </label>
-              {/* @ts-ignore (Bỏ qua lỗi "is not a module") */}
-              <ReactQuill 
-                theme="snow" 
-                value={content} 
-                onChange={setContent} 
-                className={styles.quillEditor}
+              <SunEditor 
+                lang="vi"
+                setContents={content}
+                onChange={setContent}
+                setOptions={{
+                  height: '300px',
+                  buttonList: [
+                    ['undo', 'redo'],
+                    ['font', 'fontSize', 'formatBlock'],
+                    ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript'],
+                    ['removeFormat'],
+                    '/', // (Xuống dòng)
+                    ['fontColor', 'hiliteColor'],
+                    ['outdent', 'indent'],
+                    ['align', 'horizontalRule', 'list', 'lineHeight'],
+                    ['table', 'link', 'image'],
+                    ['fullScreen', 'showBlocks', 'codeView'],
+                  ],
+                }}
               />
             </div>
 
-            {/* Thông báo Lỗi/Thành công */}
+            {/* (Thông báo Lỗi/Thành công) */}
             {formError && (
               <div className={styles.error}>{formError}</div>
             )}
             {formSuccess && (
               <div className={styles.success}>{formSuccess}</div>
             )}
-
-            {/* Nút bấm */}
+            {/* (Nút bấm) */}
             <div className={styles.buttonContainer}>
               <button
                 type="submit"
@@ -211,7 +199,6 @@ function AdminDashboard() {
                 {isSubmitting ? 'Đang đăng...' : 'Đăng bài'}
               </button>
             </div>
-
           </form>
         </div>
       </div>
@@ -222,7 +209,6 @@ function AdminDashboard() {
 // --- Component "Vỏ Bọc" (Bảo vệ) ---
 export default function AdminPage() {
   return (
-    // "Lính gác" sẽ kiểm tra
     <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'giao_vien']}>
       <AdminDashboard /> 
     </ProtectedRoute>

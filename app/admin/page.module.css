@@ -56,7 +56,7 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
-    box-sizing: border-box; /* (Rất quan trọng) */
+    box-sizing: border-box; 
 }
 
 .input:disabled,
@@ -76,24 +76,8 @@
     height: 1rem;
 }
 
-/* Kiểu cho Trình soạn thảo React-Quill */
-.quillEditor {
-    background-color: #ffffff;
-}
-/* Khi dùng 'snow' theme, toolbar và editor là 2 phần riêng */
-.quillEditor .ql-toolbar {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    border: 1px solid #ddd;
-}
-.quillEditor .ql-container {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border: 1px solid #ddd;
-    border-top: none; /* (Vì toolbar đã có rồi) */
-    min-height: 200px;
-    font-size: 1rem;
-}
+/* 💖 (ĐÃ XÓA CSS CỦA REACT-QUILL CŨ) 💖 */
+/* (SunEditor sẽ dùng CSS nó tự "triệu hồi" từ globals.css) */
 
 .buttonContainer {
     text-align: right;

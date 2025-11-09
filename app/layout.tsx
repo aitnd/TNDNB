@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css' // CSS của Tailwind
-import 'react-quill-new/dist/quill.snow.css' // CSS của Trình soạn thảo
+import './globals.css' // (CSS "Sạch" của v3)
 
-// Sửa lại đường dẫn "triệu hồi"
+// (CSS của Trình soạn thảo Ổn định "react-quill" v3)
+
 import { AuthProvider } from '../context/AuthContext' 
 import Navbar from '../components/Navbar' 
 import Footer from '../components/Footer' 
@@ -22,17 +22,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
+      {/* 💖 "THẦN CHÚ" SỬA LỖI LÀ ĐÂY 💖
+        (Thêm 'suppressHydrationWarning={true}' vào thẻ <body>
+         để "bịt" lỗi "bẩn" (Hydration Error) do Extension)
+      */}
       <body className={`${inter.className} bg-gray-50`} suppressHydrationWarning={true}>
         <AuthProvider>
-          {/* 1. "Bọc" Menu ở trên cùng */}
+          
           <Navbar />
           
-          {/* 2. "Vẽ" các "căn phòng" (Nội dung trang) */}
           <main>
             {children}
           </main>
 
-          {/* 3. "Bọc" Chân trang ở dưới cùng */}
           <Footer />
 
         </AuthProvider>
