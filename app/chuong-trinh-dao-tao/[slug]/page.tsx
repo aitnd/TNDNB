@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './page.module.css' // (Triệu hồi CSS)
+import Link from 'next/link' // (Triệu hồi Link)
 
 // --- (CƠ SỞ DỮ LIỆU "TĨNH") ---
 const CURRICULUM_DATA: Record<string, any> = {
@@ -23,7 +24,7 @@ const CURRICULUM_DATA: Record<string, any> = {
     ]
   },
   
-  // 💖 (DỮ LIỆU MỚI CHO M2) 💖
+  // (Dữ liệu M2 - Đã có)
   'maytruong-h2': {
     title: '2- GCNKNCM MÁY TRƯỞNG HẠNG NHÌ',
     subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
@@ -42,7 +43,7 @@ const CURRICULUM_DATA: Record<string, any> = {
     ]
   },
   
-  // 💖 (DỮ LIỆU MỚI CHO M3) 💖
+  // (Dữ liệu M3 - Đã có)
   'maytruong-h3': {
     title: '1- GCNKNCM MÁY TRƯỞNG HẠNG BA',
     subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
@@ -60,9 +61,74 @@ const CURRICULUM_DATA: Record<string, any> = {
       { stt: 2, noi_dung: "Lý thuyết chuyên môn", hinh_thuc: "Vấn đáp" },
       { stt: 3, noi_dung: "Vận hành, sửa chữa máy, điện", hinh_thuc: "Thực hành" },
     ]
-  }
+  },
   
-  // (Anh em mình sẽ thêm các hạng T1, T2, T3... vào đây sau)
+  // 💖 (DỮ LIỆU MỚI CHO T1) 💖
+  'thuyentruong-h1': {
+    title: '4- GCNKNCM THUYỀN TRƯỞNG HẠNG NHẤT',
+    subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
+    modules: [
+      { ma: "MH 01", ten: "Pháp luật về giao thông đường thủy nội địa", thoi_gian: "15" },
+      { ma: "MĐ 02", ten: "Công nghệ thông tin, tự động hoá trong điều khiển", thoi_gian: "30" },
+      { ma: "MĐ 03", ten: "Hàng hải và các thiết bị hàng hải", thoi_gian: "60" },
+      { ma: "MĐ 04", ten: "Điều động tàu và thực hành điều động tàu", thoi_gian: "45" },
+      { ma: "MH 05", ten: "Kinh tế vận tải", thoi_gian: "30" },
+      { ma: "MH 06", ten: "Luồng chạy tàu thuyền", thoi_gian: "30" },
+      { ma: "MĐ 07", ten: "Khí tượng thủy văn", thoi_gian: "30" },
+      { ma: "MH 08", ten: "Nghiệp vụ thuyền trưởng", thoi_gian: "30" },
+    ],
+    module_total: "270",
+    final_tests: [
+      { stt: 1, noi_dung: "Lý thuyết tổng hợp", hinh_thuc: "Trắc nghiệm" },
+      { stt: 2, noi_dung: "Lý thuyết chuyên môn", hinh_thuc: "Vấn đáp" },
+      { stt: 3, noi_dung: "Điều động tàu", hinh_thuc: "Thực hành" },
+    ]
+  },
+  
+  // 💖 (DỮ LIỆU MỚI CHO T2) 💖
+  'thuyentruong-h2': {
+    title: '3- GCNKNCM THUYỀN TRƯỞNG HẠNG NHÌ',
+    subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
+    modules: [
+      { ma: "MH 01", ten: "Pháp luật về giao thông đường thủy nội địa", thoi_gian: "45" },
+      { ma: "MĐ 02", ten: "Thông tin vô tuyến", thoi_gian: "15" },
+      { ma: "MĐ 03", ten: "Điều động tàu và thực hành điều động tàu", thoi_gian: "85" },
+      { ma: "MH 04", ten: "Kinh tế vận tải", thoi_gian: "30" },
+      { ma: "MĐ 05", ten: "Máy tàu thủy", thoi_gian: "15" },
+      { ma: "MH 06", ten: "Luồng chạy tàu thuyền", thoi_gian: "30" },
+      { ma: "MĐ 07", ten: "Khí tượng thủy văn", thoi_gian: "30" },
+      { ma: "MH 08", ten: "Nghiệp vụ thuyền trưởng", thoi_gian: "30" },
+    ],
+    module_total: "280",
+    final_tests: [
+      { stt: 1, noi_dung: "Lý thuyết tổng hợp", hinh_thuc: "Trắc nghiệm" },
+      { stt: 2, noi_dung: "Lý thuyết chuyên môn", hinh_thuc: "Vấn đáp" },
+      { stt: 3, noi_dung: "Điều động tàu", hinh_thuc: "Thực hành" },
+    ]
+  },
+  
+  // 💖 (DỮ LIỆU MỚI CHO T3) 💖
+  'thuyentruong-h3': {
+    title: '2- GCNKNCM THUYỀN TRƯỞNG HẠNG BA',
+    subtitle: 'DANH MỤC MÔN HỌC, MÔ ĐUN VÀ THỜI GIAN ĐÀO TẠO',
+    modules: [
+      { ma: "MĐ 01", ten: "Cấu trúc tàu thuyền", thoi_gian: "15" },
+      { ma: "MĐ 02", ten: "Máy tàu thủy", thoi_gian: "15" },
+      { ma: "MH 03", ten: "Luồng chạy tàu thuyền", thoi_gian: "25" },
+      { ma: "MH 04", ten: "Pháp luật về giao thông đường thủy nội địa", thoi_gian: "30" },
+      { ma: "MĐ 05", ten: "Điều động tàu và thực hành điều động tàu", thoi_gian: "120" },
+      { ma: "MH 06", ten: "Kinh tế vận tải", thoi_gian: "15" },
+      { ma: "MĐ 07", ten: "Hàng hải và các thiết bị hàng hải", thoi_gian: "30" },
+      { ma: "MĐ 08", ten: "Khí tượng, thủy văn", thoi_gian: "15" },
+      { ma: "MH 09", ten: "Nghiệp vụ thuyền trưởng", thoi_gian: "15" },
+    ],
+    module_total: "280",
+    final_tests: [
+      { stt: 1, noi_dung: "Lý thuyết tổng hợp", hinh_thuc: "Trắc nghiệm" },
+      { stt: 2, noi_dung: "Lý thuyết chuyên môn", hinh_thuc: "Vấn đáp" },
+      { stt: 3, noi_dung: "Điều động tàu", hinh_thuc: "Thực hành" },
+    ]
+  }
 };
 // --- (HẾT CSDL "TĨNH") ---
 
@@ -73,17 +139,20 @@ export default async function CurriculumDetailPage({ params }: { params: { slug:
   const slug = params.slug;
   const data = CURRICULUM_DATA[slug];
 
-  // (Xử lý nếu "tra" không thấy (Lỗi 404) - Giữ nguyên)
+  // (Xử lý nếu "tra" không thấy (Lỗi 404))
   if (!data) {
     return (
       <div className={styles.container}>
         <h1 className={styles.title}>Lỗi 404</h1>
         <p className={styles.subtitle}>Không tìm thấy chương trình đào tạo cho hạng bằng này.</p>
+        <Link href="/chuong-trinh-dao-tao" className={styles.backButton}>
+          Quay về trang Chọn
+        </Link>
       </div>
     )
   }
 
-  // ( "Vẽ" Giao diện - Giữ nguyên)
+  // ( "Vẽ" Giao diện)
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>{data.title}</h1>
@@ -134,6 +203,13 @@ export default async function CurriculumDetailPage({ params }: { params: { slug:
           ))}
         </tbody>
       </table>
+
+      {/* Nút Quay về */}
+      <div style={{marginTop: '2rem', textAlign: 'center'}}>
+        <Link href="/chuong-trinh-dao-tao" className={styles.backButton}>
+          « Quay về trang Chọn
+        </Link>
+      </div>
       
     </div>
   )
