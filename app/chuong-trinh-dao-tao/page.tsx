@@ -36,7 +36,7 @@ export default function ChuongTrinhDaoTaoLobby() {
         </Link>
       </div>
 
-      {/* 💖 (Phần Chứng chỉ - ĐÃ THÊM "THỢ MÁY") 💖 */}
+      {/* (Phần Chứng chỉ chuyên môn) */}
       <h2 className={styles.categoryTitle}>Chứng chỉ chuyên môn</h2>
       <div className={styles.grid}>
         <Link href="/chuong-trinh-dao-tao/thuythu" className={styles.linkItem}>
@@ -45,7 +45,32 @@ export default function ChuongTrinhDaoTaoLobby() {
         <Link href="/chuong-trinh-dao-tao/thomay" className={styles.linkItem}>
           Chứng chỉ Thợ máy
         </Link>
-        {/* (Anh copy-paste thêm các chứng chỉ còn lại vào đây sau) */}
+        <Link href="/chuong-trinh-dao-tao/lai-phuong-tien" className={styles.linkItem}>
+          Chứng chỉ Lái phương tiện
+        </Link>
+      </div>
+
+      {/* 💖 (Phần Chứng chỉ đặc biệt - ĐÃ THÊM 3 MỤC MỚI) 💖 */}
+      <h2 className={styles.categoryTitle}>Chứng chỉ đặc biệt</h2>
+      <div className={styles.grid}>
+        <Link href="/chuong-trinh-dao-tao/dieu-khien-cao-toc" className={styles.linkItem}>
+          Chứng chỉ Điều khiển phương tiện cao tốc - ĐKCT
+        </Link>
+        <Link href="/chuong-trinh-dao-tao/dieu-khien-ven-bien" className={styles.linkItem}>
+          Chứng chỉ Điều khiển phương tiện thủy nội địa đi ven biển - ĐKVB - SB
+        </Link>
+        <Link href="/chuong-trinh-dao-tao/an-toan-ven-bien" className={styles.linkItem}>
+          Chứng chỉ An toàn làm việc trên phương tiện đi ven biển - ATVB
+        </Link>
+        <Link href="/chuong-trinh-dao-tao/an-toan-xang-dau" className={styles.linkItem}>
+          Chứng chỉ An toàn làm việc trên phương tiện chở xăng dầu - ATXD
+        </Link>
+        <Link href="/chuong-trinh-dao-tao/an-toan-hoa-chat" className={styles.linkItem}>
+          Chứng chỉ An toàn làm việc trên phương tiện chở hoá chất - ATHC
+        </Link>
+        <Link href="/chuong-trinh-dao-tao/an-toan-khi-hoa-long" className={styles.linkItem}>
+          Chứng chỉ An toàn làm việc trên phương tiện chở khí hóa lỏng - ATKHL
+        </Link>
       </div>
 
     </div>
