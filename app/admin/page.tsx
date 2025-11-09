@@ -3,13 +3,13 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic' // "Triệu hồi" công cụ Import "động"
+import dynamic from 'next/dynamic' 
 import { useAuth } from '../../context/AuthContext' 
 import ProtectedRoute from '../../components/ProtectedRoute' 
 import { supabase } from '../../utils/supabaseClient' 
 
-// 1. "TRIỆU HỒI" TRÌNH SOẠN THẢO (Bỏ qua lỗi Types) 
-// @ts-ignore 
+// 1. 💖 THÊM DÒNG NÀY ĐỂ "BỊT" LỖI TYPE 💖
+// @ts-ignore
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 // 2. "Triệu hồi" file CSS Module
@@ -41,6 +41,7 @@ function AdminDashboard() {
   const [formError, setFormError] = useState<string | null>(null)
   const [formSuccess, setFormSuccess] = useState<string | null>(null)
 
+
   // 3. "Phép thuật": Tự động lấy "Danh mục" từ Supabase
   useEffect(() => {
     async function fetchCategories() {
@@ -63,7 +64,7 @@ function AdminDashboard() {
     fetchCategories()
   }, []) 
   
-  // 4. HÀM "ĐĂNG BÀI" (Logic giữ nguyên)
+  // 4. HÀM "ĐĂNG BÀI"
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -79,8 +80,9 @@ function AdminDashboard() {
     console.log('Đang cất bài viết vào Supabase...')
 
     try {
+      // 5. "CẤT" VÀO "KHO" SUPABASE
       const { data, error } = await supabase
-        .from('posts') 
+        .from('posts') // Vào "ngăn" posts
         .insert([
           {
             title: title,
@@ -90,7 +92,9 @@ function AdminDashboard() {
           }
         ])
 
-      if (error) throw error 
+      if (error) {
+        throw error 
+      }
 
       console.log('Đăng bài thành công!', data)
       setFormSuccess('Đăng bài thành công!')
@@ -107,7 +111,8 @@ function AdminDashboard() {
     }
   }
 
-  // 5. GIAO DIỆN FORM (Đã dùng CSS Module)
+
+  // 6. GIAO DIỆN FORM (Đã "nối não")
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -174,7 +179,7 @@ function AdminDashboard() {
               </label>
             </div>
 
-            {/* TRÌNH SOẠN THẢO "XỊN" */}
+            {/* 💖 TRÌNH SOẠN THẢO "XỊN" 💖 */}
             <div className={styles.formGroup}>
               <label className={styles.label}>
                 Nội dung bài viết
@@ -206,6 +211,7 @@ function AdminDashboard() {
                 {isSubmitting ? 'Đang đăng...' : 'Đăng bài'}
               </button>
             </div>
+
           </form>
         </div>
       </div>
