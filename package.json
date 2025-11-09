@@ -15,12 +15,13 @@
     "next": "14.2.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-quill-new": "^2.0.0"
+    "react-quill": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-quill": "^2.0.14",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "typescript": "^5",
