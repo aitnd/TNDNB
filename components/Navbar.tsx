@@ -8,6 +8,7 @@ import { auth } from '../utils/firebaseClient'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 
+// "Triệu hồi" file CSS Module
 import styles from './Navbar.module.css' 
 
 export default function Navbar() {
@@ -24,37 +25,58 @@ export default function Navbar() {
   }
 
   return (
+    // (Sử dụng 'header' thay vì 'nav' cho toàn bộ)
     <header>
-      {/* (Thanh Top - Giữ nguyên) */}
+      {/* 💖 (Req 1) THANH TOP (Đăng nhập/Quản lý) 💖 */}
       <div className={styles.headerTop}>
         <div className={styles.topContainer}>
           <ul className={styles.topLinks}>
+            
+            {/* (Link "thông minh") */}
             {user ? (
               <>
-                <li><Link href="/quan-ly">Quản lý</Link></li>
-                <li><button onClick={handleLogout}>Đăng xuất</button></li>
+                <li>
+                  <Link href="/quan-ly">Quản lý</Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout}>Đăng xuất</button>
+                </li>
+                
+                {/* Link "Vào Thi" (Học viên) */}
                 {user.role === 'hoc_vien' && (
-                   <li><Link href="/quan-ly" className={styles.ctaButton}>Vào Thi</Link></li>
+                   <li>
+                     <Link href="/quan-ly" className={styles.ctaButton}>
+                       Vào Thi
+                     </Link>
+                   </li>
                 )}
+                
+                {/* Link "Admin" (Sếp) */}
                 {(user.role === 'admin' || user.role === 'giao_vien' || user.role === 'lanh_dao') && (
-                   <li><Link href="/admin" className={`${styles.ctaButton} ${styles.adminButton}`}>Admin</Link></li>
+                   <li>
+                     <Link href="/admin" className={`${styles.ctaButton} ${styles.adminButton}`}>
+                       Admin
+                     </Link>
+                   </li>
                 )}
               </>
             ) : (
-              <li><Link href="/login">Đăng nhập</Link></li>
+              <li>
+                <Link href="/login">Đăng nhập</Link>
+              </li>
             )}
+
           </ul>
         </div>
       </div>
       
-      {/* (Thanh Chính - Giữ nguyên) */}
+      {/* 💖 THANH CHÍNH (Logo & Menu) 💖 */}
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
           <Link href="/" className={styles.logo}>
             Trường dạy nghề thủy nội địa Ninh Bình
           </Link>
 
-          {/* 💖 ĐÃ THÊM LINK "TƯ VẤN NGHỀ NGHIỆP" 💖 */}
           <ul className={styles.navLinks}>
             <li>
               <Link href="/">Trang chủ</Link>

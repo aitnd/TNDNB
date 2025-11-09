@@ -1,32 +1,17 @@
-// Đánh dấu đây là "Client Component" (BẮT BUỘC cho FB SDK)
-'use client'
-
-import React, { useEffect } from 'react'
+// 1. 💖 KHÔNG CẦN 'use client' HAY 'useEffect' NỮA 💖
+//    (Vì 'layout.tsx' đã "gánh" việc đó rồi)
+import React from 'react'
 import Link from 'next/link'
-import styles from './page.module.css' // (CSS Trang Liên hệ)
-import Sidebar from '../../components/Sidebar' // (Sidebar Dùng chung)
+import styles from './page.module.css' 
+import Sidebar from '../../components/Sidebar' 
 
 export default function LienHePage() {
   
-  // "Phép thuật" để tải SDK Facebook
-  useEffect(() => {
-    if (document.getElementById('fb-sdk')) return; 
-    
-    const script = document.createElement('script');
-    script.id = 'fb-sdk';
-    script.src = "https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0";
-    script.async = true;
-    script.defer = true;
-    script.crossOrigin = 'anonymous';
-    script.nonce = 'FB-NONCE'; 
-    
-    document.getElementById('fb-root')?.appendChild(script);
-  }, []); // (Chạy 1 lần)
+  // 2. 💖 (ĐÃ XÓA 'useEffect' TẢI SDK FACEBOOK CŨ) 💖
 
   return (
     <>
-      {/* (Div này BẮT BUỘC phải có cho SDK Facebook) */}
-      <div id="fb-root"></div>
+      {/* 3. 💖 (ĐÃ XÓA '<div id="fb-root">') 💖 */}
     
       <div className={styles.layoutGrid}>
         {/* ===== CỘT TRÁI (NỘI DUNG LIÊN HỆ) ===== */}
@@ -44,21 +29,9 @@ export default function LienHePage() {
             </div>
           </section>
 
-          {/* Box Bình luận Facebook */}
-          <section className={styles.widgetBox}>
-            <h2 className={styles.widgetTitle}>Ý kiến bạn đọc (Facebook)</h2>
-            <div className={styles.fbCommentsContainer}>
-              {/* QUAN TRỌNG: 
-                1. Anh PHẢI thay 'tndnb.vercel.app' bằng URL chính xác đã deploy.
-                2. Plugin này chỉ hiển thị trên web đã deploy.
-              */}
-              <div className="fb-comments" 
-                   data-href="https://tndnb.vercel.app/lien-he" 
-                   data-width="100%" 
-                   data-numposts="5">
-              </div>
-            </div>
-          </section>
+          {/* 4. 💖 (ĐÃ XÓA BOX BÌNH LUẬN FACEBOOK CŨ Ở ĐÂY) 💖 */}
+          {/* (Vì 'layout.tsx' sẽ tự "vẽ" nó ở dưới cùng) */}
+
         </main>
 
         {/* ===== CỘT PHẢI (SIDEBAR) ===== */}
