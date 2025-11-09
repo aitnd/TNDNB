@@ -17,15 +17,30 @@
     padding: 1.5rem;
 }
 
-/* (Xóa padding cho widget chứa ảnh banner) */
-.widgetBox.bannerBox {
+/* 💖 (SỬA LỖI) CSS CHO BANNER BOX 💖 */
+/* (Box chứa ảnh banner, KHÔNG xóa padding) */
+.bannerBox {
+    padding: 1.5rem; 
+    border-radius: 8px;
+    overflow: hidden; 
+}
+/* (Nếu banner KHÔNG có tiêu đề, thì xóa padding) */
+.bannerBox:has(> a > img):not(:has(> h3)) {
     padding: 0;
-    overflow: hidden; /* (Giữ bo góc cho ảnh) */
 }
 .bannerImage {
     width: 100%;
     height: auto;
     display: block;
+    border-radius: 5px; /* (Bo góc ảnh) */
+    border: 1px solid #eee;
+    margin-top: 1.5rem; /* (Cách tiêu đề ra) */
+}
+/* (Nếu banner KHÔNG có tiêu đề, thì ảnh không cần cách) */
+.bannerBox:has(> a > img):not(:has(> h3)) .bannerImage {
+    margin-top: 0;
+    border-radius: 8px 8px 0 0;
+    border: none;
 }
 
 
@@ -36,7 +51,20 @@
     border-bottom: 2px solid #e6f0ff;
     padding-bottom: 0.75rem;
     margin-bottom: 1rem;
+    text-decoration: none; /* (Chống gạch chân) */
 }
+/* 💖 (CSS MỚI) Khi Tiêu đề nằm trong Link <a> 💖 */
+a > .sidebarTitle {
+    color: #004a99;
+    margin-bottom: 0; /* (Bỏ margin khi là link) */
+    border-bottom: none; /* (Bỏ gạch chân khi là link) */
+    padding-bottom: 0;
+    transition: color 0.3s;
+}
+a:hover > .sidebarTitle {
+    color: #003366; /* (Đổi màu khi hover) */
+}
+
 
 /* Box Search (Pháp quy) */
 .searchForm {

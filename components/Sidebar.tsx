@@ -1,13 +1,46 @@
 // File: components/Sidebar.tsx
-// (Đây là Server Component vì nó Tĩnh)
 
 import React from 'react'
 import Link from 'next/link'
-import styles from './Sidebar.module.css' // (Triệu hồi CSS mới)
+import styles from './Sidebar.module.css' // (Triệu hồi CSS)
 
 export default function Sidebar() {
   return (
     <aside className={styles.sidebar}>
+
+      {/* 💖 (Req 1) BOX HỆ THỐNG ÔN TẬP (ĐÃ SỬA) 💖 */}
+      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
+        {/* (Cả box là 1 link) */}
+        <Link href="https://web-on-tap.vercel.app/" target="_blank">
+          <h3 className={styles.sidebarTitle} style={{marginBottom: '1.5rem', borderBottom: '2px solid #e6f0ff', paddingBottom: '0.75rem'}}>
+            Hệ thống ôn tập
+          </h3>
+          {/* (Anh đã tải 'on-tap.png' vào thư mục 'public/') */}
+          <img 
+            src="/on-tap.png" 
+            alt="Hệ Thống Ôn tập" 
+            className={styles.bannerImage} 
+            style={{marginTop: 0}} /* (Xóa margin-top của ảnh) */
+          />
+        </Link>
+      </div>
+      
+      {/* 💖 (Req 2) BOX THI ONLINE (ĐÃ DI DỜI VÀ SỬA) 💖 */}
+      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
+        {/* (Cả box là 1 link) */}
+        <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
+          <h3 className={styles.sidebarTitle} style={{marginBottom: '1.5rem', borderBottom: '2px solid #e6f0ff', paddingBottom: '0.75rem'}}>
+            Hệ thống thi trực tuyến
+          </h3>
+          {/* (Anh tải ảnh 'thi-online.png' vào 'public/') */}
+          <img 
+            src="/thi-online.png" 
+            alt="Hệ Thống Thi Online" 
+            className={styles.bannerImage} 
+            style={{marginTop: 0}}
+          />
+        </Link>
+      </div>
 
       {/* Box Văn bản pháp quy (search) */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
@@ -17,26 +50,19 @@ export default function Sidebar() {
           <button type="submit">Xem tiếp</button>
         </form>
       </div>
-      
-      {/* Box Thi Online (Banner) */}
-      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        <Link href="/login" target="_blank">
-          <img src="https://via.placeholder.com/300x150?text=He+Thong+Thi+Online" alt="Hệ Thống Thi Online" className={styles.bannerImage} />
-        </Link>
-      </div>
 
       {/* Box Bảng tin */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <h3 className={styles.sidebarTitle}>Bảng tin</h3>
         <ul className={styles.linkList}>
           <li><Link href="#">
-            <i className="fas fa-caret-right"></i> Thông báo tuyển sinh TMT, CCCM
+            <i className="fas fa-caret-right"></i> Thông báo tuyển sinh
           </Link></li>
           <li><Link href="#">
-            <i className="fas fa-caret-right"></i> Thông báo VEC v/v hồ sơ...
+            <i className="fas fa-caret-right"></i> Thông báo lần 2
           </Link></li>
           <li><Link href="#">
-            <i className="fas fa-caret-right"></i> Tuyển dụng nhân viên 2025
+            <i className="fas fa-caret-right"></i> Thông báo là có thông báo
           </Link></li>
         </ul>
       </div>

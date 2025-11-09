@@ -1,0 +1,73 @@
+/* === CSS Dùng chung cho các Trang "Tư vấn" === */
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e6f0ff;
+    padding-bottom: 1rem;
+}
+
+/* (Phần nội dung chính) */
+.content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+.content ul {
+    list-style-type: disc;
+    margin-left: 2rem;
+    padding-left: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.content li {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+/* (Nút bấm (Link)) */
+.linkButton {
+    display: inline-block;
+    background-color: #004a99;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+.linkButton:hover {
+    background-color: #003366;
+    text-decoration: none;
+}
+
+.backButtonContainer {
+    margin-top: 2.5rem;
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+    text-align: center;
+}
