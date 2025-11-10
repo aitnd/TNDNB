@@ -15,7 +15,6 @@ body {
     color: #333;
     line-height: 1.6;
     
-    /* 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 */
     /* (Cấm cuộn ngang trên toàn bộ trang) */
     overflow-x: hidden; 
 }
@@ -82,4 +81,15 @@ a:hover {
     border-left: 4px solid var(--mau-nen-phu);
     font-style: italic;
     color: #555;
+}
+
+/* 💖 "THUỐC" SỬA LỖI Ở ĐÂY NÈ ANH 💖 */
+.post-content img {
+  max-width: 100%; /* (Cho nó co giãn theo màn hình) */
+  height: auto; /* (Tự động giữ tỷ lệ) */
+  border-radius: 8px; /* (Bo góc cho đẹp) */
+  margin: 1.5rem 0; /* (Cách chữ ở trên/dưới) */
+  display: block; /* (Để nó căn giữa được) */
+  margin-left: auto; /* (Căn giữa auto) */
+  margin-right: auto; /* (Căn giữa auto) */
 }
