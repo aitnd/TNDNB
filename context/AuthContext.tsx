@@ -38,15 +38,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // --- Có người đăng nhập! ---
         console.log('Phát hiện người dùng đăng nhập:', firebaseUser.uid)
         
-        // 💖 BƯỚC 1: "BÁO CÁO" VỚI SUPABASE 💖
-        // (Lấy "vé" từ Firebase)
-        const token = await firebaseUser.getIdToken();
-        // (Đưa "vé" cho Supabase để "nâng cấp" quyền)
-        await supabase.auth.setSession({
-          access_token: token,
-          refresh_token: firebaseUser.refreshToken,
-        });
-        
+        try {
+          // 💖 BƯỚC 1: "BÁO CÁO" VỚI SUPABASE 💖
+          // (Lấy "vé" từ Firebase)
+          const token = await firebaseUser.getIdToken();
+          // (Đưa "vé" cho Supabase để "nâng cấp" quyền)
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: token,
+            // (Refresh token đôi khi bị null, mình chỉ cần access_token là đủ)
+            refresh_token: firebaseUser.refreshToken || token, 
+          });
+          if (sessionError) {
+            console.error("LỖI KHI SETSESSION SUPABASE:", sessionError.message);
+            // (Nếu setSession lỗi, mình vẫn tiếp tục để ít nhất web chạy được)
+          } else {
+            console.log('[AuthContext] Đã nạp "vé" SupABASE thành công!');
+          }
+        } catch (e: any) {
+           console.error("LỖI NGOẠI LỆ khi lấy token/setSession:", e.message);
+        }
+
         // (Lấy "hồ sơ" vai trò từ "Tủ" Firestore)
         const userDocRef = doc(db, 'users', firebaseUser.uid)
         const userDoc = await getDoc(userDocRef)
@@ -64,7 +75,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             birthDate: userData.birthDate || null,
           }
           setUser(authUser)
-          console.log(`[AuthContext] Đã nạp "vé" Supabase. Vai trò: ${authUser.role}`)
         } else {
            authUser = {
             uid: firebaseUser.uid,
