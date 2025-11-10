@@ -17,25 +17,23 @@
 .slideBackground {
   width: 100%;
   height: 100%;
-  /* 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 */
-  /* (Đổi từ 'cover' sang 'contain' để ảnh không bị cắt) */
-  background-size: contain; 
+  /* 💖 1. SỬA LỖI ĐEN (Quay về 'cover') 💖 */
+  background-size: cover; 
   background-position: center;
-  /* 💖 THÊM DÒNG NÀY ĐỂ MẤY CHỖ TRỐNG LÀ MÀU ĐEN 💖 */
-  background-color: black; 
-  background-repeat: no-repeat; /* (Không lặp ảnh) */
+  /* (Bỏ màu đen và lặp) */
+  /* background-color: black; (Xóa) */
+  /* background-repeat: no-repeat; (Xóa) */
+  
   transition: transform 0.6s ease;
 }
 
-/* (Hiệu ứng Zoom khi hover) */
-/* Em đã tắt hiệu ứng zoom trên slideBackground vì nó không hợp với contain, 
-   nếu anh muốn hiệu ứng zoom, mình sẽ phải làm cách khác á. */
-/* .mySwiper :global(.swiper-slide-active) .slideBackground {
+/* (Hiệu ứng Zoom khi hover - Mở lại) */
+.mySwiper :global(.swiper-slide-active) .slideBackground {
   transform: scale(1.05);
 }
 .mySwiper :global(.swiper-slide) a:hover .slideBackground {
   transform: scale(1.15);
-} */
+}
 
 
 .slideOverlay {
@@ -44,8 +42,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  /* (Lớp mờ màu đen) */
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.0) 100%);
+  
+  /* 💖 2. SỬA LỖI "LỚP MÀNG" 💖 */
+  /* (Chỉ làm mờ 60% ở dưới, phần trên trong suốt 100%) */
+  background: linear-gradient(to top, 
+    rgba(0,0,0,0.8) 0%,  /* (Đen 80% ở dưới cùng) */
+    rgba(0,0,0,0) 60%   /* (Trong suốt từ 60% trở lên) */
+  );
 }
 
 .slideContent {
@@ -55,12 +58,19 @@
   padding: 2rem;
   z-index: 10;
   color: white;
+  /* (Để chữ không bị "phình" ra quá 100%) */
+  width: 100%; 
+  box-sizing: border-box; 
 }
 .slideContent h2 {
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  /* (Chống tràn chữ) */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .slideContent a:hover {
   text-decoration: none;
