@@ -1,32 +1,50 @@
-/* === (CSS MỚI) PHẦN 1: THANH TOP (Đăng nhập) === */
+/* === PHẦN 1: THANH TOP (Logo & Đăng nhập) === */
 .headerTop {
-    background-color: #f3f4f6; /* (Màu xám nhạt) */
+    /* 💖 SỬA: Nền trắng, có bóng mờ */
+    background-color: #ffffff; 
     border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     padding: 0.5rem 0;
-    font-size: 0.875rem; /* (Chữ nhỏ) */
 }
 
 .topContainer {
     width: 90%;
-    max-width: 1100px;
+    /* 💖 SỬA: Dùng 1280px cho rộng rãi */
+    max-width: 1280px; 
     margin: 0 auto;
     display: flex;
-    justify-content: flex-end; /* (Đẩy sang phải) */
+    /* 💖 SỬA: Logo bên trái, Link bên phải */
+    justify-content: space-between; 
     align-items: center;
 }
 
+/* 💖 LOGO (Chuyển từ dưới lên) 💖 */
+.logo {
+    /* 💖 SỬA: To hơn, đậm hơn */
+    font-size: 1.6rem; 
+    font-weight: 700;
+    color: #004a99;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-right: 1rem;
+}
+.logo:hover {
+    text-decoration: none;
+    color: #003366;
+}
+
+/* (Phần link đăng nhập bên phải - Giữ nguyên) */
 .topLinks {
     list-style: none;
     display: flex;
     align-items: center;
     margin: 0;
     padding: 0;
+    font-size: 0.875rem; /* (Chữ nhỏ) */
 }
-
 .topLinks li {
     margin-left: 1rem;
 }
-
 .topLinks a,
 .topLinks button {
     text-decoration: none;
@@ -39,18 +57,15 @@
     font-size: inherit;
     font-family: inherit;
 }
-
 .topLinks a:hover,
 .topLinks button:hover {
     color: #004a99;
     text-decoration: none;
 }
-
-/* (Nút Admin/Vào thi - NHỎ LẠI) */
 .ctaButton {
     color: #ffffff !important;
     background-color: #004a99;
-    padding: 0.25rem 0.75rem; /* (Nút nhỏ lại) */
+    padding: 0.25rem 0.75rem; 
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
@@ -65,39 +80,23 @@
     background-color: #c9302c;
 }
 
-/* === PHẦN 2: THANH CHÍNH (Logo & Menu) === */
+/* === PHẦN 2: THANH CHÍNH (CHỈ CÓ MENU) === */
 .mainNav {
-    background-color: #ffffff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    padding: 1rem 0;
+    /* 💖 SỬA: Nền xanh dương chủ đạo */
+    background-color: #004a99;
+    /* (Bỏ bóng mờ) */
+    padding: 0.75rem 0; /* (Mỏng lại 1 xíu) */
 }
 
 .mainContainer {
-    /* 💖 EM SỬA Ở ĐÂY NÈ ANH ƠI 💖 */
-    /* Em xóa width, max-width, và margin: auto */
-    /* width: 90%; (Xóa) */
-    /* max-width: 1280px; (Xóa) */
-    /* margin: 0 auto; (Xóa) */
-
-    /* Thêm padding 2 bên lề cho nó đỡ sát mép */
-    padding: 0 1.5rem; 
-    box-sizing: border-box; /* (Để padding không làm vỡ layout) */
-
+    width: 90%;
+    /* 💖 SỬA: Đồng bộ 1280px */
+    max-width: 1280px; 
+    margin: 0 auto;
     display: flex;
-    justify-content: space-between;
+    /* 💖 SỬA: Căn lề menu sát bên trái */
+    justify-content: flex-start; 
     align-items: center;
-}
-
-.logo {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #004a99;
-    text-decoration: none;
-    white-space: nowrap;
-    margin-right: 1rem;
-}
-.logo:hover {
-    text-decoration: none;
 }
 
 .navLinks {
@@ -109,19 +108,23 @@
 }
 
 .navLinks li {
-    margin-left: 1.5rem;
+    /* 💖 SỬA: Tăng khoảng cách menu */
+    margin-left: 0; 
+    margin-right: 1.75rem; 
 }
 
 .navLinks a {
     text-decoration: none;
-    color: #333;
-    font-weight: 500;
+    /* 💖 SỬA: Chữ màu trắng */
+    color: #ffffff; 
+    font-weight: 600; /* (Đậm hơn) */
     transition: color 0.3s ease;
     white-space: nowrap;
-    font-size: 1rem; /* (Giữ chữ to, rõ ràng) */
+    font-size: 1rem;
 }
 
 .navLinks a:hover {
-    color: #004a99;
+    /* 💖 SỬA: Hover ra màu xám nhạt */
+    color: #dbeafe; 
     text-decoration: none;
 }
