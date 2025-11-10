@@ -183,7 +183,8 @@ function UserManagementDashboard() {
       return;
     }
 
-    if (userToDelete.id === currentUser?.id) {
+    // 💖 SỬA LỖI Ở ĐÂY (dùng .uid thay vì .id) 💖
+    if (userToDelete.id === currentUser?.uid) {
       alert('Bạn không thể tự xóa chính mình!');
       return;
     }
@@ -201,8 +202,6 @@ function UserManagementDashboard() {
       }
     }
   }
-
-  // 💖 SỬA LỖI 3 (XÓA DẤU "}" DƯ Ở ĐÂY) 💖
 
   // 6. GIAO DIỆN
   return (
@@ -261,7 +260,8 @@ function UserManagementDashboard() {
                           <button 
                             className={styles.buttonDelete}
                             onClick={() => handleDeleteUser(user)}
-                            disabled={!canEdit || user.id === currentUser?.id} // (Khóa nút nếu là admin/quan_ly hoặc tự xóa)
+                            // 💖 SỬA LỖI Ở ĐÂY NỮA (dùng .uid) 💖
+                            disabled={!canEdit || user.id === currentUser?.uid} // (Khóa nút nếu là admin/quan_ly hoặc tự xóa)
                           >
                             Xóa
                           </button>
