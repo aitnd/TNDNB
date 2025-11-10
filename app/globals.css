@@ -83,13 +83,18 @@ a:hover {
     color: #555;
 }
 
-/* 💖 "THUỐC" SỬA LỖI Ở ĐÂY NÈ ANH 💖 */
+/* 💖 "THUỐC" SỬA LỖI Ở ĐÂY NÈ ANH (DÙNG !important) 💖 */
 .post-content img {
-  max-width: 100%; /* (Cho nó co giãn theo màn hình) */
-  height: auto; /* (Tự động giữ tỷ lệ) */
-  border-radius: 8px; /* (Bo góc cho đẹp) */
-  margin: 1.5rem 0; /* (Cách chữ ở trên/dưới) */
-  display: block; /* (Để nó căn giữa được) */
-  margin-left: auto; /* (Căn giữa auto) */
-  margin-right: auto; /* (Căn giữa auto) */
+  max-width: 100% !important; /* (Bắt nó không được rộng quá 100%) */
+  width: auto !important;     /* (Bắt nó tự tính toán chiều rộng) */
+  height: auto !important;    /* (Bắt nó tự tính toán chiều cao) */
+  
+  border-radius: 8px; 
+  margin: 1.5rem 0; 
+  
+  /* (Mấy cái này cũng "ép" nó luôn cho chắc) */
+  display: block !important;   
+  margin-left: auto !important; 
+  margin-right: auto !important;
+  float: none !important;      /* (Chống trôi ảnh) */
 }
