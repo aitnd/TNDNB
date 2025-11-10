@@ -1,105 +1,129 @@
 // Đánh dấu đây là "Client Component"
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '../../context/AuthContext' 
 import ProtectedRoute from '../../components/ProtectedRoute' 
 import { auth } from '../../utils/firebaseClient' 
-import { signOut } from 'firebase/auth'
-import { useRouter } from 'next/navigation'
-
-import CreateRoomForm from '../../components/CreateRoomForm' 
-import JoinRoomList from '../../components/JoinRoomList' 
-// 💖 1. "TRIỆU HỒI" DASHBOARD MỚI CỦA GIÁO VIÊN 💖
-import TeacherRoomList from '../../components/TeacherRoomList'
+import { sendPasswordResetEmail } from 'firebase/auth'
+import Link from 'next/link'
 
 // (Import CSS Module)
 import styles from './page.module.css' 
 
-// 2. TẠO "NỘI DUNG" TRANG
+// 1. TẠO "NỘI DUNG" TRANG DASHBOARD
 function QuanLyDashboard() {
   const { user } = useAuth() 
-  const router = useRouter()
+  const [resetMsg, setResetMsg] = useState('');
+  const [resetError, setResetError] = useState('');
 
-  // (Hàm dịch tên vai trò - Giữ nguyên)
+  // 4.1: Chức năng Đổi mật khẩu
+  const handleChangePassword = async () => {
+    if (!user || !user.email) {
+      setResetError('Không tìm thấy email của bạn.');
+      return;
+    }
+    setResetMsg('');
+    setResetError('');
+    try {
+      await sendPasswordResetEmail(auth, user.email);
+      setResetMsg(`Đã gửi link reset mật khẩu tới: ${user.email}. Vui lòng kiểm tra email!`);
+    } catch (err: any) {
+      setResetError(err.message || 'Lỗi khi gửi email.');
+    }
+  }
+
+  // (Hàm dịch tên vai trò - Nâng cấp)
   const dichTenVaiTro = (role: string) => {
     switch (role) {
       case 'hoc_vien': return 'Học viên'
       case 'giao_vien': return 'Giáo viên'
       case 'lanh_dao': return 'Lãnh đạo'
-      case 'admin': return 'Quản trị viên'
+      case 'quan_ly': return 'Quản lý' // (Role mới)
+      case 'admin': return 'Quản trị viên (Admin)'
       default: return role
     }
   }
 
-  // (Hàm Đăng xuất - Giữ nguyên)
-  const handleLogout = async () => {
-    try {
-      await signOut(auth) 
-      console.log('Đã đăng xuất!')
-      router.push('/login') 
-    } catch (err) {
-      console.error('Lỗi khi đăng xuất:', err)
-    }
-  }
+  // (Kiểm tra quyền hạn)
+  const coQuyenDangBai = user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role);
+  const coQuyenThi = user && ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(user.role);
+  const coQuyenQLTaiKhoan = user && ['admin', 'quan_ly'].includes(user.role);
 
   // Giao diện (Đã "mặc" CSS Module)
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
         
-        {/* Thanh tiêu đề và nút Đăng xuất */}
-        <div className={styles.header}>
-          <h1 className={styles.title}>
-            Trang Quản lý
-          </h1>
-          <button
-            onClick={handleLogout}
-            className={styles.logoutButton}
-          >
-            Đăng xuất
-          </button>
-        </div>
+        <h1 className={styles.title}>
+          Bảng điều khiển
+        </h1>
 
-        {/* Thông tin người dùng (Họ và Tên) */}
+        {/* 4. Thông tin tài khoản */}
         {user && (
-          <div className={styles.userInfoBox}>
-            <p>
-              Chào mừng,{' '}
-              <strong>{user.fullName || user.email}</strong>!
-            </p>
-            <p>
-              Vai trò của bạn: {' '}
-              <strong>
-                {dichTenVaiTro(user.role)}
-              </strong>
-            </p>
+          <div className={styles.infoBox}>
+            <h2 className={styles.sectionTitle}>Thông tin tài khoản</h2>
+            <p><strong>Họ và tên:</strong> {user.fullName}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+            <p><strong>Vai trò:</strong> {dichTenVaiTro(user.role)}</p>
           </div>
         )}
 
-        {/* --- CHỨC NĂNG CỦA GIÁO VIÊN / ADMIN / LÃNH ĐẠO --- */}
-        {user && user.role !== 'hoc_vien' && (
-          <>
-            {/* (Form tạo phòng) */}
-            <CreateRoomForm />
-            
-            {/* 💖 2. "VẼ" DASHBOARD MỚI RA (Req 2+3) 💖 */}
-            <TeacherRoomList />
-          </>
-        )}
+        {/* 4.2 & 4.3: Các nút chức năng theo Role */}
+        <div className={styles.actionGrid}>
+          {/* == HỌC VIÊN == */}
+          {user?.role === 'hoc_vien' && (
+            <Link href="/quan-ly/thi-truc-tuyen" className={styles.actionCard}>
+              <h3>Thi Trực Tuyến</h3>
+              <p>Vào phòng thi và làm bài thi.</p>
+            </Link>
+          )}
 
-        {/* --- CHỨC NĂNG CỦA HỌC VIÊN --- */}
-        {user && user.role === 'hoc_vien' && (
-          // (Req 1: File này đã được cập nhật ở Bước 2)
-          <JoinRoomList />
-        )}
+          {/* == GIÁO VIÊN == */}
+          {user?.role === 'giao_vien' && (
+            <Link href="/quan-ly/thi-truc-tuyen" className={styles.actionCard}>
+              <h3>Thi Trực Tuyến</h3>
+              <p>Tạo phòng thi và quản lý thi.</p>
+            </Link>
+          )}
+
+          {/* == QUẢN LÝ, LÃNH ĐẠO, ADMIN == */}
+          {coQuyenDangBai && (
+            <Link href="/quan-ly/dang-bai" className={styles.actionCard}>
+              <h3>Quản lý Bài viết</h3>
+              <p>Tạo, sửa, xóa bài viết, tin tức.</p>
+            </Link>
+          )}
+          {coQuyenThi && (
+             <Link href="/quan-ly/thi-truc-tuyen" className={styles.actionCard}>
+              <h3>Thi Trực Tuyến</h3>
+              <p>Tạo phòng thi và quản lý thi.</p>
+            </Link>
+          )}
+          {coQuyenQLTaiKhoan && (
+             <Link href="/quan-ly/tai-khoan" className={styles.actionCard}>
+              <h3>Quản lý Tài khoản</h3>
+              <p>Thêm, sửa, xóa người dùng.</p>
+            </Link>
+          )}
+        </div>
+        
+        {/* 4.1: Chức năng đổi mật khẩu */}
+        <div className={styles.infoBox} style={{marginTop: '2rem'}}>
+          <h2 className={styles.sectionTitle}>Bảo mật</h2>
+          <button onClick={handleChangePassword} className={styles.button}>
+            Gửi email Đổi mật khẩu
+          </button>
+          {resetMsg && <p className={styles.success}>{resetMsg}</p>}
+          {resetError && <p className={styles.error}>{resetError}</p>}
+        </div>
 
       </div>
     </div>
   )
 }
 
-// 3. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
+// 2. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
 export default function QuanLyPage() {
   return (
     <ProtectedRoute>

@@ -1,4 +1,4 @@
-/* === Trang điểm cho Trang Quản lý === */
+/* === Trang điểm cho Trang Dashboard Quản lý MỚI === */
 
 .container {
     min-height: 80vh;
@@ -7,49 +7,110 @@
 }
 
 .wrapper {
-    max-width: 900px;
+    max-width: 1100px; /* Rộng hơn */
     margin: 0 auto;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
 .title {
-    font-size: 2rem;
+    font-size: 2.5rem; /* To hơn */
     font-weight: 700;
     color: #004a99;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e6f0ff;
+    padding-bottom: 1rem;
 }
 
-.logoutButton {
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #004a99;
+    margin-bottom: 1rem;
+}
+
+/* (Box thông tin chung) */
+.infoBox {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 1.5rem 2rem;
+    border-radius: 8px;
+    line-height: 1.7;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.infoBox p {
+    margin: 0.5rem 0;
+}
+.infoBox strong {
+    color: #333;
+    min-width: 100px;
+    display: inline-block;
+}
+
+/* (Lưới các nút chức năng) */
+.actionGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.actionCard {
+    display: block;
+    background-color: #ffffff;
+    border: 1px solid #004a99;
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+.actionCard:hover {
+    background-color: #e6f0ff;
+    box-shadow: 0 4px 10px rgba(0,74,153,0.15);
+    transform: translateY(-3px);
+    text-decoration: none;
+}
+.actionCard h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #004a99;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+.actionCard p {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 0;
+}
+
+/* (Nút đổi mật khẩu) */
+.button {
     background-color: #d9534f;
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     border-radius: 5px;
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s;
 }
-.logoutButton:hover {
+.button:hover {
     background-color: #c9302c;
 }
 
-.userInfoBox {
-    background-color: #e6f0ff;
-    border: 1px solid #b3d1ff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    line-height: 1.7;
-    font-size: 1.1rem;
+/* (Thông báo) */
+.error,
+.success {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 5px;
+    text-align: center;
 }
-.userInfoBox p {
-    margin: 0;
+.error {
+    background-color: #fde8e8;
+    color: #9b2c2c;
 }
-.userInfoBox strong {
-    color: #004a99;
+.success {
+    background-color: #e6f7ec;
+    color: #155724;
 }
