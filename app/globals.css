@@ -14,6 +14,10 @@ body {
     background-color: #f3f4f6; /* (Màu nền xám nhạt) */
     color: #333;
     line-height: 1.6;
+    
+    /* 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 */
+    /* (Cấm cuộn ngang trên toàn bộ trang) */
+    overflow-x: hidden; 
 }
 
 a {
