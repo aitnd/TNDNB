@@ -32,7 +32,6 @@ function CreatePostForm() {
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
   
-  // 💖 "NÃO" MỚI CHO ẢNH ĐẠI DIỆN 💖
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
@@ -60,17 +59,62 @@ function CreatePostForm() {
     fetchCategories()
   }, []) 
   
-  // 💖 HÀM XỬ LÝ KHI CHỌN ẢNH ĐẠI DIỆN 💖
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setThumbnailFile(file);
-      // (Tạo link xem trước)
       setThumbnailPreview(URL.createObjectURL(file)); 
     }
   }
 
-  // 💖 HÀM "ĐĂNG BÀI" (ĐÃ NÂNG CẤP) 💖
+  // 💖 "PHÉP THUẬT" UPLOAD ẢNH (TRONG TRÌNH SOẠN THẢO) 💖
+  const handleImageUploadBefore = (files: File[], info: object, uploadHandler: (response: any) => void) => {
+    const file = files[0];
+    if (!file) return false;
+
+    const fileName = `content_${Date.now()}_${file.name}`;
+    console.log(`[SunEditor] Đang tải ảnh nội dung: ${fileName}`);
+
+    // (Tạo hàm async để "đẩy" ảnh)
+    const uploadImage = async () => {
+      try {
+        const { error: uploadError } = await supabase.storage
+          .from('post_images') // (Tên "thùng" mình tạo)
+          .upload(fileName, file);
+        
+        if (uploadError) {
+          throw new Error(`Lỗi tải ảnh: ${uploadError.message}`);
+        }
+        
+        // (Lấy link "công khai" của ảnh)
+        const { data: publicUrlData } = supabase.storage
+          .from('post_images')
+          .getPublicUrl(fileName);
+
+        // (Đây là "câu thần chú" SunEditor cần để "nhét" ảnh vào)
+        const response = {
+          result: [
+            {
+              url: publicUrlData.publicUrl,
+              name: file.name,
+              size: file.size,
+            },
+          ],
+        };
+        uploadHandler(response); // (Trả link về cho SunEditor)
+
+      } catch (err: any) {
+        console.error(err);
+        alert(err.message);
+        uploadHandler(null); // (Báo lỗi)
+      }
+    };
+    
+    uploadImage(); // (Chạy "phép thuật")
+    return false; // (Báo SunEditor "đừng làm gì cả, chờ tui")
+  }
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -123,7 +167,7 @@ function CreatePostForm() {
             category_id: categoryId, 
             is_featured: isFeatured,
             author_id: user.uid, 
-            thumbnail_url: thumbnailUrl // 💖 LƯU LINK ẢNH VÀO CỘT MỚI 💖
+            thumbnail_url: thumbnailUrl 
           }
         ])
       if (error) throw error 
@@ -170,7 +214,7 @@ function CreatePostForm() {
               />
             </div>
             
-            {/* 💖 Ô UPLOAD ẢNH ĐẠI DIỆN 💖 */}
+            {/* Ô UPLOAD ẢNH ĐẠI DIỆN */}
             <div className={styles.formGroup}>
               <label htmlFor="thumbnail" className={styles.label}>
                 Ảnh đại diện (Thumbnail)
@@ -233,6 +277,8 @@ function CreatePostForm() {
                 lang={vi} 
                 setContents={content}
                 onChange={setContent}
+                // 💖 "GẮN" PHÉP THUẬT VÀO ĐÂY 💖
+                onImageUploadBefore={handleImageUploadBefore} 
                 setOptions={{
                   height: '300px',
                   buttonList: [
@@ -244,7 +290,7 @@ function CreatePostForm() {
                     ['fontColor', 'hiliteColor'],
                     ['outdent', 'indent'],
                     ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    ['table', 'link', 'image'],
+                    ['table', 'link', 'image'], // (Nút 'image' giờ đã "xịn")
                     ['fullScreen', 'showBlocks', 'codeView'],
                   ],
                 }}

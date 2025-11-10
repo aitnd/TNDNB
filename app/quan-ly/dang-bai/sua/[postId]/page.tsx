@@ -34,7 +34,6 @@ function EditPostForm() {
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
   
-  // 💖 "NÃO" MỚI CHO ẢNH ĐẠI DIỆN 💖
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
@@ -60,12 +59,11 @@ function EditPostForm() {
     fetchCategories()
   }, []) 
   
-  // 💖 "PHÉP THUẬT" LẤY DỮ LIỆU CŨ (ĐÃ NÂNG CẤP) 💖
+  // (Lấy dữ liệu cũ - Giữ nguyên)
   useEffect(() => {
     if (!postId) return; 
 
     async function fetchPostData() {
-      console.log(`Đang tải dữ liệu bài viết ID: ${postId}`);
       setIsLoadingPost(true);
       const { data, error } = await supabase
         .from('posts')
@@ -74,32 +72,76 @@ function EditPostForm() {
         .single(); 
 
       if (error) {
-        console.error('Lỗi khi tải bài viết:', error);
         setFormError('Không tìm thấy bài viết này hoặc có lỗi xảy ra.');
       } else if (data) {
-        // (Đổ dữ liệu cũ vào "não")
         setTitle(data.title);
         setContent(data.content);
         setCategoryId(data.category_id);
         setIsFeatured(data.is_featured);
-        setThumbnailPreview(data.thumbnail_url || null); // 💖 ĐỔ ẢNH CŨ VÀO PREVIEW 💖
+        setThumbnailPreview(data.thumbnail_url || null); 
       }
       setIsLoadingPost(false);
     }
     fetchPostData();
   }, [postId]); 
 
-  // 💖 HÀM XỬ LÝ KHI CHỌN ẢNH ĐẠI DIỆN 💖
+  
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setThumbnailFile(file);
-      // (Tạo link xem trước)
       setThumbnailPreview(URL.createObjectURL(file)); 
     }
   }
 
-  // 💖 HÀM "CẬP NHẬT BÀI" (ĐÃ NÂNG CẤP) 💖
+  // 💖 "PHÉP THUẬT" UPLOAD ẢNH (TRONG TRÌNH SOẠN THẢO) 💖
+  const handleImageUploadBefore = (files: File[], info: object, uploadHandler: (response: any) => void) => {
+    const file = files[0];
+    if (!file) return false;
+
+    const fileName = `content_${Date.now()}_${file.name}`;
+    console.log(`[SunEditor] Đang tải ảnh nội dung: ${fileName}`);
+
+    // (Tạo hàm async để "đẩy" ảnh)
+    const uploadImage = async () => {
+      try {
+        const { error: uploadError } = await supabase.storage
+          .from('post_images') // (Tên "thùng" mình tạo)
+          .upload(fileName, file);
+        
+        if (uploadError) {
+          throw new Error(`Lỗi tải ảnh: ${uploadError.message}`);
+        }
+        
+        // (Lấy link "công khai" của ảnh)
+        const { data: publicUrlData } = supabase.storage
+          .from('post_images')
+          .getPublicUrl(fileName);
+
+        // (Đây là "câu thần chú" SunEditor cần để "nhét" ảnh vào)
+        const response = {
+          result: [
+            {
+              url: publicUrlData.publicUrl,
+              name: file.name,
+              size: file.size,
+            },
+          ],
+        };
+        uploadHandler(response); // (Trả link về cho SunEditor)
+
+      } catch (err: any) {
+        console.error(err);
+        alert(err.message);
+        uploadHandler(null); // (Báo lỗi)
+      }
+    };
+    
+    uploadImage(); // (Chạy "phép thuật")
+    return false; // (Báo SunEditor "đừng làm gì cả, chờ tui")
+  }
+
+  // (Hàm "Cập nhật bài" - Giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -113,7 +155,6 @@ function EditPostForm() {
     }
     
     try {
-      // (Data cơ bản)
       const updateData: any = { 
         title: title, 
         content: content, 
@@ -121,40 +162,32 @@ function EditPostForm() {
         is_featured: isFeatured 
       };
 
-      // 1. "Đẩy" ảnh đại diện MỚI lên kho (nếu có)
       if (thumbnailFile) {
-        console.log('Đang tải ảnh đại diện MỚI lên...');
         const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
         
         const { error: uploadError } = await supabase.storage
-          .from('post_images') // (Tên "thùng" mình tạo)
+          .from('post_images')
           .upload(fileName, thumbnailFile);
         
         if (uploadError) {
           throw new Error(`Lỗi tải ảnh đại diện: ${uploadError.message}`);
         }
 
-        // 2. Lấy link "công khai" của ảnh MỚI
         const { data: publicUrlData } = supabase.storage
           .from('post_images')
           .getPublicUrl(fileName);
         
-        updateData.thumbnail_url = publicUrlData.publicUrl; // 💖 Thêm link MỚI vào data
-        console.log('Tải ảnh mới thành công, link:', updateData.thumbnail_url);
+        updateData.thumbnail_url = publicUrlData.publicUrl; 
       }
-      // (Nếu không có thumbnailFile, mình không thêm `thumbnail_url` vào updateData, 
-      //  Supabase sẽ tự động giữ nguyên link cũ 💫)
-
-      // 3. "Cất" bài viết vào "kho"
+     
       const { error } = await supabase
         .from('posts') 
-        .update(updateData) // (Update data)
-        .eq('id', postId); // (Cập nhật bài có ID này)
+        .update(updateData) 
+        .eq('id', postId); 
 
       if (error) throw error 
       setFormSuccess('Cập nhật bài viết thành công!');
       
-      // (Delay 1 giây rồi "đá" về trang danh sách)
       setTimeout(() => {
         router.push('/quan-ly/dang-bai');
       }, 1000);
@@ -198,7 +231,7 @@ function EditPostForm() {
               />
             </div>
             
-            {/* 💖 Ô UPLOAD ẢNH ĐẠI DIỆN 💖 */}
+            {/* Ô UPLOAD ẢNH ĐẠI DIỆN */}
             <div className={styles.formGroup}>
               <label htmlFor="thumbnail" className={styles.label}>
                 Ảnh đại diện (Thumbnail)
@@ -210,7 +243,6 @@ function EditPostForm() {
                 accept="image/png, image/jpeg, image/webp"
                 className={styles.fileInput}
               />
-              {/* (Chỗ xem trước ảnh - nó sẽ tự hiện ảnh cũ hoặc ảnh mới) */}
               {thumbnailPreview && (
                 <img src={thumbnailPreview} alt="Xem trước" className={styles.thumbnailPreview} />
               )}
@@ -259,8 +291,10 @@ function EditPostForm() {
               </label>
               <SunEditor 
                 lang={vi} 
-                setContents={content} // (Tự điền nội dung cũ)
+                setContents={content} 
                 onChange={setContent}
+                // 💖 "GẮN" PHÉP THUẬT VÀO ĐÂY 💖
+                onImageUploadBefore={handleImageUploadBefore}
                 setOptions={{
                   height: '300px',
                   buttonList: [
@@ -272,7 +306,7 @@ function EditPostForm() {
                     ['fontColor', 'hiliteColor'],
                     ['outdent', 'indent'],
                     ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    ['table', 'link', 'image'],
+                    ['table', 'link', 'image'], // (Nút 'image' giờ đã "xịn")
                     ['fullScreen', 'showBlocks', 'codeView'],
                   ],
                 }}
