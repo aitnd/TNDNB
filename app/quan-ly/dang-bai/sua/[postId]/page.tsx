@@ -4,17 +4,17 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation' 
 import dynamic from 'next/dynamic' 
-import { useAuth } from '../../../../../context/AuthContext' // (Sửa đường dẫn 5 chấm)
-import ProtectedRoute from '../../../../../components/ProtectedRoute' // (Sửa đường dẫn 5 chấm)
-import { supabase } from '../../../../../utils/supabaseClient' // (Sửa đường dẫn 5 chấm)
-import Link from 'next/link' // 💖 EM THÊM DÒNG NÀY NÈ ANH 💖
+import { useAuth } from '../../../../../context/AuthContext' 
+import ProtectedRoute from '../../../../../components/ProtectedRoute' 
+import { supabase } from '../../../../../utils/supabaseClient' 
+import Link from 'next/link' 
 
 const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
 import 'suneditor/dist/css/suneditor.min.css'; 
 import vi from 'suneditor/src/lang/en';
 
-// "Triệu hồi" file CSS Module
-import styles from './page.module.css' // (CSS riêng của trang này)
+// "Triệu hồi" file CSS Module (Mượn của trang Tạo Mới)
+import styles from '../../tao-moi/page.module.css' 
 
 type Category = {
   id: string;
@@ -23,24 +23,27 @@ type Category = {
 
 function EditPostForm() {
   const router = useRouter()
-  const params = useParams() // (Dùng "móc" để lấy ID)
-  const postId = params.postId as string // (Lấy ID bài viết từ URL)
+  const params = useParams() 
+  const postId = params.postId as string 
 
-  // (Não trạng thái - Giống trang "Tạo mới")
+  // (Não trạng thái)
   const [categories, setCategories] = useState<Category[]>([]) 
   const [loadingCategories, setLoadingCategories] = useState(true)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('') 
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
+  
+  // 💖 "NÃO" MỚI CHO ẢNH ĐẠI DIỆN 💖
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [formSuccess, setFormSuccess] = useState<string | null>(null)
-
-  // (Thêm "não" mới để chờ tải dữ liệu cũ)
   const [isLoadingPost, setIsLoadingPost] = useState(true);
 
-  // 1. "Phép thuật" (Lấy danh mục - Giữ nguyên)
+  // (Lấy danh mục - Giữ nguyên)
   useEffect(() => {
     async function fetchCategories() {
       const { data, error } = await supabase
@@ -57,9 +60,9 @@ function EditPostForm() {
     fetchCategories()
   }, []) 
   
-  // 2. 💖 "PHÉP THUẬT" MỚI (Lấy dữ liệu bài viết cũ) 💖
+  // 💖 "PHÉP THUẬT" LẤY DỮ LIỆU CŨ (ĐÃ NÂNG CẤP) 💖
   useEffect(() => {
-    if (!postId) return; // (Nếu chưa có ID thì nghỉ)
+    if (!postId) return; 
 
     async function fetchPostData() {
       console.log(`Đang tải dữ liệu bài viết ID: ${postId}`);
@@ -67,8 +70,8 @@ function EditPostForm() {
       const { data, error } = await supabase
         .from('posts')
         .select('*')
-        .eq('id', postId) // (Tìm bài có ID trùng)
-        .single(); // (Lấy 1 bài duy nhất)
+        .eq('id', postId) 
+        .single(); 
 
       if (error) {
         console.error('Lỗi khi tải bài viết:', error);
@@ -79,13 +82,24 @@ function EditPostForm() {
         setContent(data.content);
         setCategoryId(data.category_id);
         setIsFeatured(data.is_featured);
+        setThumbnailPreview(data.thumbnail_url || null); // 💖 ĐỔ ẢNH CŨ VÀO PREVIEW 💖
       }
       setIsLoadingPost(false);
     }
     fetchPostData();
-  }, [postId]); // (Chạy lại khi "postId" thay đổi)
+  }, [postId]); 
 
-  // 3. 💖 HÀM "CẬP NHẬT BÀI" (Sửa lại từ "Tạo mới") 💖
+  // 💖 HÀM XỬ LÝ KHI CHỌN ẢNH ĐẠI DIỆN 💖
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setThumbnailFile(file);
+      // (Tạo link xem trước)
+      setThumbnailPreview(URL.createObjectURL(file)); 
+    }
+  }
+
+  // 💖 HÀM "CẬP NHẬT BÀI" (ĐÃ NÂNG CẤP) 💖
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -99,15 +113,42 @@ function EditPostForm() {
     }
     
     try {
-      // (Dùng "update" thay vì "insert")
-      const { data, error } = await supabase
+      // (Data cơ bản)
+      const updateData: any = { 
+        title: title, 
+        content: content, 
+        category_id: categoryId, 
+        is_featured: isFeatured 
+      };
+
+      // 1. "Đẩy" ảnh đại diện MỚI lên kho (nếu có)
+      if (thumbnailFile) {
+        console.log('Đang tải ảnh đại diện MỚI lên...');
+        const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('post_images') // (Tên "thùng" mình tạo)
+          .upload(fileName, thumbnailFile);
+        
+        if (uploadError) {
+          throw new Error(`Lỗi tải ảnh đại diện: ${uploadError.message}`);
+        }
+
+        // 2. Lấy link "công khai" của ảnh MỚI
+        const { data: publicUrlData } = supabase.storage
+          .from('post_images')
+          .getPublicUrl(fileName);
+        
+        updateData.thumbnail_url = publicUrlData.publicUrl; // 💖 Thêm link MỚI vào data
+        console.log('Tải ảnh mới thành công, link:', updateData.thumbnail_url);
+      }
+      // (Nếu không có thumbnailFile, mình không thêm `thumbnail_url` vào updateData, 
+      //  Supabase sẽ tự động giữ nguyên link cũ 💫)
+
+      // 3. "Cất" bài viết vào "kho"
+      const { error } = await supabase
         .from('posts') 
-        .update({ 
-          title: title, 
-          content: content, 
-          category_id: categoryId, 
-          is_featured: isFeatured 
-        })
+        .update(updateData) // (Update data)
         .eq('id', postId); // (Cập nhật bài có ID này)
 
       if (error) throw error 
@@ -156,6 +197,25 @@ function EditPostForm() {
                 className={styles.input}
               />
             </div>
+            
+            {/* 💖 Ô UPLOAD ẢNH ĐẠI DIỆN 💖 */}
+            <div className={styles.formGroup}>
+              <label htmlFor="thumbnail" className={styles.label}>
+                Ảnh đại diện (Thumbnail)
+              </label>
+              <input
+                type="file"
+                id="thumbnail"
+                onChange={handleThumbnailChange}
+                accept="image/png, image/jpeg, image/webp"
+                className={styles.fileInput}
+              />
+              {/* (Chỗ xem trước ảnh - nó sẽ tự hiện ảnh cũ hoặc ảnh mới) */}
+              {thumbnailPreview && (
+                <img src={thumbnailPreview} alt="Xem trước" className={styles.thumbnailPreview} />
+              )}
+            </div>
+
             {/* (Danh mục) */}
             <div className={styles.formGroup}>
               <label htmlFor="category" className={styles.label}>
@@ -189,7 +249,7 @@ function EditPostForm() {
                 className={styles.checkbox}
               />
               <label htmlFor="is_featured" className={styles.label}>
-                Đánh dấu là "Tin tiêu điểm"
+                Đánh dấu là "Tin tiêu điểm" (Sẽ hiện ở Slider)
               </label>
             </div>
             

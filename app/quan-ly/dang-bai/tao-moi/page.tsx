@@ -4,9 +4,9 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic' 
-import { useAuth } from '../../../../context/AuthContext' // (Sửa đường dẫn 4 chấm)
-import ProtectedRoute from '../../../../components/ProtectedRoute' // (Sửa đường dẫn 4 chấm)
-import { supabase } from '../../../../utils/supabaseClient' // (Sửa đường dẫn 4 chấm)
+import { useAuth } from '../../../../context/AuthContext' 
+import ProtectedRoute from '../../../../components/ProtectedRoute' 
+import { supabase } from '../../../../utils/supabaseClient' 
 import Link from 'next/link' 
 
 const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
@@ -22,7 +22,7 @@ type Category = {
 }
 
 function CreatePostForm() {
-  const { user } = useAuth() // 💖 LẤY USER ĐỂ BIẾT TÁC GIẢ 💖
+  const { user } = useAuth() 
   const router = useRouter()
 
   const [categories, setCategories] = useState<Category[]>([]) 
@@ -31,6 +31,11 @@ function CreatePostForm() {
   const [content, setContent] = useState('') 
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
+  
+  // 💖 "NÃO" MỚI CHO ẢNH ĐẠI DIỆN 💖
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [formSuccess, setFormSuccess] = useState<string | null>(null)
@@ -55,6 +60,17 @@ function CreatePostForm() {
     fetchCategories()
   }, []) 
   
+  // 💖 HÀM XỬ LÝ KHI CHỌN ẢNH ĐẠI DIỆN 💖
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setThumbnailFile(file);
+      // (Tạo link xem trước)
+      setThumbnailPreview(URL.createObjectURL(file)); 
+    }
+  }
+
+  // 💖 HÀM "ĐĂNG BÀI" (ĐÃ NÂNG CẤP) 💖
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -66,14 +82,38 @@ function CreatePostForm() {
       setIsSubmitting(false)
       return
     }
-
-    if (!user) { // (Kiểm tra an toàn)
+    if (!user) { 
       setFormError('Không thể xác định người dùng. Vui lòng đăng nhập lại.');
       setIsSubmitting(false);
       return;
     }
     
     try {
+      let thumbnailUrl: string | null = null;
+
+      // 1. "Đẩy" ảnh đại diện lên kho (nếu có)
+      if (thumbnailFile) {
+        console.log('Đang tải ảnh đại diện lên...');
+        const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('post_images') // (Tên "thùng" mình tạo)
+          .upload(fileName, thumbnailFile);
+        
+        if (uploadError) {
+          throw new Error(`Lỗi tải ảnh đại diện: ${uploadError.message}`);
+        }
+
+        // 2. Lấy link "công khai" của ảnh
+        const { data: publicUrlData } = supabase.storage
+          .from('post_images')
+          .getPublicUrl(fileName);
+        
+        thumbnailUrl = publicUrlData.publicUrl;
+        console.log('Tải ảnh thành công, link:', thumbnailUrl);
+      }
+
+      // 3. "Cất" bài viết vào "kho" (kèm link ảnh)
       const { data, error } = await supabase
         .from('posts') 
         .insert([
@@ -82,15 +122,21 @@ function CreatePostForm() {
             content: content, 
             category_id: categoryId, 
             is_featured: isFeatured,
-            author_id: user.uid // 💖 SỬA Ở ĐÂY: LƯU ID TÁC GIẢ 💖
+            author_id: user.uid, 
+            thumbnail_url: thumbnailUrl // 💖 LƯU LINK ẢNH VÀO CỘT MỚI 💖
           }
         ])
       if (error) throw error 
+      
       setFormSuccess('Đăng bài thành công!')
-      setTitle('')
-      setContent('')
-      setIsFeatured(false)
-      // (Sau khi đăng, quay về trang danh sách)
+      // (Reset form)
+      setTitle('');
+      setContent('');
+      setIsFeatured(false);
+      setThumbnailFile(null);
+      setThumbnailPreview(null);
+
+      // (Quay về trang danh sách)
       router.push('/quan-ly/dang-bai') 
 
     } catch (err: any) {
@@ -123,6 +169,25 @@ function CreatePostForm() {
                 placeholder="Thông báo tuyển sinh..."
               />
             </div>
+            
+            {/* 💖 Ô UPLOAD ẢNH ĐẠI DIỆN 💖 */}
+            <div className={styles.formGroup}>
+              <label htmlFor="thumbnail" className={styles.label}>
+                Ảnh đại diện (Thumbnail)
+              </label>
+              <input
+                type="file"
+                id="thumbnail"
+                onChange={handleThumbnailChange}
+                accept="image/png, image/jpeg, image/webp"
+                className={styles.fileInput}
+              />
+              {/* (Chỗ xem trước ảnh) */}
+              {thumbnailPreview && (
+                <img src={thumbnailPreview} alt="Xem trước" className={styles.thumbnailPreview} />
+              )}
+            </div>
+
             {/* (Danh mục) */}
             <div className={styles.formGroup}>
               <label htmlFor="category" className={styles.label}>
@@ -156,7 +221,7 @@ function CreatePostForm() {
                 className={styles.checkbox}
               />
               <label htmlFor="is_featured" className={styles.label}>
-                Đánh dấu là "Tin tiêu điểm"
+                Đánh dấu là "Tin tiêu điểm" (Sẽ hiện ở Slider)
               </label>
             </div>
             

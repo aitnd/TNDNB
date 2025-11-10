@@ -1,0 +1,82 @@
+/* === Trang điểm cho Slider === */
+
+.sliderContainer {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden; /* (Rất quan trọng) */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background-color: #f3f4f6;
+  border: 1px solid #ddd;
+}
+
+.mySwiper {
+  width: 100%;
+  height: 400px; /* (Anh chỉnh độ cao ở đây nha) */
+}
+
+.slideBackground {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s ease;
+}
+
+/* (Hiệu ứng Zoom khi hover) */
+.mySwiper :global(.swiper-slide-active) .slideBackground {
+  transform: scale(1.05);
+}
+.mySwiper :global(.swiper-slide) a:hover .slideBackground {
+  transform: scale(1.15);
+}
+
+
+.slideOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* (Lớp mờ màu đen) */
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.0) 100%);
+}
+
+.slideContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 2rem;
+  z-index: 10;
+  color: white;
+}
+.slideContent h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.slideContent a:hover {
+  text-decoration: none;
+}
+
+/* (Chỉnh 2 nút mũi tên) */
+.mySwiper :global(.swiper-button-prev),
+.mySwiper :global(.swiper-button-next) {
+  color: #ffffff;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+.mySwiper :global(.swiper-button-prev):hover,
+.mySwiper :global(.swiper-button-next):hover {
+  opacity: 1;
+}
+
+/* (Chỉnh mấy nút tròn tròn ở dưới) */
+.mySwiper :global(.swiper-pagination-bullet) {
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 10px;
+  height: 10px;
+}
+.mySwiper :global(.swiper-pagination-bullet-active) {
+  background-color: #ffffff;
+}

@@ -48,44 +48,8 @@
     margin-bottom: 1.5rem;
 }
 
-/* 5. Box "Tin Tiêu Điểm" (Cột trái) */
-.newsGrid3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 1.5rem;
-    padding: 0 1.5rem 1.5rem 1.5rem;
-}
+/* 💖 (ĐÃ XÓA CSS CHO .newsGrid3 VÀ .newsItemSmall CŨ) 💖 */
 
-.newsItemSmall {
-    border: 1px solid #eee;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-.newsItemSmall img {
-    width: 100%;
-    height: 160px; 
-    object-fit: cover; 
-}
-.newsItemSmall h3 {
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.4;
-    color: #333;
-    padding: 0.75rem;
-    margin: 0;
-}
-.newsItemSmall h3 a:hover {
-    color: #004a99;
-    text-decoration: underline;
-}
-
-/* (Trên điện thoại: 1 cột) */
-@media (max-width: 768px) {
-    .newsGrid3 {
-        grid-template-columns: 1fr; 
-    }
-}
 
 /* 6. Box "Tin Tức Mới" (Cột trái) */
 .newsList {

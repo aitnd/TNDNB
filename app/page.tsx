@@ -5,6 +5,8 @@ import Link from 'next/link'
 import styles from './page.module.css' 
 // 2. 💖 "TRIỆU HỒI" SIDEBAR DÙNG CHUNG 💖
 import Sidebar from '../components/Sidebar' 
+// 3. 💖 "TRIỆU HỒI" SLIDER MỚI 💖
+import FeaturedSlider from '../components/FeaturedSlider'
 
 // (Định nghĩa "kiểu" Post - Giữ nguyên)
 type Post = {
@@ -12,27 +14,12 @@ type Post = {
   created_at: string;
   title: string;
   content: string;
-  image_url: string | null;
+  image_url: string | null; // (Cái này là ảnh trong bài viết, không phải thumbnail)
   category_id: string;
   is_featured: boolean;
 }
 
-// (Hàm lấy Tin Tiêu Điểm - Giữ nguyên)
-async function getFeaturedPosts(): Promise<Post[]> {
-  console.log('[Server] Đang lấy Tin Tiêu Điểm...')
-  const { data, error } = await supabase
-    .from('posts')
-    .select('*')
-    .eq('is_featured', true) 
-    .order('created_at', { ascending: false })
-    .limit(3) 
-
-  if (error) {
-    console.error('Lỗi lấy Tin Tiêu Điểm:', error)
-    return []
-  }
-  return data || []
-}
+// 💖 (ĐÃ XÓA HÀM getFeaturedPosts() CŨ VÌ SLIDER TỰ LẤY) 💖
 
 // (Hàm lấy Tin Tức Mới - Giữ nguyên)
 async function getLatestNews(): Promise<Post[]> {
@@ -55,8 +42,7 @@ async function getLatestNews(): Promise<Post[]> {
 // 3. TRANG CHỦ (SERVER COMPONENT)
 export default async function HomePage() {
   
-  // 4. "Chờ" máy chủ lấy 2 loại tin
-  const featuredPosts = await getFeaturedPosts()
+  // 4. "Chờ" máy chủ lấy 1 loại tin thôi
   const latestNews = await getLatestNews()
 
   // 5. "Vẽ" Giao diện (Đã dùng CSS Module)
@@ -68,28 +54,9 @@ export default async function HomePage() {
         {/* ===== CỘT TRÁI (NỘI DUNG CHÍNH) ===== */}
         <main className={styles.mainContent}>
           
-          {/* Box Tin Tiêu Điểm (ĐỘNG) */}
-          <section className={styles.widgetBox}>
-            <h2 className={styles.widgetTitle}>Tin tiêu điểm</h2>
-            <div className={styles.newsGrid3}>
-              {featuredPosts.length > 0 ? (
-                featuredPosts.map((post) => (
-                  <div key={post.id} className={styles.newsItemSmall}>
-                    <img
-                      src={post.image_url || 'https://via.placeholder.com/300x200'}
-                      alt={post.title}
-                    />
-                    <h3>
-                      <Link href={`/bai-viet/${post.id}`}>
-                        {post.title}
-                      </Link>
-                    </h3>
-                  </div>
-                ))
-              ) : (
-                <p style={{ padding: '0 1.5rem 1.5rem' }}>Chưa có tin tiêu điểm nào.</p>
-              )}
-            </div>
+          {/* 💖 Box Tin Tiêu Điểm (ĐÃ THAY BẰNG SLIDER) 💖 */}
+          <section>
+            <FeaturedSlider />
           </section>
 
           {/* Box Tin Tức Mới (ĐỘNG) */}
@@ -99,8 +66,10 @@ export default async function HomePage() {
               {latestNews.length > 0 ? (
                 latestNews.map((post) => (
                   <div key={post.id} className={styles.newsItemLarge}>
+                    {/* 💖 THÊM ẢNH ĐẠI DIỆN VÀO TIN TỨC MỚI 💖 */}
                     <img
-                      src={post.image_url || 'https://via.placeholder.com/150x100'}
+                      // (Ưu tiên thumbnail, nếu không có thì lấy ảnh cũ hoặc ảnh mồi)
+                      src={(post as any).thumbnail_url || post.image_url || 'https://via.placeholder.com/150x100'}
                       alt={post.title}
                     />
                     <div>
@@ -123,7 +92,6 @@ export default async function HomePage() {
         </main>
 
         {/* ===== CỘT PHẢI (SIDEBAR) ===== */}
-        {/* 💖 6. "TRIỆU HỒI" SIDEBAR DÙNG CHUNG 💖 */}
         <Sidebar />
 
       </div>
