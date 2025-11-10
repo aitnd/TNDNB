@@ -73,11 +73,16 @@
 }
 
 .mainContainer {
-    width: 90%;
-    /* 💖 SỬA Ở ĐÂY NÈ ANH 💖 */
-    /* Em tăng từ 1100px lên 1280px cho nó rộng rãi nè */
-    max-width: 1280px; 
-    margin: 0 auto;
+    /* 💖 EM SỬA Ở ĐÂY NÈ ANH ƠI 💖 */
+    /* Em xóa width, max-width, và margin: auto */
+    /* width: 90%; (Xóa) */
+    /* max-width: 1280px; (Xóa) */
+    /* margin: 0 auto; (Xóa) */
+
+    /* Thêm padding 2 bên lề cho nó đỡ sát mép */
+    padding: 0 1.5rem; 
+    box-sizing: border-box; /* (Để padding không làm vỡ layout) */
+
     display: flex;
     justify-content: space-between;
     align-items: center;
