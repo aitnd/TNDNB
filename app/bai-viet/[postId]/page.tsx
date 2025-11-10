@@ -1,49 +1,79 @@
-import { supabase } from '../../../utils/supabaseClient' // (Lưu ý: 3 dấu ../)
+import { supabase } from '../../../utils/supabaseClient' // (Kho Supabase)
 import Link from 'next/link'
-
-// 1. "Triệu hồi" file CSS Module
-import styles from './page.module.css' 
+import styles from './page.module.css' // (Triệu hồi CSS)
+import { adminDb } from '../../../utils/firebaseAdmin' // 💖 "TRIỆU HỒI" KHO FIRESTORE 💖
 
 // 2. 💖 ĐỊNH NGHĨA "KIỂU" NÂNG CẤP 💖
 type Post = {
   id: string;
   created_at: string;
   title: string;
-  content: string; // Đây là HTML thô từ Trình soạn thảo
+  content: string; 
   image_url: string | null;
   category_id: string;
   is_featured: boolean;
-  users: { // (Supabase sẽ trả về 1 object "lồng" vào)
-    fullName: string;
-  } | null; // (Hoặc là null nếu không tìm thấy)
+  author_id: string; // (ID của tác giả)
 }
 
-// 3. 💖 "PHÉP THUẬT": LẤY BÀI VIẾT (KÈM TÊN TÁC GIẢ) 💖
-async function getPostDetails(postId: string): Promise<Post | null> {
-  console.log(`[Server] Đang lấy chi tiết bài viết ID: ${postId}`)
-  
-  const { data, error } = await supabase
-    .from('posts')
-    // 💖 SỬA Ở ĐÂY: Lấy tất cả cột, VÀ lấy cột 'fullName' từ bảng 'users' 💖
-    .select('*, users ( fullName )') 
-    .eq('id', postId) // Lấy bài viết có ID trùng khớp
-    .single() // (Chỉ lấy 1 bài duy nhất)
+// (Kiểu dữ liệu mới cho trang)
+type PostPageData = {
+  post: Post;
+  authorName: string | null;
+}
 
-  if (error) {
-    console.error('Lỗi lấy chi tiết bài viết:', error)
+// 3. 💖 "PHÉP THUẬT": LẤY DỮ LIỆU TỪ 2 "KHO" 💖
+async function getPostDetails(postId: string): Promise<PostPageData | null> {
+  
+  // 3.1. "Hỏi" Kho Supabase để lấy Bài viết
+  console.log(`[Server] Lấy bài viết ID: ${postId} từ Supabase...`);
+  const { data: postData, error: postError } = await supabase
+    .from('posts')
+    .select('*') // (Lấy hết cột, bao gồm "author_id")
+    .eq('id', postId) 
+    .single() 
+
+  // (Nếu "Luật" RLS (bước trước) sai, hoặc không có bài, nó sẽ lỗi ở đây)
+  if (postError || !postData) {
+    console.error('Lỗi Supabase (lấy post):', postError);
     return null
   }
-  return data
+
+  let authorName: string | null = null;
+  
+  // 3.2. "Hỏi" Kho Firestore để lấy Tên Tác giả
+  if (postData.author_id) {
+    try {
+      console.log(`[Server] Lấy tác giả ID: ${postData.author_id} từ Firestore...`);
+      // (Dùng "chìa khóa" Admin để "mở tủ" users)
+      const userDocRef = adminDb.collection('users').doc(postData.author_id);
+      const userDoc = await userDocRef.get();
+      
+      if (userDoc.exists()) {
+        authorName = userDoc.data()?.fullName || 'Tác giả';
+      } else {
+        authorName = 'Tác giả không xác định';
+      }
+    } catch (firestoreError) {
+      console.error('Lỗi Firestore (lấy user):', firestoreError);
+      authorName = 'Lỗi khi tải tác giả'; // (Để mình biết lỗi)
+    }
+  }
+
+  // (Gói 2 kết quả lại)
+  return {
+    post: postData as Post,
+    authorName: authorName
+  };
 }
 
-// 4. TRANG ĐỌC BÀI VIẾT (Giao diện đã cập nhật CSS Module)
+// 4. TRANG ĐỌC BÀI VIẾT (ĐÃ SỬA)
 export default async function PostPage({ params }: { params: { postId: string } }) {
   
-  // 5. "Chờ" máy chủ lấy bài viết
-  const post = await getPostDetails(params.postId)
+  // 5. "Chờ" máy chủ lấy dữ liệu (từ cả 2 kho)
+  const data = await getPostDetails(params.postId)
 
-  // 6. Xử lý nếu không tìm thấy (Giao diện 404 đã cập nhật)
-  if (!post) {
+  // 6. Xử lý nếu không tìm thấy
+  if (!data) {
     return (
       <div className={styles.errorContainer}>
         <h1 className={styles.errorTitle}>Lỗi 404</h1>
@@ -57,7 +87,10 @@ export default async function PostPage({ params }: { params: { postId: string } 
     )
   }
 
-  // 7. "Vẽ" Giao diện (Giao diện bài viết đã cập nhật)
+  // (Lấy data ra)
+  const { post, authorName } = data;
+
+  // 7. "Vẽ" Giao diện
   return (
     <div className={styles.container}>
       
@@ -88,10 +121,10 @@ export default async function PostPage({ params }: { params: { postId: string } 
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      {/* 💖 THÊM TÊN TÁC GIẢ Ở ĐÂY NÈ ANH 💖 */}
-      {post.users && (
+      {/* 💖 THÊM TÊN TÁC GIẢ (Lấy từ Firestore) 💖 */}
+      {authorName && (
         <p className={styles.authorName}>
-          Đăng bởi: {post.users.fullName}
+          Đăng bởi: {authorName}
         </p>
       )}
       
