@@ -1,0 +1,197 @@
+/* === Trang điểm cho Trang Quản lý Tài khoản === */
+
+.container {
+    min-height: 80vh;
+    padding: 2rem;
+    background-color: #f3f4f6; /* Nền xám nhạt */
+}
+
+.wrapper {
+    max-width: 1280px; /* (Rộng hơn nữa cho bảng) */
+    margin: 0 auto;
+    position: relative; /* (Giúp modal hoạt động) */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* (Xuống dòng nếu hẹp) */
+}
+
+.title {
+    font-size: 2.5rem; 
+    font-weight: 700;
+    color: #004a99;
+}
+
+.backButton {
+    color: #004a99;
+    text-decoration: none;
+    font-weight: 500;
+}
+.backButton:hover {
+    text-decoration: underline;
+}
+
+/* (Box chứa bảng) */
+.tableContainer {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow-x: auto; /* (Cho phép cuộn ngang nếu bảng quá rộng) */
+}
+
+/* (Bảng danh sách) */
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+.userTable th,
+.userTable td {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+.userTable th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+    color: #004a99;
+}
+.userTable td strong {
+    font-weight: 600;
+    color: #333;
+}
+.subText {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* (Nhãn vai trò) */
+.rolePill {
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px; 
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.admin { background-color: #fde8e8; color: #9b2c2c; }
+.quan_ly { background-color: #fef3c7; color: #92400e; }
+.lanh_dao { background-color: #dbeafe; color: #1e40af; }
+.giao_vien { background-color: #d1fae5; color: #065f46; }
+.hoc_vien { background-color: #e5e7eb; color: #374151; }
+
+
+/* (Nút Sửa/Xóa) */
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+.buttonEdit,
+.buttonDelete,
+.buttonSecondary {
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 0.875rem;
+}
+.buttonEdit:disabled,
+.buttonDelete:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.buttonEdit {
+    background-color: #004a99;
+    color: white;
+}
+.buttonEdit:hover:not(:disabled) {
+    background-color: #003366;
+}
+.buttonDelete {
+    background-color: #d9534f;
+    color: white;
+}
+.buttonDelete:hover:not(:disabled) {
+    background-color: #c9302c;
+}
+.buttonSecondary {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+.buttonSecondary:hover {
+    background-color: #d1d5db;
+}
+
+/* === LỖI === */
+.error {
+    padding: 1rem;
+    background-color: #fde8e8;
+    color: #9b2c2c;
+}
+
+/* === CSS CHO MODAL (CỬA SỔ) === */
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modalTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #004a99;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* (Form trong Modal) */
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+.formGroup label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+.input,
+.select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box; 
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}

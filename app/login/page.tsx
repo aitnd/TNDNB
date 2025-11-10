@@ -12,14 +12,16 @@ import { useAuth } from '../../context/AuthContext'
 import styles from './page.module.css' 
 
 export default function LoginPage() {
-  // THÊM "NÃO" MỚI: fullName
+  // 💖 THÊM "NÃO" MỚI: phoneNumber, birthDate 💖
   const [fullName, setFullName] = useState('') 
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [birthDate, setBirthDate] = useState('')
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null) 
   const [loading, setLoading] = useState(false)
   
-  // (State mới để phân biệt Đăng nhập / Đăng ký)
   const [isRegistering, setIsRegistering] = useState(false) 
 
   const router = useRouter() 
@@ -67,11 +69,13 @@ export default function LoginPage() {
       const user = userCredential.user
       console.log('Đăng ký Auth thành công:', user.uid)
 
-      // 2. Tạo "hồ sơ" vai trò trong "Tủ" (Firestore)
+      // 2. 💖 TẠO "HỒ SƠ" NÂNG CẤP (LƯU SĐT, NĂM SINH) 💖
       const userDocRef = doc(db, 'users', user.uid)
       await setDoc(userDocRef, {
         email: user.email,
-        fullName: fullName, // 💖 LƯU "HỌ VÀ TÊN" (Req 2) 💖
+        fullName: fullName, 
+        phoneNumber: phoneNumber, // 💖 LƯU SĐT 💖
+        birthDate: birthDate,     // 💖 LƯU NĂM SINH 💖
         role: 'hoc_vien', // Mặc định là 'hoc_vien'
         createdAt: serverTimestamp()
       })
@@ -92,7 +96,7 @@ export default function LoginPage() {
     router.push('/quan-ly')
     return (
       <div className={styles.container}>
-        <p className={styles.loadingText}>Đã đăng nhập, đang điều hướng...</p>
+        <p className={styles.loadingText}>Đang điều hướng...</p>
       </div>
     )
   }
@@ -107,22 +111,51 @@ export default function LoginPage() {
         
         <form onSubmit={isRegistering ? handleRegister : handleLogin}>
           
-          {/* 💖 ẨN/HIỆN Ô "HỌ VÀ TÊN" (Req 2) 💖 */}
+          {/* 💖 ẨN/HIỆN CÁC Ô MỚI KHI ĐĂNG KÝ 💖 */}
           {isRegistering && (
-            <div className={styles.formGroup}>
-              <label htmlFor="fullName" className={styles.label}>
-                Họ và Tên
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
-                className={styles.input}
-                placeholder="Nguyễn Văn A"
-              />
-            </div>
+            <>
+              <div className={styles.formGroup}>
+                <label htmlFor="fullName" className={styles.label}>
+                  Họ và Tên
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                  className={styles.input}
+                  placeholder="Nguyễn Văn A"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="phoneNumber" className={styles.label}>
+                  Số điện thoại (Tuỳ chọn)
+                </label>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className={styles.input}
+                  placeholder="0912..."
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="birthDate" className={styles.label}>
+                  Ngày sinh (Tuỳ chọn)
+                </label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                  className={styles.input}
+                />
+              </div>
+            </>
           )}
 
           {/* Ô Email */}
@@ -153,7 +186,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               className={styles.input}
-              placeholder="••••••••"
+              placeholder="•••••••• (Ít nhất 6 ký tự)"
             />
           </div>
 
@@ -164,10 +197,9 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Các nút bấm (Đã cập nhật) */}
+          {/* Các nút bấm */}
           <div className={styles.buttonContainer}>
             {isRegistering ? (
-              // (Nút khi đang Đăng ký)
               <button
                 type="submit"
                 disabled={loading}
@@ -176,7 +208,6 @@ export default function LoginPage() {
                 {loading ? 'Đang xử lý...' : 'Đăng ký'}
               </button>
             ) : (
-              // (Nút khi đang Đăng nhập)
               <button
                 type="submit"
                 disabled={loading}

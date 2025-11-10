@@ -59,13 +59,25 @@ function QuanLyDashboard() {
           Bảng điều khiển
         </h1>
 
-        {/* 4. Thông tin tài khoản */}
+        {/* 4. Thông tin tài khoản (ĐÃ SỬA) */}
         {user && (
           <div className={styles.infoBox}>
             <h2 className={styles.sectionTitle}>Thông tin tài khoản</h2>
             <p><strong>Họ và tên:</strong> {user.fullName}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <p><strong>Vai trò:</strong> {dichTenVaiTro(user.role)}</p>
+
+            {/* 💖 CÁC NÚT MỚI NÈ ANH 💖 */}
+            <div className={styles.infoBoxActions}>
+              <Link href="/quan-ly/ho-so" className={styles.buttonPrimary}>
+                Chỉnh sửa thông tin
+              </Link>
+              <button onClick={handleChangePassword} className={styles.buttonDanger}>
+                Gửi email Đổi mật khẩu
+              </button>
+            </div>
+            {resetMsg && <p className={styles.success}>{resetMsg}</p>}
+            {resetError && <p className={styles.error}>{resetError}</p>}
           </div>
         )}
 
@@ -108,15 +120,7 @@ function QuanLyDashboard() {
           )}
         </div>
         
-        {/* 4.1: Chức năng đổi mật khẩu */}
-        <div className={styles.infoBox} style={{marginTop: '2rem'}}>
-          <h2 className={styles.sectionTitle}>Bảo mật</h2>
-          <button onClick={handleChangePassword} className={styles.button}>
-            Gửi email Đổi mật khẩu
-          </button>
-          {resetMsg && <p className={styles.success}>{resetMsg}</p>}
-          {resetError && <p className={styles.error}>{resetError}</p>}
-        </div>
+        {/* 💖 (ĐÃ XÓA BOX "BẢO MẬT" CŨ Ở ĐÂY) 💖 */}
 
       </div>
     </div>

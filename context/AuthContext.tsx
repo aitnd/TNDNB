@@ -6,12 +6,14 @@ import { onAuthStateChanged, User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../utils/firebaseClient' 
 
-// 1. Định nghĩa "kiểu" của người dùng (THÊM fullName - Req 2)
+// 1. 💖 NÂNG CẤP "KIỂU" NGƯỜI DÙNG 💖
 interface AuthUser {
   uid: string
   email: string | null
   role: string 
-  fullName: string // 💖 "HỌ VÀ TÊN" 💖
+  fullName: string 
+  phoneNumber: string | null // 💖 THÊM SỐ ĐIỆN THOẠI
+  birthDate: string | null   // 💖 THÊM NĂM SINH
 }
 
 // 2. Định nghĩa "kiểu" của "Bộ não" (Context)
@@ -48,7 +50,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
             role: userData.role || 'hoc_vien',
-            fullName: userData.fullName || 'Người dùng mới' // 💖 LẤY "HỌ TÊN" (Req 2) 💖
+            fullName: userData.fullName || 'Người dùng mới',
+            // 💖 LẤY THÊM 2 TRƯỜNG MỚI (nếu có) 💖
+            phoneNumber: userData.phoneNumber || null,
+            birthDate: userData.birthDate || null,
           }
           setUser(authUser)
           console.log(`Vai trò: ${authUser.role}, Tên: ${authUser.fullName}`)
@@ -58,7 +63,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
             role: 'hoc_vien',
-            fullName: 'Người dùng (chưa có hồ sơ)' // (Tạm)
+            fullName: 'Người dùng (chưa có hồ sơ)',
+            phoneNumber: null, // (Mặc định là null)
+            birthDate: null,   // (Mặc định là null)
           }
           setUser(authUser)
           console.warn('Không tìm thấy hồ sơ vai trò (role) cho user này!')
