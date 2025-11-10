@@ -17,18 +17,25 @@
 .slideBackground {
   width: 100%;
   height: 100%;
-  background-size: cover;
+  /* 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 */
+  /* (Đổi từ 'cover' sang 'contain' để ảnh không bị cắt) */
+  background-size: contain; 
   background-position: center;
+  /* 💖 THÊM DÒNG NÀY ĐỂ MẤY CHỖ TRỐNG LÀ MÀU ĐEN 💖 */
+  background-color: black; 
+  background-repeat: no-repeat; /* (Không lặp ảnh) */
   transition: transform 0.6s ease;
 }
 
 /* (Hiệu ứng Zoom khi hover) */
-.mySwiper :global(.swiper-slide-active) .slideBackground {
+/* Em đã tắt hiệu ứng zoom trên slideBackground vì nó không hợp với contain, 
+   nếu anh muốn hiệu ứng zoom, mình sẽ phải làm cách khác á. */
+/* .mySwiper :global(.swiper-slide-active) .slideBackground {
   transform: scale(1.05);
 }
 .mySwiper :global(.swiper-slide) a:hover .slideBackground {
   transform: scale(1.15);
-}
+} */
 
 
 .slideOverlay {
