@@ -74,7 +74,7 @@ export default function Navbar() {
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
           <Link href="/" className={styles.logo}>
-            Trường dạy nghề thủy nội địa Ninh Bình
+            Tư vấn và giáo dục Ninh Binh
           </Link>
 
           <ul className={styles.navLinks}>
