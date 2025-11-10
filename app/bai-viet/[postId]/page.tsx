@@ -48,7 +48,8 @@ async function getPostDetails(postId: string): Promise<PostPageData | null> {
       const userDocRef = adminDb.collection('users').doc(postData.author_id);
       const userDoc = await userDocRef.get();
       
-      if (userDoc.exists()) {
+      // 💖 SỬA LỖI Ở ĐÂY (bỏ dấu "()" ở .exists) 💖
+      if (userDoc.exists) { 
         authorName = userDoc.data()?.fullName || 'Tác giả';
       } else {
         authorName = 'Tác giả không xác định';
