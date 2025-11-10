@@ -36,7 +36,8 @@ function PostManagementDashboard() {
     setError(null);
     try {
       console.log('Đang lấy danh sách bài viết...');
-      const { data, error }_ = await supabase
+      // 💖 SỬA LỖI 1 (XÓA DẤU "_"): 💖
+      const { data, error } = await supabase
         .from('posts')
         .select('id, title, category_id, created_at, is_featured') // (Chỉ lấy cột cần)
         .order('created_at', { ascending: false }); // (Mới nhất lên đầu)
@@ -67,7 +68,8 @@ function PostManagementDashboard() {
         // (Xóa thành công, tải lại danh sách)
         await fetchPosts();
 
-      } catch (err: any)
+      // 💖 SỬA LỖI 2 (THÊM DẤU "{") 💖
+      } catch (err: any) { 
         setError(err.message || 'Lỗi khi xóa bài viết.');
       }
     }

@@ -190,9 +190,6 @@ function UserManagementDashboard() {
     
     if (confirm(`Anh có chắc chắn muốn XÓA VĨNH VIỄN tài khoản "${userToDelete.fullName}" không? Sẽ không thể khôi phục được nha!`)) {
       try {
-        // (Đây là logic xóa an toàn, mình chỉ xóa "hồ sơ" trong "tủ" users)
-        // (Việc xóa Auth cần có server (Admin SDK) rất phức tạp, 
-        //  mình sẽ làm sau nếu anh cần, tạm thời xóa hồ sơ là họ hết quyền)
         const userDocRef = doc(db, 'users', userToDelete.id);
         await deleteDoc(userDocRef);
         
@@ -205,6 +202,7 @@ function UserManagementDashboard() {
     }
   }
 
+  // 💖 SỬA LỖI 3 (XÓA DẤU "}" DƯ Ở ĐÂY) 💖
 
   // 6. GIAO DIỆN
   return (
@@ -236,4 +234,138 @@ function UserManagementDashboard() {
               <tbody>
                 {users.map((user) => {
                   // (Kiểm tra quyền trước khi "vẽ" nút)
-                  const canEdit = canEdit
+                  const canEdit = canEditUser(user);
+
+                  return (
+                    <tr key={user.id}>
+                      <td><strong>{user.fullName}</strong></td>
+                      <td>
+                        {user.email}
+                        {user.phoneNumber && <div className={styles.subText}>{user.phoneNumber}</div>}
+                      </td>
+                      <td>{user.birthDate || '...'}</td>
+                      <td>
+                        <span className={`${styles.rolePill} ${styles[user.role]}`}>
+                          {dichTenVaiTro(user.role)}
+                        </span>
+                      </td>
+                      <td>
+                        <div className={styles.actionButtons}>
+                          <button 
+                            className={styles.buttonEdit}
+                            onClick={() => handleOpenEditModal(user)}
+                            disabled={!canEdit} // (Khóa nút nếu không có quyền)
+                          >
+                            Sửa
+                          </button>
+                          <button 
+                            className={styles.buttonDelete}
+                            onClick={() => handleDeleteUser(user)}
+                            disabled={!canEdit || user.id === currentUser?.id} // (Khóa nút nếu là admin/quan_ly hoặc tự xóa)
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+      </div>
+
+      {/* 7. "CỬA SỔ" MODAL (Ẩn/Hiện) */}
+      {isModalOpen && editingUser && (
+        <div className={styles.modalBackdrop} onClick={handleCloseModal}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h2 className={styles.modalTitle}>Sửa thông tin: {editingUser.fullName}</h2>
+            
+            <form onSubmit={handleSaveEdit}>
+              {/* Ô Họ và Tên */}
+              <div className={styles.formGroup}>
+                <label htmlFor="fullName">Họ và Tên</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleFormChange}
+                  className={styles.input}
+                />
+              </div>
+
+              {/* Ô SĐT */}
+              <div className={styles.formGroup}>
+                <label htmlFor="phoneNumber">Số điện thoại</label>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleFormChange}
+                  className={styles.input}
+                />
+              </div>
+
+              {/* Ô Ngày sinh */}
+              <div className={styles.formGroup}>
+                <label htmlFor="birthDate">Ngày sinh</label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  name="birthDate"
+                  value={formData.birthDate}
+                  onChange={handleFormChange}
+                  className={styles.input}
+                />
+              </div>
+              
+              {/* Ô VAI TRÒ (PHÂN QUYỀN) */}
+              <div className={styles.formGroup}>
+                <label htmlFor="role">Vai trò</label>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleFormChange}
+                  className={styles.input}
+                >
+                  {getAvailableRoles().map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {error && <p className={styles.error}>{error}</p>}
+
+              {/* Nút bấm của Modal */}
+              <div className={styles.modalActions}>
+                <button type="button" onClick={handleCloseModal} className={styles.buttonSecondary}>
+                  Hủy
+                </button>
+                <button type="submit" disabled={isSubmitting} className={styles.buttonEdit}>
+                  {isSubmitting ? 'Đang lưu...' : 'Lưu thay đổi'}
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// 8. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
+export default function QuanLyTaiKhoanPage() {
+  return (
+    <ProtectedRoute allowedRoles={['admin', 'quan_ly']}>
+      <UserManagementDashboard /> 
+    </ProtectedRoute>
+  )
+}
