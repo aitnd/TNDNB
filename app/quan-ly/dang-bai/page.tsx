@@ -2,218 +2,158 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic' 
-import { useAuth } from '../../../context/AuthContext' // (Sửa đường dẫn 3 chấm)
-import ProtectedRoute from '../../../components/ProtectedRoute' // (Sửa đường dẫn 3 chấm)
-import { supabase } from '../../../utils/supabaseClient' // (Sửa đường dẫn 3 chấm)
+import { useAuth } from '../../../context/AuthContext' 
+import ProtectedRoute from '../../../components/ProtectedRoute' 
+import { supabase } from '../../../utils/supabaseClient' 
+import Link from 'next/link'
 
-// 1. "TRIỆU HỒI" TRÌNH SOẠN THẢO "SUNEDITOR" (MỚI)
-const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
-import 'suneditor/dist/css/suneditor.min.css'; // (CSS của nó)
+// (Import CSS Module - Mình mượn của trang Tài khoản)
+import styles from '../tai-khoan/page.module.css' 
 
-// 2. 💖 "TRIỆU HỒI" NGÔN NGỮ TỪ 'suneditor/src/lang' (Sửa lỗi) 💖
-import vi from 'suneditor/src/lang/en';
-
-// 3. "Triệu hồi" file CSS Module (Sửa đường dẫn)
-import styles from './page.module.css' 
-
-// (Định nghĩa "kiểu" Category - Giữ nguyên)
-type Category = {
-  id: string;
-  name: string;
+// 1. Định nghĩa "kiểu" của Bài viết
+interface Post {
+  id: string; 
+  title: string;
+  category_id: string;
+  created_at: string;
+  is_featured: boolean;
 }
 
-// --- Component "Nội dung" (Bên trong "Lính gác") ---
-function AdminDashboard() {
-  const { user } = useAuth()
-  const router = useRouter()
+// 2. TẠO "NỘI DUNG" TRANG
+function PostManagementDashboard() {
+  const { user } = useAuth() 
+  const [posts, setPosts] = useState<Post[]>([]) 
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // (Não trạng thái - Giữ nguyên)
-  const [categories, setCategories] = useState<Category[]>([]) 
-  const [loadingCategories, setLoadingCategories] = useState(true)
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('') 
-  const [categoryId, setCategoryId] = useState('')
-  const [isFeatured, setIsFeatured] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formError, setFormError] = useState<string | null>(null)
-  const [formSuccess, setFormSuccess] = useState<string | null>(null)
-
-  // 4. "Phép thuật": Lấy "Danh mục" (Giữ nguyên)
+  // 3. "Phép thuật" Lấy danh sách Bài viết
   useEffect(() => {
-    async function fetchCategories() {
-      console.log('[Admin] Đang lấy danh mục từ Supabase...')
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('name', { ascending: true })
+    fetchPosts();
+  }, []);
 
-      if (error) {
-        console.error('Lỗi khi lấy danh mục:', error)
-      } else {
-        setCategories(data as Category[])
-        if (data && data.length > 0) {
-          setCategoryId(data[0].id)
-        }
-      }
-      setLoadingCategories(false)
-    }
-    fetchCategories()
-  }, []) 
-  
-  // 5. HÀM "ĐĂNG BÀI" (Giữ nguyên)
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setFormError(null)
-    setFormSuccess(null)
-
-    if (!title || !content || !categoryId) {
-      setFormError('Tiêu đề, Nội dung, và Danh mục không được để trống!')
-      setIsSubmitting(false)
-      return
-    }
-    console.log('Đang cất bài viết vào Supabase...')
+  async function fetchPosts() {
+    setLoading(true);
+    setError(null);
     try {
-      const { data, error } = await supabase
-        .from('posts') 
-        .insert([
-          { title: title, content: content, category_id: categoryId, is_featured: isFeatured }
-        ])
-      if (error) throw error 
-      console.log('Đăng bài thành công!', data)
-      setFormSuccess('Đăng bài thành công!')
-      setTitle('')
-      setContent('')
-      setIsFeatured(false)
+      console.log('Đang lấy danh sách bài viết...');
+      const { data, error }_ = await supabase
+        .from('posts')
+        .select('id, title, category_id, created_at, is_featured') // (Chỉ lấy cột cần)
+        .order('created_at', { ascending: false }); // (Mới nhất lên đầu)
+      
+      if (error) throw error;
+      
+      setPosts(data || []);
     } catch (err: any) {
-      console.error('Lỗi khi đăng bài:', err)
-      setFormError(err.message || 'Lỗi không xác định khi đăng bài.')
+      console.error('Lỗi khi lấy danh sách bài viết:', err);
+      setError(err.message || 'Lỗi không xác định.');
     } finally {
-      setIsSubmitting(false)
+      setLoading(false);
     }
   }
 
-  // 6. GIAO DIỆN FORM (Đã thay thế Trình soạn thảo)
+  // 4. HÀM "XÓA BÀI VIẾT"
+  const handleDeletePost = async (postId: string, postTitle: string) => {
+    // (Vì đã qua "Lính gác", nên user chắc chắn có quyền)
+    if (confirm(`Anh có chắc chắn muốn XÓA VĨNH VIỄN bài viết "${postTitle}" không?`)) {
+      try {
+        const { error } = await supabase
+          .from('posts')
+          .delete()
+          .eq('id', postId)
+        
+        if (error) throw error;
+        
+        // (Xóa thành công, tải lại danh sách)
+        await fetchPosts();
+
+      } catch (err: any)
+        setError(err.message || 'Lỗi khi xóa bài viết.');
+      }
+    }
+  }
+
+  // 5. GIAO DIỆN
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        <h1 className={styles.title}>
-          Quản lý Đăng bài
-        </h1>
-        <div className={styles.formBox}>
-          <h2 className={styles.formTitle}>
-            Tạo bài viết mới
-          </h2>
-          <form onSubmit={handleSubmit} className={styles.form}>
-            {/* (Tiêu đề) */}
-            <div className={styles.formGroup}>
-              <label htmlFor="title" className={styles.label}>
-                Tiêu đề bài viết
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className={styles.input}
-                placeholder="Thông báo tuyển sinh..."
-              />
-            </div>
-            {/* (Danh mục) */}
-            <div className={styles.formGroup}>
-              <label htmlFor="category" className={styles.label}>
-                Danh mục
-              </label>
-              <select
-                id="category"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                disabled={loadingCategories}
-                className={styles.select}
-              >
-                {loadingCategories ? (
-                  <option>Đang tải danh mục...</option>
-                ) : (
-                  categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))
-                )}
-              </select>
-            </div>
-            {/* (Checkbox) */}
-            <div className={styles.checkboxGroup}>
-              <input
-                id="is_featured"
-                type="checkbox"
-                checked={isFeatured}
-                onChange={(e) => setIsFeatured(e.target.checked)}
-                className={styles.checkbox}
-              />
-              <label htmlFor="is_featured" className={styles.label}>
-                Đánh dấu là "Tin tiêu điểm"
-              </label>
-            </div>
-            
-            {/* 💖 TRÌNH SOẠN THẢO "SUNEDITOR" (ĐÃ SỬA LỖI "lang") 💖 */}
-            <div className={styles.formGroup}>
-              <label className={styles.label}>
-                Nội dung bài viết
-              </label>
-              <SunEditor 
-                lang={vi} 
-                setContents={content}
-                onChange={setContent}
-                setOptions={{
-                  height: '300px',
-                  buttonList: [
-                    ['undo', 'redo'],
-                    ['font', 'fontSize', 'formatBlock'],
-                    ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript'],
-                    ['removeFormat'],
-                    '/', // (Xuống dòng)
-                    ['fontColor', 'hiliteColor'],
-                    ['outdent', 'indent'],
-                    ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    ['table', 'link', 'image'],
-                    ['fullScreen', 'showBlocks', 'codeView'],
-                  ],
-                }}
-              />
-            </div>
-
-            {/* (Thông báo Lỗi/Thành công) */}
-            {formError && (
-              <div className={styles.error}>{formError}</div>
-            )}
-            {formSuccess && (
-              <div className={styles.success}>{formSuccess}</div>
-            )}
-            {/* (Nút bấm) */}
-            <div className={styles.buttonContainer}>
-              <button
-                type="submit"
-                disabled={isSubmitting || loadingCategories}
-                className={styles.button}
-              >
-                {isSubmitting ? 'Đang đăng...' : 'Đăng bài'}
-              </button>
-            </div>
-          </form>
+        
+        <div className={styles.header}>
+          <h1 className={styles.title}>Quản lý Bài viết</h1>
+          <div>
+            {/* 💖 NÚT TẠO MỚI (Trỏ sang nhà mới) 💖 */}
+            <Link href="/quan-ly/dang-bai/tao-moi" className={styles.buttonCreate}>
+              + Tạo bài viết mới
+            </Link>
+            <Link href="/quan-ly" className={styles.backButton} style={{marginLeft: '1rem'}}>
+              « Quay về Bảng điều khiển
+            </Link>
+          </div>
         </div>
+
+        {loading && <p>Đang tải danh sách bài viết...</p>}
+        {error && <p className={styles.error}>{error}</p>}
+
+        {!loading && !error && (
+          <div className={styles.tableContainer}>
+            <table className={styles.userTable}>
+              <thead>
+                <tr>
+                  <th>Tiêu đề</th>
+                  <th>Danh mục</th>
+                  <th>Trạng thái</th>
+                  <th>Ngày đăng</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.map((post) => (
+                  <tr key={post.id}>
+                    <td><strong>{post.title}</strong></td>
+                    <td>{post.category_id.replace('-', ' ')}</td>
+                    <td>
+                      {post.is_featured ? (
+                        <span className={styles.pill} style={{backgroundColor: '#fef3c7', color: '#92400e'}}>
+                          Tin tiêu điểm
+                        </span>
+                      ) : (
+                        <span className={styles.pill} style={{backgroundColor: '#e5e7eb', color: '#374151'}}>
+                          Tin thường
+                        </span>
+                      )}
+                    </td>
+                    <td>{new Date(post.created_at).toLocaleDateString('vi-VN')}</td>
+                    <td>
+                      <div className={styles.actionButtons}>
+                        {/* 💖 NÚT SỬA (Sẽ làm ở bước sau) 💖 */}
+                        <Link href={`/quan-ly/dang-bai/sua/${post.id}`} className={styles.buttonEdit}>
+                          Sửa
+                        </Link>
+                        <button 
+                          className={styles.buttonDelete}
+                          onClick={() => handleDeletePost(post.id, post.title)}
+                        >
+                          Xóa
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
       </div>
     </div>
   )
 }
 
-// --- Component "Vỏ Bọc" (Bảo vệ) ---
-export default function AdminPage() {
+// 6. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
+export default function QuanLyBaiVietPage() {
   return (
     <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'giao_vien', 'quan_ly']}>
-      <AdminDashboard /> 
+      <PostManagementDashboard /> 
     </ProtectedRoute>
   )
 }

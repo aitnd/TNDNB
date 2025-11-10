@@ -1,5 +1,5 @@
-/* === Trang điểm cho Trang Admin === */
-/* (Đây là code cũ của app/admin/page.module.css) */
+/* === Trang điểm cho Trang Quản lý Tài khoản === */
+/* (Mình mượn tạm style của 'tai-khoan' cho trang 'dang-bai' luôn) */
 
 .container {
     min-height: 80vh;
@@ -8,115 +8,141 @@
 }
 
 .wrapper {
-    max-width: 900px; /* Rộng hơn trang Login */
+    max-width: 1280px; /* (Rộng hơn nữa cho bảng) */
     margin: 0 auto;
+    position: relative; /* (Giúp modal hoạt động) */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* (Xuống dòng nếu hẹp) */
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 2.5rem; 
     font-weight: 700;
     color: #004a99;
-    margin-bottom: 1.5rem;
 }
 
-.formBox {
-    background-color: #ffffff;
-    padding: 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.formTitle {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 1.5rem;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.formGroup {
-    display: flex;
-    flex-direction: column;
-}
-
-.label {
-    margin-bottom: 0.5rem;
+.backButton {
+    color: #004a99;
+    text-decoration: none;
     font-weight: 500;
-    color: #333;
+}
+.backButton:hover {
+    text-decoration: underline;
 }
 
-.input,
-.select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    box-sizing: border-box; 
-}
-
-.input:disabled,
-.select:disabled {
-    background-color: #f3f4f6;
-    cursor: not-allowed;
-}
-
-.checkboxGroup {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.checkbox {
-    width: 1rem;
-    height: 1rem;
-}
-
-.buttonContainer {
-    text-align: right;
-    margin-top: 1rem;
-}
-
-.button {
+/* 💖 NÚT TẠO MỚI (MÀU XANH LÁ) 💖 */
+.buttonCreate {
+    background-color: #16a34a;
+    color: white;
     padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
     border-radius: 5px;
-    border: none;
+    font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s;
-    background-color: #004a99;
-    color: white;
+    text-decoration: none;
 }
-.button:hover {
-    background-color: #003366;
+.buttonCreate:hover {
+    background-color: #14833a;
+    text-decoration: none;
 }
-.button:disabled {
-    opacity: 0.5;
+
+/* (Box chứa bảng) */
+.tableContainer {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    overflow-x: auto; /* (Cho phép cuộn ngang nếu bảng quá rộng) */
+}
+
+/* (Bảng danh sách) */
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+.userTable th,
+.userTable td {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+.userTable th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+    color: #004a99;
+}
+.userTable td strong {
+    font-weight: 600;
+    color: #333;
+}
+.subText {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* (Nhãn vai trò/trạng thái) */
+.pill {
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px; 
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* (Nút Sửa/Xóa) */
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+.buttonEdit,
+.buttonDelete,
+.buttonSecondary {
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 0.875rem;
+    color: white; /* (Thêm) */
+    text-decoration: none; /* (Thêm) */
+}
+.buttonEdit:disabled,
+.buttonDelete:disabled {
+    opacity: 0.4;
     cursor: not-allowed;
 }
-
-.error,
-.success {
-    margin: 1rem 0;
-    padding: 0.75rem;
-    border-radius: 5px;
-    text-align: center;
+.buttonEdit {
+    background-color: #004a99;
+}
+.buttonEdit:hover:not(:disabled) {
+    background-color: #003366;
+    text-decoration: none;
+}
+.buttonDelete {
+    background-color: #d9534f;
+}
+.buttonDelete:hover:not(:disabled) {
+    background-color: #c9302c;
+}
+.buttonSecondary {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+.buttonSecondary:hover {
+    background-color: #d1d5db;
 }
 
+/* === LỖI === */
 .error {
+    padding: 1rem;
     background-color: #fde8e8;
     color: #9b2c2c;
-    border: 1px solid #f9bdbb;
-}
-
-.success {
-    background-color: #e6f7ec;
-    color: #155724;
-    border: 1px solid #c3e6cb;
 }
