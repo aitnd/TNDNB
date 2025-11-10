@@ -17,23 +17,27 @@
 .slideBackground {
   width: 100%;
   height: 100%;
-  /* 💖 1. SỬA LỖI ĐEN (Quay về 'cover') 💖 */
-  background-size: cover; 
+  
+  /* 💖 1. SỬA LỖI (Quay về 'contain') 💖 */
+  background-size: contain; 
   background-position: center;
-  /* (Bỏ màu đen và lặp) */
-  /* background-color: black; (Xóa) */
-  /* background-repeat: no-repeat; (Xóa) */
+  
+  /* 💖 2. SỬA LỖI (Đổi nền đen thành trắng) 💖 */
+  background-color: #ffffff; 
+  
+  /* 💖 3. THÊM (Để ảnh không bị lặp) 💖 */
+  background-repeat: no-repeat; 
   
   transition: transform 0.6s ease;
 }
 
-/* (Hiệu ứng Zoom khi hover - Mở lại) */
-.mySwiper :global(.swiper-slide-active) .slideBackground {
+/* (Tắt hiệu ứng Zoom vì nó không đẹp với 'contain') */
+/* .mySwiper :global(.swiper-slide-active) .slideBackground {
   transform: scale(1.05);
 }
 .mySwiper :global(.swiper-slide) a:hover .slideBackground {
   transform: scale(1.15);
-}
+} */
 
 
 .slideOverlay {
@@ -43,8 +47,7 @@
   width: 100%;
   height: 100%;
   
-  /* 💖 2. SỬA LỖI "LỚP MÀNG" 💖 */
-  /* (Chỉ làm mờ 60% ở dưới, phần trên trong suốt 100%) */
+  /* (Vẫn giữ lớp mờ DƯỚI để đọc chữ) */
   background: linear-gradient(to top, 
     rgba(0,0,0,0.8) 0%,  /* (Đen 80% ở dưới cùng) */
     rgba(0,0,0,0) 60%   /* (Trong suốt từ 60% trở lên) */
@@ -58,7 +61,6 @@
   padding: 2rem;
   z-index: 10;
   color: white;
-  /* (Để chữ không bị "phình" ra quá 100%) */
   width: 100%; 
   box-sizing: border-box; 
 }
@@ -67,7 +69,6 @@
   font-weight: 700;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  /* (Chống tràn chữ) */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
