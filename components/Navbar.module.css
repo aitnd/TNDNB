@@ -1,6 +1,5 @@
 /* === PHẦN 1: THANH TOP (Logo & Đăng nhập) === */
 .headerTop {
-    /* 💖 SỬA: Nền trắng, có bóng mờ */
     background-color: #ffffff; 
     border-bottom: 1px solid #e5e7eb;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -9,18 +8,14 @@
 
 .topContainer {
     width: 90%;
-    /* 💖 SỬA: Dùng 1280px cho rộng rãi */
     max-width: 1280px; 
     margin: 0 auto;
     display: flex;
-    /* 💖 SỬA: Logo bên trái, Link bên phải */
     justify-content: space-between; 
     align-items: center;
 }
 
-/* 💖 LOGO (Chuyển từ dưới lên) 💖 */
 .logo {
-    /* 💖 SỬA: To hơn, đậm hơn */
     font-size: 1.6rem; 
     font-weight: 700;
     color: #004a99;
@@ -33,14 +28,13 @@
     color: #003366;
 }
 
-/* (Phần link đăng nhập bên phải - Giữ nguyên) */
 .topLinks {
     list-style: none;
     display: flex;
     align-items: center;
     margin: 0;
     padding: 0;
-    font-size: 0.875rem; /* (Chữ nhỏ) */
+    font-size: 0.875rem; 
 }
 .topLinks li {
     margin-left: 1rem;
@@ -82,19 +76,15 @@
 
 /* === PHẦN 2: THANH CHÍNH (CHỈ CÓ MENU) === */
 .mainNav {
-    /* 💖 SỬA: Nền xanh dương chủ đạo */
     background-color: #004a99;
-    /* (Bỏ bóng mờ) */
-    padding: 0.75rem 0; /* (Mỏng lại 1 xíu) */
+    padding: 0.75rem 0; 
 }
 
 .mainContainer {
     width: 90%;
-    /* 💖 SỬA: Đồng bộ 1280px */
     max-width: 1280px; 
     margin: 0 auto;
     display: flex;
-    /* 💖 SỬA: Căn lề menu sát bên trái */
     justify-content: flex-start; 
     align-items: center;
 }
@@ -108,23 +98,28 @@
 }
 
 .navLinks li {
-    /* 💖 SỬA: Tăng khoảng cách menu */
     margin-left: 0; 
     margin-right: 1.75rem; 
 }
 
 .navLinks a {
     text-decoration: none;
-    /* 💖 SỬA: Chữ màu trắng */
     color: #ffffff; 
-    font-weight: 600; /* (Đậm hơn) */
+    font-weight: 600; 
     transition: color 0.3s ease;
     white-space: nowrap;
     font-size: 1rem;
 }
 
 .navLinks a:hover {
-    /* 💖 SỬA: Hover ra màu xám nhạt */
     color: #dbeafe; 
     text-decoration: none;
+}
+
+/* 💖 CSS MỚI CHO CHỮ "CHÀO MỪNG" 💖 */
+.welcomeText {
+  color: #555; /* (Màu chữ xám) */
+  font-weight: 500;
+  font-size: 0.875rem;
+  font-style: italic; /* (In nghiêng) */
 }

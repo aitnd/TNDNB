@@ -25,48 +25,44 @@ export default function Navbar() {
   }
 
   return (
-    // (Sử dụng 'header' thay vì 'nav' cho toàn bộ)
     <header>
-      {/* 💖 (Req 1) THANH TOP (ĐÃ CÓ LOGO + ĐĂNG NHẬP) 💖 */}
+      {/* 💖 THANH TOP (ĐÃ SỬA THEO YÊU CẦU MỚI) 💖 */}
       <div className={styles.headerTop}>
         <div className={styles.topContainer}>
           
-          {/* 💖 LOGO ĐÃ CHUYỂN LÊN ĐÂY 💖 */}
+          {/* Logo */}
           <Link href="/" className={styles.logo}>
             Tư vấn và giáo dục Ninh Binh
           </Link>
 
+          {/* Các link bên phải */}
           <ul className={styles.topLinks}>
             
             {/* (Link "thông minh") */}
             {user ? (
               <>
+                {/* 💖 1. CHÀO MỪNG [TÊN] 💖 */}
+                <li>
+                  <span className={styles.welcomeText}>
+                    Chào mừng, {user.fullName}!
+                  </span>
+                </li>
+
+                {/* 💖 2. NÚT QUẢN LÝ (Trỏ về Dashboard mới) 💖 */}
                 <li>
                   <Link href="/quan-ly">Quản lý</Link>
                 </li>
+
+                {/* 💖 3. NÚT ĐĂNG XUẤT 💖 */}
                 <li>
                   <button onClick={handleLogout}>Đăng xuất</button>
                 </li>
                 
-                {/* Link "Vào Thi" (Học viên) */}
-                {user.role === 'hoc_vien' && (
-                   <li>
-                     <Link href="/quan-ly" className={styles.ctaButton}>
-                       Vào Thi
-                     </Link>
-                   </li>
-                )}
-                
-                {/* Link "Admin" (Sếp) */}
-                {(user.role === 'admin' || user.role === 'giao_vien' || user.role === 'lanh_dao') && (
-                   <li>
-                     <Link href="/admin" className={`${styles.ctaButton} ${styles.adminButton}`}>
-                       Admin
-                     </Link>
-                   </li>
-                )}
+                {/* 💖 (ĐÃ XÓA NÚT "Admin" VÀ "Vào Thi" CŨ) 💖 */}
+
               </>
             ) : (
+              // (Nếu chưa đăng nhập)
               <li>
                 <Link href="/login">Đăng nhập</Link>
               </li>
@@ -76,11 +72,9 @@ export default function Navbar() {
         </div>
       </div>
       
-      {/* 💖 THANH CHÍNH (CHỈ CÓ MENU) 💖 */}
+      {/* THANH CHÍNH (CHỈ CÓ MENU) */}
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
-          {/* (Logo đã bị bốc đi) */}
-
           <ul className={styles.navLinks}>
             <li>
               <Link href="/">Trang chủ</Link>
