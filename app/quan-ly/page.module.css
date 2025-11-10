@@ -46,6 +46,13 @@
     display: inline-block;
 }
 
+/* 💖 THÊM STYLE CHO CHỮ "CHƯA CẬP NHẬT" 💖 */
+.subText {
+    font-style: italic;
+    color: #888;
+    font-size: 0.95rem;
+}
+
 /* (Lưới các nút chức năng) */
 .actionGrid {
     display: grid;

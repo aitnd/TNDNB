@@ -44,10 +44,21 @@
   đã được định nghĩa ở file "app/globals.css"
 */
 
-.backButtonContainer {
-    margin-top: 2.5rem;
+/* 💖 CSS MỚI CHO TÊN TÁC GIẢ 💖 */
+.authorName {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #555;
+    text-align: right; /* (Cho nó qua góc phải) */
+    margin-top: 2rem;
     border-top: 1px solid #eee;
-    padding-top: 1.5rem;
+    padding-top: 1rem;
+}
+
+.backButtonContainer {
+    margin-top: 1.5rem; /* (Giảm margin lại vì có authorName) */
+    /* (Bỏ border-top) */
+    padding-top: 1rem;
     text-align: center;
 }
 

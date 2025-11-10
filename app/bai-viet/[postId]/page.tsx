@@ -4,7 +4,7 @@ import Link from 'next/link'
 // 1. "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
 
-// 2. Định nghĩa "kiểu" của Bài viết (Logic giữ nguyên)
+// 2. 💖 ĐỊNH NGHĨA "KIỂU" NÂNG CẤP 💖
 type Post = {
   id: string;
   created_at: string;
@@ -13,15 +13,19 @@ type Post = {
   image_url: string | null;
   category_id: string;
   is_featured: boolean;
+  users: { // (Supabase sẽ trả về 1 object "lồng" vào)
+    fullName: string;
+  } | null; // (Hoặc là null nếu không tìm thấy)
 }
 
-// 3. "Phép thuật": LẤY CHI TIẾT BÀI VIẾT (Logic giữ nguyên)
+// 3. 💖 "PHÉP THUẬT": LẤY BÀI VIẾT (KÈM TÊN TÁC GIẢ) 💖
 async function getPostDetails(postId: string): Promise<Post | null> {
   console.log(`[Server] Đang lấy chi tiết bài viết ID: ${postId}`)
   
   const { data, error } = await supabase
     .from('posts')
-    .select('*')
+    // 💖 SỬA Ở ĐÂY: Lấy tất cả cột, VÀ lấy cột 'fullName' từ bảng 'users' 💖
+    .select('*, users ( fullName )') 
     .eq('id', postId) // Lấy bài viết có ID trùng khớp
     .single() // (Chỉ lấy 1 bài duy nhất)
 
@@ -78,14 +82,18 @@ export default async function PostPage({ params }: { params: { postId: string } 
         />
       )}
 
-      {/* NỘI DUNG CHÍNH (RẤT QUAN TRỌNG)
-        Chúng ta dùng class "post-content" (đã định nghĩa trong 'globals.css')
-        để "vẽ" HTML thô từ Trình soạn thảo.
-      */}
+      {/* NỘI DUNG CHÍNH */}
       <div
         className="post-content"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
+
+      {/* 💖 THÊM TÊN TÁC GIẢ Ở ĐÂY NÈ ANH 💖 */}
+      {post.users && (
+        <p className={styles.authorName}>
+          Đăng bởi: {post.users.fullName}
+        </p>
+      )}
       
       {/* Nút Quay về */}
       <div className={styles.backButtonContainer}>

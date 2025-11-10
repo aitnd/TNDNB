@@ -30,11 +30,11 @@ interface EditFormData {
   role: string;
 }
 
-// (Danh sách vai trò)
+// (Danh sách vai trò - Sắp xếp theo cấp bậc)
 const allRoles = [
   { id: 'admin', name: 'Quản trị viên (Admin)' },
-  { id: 'quan_ly', name: 'Quản lý' },
   { id: 'lanh_dao', name: 'Lãnh đạo' },
+  { id: 'quan_ly', name: 'Quản lý' },
   { id: 'giao_vien', name: 'Giáo viên' },
   { id: 'hoc_vien', name: 'Học viên' },
 ];
@@ -90,7 +90,7 @@ function UserManagementDashboard() {
     return allRoles.find(r => r.id === role)?.name || role;
   }
 
-  // --- LOGIC PHÂN QUYỀN (Yêu cầu 5.1 & 5.2) ---
+  // --- 💖 LOGIC PHÂN QUYỀN MỚI (ĐÃ UPDATE) 💖 ---
   
   // (Kiểm tra xem "tôi" (currentUser) có quyền "đụng" vào "người ta" (targetUser) không)
   const canEditUser = (targetUser: UserAccount): boolean => {
@@ -100,14 +100,22 @@ function UserManagementDashboard() {
     if (currentUser.role === 'admin') {
       return true; // Admin được sửa tất cả
     }
+
+    // Lãnh đạo (New Rule)
+    if (currentUser.role === 'lanh_dao') {
+      if (targetUser.role === 'admin') {
+        return false; // Lãnh đạo KHÔNG được sửa Admin
+      }
+      return true; // Được sửa Lãnh đạo khác, Quản lý, Giáo viên, Học viên
+    }
     
-    // Quản lý (5.2)
+    // Quản lý (Updated Rule 5.2)
     if (currentUser.role === 'quan_ly') {
-      // KHÔNG được sửa admin hoặc quản lý khác
-      if (targetUser.role === 'admin' || targetUser.role === 'quan_ly') {
+      // KHÔNG được sửa admin, lãnh đạo, hoặc quản lý khác
+      if (targetUser.role === 'admin' || targetUser.role === 'lanh_dao' || targetUser.role === 'quan_ly') {
         return false;
       }
-      return true; // Được sửa giáo viên, lãnh đạo, học viên
+      return true; // Chỉ được sửa Giáo viên, Học viên
     }
     
     return false; // Các role khác không được sửa ai cả
@@ -118,9 +126,13 @@ function UserManagementDashboard() {
     if (currentUser?.role === 'admin') {
       return allRoles; // Admin thấy tất cả
     }
-    if (currentUser?.role === 'quan_ly') {
-      // Quản lý KHÔNG thấy "Admin" (5.2)
+    if (currentUser?.role === 'lanh_dao') {
+      // Lãnh đạo thấy tất cả TRỪ Admin
       return allRoles.filter(r => r.id !== 'admin');
+    }
+    if (currentUser?.role === 'quan_ly') {
+      // Quản lý thấy tất cả TRỪ Admin và Lãnh đạo
+      return allRoles.filter(r => r.id !== 'admin' && r.id !== 'lanh_dao');
     }
     return [];
   }
@@ -183,7 +195,6 @@ function UserManagementDashboard() {
       return;
     }
 
-    // 💖 SỬA LỖI Ở ĐÂY (dùng .uid thay vì .id) 💖
     if (userToDelete.id === currentUser?.uid) {
       alert('Bạn không thể tự xóa chính mình!');
       return;
@@ -260,7 +271,6 @@ function UserManagementDashboard() {
                           <button 
                             className={styles.buttonDelete}
                             onClick={() => handleDeleteUser(user)}
-                            // 💖 SỬA LỖI Ở ĐÂY NỮA (dùng .uid) 💖
                             disabled={!canEdit || user.id === currentUser?.uid} // (Khóa nút nếu là admin/quan_ly hoặc tự xóa)
                           >
                             Xóa
@@ -364,7 +374,7 @@ function UserManagementDashboard() {
 // 8. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
 export default function QuanLyTaiKhoanPage() {
   return (
-    <ProtectedRoute allowedRoles={['admin', 'quan_ly']}>
+    <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'quan_ly']}>
       <UserManagementDashboard /> 
     </ProtectedRoute>
   )

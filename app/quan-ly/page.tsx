@@ -48,7 +48,7 @@ function QuanLyDashboard() {
   // (Kiểm tra quyền hạn)
   const coQuyenDangBai = user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role);
   const coQuyenThi = user && ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(user.role);
-  const coQuyenQLTaiKhoan = user && ['admin', 'quan_ly'].includes(user.role);
+  const coQuyenQLTaiKhoan = user && ['admin', 'lanh_dao', 'quan_ly'].includes(user.role); // (Đã sửa)
 
   // Giao diện (Đã "mặc" CSS Module)
   return (
@@ -65,6 +65,17 @@ function QuanLyDashboard() {
             <h2 className={styles.sectionTitle}>Thông tin tài khoản</h2>
             <p><strong>Họ và tên:</strong> {user.fullName}</p>
             <p><strong>Email:</strong> {user.email}</p>
+            
+            {/* 💖 THÊM SĐT VÀ NGÀY SINH 💖 */}
+            <p>
+              <strong>Số điện thoại:</strong> 
+              {user.phoneNumber ? user.phoneNumber : <span className={styles.subText}>Chưa cập nhật</span>}
+            </p>
+            <p>
+              <strong>Ngày sinh:</strong> 
+              {user.birthDate ? user.birthDate : <span className={styles.subText}>Chưa cập nhật</span>}
+            </p>
+            
             <p><strong>Vai trò:</strong> {dichTenVaiTro(user.role)}</p>
 
             {/* 💖 CÁC NÚT MỚI NÈ ANH 💖 */}

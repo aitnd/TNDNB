@@ -7,14 +7,14 @@ import dynamic from 'next/dynamic'
 import { useAuth } from '../../../../context/AuthContext' // (Sửa đường dẫn 4 chấm)
 import ProtectedRoute from '../../../../components/ProtectedRoute' // (Sửa đường dẫn 4 chấm)
 import { supabase } from '../../../../utils/supabaseClient' // (Sửa đường dẫn 4 chấm)
-import Link from 'next/link' // 💖 EM THÊM DÒNG NÀY ĐỂ SỬA LỖI 💖
+import Link from 'next/link' 
 
 const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
 import 'suneditor/dist/css/suneditor.min.css'; 
 import vi from 'suneditor/src/lang/en';
 
 // "Triệu hồi" file CSS Module
-import styles from './page.module.css' // (Sửa đường dẫn)
+import styles from './page.module.css' 
 
 type Category = {
   id: string;
@@ -22,7 +22,7 @@ type Category = {
 }
 
 function CreatePostForm() {
-  const { user } = useAuth()
+  const { user } = useAuth() // 💖 LẤY USER ĐỂ BIẾT TÁC GIẢ 💖
   const router = useRouter()
 
   const [categories, setCategories] = useState<Category[]>([]) 
@@ -66,13 +66,24 @@ function CreatePostForm() {
       setIsSubmitting(false)
       return
     }
+
+    if (!user) { // (Kiểm tra an toàn)
+      setFormError('Không thể xác định người dùng. Vui lòng đăng nhập lại.');
+      setIsSubmitting(false);
+      return;
+    }
     
     try {
       const { data, error } = await supabase
         .from('posts') 
         .insert([
-          // (Lưu ý: Supabase sẽ tự động gán 'author_id' nếu anh đã cài RLS Policy)
-          { title: title, content: content, category_id: categoryId, is_featured: isFeatured }
+          { 
+            title: title, 
+            content: content, 
+            category_id: categoryId, 
+            is_featured: isFeatured,
+            author_id: user.uid // 💖 SỬA Ở ĐÂY: LƯU ID TÁC GIẢ 💖
+          }
         ])
       if (error) throw error 
       setFormSuccess('Đăng bài thành công!')
