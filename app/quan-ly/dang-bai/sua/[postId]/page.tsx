@@ -2,11 +2,12 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter, useParams } from 'next/navigation' // (Thêm "useParams")
+import { useRouter, useParams } from 'next/navigation' 
 import dynamic from 'next/dynamic' 
 import { useAuth } from '../../../../../context/AuthContext' // (Sửa đường dẫn 5 chấm)
 import ProtectedRoute from '../../../../../components/ProtectedRoute' // (Sửa đường dẫn 5 chấm)
 import { supabase } from '../../../../../utils/supabaseClient' // (Sửa đường dẫn 5 chấm)
+import Link from 'next/link' // 💖 EM THÊM DÒNG NÀY NÈ ANH 💖
 
 const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
 import 'suneditor/dist/css/suneditor.min.css'; 
