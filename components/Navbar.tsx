@@ -27,9 +27,15 @@ export default function Navbar() {
   return (
     // (Sử dụng 'header' thay vì 'nav' cho toàn bộ)
     <header>
-      {/* 💖 (Req 1) THANH TOP (Đăng nhập/Quản lý) 💖 */}
+      {/* 💖 (Req 1) THANH TOP (ĐÃ CÓ LOGO + ĐĂNG NHẬP) 💖 */}
       <div className={styles.headerTop}>
         <div className={styles.topContainer}>
+          
+          {/* 💖 LOGO ĐÃ CHUYỂN LÊN ĐÂY 💖 */}
+          <Link href="/" className={styles.logo}>
+            Tư vấn và giáo dục Ninh Binh
+          </Link>
+
           <ul className={styles.topLinks}>
             
             {/* (Link "thông minh") */}
@@ -70,12 +76,10 @@ export default function Navbar() {
         </div>
       </div>
       
-      {/* 💖 THANH CHÍNH (Logo & Menu) 💖 */}
+      {/* 💖 THANH CHÍNH (CHỈ CÓ MENU) 💖 */}
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
-          <Link href="/" className={styles.logo}>
-            Tư vấn và giáo dục Ninh Binh
-          </Link>
+          {/* (Logo đã bị bốc đi) */}
 
           <ul className={styles.navLinks}>
             <li>
