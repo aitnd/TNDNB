@@ -25,6 +25,12 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem; 
+    
+    /* 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 */
+    /* (Thêm 2 dòng này để "nhốt" cái Slider lại, 
+       không cho nó "phình" ra làm vỡ cột) */
+    overflow: hidden;
+    min-width: 0; 
 }
 
 /* 3. Cột phải (Sidebar) */
@@ -48,7 +54,7 @@
     margin-bottom: 1.5rem;
 }
 
-/* 💖 (ĐÃ XÓA CSS CHO .newsGrid3 VÀ .newsItemSmall CŨ) 💖 */
+/* (ĐÃ XÓA CSS CHO .newsGrid3 VÀ .newsItemSmall CŨ) */
 
 
 /* 6. Box "Tin Tức Mới" (Cột trái) */
