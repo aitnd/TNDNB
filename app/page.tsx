@@ -3,9 +3,9 @@ import Link from 'next/link'
 
 // 1. "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
-// 2. 💖 "TRIỆU HỒI" SIDEBAR DÙNG CHUNG 💖
+// 2. "TRIỆU HỒI" SIDEBAR DÙNG CHUNG
 import Sidebar from '../components/Sidebar' 
-// 3. 💖 "TRIỆU HỒI" SLIDER MỚI 💖
+// 3. "TRIỆU HỒI" SLIDER MỚI
 import FeaturedSlider from '../components/FeaturedSlider'
 
 // (Định nghĩa "kiểu" Post - Giữ nguyên)
@@ -14,21 +14,19 @@ type Post = {
   created_at: string;
   title: string;
   content: string;
-  image_url: string | null; // (Cái này là ảnh trong bài viết, không phải thumbnail)
+  image_url: string | null; 
   category_id: string;
   is_featured: boolean;
 }
 
-// 💖 (ĐÃ XÓA HÀM getFeaturedPosts() CŨ VÌ SLIDER TỰ LẤY) 💖
-
-// (Hàm lấy Tin Tức Mới - Giữ nguyên)
+// 💖 HÀM LẤY TIN TỨC MỚI (ĐÃ SỬA LỖI) 💖
 async function getLatestNews(): Promise<Post[]> {
   console.log('[Server] Đang lấy Tin Tức Mới...')
   const { data, error } = await supabase
     .from('posts')
     .select('*')
     .eq('category_id', 'tin-tuc-su-kien') 
-    .eq('is_featured', false) 
+    // 💖 EM ĐÃ XÓA DÒNG .eq('is_featured', false) Ở ĐÂY RỒI NHA 💖
     .order('created_at', { ascending: false })
     .limit(5) 
 
@@ -42,10 +40,10 @@ async function getLatestNews(): Promise<Post[]> {
 // 3. TRANG CHỦ (SERVER COMPONENT)
 export default async function HomePage() {
   
-  // 4. "Chờ" máy chủ lấy 1 loại tin thôi
+  // 4. "Chờ" máy chủ lấy tin tức
   const latestNews = await getLatestNews()
 
-  // 5. "Vẽ" Giao diện (Đã dùng CSS Module)
+  // 5. "Vẽ" Giao diện
   return (
     <div className={styles.container}>
       {/* BỐ CỤC 2 CỘT */}
@@ -54,7 +52,7 @@ export default async function HomePage() {
         {/* ===== CỘT TRÁI (NỘI DUNG CHÍNH) ===== */}
         <main className={styles.mainContent}>
           
-          {/* 💖 Box Tin Tiêu Điểm (ĐÃ THAY BẰNG SLIDER) 💖 */}
+          {/* Box Tin Tiêu Điểm (Slider) */}
           <section>
             <FeaturedSlider />
           </section>
@@ -66,10 +64,9 @@ export default async function HomePage() {
               {latestNews.length > 0 ? (
                 latestNews.map((post) => (
                   <div key={post.id} className={styles.newsItemLarge}>
-                    {/* 💖 THÊM ẢNH ĐẠI DIỆN VÀO TIN TỨC MỚI 💖 */}
                     <img
-                      // (Ưu tiên thumbnail, nếu không có thì lấy ảnh cũ hoặc ảnh mồi)
-                      src={(post as any).thumbnail_url || post.image_url || 'https://via.placeholder.com/150x100'}
+                      // (Ưu tiên thumbnail, nếu không có thì lấy ảnh mồi)
+                      src={(post as any).thumbnail_url || 'https://via.placeholder.com/150x100'}
                       alt={post.title}
                     />
                     <div>

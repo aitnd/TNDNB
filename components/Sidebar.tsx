@@ -10,7 +10,7 @@ type Post = {
   title: string;
 }
 
-// 3. 💖 "PHÉP THUẬT" LẤY TIN TUYỂN SINH (Chạy ở Server) 💖
+// 3. 💖 "PHÉP THUẬT" LẤY TIN TUYỂN SINH 💖
 async function getTuyenSinhPosts(): Promise<Post[]> {
   console.log('[Sidebar] Đang lấy tin "Tuyển sinh"...');
   const { data, error } = await supabase
@@ -27,11 +27,32 @@ async function getTuyenSinhPosts(): Promise<Post[]> {
   return data || [];
 }
 
-// 4. 💖 BIẾN THÀNH "ASYNC" COMPONENT 💖
+// 4. 💖 "PHÉP THUẬT" MỚI: LẤY VĂN BẢN PHÁP QUY 💖
+async function getPhapQuyPosts(): Promise<Post[]> {
+  console.log('[Sidebar] Đang lấy tin "Văn bản"...');
+  const { data, error } = await supabase
+    .from('posts')
+    .select('id, title')
+    .eq('category_id', 'van-ban-phap-quy') // (Lấy đúng danh mục "van-ban-phap-quy")
+    .order('created_at', { ascending: false })
+    .limit(5); // (Lấy 5 tin mới nhất)
+  
+  if (error) {
+    console.error('Lỗi lấy tin pháp quy:', error);
+    return [];
+  }
+  return data || [];
+}
+
+// 5. 💖 BIẾN THÀNH "ASYNC" COMPONENT 💖
 export default async function Sidebar() {
   
-  // 5. 💖 "CHỜ" LẤY TIN 💖
-  const tuyenSinhPosts = await getTuyenSinhPosts();
+  // 6. 💖 "CHỜ" LẤY CẢ 2 LOẠI TIN 💖
+  // (Promise.all giúp 2 "kho" chạy song song, nhanh hơn)
+  const [tuyenSinhPosts, phapQuyPosts] = await Promise.all([
+    getTuyenSinhPosts(),
+    getPhapQuyPosts()
+  ]);
 
   return (
     <aside className={styles.sidebar}>
@@ -66,23 +87,33 @@ export default async function Sidebar() {
         </Link>
       </div>
 
-      {/* Box Văn bản pháp quy (search) */}
+      {/* 💖 7. BOX "VĂN BẢN PHÁP QUY" (ĐÃ SỬA THÀNH "ĐỘNG") 💖 */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <h3 className={styles.sidebarTitle}>Văn bản pháp quy</h3>
-        <form className={styles.searchForm}>
-          <input type="text" placeholder="Tìm văn bản..." />
-          <button type="submit">Xem tiếp</button>
-        </form>
+        <ul className={styles.linkList}>
+          {phapQuyPosts.length > 0 ? (
+            phapQuyPosts.map((post) => (
+              <li key={post.id}>
+                <Link href={`/bai-viet/${post.id}`}>
+                  <i className="fas fa-caret-right"></i> {post.title}
+                </Link>
+              </li>
+            ))
+          ) : (
+            <li>
+              <p style={{fontSize: '0.9rem', color: '#777', paddingLeft: '0.5rem'}}>
+                Chưa có văn bản nào.
+              </p>
+            </li>
+          )}
+        </ul>
       </div>
 
-      {/* 💖 6. BOX "THÔNG BÁO TUYỂN SINH" (ĐÃ SỬA) 💖 */}
+      {/* Box "Thông báo tuyển sinh" (Đã "động" từ trước) */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <h3 className={styles.sidebarTitle}>Thông báo tuyển sinh</h3>
         <ul className={styles.linkList}>
-          
-          {/* (Kiểm tra xem có tin nào không) */}
           {tuyenSinhPosts.length > 0 ? (
-            // (Nếu có, "vẽ" nó ra)
             tuyenSinhPosts.map((post) => (
               <li key={post.id}>
                 <Link href={`/bai-viet/${post.id}`}>
@@ -91,14 +122,12 @@ export default async function Sidebar() {
               </li>
             ))
           ) : (
-            // (Nếu không có tin nào)
             <li>
               <p style={{fontSize: '0.9rem', color: '#777', paddingLeft: '0.5rem'}}>
                 Chưa có thông báo nào.
               </p>
             </li>
           )}
-
         </ul>
       </div>
 
