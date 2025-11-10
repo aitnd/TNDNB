@@ -17,7 +17,7 @@
     "react-dom": "18.3.1",
     "suneditor": "^2.46.3",
     "suneditor-react": "^3.6.1",
-    "swiper": "^11.1.8"  /* 💖 THÊM DÒNG NÀY VÀO NÈ ANH ƠI 💖 */
+    "swiper": "^11.1.8"
   },
   "devDependencies": {
     "@types/node": "^20",
