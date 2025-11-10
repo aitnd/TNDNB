@@ -1,4 +1,4 @@
-// 💖 1. "TRIỆU HỒI" SUPABASE 💖
+// 1. "TRIỆU HỒI" SUPABASE
 import { supabase } from '../utils/supabaseClient' 
 import React from 'react'
 import Link from 'next/link'
@@ -10,16 +10,14 @@ type Post = {
   title: string;
 }
 
-// 3. 💖 "PHÉP THUẬT" LẤY TIN TUYỂN SINH 💖
+// 3. "PHÉP THUẬT" LẤY TIN TUYỂN SINH
 async function getTuyenSinhPosts(): Promise<Post[]> {
-  console.log('[Sidebar] Đang lấy tin "Tuyển sinh"...');
   const { data, error } = await supabase
     .from('posts')
     .select('id, title')
-    .eq('category_id', 'tuyen-sinh') // (Lấy đúng danh mục "tuyen-sinh")
+    .eq('category_id', 'tuyen-sinh') 
     .order('created_at', { ascending: false })
-    .limit(5); // (Lấy 5 tin mới nhất)
-  
+    .limit(5); 
   if (error) {
     console.error('Lỗi lấy tin tuyển sinh:', error);
     return [];
@@ -27,16 +25,14 @@ async function getTuyenSinhPosts(): Promise<Post[]> {
   return data || [];
 }
 
-// 4. 💖 "PHÉP THUẬT" MỚI: LẤY VĂN BẢN PHÁP QUY 💖
+// 4. "PHÉP THUẬT" LẤY VĂN BẢN PHÁP QUY
 async function getPhapQuyPosts(): Promise<Post[]> {
-  console.log('[Sidebar] Đang lấy tin "Văn bản"...');
   const { data, error } = await supabase
     .from('posts')
     .select('id, title')
-    .eq('category_id', 'van-ban-phap-quy') // (Lấy đúng danh mục "van-ban-phap-quy")
+    .eq('category_id', 'van-ban-phap-quy') 
     .order('created_at', { ascending: false })
-    .limit(5); // (Lấy 5 tin mới nhất)
-  
+    .limit(5); 
   if (error) {
     console.error('Lỗi lấy tin pháp quy:', error);
     return [];
@@ -44,14 +40,32 @@ async function getPhapQuyPosts(): Promise<Post[]> {
   return data || [];
 }
 
-// 5. 💖 BIẾN THÀNH "ASYNC" COMPONENT 💖
+// 5. 💖 "PHÉP THUẬT" MỚI: LẤY TIN TỨC SỰ KIỆN 💖
+async function getTinTucSuKien(): Promise<Post[]> {
+  console.log('[Sidebar] Đang lấy tin "Tin tức"...');
+  const { data, error } = await supabase
+    .from('posts')
+    .select('id, title')
+    .eq('category_id', 'tin-tuc-su-kien') // (Lấy đúng danh mục "tin-tuc-su-kien")
+    .order('created_at', { ascending: false })
+    .limit(5); // (Lấy 5 tin mới nhất)
+  
+  if (error) {
+    console.error('Lỗi lấy tin tức:', error);
+    return [];
+  }
+  return data || [];
+}
+
+
+// 6. 💖 BIẾN THÀNH "ASYNC" COMPONENT 💖
 export default async function Sidebar() {
   
-  // 6. 💖 "CHỜ" LẤY CẢ 2 LOẠI TIN 💖
-  // (Promise.all giúp 2 "kho" chạy song song, nhanh hơn)
-  const [tuyenSinhPosts, phapQuyPosts] = await Promise.all([
+  // 7. 💖 "CHỜ" LẤY CẢ 3 LOẠI TIN 💖
+  const [tuyenSinhPosts, phapQuyPosts, tinTucPosts] = await Promise.all([
     getTuyenSinhPosts(),
-    getPhapQuyPosts()
+    getPhapQuyPosts(),
+    getTinTucSuKien() // (Thêm tin tức vào)
   ]);
 
   return (
@@ -87,7 +101,29 @@ export default async function Sidebar() {
         </Link>
       </div>
 
-      {/* 💖 7. BOX "VĂN BẢN PHÁP QUY" (ĐÃ SỬA THÀNH "ĐỘNG") 💖 */}
+      {/* 💖 8. BOX "TIN TỨC - SỰ KIỆN" MỚI (THEO YÊU CẦU 1) 💖 */}
+      <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
+        <h3 className={styles.sidebarTitle}>Tin tức - Sự kiện</h3>
+        <ul className={styles.linkList}>
+          {tinTucPosts.length > 0 ? (
+            tinTucPosts.map((post) => (
+              <li key={post.id}>
+                <Link href={`/bai-viet/${post.id}`}>
+                  <i className="fas fa-caret-right"></i> {post.title}
+                </Link>
+              </li>
+            ))
+          ) : (
+            <li>
+              <p style={{fontSize: '0.9rem', color: '#777', paddingLeft: '0.5rem'}}>
+                Chưa có tin tức nào.
+              </p>
+            </li>
+          )}
+        </ul>
+      </div>
+
+      {/* Box "Văn bản pháp quy" */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <h3 className={styles.sidebarTitle}>Văn bản pháp quy</h3>
         <ul className={styles.linkList}>
@@ -109,7 +145,7 @@ export default async function Sidebar() {
         </ul>
       </div>
 
-      {/* Box "Thông báo tuyển sinh" (Đã "động" từ trước) */}
+      {/* Box "Thông báo tuyển sinh" */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <h3 className={styles.sidebarTitle}>Thông báo tuyển sinh</h3>
         <ul className={styles.linkList}>

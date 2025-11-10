@@ -19,16 +19,16 @@ type Post = {
   is_featured: boolean;
 }
 
-// 💖 HÀM LẤY TIN TỨC MỚI (ĐÃ SỬA LỖI) 💖
-async function getLatestNews(): Promise<Post[]> {
-  console.log('[Server] Đang lấy Tin Tức Mới...')
+// 💖 HÀM LẤY 6 BÀI MỚI NHẤT (ĐÃ SỬA THEO YÊU CẦU 2) 💖
+async function getLatestPosts(): Promise<Post[]> {
+  console.log('[Server] Đang lấy 6 bài viết mới nhất (không phân biệt danh mục)...');
   const { data, error } = await supabase
     .from('posts')
     .select('*')
-    .eq('category_id', 'tin-tuc-su-kien') 
-    // 💖 EM ĐÃ XÓA DÒNG .eq('is_featured', false) Ở ĐÂY RỒI NHA 💖
+    // (ĐÃ XÓA .eq('category_id', ...) )
+    // (ĐÃ XÓA .eq('is_featured', false) )
     .order('created_at', { ascending: false })
-    .limit(5) 
+    .limit(6); // (Lấy 6 bài)
 
   if (error) {
     console.error('Lỗi lấy Tin Tức Mới:', error)
@@ -40,8 +40,8 @@ async function getLatestNews(): Promise<Post[]> {
 // 3. TRANG CHỦ (SERVER COMPONENT)
 export default async function HomePage() {
   
-  // 4. "Chờ" máy chủ lấy tin tức
-  const latestNews = await getLatestNews()
+  // 4. "Chờ" máy chủ lấy 6 bài mới nhất
+  const latestPosts = await getLatestPosts()
 
   // 5. "Vẽ" Giao diện
   return (
@@ -57,15 +57,15 @@ export default async function HomePage() {
             <FeaturedSlider />
           </section>
 
-          {/* Box Tin Tức Mới (ĐỘNG) */}
+          {/* 💖 Box 6 BÀI MỚI NHẤT (ĐÃ XÓA TIÊU ĐỀ) 💖 */}
           <section className={styles.widgetBox}>
-            <h2 className={styles.widgetTitle}>Tin tức - Sự kiện</h2>
+            {/* (ĐÃ XÓA TIÊU ĐỀ "Tin tức - Sự kiện" Ở ĐÂY) */}
+            
             <div className={styles.newsList}>
-              {latestNews.length > 0 ? (
-                latestNews.map((post) => (
+              {latestPosts.length > 0 ? (
+                latestPosts.map((post) => (
                   <div key={post.id} className={styles.newsItemLarge}>
                     <img
-                      // (Ưu tiên thumbnail, nếu không có thì lấy ảnh mồi)
                       src={(post as any).thumbnail_url || 'https://via.placeholder.com/150x100'}
                       alt={post.title}
                     />
@@ -82,7 +82,7 @@ export default async function HomePage() {
                   </div>
                 ))
               ) : (
-                <p style={{ padding: '0 1.5rem 1.5rem' }}>Chưa có tin tức nào.</p>
+                <p style={{ padding: '0 1.5rem 1.5rem' }}>Chưa có bài viết nào.</p>
               )}
             </div>
           </section>
