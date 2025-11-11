@@ -32,7 +32,6 @@ async function getPostDetails(postId: string): Promise<PostPageData | null> {
     .eq('id', postId) 
     .single() 
 
-  // (Nếu "Luật" RLS (bước trước) sai, hoặc không có bài, nó sẽ lỗi ở đây)
   if (postError || !postData) {
     console.error('Lỗi Supabase (lấy post):', postError);
     return null
@@ -44,7 +43,6 @@ async function getPostDetails(postId: string): Promise<PostPageData | null> {
   if (postData.author_id) {
     try {
       console.log(`[Server] Lấy tác giả ID: ${postData.author_id} từ Firestore...`);
-      // (Dùng "chìa khóa" Admin để "mở tủ" users)
       const userDocRef = adminDb.collection('users').doc(postData.author_id);
       const userDoc = await userDocRef.get();
       
@@ -70,10 +68,8 @@ async function getPostDetails(postId: string): Promise<PostPageData | null> {
 // 4. TRANG ĐỌC BÀI VIẾT (ĐÃ SỬA)
 export default async function PostPage({ params }: { params: { postId: string } }) {
   
-  // 5. "Chờ" máy chủ lấy dữ liệu (từ cả 2 kho)
   const data = await getPostDetails(params.postId)
 
-  // 6. Xử lý nếu không tìm thấy
   if (!data) {
     return (
       <div className={styles.errorContainer}>
@@ -88,26 +84,21 @@ export default async function PostPage({ params }: { params: { postId: string } 
     )
   }
 
-  // (Lấy data ra)
   const { post, authorName } = data;
 
-  // 7. "Vẽ" Giao diện
   return (
     <div className={styles.container}>
       
-      {/* Tiêu đề */}
       <h1 className={styles.title}>
         {post.title}
       </h1>
 
-      {/* Thông tin phụ (Ngày đăng) */}
       <p className={styles.meta}>
         Đăng ngày: {new Date(post.created_at).toLocaleDateString('vi-VN')}
         {' | '}
         <span>{post.category_id.replace('-', ' ')}</span>
       </p>
 
-      {/* Ảnh bìa (nếu có) */}
       {post.image_url && (
         <img
           src={post.image_url}
@@ -116,20 +107,17 @@ export default async function PostPage({ params }: { params: { postId: string } 
         />
       )}
 
-      {/* NỘI DUNG CHÍNH */}
       <div
         className="post-content"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      {/* 💖 THÊM TÊN TÁC GIẢ (Lấy từ Firestore) 💖 */}
       {authorName && (
         <p className={styles.authorName}>
           Đăng bởi: {authorName}
         </p>
       )}
       
-      {/* Nút Quay về */}
       <div className={styles.backButtonContainer}>
         <Link href="/" className={styles.backButton}>
           « Quay về Trang chủ
