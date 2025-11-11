@@ -4,11 +4,20 @@ import React from 'react'
 import Link from 'next/link'
 import styles from './Sidebar.module.css' // (Triệu hồi CSS)
 
+// 💖 "THẦN CHÚ" BẮT TẢI LẠI DỮ LIỆU MỚI (Checkpoint 7, Lỗi Cache)
+export const revalidate = 0; 
+
 // 2. Định nghĩa "kiểu" bài viết
 type Post = {
   id: string;
   title: string;
 }
+
+// 💖 ĐỊNH NGHĨA "KIỂU" MEDIA (CHO THƯ VIỆN) 💖
+type MediaItem = {
+  id: number;
+  media_url: string;
+};
 
 // 3. "PHÉP THUẬT" LẤY TIN TUYỂN SINH
 async function getTuyenSinhPosts(): Promise<Post[]> {
@@ -40,15 +49,15 @@ async function getPhapQuyPosts(): Promise<Post[]> {
   return data || [];
 }
 
-// 5. 💖 "PHÉP THUẬT" MỚI: LẤY TIN TỨC SỰ KIỆN 💖
+// 5. "PHÉP THUẬT" MỚI: LẤY TIN TỨC SỰ KIỆN 
 async function getTinTucSuKien(): Promise<Post[]> {
   console.log('[Sidebar] Đang lấy tin "Tin tức"...');
   const { data, error } = await supabase
     .from('posts')
     .select('id, title')
-    .eq('category_id', 'tin-tuc-su-kien') // (Lấy đúng danh mục "tin-tuc-su-kien")
+    .eq('category_id', 'tin-tuc-su-kien') 
     .order('created_at', { ascending: false })
-    .limit(5); // (Lấy 5 tin mới nhất)
+    .limit(5); 
   
   if (error) {
     console.error('Lỗi lấy tin tức:', error);
@@ -57,28 +66,45 @@ async function getTinTucSuKien(): Promise<Post[]> {
   return data || [];
 }
 
+// 💖 "PHÉP THUẬT" MỚI: LẤY 3 ẢNH MỚI NHẤT CHO THƯ VIỆN PREVIEW 💖
+async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
+  console.log('[Sidebar] Đang lấy media mới nhất cho Thư viện...');
+  const { data, error } = await supabase
+    .from('media_library')
+    .select('id, media_url') // (Chỉ cần ID và link ảnh thôi)
+    .eq('media_type', 'image') // (Chỉ lấy ảnh)
+    .order('created_at', { ascending: false })
+    .limit(3); // (Lấy 3 cái mới nhất)
 
-// 6. 💖 BIẾN THÀNH "ASYNC" COMPONENT 💖
+  if (error) {
+    console.error('Lỗi lấy media cho Sidebar:', error);
+    return [];
+  }
+  return data || [];
+}
+
+
+// 6. 💖 BIẾN THÀNH "ASYNC" COMPONENT (ĐÃ THÊM MEDIA) 💖
 export default async function Sidebar() {
   
-  // 7. 💖 "CHỜ" LẤY CẢ 3 LOẠI TIN 💖
-  const [tuyenSinhPosts, phapQuyPosts, tinTucPosts] = await Promise.all([
+  // 7. 💖 "CHỜ" LẤY CẢ 4 LOẠI TIN VÀ MEDIA 💖
+  const [tuyenSinhPosts, phapQuyPosts, tinTucPosts, latestMedia] = await Promise.all([
     getTuyenSinhPosts(),
     getPhapQuyPosts(),
-    getTinTucSuKien() // (Thêm tin tức vào)
+    getTinTucSuKien(),
+    getLatestMediaForSidebar() // (Thêm media vào đây)
   ]);
 
   return (
     <aside className={styles.sidebar}>
 
-      {/* ✨ Box Hệ thống ôn tập (ĐÃ SỬA CẤU TRÚC) ✨ */}
+      {/* ✨ Box Hệ thống ôn tập ✨ */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://web-on-tap.vercel.app/" target="_blank">
           <h3 className={styles.sidebarTitle}>
               Hệ thống ôn tập
           </h3>
         </Link>
-        {/* Link của ảnh nằm riêng */}
         <Link href="https://web-on-tap.vercel.app/" target="_blank">
           <img 
             src="/on-tap.png" 
@@ -88,14 +114,13 @@ export default async function Sidebar() {
         </Link>
       </div>
       
-      {/* ✨ Box Thi Online (ĐÃ SỬA CẤU TRÚC) ✨ */}
+      {/* ✨ Box Thi Online ✨ */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
           <h3 className={styles.sidebarTitle}>
               Hệ thống thi trực tuyến
           </h3>
         </Link>
-        {/* Link của ảnh nằm riêng */}
         <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
           <img 
             src="/thi-online.png" 
@@ -105,7 +130,7 @@ export default async function Sidebar() {
         </Link>
       </div>
 
-      {/* 💖 8. BOX "TIN TỨC - SỰ KIỆN" (Cấu trúc này đã chuẩn) 💖 */}
+      {/* 💖 Box "TIN TỨC - SỰ KIỆN" 💖 */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <Link href="/danh-muc/tin-tuc-su-kien">
           <h3 className={styles.sidebarTitle}>Tin tức - Sự kiện</h3>
@@ -129,7 +154,7 @@ export default async function Sidebar() {
         </ul>
       </div>
 
-      {/* Box "Văn bản pháp quy" (Cấu trúc này đã chuẩn) */}
+      {/* Box "Văn bản pháp quy" */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <Link href="/danh-muc/van-ban-phap-quy">
           <h3 className={styles.sidebarTitle}>Văn bản pháp quy</h3>
@@ -153,7 +178,7 @@ export default async function Sidebar() {
         </ul>
       </div>
 
-      {/* Box "Thông báo tuyển sinh" (Cấu trúc này đã chuẩn) */}
+      {/* Box "Thông báo tuyển sinh" */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <Link href="/danh-muc/tuyen-sinh">
           <h3 className={styles.sidebarTitle}>Thông báo tuyển sinh</h3>
@@ -177,18 +202,31 @@ export default async function Sidebar() {
         </ul>
       </div>
 
-      {/* Box Video (Cấu trúc này đã chuẩn) */}
+      {/* 💖 BOX "THƯ VIỆN" MỚI (THAY THẾ BOX VIDEO) 💖 */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-        <h3 className={styles.sidebarTitle}>Video</h3>
-        <div className={styles.videoContainer}>
-          <iframe 
-              width="100%" 
-              height="100%" 
-              src="https://www.youtube.com/embed/VIDEO_ID_CUA_BAN" 
-              frameBorder="0"
-              allowFullScreen
-          ></iframe>
+        <Link href="/thu-vien">
+          <h3 className={styles.sidebarTitle}>Thư viện</h3>
+        </Link>
+        <div className={styles.mediaPreviewGrid}>
+          {latestMedia.length > 0 ? (
+            latestMedia.map((item) => (
+              <Link href="/thu-vien" key={item.id} className={styles.mediaPreviewItem}>
+                <img 
+                  src={item.media_url} 
+                  alt="Thư viện" 
+                  loading="lazy"
+                />
+              </Link>
+            ))
+          ) : (
+            <p className={styles.emptyMessage} style={{textAlign: 'center', margin: '0.5rem', fontSize: '0.85rem'}}>
+              Chưa có ảnh/video nào.
+            </p>
+          )}
         </div>
+        <Link href="/thu-vien" className={styles.viewAllButton}>
+            Xem tất cả <i className="fas fa-arrow-right"></i>
+        </Link>
       </div>
 
     </aside>

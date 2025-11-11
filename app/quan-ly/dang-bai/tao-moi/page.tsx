@@ -67,7 +67,7 @@ function CreatePostForm() {
     }
   }
 
-  // 💖 "PHÉP THUẬT" UPLOAD ẢNH (TRONG TRÌNH SOẠN THẢO) 💖
+  // (Hàm upload ảnh SunEditor - Giữ nguyên)
   const handleImageUploadBefore = (files: File[], info: object, uploadHandler: (response: any) => void) => {
     const file = files[0];
     if (!file) return false;
@@ -114,7 +114,66 @@ function CreatePostForm() {
     return false; // (Báo SunEditor "đừng làm gì cả, chờ tui")
   }
 
+  // 💖 "PHÉP THUẬT" MỚI: TÁCH ẢNH TỪ HTML VÀ LƯU VÀO THƯ VIỆN 💖
+  const extractMediaAndSave = async (
+    postId: string,
+    postTitle: string,
+    content: string,
+    thumbnailUrl: string | null
+  ) => {
+    console.log(`[Thư viện] Bắt đầu quét media cho bài: ${postTitle}`);
+    
+    // 1. "Lục lọi" (parse) HTML để tìm tất cả thẻ <img>
+    // (Đây là "câu thần chú" Regex để tìm link ảnh)
+    const imgRegex = /<img[^>]+src="([^">]+)"/g;
+    const mediaToInsert: any[] = [];
+    let match;
+    
+    while ((match = imgRegex.exec(content)) !== null) {
+      // match[1] là đường link URL trong cặp dấu ngoặc kép "..."
+      const url = match[1];
+      console.log(`[Thư viện] Tìm thấy ảnh nội dung: ${url}`);
+      mediaToInsert.push({
+        post_id: postId,
+        post_title: postTitle,
+        media_url: url,
+        media_type: 'image' // (Tạm thời mình chỉ hỗ trợ ảnh)
+      });
+    }
 
+    // 2. Thêm "ảnh đại diện" (thumbnail) vào danh sách (nếu có)
+    if (thumbnailUrl) {
+      console.log(`[Thư viện] Thêm ảnh đại diện: ${thumbnailUrl}`);
+      mediaToInsert.push({
+        post_id: postId,
+        post_title: postTitle,
+        media_url: thumbnailUrl,
+        media_type: 'image'
+      });
+    }
+
+    // 3. "Cất" tất cả vào "ngăn tủ" media_library
+    if (mediaToInsert.length > 0) {
+      console.log(`[Thư viện] Đang cất ${mediaToInsert.length} media vào kho...`);
+      const { error: mediaError } = await supabase
+        .from('media_library') // (Tên cái "ngăn tủ" mình tạo ở Chặng 1)
+        .insert(mediaToInsert);
+
+      if (mediaError) {
+        // Lỗi này không nghiêm trọng, không cần dừng đăng bài
+        console.error('[Thư viện] Lỗi khi lưu vào media_library:', mediaError.message);
+        // Mình vẫn báo lỗi cho anh biết ở đây
+        setFormError('Đăng bài OK, nhưng lỗi khi lưu vào thư viện media.');
+      } else {
+        console.log('[Thư viện] Đã cất media thành công!');
+      }
+    } else {
+      console.log('[Thư viện] Không tìm thấy media nào để cất.');
+    }
+  };
+
+
+  // 💖 HÀM SUBMIT (ĐÃ NÂNG CẤP) 💖
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -157,8 +216,9 @@ function CreatePostForm() {
         console.log('Tải ảnh thành công, link:', thumbnailUrl);
       }
 
-      // 3. "Cất" bài viết vào "kho" (kèm link ảnh)
-      const { data, error } = await supabase
+      // 3. "Cất" bài viết vào "kho"
+      // ✨ SỬA Ở ĐÂY: Thêm .select() để lấy data trả về ✨
+      const { data: postData, error } = await supabase
         .from('posts') 
         .insert([
           { 
@@ -170,9 +230,20 @@ function CreatePostForm() {
             thumbnail_url: thumbnailUrl 
           }
         ])
-      if (error) throw error 
+        .select() // ✨ Bảo Supabase trả về bài viết vừa tạo
+        .single(); // ✨ Vì mình chỉ tạo 1 bài
+
+      if (error) throw error; 
+      if (!postData) throw new Error('Không nhận được ID bài viết sau khi tạo.');
+
+      console.log('Đăng bài thành công! ID:', postData.id);
+
+      // 4. 💖 GỌI "PHÉP THUẬT" MỚI (TỰ ĐỘNG LƯU THƯ VIỆN) 💖
+      // (Mình gọi mà không "chờ" (await) để nó chạy ngầm,
+      //  trang web sẽ báo thành công ngay, không bị treo)
+      extractMediaAndSave(postData.id, postData.title, content, thumbnailUrl);
       
-      setFormSuccess('Đăng bài thành công!')
+      setFormSuccess('Đăng bài thành công! Đã tự động quét media.');
       // (Reset form)
       setTitle('');
       setContent('');
@@ -191,6 +262,7 @@ function CreatePostForm() {
     }
   }
 
+  // (Phần giao diện JSX)
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -277,7 +349,6 @@ function CreatePostForm() {
                 lang={vi} 
                 setContents={content}
                 onChange={setContent}
-                // 💖 "GẮN" PHÉP THUẬT VÀO ĐÂY 💖
                 onImageUploadBefore={handleImageUploadBefore} 
                 setOptions={{
                   height: '300px',
@@ -290,7 +361,10 @@ function CreatePostForm() {
                     ['fontColor', 'hiliteColor'],
                     ['outdent', 'indent'],
                     ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    ['table', 'link', 'image'], // (Nút 'image' giờ đã "xịn")
+                    
+                    // ✨ THÊM NÚT 'video' VÀO ĐÂY NÈ ANH ✨
+                    ['table', 'link', 'image', 'video'], 
+                    
                     ['fullScreen', 'showBlocks', 'codeView'],
                   ],
                 }}

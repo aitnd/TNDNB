@@ -94,7 +94,7 @@ function EditPostForm() {
     }
   }
 
-  // 💖 "PHÉP THUẬT" UPLOAD ẢNH (TRONG TRÌNH SOẠN THẢO) 💖
+  // (Hàm upload ảnh SunEditor - Giữ nguyên)
   const handleImageUploadBefore = (files: File[], info: object, uploadHandler: (response: any) => void) => {
     const file = files[0];
     if (!file) return false;
@@ -141,7 +141,62 @@ function EditPostForm() {
     return false; // (Báo SunEditor "đừng làm gì cả, chờ tui")
   }
 
-  // (Hàm "Cập nhật bài" - Giữ nguyên)
+  // 💖 "PHÉP THUẬT" MỚI: TÁCH ẢNH TỪ HTML VÀ LƯU VÀO THƯ VIỆN 💖
+  // (Copy y hệt từ file "tao-moi")
+  const extractMediaAndSave = async (
+    postId: string,
+    postTitle: string,
+    content: string,
+    thumbnailUrl: string | null
+  ) => {
+    console.log(`[Thư viện] Bắt đầu quét media cho bài: ${postTitle}`);
+    
+    // 1. "Lục lọi" (parse) HTML để tìm tất cả thẻ <img>
+    const imgRegex = /<img[^>]+src="([^">]+)"/g;
+    const mediaToInsert: any[] = [];
+    let match;
+    
+    while ((match = imgRegex.exec(content)) !== null) {
+      const url = match[1];
+      console.log(`[Thư viện] Tìm thấy ảnh nội dung: ${url}`);
+      mediaToInsert.push({
+        post_id: postId,
+        post_title: postTitle,
+        media_url: url,
+        media_type: 'image'
+      });
+    }
+
+    // 2. Thêm "ảnh đại diện" (thumbnail) vào danh sách (nếu có)
+    if (thumbnailUrl) {
+      console.log(`[Thư viện] Thêm ảnh đại diện: ${thumbnailUrl}`);
+      mediaToInsert.push({
+        post_id: postId,
+        post_title: postTitle,
+        media_url: thumbnailUrl,
+        media_type: 'image'
+      });
+    }
+
+    // 3. "Cất" tất cả vào "ngăn tủ" media_library
+    if (mediaToInsert.length > 0) {
+      console.log(`[Thư viện] Đang cất ${mediaToInsert.length} media vào kho...`);
+      const { error: mediaError } = await supabase
+        .from('media_library') 
+        .insert(mediaToInsert);
+
+      if (mediaError) {
+        console.error('[Thư viện] Lỗi khi lưu vào media_library:', mediaError.message);
+        setFormError('Sửa bài OK, nhưng lỗi khi đồng bộ thư viện media.');
+      } else {
+        console.log('[Thư viện] Đã cất media thành công!');
+      }
+    } else {
+      console.log('[Thư viện] Không tìm thấy media nào để cất.');
+    }
+  };
+
+  // 💖 HÀM "CẬP NHẬT BÀI" (ĐÃ NÂNG CẤP) 💖
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -162,6 +217,7 @@ function EditPostForm() {
         is_featured: isFeatured 
       };
 
+      // (Upload ảnh đại diện mới nếu có - giữ nguyên)
       if (thumbnailFile) {
         const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
         
@@ -180,13 +236,38 @@ function EditPostForm() {
         updateData.thumbnail_url = publicUrlData.publicUrl; 
       }
      
+      // (Cập nhật bài viết - giữ nguyên)
       const { error } = await supabase
         .from('posts') 
         .update(updateData) 
         .eq('id', postId); 
 
       if (error) throw error 
-      setFormSuccess('Cập nhật bài viết thành công!');
+
+      // 💖--- START LOGIC THƯ VIỆN MỚI ---💖
+      
+      // 1. Xác định link ảnh đại diện cuối cùng
+      // (Nếu mình vừa upload ảnh mới, dùng link đó. Nếu không, dùng link ảnh cũ)
+      const finalThumbnailUrl = updateData.thumbnail_url || thumbnailPreview;
+
+      // 2. "Đập đi": Xóa sạch album media cũ của bài này
+      console.log(`[Thư viện] Đang xóa media cũ của bài: ${postId}`);
+      const { error: deleteError } = await supabase
+        .from('media_library')
+        .delete()
+        .eq('post_id', postId);
+
+      if (deleteError) {
+        // Báo lỗi nhưng không dừng lại
+        console.error('[Thư viện] Lỗi khi xóa media cũ:', deleteError.message);
+      }
+
+      // 3. "Xây lại": Quét và lưu media mới (chạy ngầm)
+      extractMediaAndSave(postId, title, content, finalThumbnailUrl);
+
+      // 💖--- END LOGIC THƯ VIỆN MỚI ---💖
+      
+      setFormSuccess('Cập nhật bài viết thành công! Thư viện đang được đồng bộ...');
       
       setTimeout(() => {
         router.push('/quan-ly/dang-bai');
@@ -200,7 +281,7 @@ function EditPostForm() {
     }
   }
 
-  // (Giao diện)
+  // (Giao diện JSX - Giữ nguyên y hệt)
   if (isLoadingPost) {
     return (
       <div className={styles.container}>
@@ -293,7 +374,6 @@ function EditPostForm() {
                 lang={vi} 
                 setContents={content} 
                 onChange={setContent}
-                // 💖 "GẮN" PHÉP THUẬT VÀO ĐÂY 💖
                 onImageUploadBefore={handleImageUploadBefore}
                 setOptions={{
                   height: '300px',
@@ -306,7 +386,10 @@ function EditPostForm() {
                     ['fontColor', 'hiliteColor'],
                     ['outdent', 'indent'],
                     ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    ['table', 'link', 'image'], // (Nút 'image' giờ đã "xịn")
+                    
+                    // ✨ THÊM NÚT 'video' VÀO ĐÂY NÈ ANH ✨
+                    ['table', 'link', 'image', 'video'], 
+                    
                     ['fullScreen', 'showBlocks', 'codeView'],
                   ],
                 }}

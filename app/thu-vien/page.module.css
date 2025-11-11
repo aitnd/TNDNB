@@ -1,0 +1,83 @@
+/* === Trang điểm cho Trang Thư viện === */
+
+.container {
+    max-width: 1100px; /* (Cho trang này rộng hơn trang đọc bài) */
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e6f0ff;
+    padding-bottom: 1rem;
+}
+
+.albumList {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.albumBox {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+}
+
+.albumTitle a {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.albumTitle a:hover {
+    color: #004a99;
+    text-decoration: underline;
+}
+
+.albumTitle span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #777;
+    margin-left: 0.5rem;
+}
+
+/* (Lưới chứa ảnh) */
+.mediaGrid {
+    display: grid;
+    /* (Tự động chia cột, mỗi cột ít nhất 150px) */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.mediaItem {
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    aspect-ratio: 1 / 1; /* (Cho nó vuông vức) */
+}
+
+.mediaItem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* (Ảnh sẽ tự zoom cho vừa khung) */
+    transition: transform 0.3s ease;
+}
+
+.mediaItem a:hover img {
+    transform: scale(1.05); /* (Phóng to xíu khi hover) */
+}
+
+.emptyMessage {
+    font-size: 1.1rem;
+    color: #555;
+    text-align: center;
+    padding: 3rem 0;
+}
