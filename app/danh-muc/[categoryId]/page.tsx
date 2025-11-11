@@ -9,6 +9,7 @@ type Post = {
   created_at: string;
   title: string;
   image_url: string | null;
+  content: string; // 💖 Thêm cột này
 }
 // (Kiểu "dữ liệu" trang)
 type CategoryPageData = {
@@ -16,7 +17,7 @@ type CategoryPageData = {
   posts: Post[];
 }
 
-// 2. "Phép thuật": LẤY DỮ LIỆU DANH MỤC (Chạy ở Máy chủ)
+// 2. "Phép thuật": LẤY DỮ LIỆU DANH MỤC (Giữ nguyên)
 async function getCategoryData(categoryId: string): Promise<CategoryPageData> {
   console.log(`[Server] Đang lấy dữ liệu cho danh mục: ${categoryId}`)
 
@@ -27,10 +28,10 @@ async function getCategoryData(categoryId: string): Promise<CategoryPageData> {
     .eq('id', categoryId)
     .single();
 
-  // (Gọi "kho" 2: Lấy các bài viết)
+  // (Gọi "kho" 2: Lấy các bài viết - 💖 THÊM 'content' VÀO ĐÂY)
   const { data: postsData, error: postsError } = await supabase
     .from('posts')
-    .select('id, created_at, title, image_url')
+    .select('id, created_at, title, image_url, content') // 💖 Đã thêm 'content'
     .eq('category_id', categoryId)
     .order('created_at', { ascending: false });
 
@@ -42,6 +43,27 @@ async function getCategoryData(categoryId: string): Promise<CategoryPageData> {
     categoryName: categoryData?.name || categoryId.replace('-', ' '),
     posts: postsData || []
   }
+}
+
+// 💖 HÀM "THẦN KỲ" TẠO TÓM TẮT (ĐÃ NÂNG CẤP) 💖
+function taoTomTat(htmlContent: string, length: number = 120): string {
+  if (!htmlContent) {
+    return '';
+  }
+  // 1. Lột vỏ HTML
+  let text = htmlContent.replace(/<[^>]+>/g, '');
+  
+  // 2. ✨ SỬA LỖI: Thay thế mã &nbsp; bằng dấu cách thường ✨
+  text = text.replace(/&nbsp;/g, ' ');
+
+  // 3. ✨ SỬA LỖI: Xóa khoảng trắng thừa ở đầu/cuối sau khi thay thế ✨
+  text = text.trim(); 
+
+  // 4. Cắt ngắn
+  if (text.length <= length) {
+    return text;
+  }
+  return text.substring(0, length) + '...';
 }
 
 // 3. TRANG DANH MỤC (SERVER COMPONENT)
@@ -79,6 +101,10 @@ export default async function CategoryPage({ params }: { params: { categoryId: s
                       </h3>
                       <p>
                         {new Date(post.created_at).toLocaleDateString('vi-VN')}
+                      </p>
+                      {/* ✨ Dòng này sẽ tự động cập nhật theo hàm mới ✨ */}
+                      <p className={styles.excerpt}>
+                        {taoTomTat(post.content, 120)}
                       </p>
                     </div>
                   </div>

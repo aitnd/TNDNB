@@ -1,14 +1,16 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css' // (CSS "Sạch")
-import 'suneditor/dist/css/suneditor.min.css'; // (CSS SunEditor)
+
+// 1. 💖 (XÓA DÒNG 'react-quill-new' BỊ LỖI) 💖
+// import 'react-quill-new/dist/quill.snow.css'; 
+
+// 2. 💖 "TRIỆU HỒI" CSS CỦA "SUNEDITOR" (MỚI) 💖
+import 'suneditor/dist/css/suneditor.min.css';
 
 import { AuthProvider } from '../context/AuthContext' 
 import Navbar from '../components/Navbar' 
 import Footer from '../components/Footer' 
-
-// 1. 💖 "TRIỆU HỒI" COMPONENT BÌNH LUẬN MỚI 💖
-import FacebookComments from '../components/FacebookComments'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,10 +34,6 @@ export default function RootLayout({
           <main>
             {children}
           </main>
-
-          {/* 2. 💖 "ĐẶT" BOX BÌNH LUẬN Ở ĐÂY 💖 */}
-          {/* (Nó sẽ tự động xuất hiện ở MỌI TRANG) */}
-          <FacebookComments />
 
           <Footer />
 

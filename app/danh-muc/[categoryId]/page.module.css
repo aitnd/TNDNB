@@ -84,3 +84,11 @@
     color: #777;
     margin: 0.25rem 0 0 0;
 }
+
+/* 💖 CSS MỚI CHO TÓM TẮT 💖 */
+.excerpt {
+    font-size: 0.9rem !important; /* (Dùng !important để đè CSS cũ) */
+    color: #555 !important;
+    margin-top: 0.5rem !important;
+    line-height: 1.5;
+}

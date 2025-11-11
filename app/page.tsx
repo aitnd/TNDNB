@@ -17,16 +17,15 @@ type Post = {
   image_url: string | null; 
   category_id: string;
   is_featured: boolean;
+  thumbnail_url: string | null; // (Thêm thumbnail_url)
 }
 
-// 💖 HÀM LẤY 6 BÀI MỚI NHẤT (ĐÃ SỬA THEO YÊU CẦU 2) 💖
+// 💖 HÀM LẤY 6 BÀI MỚI NHẤT (Giữ nguyên) 💖
 async function getLatestPosts(): Promise<Post[]> {
   console.log('[Server] Đang lấy 6 bài viết mới nhất (không phân biệt danh mục)...');
   const { data, error } = await supabase
     .from('posts')
-    .select('*')
-    // (ĐÃ XÓA .eq('category_id', ...) )
-    // (ĐÃ XÓA .eq('is_featured', false) )
+    .select('*') // (Lấy tất cả cột, bao gồm content và thumbnail_url)
     .order('created_at', { ascending: false })
     .limit(6); // (Lấy 6 bài)
 
@@ -36,6 +35,28 @@ async function getLatestPosts(): Promise<Post[]> {
   }
   return data || []
 }
+
+// 💖 HÀM "THẦN KỲ" TẠO TÓM TẮT (ĐÃ NÂNG CẤP) 💖
+function taoTomTat(htmlContent: string, length: number = 120): string {
+  if (!htmlContent) {
+    return '';
+  }
+  // 1. Lột vỏ HTML
+  let text = htmlContent.replace(/<[^>]+>/g, '');
+  
+  // 2. ✨ SỬA LỖI: Thay thế mã &nbsp; bằng dấu cách thường ✨
+  text = text.replace(/&nbsp;/g, ' ');
+
+  // 3. ✨ SỬA LỖI: Xóa khoảng trắng thừa ở đầu/cuối sau khi thay thế ✨
+  text = text.trim(); 
+
+  // 4. Cắt ngắn
+  if (text.length <= length) {
+    return text;
+  }
+  return text.substring(0, length) + '...';
+}
+
 
 // 3. TRANG CHỦ (SERVER COMPONENT)
 export default async function HomePage() {
@@ -66,7 +87,7 @@ export default async function HomePage() {
                 latestPosts.map((post) => (
                   <div key={post.id} className={styles.newsItemLarge}>
                     <img
-                      src={(post as any).thumbnail_url || 'https://via.placeholder.com/150x100'}
+                      src={post.thumbnail_url || 'https://via.placeholder.com/150x100'}
                       alt={post.title}
                     />
                     <div>
@@ -77,6 +98,10 @@ export default async function HomePage() {
                       </h3>
                       <p>
                         {new Date(post.created_at).toLocaleDateString('vi-VN')}
+                      </p>
+                      {/* ✨ Dòng này sẽ tự động cập nhật theo hàm mới ✨ */}
+                      <p className={styles.excerpt}>
+                        {taoTomTat(post.content, 120)}
                       </p>
                     </div>
                   </div>
