@@ -3,6 +3,8 @@ import Link from 'next/link'
 import styles from './page.module.css' // (Triệu hồi CSS)
 import { adminDb } from '../../../utils/firebaseAdmin' // 💖 "TRIỆU HỒI" KHO FIRESTORE 💖
 
+// 💖 "THẦN CHÚ" BẮT TẢI LẠI DỮ LIỆU MỚI 💖
+export const revalidate = 0; // ✨ "Thần chú" mới đây ạ
 // 2. 💖 ĐỊNH NGHĨA "KIỂU" NÂNG CẤP 💖
 type Post = {
   id: string;

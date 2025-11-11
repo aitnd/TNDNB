@@ -8,6 +8,8 @@ import Sidebar from '../components/Sidebar'
 // 3. "TRIỆU HỒI" SLIDER MỚI
 import FeaturedSlider from '../components/FeaturedSlider'
 
+// 💖 "THẦN CHÚ" BẮT TẢI LẠI DỮ LIỆU MỚI 💖
+export const revalidate = 0; // ✨ "Thần chú" mới đây ạ
 // (Định nghĩa "kiểu" Post - Giữ nguyên)
 type Post = {
   id: string;

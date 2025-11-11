@@ -3,7 +3,9 @@ import Link from 'next/link'
 import Sidebar from '../../../components/Sidebar' // (3 dấu ../)
 import styles from './page.module.css' 
 
-// 1. Định nghĩa "kiểu" Post (Giữ nguyên)
+// 💖 "THẦN CHÚ" BẮT TẢI LẠI DỮ LIỆU MỚI 💖
+export const revalidate = 0; // ✨ "Thần chú" mới đây ạ
+// 1. Định nghĩa "kiểu" Post (Thêm content)
 type Post = {
   id: string;
   created_at: string;
@@ -17,7 +19,7 @@ type CategoryPageData = {
   posts: Post[];
 }
 
-// 2. "Phép thuật": LẤY DỮ LIỆU DANH MỤC (Giữ nguyên)
+// 2. "Phép thuật": LẤY DỮ LIỆU DANH MỤC (Chạy ở Máy chủ)
 async function getCategoryData(categoryId: string): Promise<CategoryPageData> {
   console.log(`[Server] Đang lấy dữ liệu cho danh mục: ${categoryId}`)
 

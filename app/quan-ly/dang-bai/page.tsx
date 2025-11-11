@@ -75,6 +75,21 @@ function PostManagementDashboard() {
     }
   }
 
+  // 💖✨ HÀM "PHIÊN DỊCH" TÊN DANH MỤC CỦA MÌNH ĐÂY ✨💖
+  const formatCategoryName = (categoryId: string) => {
+    switch (categoryId) {
+      case 'tin-tuc-su-kien':
+        return 'Tin tức - Sự kiện';
+      case 'tuyen-sinh':
+        return 'Tuyển sinh';
+      case 'van-ban-phap-quy':
+        return 'Văn bản pháp quy';
+      default:
+        // Nếu lỡ có tên nào lạ, mình tạm viết hoa chữ cái đầu
+        return categoryId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+  };
+
   // 5. GIAO DIỆN
   return (
     <div className={styles.container}>
@@ -112,7 +127,10 @@ function PostManagementDashboard() {
                 {posts.map((post) => (
                   <tr key={post.id}>
                     <td><strong>{post.title}</strong></td>
-                    <td>{post.category_id.replace('-', ' ')}</td>
+                    
+                    {/* ✨ GỌI HÀM "PHIÊN DỊCH" Ở ĐÂY ✨ */}
+                    <td>{formatCategoryName(post.category_id)}</td>
+                    
                     <td>
                       {post.is_featured ? (
                         <span className={styles.pill} style={{backgroundColor: '#fef3c7', color: '#92400e'}}>
