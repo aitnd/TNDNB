@@ -71,39 +71,45 @@ export default async function Sidebar() {
   return (
     <aside className={styles.sidebar}>
 
-      {/* Box Hệ thống ôn tập */}
+      {/* ✨ Box Hệ thống ôn tập (ĐÃ SỬA CẤU TRÚC) ✨ */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://web-on-tap.vercel.app/" target="_blank">
-          <h3 className={styles.sidebarTitle} style={{marginBottom: '1.5rem', borderBottom: '2px solid #e6f0ff', paddingBottom: '0.75rem'}}>
+          <h3 className={styles.sidebarTitle}>
               Hệ thống ôn tập
           </h3>
+        </Link>
+        {/* Link của ảnh nằm riêng */}
+        <Link href="https://web-on-tap.vercel.app/" target="_blank">
           <img 
             src="/on-tap.png" 
             alt="Hệ Thống Ôn tập" 
-            className={styles.bannerImage} 
-            style={{marginTop: 0}}
+            className={styles.bannerImage}
           />
         </Link>
       </div>
       
-      {/* Box Thi Online */}
+      {/* ✨ Box Thi Online (ĐÃ SỬA CẤU TRÚC) ✨ */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
-          <h3 className={styles.sidebarTitle} style={{marginBottom: '1.5rem', borderBottom: '2px solid #e6f0ff', paddingBottom: '0.75rem'}}>
+          <h3 className={styles.sidebarTitle}>
               Hệ thống thi trực tuyến
           </h3>
+        </Link>
+        {/* Link của ảnh nằm riêng */}
+        <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
           <img 
             src="/thi-online.png" 
             alt="Hệ Thống Thi Online" 
-            className={styles.bannerImage} 
-            style={{marginTop: 0}}
+            className={styles.bannerImage}
           />
         </Link>
       </div>
 
-      {/* 💖 8. BOX "TIN TỨC - SỰ KIỆN" MỚI (THEO YÊU CẦU 1) 💖 */}
+      {/* 💖 8. BOX "TIN TỨC - SỰ KIỆN" (Cấu trúc này đã chuẩn) 💖 */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-        <h3 className={styles.sidebarTitle}>Tin tức - Sự kiện</h3>
+        <Link href="/danh-muc/tin-tuc-su-kien">
+          <h3 className={styles.sidebarTitle}>Tin tức - Sự kiện</h3>
+        </Link>
         <ul className={styles.linkList}>
           {tinTucPosts.length > 0 ? (
             tinTucPosts.map((post) => (
@@ -123,9 +129,11 @@ export default async function Sidebar() {
         </ul>
       </div>
 
-      {/* Box "Văn bản pháp quy" */}
+      {/* Box "Văn bản pháp quy" (Cấu trúc này đã chuẩn) */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-        <h3 className={styles.sidebarTitle}>Văn bản pháp quy</h3>
+        <Link href="/danh-muc/van-ban-phap-quy">
+          <h3 className={styles.sidebarTitle}>Văn bản pháp quy</h3>
+        </Link>
         <ul className={styles.linkList}>
           {phapQuyPosts.length > 0 ? (
             phapQuyPosts.map((post) => (
@@ -145,9 +153,11 @@ export default async function Sidebar() {
         </ul>
       </div>
 
-      {/* Box "Thông báo tuyển sinh" */}
+      {/* Box "Thông báo tuyển sinh" (Cấu trúc này đã chuẩn) */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-        <h3 className={styles.sidebarTitle}>Thông báo tuyển sinh</h3>
+        <Link href="/danh-muc/tuyen-sinh">
+          <h3 className={styles.sidebarTitle}>Thông báo tuyển sinh</h3>
+        </Link>
         <ul className={styles.linkList}>
           {tuyenSinhPosts.length > 0 ? (
             tuyenSinhPosts.map((post) => (
@@ -167,7 +177,7 @@ export default async function Sidebar() {
         </ul>
       </div>
 
-      {/* Box Video */}
+      {/* Box Video (Cấu trúc này đã chuẩn) */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <h3 className={styles.sidebarTitle}>Video</h3>
         <div className={styles.videoContainer}>

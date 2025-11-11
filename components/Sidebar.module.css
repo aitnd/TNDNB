@@ -17,8 +17,7 @@
     padding: 1.5rem;
 }
 
-/* 💖 (SỬA LỖI) CSS CHO BANNER BOX 💖 */
-/* (Box chứa ảnh banner, KHÔNG xóa padding) */
+/* 💖 CSS CHO BANNER BOX 💖 */
 .bannerBox {
     padding: 1.5rem; 
     border-radius: 8px;
@@ -34,7 +33,7 @@
     display: block;
     border-radius: 5px; /* (Bo góc ảnh) */
     border: 1px solid #eee;
-    margin-top: 1.5rem; /* (Cách tiêu đề ra) */
+    margin-top: 1rem; /* (Cách tiêu đề ra) */
 }
 /* (Nếu banner KHÔNG có tiêu đề, thì ảnh không cần cách) */
 .bannerBox:has(> a > img):not(:has(> h3)) .bannerImage {
@@ -44,6 +43,7 @@
 }
 
 
+/* ✨ CSS CĂN CHỈNH TIÊU ĐỀ (CHUẨN 100%) ✨ */
 .sidebarTitle {
     font-size: 1.25rem;
     font-weight: 700;
@@ -53,16 +53,18 @@
     margin-bottom: 1rem;
     text-decoration: none; /* (Chống gạch chân) */
 }
-/* 💖 (CSS MỚI) Khi Tiêu đề nằm trong Link <a> 💖 */
+/* (Bảo <a> chứa .sidebarTitle cũng phải "trang điểm" y hệt) */
 a > .sidebarTitle {
+    display: block; /* (Rất quan trọng) */
     color: #004a99;
-    margin-bottom: 0; /* (Bỏ margin khi là link) */
-    border-bottom: none; /* (Bỏ gạch chân khi là link) */
-    padding-bottom: 0;
+    border-bottom: 2px solid #e6f0ff; /* (Thêm lại) */
+    padding-bottom: 0.75rem; /* (Thêm lại) */
+    margin-bottom: 1rem; /* (Thêm lại) */
     transition: color 0.3s;
 }
 a:hover > .sidebarTitle {
     color: #003366; /* (Đổi màu khi hover) */
+    text-decoration: none; /* (Chống gạch chân khi hover) */
 }
 
 
@@ -98,7 +100,7 @@ a:hover > .sidebarTitle {
 .linkList {
     list-style: none;
     padding-left: 0;
-    margin-top: 0;
+    margin-top: 0; /* (Để nó dính sát vào gạch chân của tiêu đề) */
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
