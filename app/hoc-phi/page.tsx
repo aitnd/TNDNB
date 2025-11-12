@@ -138,27 +138,7 @@ export default function HocPhiPage() {
             <td>Dự thi, sát hạch lại thuyền trưởng hạng nhất (3 môn)</td>
             <td>2.500.000</td>
           </tr>
-          <tr>
-            <td>7</td>
-            <td>An toàn cơ bản</td>
-            <td>100.000</td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>Cấp lại chứng chỉ chuyên môn</td>
-            <td>200.000</td>
-          </tr>
-          <tr>
-            <td>9</td>
-            <td>Xét cấp chứng chỉ chuyên môn</td>
-            <td>400.000</td>
-          </tr>
-          <tr>
-            <td>10</td>
-            <td>GCN bồi dưỡng pháp luật về giao thông đường thuỷ nội địa</td>
-            <td>200.000</td>
-          </tr>
-        </tbody>
+                 </tbody>
       </table>
 
       {/* Ghi chú */}
