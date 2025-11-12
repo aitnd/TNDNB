@@ -3,6 +3,8 @@ import { supabase } from '../utils/supabaseClient'
 import React from 'react'
 import Link from 'next/link'
 import styles from './Sidebar.module.css' // (Triệu hồi CSS)
+// 💖 1. "TRIỆU HỒI" BỘ NÃO TÌM KIẾM MỚI 💖
+import Searchbar from './Searchbar'
 
 // (THẦN CHÚ BẮT TẢI LẠI)
 export const revalidate = 0; 
@@ -74,7 +76,7 @@ async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
     .select('id, media_url') 
     .eq('media_type', 'image') 
     .order('created_at', { ascending: false })
-    .limit(3); // (Lấy 3 cái mới nhất)
+    .limit(3); 
 
   if (error) {
     console.error('Lỗi lấy media cho Sidebar:', error);
@@ -83,16 +85,15 @@ async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
   return data || [];
 }
 
-// 💖 1. HÀM MỚI: LẤY 3 TỆP MỚI NHẤT 💖
-// (Copy hàm trên và sửa 'image' -> 'document')
+// (Hàm lấy Tệp)
 async function getLatestFilesForSidebar(): Promise<MediaItem[]> {
   console.log('[Sidebar] Đang lấy tệp mới nhất cho Tài liệu...');
   const { data, error } = await supabase
     .from('media_library')
-    .select('id, media_url') // (Chỉ cần link thôi)
-    .eq('media_type', 'document') // (Chỉ lấy 'document')
+    .select('id, media_url') 
+    .eq('media_type', 'document') 
     .order('created_at', { ascending: false })
-    .limit(3); // (Lấy 3 cái mới nhất)
+    .limit(3); 
 
   if (error) {
     console.error('Lỗi lấy tệp cho Sidebar:', error);
@@ -102,20 +103,23 @@ async function getLatestFilesForSidebar(): Promise<MediaItem[]> {
 }
 
 
-// 💖 2. BIẾN THÀNH "ASYNC" COMPONENT (ĐÃ THÊM TỆP) 💖
+// (Nâng cấp "ASYNC" COMPONENT)
 export default async function Sidebar() {
   
-  // 💖 3. "CHỜ" LẤY CẢ 5 LOẠI 💖
+  // (Chờ lấy 5 loại)
   const [tuyenSinhPosts, phapQuyPosts, tinTucPosts, latestMedia, latestFiles] = await Promise.all([
     getTuyenSinhPosts(),
     getPhapQuyPosts(),
     getTinTucSuKien(),
     getLatestMediaForSidebar(),
-    getLatestFilesForSidebar() // (Thêm tệp vào đây)
+    getLatestFilesForSidebar() 
   ]);
 
   return (
     <aside className={styles.sidebar}>
+
+      {/* 💖 2. ĐẶT Ô TÌM KIẾM LÊN TRÊN CÙNG 💖 */}
+      <Searchbar />
 
       {/* (Box Hệ thống ôn tập) */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
@@ -248,15 +252,14 @@ export default async function Sidebar() {
         </Link>
       </div>
       
-      {/* 💖 4. BOX "TÀI LIỆU" MỚI (COPY TỪ BOX TRÊN) 💖 */}
+      {/* (BOX "TÀI LIỆU") */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
         <Link href="/tai-lieu">
           <h3 className={styles.sidebarTitle}>Tài liệu</h3>
         </Link>
-        {/* (Mình không preview file, chỉ để link "Xem tất cả") */}
         {latestFiles.length > 0 ? (
            <p style={{fontSize: '0.9rem', color: '#555', paddingLeft: '0.5rem'}}>
-             Đã có {latestFiles.length} tài liệu mới. Bấm xem tất cả.
+             Đã có tài liệu mới. Bấm xem tất cả.
            </p>
          ) : (
            <p className={styles.emptyMessage} style={{textAlign: 'center', margin: '0.5rem', fontSize: '0.85rem'}}>
