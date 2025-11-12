@@ -39,12 +39,19 @@ const allRoles = [
   { id: 'hoc_vien', name: 'Học viên' },
 ];
 
+// (Các vai trò được gom nhóm "Giáo viên")
+const staffRoles = ['giao_vien', 'lanh_dao', 'quan_ly'];
+
 // 2. TẠO "NỘI DUNG" TRANG
 function UserManagementDashboard() {
   const { user: currentUser } = useAuth() // (User đang đăng nhập)
-  const [users, setUsers] = useState<UserAccount[]>([]) // (Danh sách user)
+  const [users, setUsers] = useState<UserAccount[]>([]) // (Danh sách GỐC)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // 💖 "Não" trạng thái MỚI cho bộ lọc 💖
+  const [filter, setFilter] = useState<string>('all'); // ('all', 'staff', 'hoc_vien')
+  const [filteredUsers, setFilteredUsers] = useState<UserAccount[]>([]); // (Danh sách ĐÃ LỌC)
 
   // "Não" cho Modal (Cửa sổ Sửa)
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,7 +64,7 @@ function UserManagementDashboard() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 3. "Phép thuật" Lấy danh sách Users (Giữ nguyên)
+  // 3. "Phép thuật" Lấy danh sách Users (Chỉ lấy 1 lần)
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -77,7 +84,7 @@ function UserManagementDashboard() {
           ...doc.data()
         } as UserAccount);
       });
-      setUsers(userList);
+      setUsers(userList); // (Cất danh sách GỐC)
     } catch (err: any) {
       setError(err.message || 'Lỗi không xác định.');
     } finally {
@@ -85,59 +92,65 @@ function UserManagementDashboard() {
     }
   }
 
-  // (Hàm dịch tên vai trò)
+  // 💖 4. "Phép thuật" MỚI: Chạy bộ lọc 💖
+  // (Nó sẽ tự chạy lại mỗi khi 'users' (danh sách gốc) hoặc 'filter' (nút bấm) thay đổi)
+  useEffect(() => {
+    console.log(`Đang chạy bộ lọc: ${filter}`);
+    if (filter === 'all') {
+      setFilteredUsers(users); // (Hiện tất cả)
+    } 
+    else if (filter === 'staff') {
+      // (Hiện nhóm "Giáo viên" như anh muốn)
+      setFilteredUsers(users.filter(u => staffRoles.includes(u.role)));
+    }
+    else if (filter === 'hoc_vien') {
+      // (Hiện chỉ Học viên)
+      setFilteredUsers(users.filter(u => u.role === 'hoc_vien'));
+    }
+  }, [filter, users]); // (Phụ thuộc vào 2 "não" này)
+
+
+  // (Hàm dịch tên vai trò - Giữ nguyên)
   const dichTenVaiTro = (role: string) => {
     return allRoles.find(r => r.id === role)?.name || role;
   }
 
-  // --- 💖 LOGIC PHÂN QUYỀN MỚI (ĐÃ UPDATE) 💖 ---
-  
-  // (Kiểm tra xem "tôi" (currentUser) có quyền "đụng" vào "người ta" (targetUser) không)
+  // (Logic Phân quyền - Giữ nguyên)
   const canEditUser = (targetUser: UserAccount): boolean => {
     if (!currentUser) return false;
-    
-    // Admin (5.1)
     if (currentUser.role === 'admin') {
-      return true; // Admin được sửa tất cả
+      return true; 
     }
-
-    // Lãnh đạo (New Rule)
     if (currentUser.role === 'lanh_dao') {
       if (targetUser.role === 'admin') {
-        return false; // Lãnh đạo KHÔNG được sửa Admin
+        return false; 
       }
-      return true; // Được sửa Lãnh đạo khác, Quản lý, Giáo viên, Học viên
+      return true;
     }
-    
-    // Quản lý (Updated Rule 5.2)
     if (currentUser.role === 'quan_ly') {
-      // KHÔNG được sửa admin, lãnh đạo, hoặc quản lý khác
       if (targetUser.role === 'admin' || targetUser.role === 'lanh_dao' || targetUser.role === 'quan_ly') {
         return false;
       }
-      return true; // Chỉ được sửa Giáo viên, Học viên
+      return true; 
     }
-    
-    return false; // Các role khác không được sửa ai cả
+    return false;
   }
 
-  // (Lấy danh sách role cho phép khi "tôi" (currentUser) sửa)
+  // (Logic Lấy Role cho Modal - Giữ nguyên)
   const getAvailableRoles = (): { id: string, name: string }[] => {
     if (currentUser?.role === 'admin') {
-      return allRoles; // Admin thấy tất cả
+      return allRoles;
     }
     if (currentUser?.role === 'lanh_dao') {
-      // Lãnh đạo thấy tất cả TRỪ Admin
       return allRoles.filter(r => r.id !== 'admin');
     }
     if (currentUser?.role === 'quan_ly') {
-      // Quản lý thấy tất cả TRỪ Admin và Lãnh đạo
       return allRoles.filter(r => r.id !== 'admin' && r.id !== 'lanh_dao');
     }
     return [];
   }
 
-  // --- HÀNH ĐỘNG VỚI MODAL ---
+  // --- HÀNH ĐỘNG VỚI MODAL (Giữ nguyên) ---
 
   const handleOpenEditModal = (user: UserAccount) => {
     setEditingUser(user);
@@ -161,7 +174,7 @@ function UserManagementDashboard() {
     setFormData(prev => ({ ...prev, [name]: value }));
   }
 
-  // 4. HÀM "LƯU THAY ĐỔI"
+  // 4. HÀM "LƯU THAY ĐỔI" (Giữ nguyên)
   const handleSaveEdit = async (e: FormEvent) => {
     e.preventDefault();
     if (!editingUser) return;
@@ -177,9 +190,8 @@ function UserManagementDashboard() {
         role: formData.role,
       });
 
-      // (Cập nhật lại danh sách)
       await fetchUsers(); 
-      handleCloseModal(); // (Đóng cửa sổ)
+      handleCloseModal(); 
 
     } catch (err: any) {
       setError(err.message || 'Lỗi khi cập nhật.');
@@ -188,33 +200,28 @@ function UserManagementDashboard() {
     }
   }
 
-  // 5. HÀM "XÓA NGƯỜI DÙNG"
+  // 5. HÀM "XÓA NGƯỜI DÙNG" (Giữ nguyên)
   const handleDeleteUser = async (userToDelete: UserAccount) => {
     if (!canEditUser(userToDelete)) {
       alert('Bạn không có quyền xóa tài khoản này!');
       return;
     }
-
     if (userToDelete.id === currentUser?.uid) {
       alert('Bạn không thể tự xóa chính mình!');
       return;
     }
-    
     if (confirm(`Anh có chắc chắn muốn XÓA VĨNH VIỄN tài khoản "${userToDelete.fullName}" không? Sẽ không thể khôi phục được nha!`)) {
       try {
         const userDocRef = doc(db, 'users', userToDelete.id);
         await deleteDoc(userDocRef);
-        
-        // (Cập nhật lại danh sách)
-        await fetchUsers();
-
+        await fetchUsers(); // Tải lại
       } catch (err: any) {
         setError(err.message || 'Lỗi khi xóa người dùng.');
       }
     }
   }
 
-  // 6. GIAO DIỆN
+  // 6. GIAO DIỆN (ĐÃ NÂNG CẤP)
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -225,6 +232,35 @@ function UserManagementDashboard() {
             « Quay về Bảng điều khiển
           </Link>
         </div>
+
+        {/* 💖 7. JSX CHO CÁC NÚT LỌC 💖 */}
+        <div className={styles.filterContainer}>
+          <span>Lọc theo:</span>
+          <button
+            onClick={() => setFilter('all')}
+            className={`${styles.filterButton} ${filter === 'all' ? styles.filterButtonActive : ''}`}
+          >
+            Tất cả
+          </button>
+          <button
+            onClick={() => setFilter('staff')}
+            className={`${styles.filterButton} ${filter === 'staff' ? styles.filterButtonActive : ''}`}
+          >
+            Giáo viên / Quản lý
+          </button>
+          <button
+            onClick={() => setFilter('hoc_vien')}
+            className={`${styles.filterButton} ${filter === 'hoc_vien' ? styles.filterButtonActive : ''}`}
+          >
+            Học viên
+          </button>
+          
+          <span className={styles.filterInfo}>
+            (Đang hiển thị {filteredUsers.length} / {users.length} tài khoản)
+          </span>
+        </div>
+        {/* 💖 HẾT PHẦN LỌC 💖 */}
+
 
         {loading && <p>Đang tải danh sách người dùng...</p>}
         {error && <p className={styles.error}>{error}</p>}
@@ -242,7 +278,8 @@ function UserManagementDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => {
+                {/* 💖 8. SỬA "users.map" thành "filteredUsers.map" 💖 */}
+                {filteredUsers.map((user) => {
                   // (Kiểm tra quyền trước khi "vẽ" nút)
                   const canEdit = canEditUser(user);
 
@@ -280,6 +317,14 @@ function UserManagementDashboard() {
                     </tr>
                   )
                 })}
+                {/* (Nếu lọc mà không có ai) */}
+                {filteredUsers.length === 0 && (
+                  <tr>
+                    <td colSpan={5} style={{textAlign: 'center', fontStyle: 'italic', color: '#777'}}>
+                      Không tìm thấy tài khoản nào khớp với bộ lọc này.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -287,7 +332,7 @@ function UserManagementDashboard() {
 
       </div>
 
-      {/* 7. "CỬA SỔ" MODAL (Ẩn/Hiện) */}
+      {/* 7. "CỬA SỔ" MODAL (Giữ nguyên) */}
       {isModalOpen && editingUser && (
         <div className={styles.modalBackdrop} onClick={handleCloseModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>

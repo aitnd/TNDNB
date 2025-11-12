@@ -195,3 +195,42 @@
     padding-top: 1.5rem;
     border-top: 1px solid #eee;
 }
+
+/* === 💖 CSS MỚI CHO BỘ LỌC (Thêm ở cuối) 💖 === */
+.filterContainer {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap; /* (Cho nó xuống dòng nếu hẹp) */
+    align-items: center;
+}
+
+.filterButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    color: #555;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filterButton:hover {
+    background-color: #eee;
+    border-color: #ccc;
+}
+
+.filterButtonActive {
+    background-color: #004a99; /* (Màu xanh chủ đạo) */
+    color: white;
+    border-color: #004a99;
+}
+
+.filterInfo {
+    margin-left: auto; /* (Đẩy nó qua bên phải) */
+    font-size: 0.9rem;
+    color: #777;
+    font-style: italic;
+}
