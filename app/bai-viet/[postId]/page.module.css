@@ -44,7 +44,7 @@
   đã được định nghĩa ở file "app/globals.css"
 */
 
-/* 💖 CSS MỚI CHO TÊN TÁC GIẢ 💖 */
+/* (CSS CHO TÊN TÁC GIẢ) */
 .authorName {
     font-size: 0.9rem;
     font-style: italic;
@@ -96,4 +96,74 @@
     font-size: 1.2rem;
     margin-top: 1rem;
     color: #555;
+}
+
+
+/* === 💖 CSS MỚI CHO TỆP ĐÍNH KÈM (Thêm ở cuối) 💖 === */
+.attachmentSection {
+    margin-top: 2.5rem;
+    border-top: 2px solid #e6f0ff;
+    padding-top: 1.5rem;
+}
+.attachmentTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 1rem;
+}
+.attachmentList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* (Khoảng cách giữa các tệp) */
+}
+
+/* (Khung cho PDF) */
+.pdfViewer {
+    width: 100%;
+    aspect-ratio: 4 / 5; /* (Tỉ lệ 4:5 cho đẹp) */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.pdfViewerTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+/* (Link tải cho Word, Zip...) */
+.downloadLink {
+    display: flex;
+    align-items: center;
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    padding: 1rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.downloadLink:hover {
+    background-color: #e6f0ff;
+    border-color: #004a99;
+    text-decoration: none;
+}
+.downloadIcon {
+    font-size: 1.5rem;
+    color: #004a99;
+    margin-right: 1rem;
+}
+.downloadInfo {
+    flex: 1;
+}
+.downloadName {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #004a99;
+}
+.downloadSize {
+    font-size: 0.9rem;
+    color: #777;
 }
