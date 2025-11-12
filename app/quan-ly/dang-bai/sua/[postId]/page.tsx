@@ -94,7 +94,7 @@ function EditPostForm() {
     }
   }
 
-  // 💖 (Hàm upload ảnh SunEditor - NÂNG CẤP ĐA ẢNH) 💖
+  // (Hàm upload ảnh SunEditor - NÂNG CẤP ĐA ẢNH)
   const handleImageUploadBefore = (
     files: File[], // (Đây là mảng nè anh)
     info: object,
@@ -399,16 +399,16 @@ function EditPostForm() {
                 setContents={content} 
                 onChange={setContent}
                 onImageUploadBefore={handleImageUploadBefore}
-                // 💖 (BỘ "CÀI ĐẶT" ĐÃ NÂNG CẤP) 💖
+                // 💖 (BỘ "CÀI ĐẶT" ĐÃ SỬA LỖI) 💖
                 setOptions={{
                   height: '300px',
                   
-                  // --- 💖 BÍ KÍP NÂNG CẤP Ở ĐÂY NÈ ANH 💖 ---
-                  imageUploadMultiple: true, // (Cho phép up nhiều ảnh)
+                  // --- 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 ---
+                  imageMultiple: true,       // (Tên đúng là 'imageMultiple')
                   imageWidth: '500px',       // (Kích thước mặc định khi thả ảnh vào)
                   imageHeight: 'auto',       // (Để nó tự tính chiều cao)
                   // --- Hết 💖 ---
-
+                  
                   buttonList: [
                     ['undo', 'redo'],
                     ['font', 'fontSize', 'formatBlock'],
