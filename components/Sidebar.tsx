@@ -123,7 +123,7 @@ export default async function Sidebar() {
 
       {/* ✨ Box Hệ thống ôn tập (ĐÃ SỬA LINK) ✨ */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        <Link href="https://vercel.com/tnds-projects-21843c4e/ontap/DpKDVAFMW2L4Ve3TGeUwBsyGWmCz" target="_blank">
+        <Link href="https://ontap-89rlhevi0-tnds-projects-21843c4e.vercel.app/" target="_blank">
           <h3 className={styles.sidebarTitle}>
               Hệ thống ôn tập
           </h3>
