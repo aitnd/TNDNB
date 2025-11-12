@@ -67,54 +67,87 @@ function CreatePostForm() {
     }
   }
 
-  // (Hàm upload ảnh SunEditor - Giữ nguyên)
-  const handleImageUploadBefore = (files: File[], info: object, uploadHandler: (response: any) => void) => {
-    const file = files[0];
-    if (!file) return false;
+  // 💖 (Hàm upload ảnh SunEditor - NÂNG CẤP ĐA ẢNH) 💖
+  const handleImageUploadBefore = (
+    files: File[], // (Đây là mảng nè anh)
+    info: object,
+    uploadHandler: (response: any) => void
+  ) => {
+    console.log(`[SunEditor] Nhận được ${files.length} ảnh.`);
 
-    const fileName = `content_${Date.now()}_${file.name}`;
-    console.log(`[SunEditor] Đang tải ảnh nội dung: ${fileName}`);
+    // (Mình sẽ "hứa" là upload hết, rồi báo cáo sau)
+    const uploadPromises = files.map(file => {
+      // (Bọc mỗi lần upload trong 1 "lời hứa" - Promise)
+      return new Promise((resolve, reject) => {
+        const fileName = `content_${Date.now()}_${file.name}`;
+        console.log(`[SunEditor] Đang tải: ${fileName}`);
 
-    // (Tạo hàm async để "đẩy" ảnh)
-    const uploadImage = async () => {
-      try {
-        const { error: uploadError } = await supabase.storage
-          .from('post_images') // (Tên "thùng" mình tạo)
-          .upload(fileName, file);
-        
-        if (uploadError) {
-          throw new Error(`Lỗi tải ảnh: ${uploadError.message}`);
-        }
-        
-        // (Lấy link "công khai" của ảnh)
-        const { data: publicUrlData } = supabase.storage
+        supabase.storage
           .from('post_images')
-          .getPublicUrl(fileName);
+          .upload(fileName, file)
+          .then(({ error: uploadError }) => {
+            if (uploadError) {
+              console.error(`Lỗi tải ảnh ${fileName}:`, uploadError.message);
+              // (Nếu lỗi 1 ảnh, mình vẫn tiếp tục, chỉ báo lỗi)
+              return reject(new Error(uploadError.message)); 
+            }
+            
+            // (Lấy link "công khai")
+            const { data: publicUrlData } = supabase.storage
+              .from('post_images')
+              .getPublicUrl(fileName);
 
-        // (Đây là "câu thần chú" SunEditor cần để "nhét" ảnh vào)
-        const response = {
-          result: [
-            {
+            // (Đây là "kết quả" SunEditor cần)
+            resolve({
               url: publicUrlData.publicUrl,
               name: file.name,
               size: file.size,
-            },
-          ],
-        };
-        uploadHandler(response); // (Trả link về cho SunEditor)
+            });
+          })
+          .catch(err => {
+             console.error(`Lỗi ngoại lệ khi tải ${fileName}:`, err);
+             return reject(err);
+          });
+      });
+    }); // (Hết .map)
 
-      } catch (err: any) {
-        console.error(err);
-        alert(err.message);
-        uploadHandler(null); // (Báo lỗi)
-      }
-    };
-    
-    uploadImage(); // (Chạy "phép thuật")
+    // (Chờ tất cả lời hứa hoàn thành)
+    Promise.allSettled(uploadPromises) // Dùng "allSettled" để nó không dừng nếu 1 ảnh lỗi
+      .then(results => {
+        
+        const successResults: any[] = [];
+        let errorCount = 0;
+
+        results.forEach(res => {
+          if (res.status === 'fulfilled') {
+            successResults.push(res.value); // (Lấy kết quả thành công)
+          } else {
+            errorCount++; // (Đếm số ảnh lỗi)
+          }
+        });
+
+        // (Chỉ "báo cáo" cho SunEditor những ảnh thành công)
+        if (successResults.length > 0) {
+          const response = {
+            result: successResults,
+          };
+          uploadHandler(response); // (Trả về MỘT LẦN)
+        }
+        
+        if (errorCount > 0) {
+           alert(`Đã tải lên ${successResults.length} ảnh. Có ${errorCount} ảnh bị lỗi, anh xem lại nhé.`);
+        }
+        
+        // (Nếu không có ảnh nào thành công)
+        if (successResults.length === 0 && errorCount > 0) {
+           uploadHandler(null);
+        }
+      });
+
     return false; // (Báo SunEditor "đừng làm gì cả, chờ tui")
   }
 
-  // 💖 "PHÉP THUẬT" MỚI: TÁCH ẢNH TỪ HTML VÀ LƯU VÀO THƯ VIỆN 💖
+  // (Hàm "Lưu thư viện" - Giữ nguyên)
   const extractMediaAndSave = async (
     postId: string,
     postTitle: string,
@@ -124,13 +157,11 @@ function CreatePostForm() {
     console.log(`[Thư viện] Bắt đầu quét media cho bài: ${postTitle}`);
     
     // 1. "Lục lọi" (parse) HTML để tìm tất cả thẻ <img>
-    // (Đây là "câu thần chú" Regex để tìm link ảnh)
     const imgRegex = /<img[^>]+src="([^">]+)"/g;
     const mediaToInsert: any[] = [];
     let match;
     
     while ((match = imgRegex.exec(content)) !== null) {
-      // match[1] là đường link URL trong cặp dấu ngoặc kép "..."
       const url = match[1];
       console.log(`[Thư viện] Tìm thấy ảnh nội dung: ${url}`);
       mediaToInsert.push({
@@ -160,9 +191,7 @@ function CreatePostForm() {
         .insert(mediaToInsert);
 
       if (mediaError) {
-        // Lỗi này không nghiêm trọng, không cần dừng đăng bài
         console.error('[Thư viện] Lỗi khi lưu vào media_library:', mediaError.message);
-        // Mình vẫn báo lỗi cho anh biết ở đây
         setFormError('Đăng bài OK, nhưng lỗi khi lưu vào thư viện media.');
       } else {
         console.log('[Thư viện] Đã cất media thành công!');
@@ -173,7 +202,7 @@ function CreatePostForm() {
   };
 
 
-  // 💖 HÀM SUBMIT (ĐÃ NÂNG CẤP) 💖
+  // HÀM SUBMIT (Giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -200,7 +229,7 @@ function CreatePostForm() {
         const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
         
         const { error: uploadError } = await supabase.storage
-          .from('post_images') // (Tên "thùng" mình tạo)
+          .from('post_images') 
           .upload(fileName, thumbnailFile);
         
         if (uploadError) {
@@ -217,7 +246,6 @@ function CreatePostForm() {
       }
 
       // 3. "Cất" bài viết vào "kho"
-      // ✨ SỬA Ở ĐÂY: Thêm .select() để lấy data trả về ✨
       const { data: postData, error } = await supabase
         .from('posts') 
         .insert([
@@ -230,17 +258,15 @@ function CreatePostForm() {
             thumbnail_url: thumbnailUrl 
           }
         ])
-        .select() // ✨ Bảo Supabase trả về bài viết vừa tạo
-        .single(); // ✨ Vì mình chỉ tạo 1 bài
+        .select() 
+        .single(); 
 
       if (error) throw error; 
       if (!postData) throw new Error('Không nhận được ID bài viết sau khi tạo.');
 
       console.log('Đăng bài thành công! ID:', postData.id);
 
-      // 4. 💖 GỌI "PHÉP THUẬT" MỚI (TỰ ĐỘNG LƯU THƯ VIỆN) 💖
-      // (Mình gọi mà không "chờ" (await) để nó chạy ngầm,
-      //  trang web sẽ báo thành công ngay, không bị treo)
+      // 4. GỌI "PHÉP THUẬT" MỚI (TỰ ĐỘNG LƯU THƯ VIỆN) 
       extractMediaAndSave(postData.id, postData.title, content, thumbnailUrl);
       
       setFormSuccess('Đăng bài thành công! Đã tự động quét media.');
@@ -350,8 +376,16 @@ function CreatePostForm() {
                 setContents={content}
                 onChange={setContent}
                 onImageUploadBefore={handleImageUploadBefore} 
+                // 💖 (BỘ "CÀI ĐẶT" ĐÃ NÂNG CẤP) 💖
                 setOptions={{
                   height: '300px',
+                  
+                  // --- 💖 BÍ KÍP NÂNG CẤP Ở ĐÂY NÈ ANH 💖 ---
+                  imageUploadMultiple: true, // (Cho phép up nhiều ảnh)
+                  imageWidth: '500px',       // (Kích thước mặc định khi thả ảnh vào)
+                  imageHeight: 'auto',       // (Để nó tự tính chiều cao)
+                  // --- Hết 💖 ---
+
                   buttonList: [
                     ['undo', 'redo'],
                     ['font', 'fontSize', 'formatBlock'],
@@ -361,10 +395,7 @@ function CreatePostForm() {
                     ['fontColor', 'hiliteColor'],
                     ['outdent', 'indent'],
                     ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    
-                    // ✨ THÊM NÚT 'video' VÀO ĐÂY NÈ ANH ✨
                     ['table', 'link', 'image', 'video'], 
-                    
                     ['fullScreen', 'showBlocks', 'codeView'],
                   ],
                 }}

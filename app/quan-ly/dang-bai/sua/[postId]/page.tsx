@@ -35,7 +35,7 @@ function EditPostForm() {
   const [isFeatured, setIsFeatured] = useState(false)
   
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null); // (Giữ nguyên)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
@@ -78,7 +78,7 @@ function EditPostForm() {
         setContent(data.content);
         setCategoryId(data.category_id);
         setIsFeatured(data.is_featured);
-        setThumbnailPreview(data.thumbnail_url || null); 
+        setThumbnailPreview(data.thumbnail_url || null); // (Giữ nguyên)
       }
       setIsLoadingPost(false);
     }
@@ -94,55 +94,87 @@ function EditPostForm() {
     }
   }
 
-  // (Hàm upload ảnh SunEditor - Giữ nguyên)
-  const handleImageUploadBefore = (files: File[], info: object, uploadHandler: (response: any) => void) => {
-    const file = files[0];
-    if (!file) return false;
+  // 💖 (Hàm upload ảnh SunEditor - NÂNG CẤP ĐA ẢNH) 💖
+  const handleImageUploadBefore = (
+    files: File[], // (Đây là mảng nè anh)
+    info: object,
+    uploadHandler: (response: any) => void
+  ) => {
+    console.log(`[SunEditor] Nhận được ${files.length} ảnh.`);
 
-    const fileName = `content_${Date.now()}_${file.name}`;
-    console.log(`[SunEditor] Đang tải ảnh nội dung: ${fileName}`);
+    // (Mình sẽ "hứa" là upload hết, rồi báo cáo sau)
+    const uploadPromises = files.map(file => {
+      // (Bọc mỗi lần upload trong 1 "lời hứa" - Promise)
+      return new Promise((resolve, reject) => {
+        const fileName = `content_${Date.now()}_${file.name}`;
+        console.log(`[SunEditor] Đang tải: ${fileName}`);
 
-    // (Tạo hàm async để "đẩy" ảnh)
-    const uploadImage = async () => {
-      try {
-        const { error: uploadError } = await supabase.storage
-          .from('post_images') // (Tên "thùng" mình tạo)
-          .upload(fileName, file);
-        
-        if (uploadError) {
-          throw new Error(`Lỗi tải ảnh: ${uploadError.message}`);
-        }
-        
-        // (Lấy link "công khai" của ảnh)
-        const { data: publicUrlData } = supabase.storage
+        supabase.storage
           .from('post_images')
-          .getPublicUrl(fileName);
+          .upload(fileName, file)
+          .then(({ error: uploadError }) => {
+            if (uploadError) {
+              console.error(`Lỗi tải ảnh ${fileName}:`, uploadError.message);
+              // (Nếu lỗi 1 ảnh, mình vẫn tiếp tục, chỉ báo lỗi)
+              return reject(new Error(uploadError.message)); 
+            }
+            
+            // (Lấy link "công khai")
+            const { data: publicUrlData } = supabase.storage
+              .from('post_images')
+              .getPublicUrl(fileName);
 
-        // (Đây là "câu thần chú" SunEditor cần để "nhét" ảnh vào)
-        const response = {
-          result: [
-            {
+            // (Đây là "kết quả" SunEditor cần)
+            resolve({
               url: publicUrlData.publicUrl,
               name: file.name,
               size: file.size,
-            },
-          ],
-        };
-        uploadHandler(response); // (Trả link về cho SunEditor)
+            });
+          })
+          .catch(err => {
+             console.error(`Lỗi ngoại lệ khi tải ${fileName}:`, err);
+             return reject(err);
+          });
+      });
+    }); // (Hết .map)
 
-      } catch (err: any) {
-        console.error(err);
-        alert(err.message);
-        uploadHandler(null); // (Báo lỗi)
-      }
-    };
-    
-    uploadImage(); // (Chạy "phép thuật")
+    // (Chờ tất cả lời hứa hoàn thành)
+    Promise.allSettled(uploadPromises) // Dùng "allSettled" để nó không dừng nếu 1 ảnh lỗi
+      .then(results => {
+        
+        const successResults: any[] = [];
+        let errorCount = 0;
+
+        results.forEach(res => {
+          if (res.status === 'fulfilled') {
+            successResults.push(res.value); // (Lấy kết quả thành công)
+          } else {
+            errorCount++; // (Đếm số ảnh lỗi)
+          }
+        });
+
+        // (Chỉ "báo cáo" cho SunEditor những ảnh thành công)
+        if (successResults.length > 0) {
+          const response = {
+            result: successResults,
+          };
+          uploadHandler(response); // (Trả về MỘT LẦN)
+        }
+        
+        if (errorCount > 0) {
+           alert(`Đã tải lên ${successResults.length} ảnh. Có ${errorCount} ảnh bị lỗi, anh xem lại nhé.`);
+        }
+        
+        // (Nếu không có ảnh nào thành công)
+        if (successResults.length === 0 && errorCount > 0) {
+           uploadHandler(null);
+        }
+      });
+
     return false; // (Báo SunEditor "đừng làm gì cả, chờ tui")
   }
 
-  // 💖 "PHÉP THUẬT" MỚI: TÁCH ẢNH TỪ HTML VÀ LƯU VÀO THƯ VIỆN 💖
-  // (Copy y hệt từ file "tao-moi")
+  // (Hàm "Lưu thư viện" - Giữ nguyên)
   const extractMediaAndSave = async (
     postId: string,
     postTitle: string,
@@ -196,7 +228,7 @@ function EditPostForm() {
     }
   };
 
-  // 💖 HÀM "CẬP NHẬT BÀI" (ĐÃ NÂNG CẤP) 💖
+  // (Hàm "Cập nhật" - Giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -244,13 +276,9 @@ function EditPostForm() {
 
       if (error) throw error 
 
-      // 💖--- START LOGIC THƯ VIỆN MỚI ---💖
-      
-      // 1. Xác định link ảnh đại diện cuối cùng
-      // (Nếu mình vừa upload ảnh mới, dùng link đó. Nếu không, dùng link ảnh cũ)
+      // (Logic "Dọn dẹp" Thư viện - Giữ nguyên)
       const finalThumbnailUrl = updateData.thumbnail_url || thumbnailPreview;
 
-      // 2. "Đập đi": Xóa sạch album media cũ của bài này
       console.log(`[Thư viện] Đang xóa media cũ của bài: ${postId}`);
       const { error: deleteError } = await supabase
         .from('media_library')
@@ -258,14 +286,10 @@ function EditPostForm() {
         .eq('post_id', postId);
 
       if (deleteError) {
-        // Báo lỗi nhưng không dừng lại
         console.error('[Thư viện] Lỗi khi xóa media cũ:', deleteError.message);
       }
 
-      // 3. "Xây lại": Quét và lưu media mới (chạy ngầm)
       extractMediaAndSave(postId, title, content, finalThumbnailUrl);
-
-      // 💖--- END LOGIC THƯ VIỆN MỚI ---💖
       
       setFormSuccess('Cập nhật bài viết thành công! Thư viện đang được đồng bộ...');
       
@@ -281,7 +305,7 @@ function EditPostForm() {
     }
   }
 
-  // (Giao diện JSX - Giữ nguyên y hệt)
+  // (Giao diện JSX - Giữ nguyên)
   if (isLoadingPost) {
     return (
       <div className={styles.container}>
@@ -375,8 +399,16 @@ function EditPostForm() {
                 setContents={content} 
                 onChange={setContent}
                 onImageUploadBefore={handleImageUploadBefore}
+                // 💖 (BỘ "CÀI ĐẶT" ĐÃ NÂNG CẤP) 💖
                 setOptions={{
                   height: '300px',
+                  
+                  // --- 💖 BÍ KÍP NÂNG CẤP Ở ĐÂY NÈ ANH 💖 ---
+                  imageUploadMultiple: true, // (Cho phép up nhiều ảnh)
+                  imageWidth: '500px',       // (Kích thước mặc định khi thả ảnh vào)
+                  imageHeight: 'auto',       // (Để nó tự tính chiều cao)
+                  // --- Hết 💖 ---
+
                   buttonList: [
                     ['undo', 'redo'],
                     ['font', 'fontSize', 'formatBlock'],
@@ -386,10 +418,7 @@ function EditPostForm() {
                     ['fontColor', 'hiliteColor'],
                     ['outdent', 'indent'],
                     ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    
-                    // ✨ THÊM NÚT 'video' VÀO ĐÂY NÈ ANH ✨
                     ['table', 'link', 'image', 'video'], 
-                    
                     ['fullScreen', 'showBlocks', 'codeView'],
                   ],
                 }}
