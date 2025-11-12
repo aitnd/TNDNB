@@ -399,14 +399,15 @@ function EditPostForm() {
                 setContents={content} 
                 onChange={setContent}
                 onImageUploadBefore={handleImageUploadBefore}
-                // 💖 (BỘ "CÀI ĐẶT" ĐÃ SỬA LỖI) 💖
+                // 💖 (BỘ "CÀI ĐẶT" ĐÃ SỬA LỖI LẦN 3) 💖
                 setOptions={{
                   height: '300px',
                   
                   // --- 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 ---
-                  imageMultiple: true,       // (Tên đúng là 'imageMultiple')
-                  imageWidth: '500px',       // (Kích thước mặc định khi thả ảnh vào)
-                  imageHeight: 'auto',       // (Để nó tự tính chiều cao)
+                  // (Tên đúng 1000% là 'imageMultipleFile' 😭)
+                  imageMultipleFile: true, 
+                  imageWidth: '500px',       
+                  imageHeight: 'auto',       
                   // --- Hết 💖 ---
                   
                   buttonList: [

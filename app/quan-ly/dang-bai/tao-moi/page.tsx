@@ -11,7 +11,7 @@ import Link from 'next/link'
 
 const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
 import 'suneditor/dist/css/suneditor.min.css'; 
-import vi from 'suneditor/src/lang/en'; // (Dùng 'en' nhưng nó vẫn lấy 'vi' từ 'lang' prop, anh đừng lo)
+import vi from 'suneditor/src/lang/en';
 
 // "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
@@ -376,15 +376,15 @@ function CreatePostForm() {
                 setContents={content}
                 onChange={setContent}
                 onImageUploadBefore={handleImageUploadBefore} 
-                // 💖 (BỘ "CÀI ĐẶT" ĐÃ SỬA LỖI) 💖
+                // 💖 (BỘ "CÀI ĐẶT" ĐÃ SỬA LỖI LẦN 3) 💖
                 setOptions={{
                   height: '300px',
                   
                   // --- 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 ---
-                  // (Em đã sửa "imageUploadMultiple" thành "imageMultiple")
-                  imageMultiple: true,       // (Tên đúng là 'imageMultiple')
-                  imageWidth: '500px',       // (Kích thước mặc định khi thả ảnh vào)
-                  imageHeight: 'auto',       // (Để nó tự tính chiều cao)
+                  // (Tên đúng 1000% là 'imageMultipleFile' 😭)
+                  imageMultipleFile: true, 
+                  imageWidth: '500px',       
+                  imageHeight: 'auto',       
                   // --- Hết 💖 ---
 
                   buttonList: [
