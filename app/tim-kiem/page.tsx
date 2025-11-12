@@ -42,7 +42,7 @@ function SearchResults() {
   const [results, setResults] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 💖 4. "PHÉP THUẬT" TỰ ĐỘNG TÌM KIẾM 💖
+  // 💖 4. "PHÉP THUẬT" TỰ ĐỘNG TÌM KIẾM (ĐÃ NÂNG CẤP) 💖
   useEffect(() => {
     // (Nếu không có từ khóa, hoặc từ khóa rỗng thì không làm gì)
     if (!query || !query.trim()) {
@@ -57,13 +57,14 @@ function SearchResults() {
       
       try {
         // (Đây là "câu thần chú" tìm kiếm Full-text-search)
-        // (Mình sẽ tìm từ khóa (đã xử lý) trong 2 cột 'title' và 'content')
+        
+        // 💖 SỬA LỖI Ở DÒNG ".or(...)" NÀY NÈ ANH 💖
+        // (Em thêm `attachments::text.ilike.%${query}%`)
+        // (Nghĩa là: "Biến cái túi 'attachments' thành văn bản, rồi tìm trong đó")
         const { data, error } = await supabase
           .from('posts')
           .select('*')
-          // (Mình dùng 'ilike' (không phân biệt hoa-thường) 
-          //  và '%' (đại diện cho ký tự bất kỳ))
-          .or(`title.ilike.%${query}%,content.ilike.%${query}%`)
+          .or(`title.ilike.%${query}%,content.ilike.%${query}%,attachments::text.ilike.%${query}%`)
           .order('created_at', { ascending: false });
 
         if (error) {
@@ -149,8 +150,6 @@ function SearchResults() {
 }
 
 // 💖 6. BỌC BẰNG "SUSPENSE" (Bắt buộc) 💖
-// (Vì 'useSearchParams' cần "thời gian" để "tỉnh dậy",
-//  nên Next.js bắt mình bọc nó trong Suspense)
 export default function SearchPage() {
   return (
     <Suspense fallback={<div className={styles.emptyMessage}>Đang tải trang tìm kiếm...</div>}>
