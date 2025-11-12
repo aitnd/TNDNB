@@ -90,9 +90,11 @@
     display: flex;
     gap: 0.5rem;
 }
+/* 💖 1. THÊM .buttonShare VÀO ĐÂY 💖 */
 .buttonEdit,
 .buttonDelete,
-.buttonSecondary {
+.buttonSecondary,
+.buttonShare {
     border: none;
     padding: 0.5rem 0.75rem;
     border-radius: 5px;
@@ -100,9 +102,11 @@
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 0.875rem;
+    color: white; /* (Thêm màu chữ trắng cho đồng bộ) */
 }
 .buttonEdit:disabled,
-.buttonDelete:disabled {
+.buttonDelete:disabled,
+.buttonShare:disabled {
     opacity: 0.4;
     cursor: not-allowed;
 }
@@ -127,6 +131,15 @@
 .buttonSecondary:hover {
     background-color: #d1d5db;
 }
+
+/* 💖 2. THÊM MÀU ÁO CHO NÚT FACEBOOK 💖 */
+.buttonShare {
+    background-color: #1877f2; /* (Màu Facebook "xịn") */
+}
+.buttonShare:hover:not(:disabled) {
+    background-color: #166fe5; /* (Màu hover) */
+}
+
 
 /* === LỖI === */
 .error {
@@ -196,12 +209,12 @@
     border-top: 1px solid #eee;
 }
 
-/* === 💖 CSS MỚI CHO BỘ LỌC (Thêm ở cuối) 💖 === */
+/* === (CSS CHO BỘ LỌC TÀI KHOẢN) === */
 .filterContainer {
     margin-bottom: 1.5rem;
     display: flex;
     gap: 0.75rem;
-    flex-wrap: wrap; /* (Cho nó xuống dòng nếu hẹp) */
+    flex-wrap: wrap; 
     align-items: center;
 }
 
@@ -223,13 +236,13 @@
 }
 
 .filterButtonActive {
-    background-color: #004a99; /* (Màu xanh chủ đạo) */
+    background-color: #004a99; 
     color: white;
     border-color: #004a99;
 }
 
 .filterInfo {
-    margin-left: auto; /* (Đẩy nó qua bên phải) */
+    margin-left: auto; 
     font-size: 0.9rem;
     color: #777;
     font-style: italic;
