@@ -6,17 +6,15 @@
     margin: 2rem auto; 
 }
 
-/* 1. Bố cục 2 cột */
+/* 1. Bố cục 2 cột (LUÔN LUÔN 2 CỘT) */
 .layoutGrid {
     display: grid;
     grid-template-columns: 2fr 1fr; 
     gap: 2rem; 
 }
-@media (max-width: 768px) {
-    .layoutGrid {
-        grid-template-columns: 1fr; 
-    }
-}
+
+/* (ĐÃ XÓA MEDIA QUERY @media (max-width: 768px) Ở ĐÂY) */
+
 
 /* 2. Cột trái (Main Content) */
 .mainContent {
@@ -85,9 +83,9 @@
     margin: 0.25rem 0 0 0;
 }
 
-/* 💖 CSS MỚI CHO TÓM TẮT 💖 */
+/* (CSS CHO TÓM TẮT) */
 .excerpt {
-    font-size: 0.9rem !important; /* (Dùng !important để đè CSS cũ) */
+    font-size: 0.9rem !important; 
     color: #555 !important;
     margin-top: 0.5rem !important;
     line-height: 1.5;

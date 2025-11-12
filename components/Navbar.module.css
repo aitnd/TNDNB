@@ -74,7 +74,7 @@
     background-color: #c9302c;
 }
 
-/* === PHẦN 2: THANH CHÍNH (CHỈ CÓ MENU) === */
+/* === PHẦN 2: THANH CHÍNH (ĐÃ SỬA CHO RESPONSIVE) === */
 .mainNav {
     background-color: #004a99;
     padding: 0.75rem 0; 
@@ -92,6 +92,7 @@
 .navLinks {
     list-style: none;
     display: flex;
+    flex-wrap: wrap; /* 💖 CHO PHÉP XUỐNG DÒNG 💖 */
     align-items: center;
     margin: 0;
     padding: 0;
@@ -99,7 +100,8 @@
 
 .navLinks li {
     margin-left: 0; 
-    margin-right: 1.75rem; 
+    margin-right: 1.5rem; /* (Giảm bớt xíu) */
+    margin-bottom: 0.5rem; /* 💖 Thêm khoảng cách khi nó xuống dòng 💖 */
 }
 
 .navLinks a {
@@ -116,7 +118,7 @@
     text-decoration: none;
 }
 
-/* 💖 CSS MỚI CHO CHỮ "CHÀO MỪNG" 💖 */
+/* (CSS CHO CHỮ "CHÀO MỪNG") */
 .welcomeText {
   color: #555; /* (Màu chữ xám) */
   font-weight: 500;

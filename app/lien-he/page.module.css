@@ -1,6 +1,6 @@
-/* === Bố cục 2 cột (Kế thừa từ app/page.module.css) === */
+/* === Bố cục 2 cột (LUÔN LUÔN 2 CỘT) === */
 .layoutGrid {
-    display: grid;
+    display: grid; 
     grid-template-columns: 2fr 1fr; 
     gap: 2rem; 
     width: 90%;
@@ -14,11 +14,8 @@
 }
 /* (Sidebar sẽ dùng style của component Sidebar) */
 
-@media (max-width: 768px) {
-    .layoutGrid {
-        grid-template-columns: 1fr; 
-    }
-}
+/* (ĐÃ XÓA MEDIA QUERY @media (max-width: 768px) Ở ĐÂY) */
+
 
 /* === Box chung (Kế thừa từ app/page.module.css) === */
 .widgetBox {
@@ -51,4 +48,4 @@
     margin-bottom: 0.5rem;
 }
 
-/* 💖 (ĐÃ XÓA CSS '.fbCommentsContainer' CŨ) 💖 */
+/* (ĐÃ XÓA CSS '.fbCommentsContainer' CŨ) */
