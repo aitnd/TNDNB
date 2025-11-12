@@ -80,13 +80,42 @@
   background-color: #d1d5db;
 }
 
-/* 💖 CSS MỚI CHO ẢNH XEM TRƯỚC 💖 */
+/* 💖 CSS NÂNG CẤP CHO ẢNH XEM TRƯỚC + NÚT XÓA 💖 */
+.thumbnailPreviewContainer {
+  position: relative; /* (Để định vị nút Xóa) */
+  display: inline-block; /* (Để nó không chiếm 100% chiều rộng) */
+  margin-top: 1rem;
+}
+
 .thumbnailPreview {
   max-width: 300px;
   height: auto;
   border-radius: 5px;
   border: 1px solid #ddd;
-  margin-top: 1rem;
+  display: block; /* (Quan trọng để container nhận đúng kích thước) */
+}
+
+.buttonRemove {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: #d9534f; /* (Màu đỏ) */
+  color: white;
+  border: 2px solid white; /* (Thêm viền trắng cho nổi) */
+  border-radius: 50%; /* (Cho nó tròn) */
+  width: 30px;
+  height: 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  line-height: 26px; /* (Căn chữ X vào giữa) */
+  cursor: pointer;
+  opacity: 0.8;
+  transition: all 0.3s;
+}
+
+.buttonRemove:hover {
+  opacity: 1;
+  transform: scale(1.1); /* (Phóng to xíu) */
 }
 
 

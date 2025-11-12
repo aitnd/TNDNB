@@ -67,6 +67,18 @@ function CreatePostForm() {
     }
   }
 
+  // 💖 HÀM XÓA ẢNH MỚI CỦA ANH ĐÂY 💖
+  const handleRemoveThumbnail = () => {
+    setThumbnailFile(null);
+    setThumbnailPreview(null);
+    
+    // (Reset cái ô input file)
+    const fileInput = document.getElementById('thumbnail') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = ''; // (Xóa file đã chọn)
+    }
+  }
+
   // (Hàm upload ảnh SunEditor - NÂNG CẤP ĐA ẢNH)
   const handleImageUploadBefore = (
     files: File[], // (Đây là mảng nè anh)
@@ -324,10 +336,27 @@ function CreatePostForm() {
                 accept="image/png, image/jpeg, image/webp"
                 className={styles.fileInput}
               />
-              {/* (Chỗ xem trước ảnh) */}
+              
+              {/* 💖 KHỐI XEM TRƯỚC VÀ NÚT XÓA MỚI 💖 */}
               {thumbnailPreview && (
-                <img src={thumbnailPreview} alt="Xem trước" className={styles.thumbnailPreview} />
+                <div className={styles.thumbnailPreviewContainer}>
+                  <img 
+                    src={thumbnailPreview} 
+                    alt="Xem trước" 
+                    className={styles.thumbnailPreview} 
+                  />
+                  <button
+                    type="button" // (Quan trọng: để nó không submit form)
+                    onClick={handleRemoveThumbnail}
+                    className={styles.buttonRemove}
+                    title="Xóa ảnh này"
+                  >
+                    &times; 
+                  </button>
+                </div>
               )}
+              {/* 💖 HẾT KHỐI MỚI 💖 */}
+
             </div>
 
             {/* (Danh mục) */}
@@ -376,17 +405,11 @@ function CreatePostForm() {
                 setContents={content}
                 onChange={setContent}
                 onImageUploadBefore={handleImageUploadBefore} 
-                // 💖 (BỘ "CÀI ĐẶT" ĐÃ SỬA LỖI LẦN 3) 💖
                 setOptions={{
                   height: '300px',
-                  
-                  // --- 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 ---
-                  // (Tên đúng 1000% là 'imageMultipleFile' 😭)
-                  imageMultipleFile: true, 
+                  imageMultipleFile: true, // (Tên đúng 1000% là 'imageMultipleFile')
                   imageWidth: '500px',       
                   imageHeight: 'auto',       
-                  // --- Hết 💖 ---
-
                   buttonList: [
                     ['undo', 'redo'],
                     ['font', 'fontSize', 'formatBlock'],

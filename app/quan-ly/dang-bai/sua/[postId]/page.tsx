@@ -94,6 +94,18 @@ function EditPostForm() {
     }
   }
 
+  // 💖 HÀM XÓA ẢNH MỚI CỦA ANH ĐÂY 💖
+  const handleRemoveThumbnail = () => {
+    setThumbnailFile(null);
+    setThumbnailPreview(null);
+    
+    // (Reset cái ô input file)
+    const fileInput = document.getElementById('thumbnail') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = ''; // (Xóa file đã chọn)
+    }
+  }
+
   // (Hàm upload ảnh SunEditor - NÂNG CẤP ĐA ẢNH)
   const handleImageUploadBefore = (
     files: File[], // (Đây là mảng nè anh)
@@ -277,7 +289,14 @@ function EditPostForm() {
       if (error) throw error 
 
       // (Logic "Dọn dẹp" Thư viện - Giữ nguyên)
-      const finalThumbnailUrl = updateData.thumbnail_url || thumbnailPreview;
+      // 💖 SỬA LỖI NHỎ: Nếu BẤM NÚT XÓA, thumbnailPreview là null 💖
+      // (Mình phải kiểm tra cả thumbnailFile và thumbnailPreview)
+      let finalThumbnailUrl = updateData.thumbnail_url; // 1. Ưu tiên ảnh mới up
+      if (!finalThumbnailUrl) {
+         // 2. Nếu không up ảnh mới, xem ảnh cũ còn không
+         // (Nếu thumbnailPreview là null (do bấm xóa), thì finalThumbnailUrl cũng là null)
+        finalThumbnailUrl = thumbnailPreview; 
+      }
 
       console.log(`[Thư viện] Đang xóa media cũ của bài: ${postId}`);
       const { error: deleteError } = await supabase
@@ -348,9 +367,26 @@ function EditPostForm() {
                 accept="image/png, image/jpeg, image/webp"
                 className={styles.fileInput}
               />
+              
+              {/* 💖 KHỐI XEM TRƯỚC VÀ NÚT XÓA MỚI 💖 */}
               {thumbnailPreview && (
-                <img src={thumbnailPreview} alt="Xem trước" className={styles.thumbnailPreview} />
+                <div className={styles.thumbnailPreviewContainer}>
+                  <img 
+                    src={thumbnailPreview} 
+                    alt="Xem trước" 
+                    className={styles.thumbnailPreview} 
+                  />
+                  <button
+                    type="button" // (Quan trọng: để nó không submit form)
+                    onClick={handleRemoveThumbnail}
+                    className={styles.buttonRemove}
+                    title="Xóa ảnh này"
+                  >
+                    &times; 
+                  </button>
+                </div>
               )}
+              {/* 💖 HẾT KHỐI MỚI 💖 */}
             </div>
 
             {/* (Danh mục) */}
