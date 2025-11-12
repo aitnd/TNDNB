@@ -11,7 +11,7 @@ import Link from 'next/link'
 
 const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
 import 'suneditor/dist/css/suneditor.min.css'; 
-import vi from 'suneditor/src/lang/en';
+import vi from 'suneditor/src/lang/en'; // (Dùng 'en' nhưng nó vẫn lấy 'vi' từ 'lang' prop, anh đừng lo)
 
 // "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
@@ -320,3 +320,120 @@ function CreatePostForm() {
               <input
                 type="file"
                 id="thumbnail"
+                onChange={handleThumbnailChange}
+                accept="image/png, image/jpeg, image/webp"
+                className={styles.fileInput}
+              />
+              {/* (Chỗ xem trước ảnh) */}
+              {thumbnailPreview && (
+                <img src={thumbnailPreview} alt="Xem trước" className={styles.thumbnailPreview} />
+              )}
+            </div>
+
+            {/* (Danh mục) */}
+            <div className={styles.formGroup}>
+              <label htmlFor="category" className={styles.label}>
+                Danh mục
+              </label>
+              <select
+                id="category"
+                value={categoryId}
+                onChange={(e) => setCategoryId(e.target.value)}
+                disabled={loadingCategories}
+                className={styles.select}
+              >
+                {loadingCategories ? (
+                  <option>Đang tải danh mục...</option>
+                ) : (
+                  categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
+            {/* (Checkbox) */}
+            <div className={styles.checkboxGroup}>
+              <input
+                id="is_featured"
+                type="checkbox"
+                checked={isFeatured}
+                onChange={(e) => setIsFeatured(e.target.checked)}
+                className={styles.checkbox}
+              />
+              <label htmlFor="is_featured" className={styles.label}>
+                Đánh dấu là "Tin tiêu điểm" (Sẽ hiện ở Slider)
+              </label>
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label className={styles.label}>
+                Nội dung bài viết
+              </label>
+              <SunEditor 
+                lang={vi} 
+                setContents={content}
+                onChange={setContent}
+                onImageUploadBefore={handleImageUploadBefore} 
+                // 💖 (BỘ "CÀI ĐẶT" ĐÃ SỬA LỖI) 💖
+                setOptions={{
+                  height: '300px',
+                  
+                  // --- 💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖 ---
+                  // (Em đã sửa "imageUploadMultiple" thành "imageMultiple")
+                  imageMultiple: true,       // (Tên đúng là 'imageMultiple')
+                  imageWidth: '500px',       // (Kích thước mặc định khi thả ảnh vào)
+                  imageHeight: 'auto',       // (Để nó tự tính chiều cao)
+                  // --- Hết 💖 ---
+
+                  buttonList: [
+                    ['undo', 'redo'],
+                    ['font', 'fontSize', 'formatBlock'],
+                    ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript'],
+                    ['removeFormat'],
+                    '/', // (Xuống dòng)
+                    ['fontColor', 'hiliteColor'],
+                    ['outdent', 'indent'],
+                    ['align', 'horizontalRule', 'list', 'lineHeight'],
+                    ['table', 'link', 'image', 'video'], 
+                    ['fullScreen', 'showBlocks', 'codeView'],
+                  ],
+                }}
+              />
+            </div>
+
+            {formError && (
+              <div className={styles.error}>{formError}</div>
+            )}
+            {formSuccess && (
+              <div className={styles.success}>{formSuccess}</div>
+            )}
+            
+            <div className={styles.buttonContainer} style={{justifyContent: 'space-between', display: 'flex'}}>
+              <Link href="/quan-ly/dang-bai" style={{color: '#555', textDecoration: 'underline'}}>
+                « Quay về Danh sách
+              </Link>
+              <button
+                type="submit"
+                disabled={isSubmitting || loadingCategories}
+                className={styles.button}
+              >
+                {isSubmitting ? 'Đang đăng...' : 'Đăng bài'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// --- Component "Vỏ Bọc" (Bảo vệ) ---
+export default function CreatePostPage() {
+  return (
+    <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'giao_vien', 'quan_ly']}>
+      <CreatePostForm /> 
+    </ProtectedRoute>
+  )
+}
