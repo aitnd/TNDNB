@@ -3,7 +3,7 @@ import { supabase } from '../utils/supabaseClient'
 import React from 'react'
 import Link from 'next/link'
 import styles from './Sidebar.module.css' // (Triệu hồi CSS)
-// 💖 1. "TRIỆU HỒI" BỘ NÃO TÌM KIẾM MỚI 💖
+// (Triệu hồi Bộ não Tìm kiếm)
 import Searchbar from './Searchbar'
 
 // (THẦN CHÚ BẮT TẢI LẠI)
@@ -118,17 +118,17 @@ export default async function Sidebar() {
   return (
     <aside className={styles.sidebar}>
 
-      {/* 💖 2. ĐẶT Ô TÌM KIẾM LÊN TRÊN CÙNG 💖 */}
+      {/* (Ô Tìm kiếm) */}
       <Searchbar />
 
-      {/* (Box Hệ thống ôn tập) */}
+      {/* ✨ Box Hệ thống ôn tập (ĐÃ SỬA LINK) ✨ */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        <Link href="https://web-on-tap.vercel.app/" target="_blank">
+        <Link href="https://vercel.com/tnds-projects-21843c4e/ontap/DpKDVAFMW2L4Ve3TGeUwBsyGWmCz" target="_blank">
           <h3 className={styles.sidebarTitle}>
               Hệ thống ôn tập
           </h3>
         </Link>
-        <Link href="https://web-on-tap.vercel.app/" target="_blank">
+        <Link href="https://vercel.com/tnds-projects-21843c4e/ontap/DpKDVAFMW2L4Ve3TGeUwBsyGWmCz" target="_blank">
           <img 
             src="/on-tap.png" 
             alt="Hệ Thống Ôn tập" 
@@ -137,7 +137,7 @@ export default async function Sidebar() {
         </Link>
       </div>
       
-      {/* (Box Thi Online) */}
+      {/* (Box Thi Online - Giữ nguyên) */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
           <h3 className={styles.sidebarTitle}>
