@@ -26,7 +26,7 @@ export default function Navbar() {
 
   return (
     <header>
-      {/* 💖 THANH TOP (ĐÃ SỬA THEO YÊU CẦU MỚI) 💖 */}
+      {/* (THANH TOP - Giữ nguyên) */}
       <div className={styles.headerTop}>
         <div className={styles.topContainer}>
           
@@ -41,25 +41,22 @@ export default function Navbar() {
             {/* (Link "thông minh") */}
             {user ? (
               <>
-                {/* 💖 1. CHÀO MỪNG [TÊN] 💖 */}
+                {/* (CHÀO MỪNG [TÊN]) */}
                 <li>
                   <span className={styles.welcomeText}>
                     Chào mừng, {user.fullName}!
                   </span>
                 </li>
 
-                {/* 💖 2. NÚT QUẢN LÝ (Trỏ về Dashboard mới) 💖 */}
+                {/* (NÚT QUẢN LÝ) */}
                 <li>
                   <Link href="/quan-ly">Quản lý</Link>
                 </li>
 
-                {/* 💖 3. NÚT ĐĂNG XUẤT 💖 */}
+                {/* (NÚT ĐĂNG XUẤT) */}
                 <li>
                   <button onClick={handleLogout}>Đăng xuất</button>
                 </li>
-                
-                {/* 💖 (ĐÃ XÓA NÚT "Admin" VÀ "Vào Thi" CŨ) 💖 */}
-
               </>
             ) : (
               // (Nếu chưa đăng nhập)
@@ -72,7 +69,7 @@ export default function Navbar() {
         </div>
       </div>
       
-      {/* THANH CHÍNH (CHỈ CÓ MENU) */}
+      {/* 💖 THANH CHÍNH (ĐÃ THÊM LINK "TÀI LIỆU") 💖 */}
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
           <ul className={styles.navLinks}>
@@ -90,6 +87,13 @@ export default function Navbar() {
             </li>
             <li>
               <Link href="/hoc-phi">Học phí</Link>
+            </li>
+            <li>
+              <Link href="/thu-vien">Thư viện</Link>
+            </li>
+            {/* 💖 ANH THÊM DÒNG NÀY VÀO NÈ 💖 */}
+            <li>
+              <Link href="/tai-lieu">Tài liệu</Link>
             </li>
             <li>
               <Link href="/lien-he">Liên hệ</Link>

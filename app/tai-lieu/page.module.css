@@ -1,7 +1,8 @@
-/* === Trang điểm cho Trang Thư viện === */
+/* === Trang điểm cho Trang "Tài liệu" === */
+/* (Em copy từ file "thu-vien" và sửa lại) */
 
 .container {
-    max-width: 1100px; /* (Cho trang này rộng hơn trang đọc bài) */
+    max-width: 1100px; 
     margin: 2rem auto;
     padding: 2.5rem;
     background-color: #ffffff;
@@ -29,7 +30,7 @@
     padding-bottom: 1.5rem;
 }
 
-/* 💖 CSS MỚI: Bọc Tiêu đề và Nút Xóa Album 💖 */
+/* (Bọc Tiêu đề và Nút Xóa Album) */
 .albumHeader {
     display: flex;
     justify-content: space-between;
@@ -56,7 +57,7 @@
     margin-left: 0.5rem;
 }
 
-/* 💖 CSS MỚI: Nút Xóa Album 💖 */
+/* (Nút Xóa Album) */
 .albumDeleteButton {
     background-color: #fef2f2; /* (Màu nền đỏ nhạt) */
     color: #dc2626; /* (Màu chữ đỏ đậm) */
@@ -78,68 +79,90 @@
 }
 
 
-/* (Lưới chứa ảnh) */
-.mediaGrid {
-    display: grid;
-    /* (Tự động chia cột, mỗi cột ít nhất 150px) */
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-/* 💖 CSS MỚI: Bọc cái ảnh lại 💖 */
-.mediaItemContainer {
-    position: relative; /* (Để định vị nút xóa) */
-    border-radius: 5px;
-    overflow: hidden;
-    border: 1px solid #ddd;
-    aspect-ratio: 1 / 1; /* (Cho nó vuông vức) */
-}
-
-.mediaItem img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* (Ảnh sẽ tự zoom cho vừa khung) */
-    transition: transform 0.3s ease;
-}
-
-.mediaItem a:hover img {
-    transform: scale(1.05); /* (Phóng to xíu khi hover) */
-}
-
-/* 💖 CSS MỚI: Lớp mờ và Nút Xóa Ảnh 💖 */
-.mediaItemOverlay {
-    position: absolute;
-    inset: 0; /* (Phủ kín) */
-    background-color: rgba(0, 0, 0, 0.6);
+/* === 💖 CSS MỚI: DANH SÁCH TỆP (Thay cho Lưới ảnh) 💖 === */
+.fileList {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.fileItem {
+    display: flex;
     align-items: center;
-    opacity: 0; /* (Mặc định ẩn) */
-    transition: opacity 0.3s;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 1rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative; /* (Để định vị nút xóa) */
+    overflow: hidden; /* (Giấu nút xóa) */
+}
+.fileItem:hover {
+    background-color: #e6f0ff;
+    border-color: #004a99;
+    text-decoration: none;
 }
 
-.mediaItemContainer:hover .mediaItemOverlay {
-    opacity: 1; /* (Hiện ra khi hover) */
+.fileIcon {
+    font-size: 1.8rem;
+    color: #004a99;
+    margin-right: 1rem;
 }
 
-.mediaDeleteButton {
-    background-color: #ef4444; /* (Màu đỏ) */
+.fileInfo {
+    flex: 1;
+    /* (Chống tràn tên file) */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.fileName {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #004a99;
+    display: block; /* (Xuống dòng) */
+}
+.fileSize {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.fileDownloadIcon {
+    font-size: 1.2rem;
+    color: #555;
+    margin-left: 1.5rem;
+    transition: color 0.3s;
+}
+.fileItem:hover .fileDownloadIcon {
+    color: #004a99;
+}
+
+/* (Nút Xóa Tệp) */
+.fileDeleteButton {
+    position: absolute;
+    top: 0;
+    right: -50px; /* (Mặc định giấu bên phải) */
+    bottom: 0;
+    width: 50px;
+    background-color: #ef4444;
     color: white;
     border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: right 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.mediaDeleteButton:hover {
+.fileItem:hover .fileDeleteButton {
+    right: 0; /* (Hiện ra khi hover) */
+}
+.fileDeleteButton:hover {
     background-color: #dc2626;
-    transform: scale(1.1);
 }
 
 
