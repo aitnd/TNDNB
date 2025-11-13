@@ -12,8 +12,11 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} CÔNG TY CỔ PHẦN TƯ VẤN VÀ GIÁO DỤC NINH BÌNH.
         </p>
         <p>
-          Địa chỉ: Đường Triệu Việt Vương - Phường Bích Đào - TP. Ninh Bình - Tỉnh Ninh Bình | MST: 2700960947
+          Địa chỉ: Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình | MST: 2700960947
         </p>
+	<p>
+	Hotline: 022.96.282.969 
+	</p>
       </div>
     </footer>
   )
