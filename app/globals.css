@@ -83,7 +83,7 @@ a:hover {
     color: #555;
 }
 
-/* 💖 "THUỐC" SỬA LỖI Ở ĐÂY NÈ ANH (DÙNG !important) 💖 */
+/* (CSS "Ép" ẢNH co dãn - Giữ nguyên) */
 .post-content img {
   max-width: 100% !important; /* (Bắt nó không được rộng quá 100%) */
   width: auto !important;     /* (Bắt nó tự tính toán chiều rộng) */
@@ -97,4 +97,39 @@ a:hover {
   margin-left: auto !important; 
   margin-right: auto !important;
   float: none !important;      /* (Chống trôi ảnh) */
+}
+
+
+/* === 💖 CSS MỚI CHO VIDEO YOUTUBE (Thêm ở cuối) 💖 === */
+
+/* (1. "Bọc" cái video lại) */
+/* (SunEditor nó bọc video trong <figure class="se-video-container">) */
+.post-content figure.se-video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  /* 💖 Đây là "thần chú" 16:9 (9 chia 16 = 0.5625) 💖 */
+  padding-bottom: 56.25%; 
+  margin: 1.5rem 0; /* (Cho nó cách ra giống ảnh) */
+  border-radius: 8px; /* (Bo góc) */
+  overflow: hidden; /* (Giấu phần thừa) */
+}
+
+/* (2. "Ép" cái iframe video "phình" ra cho vừa) */
+.post-content figure.se-video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;  /* (Ép nó 100% rộng) */
+  height: 100% !important; /* (Ép nó 100% cao) */
+  border: none; /* (Bỏ viền) */
+}
+
+/* (3. Dự phòng cho trường hợp lỡ dán <iframe> mà không có "bọc") */
+.post-content > iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* (Dùng cách "hiện đại" hơn) */
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border: none;
 }
