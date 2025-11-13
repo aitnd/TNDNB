@@ -97,38 +97,35 @@ a:hover {
 }
 
 
-/* === 💖 CSS "ÉP" VIDEO CO DÃN (ĐÃ NÂNG CẤP) 💖 === */
+/* === 💖 CSS "ÉP" VIDEO CO DÃN (Bản "Chấp nhận <iframe>") 💖 === */
 
-/* (1. "Bọc" cái video lại - Dùng !important) */
-/* (Áp dụng cho video anh chèn bằng nút "Video" của SunEditor) */
+/* Giải thích: SunEditor nó bọc cái <iframe> anh dán vào trong
+  một cái <figure> VÀ một cái <div>. Mình phải "reset" hết
+  mấy cái "bọc" đó và "ép" cái <iframe> bên trong phải 16:9
+*/
+
+/* (1. Reset cái "bọc" ngoài cùng của SunEditor) */
 .post-content figure.se-video-container {
-  position: relative !important;
-  width: 100% !important;
-  height: 0 !important; /* 💖 ÉP NÓ BẰNG 0 💖 */
-  /* (Ép tỉ lệ 16:9) */
-  padding-bottom: 56.25% !important; 
-  margin: 1.5rem 0 !important; 
-  border-radius: 8px !important; 
-  overflow: hidden !important; 
+  /* (Bỏ hết mấy cái padding 16:9 cũ đi) */
+  padding-bottom: 0 !important; 
+  height: auto !important;
+  position: static !important; /* (Bỏ position) */
 }
 
-/* (2. "Ép" cái iframe video "phình" ra cho vừa) */
-.post-content figure.se-video-container iframe {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;  
-  height: 100% !important; 
-  border: none !important; 
-}
-
-/* (3. Dự phòng cho trường hợp lỡ dán <iframe> trực tiếp) */
-.post-content > iframe {
-  width: 100% !important; /* 💖 ÉP RỘNG 100% 💖 */
-  height: auto !important; /* 💖 ÉP CAO TỰ ĐỘNG 💖 */
-  /* (Tự động tính chiều cao theo 16:9) */
+/* (2. "Thần chú" chính là đây!) */
+/* (Tìm BẤT KỲ <iframe> nào nằm trong .post-content) */
+.post-content iframe {
+  /* (Bắt nó "co" 100% theo chiều ngang) */
+  width: 100% !important; 
+  
+  /* (Bắt nó "cao" tự động theo tỉ lệ 16:9 "thần thánh") */
   aspect-ratio: 16 / 9; 
+  
+  /* (Bỏ chiều cao "cứng" 315px mà <iframe> nó mang vào) */
+  height: auto !important; 
+  
+  /* (Trang điểm thêm) */
+  border: none !important;
   border-radius: 8px;
   margin: 1.5rem 0;
-  border: none;
 }
