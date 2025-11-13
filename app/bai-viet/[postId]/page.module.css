@@ -40,9 +40,8 @@
     border: 1px solid #eee;
 }
 
-/* Lưu ý: class ".post-content" (nội dung chính) 
-  đã được định nghĩa ở file "app/globals.css"
-*/
+/* (Class ".post-content" đã được định nghĩa ở file "app/globals.css") */
+
 
 /* (CSS CHO TÊN TÁC GIẢ) */
 .authorName {
@@ -55,13 +54,21 @@
     padding-top: 1rem;
 }
 
+/* 💖 1. SỬA CONTAINER NÚT BẤM (DÙNG FLEX) 💖 */
 .backButtonContainer {
-    margin-top: 1.5rem; /* (Giảm margin lại vì có authorName) */
-    /* (Bỏ border-top) */
+    margin-top: 1.5rem; 
     padding-top: 1rem;
     text-align: center;
+    
+    /* (Cho 2 nút nằm ngang) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem; /* (Khoảng cách 2 nút) */
+    flex-wrap: wrap; /* (Tự xuống dòng nếu chật) */
 }
 
+/* (Nút "Quay về" - Giữ nguyên) */
 .backButton {
     display: inline-block;
     background-color: #004a99;
@@ -76,6 +83,23 @@
     background-color: #003366;
     text-decoration: none;
 }
+
+/* 💖 2. THÊM NÚT "QUẢN LÝ" (MÀU XÁM) 💖 */
+.buttonSecondary {
+    display: inline-block;
+    background-color: #e5e7eb; /* (Màu xám nhạt) */
+    color: #374151; /* (Màu chữ tối) */
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+.buttonSecondary:hover {
+    background-color: #d1d5db; /* (Xám đậm hơn) */
+    text-decoration: none;
+}
+
 
 /* === Style cho Trang Lỗi 404 === */
 .errorContainer {
@@ -99,7 +123,7 @@
 }
 
 
-/* === 💖 CSS MỚI CHO TỆP ĐÍNH KÈM (Thêm ở cuối) 💖 === */
+/* === (CSS CHO TỆP ĐÍNH KÈM - Giữ nguyên) === */
 .attachmentSection {
     margin-top: 2.5rem;
     border-top: 2px solid #e6f0ff;

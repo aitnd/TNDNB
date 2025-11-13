@@ -3,10 +3,13 @@ import Link from 'next/link'
 import styles from './page.module.css' // (Triệu hồi CSS)
 import { adminDb } from '../../../utils/firebaseAdmin' // (Kho Firestore)
 
-// 💖 1. "TRIỆU HỒI" CÁC ICON 💖
+// (Triệu hồi Icon)
 import { FaFilePdf, FaFileWord, FaFileArchive, FaFile, FaDownload } from 'react-icons/fa'
-// 💖 2. "TRIỆU HỒI" BOX BÌNH LUẬN 💖
+// (Triệu hồi Box Bình luận)
 import FacebookComments from '../../../components/FacebookComments'
+
+// 💖 1. "TRIỆU HỒI" BỘ NÃO NÚT BẤM MỚI 💖
+import PostFooterActions from '../../../components/PostFooterActions'
 
 
 // "THẦN CHÚ" BẮT TẢI LẠI DỮ LIỆU MỚI
@@ -101,7 +104,7 @@ function getFileIcon(fileType: string) {
 }
 
 
-// 💖 3. TRANG ĐỌC BÀI VIẾT (ĐÃ NÂNG CẤP) 💖
+// (TRANG ĐỌC BÀI VIẾT - ĐÃ SỬA)
 export default async function PostPage({ params }: { params: { postId: string } }) {
   
   const data = await getPostDetails(params.postId)
@@ -123,7 +126,6 @@ export default async function PostPage({ params }: { params: { postId: string } 
   const { post, authorName } = data;
 
   return (
-    // 💖 4. BỌC BẰNG FRAGMENT (<>) ĐỂ THÊM BOX BÌNH LUẬN 💖
     <>
       <div className={styles.container}>
         
@@ -206,17 +208,14 @@ export default async function PostPage({ params }: { params: { postId: string } 
           </p>
         )}
         
-        <div className={styles.backButtonContainer}>
-          <Link href="/" className={styles.backButton}>
-            « Quay về Trang chủ
-          </Link>
-        </div>
+        {/* 💖 2. THAY THẾ NÚT "QUAY VỀ" CŨ BẰNG COMPONENT MỚI 💖 */}
+        <PostFooterActions />
+      
       </div>
 
-      {/* 💖 5. ĐẶT BOX BÌNH LUẬN FACEBOOK VÀO ĐÂY 💖 */}
-      {/* (Nó sẽ tự động lấy link bài viết này) */}
+      {/* (Box Bình luận Facebook - Giữ nguyên) */}
       <FacebookComments />
     
-    </> // (Đóng Fragment)
+    </> 
   )
 }
