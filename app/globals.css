@@ -85,50 +85,49 @@ a:hover {
 
 /* (CSS "Ép" ẢNH co dãn - Giữ nguyên) */
 .post-content img {
-  max-width: 100% !important; /* (Bắt nó không được rộng quá 100%) */
-  width: auto !important;     /* (Bắt nó tự tính toán chiều rộng) */
-  height: auto !important;    /* (Bắt nó tự tính toán chiều cao) */
-  
+  max-width: 100% !important; 
+  width: auto !important;     
+  height: auto !important;    
   border-radius: 8px; 
   margin: 1.5rem 0; 
-  
-  /* (Mấy cái này cũng "ép" nó luôn cho chắc) */
   display: block !important;   
   margin-left: auto !important; 
   margin-right: auto !important;
-  float: none !important;      /* (Chống trôi ảnh) */
+  float: none !important;      
 }
 
 
-/* === 💖 CSS MỚI CHO VIDEO YOUTUBE (Thêm ở cuối) 💖 === */
+/* === 💖 CSS "ÉP" VIDEO CO DÃN (ĐÃ NÂNG CẤP) 💖 === */
 
-/* (1. "Bọc" cái video lại) */
-/* (SunEditor nó bọc video trong <figure class="se-video-container">) */
+/* (1. "Bọc" cái video lại - Dùng !important) */
+/* (Áp dụng cho video anh chèn bằng nút "Video" của SunEditor) */
 .post-content figure.se-video-container {
-  position: relative;
-  width: 100%;
-  height: 0;
-  /* 💖 Đây là "thần chú" 16:9 (9 chia 16 = 0.5625) 💖 */
-  padding-bottom: 56.25%; 
-  margin: 1.5rem 0; /* (Cho nó cách ra giống ảnh) */
-  border-radius: 8px; /* (Bo góc) */
-  overflow: hidden; /* (Giấu phần thừa) */
+  position: relative !important;
+  width: 100% !important;
+  height: 0 !important; /* 💖 ÉP NÓ BẰNG 0 💖 */
+  /* (Ép tỉ lệ 16:9) */
+  padding-bottom: 56.25% !important; 
+  margin: 1.5rem 0 !important; 
+  border-radius: 8px !important; 
+  overflow: hidden !important; 
 }
 
 /* (2. "Ép" cái iframe video "phình" ra cho vừa) */
 .post-content figure.se-video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100% !important;  /* (Ép nó 100% rộng) */
-  height: 100% !important; /* (Ép nó 100% cao) */
-  border: none; /* (Bỏ viền) */
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;  
+  height: 100% !important; 
+  border: none !important; 
 }
 
-/* (3. Dự phòng cho trường hợp lỡ dán <iframe> mà không có "bọc") */
+/* (3. Dự phòng cho trường hợp lỡ dán <iframe> trực tiếp) */
 .post-content > iframe {
-  width: 100%;
-  aspect-ratio: 16 / 9; /* (Dùng cách "hiện đại" hơn) */
+  width: 100% !important; /* 💖 ÉP RỘNG 100% 💖 */
+  height: auto !important; /* 💖 ÉP CAO TỰ ĐỘNG 💖 */
+  /* (Tự động tính chiều cao theo 16:9) */
+  aspect-ratio: 16 / 9; 
   border-radius: 8px;
   margin: 1.5rem 0;
   border: none;
