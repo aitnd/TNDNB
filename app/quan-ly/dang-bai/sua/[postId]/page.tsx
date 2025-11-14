@@ -109,7 +109,7 @@ function EditPostForm() {
     fetchPostData();
   }, [postId]); 
 
-  // (Các hàm xử lý Ảnh đại diện - Giữ nguyên)
+  
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -117,6 +117,8 @@ function EditPostForm() {
       setThumbnailPreview(URL.createObjectURL(file)); 
     }
   }
+
+  // (Hàm xóa ảnh đại diện - Giữ nguyên)
   const handleRemoveThumbnail = () => {
     setThumbnailFile(null);
     setThumbnailPreview(null);
@@ -243,11 +245,10 @@ function EditPostForm() {
     }
   };
 
-  // 💖 5. HÀM "CẬP NHẬT" (ĐÃ NÂNG CẤP DÙNG `editorRef`) 💖
+  // (Hàm "Cập nhật" - Giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // (Lấy nội dung "xịn" từ TinyMCE)
     const editorContent = editorRef.current ? editorRef.current.getContent() : content;
 
     setIsSubmitting(true)
@@ -265,12 +266,12 @@ function EditPostForm() {
     try {
       const updateData: any = { 
         title: title, 
-        content: editorContent, // (Gửi nội dung "xịn" đi)
+        content: editorContent, 
         category_id: categoryId, 
         is_featured: isFeatured 
       };
 
-      // 1. "Đẩy" ảnh đại diện (Giữ nguyên)
+      // 1. "Đẩy" ảnh đại diện
       if (thumbnailFile) {
         const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
         const { error: uploadError } = await supabase.storage
@@ -288,7 +289,7 @@ function EditPostForm() {
          updateData.thumbnail_url = null;
       }
      
-      // 2. "ĐẨY" TỆP ĐÍNH KÈM MỚI (Giữ nguyên)
+      // 2. "ĐẨY" TỆP ĐÍNH KÈM MỚI
       const newlyUploadedAttachments: Attachment[] = [];
       if (newAttachmentFiles.length > 0) {
         console.log(`Đang tải ${newAttachmentFiles.length} tệp đính kèm MỚI...`);
@@ -314,7 +315,7 @@ function EditPostForm() {
         }
       }
 
-      // 3. GOM TÚI "THẦN KỲ" (Giữ nguyên)
+      // 3. GOM TÚI "THẦN KỲ"
       const finalAttachments = [...existingAttachments, ...newlyUploadedAttachments];
       updateData.attachments = finalAttachments; 
 
@@ -326,7 +327,7 @@ function EditPostForm() {
 
       if (error) throw error 
 
-      // 5. "Dọn dẹp" Thư viện (Giữ nguyên)
+      // 5. "Dọn dẹp" Thư viện
       const finalThumbnailUrl = updateData.thumbnail_url || (thumbnailPreview && !thumbnailFile ? thumbnailPreview : null);
 
       console.log(`[Thư viện] Đang xóa media cũ của bài: ${postId}`);
@@ -532,45 +533,49 @@ function EditPostForm() {
                     Đang tải trình soạn thảo "xịn"...
                   </div>
                 )}
-                <Editor
-                  apiKey='no-api-key' 
-                  
-                  // 💖 7. SỬA LỖI "any" Ở ĐÂY 💖
-                  onInit={(evt: any, editor: any) => {
-                    editorRef.current = editor;
-                    setEditorLoading(false); 
-                  }}
-                  
-                  // (Nạp nội dung cũ vào)
-                  initialValue={content} 
-                  
-                  // (Cập nhật "não" nháp)
-                  onEditorChange={(newContent, editor) => {
-                    setContent(newContent);
-                  }}
-                  
-                  init={{
-                    height: 500,
-                    menubar: false,
-                    plugins: [
-                      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 
-                      'preview', 'anchor', 'searchreplace', 'visualblocks', 'code', 
-                      'fullscreen', 'insertdatetime', 'media', 'table', 'code', 
-                      'help', 'wordcount', 'image'
-                    ],
-                    toolbar:
-                      'undo redo | formatselect | ' +
-                      'bold italic backcolor | alignleft aligncenter ' +
-                      'alignright alignjustify | bullist numlist outdent indent | ' +
-                      'removeformat | image media link | code fullscreen | help',
-                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+                
+                {/* (Thêm: Chỉ "vẽ" Editor khi "hết" loading bài cũ) */}
+                {!isLoadingPost && (
+                  <Editor
+                    apiKey='no-api-key' 
                     
-                    automatic_uploads: true,
-                    file_picker_types: 'image media',
+                    // (Khai báo 'any' cho 'onInit')
+                    onInit={(evt: any, editor: any) => {
+                      editorRef.current = editor;
+                      setEditorLoading(false); 
+                    }}
                     
-                    images_upload_handler: tinymceUploadHandler,
-                  }}
-                />
+                    // (Nạp nội dung cũ vào)
+                    initialValue={content} 
+                    
+                    // 💖 7. SỬA LỖI "any" Ở ĐÂY 💖
+                    onEditorChange={(newContent: any, editor: any) => {
+                      setContent(newContent);
+                    }}
+                    
+                    init={{
+                      height: 500,
+                      menubar: false,
+                      plugins: [
+                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 
+                        'preview', 'anchor', 'searchreplace', 'visualblocks', 'code', 
+                        'fullscreen', 'insertdatetime', 'media', 'table', 'code', 
+                        'help', 'wordcount', 'image'
+                      ],
+                      toolbar:
+                        'undo redo | formatselect | ' +
+                        'bold italic backcolor | alignleft aligncenter ' +
+                        'alignright alignjustify | bullist numlist outdent indent | ' +
+                        'removeformat | image media link | code fullscreen | help',
+                      content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+                      
+                      automatic_uploads: true,
+                      file_picker_types: 'image media',
+                      
+                      images_upload_handler: tinymceUploadHandler,
+                    }}
+                  />
+                )}
               </div>
             </div>
             {/* 💖 HẾT KHỐI THAY THẾ 💖 */}
