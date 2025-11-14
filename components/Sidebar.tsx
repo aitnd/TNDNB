@@ -38,7 +38,7 @@ async function getTuyenSinhPosts(): Promise<Post[]> {
 
 // (Hàm lấy tin Pháp quy)
 async function getPhapQuyPosts(): Promise<Post[]> {
-  const { data, error } = await supabase
+  const { data, error } } = await supabase
     .from('posts')
     .select('id, title')
     .eq('category_id', 'van-ban-phap-quy') 
@@ -54,7 +54,7 @@ async function getPhapQuyPosts(): Promise<Post[]> {
 // (Hàm lấy tin Tức)
 async function getTinTucSuKien(): Promise<Post[]> {
   console.log('[Sidebar] Đang lấy tin "Tin tức"...');
-  const { data, error } = await supabase
+  const { data, error } } = await supabase
     .from('posts')
     .select('id, title')
     .eq('category_id', 'tin-tuc-su-kien') 
@@ -71,7 +71,7 @@ async function getTinTucSuKien(): Promise<Post[]> {
 // (Hàm lấy ảnh Thư viện)
 async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
   console.log('[Sidebar] Đang lấy media mới nhất cho Thư viện...');
-  const { data, error } = await supabase
+  const { data, error } } = await supabase
     .from('media_library')
     .select('id, media_url') 
     .eq('media_type', 'image') 
@@ -88,7 +88,7 @@ async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
 // (Hàm lấy Tệp)
 async function getLatestFilesForSidebar(): Promise<MediaItem[]> {
   console.log('[Sidebar] Đang lấy tệp mới nhất cho Tài liệu...');
-  const { data, error } = await supabase
+  const { data, error } } = await supabase
     .from('media_library')
     .select('id, media_url') 
     .eq('media_type', 'document') 
@@ -121,15 +121,30 @@ export default async function Sidebar() {
       {/* (Ô Tìm kiếm) */}
       <Searchbar />
 
-      {/* ✨ Box Hệ thống ôn tập (ĐÃ SỬA LINK MỚI) ✨ */}
+      {/* 💖 1. BOX "TRA CỨU VĂN BẰNG" MỚI CỦA ANH 💖 */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        {/* 💖 LINK 1 ĐÃ SỬA 💖 */}
+        <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
+          <h3 className={styles.sidebarTitle}>
+              Tra cứu Văn bằng
+          </h3>
+        </Link>
+        {/* (Em "chế" cái ảnh "Ôn tập" thành ảnh "Tra cứu" cho anh nha) */}
+        <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
+          <img 
+            src="/on-tap.png" // (Mình mượn tạm ảnh "on-tap.png", anh có ảnh "tra cứu" thì đổi tên file ở đây)
+            alt="Tra cứu Văn bằng Chứng chỉ" 
+            className={styles.bannerImage}
+          />
+        </Link>
+      </div>
+
+      {/* (Box Hệ thống ôn tập) */}
+      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://ontap.daotaothuyenvien.com/" target="_blank">
           <h3 className={styles.sidebarTitle}>
               Hệ thống ôn tập
           </h3>
         </Link>
-        {/* 💖 LINK 2 (CỦA TẤM ẢNH) CŨNG ĐÃ SỬA LUÔN 💖 */}
         <Link href="https://ontap.daotaothuyenvien.com/" target="_blank">
           <img 
             src="/on-tap.png" 
@@ -139,7 +154,7 @@ export default async function Sidebar() {
         </Link>
       </div>
       
-      {/* (Box Thi Online - Giữ nguyên) */}
+      {/* (Box Thi Online) */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
           <h3 className={styles.sidebarTitle}>

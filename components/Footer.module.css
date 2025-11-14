@@ -1,15 +1,96 @@
+/* === 💖 CSS MỚI CHO CHÂN TRANG (FOOTER) "XỊN" 💖 === */
+
 .footer {
-    background-color: #333;
-    color: #f4f4f4;
+    background-color: #0d2a4a; /* (Màu xanh đậm "sang") */
+    color: #b0c4de; /* (Màu chữ xám xanh) */
     margin-top: 3rem;
-    padding: 1.5rem 0;
-    text-align: center;
-    font-size: 0.875rem;
-    line-height: 1.5;
+    padding: 3rem 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
 }
 
 .container {
     width: 90%;
     max-width: 1100px;
     margin: 0 auto;
+}
+
+/* (Cái lưới 4 cột) */
+.footerGrid {
+    display: grid;
+    /* (4 cột trên desktop) */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+/* (Căn chỉnh trên điện thoại) */
+@media (max-width: 900px) {
+    .footerGrid {
+        grid-template-columns: repeat(2, 1fr); /* (2 cột trên tablet) */
+    }
+}
+@media (max-width: 500px) {
+    .footerGrid {
+        grid-template-columns: 1fr; /* (1 cột trên mobile) */
+    }
+}
+
+.footerColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+/* (Cột 1: Logo và Văn bản) */
+.footerLogo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    margin-bottom: 1rem;
+}
+.footerColumn p {
+    margin: 0.25rem 0;
+}
+
+/* (Cột 2, 3, 4: Tiêu đề và Link) */
+.footerTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+.footerList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footerList li {
+    margin-bottom: 0.75rem;
+}
+.footerList a {
+    color: #b0c4de;
+    text-decoration: none;
+    transition: color 0.3s, text-decoration 0.3s;
+}
+.footerList a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* (Icon Mạng xã hội) */
+.socialLinks {
+    display: flex;
+    gap: 1rem;
+}
+.socialLinks a {
+    color: #ffffff;
+    font-size: 1.8rem;
+    transition: color 0.3s, transform 0.3s;
+}
+.socialLinks a:hover {
+    color: #1877f2; /* (Màu FB) */
+    transform: scale(1.1);
+}
+.socialLinks a.youtube:hover {
+    color: #FF0000; /* (Màu YouTube) */
 }
