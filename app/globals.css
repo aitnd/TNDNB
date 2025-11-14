@@ -1,8 +1,8 @@
 /* === PHẦN 1: TRIỆU HỒI (IMPORTS) === */
 /* (Font Awesome cho icon) */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
-/* (CSS của Trình soạn thảo MỚI "SunEditor") */
-@import 'suneditor/dist/css/suneditor.min.css';
+
+/* 💖 (ĐÃ XÓA DÒNG '@import suneditor' Ở ĐÂY) 💖 */
 
 
 /* === PHẦN 2: STYLE CƠ BẢN (BODY) === */
@@ -97,34 +97,20 @@ a:hover {
 }
 
 
-/* === 💖 CSS "ÉP" VIDEO CO DÃN (Bản "Chấp nhận <iframe>") 💖 === */
-
-/* Giải thích: SunEditor nó bọc cái <iframe> anh dán vào trong
-  một cái <figure> VÀ một cái <div>. Mình phải "reset" hết
-  mấy cái "bọc" đó và "ép" cái <iframe> bên trong phải 16:9
-*/
+/* === (CSS "ÉP" VIDEO CO DÃN - Bản "Chấp nhận <iframe>") === */
 
 /* (1. Reset cái "bọc" ngoài cùng của SunEditor) */
 .post-content figure.se-video-container {
-  /* (Bỏ hết mấy cái padding 16:9 cũ đi) */
   padding-bottom: 0 !important; 
   height: auto !important;
-  position: static !important; /* (Bỏ position) */
+  position: static !important; 
 }
 
 /* (2. "Thần chú" chính là đây!) */
-/* (Tìm BẤT KỲ <iframe> nào nằm trong .post-content) */
 .post-content iframe {
-  /* (Bắt nó "co" 100% theo chiều ngang) */
   width: 100% !important; 
-  
-  /* (Bắt nó "cao" tự động theo tỉ lệ 16:9 "thần thánh") */
   aspect-ratio: 16 / 9; 
-  
-  /* (Bỏ chiều cao "cứng" 315px mà <iframe> nó mang vào) */
   height: auto !important; 
-  
-  /* (Trang điểm thêm) */
   border: none !important;
   border-radius: 8px;
   margin: 1.5rem 0;

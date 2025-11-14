@@ -1,19 +1,25 @@
 // Đánh dấu đây là "Client Component"
 'use client'
 
-import React, { useState, useEffect } from 'react'
+// 💖 1. THÊM "NÃO" 'useRef' (Rất quan trọng cho TinyMCE) 💖
+import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic' 
-// 💖 1. "TRIỆU HỒI" ICON (cho file PDF/Word) 💖
+
+// 💖 2. "GỠ" SUNEDITOR 💖
+// import dynamic from 'next/dynamic' 
+
 import { FaFilePdf, FaFileWord, FaFileArchive, FaFile } from 'react-icons/fa'
 import { useAuth } from '../../../../context/AuthContext' 
 import ProtectedRoute from '../../../../components/ProtectedRoute' 
 import { supabase } from '../../../../utils/supabaseClient' 
 import Link from 'next/link' 
 
-const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
-import 'suneditor/dist/css/suneditor.min.css'; 
-import vi from 'suneditor/src/lang/en';
+// 💖 3. "THUÊ" TINYMCE 💖
+import { Editor } from '@tinymce/tinymce-react';
+
+// (Gỡ CSS SunEditor)
+// import 'suneditor/dist/css/suneditor.min.css'; 
+// import vi from 'suneditor/src/lang/en';
 
 // "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
@@ -24,32 +30,38 @@ type Category = {
   name: string;
 }
 
-// 💖 2. ĐỊNH NGHĨA "KIỂU" TỆP ĐÍNH KÈM (CHO SUPABASE) 💖
+// (Kiểu Tệp đính kèm - Giữ nguyên)
 type Attachment = {
-  file_name: string; // (Tên gốc của file)
-  file_url: string;  // (Link Supabase)
-  file_size: number; // (Kích thước file - tính bằng byte)
-  file_type: string; // (Loại file: 'application/pdf')
+  file_name: string; 
+  file_url: string;  
+  file_size: number; 
+  file_type: string; 
 };
 
 function CreatePostForm() {
   const { user } = useAuth() 
   const router = useRouter()
+  
+  // 💖 4. THÊM "NÃO" CHO EDITOR (Cần cái ref) 💖
+  const editorRef = useRef<any>(null); // (Cần để "lấy" nội dung)
 
   // (Não trạng thái - Giữ nguyên)
   const [categories, setCategories] = useState<Category[]>([]) 
   const [loadingCategories, setLoadingCategories] = useState(true)
   const [title, setTitle] = useState('')
-  const [content, setContent] = useState('') 
+  const [content, setContent] = useState('') // (Vẫn giữ để "nháp")
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
   
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
-  // 💖 3. "NÃO" TRẠNG THÁI MỚI CHO TỆP ĐÍNH KÈM 💖
-  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]); // (Mảng các file đã chọn)
-  const [isUploadingFiles, setIsUploadingFiles] = useState(false); // (Trạng thái đang upload)
+  // (Não Tệp đính kèm - Giữ nguyên)
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]); 
+  const [isUploadingFiles, setIsUploadingFiles] = useState(false); 
+
+  // 💖 5. THÊM "NÃO" TRẠNG THÁI LOADING CHO TINYMCE 💖
+  const [editorLoading, setEditorLoading] = useState(true);
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
@@ -75,6 +87,7 @@ function CreatePostForm() {
     fetchCategories()
   }, []) 
   
+  // (Các hàm xử lý Ảnh đại diện - Giữ nguyên)
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -82,8 +95,6 @@ function CreatePostForm() {
       setThumbnailPreview(URL.createObjectURL(file)); 
     }
   }
-
-  // (Hàm xóa ảnh đại diện - Giữ nguyên)
   const handleRemoveThumbnail = () => {
     setThumbnailFile(null);
     setThumbnailPreview(null);
@@ -93,28 +104,19 @@ function CreatePostForm() {
     }
   }
 
-  // 💖 4. CÁC HÀM XỬ LÝ TỆP ĐÍNH KÈM 💖
-
-  // (Khi người dùng chọn tệp)
+  // (Các hàm xử lý Tệp đính kèm - Giữ nguyên)
   const handleAttachmentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      // (Biến nó thành mảng rồi "nhét" vào "não" state)
       const newFiles = Array.from(e.target.files);
       setAttachmentFiles(prevFiles => [...prevFiles, ...newFiles]);
-      
-      // (Reset ô input để anh có thể chọn file y hệt lần nữa)
       e.target.value = '';
     }
   }
-
-  // (Khi người dùng bấm nút "X" để xóa 1 tệp)
   const handleRemoveAttachment = (fileToRemove: File) => {
     setAttachmentFiles(prevFiles => 
-      prevFiles.filter(file => file !== fileToRemove) // (Lọc bỏ file đó ra)
+      prevFiles.filter(file => file !== fileToRemove) 
     );
   }
-
-  // (Hàm "dịch" kích thước file cho đẹp)
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -122,8 +124,6 @@ function CreatePostForm() {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
-
-  // (Hàm "dịch" icon cho file)
   const getFileIcon = (fileType: string) => {
     if (fileType.includes('pdf')) return <FaFilePdf className={styles.attachmentIcon} />;
     if (fileType.includes('word') || fileType.includes('doc')) return <FaFileWord className={styles.attachmentIcon} />;
@@ -131,73 +131,64 @@ function CreatePostForm() {
     return <FaFile className={styles.attachmentIcon} />;
   }
 
+  // (Hàm "Làm sạch" tên file - Giữ nguyên)
+  const sanitizeFileName = (fileName: string) => {
+    const extension = fileName.substring(fileName.lastIndexOf('.'));
+    let baseName = fileName.substring(0, fileName.lastIndexOf('.'));
+    baseName = baseName
+      .toLowerCase()
+      .normalize("NFD") 
+      .replace(/[\u0300-\u036f]/g, "") 
+      .replace(/đ/g, "d") 
+      .replace(/\s+/g, '_') 
+      .replace(/[^a-z0-9._-]/g, '-') 
+      .replace(/__+/g, '_') 
+      .replace(/--+/g, '-'); 
+    return `${baseName}${extension}`;
+  };
 
-  // (Hàm upload ảnh SunEditor - Giữ nguyên)
-  const handleImageUploadBefore = (
-    files: File[], 
-    info: object,
-    uploadHandler: (response: any) => void
-  ) => {
-    console.log(`[SunEditor] Nhận được ${files.length} ảnh.`);
 
-    const uploadPromises = files.map(file => {
-      return new Promise((resolve, reject) => {
-        const fileName = `content_${Date.now()}_${file.name}`;
-        console.log(`[SunEditor] Đang tải: ${fileName}`);
+  // 💖 6. "THỢ" UPLOAD ẢNH MỚI CHO TINYMCE 💖
+  // (Hàm này "dịch" cái 'blobInfo' của TinyMCE sang 'file' rồi up lên Supabase)
+  const tinymceUploadHandler = (blobInfo: any, progress: (percent: number) => void): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      
+      const file = blobInfo.blob();
+      
+      // (Báo lỗi nếu file quá 5MB - Anh chỉnh số 5 nếu muốn)
+      if (file.size > 5 * 1024 * 1024) {
+        reject('Lỗi: Ảnh quá lớn, vui lòng chọn ảnh dưới 5MB');
+        return;
+      }
 
-        supabase.storage
-          .from('post_images')
-          .upload(fileName, file)
-          .then(({ error: uploadError }) => {
-            if (uploadError) {
-              console.error(`Lỗi tải ảnh ${fileName}:`, uploadError.message);
-              return reject(new Error(uploadError.message)); 
-            }
-            
-            const { data: publicUrlData } = supabase.storage
-              .from('post_images')
-              .getPublicUrl(fileName);
+      const fileName = `content_${Date.now()}_${blobInfo.filename()}`;
+      console.log(`[TinyMCE] Đang tải ảnh: ${fileName}`);
 
-            resolve({
-              url: publicUrlData.publicUrl,
-              name: file.name,
-              size: file.size,
-            });
-          })
-          .catch(err => {
-             console.error(`Lỗi ngoại lệ khi tải ${fileName}:`, err);
-             return reject(err);
-          });
-      });
-    }); 
-
-    Promise.allSettled(uploadPromises) 
-      .then(results => {
-        const successResults: any[] = [];
-        let errorCount = 0;
-        results.forEach(res => {
-          if (res.status === 'fulfilled') {
-            successResults.push(res.value); 
-          } else {
-            errorCount++; 
+      supabase.storage
+        .from('post_images') // (Vẫn up vào "thùng" ảnh cũ)
+        .upload(fileName, file)
+        .then(({ error: uploadError }) => {
+          if (uploadError) {
+            console.error(`Lỗi tải ảnh ${fileName}:`, uploadError.message);
+            return reject(new Error(uploadError.message)); 
           }
-        });
+          
+          // (Lấy link "công khai")
+          const { data: publicUrlData } = supabase.storage
+            .from('post_images')
+            .getPublicUrl(fileName);
 
-        if (successResults.length > 0) {
-          const response = {
-            result: successResults,
-          };
-          uploadHandler(response); 
-        }
-        if (errorCount > 0) {
-           alert(`Đã tải lên ${successResults.length} ảnh. Có ${errorCount} ảnh bị lỗi, anh xem lại nhé.`);
-        }
-        if (successResults.length === 0 && errorCount > 0) {
-           uploadHandler(null);
-        }
-      });
-    return false; 
+          console.log('[TinyMCE] Tải ảnh thành công, link:', publicUrlData.publicUrl);
+          // (Trả link về cho TinyMCE)
+          resolve(publicUrlData.publicUrl); 
+        })
+        .catch(err => {
+           console.error(`Lỗi ngoại lệ khi tải ${fileName}:`, err);
+           return reject(err);
+        });
+    });
   }
+
 
   // (Hàm "Lưu thư viện" - Giữ nguyên)
   const extractMediaAndSave = async (
@@ -246,15 +237,20 @@ function CreatePostForm() {
   };
 
 
-  // 💖 5. HÀM SUBMIT (ĐÃ NÂNG CẤP) 💖
+  // 💖 7. HÀM SUBMIT (ĐÃ NÂNG CẤP DÙNG `editorRef`) 💖
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // (Lấy nội dung "xịn" từ TinyMCE)
+    const editorContent = editorRef.current ? editorRef.current.getContent() : '';
+
     setIsSubmitting(true)
-    setIsUploadingFiles(true); // (Bật quay tròn)
+    setIsUploadingFiles(true); 
     setFormError(null)
     setFormSuccess(null)
 
-    if (!title || !content || !categoryId) {
+    // (Validate bằng nội dung "xịn")
+    if (!title || !editorContent || !categoryId) {
       setFormError('Tiêu đề, Nội dung, và Danh mục không được để trống!')
       setIsSubmitting(false)
       setIsUploadingFiles(false);
@@ -269,7 +265,7 @@ function CreatePostForm() {
     
     try {
       let thumbnailUrl: string | null = null;
-      const attachmentsData: Attachment[] = []; // (Cái túi rỗng)
+      const attachmentsData: Attachment[] = []; 
 
       // 1. "Đẩy" ảnh đại diện (Giữ nguyên)
       if (thumbnailFile) {
@@ -285,29 +281,26 @@ function CreatePostForm() {
         thumbnailUrl = publicUrlData.publicUrl;
       }
 
-      // 💖 6. "ĐẨY" TỆP ĐÍNH KÈM (LOGIC MỚI) 💖
+      // 2. "ĐẨY" TỆP ĐÍNH KÈM (Giữ nguyên)
       if (attachmentFiles.length > 0) {
         console.log(`Đang tải ${attachmentFiles.length} tệp đính kèm...`);
-        
-        // (Tải từng file một)
         for (const file of attachmentFiles) {
-          const fileName = `file_${Date.now()}_${file.name}`;
+          const cleanName = sanitizeFileName(file.name);
+          const fileName = `file_${Date.now()}_${cleanName}`;
+          
           const { error: fileUploadError } = await supabase.storage
-            .from('post_files') // (Upload vào "thùng" mới)
+            .from('post_files') 
             .upload(fileName, file);
 
           if (fileUploadError) {
             throw new Error(`Lỗi khi tải tệp ${file.name}: ${fileUploadError.message}`);
           }
-          
-          // (Lấy link)
           const { data: publicUrlData } = supabase.storage
             .from('post_files')
             .getPublicUrl(fileName);
             
-          // (Nhét vào "túi" của mình)
           attachmentsData.push({
-            file_name: file.name,
+            file_name: file.name, 
             file_url: publicUrlData.publicUrl,
             file_size: file.size,
             file_type: file.type,
@@ -316,18 +309,18 @@ function CreatePostForm() {
         console.log('Tải tệp đính kèm thành công!');
       }
 
-      // 💖 7. "CẤT" BÀI VIẾT (Thêm cột 'attachments' mới) 💖
+      // 3. "CẤT" BÀI VIẾT (Gửi nội dung "xịn" đi)
       const { data: postData, error } = await supabase
         .from('posts') 
         .insert([
           { 
             title: title, 
-            content: content, 
+            content: editorContent, // (Gửi nội dung "xịn" từ TinyMCE)
             category_id: categoryId, 
             is_featured: isFeatured,
             author_id: user.uid, 
             thumbnail_url: thumbnailUrl,
-            attachments: attachmentsData, // (Nhét "túi" vào cột jsonb)
+            attachments: attachmentsData, 
           }
         ])
         .select() 
@@ -338,17 +331,20 @@ function CreatePostForm() {
 
       console.log('Đăng bài thành công! ID:', postData.id);
 
-      // 4. GỌI "PHÉP THUẬT" (Giữ nguyên) 
-      extractMediaAndSave(postData.id, postData.title, content, thumbnailUrl);
+      // 4. GỌI "PHÉP THUẬT" (Gửi nội dung "xịn" đi)
+      extractMediaAndSave(postData.id, postData.title, editorContent, thumbnailUrl);
       
       setFormSuccess('Đăng bài thành công! Đã tự động quét media.');
       // (Reset form)
       setTitle('');
       setContent('');
+      setAttachmentFiles([]);
+      if (editorRef.current) {
+        editorRef.current.setContent(''); // (Reset TinyMCE)
+      }
       setIsFeatured(false);
       setThumbnailFile(null);
       setThumbnailPreview(null);
-      setAttachmentFiles([]); // (Dọn dẹp tệp)
 
       // (Quay về trang danh sách)
       router.push('/quan-ly/dang-bai') 
@@ -362,7 +358,7 @@ function CreatePostForm() {
     }
   }
 
-  // 💖 8. (PHẦN GIAO DIỆN JSX - ĐÃ THÊM Ô UPLOAD TỆP) 💖
+  // (PHẦN GIAO DIỆN JSX)
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -395,10 +391,9 @@ function CreatePostForm() {
                 type="file"
                 id="thumbnail"
                 onChange={handleThumbnailChange}
-                accept="image/png, image/jpeg, image/webp" // (Chỉ nhận ảnh)
+                accept="image/png, image/jpeg, image/webp" 
                 className={styles.fileInput}
               />
-              
               {/* KHỐI XEM TRƯỚC VÀ NÚT XÓA ẢNH */}
               {thumbnailPreview && (
                 <div className={styles.thumbnailPreviewContainer}>
@@ -419,7 +414,7 @@ function CreatePostForm() {
               )}
             </div>
 
-            {/* 💖 9. Ô UPLOAD TỆP ĐÍNH KÈM (KHỐI MỚI) 💖 */}
+            {/* Ô UPLOAD TỆP ĐÍNH KÈM (KHỐI MỚI) */}
             <div className={styles.formGroup}>
               <label htmlFor="attachments" className={styles.label}>
                 Tệp đính kèm (PDF, Word, Zip...)
@@ -427,13 +422,11 @@ function CreatePostForm() {
               <input
                 type="file"
                 id="attachments"
-                multiple // (Cho phép chọn nhiều tệp)
+                multiple 
                 onChange={handleAttachmentChange}
-                accept=".pdf,.doc,.docx,.zip,.rar" // (Chỉ nhận các tệp này)
+                accept=".pdf,.doc,.docx,.zip,.rar,.xls,.xlsx" 
                 className={styles.fileInput}
               />
-              
-              {/* (Danh sách tệp đã chọn) */}
               {attachmentFiles.length > 0 && (
                 <ul className={styles.attachmentList}>
                   {attachmentFiles.map((file, index) => (
@@ -458,7 +451,7 @@ function CreatePostForm() {
                 </ul>
               )}
             </div>
-            {/* 💖 HẾT KHỐI MỚI 💖 */}
+            {/* HẾT KHỐI MỚI */}
 
 
             {/* (Danh mục) */}
@@ -498,36 +491,63 @@ function CreatePostForm() {
               </label>
             </div>
             
-            {/* (Trình soạn thảo SunEditor) */}
+            {/* 💖 8. THAY THẾ SUNEDITOR BẰNG TINYMCE 💖 */}
             <div className={styles.formGroup}>
               <label className={styles.label}>
                 Nội dung bài viết
               </label>
-              <SunEditor 
-                lang={vi} 
-                setContents={content}
-                onChange={setContent}
-                onImageUploadBefore={handleImageUploadBefore} 
-                setOptions={{
-                  height: '300px',
-                  imageMultipleFile: true, 
-                  imageWidth: '500px',       
-                  imageHeight: 'auto',       
-                  buttonList: [
-                    ['undo', 'redo'],
-                    ['font', 'fontSize', 'formatBlock'],
-                    ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript'],
-                    ['removeFormat'],
-                    '/', 
-                    ['fontColor', 'hiliteColor'],
-                    ['outdent', 'indent'],
-                    ['align', 'horizontalRule', 'list', 'lineHeight'],
-                    ['table', 'link', 'image', 'video'], 
-                    ['fullScreen', 'showBlocks', 'codeView'],
-                  ],
-                }}
-              />
+              
+              {/* (Thêm "bọc" và "Loading" cho đẹp) */}
+              <div className={styles.editorWrapper}>
+                {editorLoading && (
+                  <div className={styles.editorLoadingPlaceholder}>
+                    Đang tải trình soạn thảo "xịn"...
+                  </div>
+                )}
+                <Editor
+                  // (Anh có thể vào tiny.cloud đăng ký 1 key miễn phí)
+                  apiKey='no-api-key' // (Dùng tạm key này)
+                  
+                  onInit={(evt, editor) => {
+                    editorRef.current = editor;
+                    setEditorLoading(false); // (Tải xong, ẩn chữ "Đang tải")
+                  }}
+                  
+                  initialValue="" // (Giá trị ban đầu)
+                  
+                  // (Cập nhật "não" nháp)
+                  onEditorChange={(newContent, editor) => {
+                    setContent(newContent);
+                  }}
+                  
+                  init={{
+                    height: 500, // (Cho cao hơn)
+                    menubar: false,
+                    plugins: [
+                      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 
+                      'preview', 'anchor', 'searchreplace', 'visualblocks', 'code', 
+                      'fullscreen', 'insertdatetime', 'media', 'table', 'code', 
+                      'help', 'wordcount', 'image' // (Quan trọng: 'image' phải có)
+                    ],
+                    toolbar:
+                      'undo redo | formatselect | ' +
+                      'bold italic backcolor | alignleft aligncenter ' +
+                      'alignright alignjustify | bullist numlist outdent indent | ' +
+                      'removeformat | image media link | code fullscreen | help',
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+                    
+                    // (Quan trọng: Bật chế độ upload ảnh "tự động")
+                    automatic_uploads: true,
+                    file_picker_types: 'image media', // (Chỉ cho up ảnh/video qua nút)
+                    
+                    // (Gắn "thợ" upload của mình vào)
+                    images_upload_handler: tinymceUploadHandler,
+                  }}
+                />
+              </div>
             </div>
+            {/* 💖 HẾT KHỐI THAY THẾ 💖 */}
+
 
             {formError && (
               <div className={styles.error}>{formError}</div>
@@ -542,14 +562,13 @@ function CreatePostForm() {
               </Link>
               
               <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                {/* (Icon quay tròn khi đang upload) */}
                 {(isSubmitting || isUploadingFiles) && (
                   <div className={styles.uploadSpinner} title="Đang tải tệp lên..."></div>
                 )}
                 
                 <button
                   type="submit"
-                  disabled={isSubmitting || loadingCategories || isUploadingFiles}
+                  disabled={isSubmitting || loadingCategories || isUploadingFiles || editorLoading}
                   className={styles.button}
                 >
                   {isSubmitting ? 'Đang đăng...' : 'Đăng bài'}
@@ -566,9 +585,6 @@ function CreatePostForm() {
 // --- Component "Vỏ Bọc" (Bảo vệ) ---
 export default function CreatePostPage() {
   return (
-    // 💖 10. "TRIỆU HỒI" CÁI "LÍNH GÁC" ICON 💖
-    // (Vì mình dùng react-icons, mà nó là Client Component,
-    //  nên mình phải bọc nó bằng "Lính gác" này)
     <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'giao_vien', 'quan_ly']}>
       <CreatePostForm /> 
     </ProtectedRoute>

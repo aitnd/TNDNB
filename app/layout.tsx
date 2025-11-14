@@ -2,11 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css' // (CSS "Sạch")
 
-// 1. 💖 (XÓA DÒNG 'react-quill-new' BỊ LỖI) 💖
-// import 'react-quill-new/dist/quill.snow.css'; 
-
-// 2. 💖 "TRIỆU HỒI" CSS CỦA "SUNEDITOR" (MỚI) 💖
-import 'suneditor/dist/css/suneditor.min.css';
+// 💖 (ĐÃ XÓA DÒNG 'suneditor/dist/css/suneditor.min.css' Ở ĐÂY) 💖
 
 import { AuthProvider } from '../context/AuthContext' 
 import Navbar from '../components/Navbar' 
@@ -38,6 +34,9 @@ export default function RootLayout({
           <Footer />
 
         </AuthProvider>
+        
+        {/* (Chỗ này anh dán Chatbot Script nè) */}
+        
       </body>
     </html>
   )

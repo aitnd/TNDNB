@@ -181,7 +181,7 @@
 }
 
 
-/* === 💖 CSS MỚI CHO TỆP ĐÍNH KÈM (Thêm ở cuối) 💖 === */
+/* === (CSS CHO TỆP ĐÍNH KÈM) === */
 .attachmentList {
   list-style: none;
   padding: 0;
@@ -190,7 +190,6 @@
   flex-direction: column;
   gap: 0.75rem;
 }
-
 .attachmentItem {
   display: flex;
   justify-content: space-between;
@@ -200,31 +199,26 @@
   padding: 0.75rem 1rem;
   border-radius: 5px;
 }
-
 .attachmentIcon {
   margin-right: 0.75rem;
   color: #555;
 }
-
 .attachmentName {
   font-weight: 500;
   color: #333;
-  /* (Chống tràn tên file) */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex: 1; /* (Quan trọng) */
+  flex: 1; 
 }
-
 .attachmentSize {
   font-size: 0.85rem;
   color: #777;
   margin-left: 1rem;
-  white-space: nowrap; /* (Không xuống dòng) */
+  white-space: nowrap; 
 }
-
 .attachmentRemoveButton {
-  background-color: #ef4444; /* (Màu đỏ) */
+  background-color: #ef4444; 
   color: white;
   border: none;
   border-radius: 50%;
@@ -256,4 +250,25 @@
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* === 💖 CSS MỚI CHO TINYMCE LOADING 💖 === */
+.editorWrapper {
+  position: relative;
+  min-height: 300px; /* (Bằng chiều cao của editor) */
+}
+
+.editorLoadingPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0; /* (Phủ kín) */
+  background-color: #f3f4f6;
+  border: 1px dashed #ddd;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  color: #777;
+  font-style: italic;
+  z-index: 10;
 }
