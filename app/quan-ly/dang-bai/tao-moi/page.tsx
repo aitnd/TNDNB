@@ -497,7 +497,7 @@ function CreatePostForm() {
                 <Editor
                   apiKey='no-api-key' // (Dùng tạm key này)
                   
-                  // 💖 9. SỬA LỖI "any" Ở ĐÂY 💖
+                  // (Khai báo 'any' cho 'onInit')
                   onInit={(evt: any, editor: any) => {
                     editorRef.current = editor;
                     setEditorLoading(false); // (Tải xong, ẩn chữ "Đang tải")
@@ -505,8 +505,8 @@ function CreatePostForm() {
                   
                   initialValue="" // (Giá trị ban đầu)
                   
-                  // (Cập nhật "não" nháp)
-                  onEditorChange={(newContent, editor) => {
+                  // 💖 9. SỬA LỖI "any" Ở ĐÂY 💖
+                  onEditorChange={(newContent: any, editor: any) => {
                     setContent(newContent);
                   }}
                   
