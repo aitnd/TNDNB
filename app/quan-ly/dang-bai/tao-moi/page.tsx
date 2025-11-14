@@ -5,7 +5,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
-// 💖 2. "GỠ" SUNEDITOR 💖
+// (Gỡ SunEditor)
 // import dynamic from 'next/dynamic' 
 
 import { FaFilePdf, FaFileWord, FaFileArchive, FaFile } from 'react-icons/fa'
@@ -16,10 +16,6 @@ import Link from 'next/link'
 
 // 💖 3. "THUÊ" TINYMCE 💖
 import { Editor } from '@tinymce/tinymce-react';
-
-// (Gỡ CSS SunEditor)
-// import 'suneditor/dist/css/suneditor.min.css'; 
-// import vi from 'suneditor/src/lang/en';
 
 // "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
@@ -60,7 +56,7 @@ function CreatePostForm() {
   const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]); 
   const [isUploadingFiles, setIsUploadingFiles] = useState(false); 
 
-  // 💖 5. THÊM "NÃO" TRẠNG THÁI LOADING CHO TINYMCE 💖
+  // (Não Loading cho TinyMCE - Giữ nguyên)
   const [editorLoading, setEditorLoading] = useState(true);
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -148,14 +144,12 @@ function CreatePostForm() {
   };
 
 
-  // 💖 6. "THỢ" UPLOAD ẢNH MỚI CHO TINYMCE 💖
-  // (Hàm này "dịch" cái 'blobInfo' của TinyMCE sang 'file' rồi up lên Supabase)
+  // ("Thợ" upload ảnh TinyMCE - Giữ nguyên)
   const tinymceUploadHandler = (blobInfo: any, progress: (percent: number) => void): Promise<string> => {
     return new Promise((resolve, reject) => {
       
       const file = blobInfo.blob();
       
-      // (Báo lỗi nếu file quá 5MB - Anh chỉnh số 5 nếu muốn)
       if (file.size > 5 * 1024 * 1024) {
         reject('Lỗi: Ảnh quá lớn, vui lòng chọn ảnh dưới 5MB');
         return;
@@ -165,7 +159,7 @@ function CreatePostForm() {
       console.log(`[TinyMCE] Đang tải ảnh: ${fileName}`);
 
       supabase.storage
-        .from('post_images') // (Vẫn up vào "thùng" ảnh cũ)
+        .from('post_images') 
         .upload(fileName, file)
         .then(({ error: uploadError }) => {
           if (uploadError) {
@@ -173,13 +167,11 @@ function CreatePostForm() {
             return reject(new Error(uploadError.message)); 
           }
           
-          // (Lấy link "công khai")
           const { data: publicUrlData } = supabase.storage
             .from('post_images')
             .getPublicUrl(fileName);
 
           console.log('[TinyMCE] Tải ảnh thành công, link:', publicUrlData.publicUrl);
-          // (Trả link về cho TinyMCE)
           resolve(publicUrlData.publicUrl); 
         })
         .catch(err => {
@@ -237,11 +229,10 @@ function CreatePostForm() {
   };
 
 
-  // 💖 7. HÀM SUBMIT (ĐÃ NÂNG CẤP DÙNG `editorRef`) 💖
+  // (Hàm Submit - Giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // (Lấy nội dung "xịn" từ TinyMCE)
     const editorContent = editorRef.current ? editorRef.current.getContent() : '';
 
     setIsSubmitting(true)
@@ -249,7 +240,6 @@ function CreatePostForm() {
     setFormError(null)
     setFormSuccess(null)
 
-    // (Validate bằng nội dung "xịn")
     if (!title || !editorContent || !categoryId) {
       setFormError('Tiêu đề, Nội dung, và Danh mục không được để trống!')
       setIsSubmitting(false)
@@ -267,7 +257,7 @@ function CreatePostForm() {
       let thumbnailUrl: string | null = null;
       const attachmentsData: Attachment[] = []; 
 
-      // 1. "Đẩy" ảnh đại diện (Giữ nguyên)
+      // 1. "Đẩy" ảnh đại diện
       if (thumbnailFile) {
         console.log('Đang tải ảnh đại diện lên...');
         const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
@@ -281,7 +271,7 @@ function CreatePostForm() {
         thumbnailUrl = publicUrlData.publicUrl;
       }
 
-      // 2. "ĐẨY" TỆP ĐÍNH KÈM (Giữ nguyên)
+      // 2. "ĐẨY" TỆP ĐÍNH KÈM
       if (attachmentFiles.length > 0) {
         console.log(`Đang tải ${attachmentFiles.length} tệp đính kèm...`);
         for (const file of attachmentFiles) {
@@ -309,7 +299,7 @@ function CreatePostForm() {
         console.log('Tải tệp đính kèm thành công!');
       }
 
-      // 3. "CẤT" BÀI VIẾT (Gửi nội dung "xịn" đi)
+      // 3. "CẤT" BÀI VIẾT
       const { data: postData, error } = await supabase
         .from('posts') 
         .insert([
@@ -331,7 +321,7 @@ function CreatePostForm() {
 
       console.log('Đăng bài thành công! ID:', postData.id);
 
-      // 4. GỌI "PHÉP THUẬT" (Gửi nội dung "xịn" đi)
+      // 4. GỌI "PHÉP THUẬT" (Lưu thư viện)
       extractMediaAndSave(postData.id, postData.title, editorContent, thumbnailUrl);
       
       setFormSuccess('Đăng bài thành công! Đã tự động quét media.');
@@ -358,7 +348,7 @@ function CreatePostForm() {
     }
   }
 
-  // (PHẦN GIAO DIỆN JSX)
+  // (PHẦN GIAO DIỆN JSX - Giữ nguyên)
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -505,10 +495,10 @@ function CreatePostForm() {
                   </div>
                 )}
                 <Editor
-                  // (Anh có thể vào tiny.cloud đăng ký 1 key miễn phí)
                   apiKey='no-api-key' // (Dùng tạm key này)
                   
-                  onInit={(evt, editor) => {
+                  // 💖 9. SỬA LỖI "any" Ở ĐÂY 💖
+                  onInit={(evt: any, editor: any) => {
                     editorRef.current = editor;
                     setEditorLoading(false); // (Tải xong, ẩn chữ "Đang tải")
                   }}
@@ -527,7 +517,7 @@ function CreatePostForm() {
                       'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 
                       'preview', 'anchor', 'searchreplace', 'visualblocks', 'code', 
                       'fullscreen', 'insertdatetime', 'media', 'table', 'code', 
-                      'help', 'wordcount', 'image' // (Quan trọng: 'image' phải có)
+                      'help', 'wordcount', 'image' 
                     ],
                     toolbar:
                       'undo redo | formatselect | ' +
@@ -536,11 +526,9 @@ function CreatePostForm() {
                       'removeformat | image media link | code fullscreen | help',
                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
                     
-                    // (Quan trọng: Bật chế độ upload ảnh "tự động")
                     automatic_uploads: true,
-                    file_picker_types: 'image media', // (Chỉ cho up ảnh/video qua nút)
+                    file_picker_types: 'image media', 
                     
-                    // (Gắn "thợ" upload của mình vào)
                     images_upload_handler: tinymceUploadHandler,
                   }}
                 />
