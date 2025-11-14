@@ -130,7 +130,7 @@ export default async function Sidebar() {
         </Link>
         <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
           <img 
-            src="/on-tap.png" 
+            src="/tracuu.png" 
             alt="Tra cứu Văn bằng Chứng chỉ" 
             className={styles.bannerImage}
           />
