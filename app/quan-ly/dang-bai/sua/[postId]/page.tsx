@@ -1,15 +1,20 @@
 // Đánh dấu đây là "Client Component"
 'use client'
 
+// 💖 1. THÊM "NÃO" 'useRef' 💖
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation' 
+
+// (Gỡ SunEditor)
+// import dynamic from 'next/dynamic' 
+
 import { FaFilePdf, FaFileWord, FaFileArchive, FaFile } from 'react-icons/fa'
 import { useAuth } from '../../../../../context/AuthContext' 
 import ProtectedRoute from '../../../../../components/ProtectedRoute' 
 import { supabase } from '../../../../../utils/supabaseClient' 
 import Link from 'next/link' 
 
-// "THUÊ" TINYMCE
+// 💖 2. "THUÊ" TINYMCE 💖
 import { Editor } from '@tinymce/tinymce-react';
 
 // "Triệu hồi" file CSS Module (Mượn của trang Tạo Mới)
@@ -33,6 +38,7 @@ function EditPostForm() {
   const params = useParams() 
   const postId = params.postId as string 
   
+  // 💖 3. THÊM "NÃO" CHO EDITOR 💖
   const editorRef = useRef<any>(null);
 
   // (Não trạng thái - Giữ nguyên)
@@ -51,9 +57,9 @@ function EditPostForm() {
   const [newAttachmentFiles, setNewAttachmentFiles] = useState<File[]>([]); 
   const [isUploadingFiles, setIsUploadingFiles] = useState(false); 
 
-  // (Não Loading - Giữ nguyên)
-  const [editorLoading, setEditorLoading] = useState(true); 
-  const [isLoadingPost, setIsLoadingPost] = useState(true); 
+  // 💖 4. THÊM "NÃO" LOADING 💖
+  const [editorLoading, setEditorLoading] = useState(true); // (Cho TinyMCE)
+  const [isLoadingPost, setIsLoadingPost] = useState(true); // (Cho data)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
@@ -531,8 +537,8 @@ function EditPostForm() {
                 {/* (Thêm: Chỉ "vẽ" Editor khi "hết" loading bài cũ) */}
                 {!isLoadingPost && (
                   <Editor
-                    // 💖 7. TRA "CHÌA KHÓA" CỦA ANH VÀO ĐÂY 💖
-                    apiKey='20m5wt4ebguc9anzt43drvz8gd06zeumm7srlb0ivrdq2m4t'
+                    // (Dùng "chìa khóa" của anh)
+                    apiKey='20m5wt4ebguc9anzt43drvz8gd06zeumm7srlb0ivrdq2m4t' 
                     
                     // (Khai báo 'any' cho 'onInit')
                     onInit={(evt: any, editor: any) => {

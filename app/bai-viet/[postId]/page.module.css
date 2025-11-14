@@ -100,7 +100,7 @@
     text-decoration: none;
 }
 
-/* 💖 1. THÊM "MÀU ÁO" CHO NÚT SHARE FB 💖 */
+/* (Nút "Share" - Giữ nguyên) */
 .buttonShare {
     display: inline-flex; /* (Để icon và chữ nằm ngang) */
     align-items: center;
@@ -206,4 +206,76 @@
 .downloadSize {
     font-size: 0.9rem;
     color: #777;
+}
+
+/* === 💖 CSS MỚI CHO "BÀI VIẾT KHÁC" (Thêm ở cuối) 💖 === */
+.relatedSection {
+    margin-top: 2.5rem;
+    border-top: 2px solid #e6f0ff;
+    padding-top: 1.5rem;
+}
+.relatedTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 1.5rem;
+}
+.relatedGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* (3 cột y như hình) */
+    gap: 1.5rem;
+}
+.relatedCard {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.relatedCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-decoration: none;
+}
+.relatedImage {
+    width: 100%;
+    height: 150px; /* (Chiều cao cố định) */
+    object-fit: cover; /* (Ảnh tự zoom) */
+    display: block;
+    background-color: #f0f0f0; /* (Màu nền lót) */
+}
+.relatedInfo {
+    padding: 1rem;
+}
+.relatedCard h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+    /* (Giới hạn 2 dòng) */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.4em; /* (Giữ chỗ 2 dòng) */
+}
+.relatedCard p {
+    font-size: 0.875rem;
+    color: #777;
+    margin: 0;
+}
+
+/* (Responsive cho 3 cột) */
+@media (max-width: 768px) {
+    .relatedGrid {
+        grid-template-columns: 1fr 1fr; /* (2 cột trên tablet) */
+    }
+}
+@media (max-width: 500px) {
+    .relatedGrid {
+        grid-template-columns: 1fr; /* (1 cột trên điện thoại) */
+    }
 }

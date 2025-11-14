@@ -6,8 +6,6 @@ import { useAuth } from '../../../context/AuthContext'
 import ProtectedRoute from '../../../components/ProtectedRoute' 
 import { supabase } from '../../../utils/supabaseClient' 
 import Link from 'next/link'
-
-// 💖 1. "TRIỆU HỒI" ICON FACEBOOK 💖
 import { FaFacebook } from 'react-icons/fa' 
 
 // (Triệu hồi kho Firestore)
@@ -33,15 +31,14 @@ type AuthorMap = {
   [key: string]: string; 
 }
 
-// 2. TẠO "NỘI DUNG" TRANG (ĐÃ NÂNG CẤP)
+// (NỘI DUNG TRANG - Giữ nguyên)
 function PostManagementDashboard() {
   const { user } = useAuth() 
   const [posts, setPosts] = useState<Post[]>([]) 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // 💖 3. ĐỊNH NGHĨA LINK WEB CỦA ANH 💖
-  // (Link này dùng để "mồi" cho Facebook)
+  // (Link web - Giữ nguyên)
   const PRODUCTION_URL = 'https://tndnb.vercel.app';
 
   // (Hàm "Lấy Bài viết" & "Tác giả" - Giữ nguyên)
@@ -114,15 +111,10 @@ function PostManagementDashboard() {
     }
   }
 
-  // 💖 4. HÀM "BÁN TỰ ĐỘNG" ĐĂNG FACEBOOK 💖
+  // (Hàm "Share FB" - Giữ nguyên)
   const handleShareToFacebook = (postId: string) => {
-    // (Tạo link bài viết "xịn" của mình)
     const postUrl = `${PRODUCTION_URL}/bai-viet/${postId}`;
-    
-    // (Tạo link "mồi" của Facebook)
     const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
-    
-    // (Mở cửa sổ popup)
     window.open(facebookShareUrl, '_blank', 'width=600,height=400');
   }
 
@@ -141,7 +133,7 @@ function PostManagementDashboard() {
     }
   };
 
-  // 5. GIAO DIỆN (ĐÃ THÊM NÚT "ĐĂNG FB")
+  // 💖 GIAO DIỆN (ĐÃ NÂNG CẤP LINK TIÊU ĐỀ) 💖
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -178,7 +170,19 @@ function PostManagementDashboard() {
               <tbody>
                 {posts.map((post) => (
                   <tr key={post.id}>
-                    <td><strong>{post.title}</strong></td>
+                    
+                    {/* 💖 1. "BỌC" CÁI TIÊU ĐỀ BẰNG LINK 💖 */}
+                    <td>
+                      <Link 
+                        href={`/bai-viet/${post.id}`} 
+                        target="_blank" // (Mở tab mới)
+                        rel="noopener noreferrer" // (Bảo mật)
+                        className={styles.titleLink} // (Dùng "áo" mới)
+                        title="Bấm để xem bài viết"
+                      >
+                        <strong>{post.title}</strong>
+                      </Link>
+                    </td>
                     
                     {/* (Phiên dịch Danh mục) */}
                     <td>{formatCategoryName(post.category_id)}</td>
@@ -200,7 +204,7 @@ function PostManagementDashboard() {
                     <td>{new Date(post.created_at).toLocaleDateString('vi-VN')}</td>
                     <td>
                       <div className={styles.actionButtons}>
-                        {/* 💖 6. NÚT "ĐĂNG FB" MỚI CỦA ANH 💖 */}
+                        {/* (Nút "Đăng FB") */}
                         <button 
                           className={styles.buttonShare}
                           onClick={() => handleShareToFacebook(post.id)}
@@ -235,10 +239,10 @@ function PostManagementDashboard() {
   )
 }
 
-// 7. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC" (Giữ nguyên)
+// (BỌC "LÍNH GÁC" - Giữ nguyên)
 export default function QuanLyBaiVietPage() {
   return (
-    <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'giao_vien', 'quan-ly']}>
+    <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'giao_vien', 'quan_ly']}>
       <PostManagementDashboard /> 
     </ProtectedRoute>
   )

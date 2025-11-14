@@ -85,12 +85,11 @@
 .hoc_vien { background-color: #e5e7eb; color: #374151; }
 
 
-/* (Nút Sửa/Xóa) */
+/* (Nút Sửa/Xóa/Share) */
 .actionButtons {
     display: flex;
     gap: 0.5rem;
 }
-/* 💖 1. THÊM .buttonShare VÀO ĐÂY 💖 */
 .buttonEdit,
 .buttonDelete,
 .buttonSecondary,
@@ -102,7 +101,7 @@
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 0.875rem;
-    color: white; /* (Thêm màu chữ trắng cho đồng bộ) */
+    color: white; 
 }
 .buttonEdit:disabled,
 .buttonDelete:disabled,
@@ -132,12 +131,11 @@
     background-color: #d1d5db;
 }
 
-/* 💖 2. THÊM MÀU ÁO CHO NÚT FACEBOOK 💖 */
 .buttonShare {
-    background-color: #1877f2; /* (Màu Facebook "xịn") */
+    background-color: #1877f2; 
 }
 .buttonShare:hover:not(:disabled) {
-    background-color: #166fe5; /* (Màu hover) */
+    background-color: #166fe5; 
 }
 
 
@@ -246,4 +244,15 @@
     font-size: 0.9rem;
     color: #777;
     font-style: italic;
+}
+
+/* === 💖 CSS MỚI CHO LINK TIÊU ĐỀ BÀI VIẾT 💖 === */
+.titleLink strong {
+  color: #004a99; /* (Cho nó màu xanh "link") */
+  font-weight: 600;
+  transition: color 0.3s;
+}
+.titleLink:hover strong {
+  color: #003366; /* (Đậm hơn khi hover) */
+  text-decoration: underline;
 }

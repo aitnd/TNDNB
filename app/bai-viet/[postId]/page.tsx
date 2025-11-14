@@ -7,8 +7,7 @@ import { adminDb } from '../../../utils/firebaseAdmin' // (Kho Firestore)
 import { FaFilePdf, FaFileWord, FaFileArchive, FaFile, FaDownload } from 'react-icons/fa'
 // (Triệu hồi Box Bình luận)
 import FacebookComments from '../../../components/FacebookComments'
-
-// 💖 1. "TRIỆU HỒI" BỘ NÃO NÚT BẤM MỚI 💖
+// (Triệu hồi Nút bấm)
 import PostFooterActions from '../../../components/PostFooterActions'
 
 
@@ -30,6 +29,7 @@ type Post = {
   title: string;
   content: string; 
   image_url: string | null;
+  thumbnail_url: string | null; 
   category_id: string;
   is_featured: boolean;
   author_id: string; 
@@ -85,6 +85,27 @@ async function getPostDetails(postId: string): Promise<PostPageData | null> {
   };
 }
 
+// (Hàm lấy bài viết liên quan - Giữ nguyên)
+async function getRelatedPosts(categoryId: string, currentPostId: string): Promise<Post[]> {
+  console.log(`[Server] Lấy 3 bài viết liên quan (danh mục: ${categoryId})...`);
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('id, title, created_at, thumbnail_url') // (Chỉ lấy mấy cái này cho gọn)
+      .eq('category_id', categoryId)       // (1. Cùng danh mục)
+      .neq('id', currentPostId)            // (2. Trừ bài hiện tại)
+      .order('created_at', { ascending: false }) // (3. Lấy bài mới nhất)
+      .limit(3); // (4. Lấy 3 bài)
+
+    if (error) throw error;
+    return (data as Post[]) || [];
+
+  } catch (err: any) {
+    console.error('Lỗi khi lấy bài viết liên quan:', err.message);
+    return [];
+  }
+}
+
 
 // (Hàm "dịch" file - Giữ nguyên)
 function formatFileSize(bytes: number) {
@@ -125,6 +146,9 @@ export default async function PostPage({ params }: { params: { postId: string } 
 
   const { post, authorName } = data;
 
+  // (Lấy bài viết liên quan - Giữ nguyên)
+  const relatedPosts = await getRelatedPosts(post.category_id, post.id);
+
   return (
     <>
       <div className={styles.container}>
@@ -139,9 +163,9 @@ export default async function PostPage({ params }: { params: { postId: string } 
           <span>{post.category_id.replace('-', ' ')}</span>
         </p>
 
-        {post.image_url && (
+        {post.thumbnail_url && (
           <img
-            src={post.image_url}
+            src={post.thumbnail_url}
             alt={post.title}
             className={styles.image}
           />
@@ -208,7 +232,45 @@ export default async function PostPage({ params }: { params: { postId: string } 
           </p>
         )}
         
-        {/* 💖 2. THAY THẾ NÚT "QUAY VỀ" CŨ BẰNG COMPONENT MỚI 💖 */}
+        {/* 💖 1. KHU VỰC "BÀI VIẾT KHÁC" (ĐÃ "PHẪU THUẬT" LẠI LINK) 💖 */}
+        {relatedPosts.length > 0 && (
+          <section className={styles.relatedSection}>
+            <h2 className={styles.relatedTitle}>Bài viết khác</h2>
+            <div className={styles.relatedGrid}>
+              {relatedPosts.map((relatedPost) => (
+                
+                // (Giờ cái Card không phải là link nữa)
+                <div key={relatedPost.id} className={styles.relatedCard}>
+                  
+                  {/* (Link 1: Bọc cái ảnh) */}
+                  <Link href={`/bai-viet/${relatedPost.id}`}>
+                    <img 
+                      src={relatedPost.thumbnail_url || 'https://via.placeholder.com/300x150?text=TND+Ninh+Binh'}
+                      alt={relatedPost.title}
+                      className={styles.relatedImage}
+                      loading="lazy"
+                    />
+                  </Link>
+                  
+                  {/* (Phần thông tin) */}
+                  <div className={styles.relatedInfo}>
+                    {/* (Link 2: Bọc cái tiêu đề H3) */}
+                    <h3>
+                      <Link href={`/bai-viet/${relatedPost.id}`}>
+                        {relatedPost.title}
+                      </Link>
+                    </h3>
+                    <p>{new Date(relatedPost.created_at).toLocaleDateString('vi-VN')}</p>
+                  </div>
+
+                </div> // (Đóng cái .relatedCard)
+
+              ))}
+            </div>
+          </section>
+        )}
+        
+        {/* (Nút Bấm Cuối bài - Giữ nguyên) */}
         <PostFooterActions />
       
       </div>
