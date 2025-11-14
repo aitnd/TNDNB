@@ -36,9 +36,9 @@ async function getTuyenSinhPosts(): Promise<Post[]> {
   return data || [];
 }
 
-// (Hàm lấy tin Pháp quy)
+// (Hàm lấy tin Pháp quy - 💖 SỬA LỖI DƯ DẤU "}" 💖)
 async function getPhapQuyPosts(): Promise<Post[]> {
-  const { data, error } } = await supabase
+  const { data, error } = await supabase
     .from('posts')
     .select('id, title')
     .eq('category_id', 'van-ban-phap-quy') 
@@ -51,10 +51,10 @@ async function getPhapQuyPosts(): Promise<Post[]> {
   return data || [];
 }
 
-// (Hàm lấy tin Tức)
+// (Hàm lấy tin Tức - 💖 SỬA LỖI DƯ DẤU "}" 💖)
 async function getTinTucSuKien(): Promise<Post[]> {
   console.log('[Sidebar] Đang lấy tin "Tin tức"...');
-  const { data, error } } = await supabase
+  const { data, error } = await supabase
     .from('posts')
     .select('id, title')
     .eq('category_id', 'tin-tuc-su-kien') 
@@ -68,10 +68,10 @@ async function getTinTucSuKien(): Promise<Post[]> {
   return data || [];
 }
 
-// (Hàm lấy ảnh Thư viện)
+// (Hàm lấy ảnh Thư viện - 💖 SỬA LỖI DƯ DẤU "}" 💖)
 async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
   console.log('[Sidebar] Đang lấy media mới nhất cho Thư viện...');
-  const { data, error } } = await supabase
+  const { data, error } = await supabase
     .from('media_library')
     .select('id, media_url') 
     .eq('media_type', 'image') 
@@ -85,10 +85,10 @@ async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
   return data || [];
 }
 
-// (Hàm lấy Tệp)
+// (Hàm lấy Tệp - 💖 SỬA LỖI DƯ DẤU "}" 💖)
 async function getLatestFilesForSidebar(): Promise<MediaItem[]> {
   console.log('[Sidebar] Đang lấy tệp mới nhất cho Tài liệu...');
-  const { data, error } } = await supabase
+  const { data, error } = await supabase
     .from('media_library')
     .select('id, media_url') 
     .eq('media_type', 'document') 
@@ -121,17 +121,16 @@ export default async function Sidebar() {
       {/* (Ô Tìm kiếm) */}
       <Searchbar />
 
-      {/* 💖 1. BOX "TRA CỨU VĂN BẰNG" MỚI CỦA ANH 💖 */}
+      {/* (Box "Tra cứu Văn bằng") */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
           <h3 className={styles.sidebarTitle}>
               Tra cứu Văn bằng
           </h3>
         </Link>
-        {/* (Em "chế" cái ảnh "Ôn tập" thành ảnh "Tra cứu" cho anh nha) */}
         <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
           <img 
-            src="/on-tap.png" // (Mình mượn tạm ảnh "on-tap.png", anh có ảnh "tra cứu" thì đổi tên file ở đây)
+            src="/on-tap.png" 
             alt="Tra cứu Văn bằng Chứng chỉ" 
             className={styles.bannerImage}
           />
@@ -156,12 +155,12 @@ export default async function Sidebar() {
       
       {/* (Box Thi Online) */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
+        <Link href="httpsDITNB://tndnb.vercel.app/quan-ly" target="_blank">
           <h3 className={styles.sidebarTitle}>
               Hệ thống thi trực tuyến
           </h3>
         </Link>
-        <Link href="https://tndnb.vercel.app/quan-ly" target="_blank">
+        <Link href="httpsDITNB://tndnb.vercel.app/quan-ly" target="_blank">
           <img 
             src="/thi-online.png" 
             alt="Hệ Thống Thi Online" 
