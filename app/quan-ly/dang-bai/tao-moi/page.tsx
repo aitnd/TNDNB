@@ -1,20 +1,15 @@
 // Đánh dấu đây là "Client Component"
 'use client'
 
-// 💖 1. THÊM "NÃO" 'useRef' (Rất quan trọng cho TinyMCE) 💖
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-
-// (Gỡ SunEditor)
-// import dynamic from 'next/dynamic' 
-
 import { FaFilePdf, FaFileWord, FaFileArchive, FaFile } from 'react-icons/fa'
 import { useAuth } from '../../../../context/AuthContext' 
 import ProtectedRoute from '../../../../components/ProtectedRoute' 
 import { supabase } from '../../../../utils/supabaseClient' 
 import Link from 'next/link' 
 
-// 💖 3. "THUÊ" TINYMCE 💖
+// "THUÊ" TINYMCE
 import { Editor } from '@tinymce/tinymce-react';
 
 // "Triệu hồi" file CSS Module
@@ -38,14 +33,13 @@ function CreatePostForm() {
   const { user } = useAuth() 
   const router = useRouter()
   
-  // 💖 4. THÊM "NÃO" CHO EDITOR (Cần cái ref) 💖
   const editorRef = useRef<any>(null); // (Cần để "lấy" nội dung)
 
   // (Não trạng thái - Giữ nguyên)
   const [categories, setCategories] = useState<Category[]>([]) 
   const [loadingCategories, setLoadingCategories] = useState(true)
   const [title, setTitle] = useState('')
-  const [content, setContent] = useState('') // (Vẫn giữ để "nháp")
+  const [content, setContent] = useState('') 
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
   
@@ -481,13 +475,12 @@ function CreatePostForm() {
               </label>
             </div>
             
-            {/* 💖 8. THAY THẾ SUNEDITOR BẰNG TINYMCE 💖 */}
+            {/* (THAY THẾ BẰNG TINYMCE) */}
             <div className={styles.formGroup}>
               <label className={styles.label}>
                 Nội dung bài viết
               </label>
               
-              {/* (Thêm "bọc" và "Loading" cho đẹp) */}
               <div className={styles.editorWrapper}>
                 {editorLoading && (
                   <div className={styles.editorLoadingPlaceholder}>
@@ -495,23 +488,24 @@ function CreatePostForm() {
                   </div>
                 )}
                 <Editor
-                  apiKey='no-api-key' // (Dùng tạm key này)
+                  // 💖 8. TRA "CHÌA KHÓA" CỦA ANH VÀO ĐÂY 💖
+                  apiKey='20m5wt4ebguc9anzt43drvz8gd06zeumm7srlb0ivrdq2m4t'
                   
                   // (Khai báo 'any' cho 'onInit')
                   onInit={(evt: any, editor: any) => {
                     editorRef.current = editor;
-                    setEditorLoading(false); // (Tải xong, ẩn chữ "Đang tải")
+                    setEditorLoading(false); 
                   }}
                   
-                  initialValue="" // (Giá trị ban đầu)
+                  initialValue="" 
                   
-                  // 💖 9. SỬA LỖI "any" Ở ĐÂY 💖
+                  // (Khai báo 'any' cho 'onEditorChange')
                   onEditorChange={(newContent: any, editor: any) => {
                     setContent(newContent);
                   }}
                   
                   init={{
-                    height: 500, // (Cho cao hơn)
+                    height: 500,
                     menubar: false,
                     plugins: [
                       'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 
@@ -534,7 +528,7 @@ function CreatePostForm() {
                 />
               </div>
             </div>
-            {/* 💖 HẾT KHỐI THAY THẾ 💖 */}
+            {/* HẾT KHỐI THAY THẾ */}
 
 
             {formError && (
