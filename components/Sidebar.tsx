@@ -121,22 +121,6 @@ export default async function Sidebar() {
       {/* (Ô Tìm kiếm) */}
       <Searchbar />
 
-      {/* (Box "Tra cứu Văn bằng") */}
-      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
-          <h3 className={styles.sidebarTitle}>
-              Tra cứu Văn bằng
-          </h3>
-        </Link>
-        <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
-          <img 
-            src="/tracuu.png" 
-            alt="Tra cứu Văn bằng Chứng chỉ" 
-            className={styles.bannerImage}
-          />
-        </Link>
-      </div>
-
       {/* (Box Hệ thống ôn tập) */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         <Link href="https://ontap.daotaothuyenvien.com/" target="_blank">
@@ -164,6 +148,22 @@ export default async function Sidebar() {
           <img 
             src="/thi-online.png" 
             alt="Hệ Thống Thi Online" 
+            className={styles.bannerImage}
+          />
+        </Link>
+      </div>
+
+      {/* (Box "Tra cứu Văn bằng") */}
+      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
+        <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
+          <h3 className={styles.sidebarTitle}>
+              Tra cứu Văn bằng
+          </h3>
+        </Link>
+        <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
+          <img 
+            src="/tracuu.png" 
+            alt="Tra cứu Văn bằng Chứng chỉ" 
             className={styles.bannerImage}
           />
         </Link>
