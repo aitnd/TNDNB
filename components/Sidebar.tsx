@@ -121,16 +121,16 @@ export default async function Sidebar() {
       {/* (Ô Tìm kiếm) */}
       <Searchbar />
 
-      {/* ✨ Box Hệ thống ôn tập (ĐÃ SỬA CẢ 2 LINK) ✨ */}
+      {/* ✨ Box Hệ thống ôn tập (ĐÃ SỬA LINK MỚI) ✨ */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
         {/* 💖 LINK 1 ĐÃ SỬA 💖 */}
-        <Link href="https://ontap-nu.vercel.app/" target="_blank">
+        <Link href="https://ontap.daotaothuyenvien.com/" target="_blank">
           <h3 className={styles.sidebarTitle}>
               Hệ thống ôn tập
           </h3>
         </Link>
         {/* 💖 LINK 2 (CỦA TẤM ẢNH) CŨNG ĐÃ SỬA LUÔN 💖 */}
-        <Link href="https://ontap-nu.vercel.app/" target="_blank">
+        <Link href="https://ontap.daotaothuyenvien.com/" target="_blank">
           <img 
             src="/on-tap.png" 
             alt="Hệ Thống Ôn tập" 
