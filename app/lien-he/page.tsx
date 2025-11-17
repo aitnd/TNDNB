@@ -7,7 +7,7 @@ import styles from './page.module.css'
 import Sidebar from '../../components/Sidebar' 
 
 // 💖 2. "TRIỆU HỒI" BƯU ĐIỆN FORMSPREE 💖
-// (Mình phải cài nó đã)
+// (Mình đã cài nó)
 import { useForm, ValidationError } from '@formspree/react';
 
 
@@ -15,7 +15,8 @@ export default function LienHePage() {
   
   // 💖 3. "TRA CHÌA KHÓA BƯU ĐIỆN" VÀO ĐÂY 💖
   // (Anh dán cái link "bưu điện" ở Chặng 1 vào đây nha)
-  const FORMSPREE_ID = 'xjkjlvpz'; // ❗️❗️❗️ THAY CÁI ĐUÔI NÀY ❗️❗️❗️
+  // (Em giữ nguyên cái ID anh gửi lần trước, nếu sai anh đổi lại nha)
+  const FORMSPREE_ID = 'mqkvyqza'; 
   
   const [state, handleSubmit] = useForm(FORMSPREE_ID);
 
@@ -120,11 +121,12 @@ export default function LienHePage() {
                     />
                   </div>
                   
-                  {/* (Nếu Formspree báo lỗi chung) */}
-                  {state.errors && !state.errors.fieldErrors && (
+                  {/* 💖 5. SỬA LỖI Ở ĐÂY NÈ ANH 💖 */}
+                  {/* (Em đã "vứt" cái !state.errors.fieldErrors đi rồi) */}
+                  {state.errors && state.errors.formErrors.length > 0 && (
                     <p className={`${styles.formStatus} ${styles.error}`}>
                       {/* (Tạm dịch) */}
-                      {state.errors.formErrors.length > 0 ? state.errors.formErrors[0].message : 'Lỗi khi gửi, vui lòng thử lại.'}
+                      {state.errors.formErrors[0].message || 'Lỗi khi gửi, vui lòng thử lại.'}
                     </p>
                   )}
 
