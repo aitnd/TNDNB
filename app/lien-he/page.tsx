@@ -115,7 +115,11 @@ export default function LienHePage() {
               </div>
               
               {/* (Nếu Formspree báo lỗi chung) */}
-              {state.errors && !state.errors.fieldErrors && (
+              
+              {/* 💖💖💖 SỬA DÒNG NÀY NÈ ANH 💖💖💖 */}
+              {state.errors && state.errors.formErrors.length > 0 && (
+              {/* (Cách cũ: {state.errors && !state.errors.fieldErrors && ( ) */}
+                
                 <p className={`${styles.formStatus} ${styles.error}`}>
                   {/* (Tạm dịch) */}
                   {state.errors.formErrors.length > 0 ? state.errors.formErrors[0].message : 'Lỗi khi gửi, vui lòng thử lại.'}
@@ -133,5 +137,5 @@ export default function LienHePage() {
         </div>
       </section>
     </>
-  ); // 💖💖💖 EM ĐÃ SỬA DẤU ")" THÀNH ";" Ở ĐÂY 💖💖💖
+  ); 
 }
