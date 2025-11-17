@@ -116,13 +116,10 @@ export default function LienHePage() {
               
               {/* (Nếu Formspree báo lỗi chung) */}
               
-              {/* 💖💖💖 SỬA DÒNG NÀY NÈ ANH 💖💖💖 */}
+              {/* 💖💖💖 ĐÃ SỬA LẠI CHÚ THÍCH & LOGIC 💖💖💖 */}
               {state.errors && state.errors.formErrors.length > 0 && (
-              {/* (Cách cũ: {state.errors && !state.errors.fieldErrors && ( ) */}
-                
                 <p className={`${styles.formStatus} ${styles.error}`}>
-                  {/* (Tạm dịch) */}
-                  {state.errors.formErrors.length > 0 ? state.errors.formErrors[0].message : 'Lỗi khi gửi, vui lòng thử lại.'}
+                  {state.errors.formErrors[0].message || 'Lỗi khi gửi, vui lòng thử lại.'}
                 </p>
               )}
 
