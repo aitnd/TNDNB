@@ -8,16 +8,19 @@ import { auth } from '../../utils/firebaseClient'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import Link from 'next/link'
 
+// 💖 1. "TRIỆU HỒI" CÁI 'MÀN HÌNH' MỚI 💖
+import AnalyticsWidget from '../../components/AnalyticsWidget' 
+
 // (Import CSS Module)
 import styles from './page.module.css' 
 
-// 1. TẠO "NỘI DUNG" TRANG DASHBOARD
+// (NỘI DUNG TRANG - Giữ nguyên)
 function QuanLyDashboard() {
   const { user } = useAuth() 
   const [resetMsg, setResetMsg] = useState('');
   const [resetError, setResetError] = useState('');
 
-  // 4.1: Chức năng Đổi mật khẩu
+  // (Hàm Đổi mật khẩu - Giữ nguyên)
   const handleChangePassword = async () => {
     if (!user || !user.email) {
       setResetError('Không tìm thấy email của bạn.');
@@ -33,24 +36,24 @@ function QuanLyDashboard() {
     }
   }
 
-  // (Hàm dịch tên vai trò - Nâng cấp)
+  // (Hàm dịch tên vai trò - Giữ nguyên)
   const dichTenVaiTro = (role: string) => {
     switch (role) {
       case 'hoc_vien': return 'Học viên'
       case 'giao_vien': return 'Giáo viên'
       case 'lanh_dao': return 'Lãnh đạo'
-      case 'quan_ly': return 'Quản lý' // (Role mới)
+      case 'quan_ly': return 'Quản lý' 
       case 'admin': return 'Quản trị viên (Admin)'
       default: return role
     }
   }
 
-  // (Kiểm tra quyền hạn)
+  // (Kiểm tra quyền hạn - Giữ nguyên)
   const coQuyenDangBai = user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role);
   const coQuyenThi = user && ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(user.role);
-  const coQuyenQLTaiKhoan = user && ['admin', 'lanh_dao', 'quan_ly'].includes(user.role); // (Đã sửa)
+  const coQuyenQLTaiKhoan = user && ['admin', 'lanh_dao', 'quan_ly'].includes(user.role); 
 
-  // Giao diện (Đã "mặc" CSS Module)
+  // (Giao diện - ĐÃ THÊM HỘP ANALYTICS)
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -59,14 +62,18 @@ function QuanLyDashboard() {
           Bảng điều khiển
         </h1>
 
-        {/* 4. Thông tin tài khoản (ĐÃ SỬA) */}
+        {/* 💖 2. ĐẶT CÁI "MÀN HÌNH" Ở ĐÂY 💖 */}
+        {/* (Chỉ "sếp" mới thấy cái này nha) */}
+        {user && (user.role === 'admin' || user.role === 'lanh_dao') && (
+          <AnalyticsWidget />
+        )}
+        
+        {/* Thông tin tài khoản (Giữ nguyên) */}
         {user && (
           <div className={styles.infoBox}>
             <h2 className={styles.sectionTitle}>Thông tin tài khoản</h2>
             <p><strong>Họ và tên:</strong> {user.fullName}</p>
             <p><strong>Email:</strong> {user.email}</p>
-            
-            {/* 💖 THÊM SĐT VÀ NGÀY SINH 💖 */}
             <p>
               <strong>Số điện thoại:</strong> 
               {user.phoneNumber ? user.phoneNumber : <span className={styles.subText}>Chưa cập nhật</span>}
@@ -75,10 +82,7 @@ function QuanLyDashboard() {
               <strong>Ngày sinh:</strong> 
               {user.birthDate ? user.birthDate : <span className={styles.subText}>Chưa cập nhật</span>}
             </p>
-            
             <p><strong>Vai trò:</strong> {dichTenVaiTro(user.role)}</p>
-
-            {/* 💖 CÁC NÚT MỚI NÈ ANH 💖 */}
             <div className={styles.infoBoxActions}>
               <Link href="/quan-ly/ho-so" className={styles.buttonPrimary}>
                 Chỉnh sửa thông tin
@@ -92,25 +96,20 @@ function QuanLyDashboard() {
           </div>
         )}
 
-        {/* 4.2 & 4.3: Các nút chức năng theo Role */}
+        {/* Các nút chức năng (Giữ nguyên) */}
         <div className={styles.actionGrid}>
-          {/* == HỌC VIÊN == */}
           {user?.role === 'hoc_vien' && (
             <Link href="/quan-ly/thi-truc-tuyen" className={styles.actionCard}>
               <h3>Thi Trực Tuyến</h3>
               <p>Vào phòng thi và làm bài thi.</p>
             </Link>
           )}
-
-          {/* == GIÁO VIÊN == */}
           {user?.role === 'giao_vien' && (
             <Link href="/quan-ly/thi-truc-tuyen" className={styles.actionCard}>
               <h3>Thi Trực Tuyến</h3>
               <p>Tạo phòng thi và quản lý thi.</p>
             </Link>
           )}
-
-          {/* == QUẢN LÝ, LÃNH ĐẠO, ADMIN == */}
           {coQuyenDangBai && (
             <Link href="/quan-ly/dang-bai" className={styles.actionCard}>
               <h3>Quản lý Bài viết</h3>
@@ -131,14 +130,12 @@ function QuanLyDashboard() {
           )}
         </div>
         
-        {/* 💖 (ĐÃ XÓA BOX "BẢO MẬT" CŨ Ở ĐÂY) 💖 */}
-
       </div>
     </div>
   )
 }
 
-// 2. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
+// (BỌC "LÍNH GÁC" - Giữ nguyên)
 export default function QuanLyPage() {
   return (
     <ProtectedRoute>

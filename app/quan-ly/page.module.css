@@ -1,153 +1,37 @@
-/* === Trang điểm cho Trang Dashboard Quản lý MỚI === */
+/* === 💖 CSS MỚI CHO HỘP ANALYTICS 💖 === */
 
-.container {
-    min-height: 80vh;
-    padding: 2rem;
-    background-color: #f3f4f6; /* Nền xám nhạt */
-}
-
-.wrapper {
-    max-width: 1100px; /* Rộng hơn */
-    margin: 0 auto;
-}
-
-.title {
-    font-size: 2.5rem; /* To hơn */
-    font-weight: 700;
-    color: #004a99;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid #e6f0ff;
-    padding-bottom: 1rem;
-}
-
-.sectionTitle {
+.analyticsTitle {
     font-size: 1.5rem;
     font-weight: 600;
     color: #004a99;
     margin-bottom: 1rem;
 }
 
-/* (Box thông tin chung) */
-.infoBox {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    padding: 1.5rem 2rem;
-    border-radius: 8px;
-    line-height: 1.7;
-    font-size: 1.1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.infoBox p {
-    margin: 0.5rem 0;
-}
-.infoBox strong {
-    color: #333;
-    min-width: 100px;
-    display: inline-block;
-}
-
-/* 💖 THÊM STYLE CHO CHỮ "CHƯA CẬP NHẬT" 💖 */
-.subText {
-    font-style: italic;
-    color: #888;
-    font-size: 0.95rem;
-}
-
-/* (Lưới các nút chức năng) */
-.actionGrid {
+.analyticsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr 1fr; /* (Chia 2 cột) */
     gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.actionCard {
-    display: block;
-    background-color: #ffffff;
-    border: 1px solid #004a99;
-    border-radius: 8px;
-    padding: 1.5rem 2rem;
-    text-decoration: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-}
-.actionCard:hover {
-    background-color: #e6f0ff;
-    box-shadow: 0 4px 10px rgba(0,74,153,0.15);
-    transform: translateY(-3px);
-    text-decoration: none;
-}
-.actionCard h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #004a99;
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-}
-.actionCard p {
-    font-size: 0.95rem;
-    color: #555;
-    margin: 0;
-}
-
-/* 💖 VÙNG CHỨA NÚT TRONG INFOBOX 💖 */
-.infoBoxActions {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #eee;
-    display: flex;
-    flex-wrap: wrap; /* (Cho nó xuống dòng nếu màn hình hẹp) */
-    gap: 1rem;
-}
-
-/* 💖 NÚT MỚI: CHỈNH SỬA (MÀU XANH) 💖 */
-.buttonPrimary {
-    background-color: #004a99;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
-    font-size: 1rem;
-}
-.buttonPrimary:hover {
-    background-color: #003366;
-    text-decoration: none;
-}
-
-/* 💖 NÚT ĐỔI MẬT KHẨU (MÀU ĐỎ) 💖 */
-.buttonDanger {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 1rem;
-}
-.buttonDanger:hover {
-    background-color: #c9302c;
-}
-
-
-/* (Thông báo) */
-.error,
-.success {
     margin-top: 1rem;
-    padding: 0.75rem;
-    border-radius: 5px;
+}
+
+.analyticsCard {
+    background-color: #e6f0ff;
+    border: 1px solid #b3d1ff;
+    border-radius: 8px;
+    padding: 1.5rem;
     text-align: center;
 }
-.error {
-    background-color: #fde8e8;
-    color: #9b2c2c;
+
+.analyticsValue {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #004a99;
+    line-height: 1.1;
 }
-.success {
-    background-color: #e6f7ec;
-    color: #155724;
+
+.analyticsLabel {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1e3a8a;
+    margin-top: 0.5rem;
 }
