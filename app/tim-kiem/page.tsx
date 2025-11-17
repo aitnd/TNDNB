@@ -7,7 +7,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../utils/supabaseClient'
 import Link from 'next/link'
-import Sidebar from '../../components/Sidebar'
+// 💖💖💖 XÓA: import Sidebar from '../../components/Sidebar' 💖💖💖
 import styles from './page.module.css' // (Dùng CSS của chính nó)
 
 // (Kiểu 'Post' y như trang Danh mục)
@@ -85,67 +85,57 @@ function SearchResults() {
   }, [query]); // (Tự chạy lại khi 'query' thay đổi)
 
 
-  // 💖 5. GIAO DIỆN TRANG KẾT QUẢ 💖
+  // 💖 5. GIAO DIỆN TRANG KẾT QUẢ (Đã xóa layout) 💖
   return (
-    <div className={styles.container}>
-      <div className={styles.layoutGrid}>
+    // 💖💖💖 XÓA <div container>, <div layoutGrid>, <main> ở đây 💖💖💖
+    <section className={styles.widgetBox}>
+      <h2 className={styles.widgetTitle}>
+        {query ? (
+          <>
+            Kết quả tìm kiếm cho: <span>"{query}"</span>
+          </>
+        ) : (
+          'Vui lòng nhập từ khóa để tìm kiếm'
+        )}
+      </h2>
+      
+      {loading && (
+        <p className={styles.emptyMessage}>Đang tìm...</p>
+      )}
 
-        {/* ===== CỘT TRÁI (KẾT QUẢ) ===== */}
-        <main className={styles.mainContent}>
-          <section className={styles.widgetBox}>
-            <h2 className={styles.widgetTitle}>
-              {query ? (
-                <>
-                  Kết quả tìm kiếm cho: <span>"{query}"</span>
-                </>
-              ) : (
-                'Vui lòng nhập từ khóa để tìm kiếm'
-              )}
-            </h2>
-            
-            {loading && (
-              <p className={styles.emptyMessage}>Đang tìm...</p>
-            )}
+      {!loading && results.length === 0 && (
+        <p className={styles.emptyMessage}>
+          Không tìm thấy bài viết hoặc tài liệu nào khớp.
+        </p>
+      )}
 
-            {!loading && results.length === 0 && (
-              <p className={styles.emptyMessage}>
-                Không tìm thấy bài viết hoặc tài liệu nào khớp.
-              </p>
-            )}
-
-            {!loading && results.length > 0 && (
-              <div className={styles.newsList}>
-                {results.map((post) => (
-                  <div key={post.id} className={styles.newsItemLarge}>
-                    <img
-                      src={post.thumbnail_url || 'https://via.placeholder.com/150x100'}
-                      alt={post.title}
-                    />
-                    <div>
-                      <h3>
-                        <Link href={`/bai-viet/${post.id}`}>
-                          {post.title}
-                        </Link>
-                      </h3>
-                      <p>
-                        {new Date(post.created_at).toLocaleDateString('vi-VN')}
-                      </p>
-                      <p className={styles.excerpt}>
-                        {taoTomTat(post.content, 120)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+      {!loading && results.length > 0 && (
+        <div className={styles.newsList}>
+          {results.map((post) => (
+            <div key={post.id} className={styles.newsItemLarge}>
+              <img
+                src={post.thumbnail_url || 'https://via.placeholder.com/150x100'}
+                alt={post.title}
+              />
+              <div>
+                <h3>
+                  <Link href={`/bai-viet/${post.id}`}>
+                    {post.title}
+                  </Link>
+                </h3>
+                <p>
+                  {new Date(post.created_at).toLocaleDateString('vi-VN')}
+                </p>
+                <p className={styles.excerpt}>
+                  {taoTomTat(post.content, 120)}
+                </p>
               </div>
-            )}
-          </section>
-        </main>
-
-        {/* ===== CỘT PHẢI (SIDEBAR) ===== */}
-        <Sidebar />
-
-      </div>
-    </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+    // 💖💖💖 XÓA </main> và <Sidebar> ở đây 💖💖💖
   )
 }
 
