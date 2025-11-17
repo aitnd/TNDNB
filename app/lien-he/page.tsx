@@ -39,6 +39,7 @@ export default function LienHePage() {
             </div>
           </section>
 
+
       {/* 💖 4. FORM LIÊN HỆ MỚI "XỊN" 💖 */}
       <section className={styles.widgetBox}>
         <h2 className={styles.widgetTitle}>Gửi tin nhắn cho chúng tôi</h2>
@@ -141,6 +142,6 @@ export default function LienHePage() {
         </div>
       </section>
     </>
-    // 💖💖💖 XÓA </main>, <Sidebar>, </div> ở đây 💖💖💖
+    // 💖💖💖 ĐÃ XÓA main, Sidebar, div 💖💖💖
   )
 }
