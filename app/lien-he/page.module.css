@@ -1,6 +1,6 @@
-/* === Bố cục 2 cột (LUÔN LUÔN 2 CỘT) === */
+/* === Bố cục 2 cột (ĐÃ SỬA LẠI CHO ĐÚNG) === */
 .layoutGrid {
-    display: grid; 
+    display: grid; /* (Giữ grid cho desktop) */
     grid-template-columns: 2fr 1fr; 
     gap: 2rem; 
     width: 90%;
@@ -12,12 +12,17 @@
     flex-direction: column;
     gap: 1.5rem; 
 }
-/* (Sidebar sẽ dùng style của component Sidebar) */
 
-/* (ĐÃ XÓA MEDIA QUERY @media (max-width: 768px) Ở ĐÂY) */
+/* (Trên điện thoại: 1 cột VÀ ĐẢO NGƯỢC) */
+@media (max-width: 768px) {
+    .layoutGrid {
+        display: flex; 
+        flex-direction: column-reverse; 
+        gap: 1.5rem; 
+    }
+}
 
-
-/* === Box chung (Kế thừa từ app/page.module.css) === */
+/* === Box chung (Giữ nguyên) === */
 .widgetBox {
     background-color: #ffffff;
     border: 1px solid #ddd;
@@ -33,7 +38,7 @@
     margin-bottom: 1.5rem;
 }
 
-/* === Style riêng cho Trang Liên Hệ === */
+/* === Style riêng cho Trang Liên Hệ (Giữ nguyên) === */
 .contactInfo {
     padding: 0 1.5rem 1.5rem 1.5rem;
     line-height: 1.8;
@@ -48,4 +53,78 @@
     margin-bottom: 0.5rem;
 }
 
-/* (ĐÃ XÓA CSS '.fbCommentsContainer' CŨ) */
+
+/* === 💖 CSS MỚI CHO FORM LIÊN HỆ 💖 === */
+.formContainer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box; /* (Quan trọng) */
+    font-family: inherit; /* (Cho nó giống font chữ web) */
+}
+
+.textarea {
+    min-height: 150px;
+    resize: vertical; /* (Cho phép kéo dọc) */
+}
+
+.button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #004a99;
+    color: white;
+    align-self: flex-start; /* (Cho nút nó co lại) */
+}
+.button:hover {
+    background-color: #003366;
+}
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.formStatus {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 5px;
+    text-align: center;
+}
+.success {
+    background-color: #e6f7ec;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.error {
+    background-color: #fde8e8;
+    color: #9b2c2c;
+    border: 1px solid #f9bdbb;
+}

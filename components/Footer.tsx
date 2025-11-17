@@ -21,11 +21,12 @@ export default function Footer() {
               TƯ VẤN VÀ GIÁO DỤC NINH BÌNH
             </Link>
             <p>
-              <strong>Địa chỉ:</strong> Đường Triệu Việt Vương - Phường Bích Đào - TP. Ninh Bình
+              <strong>Địa chỉ:</strong> Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình
             </p>
             <p><strong>MST:</strong> 2700960947</p>
-            <p><strong>SĐT:</strong> (Anh điền SĐT vào đây)</p>
-            <p><strong>Email:</strong> (Anh điền Email vào đây)</p>
+            <p><strong>SĐT:</strong> 022.96.282.969 </p>
+            <p><strong>Email:</strong> ninhbinheduco.jsc@gmail.com</p>
+	    <p><strong>      </strong> giaoducninhbinh@daotaothuyenvien.com</p>
           </div>
 
           {/* --- CỘT 2: LINK NHANH --- */}
@@ -69,7 +70,7 @@ export default function Footer() {
             <p>Theo dõi chúng tôi trên các nền tảng:</p>
             <div className={styles.socialLinks}>
               <a 
-                href="httpsDEPRECATED://(Anh dán link Fanpage FB vào đây)" 
+                href="https://www.facebook.com/profile.php?id=61583836799509" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 title="Facebook"
@@ -77,7 +78,7 @@ export default function Footer() {
                 <FaFacebookSquare />
               </a>
               <a 
-                href="httpsDEPRECATED://(Anh dán link Kênh YouTube vào đây)" 
+                href="https://www.youtube.com/@thuyenvienninhbinh" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 title="YouTube"

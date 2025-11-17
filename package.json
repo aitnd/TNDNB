@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@formspree/react": "^3.0.0",
     "@supabase/supabase-js": "^2.80.0",
     "@tinymce/tinymce-react": "^6.3.0",
     "firebase": "^12.5.0",
