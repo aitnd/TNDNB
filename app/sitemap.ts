@@ -1,7 +1,5 @@
 import { MetadataRoute } from 'next'
-
-// 💖💖💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖💖💖
-// (Đường dẫn đúng phải là '../' (đi ra) chứ không phải './' (ở trong))
+// (Đường dẫn đúng là '../' (đi ra) chứ không phải './' (ở trong))
 import { supabase } from '../utils/supabaseClient'; 
  
 // (Kiểu Post - mình "mượn" của trang chủ)
@@ -21,21 +19,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .order('created_at', { ascending: false });
  
   // (Biến các bài viết thành link "bản đồ")
-  const postUrls = (posts || []).map((post: Post) => ({
+  // 💖 SỬA LỖI 1: BÁO KIỂU "XỊN" CHO CÁI NÀY 💖
+  const postUrls: MetadataRoute.Sitemap = (posts || []).map((post: Post) => ({
     url: `${baseUrl}/bai-viet/${post.id}`,
     lastModified: new Date(post.created_at),
-    changeFrequency: 'weekly', // (Báo Google là tuần vào check 1 lần)
+    changeFrequency: 'weekly', // (Giờ nó hiểu 'weekly' là "xịn" rồi)
     priority: 0.8,
   }));
 
   // 2. Các trang (tĩnh) của mình
-  // (Mình liệt kê các trang chính ra đây)
-  const staticUrls = [
+  // 💖 SỬA LỖI 2: BÁO KIỂU "XỊN" CHO CÁI MẢNG NÀY NỮA 💖
+  const staticUrls: MetadataRoute.Sitemap = [
     { 
       url: baseUrl, // (Trang chủ)
       lastModified: new Date(), 
-      changeFrequency: 'daily', // (Trang chủ thì ngày nào cũng check)
-      priority: 1.0, // (Quan trọng nhất)
+      changeFrequency: 'daily', // (Giờ nó hiểu 'daily' là "xịn" rồi)
+      priority: 1.0, 
     },
     { url: `${baseUrl}/gioi-thieu`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/tu-van-nghe-nghiep`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
