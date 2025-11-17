@@ -144,7 +144,7 @@ export default async function Sidebar() {
               Hệ thống thi trực tuyến
           </h3>
         </Link>
-        <Link href="httpsDITNB://tndnb.vercel.app/quan-ly" target="_blank">
+        <Link href="https://www.daotaothuyenvien.com/quan-ly/thi-truc-tuyen" target="_blank">
           <img 
             src="/thi-online.png" 
             alt="Hệ Thống Thi Online" 
