@@ -116,10 +116,11 @@ export default function LienHePage() {
               
               {/* (Nếu Formspree báo lỗi chung) */}
               
-              {/* 💖💖💖 ĐÃ SỬA LẠI CHÚ THÍCH & LOGIC 💖💖💖 */}
-              {state.errors && state.errors.formErrors.length > 0 && (
+              {/* 💖💖💖 SỬA LOGIC Ở ĐÂY NÈ ANH 💖💖💖 */}
+              {/* (Mình dùng hàm getFormErrors() "xịn" của nó) */}
+              {state.errors && state.errors.getFormErrors().length > 0 && (
                 <p className={`${styles.formStatus} ${styles.error}`}>
-                  {state.errors.formErrors[0].message || 'Lỗi khi gửi, vui lòng thử lại.'}
+                  {state.errors.getFormErrors()[0].message || 'Lỗi khi gửi, vui lòng thử lại.'}
                 </p>
               )}
 
