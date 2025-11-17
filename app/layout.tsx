@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css' 
-// 💖 1. "TRIỆU HỒI" CÁI SCRIPT 💖
 import Script from 'next/script' 
 
 import { AuthProvider } from '../context/AuthContext' 
@@ -10,8 +9,10 @@ import Footer from '../components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
-// (Mã GA4 của anh nè)
-const GA_TRACKING_ID = 'G-8NETMXL60S'; // 💖 MÃ "BÁU VẬT" CỦA ANH 💖
+// (Mã GA4 của anh)
+const GA_TRACKING_ID = 'G-8NETMXL60S'; 
+// (Mã Ads mới của anh)
+const AW_TRACKING_ID = 'AW-16621935811'; // 💖 THÊM DÒNG NÀY 💖
 
 // ("Biển hiệu" SEO mình làm lúc nãy)
 export const metadata: Metadata = {
@@ -54,7 +55,7 @@ export default function RootLayout({
         
         {/* (Chỗ này anh dán Chatbot Script nè) */}
 
-        {/* 💖 2. GẮN "MÁY ĐẾM" GOOGLE VÀO ĐÂY 💖 */}
+        {/* 💖 GẮN "MÁY ĐẾM" (ĐÃ CẬP NHẬT) 💖 */}
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
@@ -67,9 +68,13 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
+              
               gtag('config', '${GA_TRACKING_ID}', {
                 page_path: window.location.pathname,
               });
+              
+              // 💖 THÊM DÒNG "CONFIG" CỦA ADS VÀO ĐÂY NÈ ANH 💖
+              gtag('config', '${AW_TRACKING_ID}');
             `,
           }}
         />

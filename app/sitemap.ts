@@ -1,39 +1,33 @@
 import { MetadataRoute } from 'next'
-// (Đường dẫn đúng là '../' (đi ra) chứ không phải './' (ở trong))
 import { supabase } from '../utils/supabaseClient'; 
  
-// (Kiểu Post - mình "mượn" của trang chủ)
 type Post = {
   id: string;
   created_at: string; 
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // (Anh thay 'tndnb.vercel.app' bằng tên miền "xịn" của mình nếu có nha)
   const baseUrl = 'https://tndnb.vercel.app';
  
-  // 1. Lấy các bài viết (động) từ Supabase
-  const { data: posts } = await supabase
+  // 1. Lấy các bài viết (động)
+  const postUrls: MetadataRoute.Sitemap = (await supabase
     .from('posts')
     .select('id, created_at')
-    .order('created_at', { ascending: false });
- 
-  // (Biến các bài viết thành link "bản đồ")
-  // 💖 SỬA LỖI 1: BÁO KIỂU "XỊN" CHO CÁI NÀY 💖
-  const postUrls: MetadataRoute.Sitemap = (posts || []).map((post: Post) => ({
+    .order('created_at', { ascending: false })
+    .then(result => result.data || [])
+  ).map((post: Post) => ({
     url: `${baseUrl}/bai-viet/${post.id}`,
     lastModified: new Date(post.created_at),
-    changeFrequency: 'weekly', // (Giờ nó hiểu 'weekly' là "xịn" rồi)
+    changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
-  // 2. Các trang (tĩnh) của mình
-  // 💖 SỬA LỖI 2: BÁO KIỂU "XỊN" CHO CÁI MẢNG NÀY NỮA 💖
+  // 2. Các trang (tĩnh)
   const staticUrls: MetadataRoute.Sitemap = [
     { 
-      url: baseUrl, // (Trang chủ)
+      url: baseUrl, 
       lastModified: new Date(), 
-      changeFrequency: 'daily', // (Giờ nó hiểu 'daily' là "xịn" rồi)
+      changeFrequency: 'daily', 
       priority: 1.0, 
     },
     { url: `${baseUrl}/gioi-thieu`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
@@ -43,9 +37,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/thu-vien`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.6 },
     { url: `${baseUrl}/tai-lieu`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.6 },
     { url: `${baseUrl}/lien-he`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    
+    // 💖 4. THÊM LINK MỚI VÀO ĐÂY NÈ ANH 💖
+    { url: `${baseUrl}/thitructuyen`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
   ];
 
-  // 3. Gộp 2 nhóm link này lại và gửi cho Google
+  // 3. Gộp 2 nhóm link này lại
   return [
     ...staticUrls,
     ...postUrls

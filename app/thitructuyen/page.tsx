@@ -2,20 +2,22 @@
 'use client'
 
 import React from 'react'
-import { useAuth } from '../../../context/AuthContext' // (Sửa đường dẫn 3 chấm)
-import ProtectedRoute from '../../../components/ProtectedRoute' // (Sửa đường dẫn 3 chấm)
-import { auth } from '../../../utils/firebaseClient' // (Sửa đường dẫn 3 chấm)
+// 💖 1. SỬA ĐƯỜNG DẪN "ĐI LÙI 2 BƯỚC" (../../) 💖
+import { useAuth } from '../../context/AuthContext' 
+import ProtectedRoute from '../../components/ProtectedRoute' 
+import { auth } from '../../utils/firebaseClient' 
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 
-import CreateRoomForm from '../../../components/CreateRoomForm' // (Sửa đường dẫn 3 chấm)
-import JoinRoomList from '../../../components/JoinRoomList' // (Sửa đường dẫn 3 chấm)
-import TeacherRoomList from '../../../components/TeacherRoomList' // (Sửa đường dẫn 3 chấm)
+// 💖 2. SỬA ĐƯỜNG DẪN "ĐI LÙI 2 BƯỚC" (../../) 💖
+import CreateRoomForm from '../../components/CreateRoomForm' 
+import JoinRoomList from '../../components/JoinRoomList' 
+import TeacherRoomList from '../../components/TeacherRoomList' 
 
-// (Import CSS Module)
+// (Import CSS Module - file này nó đi theo "nhà" nên giữ nguyên)
 import styles from './page.module.css' 
 
-// 2. TẠO "NỘI DUNG" TRANG
+// (TẠO "NỘI DUNG" TRANG - Giữ nguyên)
 function QuanLyDashboard() {
   const { user } = useAuth() 
   const router = useRouter()
@@ -27,7 +29,7 @@ function QuanLyDashboard() {
       case 'giao_vien': return 'Giáo viên'
       case 'lanh_dao': return 'Lãnh đạo'
       case 'admin': return 'Quản trị viên'
-      case 'quan_ly': return 'Quản lý' // (Thêm role mới)
+      case 'quan_ly': return 'Quản lý' 
       default: return role
     }
   }
@@ -97,7 +99,8 @@ function QuanLyDashboard() {
   )
 }
 
-// 3. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
+// ("BỌC" NỘI DUNG BẰNG "LÍNH GÁC" - Giữ nguyên)
+// (Bất kỳ ai (kể cả học viên) vào /thitructuyen đều phải đăng nhập)
 export default function QuanLyPage() {
   return (
     <ProtectedRoute>

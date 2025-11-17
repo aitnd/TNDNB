@@ -7,8 +7,6 @@ import ProtectedRoute from '../../components/ProtectedRoute'
 import { auth } from '../../utils/firebaseClient' 
 import { sendPasswordResetEmail } from 'firebase/auth'
 import Link from 'next/link'
-
-// 💖 1. "TRIỆU HỒI" CÁI 'MÀN HÌNH' MỚI 💖
 import AnalyticsWidget from '../../components/AnalyticsWidget' 
 
 // (Import CSS Module)
@@ -62,8 +60,7 @@ function QuanLyDashboard() {
           Bảng điều khiển
         </h1>
 
-        {/* 💖 2. ĐẶT CÁI "MÀN HÌNH" Ở ĐÂY 💖 */}
-        {/* (Chỉ "sếp" mới thấy cái này nha) */}
+        {/* (HỘP ANALYTICS - Giữ nguyên) */}
         {user && (user.role === 'admin' || user.role === 'lanh_dao') && (
           <AnalyticsWidget />
         )}
@@ -96,20 +93,25 @@ function QuanLyDashboard() {
           </div>
         )}
 
-        {/* Các nút chức năng (Giữ nguyên) */}
+        {/* 💖 3. SỬA LINK "THI TRỰC TUYẾN" Ở ĐÂY 💖 */}
         <div className={styles.actionGrid}>
+          {/* == HỌC VIÊN == */}
           {user?.role === 'hoc_vien' && (
-            <Link href="/quan-ly/thi-truc-tuyen" className={styles.actionCard}>
+            <Link href="/thitructuyen" className={styles.actionCard}>
               <h3>Thi Trực Tuyến</h3>
               <p>Vào phòng thi và làm bài thi.</p>
             </Link>
           )}
+
+          {/* == GIÁO VIÊN == */}
           {user?.role === 'giao_vien' && (
-            <Link href="/quan-ly/thi-truc-tuyen" className={styles.actionCard}>
+            <Link href="/thitructuyen" className={styles.actionCard}>
               <h3>Thi Trực Tuyến</h3>
               <p>Tạo phòng thi và quản lý thi.</p>
             </Link>
           )}
+
+          {/* == QUẢN LÝ, LÃNH ĐẠO, ADMIN == */}
           {coQuyenDangBai && (
             <Link href="/quan-ly/dang-bai" className={styles.actionCard}>
               <h3>Quản lý Bài viết</h3>
@@ -117,7 +119,7 @@ function QuanLyDashboard() {
             </Link>
           )}
           {coQuyenThi && (
-             <Link href="/quan-ly/thi-truc-tuyen" className={styles.actionCard}>
+             <Link href="/thitructuyen" className={styles.actionCard}>
               <h3>Thi Trực Tuyến</h3>
               <p>Tạo phòng thi và quản lý thi.</p>
             </Link>
