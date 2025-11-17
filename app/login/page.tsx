@@ -3,35 +3,47 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation' 
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
+// 💖 1. "TRIỆU HỒI" THÊM ĐỒ NGHỀ CỦA "BẢO VỆ" 💖
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider, // (Mời "Bảo vệ" Google)
+  signInWithPopup,    // (Cái "cửa" pop-up)
+  sendPasswordResetEmail // (Cái "bưu điện" gửi link reset)
+} from 'firebase/auth'
 import { auth, db } from '../../utils/firebaseClient' 
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+// 💖 2. "TRIỆU HỒI" THÊM ĐỒ NGHỀ CỦA "TỦ" 💖
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { useAuth } from '../../context/AuthContext' 
+// 💖 3. "TRIỆU HỒI" ICON GOOGLE 💖
+import { FaGoogle } from 'react-icons/fa'
 
 // "Triệu hồi" file CSS Module
 import styles from './page.module.css' 
 
 export default function LoginPage() {
-  // 💖 THÊM "NÃO" MỚI: phoneNumber, birthDate 💖
+  // (Não cũ - Giữ nguyên)
   const [fullName, setFullName] = useState('') 
   const [phoneNumber, setPhoneNumber] = useState('')
   const [birthDate, setBirthDate] = useState('')
-  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null) 
   const [loading, setLoading] = useState(false)
-  
   const [isRegistering, setIsRegistering] = useState(false) 
+  
+  // 💖 4. "NÃO" MỚI CHO CÁI LINK RESET MẬT KHẨU 💖
+  const [resetMsg, setResetMsg] = useState<string | null>(null);
 
   const router = useRouter() 
   const { user } = useAuth() 
 
-  // --- HÀM XỬ LÝ ĐĂNG NHẬP ---
+  // --- HÀM XỬ LÝ ĐĂNG NHẬP (Giữ nguyên) ---
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    setResetMsg(null) // (Tắt thông báo cũ)
     
     try {
       await signInWithEmailAndPassword(auth, email, password)
@@ -45,18 +57,18 @@ export default function LoginPage() {
     }
   }
 
-  // --- HÀM XỬ LÝ ĐĂNG KÝ (Nâng cấp) ---
+  // --- HÀM XỬ LÝ ĐĂNG KÝ (Giữ nguyên) ---
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
+    setResetMsg(null) // (Tắt thông báo cũ)
 
     if (password.length < 6) {
       setError('Mật khẩu phải có ít nhất 6 ký tự.')
       setLoading(false)
       return
     }
-    // (Kiểm tra Họ tên)
     if (fullName.length < 3) {
       setError('Vui lòng nhập Họ và Tên đầy đủ.')
       setLoading(false)
@@ -69,19 +81,18 @@ export default function LoginPage() {
       const user = userCredential.user
       console.log('Đăng ký Auth thành công:', user.uid)
 
-      // 2. 💖 TẠO "HỒ SƠ" NÂNG CẤP (LƯU SĐT, NĂM SINH) 💖
+      // 2. TẠO "HỒ SƠ"
       const userDocRef = doc(db, 'users', user.uid)
       await setDoc(userDocRef, {
         email: user.email,
         fullName: fullName, 
-        phoneNumber: phoneNumber, // 💖 LƯU SĐT 💖
-        birthDate: birthDate,     // 💖 LƯU NĂM SINH 💖
+        phoneNumber: phoneNumber, 
+        birthDate: birthDate,     
         role: 'hoc_vien', // Mặc định là 'hoc_vien'
         createdAt: serverTimestamp()
       })
       
       console.log('Tạo hồ sơ Firestore thành công. Đang đăng nhập...')
-      // 3. Đăng ký xong, "đẩy" về trang "Quản lý"
       router.push('/quan-ly')
 
     } catch (err: any) {
@@ -90,6 +101,73 @@ export default function LoginPage() {
       setLoading(false)
     }
   }
+
+  // 💖 5. HÀM MỚI: ĐĂNG NHẬP BẰNG GOOGLE 💖
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError(null);
+    setResetMsg(null);
+    
+    const provider = new GoogleAuthProvider(); // (Gọi "bảo vệ" Google)
+
+    try {
+      // (Mở cửa sổ pop-up)
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // (Kiểm tra xem "người quen" hay "người lạ")
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef); // (Phải "hỏi" cái "tủ")
+
+      if (!userDoc.exists()) {
+        // (Nếu là "người lạ" - lần đầu đăng nhập Google)
+        console.log('Phát hiện người dùng Google mới, đang tạo hồ sơ...');
+        await setDoc(userDocRef, {
+          email: user.email,
+          fullName: user.displayName || 'Người dùng Google', // (Lấy tên từ Google)
+          phoneNumber: user.phoneNumber || '', // (Lấy SĐT nếu có)
+          birthDate: '',     
+          role: 'hoc_vien', // Mặc định là 'hoc_vien'
+          createdAt: serverTimestamp()
+        });
+      } else {
+        // (Nếu là "người quen" thì thôi)
+        console.log('Người dùng Google đã có hồ sơ, đang đăng nhập...');
+      }
+
+      router.push('/quan-ly'); // (Cho vào!)
+
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Lỗi khi đăng nhập Google.');
+      setLoading(false);
+    }
+  }
+
+  // 💖 6. HÀM MỚI: GỬI LINK RESET MẬT KHẨU 💖
+  const handlePasswordReset = async () => {
+    setError(null);
+    setResetMsg(null);
+
+    // (Kiểm tra xem anh có gõ email vào ô chưa)
+    if (!email) {
+      setError('Vui lòng nhập email của bạn vào ô Email trước, rồi bấm lại "Quên mật khẩu".');
+      return;
+    }
+
+    setLoading(true);
+    console.log(`Đang gửi link reset tới ${email}...`);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setResetMsg('Gửi thành công! Anh kiểm tra email để lấy link reset mật khẩu nha.');
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Lỗi khi gửi email reset.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
 
   // (Logic "đá" về trang quản lý - Giữ nguyên)
   if (user && !loading) {
@@ -101,7 +179,7 @@ export default function LoginPage() {
     )
   }
 
-  // 2. GIAO DIỆN FORM (Đã cập nhật)
+  // 7. GIAO DIỆN FORM (Đã cập nhật)
   return (
     <div className={styles.container}>
       <div className={styles.formBox}>
@@ -111,7 +189,7 @@ export default function LoginPage() {
         
         <form onSubmit={isRegistering ? handleRegister : handleLogin}>
           
-          {/* 💖 ẨN/HIỆN CÁC Ô MỚI KHI ĐĂNG KÝ 💖 */}
+          {/* (Các ô đăng ký - Giữ nguyên) */}
           {isRegistering && (
             <>
               <div className={styles.formGroup}>
@@ -184,9 +262,9 @@ export default function LoginPage() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              required={!isRegistering} // (Khi đăng nhập mới cần, đăng ký thì gõ ở dưới)
               className={styles.input}
-              placeholder="•••••••• (Ít nhất 6 ký tự)"
+              placeholder={isRegistering ? "•••••••• (Ít nhất 6 ký tự)" : "••••••••"}
             />
           </div>
 
@@ -194,6 +272,13 @@ export default function LoginPage() {
           {error && (
             <div className={styles.error}>
               {error}
+            </div>
+          )}
+
+          {/* 💖 Thông báo Reset Mật khẩu (MỚI) 💖 */}
+          {resetMsg && (
+            <div className={styles.success}>
+              {resetMsg}
             </div>
           )}
 
@@ -227,6 +312,39 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
+
+        {/* 💖 8. KHU VỰC "HOẶC" VÀ NÚT GOOGLE (MỚI) 💖 */}
+        {!isRegistering && (
+          <>
+            <div className={styles.divider}>
+              <span>hoặc</span>
+            </div>
+
+            <div className={styles.buttonContainer}>
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+                className={`${styles.button} ${styles.buttonGoogle}`}
+              >
+                <FaGoogle /> {/* Icon nè */}
+                Đăng nhập với Google
+              </button>
+            </div>
+
+            <div className={styles.resetLink}>
+              <button
+                type="button"
+                onClick={handlePasswordReset}
+                disabled={loading}
+                className={styles.linkButton}
+              >
+                Quên mật khẩu?
+              </button>
+            </div>
+          </>
+        )}
+        
       </div>
     </div>
   )
