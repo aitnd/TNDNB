@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css' // (CSS "Sạch")
-
-// 💖 (ĐÃ XÓA DÒNG 'suneditor/dist/css/suneditor.min.css' Ở ĐÂY) 💖
+import './globals.css' 
+// 💖 1. "TRIỆU HỒI" CÁI SCRIPT 💖
+import Script from 'next/script' 
 
 import { AuthProvider } from '../context/AuthContext' 
 import Navbar from '../components/Navbar' 
@@ -10,10 +10,27 @@ import Footer from '../components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
+// (Mã GA4 của anh nè)
+const GA_TRACKING_ID = 'G-8NETMXL60S'; // 💖 MÃ "BÁU VẬT" CỦA ANH 💖
+
+// ("Biển hiệu" SEO mình làm lúc nãy)
 export const metadata: Metadata = {
-  title: 'Hệ thống Đào tạo Thuyền viên',
-  description: 'Trường CĐ TV và GD Ninh Bình',
-}
+  title: {
+    template: '%s | TĐNB', 
+    default: 'Trang chủ | Công ty CP Tư vấn và Giáo dục Ninh Bình', 
+  },
+  description: 'Chuyên đào tạo, bồi dưỡng cấp GCNKNCM và Chứng chỉ chuyên môn Thuyền, Máy trưởng hạng Nhất, Nhì, Ba và các chứng chỉ thủy thủ, thợ máy...',
+  openGraph: {
+    title: 'Công ty CP Tư vấn và Giáo dục Ninh Bình',
+    description: 'Đào tạo thuyền, máy trưởng và chứng chỉ chuyên môn PTTNĐ.',
+    images: ['/trang-chu-banner.jpg'], 
+    url: 'https://tndnb.vercel.app', // (Địa chỉ web "xịn" của mình)
+    siteName: 'TĐNB Ninh Bình',
+    locale: 'vi_VN',
+    type: 'website',
+  },
+};
+
 
 export default function RootLayout({
   children,
@@ -36,6 +53,27 @@ export default function RootLayout({
         </AuthProvider>
         
         {/* (Chỗ này anh dán Chatbot Script nè) */}
+
+        {/* 💖 2. GẮN "MÁY ĐẾM" GOOGLE VÀO ĐÂY 💖 */}
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+        />
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_TRACKING_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+        {/* 💖 HẾT PHẦN "MÁY ĐẾM" 💖 */}
         
       </body>
     </html>
