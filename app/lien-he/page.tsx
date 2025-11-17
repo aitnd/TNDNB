@@ -12,6 +12,7 @@ import { useForm, ValidationError } from '@formspree/react';
 
 export default function LienHePage() {
   
+ // 💖 3. "TRA CHÌA KHÓA BƯU ĐIỆN" VÀO ĐÂY 💖
   // (Anh dán cái link "bưu điện" ở Chặng 1 vào đây nha)
   // (Em giữ nguyên cái ID anh gửi lần trước, nếu sai anh đổi lại nha)
   const FORMSPREE_ID = 'xjkjlvpz'; 
