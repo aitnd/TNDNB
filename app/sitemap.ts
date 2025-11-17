@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
-// (Mình gọi "kho" Supabase từ máy chủ)
-// (Lưu ý: đường dẫn là './utils/supabaseClient' vì sitemap.ts nằm ở app/)
-import { supabase } from './utils/supabaseClient'; 
+
+// 💖💖💖 SỬA LỖI Ở ĐÂY NÈ ANH 💖💖💖
+// (Đường dẫn đúng phải là '../' (đi ra) chứ không phải './' (ở trong))
+import { supabase } from '../utils/supabaseClient'; 
  
 // (Kiểu Post - mình "mượn" của trang chủ)
 type Post = {
