@@ -1,13 +1,11 @@
 // 💖 1. ĐÁNH DẤU CLIENT COMPONENT 💖
-// (Vì mình cần đọc cái "đuôi" ?q=... (useSearchParams)
-//  và cần "não" (useState, useEffect) để tải kết quả)
 'use client'
 
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../utils/supabaseClient'
 import Link from 'next/link'
-// 💖💖💖 XÓA: import Sidebar from '../../components/Sidebar' 💖💖💖
+// 💖💖💖 ĐÃ XÓA Sidebar ở đây 💖💖💖
 import styles from './page.module.css' // (Dùng CSS của chính nó)
 
 // (Kiểu 'Post' y như trang Danh mục)
@@ -57,10 +55,6 @@ function SearchResults() {
       
       try {
         // (Đây là "câu thần chú" tìm kiếm Full-text-search)
-        
-        // 💖 SỬA LỖI Ở DÒNG ".or(...)" NÀY NÈ ANH 💖
-        // (Em thêm `attachments::text.ilike.%${query}%`)
-        // (Nghĩa là: "Biến cái túi 'attachments' thành văn bản, rồi tìm trong đó")
         const { data, error } = await supabase
           .from('posts')
           .select('*')
@@ -87,7 +81,6 @@ function SearchResults() {
 
   // 💖 5. GIAO DIỆN TRANG KẾT QUẢ (Đã xóa layout) 💖
   return (
-    // 💖💖💖 XÓA <div container>, <div layoutGrid>, <main> ở đây 💖💖💖
     <section className={styles.widgetBox}>
       <h2 className={styles.widgetTitle}>
         {query ? (
@@ -135,8 +128,7 @@ function SearchResults() {
         </div>
       )}
     </section>
-    // 💖💖💖 XÓA </main> và <Sidebar> ở đây 💖💖💖
-  )
+  ); // 💖💖💖 EM ĐÃ SỬA DẤU ")" THÀNH ";" Ở ĐÂY 💖💖💖
 }
 
 // 💖 6. BỌC BẰNG "SUSPENSE" (Bắt buộc) 💖
@@ -145,5 +137,5 @@ export default function SearchPage() {
     <Suspense fallback={<div className={styles.emptyMessage}>Đang tải trang tìm kiếm...</div>}>
       <SearchResults />
     </Suspense>
-  )
+  ); // 💖💖💖 VÀ SỬA CẢ Ở ĐÂY NỮA 💖💖💖
 }

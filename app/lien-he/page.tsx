@@ -2,43 +2,34 @@
 'use client'
 
 import React, { useState } from 'react' // (Thêm "não" useState)
-// (Em xóa Link vì mình không dùng ở đây)
 import styles from './page.module.css' 
-// 💖💖💖 XÓA DÒNG NÀY: import Sidebar from '../../components/Sidebar' 💖💖💖
+// 💖💖💖 ĐÃ XÓA Sidebar ở đây 💖💖💖
 
 // 💖 2. "TRIỆU HỒI" BƯU ĐIỆN FORMSPREE 💖
-// (Mình phải cài nó đã)
 import { useForm, ValidationError } from '@formspree/react';
 
 
 export default function LienHePage() {
   
   // 💖 3. "TRA CHÌA KHÓA BƯU ĐIỆN" VÀO ĐÂY 💖
-  // (Anh dán cái link "bưu điện" ở Chặng 1 vào đây nha)
-  // (Em giữ nguyên cái ID anh gửi lần trước, nếu sai anh đổi lại nha)
-  const FORMSPREE_ID = 'xjkjlvpz'; 
+  const FORMSPREE_ID = 'xjkjlvpz'; // ❗️❗️❗️ ANH NHỚ THAY CÁI ĐUÔI NÀY ❗️❗️❗️
   
   const [state, handleSubmit] = useForm(FORMSPREE_ID);
 
   return (
     <>
-      <div className={styles.layoutGrid}>
-        {/* ===== CỘT TRÁI (NỘI DUNG LIÊN HỆ) ===== */}
-        <main className={styles.mainContent}>
-          
-          {/* Box Thông tin Liên hệ (Giữ nguyên) */}
-          <section className={styles.widgetBox}>
-            <h2 className={styles.widgetTitle}>Liên hệ</h2>
-            <div className={styles.contactInfo}>
-              <h3>CÔNG TY CỔ PHẦN TƯ VẤN VÀ GIÁO DỤC NINH BÌNH</h3>
-              <p><strong>Địa chỉ:</strong> Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình </p>
-              <p><strong>MST:</strong> 2700960947</p>
-              <p><strong>Điện thoại:</strong> (Anh điền SĐT vào đây) 022.96.282.969 </p>
-              <p><strong>Email:</strong> ninhbinheduco.jsc@gmail.com </p>
-	      <p><strong>      </strong> giaoducninhbinh@daotaothuyenvien.com </p>
-            </div>
-          </section>
-
+      {/* Box Thông tin Liên hệ (Giữ nguyên) */}
+      <section className={styles.widgetBox}>
+        <h2 className={styles.widgetTitle}>Liên hệ</h2>
+        <div className={styles.contactInfo}>
+          <h3>CÔNG TY CỔ PHẦN TƯ VẤN VÀ GIÁO DỤC NINH BÌNH</h3>
+          <p><strong>Địa chỉ:</strong> Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình </p>
+          <p><strong>MST:</strong> 2700960947</p>
+          <p><strong>Điện thoại:</strong> 022.96.282.969 </p>
+          <p><strong>Email:</strong> ninhbinheduco.jsc@gmail.com </p>
+	        <p><strong>      </strong> giaoducninhbinh@daotaothuyenvien.com </p>
+        </div>
+      </section>
 
       {/* 💖 4. FORM LIÊN HỆ MỚI "XỊN" 💖 */}
       <section className={styles.widgetBox}>
@@ -142,6 +133,5 @@ export default function LienHePage() {
         </div>
       </section>
     </>
-    // 💖💖💖 ĐÃ XÓA main, Sidebar, div 💖💖💖
-  )
+  ); // 💖💖💖 EM ĐÃ SỬA DẤU ")" THÀNH ";" Ở ĐÂY 💖💖💖
 }
