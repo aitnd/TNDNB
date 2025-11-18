@@ -1,32 +1,177 @@
-/* ... (Giữ nguyên code cũ ở trên) ... */
+/* === 1. CẤU TRÚC CHUNG === */
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
 
-/* === 💖 SỬA LỖI TIN TỨC "VỠ" TRÊN MOBILE 💖 === */
-@media (max-width: 768px) {
-    /* 1. Cho từng bài tin tức xếp dọc (Ảnh trên - Chữ dưới) */
-    .newsItemLarge {
-        flex-direction: column; /* Xếp dọc */
-        align-items: flex-start; /* Căn trái */
+.featuredSection {
+    margin-bottom: 3rem;
+}
+
+/* === 💖 2. BỐ CỤC GRID (DÀNH CHO PC) 💖 === */
+/* (Mặc định là PC: Chia 2 cột, Trái to - Phải nhỏ) */
+.layoutGrid {
+    display: grid;
+    grid-template-columns: 1fr 340px; /* Cột trái tự do - Cột phải 340px */
+    gap: 2.5rem;
+    align-items: start;
+}
+
+/* (Tiêu đề mục) */
+.sectionTitle {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #004a99;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+    position: relative;
+}
+.sectionTitle::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: #004a99;
+}
+
+/* === 3. TIN TỨC (STYLE CHUNG) === */
+.newsList {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.newsItemLarge {
+    display: flex;
+    gap: 1.5rem;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: box-shadow 0.3s ease;
+}
+.newsItemLarge:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.imageWrapper {
+    flex-shrink: 0;
+    width: 280px; /* (Kích thước ảnh chuẩn trên PC) */
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.postThumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.newsItemLarge:hover .postThumb {
+    transform: scale(1.05);
+}
+
+.postContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.postTitle {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+    text-decoration: none;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+.postTitle:hover {
+    color: #004a99;
+}
+
+.postDate {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 0.8rem;
+}
+
+.postExcerpt {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+.readMore {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #004a99;
+    text-decoration: none;
+}
+.readMore:hover {
+    text-decoration: underline;
+}
+
+
+/* === 💖 4. RESPONSIVE (CHỈNH SỬA CHO ĐIỆN THOẠI) 💖 === */
+
+/* (Màn hình nhỏ hơn 992px - Tablet & Mobile) */
+@media (max-width: 992px) {
+    
+    /* Chuyển từ Grid sang Flex cột dọc */
+    .layoutGrid {
+        display: flex;
+        flex-direction: column;
     }
 
-    /* 2. Chỉnh lại khung ảnh cho vừa vặn */
-    .imageWrapper {
-        width: 100%; /* Chiếm hết chiều ngang */
-        height: 200px; /* Chiều cao cố định cho đẹp đều */
-        margin-bottom: 1rem; /* Cách phần chữ ra xíu */
-        margin-right: 0; /* Bỏ lề phải cũ */
-    }
-
-    /* 3. Chỉnh ảnh bên trong cho không bị méo */
-    .postThumb {
+    /* Đảo thứ tự: Nội dung chính lên đầu (1) */
+    .mainContent {
+        order: 1;
         width: 100%;
-        height: 100%;
-        object-fit: cover; /* Cắt ảnh gọn gàng, không bị méo */
-        border-radius: 8px; /* Bo góc xíu cho mềm */
     }
 
-    /* 4. Tiêu đề bài viết nhỏ lại xíu cho cân đối */
+    /* Sidebar xuống dưới (2) */
+    .sidebarWrapper {
+        order: 2;
+        width: 100%;
+        margin-top: 3rem;
+    }
+
+    /* Ảnh tin tức nhỏ lại chút cho vừa tablet */
+    .imageWrapper {
+        width: 220px;
+        height: 150px;
+    }
+}
+
+/* (Màn hình nhỏ hơn 768px - Điện thoại) */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    /* Tin tức: Ảnh trên - Chữ dưới */
+    .newsItemLarge {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* Ảnh full chiều ngang */
+    .imageWrapper {
+        width: 100%;
+        height: 200px;
+        margin-bottom: 1rem;
+    }
+
     .postTitle {
-        font-size: 1.1rem;
-        line-height: 1.4;
+        font-size: 1.25rem;
     }
 }
