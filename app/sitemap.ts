@@ -7,7 +7,7 @@ type Post = {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://tndnb.vercel.app';
+  const baseUrl = 'https://daotaothuyenvien.com';
  
   // 1. Lấy các bài viết (động)
   const postUrls: MetadataRoute.Sitemap = (await supabase
