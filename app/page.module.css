@@ -3,14 +3,14 @@
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    overflow-x: hidden; /* Chống tràn ngang toàn trang */
 }
 
 .featuredSection {
     margin-bottom: 3rem;
 }
 
-/* === 💖 2. BỐ CỤC GRID (DÀNH CHO PC) 💖 === */
-/* (Mặc định là PC: Chia 2 cột, Trái to - Phải nhỏ) */
+/* === 2. BỐ CỤC GRID (DÀNH CHO PC) === */
 .layoutGrid {
     display: grid;
     grid-template-columns: 1fr 340px; /* Cột trái tự do - Cột phải 340px */
@@ -38,7 +38,7 @@
     background-color: #004a99;
 }
 
-/* === 3. TIN TỨC (STYLE CHUNG) === */
+/* === 3. TIN TỨC (STYLE CHUNG CHO PC) === */
 .newsList {
     display: flex;
     flex-direction: column;
@@ -53,14 +53,15 @@
     border-radius: 8px;
     padding: 1.5rem;
     transition: box-shadow 0.3s ease;
+    overflow: hidden; /* Chống tràn nội dung ra khỏi thẻ */
 }
 .newsItemLarge:hover {
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
 .imageWrapper {
-    flex-shrink: 0;
-    width: 280px; /* (Kích thước ảnh chuẩn trên PC) */
+    flex-shrink: 0; /* Ảnh không được co lại */
+    width: 280px; 
     height: 180px;
     position: relative;
     overflow: hidden;
@@ -77,10 +78,13 @@
     transform: scale(1.05);
 }
 
+/* 💖 PHẦN CHỮ (QUAN TRỌNG CHO FLEXBOX) 💖 */
 .postContent {
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    min-width: 0; /* 💖 Cực kỳ quan trọng để text wrap trong Flexbox 💖 */
 }
 
 .postTitle {
@@ -88,9 +92,15 @@
     font-weight: 700;
     color: #333;
     text-decoration: none;
-    line-height: 1.3;
+    line-height: 1.4;
     margin-bottom: 0.5rem;
     display: block;
+    /* Cắt dòng thông minh 2 dòng */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word; /* Ngắt từ dài nếu cần */
 }
 .postTitle:hover {
     color: #004a99;
@@ -100,6 +110,11 @@
     font-size: 0.9rem;
     color: #888;
     margin-bottom: 0.8rem;
+    /* Căn chỉnh icon và ngày tháng */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    line-height: 1;
 }
 
 .postExcerpt {
@@ -107,7 +122,12 @@
     color: #555;
     line-height: 1.6;
     margin-bottom: 1rem;
-    flex-grow: 1;
+    /* Cắt dòng thông minh 3 dòng */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
 }
 
 .readMore {
@@ -115,18 +135,18 @@
     font-weight: 600;
     color: #004a99;
     text-decoration: none;
+    margin-top: auto; /* Đẩy xuống đáy */
+    display: inline-block;
 }
 .readMore:hover {
     text-decoration: underline;
 }
 
 
-/* === 💖 4. RESPONSIVE (CHỈNH SỬA CHO ĐIỆN THOẠI) 💖 === */
-
-/* (Màn hình nhỏ hơn 992px - Tablet & Mobile) */
+/* === 4. RESPONSIVE (MÁY TÍNH BẢNG & MÀN HÌNH NHỎ) === */
 @media (max-width: 992px) {
     
-    /* Chuyển từ Grid sang Flex cột dọc */
+    /* Chuyển Grid sang Flex cột dọc */
     .layoutGrid {
         display: flex;
         flex-direction: column;
@@ -152,26 +172,76 @@
     }
 }
 
-/* (Màn hình nhỏ hơn 768px - Điện thoại) */
+/* === 5. RESPONSIVE (ĐIỆN THOẠI - MOBILE) - ĐÃ FIX LỖI HIỂN THỊ === */
 @media (max-width: 768px) {
-    .container {
-        padding: 1rem;
+    .container { 
+        padding: 0.75rem; 
     }
-
-    /* Tin tức: Ảnh trên - Chữ dưới */
-    .newsItemLarge {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    /* Ảnh full chiều ngang */
-    .imageWrapper {
-        width: 100%;
-        height: 200px;
+    
+    .sectionTitle {
+        font-size: 1.4rem;
         margin-bottom: 1rem;
     }
 
-    .postTitle {
-        font-size: 1.25rem;
+    /* Tin tức: Dùng Block để an toàn tuyệt đối */
+    .newsItemLarge { 
+        display: block; 
+        padding: 1rem; 
+        height: auto;
+        background: #fff; /* Đảm bảo nền trắng */
+    }
+    
+    /* Ảnh */
+    .imageWrapper { 
+        width: 100%; 
+        height: 180px; 
+        margin-bottom: 0.8rem; 
+        margin-right: 0;
+        border-radius: 6px; /* Bo góc nhẹ */
+    }
+    
+    /* Phần chữ */
+    .postContent {
+        display: block; 
+        width: 100%;
+    }
+    
+    .postTitle { 
+        font-size: 1.2rem;
+        line-height: 1.4; /* Giãn dòng ra chút cho dễ đọc */
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .postDate {
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        /* 💖 Căn icon lên trên cùng nếu chữ bị xuống dòng 💖 */
+        align-items: flex-start; 
+        line-height: 1.2;
+    }
+    .postDate i {
+        margin-top: 2px; /* Chỉnh icon xuống xíu cho khớp chữ */
+    }
+    
+    .postExcerpt {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1rem; /* Cách nút xem thêm ra xa chút */
+        color: #666;
+        /* Vẫn giữ cắt dòng 3 dòng */
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    /* 💖 Nút Xem thêm: Cho ra dòng riêng 💖 */
+    .readMore {
+        display: block; /* Ra dòng riêng */
+        margin-top: 0.5rem;
+        text-align: right; /* Căn phải cho đẹp (hoặc left tuỳ anh) */
+        padding: 0.5rem 0; /* Tăng vùng bấm */
+        font-size: 0.9rem;
     }
 }

@@ -1,176 +1,104 @@
-/* === Trang điểm cho Sidebar Dùng chung === */
-
+/* === KHUNG SIDEBAR === */
 .sidebar {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* (Khoảng cách giữa các widget) */
+    gap: 2rem;
+    width: 100%; /* Đảm bảo sidebar chiếm đủ chỗ */
 }
 
-.widgetBox {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.sidebarWidget {
-    padding: 1.5rem;
-}
-
-/* 💖 CSS CHO BANNER BOX 💖 */
-.bannerBox {
-    padding: 1.5rem; 
-    border-radius: 8px;
-    overflow: hidden; 
-}
-/* (Nếu banner KHÔNG có tiêu đề, thì xóa padding) */
-.bannerBox:has(> a > img):not(:has(> h3)) {
-    padding: 0;
-}
-.bannerImage {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 5px; /* (Bo góc ảnh) */
-    border: 1px solid #eee;
-    margin-top: 1rem; /* (Cách tiêu đề ra) */
-}
-/* (Nếu banner KHÔNG có tiêu đề, thì ảnh không cần cách) */
-.bannerBox:has(> a > img):not(:has(> h3)) .bannerImage {
-    margin-top: 0;
-    border-radius: 8px 8px 0 0;
-    border: none;
-}
-
-
-/* (CSS CĂN CHỈNH TIÊU ĐỀ) */
+/* (Tiêu đề Widget) */
 .sidebarTitle {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    color: #004a99;
-    border-bottom: 2px solid #e6f0ff;
-    padding-bottom: 0.75rem;
+    color: #333;
+    padding-bottom: 0.8rem;
     margin-bottom: 1rem;
-    text-decoration: none; /* (Chống gạch chân) */
-}
-/* (Bảo <a> chứa .sidebarTitle cũng phải "trang điểm" y hệt) */
-a > .sidebarTitle {
-    display: block; /* (Rất quan trọng) */
-    color: #004a99;
-    border-bottom: 2px solid #e6f0ff; /* (Thêm lại) */
-    padding-bottom: 0.75rem; /* (Thêm lại) */
-    margin-bottom: 1rem; /* (Thêm lại) */
-    transition: color 0.3s;
-}
-a:hover > .sidebarTitle {
-    color: #003366; /* (Đổi màu khi hover) */
-    text-decoration: none; /* (Chống gạch chân khi hover) */
+    border-bottom: 2px solid #004a99;
+    text-transform: uppercase;
+    line-height: 1.4;
 }
 
-
-/* === 💖 CSS MỚI CHO Ô TÌM KIẾM 💖 === */
-.searchBox {
-    padding: 1rem; /* (Cho nó ít padding hơn các box khác) */
-}
-.searchBox form {
-    display: flex;
-    width: 100%;
-}
-.searchInput {
-    flex: 1; /* (Cho nó chiếm hết chiều ngang) */
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px 0 0 5px; /* (Bo góc trái) */
-    font-size: 1rem;
-    box-sizing: border-box;
-    border-right: none; /* (Bỏ viền phải) */
-}
-.searchInput:focus {
-    outline: 2px solid #004a99;
-    z-index: 10;
-}
-.searchButton {
-    background-color: #004a99;
-    color: white;
-    padding: 0 1rem; /* (Cho nó hẹp lại) */
-    border: none;
-    border-radius: 0 5px 5px 0; /* (Bo góc phải) */
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-.searchButton:hover {
-    background-color: #003366;
+/* (Hộp Widget chung) */
+.widgetBox {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    overflow: hidden; /* Chống tràn khung */
 }
 
-
-/* (Box Bảng tin (Link list - Giữ nguyên)) */
+/* === 💖 LIST LINK (Đã sửa lỗi dính chữ) 💖 === */
 .linkList {
     list-style: none;
-    padding-left: 0;
-    margin-top: 0; 
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-.linkList a {
-    display: flex;
-    align-items: flex-start;
-    color: #333;
-    text-decoration: none;
-}
-.linkList a:hover {
-    color: #004a99;
-    text-decoration: underline;
-}
-.linkList a i {
-    color: #004a99;
-    margin-right: 0.5rem;
-    margin-top: 5px;
-    font-size: 0.8rem;
+    padding: 0;
+    margin: 0;
 }
 
-/* (BOX "THƯ VIỆN") */
+.linkList li {
+    margin-bottom: 0.8rem;
+    border-bottom: 1px dashed #eee; 
+    padding-bottom: 0.8rem;
+}
+.linkList li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.linkList a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.2s;
+    display: flex; 
+    align-items: flex-start; /* 💖 Căn icon lên đầu dòng (nếu chữ xuống dòng) */
+    gap: 0.75rem; /* Tăng khoảng cách icon-chữ */
+    line-height: 1.5;
+}
+
+.linkList a:hover {
+    color: #004a99;
+}
+
+/* 💖 Icon trong list (QUAN TRỌNG: Không cho co lại) 💖 */
+.linkList i {
+    color: #004a99;
+    font-size: 1rem;
+    min-width: 20px; /* Chiều rộng cố định */
+    text-align: center;
+    margin-top: 3px; /* Căn chỉnh cho khớp với dòng chữ đầu tiên */
+    flex-shrink: 0; /* 💖 CHỐNG MÉO ICON TUYỆT ĐỐI 💖 */
+}
+
+/* === CÁC PHẦN KHÁC === */
 .mediaPreviewGrid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* (Chia 3 cột) */
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
     margin-bottom: 1rem;
 }
-.mediaPreviewItem {
-    display: block;
-    aspect-ratio: 1 / 1; /* (Ảnh vuông) */
-    overflow: hidden;
-    border-radius: 4px;
-    border: 1px solid #eee;
-}
 .mediaPreviewItem img {
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* (Ảnh tự zoom cho vừa khung) */
-    display: block;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #eee;
 }
 .viewAllButton {
     display: block;
     text-align: right;
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 0.9rem;
     color: #004a99;
     text-decoration: none;
-    margin-top: 1rem;
-    transition: color 0.3s;
+    font-weight: 600;
+    margin-top: 0.5rem;
 }
 .viewAllButton:hover {
-    color: #003366;
     text-decoration: underline;
 }
-.viewAllButton i {
-    margin-left: 0.5rem;
-}
 .emptyMessage {
-    font-size: 1.1rem;
-    color: #555;
+    color: #888;
+    font-style: italic;
     text-align: center;
-    padding: 3rem 0;
 }

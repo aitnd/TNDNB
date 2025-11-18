@@ -2,27 +2,40 @@
 import React from 'react'
 import { supabase } from '../utils/supabaseClient'
 import Link from 'next/link'
-import Sidebar from '../components/Sidebar' // (Cột phải)
-import FeaturedSlider from '../components/FeaturedSlider' // (Slider tin nổi bật)
+import Sidebar from '../components/Sidebar' 
+import FeaturedSlider from '../components/FeaturedSlider' 
 import styles from './page.module.css' 
 
 // (Hàm tạo tóm tắt - Giữ nguyên)
 function taoTomTat(htmlContent: string, length: number = 150): string {
   if (!htmlContent) return '';
+  
+  // 1. Xóa thẻ HTML và khoảng trắng thừa
   let text = htmlContent.replace(/<[^>]+>/g, '');
   text = text.replace(/&nbsp;/g, ' ');
   text = text.trim(); 
+  
+  // 2. Nếu ngắn hơn giới hạn thì trả về luôn
   if (text.length <= length) return text;
-  return text.substring(0, length) + '...';
+  
+  // 3. CẮT THÔNG MINH
+  const subText = text.substring(0, length);
+  const lastSpaceIndex = subText.lastIndexOf(' ');
+  
+  if (lastSpaceIndex > 0) {
+    return subText.substring(0, lastSpaceIndex) + '...';
+  }
+  
+  return subText + '...';
 }
 
-// (Hàm lấy bài viết mới nhất)
+// (Hàm lấy bài viết mới nhất - Giữ nguyên)
 async function getLatestPosts() {
   const { data, error } = await supabase
     .from('posts')
     .select('*')
     .order('created_at', { ascending: false })
-    .limit(10); // Lấy 10 bài mới nhất
+    .limit(10); 
 
   if (error) {
     console.error('Lỗi lấy bài viết:', error);
@@ -37,15 +50,13 @@ export default async function HomePage() {
   return (
     <div className={styles.container}>
       
-      {/* (Slider Tin Nổi Bật - Luôn ở trên cùng) */}
       <section className={styles.featuredSection}>
         <FeaturedSlider />
       </section>
 
-      {/* 💖 BỐ CỤC 2 CỘT (Đã gắn class để chỉnh Mobile) 💖 */}
       <div className={styles.layoutGrid}>
         
-        {/* === CỘT 1: NỘI DUNG CHÍNH (Ưu tiên số 1 trên Mobile) === */}
+        {/* === CỘT 1: NỘI DUNG CHÍNH === */}
         <div className={styles.mainContent}>
           
           <section className={styles.latestNews}>
@@ -67,13 +78,17 @@ export default async function HomePage() {
                         {post.title}
                       </Link>
                     </h3>
-                    <p className={styles.postDate}>
-                      <i className="far fa-calendar-alt"></i>{' '}
-                      {new Date(post.created_at).toLocaleDateString('vi-VN')}
-                    </p>
-                    <p className={styles.postExcerpt}>
-                      {taoTomTat(post.content)}
-                    </p>
+                    <div className={styles.postDate}>
+                      <i className="far fa-calendar-alt"></i>
+                      <span>{new Date(post.created_at).toLocaleDateString('vi-VN')}</span>
+                    </div>
+                    
+                    {/* 💖 SỬA LỖI HIỂN THỊ MÃ HTML Ở ĐÂY 💖 */}
+                    <p 
+                      className={styles.postExcerpt}
+                      dangerouslySetInnerHTML={{ __html: taoTomTat(post.content) }}
+                    />
+
                     <Link href={`/bai-viet/${post.id}`} className={styles.readMore}>
                       Xem chi tiết »
                     </Link>
@@ -89,7 +104,7 @@ export default async function HomePage() {
 
         </div>
 
-        {/* === CỘT 2: SIDEBAR (Ưu tiên số 2 trên Mobile) === */}
+        {/* === CỘT 2: SIDEBAR === */}
         <div className={styles.sidebarWrapper}>
            <Sidebar />
         </div>
