@@ -1,0 +1,14 @@
+stages:
+ - build
+
+build-pdf:
+  stage: build
+  image: openjdk:20-jdk-slim
+  script:
+    - DEBIAN_FRONTEND=noninteractive apt-get update && apt-get -y install libreoffice-common libreoffice-writer hyphen-af hyphen-en-us fonts-dejavu fonts-dejavu-core fonts-dejavu-extra fonts-droid-fallback fonts-dustin fonts-f500 fonts-fanwood fonts-freefont-ttf fonts-liberation fonts-lmodern fonts-lyx fonts-sil-gentium fonts-texgyre fonts-tlwg-purisa fonts-opensymbol
+    - mkdir -p public
+    - cd storybook
+    - libreoffice --headless --convert-to pdf --outdir ../public *.odt
+  artifacts:
+    paths:
+      - public

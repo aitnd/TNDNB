@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 595.3 595.3" style="enable-background:new 0 0 595.3 595.3;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:none;}
+	.st2{font-family:'Impact';}
+	.st3{font-size:40px;}
+	.st4{font-family:'Helvetica-Light';}
+	.st5{font-size:18px;}
+	.st6{font-size:15px;}
+	.st7{font-size:20px;}
+</style>
+<rect id="BG" y="0" class="st0" width="595.3" height="595.3"/>
+<g id="IMG">
+	
+		<image style="overflow:visible;enable-background:new    ;" width="4185" height="2790" xlink:href="../../image/apprentice.png"  transform="matrix(0.1216 0 0 0.1216 -104 7)">
+	</image>
+</g>
+<g id="Layer_4">
+</g>
+<g id="Layer_3">
+	<rect x="342" y="66" class="st1" width="205" height="94"/>
+	<text transform="matrix(1 0 0 1 342 97.6396)" class="st2 st3">Elliot</text>
+	<text transform="matrix(1 0 0 1 342 119.2396)" class="st4 st5">Lehrling</text>
+	<rect x="342" y="152.8" class="st1" width="227" height="402.1"/>
+	<text transform="matrix(1 0 0 1 342 165.7601)" class="st4 st5">18 Jahre alt</text>
+	<rect x="342" y="191.9" class="st1" width="222" height="378"/>
+	<text transform="matrix(1 0 0 1 342 202.6898)" class="st4 st6">Elliot ist leidenschaftlicher Com</text>
+	<text transform="matrix(1 0 0 1 551.2 202.6898)" class="st4 st6">-</text>
+	<text transform="matrix(1 0 0 1 342 220.6898)" class="st4 st6">puterliebhaber. Wenn es nach </text>
+	<text transform="matrix(1 0 0 1 342 238.6898)" class="st4 st6">ihm ginge, hätte er eine Lehre </text>
+	<text transform="matrix(1 0 0 1 342 256.6898)" class="st4 st6">als Informatiker gemacht. Seine </text>
+	<text transform="matrix(1 0 0 1 342 274.6898)" class="st4 st6">Eltern haben ihn aber dazu </text>
+	<text transform="matrix(1 0 0 1 342 292.6898)" class="st4 st6">überredet sein zweites Hobby, </text>
+	<text transform="matrix(1 0 0 1 342 310.6898)" class="st4 st6">nämlich das Backen, zum Beruf </text>
+	<text transform="matrix(1 0 0 1 342 328.6898)" class="st4 st6">zu machen. In seiner Freizeit </text>
+	<text transform="matrix(1 0 0 1 342 346.6898)" class="st4 st6">findet man ihn oft am Computer. </text>
+	<text transform="matrix(1 0 0 1 342 364.6898)" class="st4 st6">Wenn er nicht gerade am Fort</text>
+	<text transform="matrix(1 0 0 1 542.1 364.6898)" class="st4 st6">-</text>
+	<text transform="matrix(1 0 0 1 342 382.6898)" class="st4 st6">nite spielen ist, schaut er seine </text>
+	<text transform="matrix(1 0 0 1 342 400.6898)" class="st4 st6">Lieblingsserie Mr. Robot. Obwohl </text>
+	<text transform="matrix(1 0 0 1 342 418.6898)" class="st4 st6">er die Technik nicht zum Beruf </text>
+	<text transform="matrix(1 0 0 1 342 436.6898)" class="st4 st6">gemacht hat, liebt er die Arbeit </text>
+	<text transform="matrix(1 0 0 1 342 454.6898)" class="st4 st6">in der Bäckerei sehr. Er fühlt sich </text>
+	<text transform="matrix(1 0 0 1 342 472.6898)" class="st4 st6">schon wie zuhause und seine </text>
+	<text transform="matrix(1 0 0 1 342 490.6898)" class="st4 st6">Teamkollegen sind wie eine </text>
+	<text transform="matrix(1 0 0 1 342 508.6898)" class="st4 st6">zweite Familie für ihn. Er traut </text>
+	<text transform="matrix(1 0 0 1 342 526.6898)" class="st4 st6">sich auch schon ab und zu </text>
+	<text transform="matrix(1 0 0 1 342 544.6898)" class="st4 st6">einen Witz zu machen.</text>
+	<rect x="29" y="370" class="st1" width="132" height="128"/>
+	<text transform="matrix(1 0 0 1 29 382.9577)" class="st4 st5">Intelligenz</text>
+	<text transform="matrix(1 0 0 1 29 418.9577)" class="st4 st5">Charisma</text>
+	<text transform="matrix(1 0 0 1 29 454.9577)" class="st4 st5">Athletik</text>
+	<text transform="matrix(1 0 0 1 29 490.9577)" class="st4 st5">Nerd </text>
+	<rect x="95" y="370" class="st1" width="83.5" height="128"/>
+	<text transform="matrix(1 0 0 1 168.4922 382.9577)" class="st4 st5">3</text>
+	<text transform="matrix(1 0 0 1 162.4922 418.9577)" class="st4 st5">-1</text>
+	<text transform="matrix(1 0 0 1 162.4922 454.9577)" class="st4 st5">-1</text>
+	<text transform="matrix(1 0 0 1 168.4922 490.9577)" class="st4 st5">5</text>
+	<rect x="29" y="321" class="st1" width="272" height="37"/>
+	<text transform="matrix(1 0 0 1 29 336.8171)" class="st2 st7">Stats</text>
+	<rect x="29" y="522" class="st1" width="243" height="22.5"/>
+	<text transform="matrix(1 0 0 1 29 537.8171)" class="st2 st7">Besonderheit         </text>
+	<text transform="matrix(1 0 0 1 164.2 537.8171)" class="st4 st5">Nerd</text>
+</g>
+</svg>

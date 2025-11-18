@@ -2,7 +2,7 @@
 import { supabase } from '../utils/supabaseClient' 
 import React from 'react'
 import Link from 'next/link'
-import styles from './Sidebar.module.css' // (Triệu hồi CSS)
+import styles from './Sidebar.module.css' 
 // (Triệu hồi Bộ não Tìm kiếm)
 import Searchbar from './Searchbar'
 
@@ -21,7 +21,7 @@ type MediaItem = {
   media_url: string;
 };
 
-// (Hàm lấy tin Tuyển sinh)
+// --- CÁC HÀM LẤY DỮ LIỆU (Giữ nguyên) ---
 async function getTuyenSinhPosts(): Promise<Post[]> {
   const { data, error } = await supabase
     .from('posts')
@@ -29,14 +29,10 @@ async function getTuyenSinhPosts(): Promise<Post[]> {
     .eq('category_id', 'tuyen-sinh') 
     .order('created_at', { ascending: false })
     .limit(5); 
-  if (error) {
-    console.error('Lỗi lấy tin tuyển sinh:', error);
-    return [];
-  }
+  if (error) return [];
   return data || [];
 }
 
-// (Hàm lấy tin Pháp quy - 💖 SỬA LỖI DƯ DẤU "}" 💖)
 async function getPhapQuyPosts(): Promise<Post[]> {
   const { data, error } = await supabase
     .from('posts')
@@ -44,69 +40,47 @@ async function getPhapQuyPosts(): Promise<Post[]> {
     .eq('category_id', 'van-ban-phap-quy') 
     .order('created_at', { ascending: false })
     .limit(5); 
-  if (error) {
-    console.error('Lỗi lấy tin pháp quy:', error);
-    return [];
-  }
+  if (error) return [];
   return data || [];
 }
 
-// (Hàm lấy tin Tức - 💖 SỬA LỖI DƯ DẤU "}" 💖)
 async function getTinTucSuKien(): Promise<Post[]> {
-  console.log('[Sidebar] Đang lấy tin "Tin tức"...');
   const { data, error } = await supabase
     .from('posts')
     .select('id, title')
     .eq('category_id', 'tin-tuc-su-kien') 
     .order('created_at', { ascending: false })
     .limit(5); 
-  
-  if (error) {
-    console.error('Lỗi lấy tin tức:', error);
-    return [];
-  }
+  if (error) return [];
   return data || [];
 }
 
-// (Hàm lấy ảnh Thư viện - 💖 SỬA LỖI DƯ DẤU "}" 💖)
 async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
-  console.log('[Sidebar] Đang lấy media mới nhất cho Thư viện...');
   const { data, error } = await supabase
     .from('media_library')
     .select('id, media_url') 
     .eq('media_type', 'image') 
     .order('created_at', { ascending: false })
     .limit(3); 
-
-  if (error) {
-    console.error('Lỗi lấy media cho Sidebar:', error);
-    return [];
-  }
+  if (error) return [];
   return data || [];
 }
 
-// (Hàm lấy Tệp - 💖 SỬA LỖI DƯ DẤU "}" 💖)
 async function getLatestFilesForSidebar(): Promise<MediaItem[]> {
-  console.log('[Sidebar] Đang lấy tệp mới nhất cho Tài liệu...');
   const { data, error } = await supabase
     .from('media_library')
     .select('id, media_url') 
     .eq('media_type', 'document') 
     .order('created_at', { ascending: false })
     .limit(3); 
-
-  if (error) {
-    console.error('Lỗi lấy tệp cho Sidebar:', error);
-    return [];
-  }
+  if (error) return [];
   return data || [];
 }
 
 
-// (Nâng cấp "ASYNC" COMPONENT)
+// (COMPONENT CHÍNH)
 export default async function Sidebar() {
   
-  // (Chờ lấy 5 loại)
   const [tuyenSinhPosts, phapQuyPosts, tinTucPosts, latestMedia, latestFiles] = await Promise.all([
     getTuyenSinhPosts(),
     getPhapQuyPosts(),
@@ -121,55 +95,29 @@ export default async function Sidebar() {
       {/* (Ô Tìm kiếm) */}
       <Searchbar />
 
-      {/* (Box Hệ thống ôn tập) */}
-      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        <Link href="https://ontap.daotaothuyenvien.com/" target="_blank">
-          <h3 className={styles.sidebarTitle}>
-              Hệ thống ôn tập
-          </h3>
-        </Link>
-        <Link href="https://ontap.daotaothuyenvien.com/" target="_blank">
-          <img 
-            src="/on-tap.png" 
-            alt="Hệ Thống Ôn tập" 
-            className={styles.bannerImage}
-          />
-        </Link>
+      {/* 💖 1. HỘP "TRA CỨU & TIỆN ÍCH" (MỚI - GỌN GÀNG) 💖 */}
+      <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
+        <h3 className={styles.sidebarTitle}>Tra cứu & Tiện ích</h3>
+        <ul className={styles.linkList}>
+          {/* Link 1: Tra cứu văn bằng */}
+          <li>
+            <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
+              <i className="fas fa-search" style={{color: '#004a99'}}></i> Tra cứu Văn bằng
+            </Link>
+          </li>
+          
+          {/* (Sau này anh muốn thêm link khác thì copy dòng <li> ở trên dán xuống đây nha) */}
+          {/* Ví dụ:
+          <li>
+            <Link href="#">
+              <i className="fas fa-link" style={{color: '#004a99'}}></i> Link tiện ích khác
+            </Link>
+          </li> 
+          */}
+        </ul>
       </div>
       
-      {/* 💖 (Box Thi Online - SỬA LINK Ở ĐÂY NÈ ANH) 💖 */}
-      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        {/* (Sửa link: trỏ về "phòng" /thitructuyen CÙNG WEB) */}
-        <Link href="/thitructuyen">
-          <h3 className={styles.sidebarTitle}>
-              Hệ thống thi trực tuyến
-          </h3>
-        </Link>
-        {/* (Sửa link: trỏ về "phòng" /thitructuyen CÙNG WEB) */}
-        <Link href="/thitructuyen">
-          <img 
-            src="/thi-online.png" 
-            alt="Hệ Thống Thi Online" 
-            className={styles.bannerImage}
-          />
-        </Link>
-      </div>
-
-      {/* (Box "Tra cứu Văn bằng") */}
-      <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
-          <h3 className={styles.sidebarTitle}>
-              Tra cứu Văn bằng
-          </h3>
-        </Link>
-        <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
-          <img 
-            src="/tracuu.png" 
-            alt="Tra cứu Văn bằng Chứng chỉ" 
-            className={styles.bannerImage}
-          />
-        </Link>
-      </div>
+      {/* (ĐÃ XÓA CÁC BANNER CŨ: ÔN TẬP & THI) */}
 
       {/* (Box "TIN TỨC - SỰ KIỆN") */}
       <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>

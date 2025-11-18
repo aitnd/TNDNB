@@ -13,10 +13,12 @@
     display: flex;
     justify-content: space-between; 
     align-items: center;
+    flex-wrap: wrap; /* (Cho phép xuống dòng nếu màn hình nhỏ quá) */
+    gap: 0.5rem;
 }
 
 .logo {
-    font-size: 1.6rem; 
+    font-size: 1.4rem; /* (Giảm xíu cho đỡ chật) */
     font-weight: 700;
     color: #004a99;
     text-decoration: none;
@@ -35,9 +37,11 @@
     margin: 0;
     padding: 0;
     font-size: 0.875rem; 
+    flex-wrap: wrap; /* (Cho phép xuống dòng) */
 }
 .topLinks li {
     margin-left: 1rem;
+    white-space: nowrap;
 }
 .topLinks a,
 .topLinks button {
@@ -56,52 +60,38 @@
     color: #004a99;
     text-decoration: none;
 }
-.ctaButton {
-    color: #ffffff !important;
-    background-color: #004a99;
-    padding: 0.25rem 0.75rem; 
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-.ctaButton:hover {
-    background-color: #003366;
-    color: #ffffff !important;
-}
-.adminButton {
-    background-color: #d9534f;
-}
-.adminButton:hover {
-    background-color: #c9302c;
+.welcomeText {
+  color: #555;
+  font-weight: 500;
+  font-size: 0.875rem;
+  font-style: italic;
 }
 
-/* === PHẦN 2: THANH CHÍNH (ĐÃ SỬA CHO RESPONSIVE) === */
+/* === PHẦN 2: THANH CHÍNH (ĐÃ TINH CHỈNH) === */
 .mainNav {
     background-color: #004a99;
-    padding: 0.75rem 0; 
+    padding: 0.5rem 0; /* (Giảm padding trên dưới chút) */
 }
 
 .mainContainer {
     width: 90%;
     max-width: 1280px; 
     margin: 0 auto;
-    display: flex;
-    justify-content: flex-start; 
-    align-items: center;
 }
 
 .navLinks {
     list-style: none;
     display: flex;
-    flex-wrap: wrap; /* 💖 CHO PHÉP XUỐNG DÒNG 💖 */
-    align-items: center;
+    flex-wrap: wrap; /* (Cho phép xuống dòng tự nhiên) */
+    align-items: center; /* (Căn giữa theo chiều dọc) */
+    justify-content: flex-start; /* (Căn trái) */
     margin: 0;
     padding: 0;
+    gap: 1rem 1.5rem; /* (Khoảng cách: Hàng dọc 1rem, Hàng ngang 1.5rem) */
 }
 
 .navLinks li {
-    margin-left: 0; 
-    margin-right: 1.5rem; /* (Giảm bớt xíu) */
-    margin-bottom: 0.5rem; /* 💖 Thêm khoảng cách khi nó xuống dòng 💖 */
+    margin: 0; /* (Reset margin cũ) */
 }
 
 .navLinks a {
@@ -111,17 +101,38 @@
     transition: color 0.3s ease;
     white-space: nowrap;
     font-size: 1rem;
+    display: block; /* (Để căn chỉnh tốt hơn) */
 }
 
 .navLinks a:hover {
-    color: #dbeafe; 
+    color: #fbbf24; /* (Hover màu vàng cho nổi) */
     text-decoration: none;
 }
 
-/* (CSS CHO CHỮ "CHÀO MỪNG") */
-.welcomeText {
-  color: #555; /* (Màu chữ xám) */
-  font-weight: 500;
-  font-size: 0.875rem;
-  font-style: italic; /* (In nghiêng) */
+/* === CSS CHO LINK "HOT" (Ôn tập & Thi) === */
+.hotLink {
+    display: flex !important;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: rgba(255, 255, 255, 0.1); /* (Thêm nền mờ nhẹ cho nút hot) */
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    transition: all 0.3s ease !important;
+}
+
+.hotLink:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fbbf24 !important;
+}
+
+.hotIcon {
+    color: #fbbf24; /* (Màu Vàng) */
+    font-size: 1.1rem;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }

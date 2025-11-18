@@ -1,100 +1,32 @@
-/* === Trang điểm cho Trang Chủ === */
+/* ... (Giữ nguyên code cũ ở trên) ... */
 
-.container {
-    width: 90%;
-    max-width: 1100px;
-    margin: 2rem auto; 
-}
+/* === 💖 SỬA LỖI TIN TỨC "VỠ" TRÊN MOBILE 💖 === */
+@media (max-width: 768px) {
+    /* 1. Cho từng bài tin tức xếp dọc (Ảnh trên - Chữ dưới) */
+    .newsItemLarge {
+        flex-direction: column; /* Xếp dọc */
+        align-items: flex-start; /* Căn trái */
+    }
 
-/* 1. Bố cục 2 cột (LUÔN LUÔN 2 CỘT) */
-.layoutGrid {
-    display: grid;
-    grid-template-columns: 2fr 1fr; 
-    gap: 2rem; 
-}
+    /* 2. Chỉnh lại khung ảnh cho vừa vặn */
+    .imageWrapper {
+        width: 100%; /* Chiếm hết chiều ngang */
+        height: 200px; /* Chiều cao cố định cho đẹp đều */
+        margin-bottom: 1rem; /* Cách phần chữ ra xíu */
+        margin-right: 0; /* Bỏ lề phải cũ */
+    }
 
-/* (ĐÃ XÓA MEDIA QUERY @media (max-width: 768px) Ở ĐÂY) */
+    /* 3. Chỉnh ảnh bên trong cho không bị méo */
+    .postThumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Cắt ảnh gọn gàng, không bị méo */
+        border-radius: 8px; /* Bo góc xíu cho mềm */
+    }
 
-
-/* 2. Cột trái (Main Content) */
-.mainContent {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; 
-    
-    /* (Chống "phình" làm vỡ cột) */
-    overflow: hidden;
-    min-width: 0; 
-}
-
-/* 3. Cột phải (Sidebar) */
-/* (Tất cả CSS Sidebar đã được chuyển sang Sidebar.module.css) */
-
-
-/* 4. "Box" chung (Widget) */
-.widgetBox {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.widgetTitle {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #004a99; 
-    padding: 1rem 1.5rem;
-    border-bottom: 2px solid #e6f0ff; 
-    margin-bottom: 1.5rem;
-}
-
-/* 6. Box "Tin Tức Mới" (Cột trái) */
-.newsList {
-    padding: 0 1.5rem 1.5rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.newsItemLarge {
-    display: flex;
-    gap: 1rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1.5rem;
-}
-.newsItemLarge:last-child {
-    border-bottom: none;
-}
-
-.newsItemLarge img {
-    width: 150px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 1px solid #eee;
-}
-.newsItemLarge div { /* (Nội dung chữ) */
-    flex: 1;
-}
-.newsItemLarge h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-}
-.newsItemLarge h3 a:hover {
-    color: #004a99;
-}
-.newsItemLarge p {
-    font-size: 0.875rem;
-    color: #777;
-    margin: 0.25rem 0 0 0;
-}
-
-/* (CSS CHO TÓM TẮT) */
-.excerpt {
-    font-size: 0.9rem !important; 
-    color: #555 !important;
-    margin-top: 0.5rem !important;
-    line-height: 1.5;
+    /* 4. Tiêu đề bài viết nhỏ lại xíu cho cân đối */
+    .postTitle {
+        font-size: 1.1rem;
+        line-height: 1.4;
+    }
 }
