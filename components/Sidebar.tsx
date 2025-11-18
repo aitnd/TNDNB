@@ -137,14 +137,16 @@ export default async function Sidebar() {
         </Link>
       </div>
       
-      {/* (Box Thi Online) */}
+      {/* 💖 (Box Thi Online - SỬA LINK Ở ĐÂY NÈ ANH) 💖 */}
       <div className={`${styles.widgetBox} ${styles.bannerBox}`}>
-        <Link href="httpsDITNB://tndnb.vercel.app/quan-ly" target="_blank">
+        {/* (Sửa link: trỏ về "phòng" /thitructuyen CÙNG WEB) */}
+        <Link href="/thitructuyen">
           <h3 className={styles.sidebarTitle}>
               Hệ thống thi trực tuyến
           </h3>
         </Link>
-        <Link href="https://www.daotaothuyenvien.com/quan-ly/thi-truc-tuyen" target="_blank">
+        {/* (Sửa link: trỏ về "phòng" /thitructuyen CÙNG WEB) */}
+        <Link href="/thitructuyen">
           <img 
             src="/thi-online.png" 
             alt="Hệ Thống Thi Online" 
