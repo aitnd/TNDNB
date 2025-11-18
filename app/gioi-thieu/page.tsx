@@ -12,7 +12,7 @@ export default function GioiThieuPage() {
         
         <h3>CHỨC NĂNG, NHIỆM VỤ:</h3>
         <p>
-          Tổ chức đào tạo bổ túc nâng hạng bằng thuyền, máy trưởng phương tiện thủy nội địa hạng nhất, nhì, ba; đào tạo và cấp các loại chứng chỉ chuyên môn cho người lái, thuyền viên phương tiện thủy nội địa.
+          Tổ chức đào tạo nâng hạng bằng thuyền, máy trưởng phương tiện thủy nội địa hạng nhất, nhì, ba; đào tạo và cấp các loại chứng chỉ chuyên môn cho người lái, thuyền viên phương tiện thủy nội địa.
         </p>
       </div>
       
