@@ -8,7 +8,7 @@ export default function HocPhiPage() {
     <div className={styles.container}>
       <h1 className={styles.title}>Biểu mục thu học phí</h1>
       <p className={styles.subtitle}>
-        Đào tạo cấp CCCM, GCNKNCM Phương tiện thủy nội địa (Kèm theo Quyết định số: 119/2023/QĐ-CĐSP ngày 11/10/2023)
+        Đào tạo cấp CCCM, GCNKNCM Phương tiện thủy nội địa (Kèm theo Quyết định số: 110A/QĐ ngày 11/10/2025 của Công ty cổ phần Tư vấn và Giáo dục Ninh Bình)
       </p>
 
       {/* Bảng học phí */}
