@@ -11,8 +11,10 @@ const inter = Inter({ subsets: ['latin'] })
 
 // (Mã GA4 của anh)
 const GA_TRACKING_ID = 'G-8NETMXL60S'; 
-// (Mã Ads mới của anh)
-const AW_TRACKING_ID = 'AW-16621935811'; // 💖 THÊM DÒNG NÀY 💖
+// (Mã Ads Tracking của anh)
+const AW_TRACKING_ID = 'AW-16621935811'; 
+// 💖 (Mã AdSense "Kiếm tiền" của anh) 💖
+const ADSENSE_CLIENT_ID = 'ca-pub-6121118706628509';
 
 // ("Biển hiệu" SEO mình làm lúc nãy)
 export const metadata: Metadata = {
@@ -25,7 +27,7 @@ export const metadata: Metadata = {
     title: 'Công ty CP Tư vấn và Giáo dục Ninh Bình',
     description: 'Đào tạo thuyền, máy trưởng và chứng chỉ chuyên môn PTTNĐ.',
     images: ['/trang-chu-banner.jpg'], 
-    url: 'https://tndnb.vercel.app', // (Địa chỉ web "xịn" của mình)
+    url: 'https://tndnb.vercel.app', 
     siteName: 'TĐNB Ninh Bình',
     locale: 'vi_VN',
     type: 'website',
@@ -55,7 +57,7 @@ export default function RootLayout({
         
         {/* (Chỗ này anh dán Chatbot Script nè) */}
 
-        {/* 💖 GẮN "MÁY ĐẾM" (ĐÃ CẬP NHẬT) 💖 */}
+        {/* 💖 GẮN "MÁY ĐẾM" (GA4) VÀ "THEO DÕI" (ADS) 💖 */}
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
@@ -68,17 +70,20 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              
               gtag('config', '${GA_TRACKING_ID}', {
                 page_path: window.location.pathname,
               });
-              
-              // 💖 THÊM DÒNG "CONFIG" CỦA ADS VÀO ĐÂY NÈ ANH 💖
               gtag('config', '${AW_TRACKING_ID}');
             `,
           }}
         />
-        {/* 💖 HẾT PHẦN "MÁY ĐẾM" 💖 */}
+        
+        {/* 💖 GẮN "BIỂN CHO THUÊ" (ADSENSE) 💖 */}
+        <Script
+          strategy="afterInteractive"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          crossOrigin="anonymous"
+        />
         
       </body>
     </html>
