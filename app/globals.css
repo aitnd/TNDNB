@@ -115,3 +115,19 @@ a:hover {
   border-radius: 8px;
   margin: 1.5rem 0;
 }
+/* ... (Giữ nguyên code cũ ở trên) ... */
+
+/* === 💖 THU NHỎ TOÀN BỘ WEB TRÊN MOBILE 💖 === */
+@media (max-width: 768px) {
+  html {
+    /* Mặc định web là 16px. 
+       Mình giảm xuống 14px là toàn bộ web sẽ nhỏ đi khoảng 12%.
+       Nếu anh muốn nhỏ nữa thì sửa thành 13px nha! */
+    font-size: 14px; 
+  }
+  
+  body {
+    /* Giữ chữ văn bản không bị bé quá */
+    font-size: 1rem; 
+  }
+}

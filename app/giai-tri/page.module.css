@@ -17,34 +17,86 @@
     text-align: center;
 }
 
-/* === MENU GAME === */
+/* === 💖 GIAO DIỆN THƯ VIỆN GAME (GRID) 💖 === */
 .gameList {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    /* Tự động chia cột: Mỗi cột ít nhất 160px (mobile) hoặc to hơn */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
 }
 
-.gameButton {
-    display: block;
-    width: 100%;
-    padding: 1.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #ffffff;
-    background-color: #004a99; 
-    border: none;
-    border-radius: 8px;
+/* Biến nút bấm thành Thẻ Game (Card) */
+.gameCard {
+    display: flex;
+    flex-direction: column; /* Ảnh trên, chữ dưới */
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-.gameButton:hover {
-    background-color: #003366;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    overflow: hidden; /* Bo góc ảnh */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 0; /* Xóa padding mặc định của button */
+    height: 100%; /* Để các thẻ cao bằng nhau */
 }
 
-/* === KHUNG GAME (QUAN TRỌNG) === */
+.gameCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,74,153,0.15);
+    border-color: #b3d1ff;
+}
+
+/* Phần Ảnh Game */
+.cardImageWrapper {
+    width: 100%;
+    aspect-ratio: 4/3; /* Tỷ lệ khung ảnh chuẩn */
+    overflow: hidden;
+    background-color: #f0f0f0; /* Màu nền lót khi chưa có ảnh */
+    position: relative;
+}
+
+.cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cắt ảnh cho vừa khung, không bị méo */
+    transition: transform 0.5s ease;
+}
+
+.gameCard:hover .cardImage {
+    transform: scale(1.1); /* Phóng to ảnh nhẹ khi hover */
+}
+
+/* Phần Tên Game */
+.cardContent {
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.cardTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+}
+
+.cardTag {
+    font-size: 0.75rem;
+    background-color: #e6f0ff;
+    color: #004a99;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+
+/* === KHUNG CHƠI GAME (Giữ nguyên) === */
 .fullscreenContainer {
     background-color: #000;
     width: 100%;
@@ -52,7 +104,6 @@
     justify-content: center;
     align-items: center;
 }
-
 .fullscreenContainer:fullscreen {
     width: 100vw;
     height: 100vh;
@@ -67,14 +118,13 @@
 .iframeWrapper {
     position: relative;
     width: 100%;
-    height: 80vh; /* Mặc định cao 80% màn hình */
-    min-height: 600px; /* PC tối thiểu 600px */
+    height: 80vh; 
+    min-height: 600px; 
     overflow: hidden;
     border-radius: 8px;
     background-color: #000;
     border: 1px solid #ddd;
 }
-
 .iframeContent {
     width: 100%;
     height: 100%;
@@ -90,32 +140,10 @@
     margin-top: 1.5rem;
     flex-wrap: wrap;
 }
-
-.backButton {
+.backButton, .fullscreenButton {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: #d9534f;
-    color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
-.backButton:hover {
-    background-color: #c9302c;
-}
-
-.fullscreenButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #28a745;
-    color: #ffffff;
     padding: 0.75rem 1.5rem;
     border-radius: 5px;
     font-weight: 500;
@@ -123,19 +151,17 @@
     cursor: pointer;
     transition: all 0.3s;
     font-size: 1rem;
+    color: #fff;
 }
-.fullscreenButton:hover {
-    background-color: #218838;
-}
+.backButton { background-color: #d9534f; }
+.backButton:hover { background-color: #c9302c; }
+.fullscreenButton { background-color: #28a745; }
+.fullscreenButton:hover { background-color: #218838; }
 
-/* === 💖 TỐI ƯU RIÊNG CHO MOBILE 💖 === */
+/* === MOBILE === */
 @media (max-width: 768px) {
-    .iframeWrapper {
-        height: 85vh; /* Trên điện thoại cho cao hơn tí */
-        min-height: 500px; /* Đảm bảo không bị lùn tịt */
-    }
-    .title {
-        font-size: 1.2rem;
-        margin-bottom: 0.5rem;
-    }
+    .iframeWrapper { height: 85vh; min-height: 500px; }
+    .gameList { grid-template-columns: repeat(2, 1fr); gap: 10px; } /* Mobile 2 cột */
+    .cardTitle { font-size: 0.9rem; }
+    .container { padding: 1rem 0.5rem; }
 }
