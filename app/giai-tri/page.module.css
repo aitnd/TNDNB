@@ -1,10 +1,9 @@
 /* === Trang điểm cho phòng Game === */
 .container {
-    /* 💖 1. MỞ RỘNG KHUNG NHÀ 💖 */
-    max-width: 1200px; /* (Cho rộng ra 1200px để chơi game cho đã, cũ là 900px) */
-    width: 95%; /* (Trên điện thoại thì chiếm 95%) */
+    max-width: 1200px; 
+    width: 95%; 
     margin: 2rem auto;
-    padding: 1.5rem; /* (Giảm padding chút cho đỡ tốn chỗ) */
+    padding: 1.5rem; 
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -15,10 +14,10 @@
     font-weight: 700;
     color: #004a99;
     margin-bottom: 1.5rem;
-    text-align: center; /* (Căn giữa tiêu đề luôn) */
+    text-align: center;
 }
 
-/* === MENU 3 CỘT (Giữ nguyên, chỉ chỉnh lại chút cho đẹp) === */
+/* === MENU GAME === */
 .gameList {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -45,61 +44,35 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* Nút Quay lại */
-.backButton {
-    display: inline-block;
-    background-color: #d9534f;
-    color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background-color 0.3s;
-    margin-top: 1.5rem;
-    border: none;
-    cursor: pointer;
-}
-.backButton:hover {
-    background-color: #c9302c;
-}
-
-
-/* === 💖 CÁI QUAN TRỌNG NHẤT Ở ĐÂY 💖 === */
-
-/* (Khung cho Game NES - Giữ tỷ lệ 4:3 vì NES nó thế) */
-.gameWrapper {
-    position: relative;
-    padding-bottom: 75%; /* 4:3 */
-    height: 0;
-    overflow: hidden;
-    border-radius: 8px;
+/* === KHUNG GAME (QUAN TRỌNG) === */
+.fullscreenContainer {
     background-color: #000;
-    border: 1px solid #ddd;
-    margin: 0 auto;
-    max-width: 800px; /* (NES không cần to quá, vỡ hình) */
-}
-.gameCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100% !important;
-    height: 100% !important;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* (Khung cho Game HTML5 - SỬA LẠI CÁI NÀY) */
-/* (Bỏ trò padding-bottom, dùng chiều cao cứng!) */
+.fullscreenContainer:fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
+.fullscreenContainer:fullscreen .iframeWrapper {
+    height: 100vh !important; 
+    width: 100vw !important;
+    border: none;
+    border-radius: 0;
+}
+
 .iframeWrapper {
     position: relative;
     width: 100%;
-    /* 💖 "THẦN CHÚ" CHIỀU CAO 💖 */
-    height: 80vh; /* (Cao bằng 80% màn hình thiết bị) */
-    min-height: 600px; /* (Không bao giờ thấp hơn 600px - để khỏi bị cắt) */
-    
+    height: 80vh; /* Mặc định cao 80% màn hình */
+    min-height: 600px; /* PC tối thiểu 600px */
     overflow: hidden;
     border-radius: 8px;
     background-color: #000;
     border: 1px solid #ddd;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .iframeContent {
@@ -107,4 +80,62 @@
     height: 100%;
     border: 0;
     display: block;
+}
+
+/* === THANH CÔNG CỤ === */
+.actionBar {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d9534f;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.backButton:hover {
+    background-color: #c9302c;
+}
+
+.fullscreenButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+}
+.fullscreenButton:hover {
+    background-color: #218838;
+}
+
+/* === 💖 TỐI ƯU RIÊNG CHO MOBILE 💖 === */
+@media (max-width: 768px) {
+    .iframeWrapper {
+        height: 85vh; /* Trên điện thoại cho cao hơn tí */
+        min-height: 500px; /* Đảm bảo không bị lùn tịt */
+    }
+    .title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
 }
