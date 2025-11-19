@@ -1,0 +1,251 @@
+/* Updated */
+/* KHUNG CHÍNH */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 80vh;
+  background-color: #f8f9fa; /* Nền xám nhẹ toàn trang */
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.title {
+  color: #004a99;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* THANH TÌM KIẾM */
+.searchBox {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 2.5rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
+}
+
+.input {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+.input:focus {
+  border-color: #004a99;
+  box-shadow: 0 0 0 3px rgba(0, 74, 153, 0.1);
+}
+
+.button {
+  padding: 0 30px;
+  background: #004a99;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s;
+  white-space: nowrap; /* Giữ chữ không xuống dòng */
+}
+
+.button:hover {
+  background: #003366;
+  transform: translateY(-2px);
+}
+
+.button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* DANH SÁCH KẾT QUẢ */
+.resultList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* THẺ KẾT QUẢ (CARD) */
+.card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #f0f0f0;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+/* Trạng thái SÁP NHẬP (Màu Cam) */
+.cardMerger {
+  border-left: 6px solid #f59e0b;
+}
+.cardMerger .unitTitle span {
+  color: #d97706;
+}
+
+/* Trạng thái ỔN ĐỊNH (Màu Xanh) */
+.cardStable {
+  border-left: 6px solid #10b981;
+}
+.cardStable .unitTitle span {
+  color: #059669;
+}
+
+/* Header của Thẻ */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed #eee;
+}
+
+.unitTitle {
+  margin: 0 0 8px 0;
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unitLocation {
+  font-size: 0.95rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Badge (Nhãn trạng thái) */
+.badge {
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgeMerger {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fcd34d;
+}
+
+.badgeStable {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #6ee7b7;
+}
+
+/* KHUNG LỊCH SỬ SÁP NHẬP */
+.historyBox {
+  background: #fff7ed; /* Nền cam nhạt */
+  padding: 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #ffedd5;
+  margin-top: 0.5rem;
+}
+
+.historyTitle {
+  margin: 0 0 10px 0;
+  font-weight: 700;
+  color: #c2410c;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.historyList {
+  margin: 0;
+  padding-left: 20px;
+  color: #4b5563;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.highlight {
+  background-color: #fef08a; /* Vàng nổi bật */
+  color: #000;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* TRẠNG THÁI TRỐNG */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #9ca3af;
+  background: #fff;
+  border-radius: 12px;
+  border: 2px dashed #e5e7eb;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .container { padding: 1.5rem 1rem; }
+  
+  .searchBox {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 10px;
+  }
+  
+  .button {
+    width: 100%;
+    padding: 12px;
+  }
+  
+  .title { font-size: 1.6rem; }
+  
+  .cardHeader {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .badge {
+    align-self: flex-start;
+    margin-top: 5px;
+  }
+}
