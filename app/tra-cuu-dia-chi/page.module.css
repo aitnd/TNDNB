@@ -249,3 +249,86 @@
     margin-top: 5px;
   }
 }
+/* ... (Code cũ giữ nguyên) ... */
+
+/* === 💖 PHẦN BỘ LỌC DROPDOWN (MỚI) 💖 === */
+.filterSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Tự động chia cột */
+  gap: 15px;
+  margin-bottom: 20px;
+  background: #f1f5f9;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  margin-left: 5px;
+}
+
+.select {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+  background-color: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+  appearance: none; /* Xóa mũi tên mặc định */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 12px auto;
+}
+
+.select:hover {
+  border-color: #004a99;
+}
+
+.select:focus {
+  border-color: #004a99;
+  box-shadow: 0 0 0 3px rgba(0, 74, 153, 0.1);
+}
+
+.select:disabled {
+  background-color: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Divider (Đường kẻ) */
+.divider {
+  margin: 20px 0;
+  text-align: center;
+  position: relative;
+}
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #e2e8f0;
+  z-index: 0;
+}
+.divider span {
+  background: #f8f9fa; /* Trùng màu nền */
+  padding: 0 15px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+}

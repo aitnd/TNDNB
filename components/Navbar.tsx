@@ -7,8 +7,8 @@ import { useAuth } from '../context/AuthContext'
 import { auth } from '../utils/firebaseClient' 
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-// 💖 1. TRIỆU HỒI ĐỦ 3 ICON 💖
-import { FaBookOpen, FaLaptop, FaGamepad } from 'react-icons/fa' 
+// 💖 TRIỆU HỒI ĐỦ CÁC ICON XỊN 💖
+import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation } from 'react-icons/fa' 
 
 import styles from './Navbar.module.css' 
 
@@ -51,7 +51,7 @@ export default function Navbar() {
         </div>
       </div>
       
-      {/* (THANH CHÍNH - Đã sắp xếp và thêm Icon) */}
+      {/* (THANH CHÍNH - FULL OPTION) */}
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
           <ul className={styles.navLinks}>
@@ -63,16 +63,13 @@ export default function Navbar() {
             <li><Link href="/thu-vien">Thư viện</Link></li>
             <li><Link href="/tai-lieu">Tài liệu</Link></li>
 
-            {/* 💖 BỘ 3 MÓN ĂN CHƠI & HỌC TẬP 💖 */}
-            
-            {/* 1. Giải trí (Mới thêm icon Gamepad) */}
+            {/* 💖 CỤM GIẢI TRÍ & HỌC TẬP 💖 */}
             <li>
               <Link href="/giai-tri" className={styles.hotLink}>
-                <FaGamepad className={styles.hotIcon} /> Giải trí 🎮
+                <FaGamepad className={styles.hotIcon} /> Giải trí
               </Link>
             </li>
 
-            {/* 2. Ôn tập */}
             <li>
               <a 
                 href="https://ontap.daotaothuyenvien.com/" 
@@ -85,7 +82,6 @@ export default function Navbar() {
               </a>
             </li>
 
-            {/* 3. Thi Online */}
             <li>
               <Link 
                 href="/thitructuyen"
@@ -93,6 +89,13 @@ export default function Navbar() {
                 title="Hệ thống Thi trực tuyến"
               >
                 <FaLaptop className={styles.hotIcon} /> Thi Online
+              </Link>
+            </li>
+            
+            {/* 💖 MỚI: TRA CỨU ĐỊA CHỈ 💖 */}
+            <li>
+              <Link href="/tra-cuu-dia-chi" className={styles.hotLink}>
+                 <FaSearchLocation className={styles.hotIcon} /> Tra cứu ĐC
               </Link>
             </li>
 

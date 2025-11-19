@@ -13,12 +13,12 @@
     display: flex;
     justify-content: space-between; 
     align-items: center;
-    flex-wrap: wrap; /* (Cho phép xuống dòng nếu màn hình nhỏ quá) */
+    flex-wrap: wrap; 
     gap: 0.5rem;
 }
 
 .logo {
-    font-size: 1.4rem; /* (Giảm xíu cho đỡ chật) */
+    font-size: 1.4rem; 
     font-weight: 700;
     color: #004a99;
     text-decoration: none;
@@ -37,7 +37,7 @@
     margin: 0;
     padding: 0;
     font-size: 0.875rem; 
-    flex-wrap: wrap; /* (Cho phép xuống dòng) */
+    flex-wrap: wrap; 
 }
 .topLinks li {
     margin-left: 1rem;
@@ -70,7 +70,7 @@
 /* === PHẦN 2: THANH CHÍNH (ĐÃ TINH CHỈNH) === */
 .mainNav {
     background-color: #004a99;
-    padding: 0.5rem 0; /* (Giảm padding trên dưới chút) */
+    padding: 0.5rem 0; 
 }
 
 .mainContainer {
@@ -82,16 +82,16 @@
 .navLinks {
     list-style: none;
     display: flex;
-    flex-wrap: wrap; /* (Cho phép xuống dòng tự nhiên) */
-    align-items: center; /* (Căn giữa theo chiều dọc) */
-    justify-content: flex-start; /* (Căn trái) */
+    flex-wrap: wrap; /* Cho phép xuống dòng tự nhiên */
+    align-items: center; 
+    justify-content: flex-start; 
     margin: 0;
     padding: 0;
-    gap: 1rem 1.5rem; /* (Khoảng cách: Hàng dọc 1rem, Hàng ngang 1.5rem) */
+    gap: 1rem 1.5rem; 
 }
 
 .navLinks li {
-    margin: 0; /* (Reset margin cũ) */
+    margin: 0; 
 }
 
 .navLinks a {
@@ -101,20 +101,20 @@
     transition: color 0.3s ease;
     white-space: nowrap;
     font-size: 1rem;
-    display: block; /* (Để căn chỉnh tốt hơn) */
+    display: block; 
 }
 
 .navLinks a:hover {
-    color: #fbbf24; /* (Hover màu vàng cho nổi) */
+    color: #fbbf24; /* Hover màu vàng */
     text-decoration: none;
 }
 
-/* === CSS CHO LINK "HOT" (Ôn tập & Thi) === */
+/* === CSS CHO LINK "HOT" (Ôn tập, Thi, Giải trí, Tra cứu) === */
 .hotLink {
     display: flex !important;
     align-items: center;
     gap: 0.4rem;
-    background-color: rgba(255, 255, 255, 0.1); /* (Thêm nền mờ nhẹ cho nút hot) */
+    background-color: rgba(255, 255, 255, 0.1); /* Nền mờ nhẹ */
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     transition: all 0.3s ease !important;
@@ -126,7 +126,7 @@
 }
 
 .hotIcon {
-    color: #fbbf24; /* (Màu Vàng) */
+    color: #fbbf24; /* Màu Vàng */
     font-size: 1.1rem;
     animation: pulse 1.5s infinite;
 }
