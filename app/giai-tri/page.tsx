@@ -105,7 +105,7 @@ export default function GiaiTriPage() {
         <>
           <h1 className={styles.title}>Góc Giải Trí 🕹️</h1>
           <p style={{marginBottom: '1.5rem', fontSize: '1.1rem', color: '#333', textAlign: 'center'}}>
-            Vé về tuổi thơ xin mời anh chọn:
+            Vé về tuổi thơ xin mời bạn chọn:
           </p>
           <div className={styles.gameList}>
             {gamesList.map((game) => (
