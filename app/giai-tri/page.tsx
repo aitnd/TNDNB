@@ -4,9 +4,29 @@
 import React, { useState, useRef } from 'react'
 import styles from './page.module.css' 
 
-// 💖 2. DANH SÁCH GAME FULL (ĐÃ CẬP NHẬT ẢNH CHO HTML5) 💖
+// 💖 2. DANH SÁCH GAME (ĐÃ CẬP NHẬT PIKACHU SOCVUI) 💖
 const gamesList = [
-  // === GAME NDS (Folder /games2/) ===
+  
+  {
+    name: 'Đào Vàng (Gold Miner)',
+    // 💖 LINK MỚI SIÊU SẠCH 💖
+    file: 'https://cdn.htmlgames.com/GoldMiner/', 
+    image: '/games/daovang.png', 
+    tag: 'Kinh Điển',
+    type: 'html5', 
+  },
+  
+  // === GAME HIỆN ĐẠI (HTML5) ===
+  {
+    name: 'Subway Surfers',
+    // 💖 LINK GAME CHẠY NGAY 💖
+    file: 'https://vietdp.com/games/2023/subway-surfers-world-seul/index.html', 
+    image: '/games/subwaysurfers.png', // (Anh nhớ kiếm ảnh đẹp bỏ vào nha)
+    tag: 'Siêu Hot',
+    type: 'html5', 
+  },
+  
+  // === GAME MỚI (NDS) ===
   { 
     name: 'Plants vs Zombies', 
     file: '/nds-player/index.html?game=PlantsvsZombies.nds', 
@@ -15,14 +35,61 @@ const gamesList = [
     type: 'html5', 
   },
   { 
-    name: 'Cờ Vua (Chess)', 
+    name: 'Cờ Vua', 
     file: '/nds-player/index.html?game=chess.nds', 
     image: '/games2/chess.png', 
     tag: 'NDS',
     type: 'html5', 
   },
 
-  // === GAME NES (Folder /games/) ===
+  // === GAME HUYỀN THOẠI (HTML5) ===
+  {
+    name: 'Pikachu',
+    // Link bản chuẩn quốc tế, chơi cực mượt
+    file: 'https://www.pikachucodien.net/games/pikachu/index.html', 
+    image: '/games/pikachu.png', 
+    tag: 'Huyền Thoại',
+    type: 'html5', 
+  },
+   
+  
+  {
+    name: 'Mario',
+    file: '/mario-html5/index.html', 
+    image: '/games/mariohtml5.png', 
+    tag: 'HTML5',
+    type: 'html5', 
+  },
+  
+
+  {
+    name: 'Sudoku Cổ Điển',
+    // 💖 LINK SUDOKU SẠCH ĐẸP 💖
+    file: 'https://cdn.htmlgames.com/SudokuClassic/', 
+    image: '/games/sudoku.png', // (Anh nhớ kiếm ảnh Sudoku đẹp bỏ vào nha)
+    tag: 'Trí Tuệ',
+    type: 'html5', 
+  },
+
+{
+    name: 'Sudoku Hàng Ngày',
+    // 💖 LINK SUDOKU MỚI 💖
+    file: 'https://cdn.htmlgames.com/DailySudoku/', 
+    image: '/games/dailysudoku.png', // (Anh nhớ kiếm ảnh đẹp bỏ vào nha)
+    tag: 'Trí Tuệ',
+    type: 'html5', 
+  },
+
+  {
+    name: 'Thủ Thành Trung Cổ',
+    // 💖 LINK MỚI SIÊU XỊN 💖
+    file: 'https://cdn.htmlgames.com/MedievalCastleDefense/', 
+    image: '/games/medieval.png', // (Anh nhớ kiếm cái ảnh lâu đài đẹp đẹp bỏ vào nha)
+    tag: 'Chiến Thuật',
+    type: 'html5', 
+  },
+  
+  // === GAME NES (Giả lập) ===
   { 
     name: 'Contra', 
     file: '/games/index.html?game=contra.nes', 
@@ -58,31 +125,25 @@ const gamesList = [
     tag: 'NES', 
     type: 'html5', 
   },
-  { 
-    name: 'Mario Cổ điển', 
-    file: '/games/index.html?game=mario.nes', 
-    image: '/games/mario.png',
-    tag: 'NES',
+
+{
+    name: 'Pac-Man Cổ Điển',
+    // 💖 LINK PAC-MAN SẠCH ĐẸP 💖
+    file: 'https://cdn.htmlgames.com/ClassicPac/', 
+    image: '/games/pacman.png', // (Anh nhớ kiếm ảnh Pac-Man đẹp bỏ vào nha)
+    tag: 'Kinh Điển',
     type: 'html5', 
   },
 
-  // === GAME HTML5 KHÁC (CẬP NHẬT ẢNH) ===
-  {
-    name: 'Mario HTML5',
-    file: '/mario-html5/index.html', 
-    // 💖 ẢNH MỚI CỦA ANH 💖
-    image: '/games/mariohtml5.png', 
-    tag: 'HTML5',
-    type: 'html5', 
-  },
   { 
     name: 'Piece of Cake',
     file: 'https://www.crazygames.com/embed/piece-of-cake-merge-and-bake', 
-    // 💖 ẢNH MỚI CỦA ANH 💖
     image: '/games/pieceofcake.png', 
     tag: 'HOT',
     type: 'html5', 
   },
+
+  // === GAME FACEBOOK ===
   { 
     name: 'EverWing', 
     file: 'https://www.facebook.com/gaming/play/364648672526634/?source=www_games_home', 
@@ -137,7 +198,7 @@ export default function GiaiTriPage() {
   return (
     <div className={styles.container}>
       
-      {/* == MENU CHỌN GAME DẠNG THẺ == */}
+      {/* == MENU CHỌN GAME == */}
       {!selectedGame && (
         <>
           <h1 className={styles.title}>Góc Giải Trí 🕹️</h1>
@@ -152,7 +213,6 @@ export default function GiaiTriPage() {
                 className={styles.gameCard} 
                 onClick={() => handleSelectGame(game)}
               >
-                {/* Phần Ảnh */}
                 <div className={styles.cardImageWrapper}>
                    <img 
                      src={game.image || '/on-tap.png'} 
@@ -161,8 +221,6 @@ export default function GiaiTriPage() {
                      loading="lazy"
                    />
                 </div>
-                
-                {/* Phần Chữ */}
                 <div className={styles.cardContent}>
                   <span className={styles.cardTitle}>{game.name}</span>
                   <span className={styles.cardTag}>{game.tag}</span>
@@ -173,7 +231,7 @@ export default function GiaiTriPage() {
         </>
       )}
 
-      {/* == MÀN HÌNH CHƠI GAME (Giữ nguyên) == */}
+      {/* == MÀN HÌNH CHƠI GAME == */}
       {selectedGame && (
         <>
           <h1 className={styles.title}>
