@@ -1,253 +1,196 @@
 /* app/tra-cuu-dia-chi/page.module.css */
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f0f2f5;
-    min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
 }
 
-/* HEADER */
 .header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-.pageTitle {
-    color: #1a73e8;
-    font-size: 2rem;
-    font-weight: 800;
-    margin: 0 0 0.5rem 0;
-    text-transform: uppercase;
-}
-.pageSubtitle {
-    color: #5f6368;
-    font-size: 1rem;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-/* TABS CHUYỂN CHẾ ĐỘ */
-.tabs {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-.tabButton {
-    background: #fff;
-    border: 2px solid #e0e0e0;
-    padding: 0.8rem 1.5rem;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #555;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.tabButton:hover {
-    border-color: #1a73e8;
-    color: #1a73e8;
-}
-.activeTab {
-    background: #1a73e8;
-    border-color: #1a73e8;
-    color: #fff;
-    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
-}
-.tabIcon {
-    font-size: 1.2rem;
+.title {
+  color: #003366; /* Xanh đậm sang trọng */
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
-/* KHUNG TÌM KIẾM (SEARCH PANEL) */
-.searchPanel {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    margin-bottom: 2rem;
+.subtitle {
+  color: #666;
+  font-size: 16px;
 }
 
+/* Bố cục 2 cột */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr; /* Cột phải rộng hơn chút */
+  gap: 30px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr; /* Mobile: xếp chồng */
+  }
+}
+
+/* Khung chung (Card) */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  overflow: hidden;
+  border: 1px solid #e1e4e8;
+}
+
+/* Tiêu đề Card */
+.cardHeader {
+  background: #0056b3; /* Xanh dương chủ đạo */
+  color: white;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cardHeaderResult {
+  background: #28a745; /* Xanh lá kết quả */
+}
+
+/* Nội dung bên trong */
+.cardBody {
+  padding: 25px;
+}
+
+/* Form inputs */
 .formGroup {
-    margin-bottom: 1.5rem;
-}
-.formGroup:last-child {
-    margin-bottom: 0;
+  margin-bottom: 20px;
 }
 
 .label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #333;
-    font-size: 0.95rem;
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
 }
 
-.selectWrapper {
-    position: relative;
-}
 .select {
-    width: 100%;
-    padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid #dadce0;
-    font-size: 1rem;
-    appearance: none;
-    background-color: #fff;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1em;
-    cursor: pointer;
-    transition: border-color 0.2s;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+  background-color: #fff;
 }
+
 .select:focus {
-    outline: none;
-    border-color: #1a73e8;
-    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0,86,179,0.1);
 }
+
 .select:disabled {
-    background-color: #f1f3f4;
-    cursor: not-allowed;
-    color: #9aa0a6;
-}
-.helperText {
-    font-size: 0.85rem;
-    color: #777;
-    margin-top: 0.5rem;
-    font-style: italic;
+  background-color: #e9ecef;
+  cursor: not-allowed;
 }
 
-/* KẾT QUẢ (CARD) */
-.resultSection {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+/* Phần hiển thị kết quả */
+.resultBox {
+  text-align: center;
+  padding: 20px 0;
 }
 
-.card {
-    background: #fff;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border: 1px solid #eee;
-    animation: fadeIn 0.5s ease;
+.newAddressLabel {
+  color: #6c757d;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.newAddress {
+  color: #28a745;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 5px;
 }
 
-.cardHeader {
-    background: linear-gradient(to right, #1a73e8, #4285f4);
-    padding: 1.5rem;
-    color: #fff;
-}
-.unitLabel {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.9;
-    display: block;
-    margin-bottom: 0.3rem;
-}
-.unitTitle {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 700;
-}
-.unitLocation {
-    margin: 0.5rem 0 0 0;
-    font-size: 1rem;
-    opacity: 0.9;
+.fullAddress {
+  color: #333;
+  font-size: 18px;
 }
 
-/* PHẦN LỊCH SỬ */
-.historyBox {
-    padding: 1.5rem;
-    background-color: #fff;
-}
-.historyHeader {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-}
-.historyIcon {
-    font-size: 1.5rem;
-}
-.historyLabel {
-    font-weight: 700;
-    color: #e37400; /* Màu cam đậm */
-    font-size: 1.1rem;
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
 }
 
-.oldUnitList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-}
-.oldUnitItem {
-    background: #fef7e0;
-    color: #b06000;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    border: 1px solid #fce8b2;
-}
-.highlightItem {
-    background: #fce8b2;
-    border-color: #f9a825;
-    box-shadow: 0 0 0 2px #f9a825; /* Highlight đơn vị đang chọn */
+.metaItem {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
 }
 
-.mergerNote {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px dashed #eee;
-    color: #666;
-    font-size: 0.95rem;
-    line-height: 1.5;
+.metaLabel {
+  font-size: 12px;
+  color: #888;
+  display: block;
+  margin-bottom: 4px;
 }
 
-/* TRẠNG THÁI TRỐNG / LOADING */
+.metaValue {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+/* Trạng thái trống */
 .emptyState {
-    text-align: center;
-    padding: 3rem;
-    color: #999;
-    font-style: italic;
-    background: #fff;
-    border-radius: 12px;
-    border: 2px dashed #eee;
-}
-.loadingOverlay {
-    text-align: center;
-    padding: 2rem;
-    color: #1a73e8;
-    font-weight: bold;
-}
-.errorMsg {
-    color: #d93025;
-    text-align: center;
-    background: #fce8e6;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #adb5bd;
+  text-align: center;
+  min-height: 300px;
 }
 
-/* MOBILE */
-@media (max-width: 600px) {
-    .tabs {
-        flex-direction: column;
-    }
-    .tabButton {
-        width: 100%;
-        justify-content: center;
-    }
-    .container {
-        padding: 1rem;
-    }
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+/* Thông báo lỗi */
+.errorBox {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  border: 1px solid #ffeeba;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  color: #0056b3;
+  font-style: italic;
+  margin-top: 10px;
 }

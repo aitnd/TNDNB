@@ -1,242 +1,231 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 
-// Định nghĩa kiểu dữ liệu cho một dòng địa chỉ
+// --- 1. LOGIC XỬ LÝ DỮ LIỆU (Giữ nguyên vì đã chạy tốt) ---
 interface AddressRecord {
-  tinhCu: string;
-  huyenCu: string;
-  xaCu: string;
-  tinhMoi: string;
-  huyenMoi: string;
-  xaMoi: string;
-  nghiQuyet?: string;
-  ngayHieuLuc?: string;
+  tinhCu: string; huyenCu: string; xaCu: string;
+  tinhMoi: string; huyenMoi: string; xaMoi: string;
+  nghiQuyet?: string; ngayHieuLuc?: string;
 }
 
 export default function TraCuuDiaChiPage() {
-  // --- 1. STATE QUẢN LÝ DỮ LIỆU ---
   const [data, setData] = useState<AddressRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
   
-  // State cho các ô chọn (Dropdown)
   const [selectedTinh, setSelectedTinh] = useState('');
   const [selectedHuyen, setSelectedHuyen] = useState('');
   const [selectedXa, setSelectedXa] = useState('');
-  
-  // State kết quả tìm thấy
   const [result, setResult] = useState<AddressRecord | null>(null);
 
-  // --- 2. HÀM TẢI DỮ LIỆU TỪ FILE CSV ---
   useEffect(() => {
-    // Hàm đọc file CSV (giả lập file Excel anh đã export ra CSV)
-    // Anh nhớ đổi tên file CSV trong thư mục public/tra-cuu thành 'data.csv' cho gọn nhé, 
-    // hoặc sửa đường dẫn bên dưới đúng tên file hiện tại.
     const fetchData = async () => {
       try {
-        // Đường dẫn file CSV trong thư mục public
-        const response = await fetch('/tra-cuu/sap nhap.xlsx - DATA.csv'); 
-        const text = await response.text();
+        setLoading(true);
+        // Link file CSV (Ưu tiên file data.csv ngắn gọn)
+        const filePaths = ['/tra-cuu/data.csv', '/tra-cuu/sap%20nhap.xlsx%20-%20DATA.csv'];
+        let text = '', success = false;
+
+        for (const path of filePaths) {
+          try {
+            const res = await fetch(path);
+            if (res.ok) { text = await res.text(); success = true; break; }
+          } catch (e) {}
+        }
+
+        if (!success || !text) throw new Error("Không tìm thấy file data.csv");
+
+        const rows = text.split(/\r?\n/);
+        const delimiter = rows[0].includes(';') ? ';' : ','; 
         
-        // Parse CSV đơn giản (tách dòng, tách dấu phẩy)
-        // Lưu ý: Nếu file CSV có dấu phẩy trong nội dung, cần thư viện xịn hơn như PapaParse.
-        // Ở đây em làm code nhẹ (lightweight) giả định CSV chuẩn.
-        const rows = text.split('\n').slice(1); // Bỏ dòng tiêu đề
-        const parsedData: AddressRecord[] = rows.map(row => {
-          const cols = row.split(',').map(c => c.trim().replace(/^"|"$/g, '')); // Xóa dấu ngoặc kép thừa
+        const parsedData = rows.slice(1).map(row => {
+          if (!row.trim()) return null;
+          const cols = row.split(delimiter).map(c => c.trim().replace(/^"|"$/g, ''));
           if (cols.length < 6) return null;
           return {
-            tinhCu: cols[0],
-            huyenCu: cols[1],
-            xaCu: cols[2],
-            tinhMoi: cols[3],
-            huyenMoi: cols[4],
-            xaMoi: cols[5],
-            nghiQuyet: cols[6] || '',
-            ngayHieuLuc: cols[7] || ''
+            tinhCu: cols[0], huyenCu: cols[1], xaCu: cols[2],
+            tinhMoi: cols[3], huyenMoi: cols[4], xaMoi: cols[5],
+            nghiQuyet: cols[6] || '', ngayHieuLuc: cols[7] || ''
           };
         }).filter(Boolean) as AddressRecord[];
 
         setData(parsedData);
         setLoading(false);
-      } catch (error) {
-        console.error("Lỗi tải dữ liệu:", error);
+      } catch (error: any) {
+        setErrorMsg(error.message);
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
-  // --- 3. LOGIC LỌC DỮ LIỆU ---
-  
-  // Lấy danh sách Tỉnh (duy nhất)
-  const listTinh = Array.from(new Set(data.map(item => item.tinhCu))).sort();
+  const listTinh = Array.from(new Set(data.map(i => i.tinhCu))).sort();
+  const listHuyen = Array.from(new Set(data.filter(i => i.tinhCu === selectedTinh).map(i => i.huyenCu))).sort();
+  const listXa = Array.from(new Set(data.filter(i => i.tinhCu === selectedTinh && i.huyenCu === selectedHuyen).map(i => i.xaCu))).sort();
 
-  // Lấy danh sách Huyện (theo Tỉnh đã chọn)
-  const listHuyen = Array.from(new Set(
-    data.filter(item => item.tinhCu === selectedTinh).map(item => item.huyenCu)
-  )).sort();
-
-  // Lấy danh sách Xã (theo Tỉnh & Huyện đã chọn)
-  const listXa = Array.from(new Set(
-    data.filter(item => item.tinhCu === selectedTinh && item.huyenCu === selectedHuyen).map(item => item.xaCu)
-  )).sort();
-
-  // Hàm xử lý khi bấm nút "Tra cứu" (hoặc tự động hiện khi chọn xong xã)
   useEffect(() => {
     if (selectedTinh && selectedHuyen && selectedXa) {
-      const found = data.find(item => 
-        item.tinhCu === selectedTinh && 
-        item.huyenCu === selectedHuyen && 
-        item.xaCu === selectedXa
-      );
-      setResult(found || null);
-    } else {
-      setResult(null);
-    }
-  }, [selectedTinh, selectedHuyen, selectedXa, data]);
+      setResult(data.find(i => i.tinhCu === selectedTinh && i.huyenCu === selectedHuyen && i.xaCu === selectedXa) || null);
+    } else setResult(null);
+  }, [selectedTinh, selectedHuyen, selectedXa]);
 
 
-  // --- 4. GIAO DIỆN (UI) ---
+  // --- 2. GIAO DIỆN (Đã sửa lại theo phong cách Form Ngang) ---
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#f0f2f5',
+      padding: '40px 20px',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    }}>
       
-      {/* Header trang */}
-      <div className="max-w-4xl mx-auto text-center mb-10">
-        <h1 className="text-3xl font-bold text-blue-900 mb-2">
-          Tra Cứu Thông Tin Địa Giới Hành Chính
-        </h1>
-        <p className="text-gray-600">
-          Cập nhật thông tin thay đổi địa chỉ sau sáp nhập các đơn vị hành chính.
-        </p>
-      </div>
-
-      <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* KHUNG CHÍNH */}
+      <div style={{
+        maxWidth: '1000px',
+        margin: '0 auto',
+        backgroundColor: 'white',
+        borderRadius: '12px',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+        overflow: 'hidden'
+      }}>
         
-        {/* CỘT TRÁI: FORM NHẬP LIỆU */}
-        <div className="lg:col-span-5 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <div className="flex items-center mb-6">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold text-gray-800">Thông tin địa chỉ cũ</h2>
-          </div>
+        {/* HEADER XANH */}
+        <div style={{
+          backgroundColor: '#0056b3',
+          padding: '20px',
+          textAlign: 'center',
+          color: 'white'
+        }}>
+          <h1 style={{ margin: 0, fontSize: '24px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            Tra Cứu Thông Tin Địa Giới Hành Chính
+          </h1>
+          <p style={{ margin: '8px 0 0 0', opacity: 0.8, fontSize: '14px' }}>
+            Cập nhật dữ liệu sáp nhập mới nhất năm 2024-2025
+          </p>
+        </div>
 
-          <div className="space-y-4">
-            {/* Chọn Tỉnh */}
+        <div style={{ padding: '30px' }}>
+          
+          {/* THÔNG BÁO LỖI (NẾU CÓ) */}
+          {errorMsg && (
+            <div style={{ padding: '15px', backgroundColor: '#fff3cd', color: '#856404', borderRadius: '6px', marginBottom: '20px', border: '1px solid #ffeeba' }}>
+              ⚠️ <strong>Lỗi tải dữ liệu:</strong> {errorMsg}
+            </div>
+          )}
+
+          {/* HÀNG 3 Ô CHỌN (GRID LAYOUT) */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+            gap: '20px',
+            marginBottom: '30px'
+          }}>
+            
+            {/* Ô 1: TỈNH */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tỉnh / Thành phố</label>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#333' }}>Tỉnh / Thành phố cũ</label>
               <select 
+                style={selectStyle} 
                 value={selectedTinh}
-                onChange={(e) => {
-                  setSelectedTinh(e.target.value);
-                  setSelectedHuyen('');
-                  setSelectedXa('');
-                }}
-                className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition shadow-sm"
-                disabled={loading}
+                onChange={e => { setSelectedTinh(e.target.value); setSelectedHuyen(''); setSelectedXa(''); }}
               >
-                <option value="">-- Chọn Tỉnh/TP --</option>
+                <option value="">-- Chọn Tỉnh --</option>
                 {listTinh.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
 
-            {/* Chọn Huyện */}
+            {/* Ô 2: HUYỆN */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Quận / Huyện</label>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#333' }}>Quận / Huyện cũ</label>
               <select 
+                style={!selectedTinh ? disabledSelectStyle : selectStyle} 
                 value={selectedHuyen}
-                onChange={(e) => {
-                  setSelectedHuyen(e.target.value);
-                  setSelectedXa('');
-                }}
-                className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition shadow-sm disabled:bg-gray-100"
+                onChange={e => { setSelectedHuyen(e.target.value); setSelectedXa(''); }}
                 disabled={!selectedTinh}
               >
-                <option value="">-- Chọn Quận/Huyện --</option>
+                <option value="">-- Chọn Huyện --</option>
                 {listHuyen.map(h => <option key={h} value={h}>{h}</option>)}
               </select>
             </div>
 
-            {/* Chọn Xã */}
+            {/* Ô 3: XÃ */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phường / Xã</label>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#333' }}>Phường / Xã cũ</label>
               <select 
+                style={!selectedHuyen ? disabledSelectStyle : selectStyle} 
                 value={selectedXa}
-                onChange={(e) => setSelectedXa(e.target.value)}
-                className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition shadow-sm disabled:bg-gray-100"
+                onChange={e => setSelectedXa(e.target.value)}
                 disabled={!selectedHuyen}
               >
-                <option value="">-- Chọn Phường/Xã --</option>
+                <option value="">-- Chọn Xã --</option>
                 {listXa.map(x => <option key={x} value={x}>{x}</option>)}
               </select>
             </div>
           </div>
 
-          {loading && <p className="text-center text-sm text-gray-500 mt-4">Đang tải dữ liệu...</p>}
-        </div>
+          {loading && <p style={{ textAlign: 'center', color: '#0056b3', fontStyle: 'italic' }}>Đang tải dữ liệu...</p>}
 
-        {/* CỘT PHẢI: KẾT QUẢ */}
-        <div className="lg:col-span-7">
-          {result ? (
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-lg border border-green-100 p-6 h-full flex flex-col justify-center animate-fade-in-up">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-700 mr-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h2 className="text-xl font-bold text-green-800">Kết quả chuyển đổi</h2>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-green-100">
-                  <p className="text-xs text-gray-500 uppercase font-semibold mb-1">Đơn vị hành chính mới</p>
-                  <p className="text-lg font-bold text-gray-800">
-                    {result.xaMoi}, {result.huyenMoi}, {result.tinhMoi}
-                  </p>
-                </div>
+          <hr style={{ border: 'none', borderTop: '1px solid #eee', margin: '30px 0' }} />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-white/60 p-3 rounded-lg border border-green-50">
-                    <p className="text-xs text-gray-500">Căn cứ pháp lý</p>
-                    <p className="font-medium text-gray-700">{result.nghiQuyet || "Đang cập nhật"}</p>
+          {/* KHUNG KẾT QUẢ */}
+          <div style={{ textAlign: 'center' }}>
+            {result ? (
+              <div style={{ 
+                backgroundColor: '#f8fff9', 
+                border: '1px solid #28a745', 
+                borderRadius: '8px', 
+                padding: '30px' 
+              }}>
+                <p style={{ color: '#28a745', fontWeight: 'bold', fontSize: '14px', textTransform: 'uppercase', marginBottom: '10px' }}>
+                  ✅ Kết quả chuyển đổi
+                </p>
+                <h2 style={{ color: '#333', fontSize: '28px', margin: '0 0 5px 0' }}>{result.xaMoi}</h2>
+                <p style={{ fontSize: '18px', color: '#555', margin: 0 }}>
+                  {result.huyenMoi}, {result.tinhMoi}
+                </p>
+                
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', marginTop: '20px', paddingTop: '20px', borderTop: '1px dashed #c3e6cb' }}>
+                  <div>
+                    <span style={{ fontSize: '12px', color: '#888', textTransform: 'uppercase' }}>Căn cứ</span>
+                    <div style={{ fontWeight: '600', color: '#333' }}>{result.nghiQuyet || '-'}</div>
                   </div>
-                  <div className="bg-white/60 p-3 rounded-lg border border-green-50">
-                    <p className="text-xs text-gray-500">Ngày hiệu lực</p>
-                    <p className="font-medium text-gray-700">{result.ngayHieuLuc || "Đang cập nhật"}</p>
+                  <div>
+                    <span style={{ fontSize: '12px', color: '#888', textTransform: 'uppercase' }}>Ngày hiệu lực</span>
+                    <div style={{ fontWeight: '600', color: '#333' }}>{result.ngayHieuLuc || '-'}</div>
                   </div>
                 </div>
+              </div>
+            ) : (
+              <div style={{ padding: '40px', color: '#999', backgroundColor: '#fafafa', borderRadius: '8px', border: '1px dashed #ddd' }}>
+                Vui lòng chọn đầy đủ thông tin ở trên để xem kết quả.
+              </div>
+            )}
+          </div>
 
-                <div className="mt-4 pt-4 border-t border-green-200 text-center">
-                   <p className="text-green-700 italic text-sm">
-                     "Địa chỉ của bạn đã được cập nhật thành công theo quy định mới nhất."
-                   </p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* TRẠNG THÁI CHỜ (EMPTY STATE) */
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full flex flex-col items-center justify-center text-center opacity-70">
-              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <p className="text-gray-500 font-medium">Vui lòng chọn đầy đủ thông tin bên trái để xem kết quả.</p>
-            </div>
-          )}
         </div>
-      </div>
-      
-      <div className="text-center mt-12 text-sm text-gray-400">
-        <p>Dữ liệu được cập nhật từ các Nghị quyết của Ủy ban Thường vụ Quốc hội.</p>
       </div>
     </div>
   );
 }
+
+// --- STYLE OBJECTS (Để code gọn hơn) ---
+const selectStyle = {
+  width: '100%',
+  padding: '12px',
+  fontSize: '16px',
+  borderRadius: '6px',
+  border: '1px solid #ccc',
+  outline: 'none',
+  backgroundColor: '#fff',
+  cursor: 'pointer',
+  height: '48px' // Chiều cao cố định
+};
+
+const disabledSelectStyle = {
+  ...selectStyle,
+  backgroundColor: '#f5f5f5',
+  color: '#aaa',
+  cursor: 'not-allowed',
+  border: '1px solid #eee'
+};
