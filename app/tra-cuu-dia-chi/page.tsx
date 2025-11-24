@@ -1,115 +1,127 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { DATABASE, AddressRecord } from './data';
+
+// --- ĐỊNH NGHĨA KIỂU DỮ LIỆU TỪ API ---
+interface Province {
+  province_code: string;
+  name: string;
+}
+
+interface Ward {
+  ward_code: string;
+  ward_name: string;
+  province_code: string;
+  // Các trường dự đoán có thể trả về từ API để hiển thị chi tiết
+  old_units?: string[]; 
+  merger_details?: string;
+  is_merged?: boolean;
+}
 
 export default function TraCuuDiaChiPage() {
-  const [data] = useState<AddressRecord[]>(DATABASE); 
+  // --- STATE ---
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [wards, setWards] = useState<Ward[]>([]);
   
-  // --- STATE QUẢN LÝ ---
-  
-  // 1. Tỉnh
-  const [selectedTinh, setSelectedTinh] = useState('');
-  const [searchTinhTerm, setSearchTinhTerm] = useState(''); // Từ khóa tìm Tỉnh
-  const [showTinhSuggestions, setShowTinhSuggestions] = useState(false);
-  
-  // 2. Xã (Giờ cũng có tìm kiếm luôn)
-  const [selectedXa, setSelectedXa] = useState('');
-  const [searchXaTerm, setSearchXaTerm] = useState(''); // Từ khóa tìm Xã
-  const [showXaSuggestions, setShowXaSuggestions] = useState(false);
-  
-  // 3. Kết quả
-  const [result, setResult] = useState<AddressRecord | null>(null);
+  const [loadingProvinces, setLoadingProvinces] = useState(true);
+  const [loadingWards, setLoadingWards] = useState(false);
 
-  // Ref để xử lý click ra ngoài
-  const wrapperTinhRef = useRef<HTMLDivElement>(null);
-  const wrapperXaRef = useRef<HTMLDivElement>(null);
+  // State cho ô tìm kiếm Tỉnh
+  const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
+  const [searchProvinceTerm, setSearchProvinceTerm] = useState('');
+  const [showProvinceSuggestions, setShowProvinceSuggestions] = useState(false);
 
-  // --- LOGIC LỌC DỮ LIỆU ---
-  
-  // A. Lọc Tỉnh
-  const listTinhFull = Array.from(new Set(data.map(i => i.tinhCu))).sort();
-  const listTinhFiltered = listTinhFull.filter(t => 
-    t.toLowerCase().includes(searchTinhTerm.toLowerCase())
-  );
+  // State cho ô tìm kiếm Xã
+  const [selectedWard, setSelectedWard] = useState<Ward | null>(null);
+  const [searchWardTerm, setSearchWardTerm] = useState('');
+  const [showWardSuggestions, setShowWardSuggestions] = useState(false);
 
-  // B. Lọc Xã (Theo Tỉnh đã chọn + Từ khóa tìm kiếm)
-  const listXaFull = Array.from(new Set(
-    data.filter(i => i.tinhCu === selectedTinh).map(i => i.xaCu)
-  )).sort();
-  
-  const listXaFiltered = listXaFull.filter(x => 
-    x.toLowerCase().includes(searchXaTerm.toLowerCase())
-  );
+  // Ref để đóng gợi ý khi click ra ngoài
+  const wrapperProvinceRef = useRef<HTMLDivElement>(null);
+  const wrapperWardRef = useRef<HTMLDivElement>(null);
 
-  // C. Tìm kết quả
+  // --- 1. LẤY DANH SÁCH TỈNH (Khi mới vào trang) ---
   useEffect(() => {
-    if (selectedTinh && selectedXa) {
-      const found = data.find(i => i.tinhCu === selectedTinh && i.xaCu === selectedXa);
-      setResult(found || null);
-    } else {
-      setResult(null);
-    }
-  }, [selectedTinh, selectedXa, data]);
+    const fetchProvinces = async () => {
+      try {
+        const res = await fetch('https://34tinhthanh.com/api/provinces');
+        if (!res.ok) throw new Error('Lỗi kết nối API');
+        const data = await res.json();
+        setProvinces(data);
+      } catch (error) {
+        console.error("Không tải được danh sách tỉnh:", error);
+      } finally {
+        setLoadingProvinces(false);
+      }
+    };
+    fetchProvinces();
+  }, []);
 
-  // Xử lý click ra ngoài để đóng gợi ý
+  // --- 2. LẤY DANH SÁCH XÃ (Khi chọn Tỉnh) ---
+  useEffect(() => {
+    if (selectedProvince) {
+      setLoadingWards(true);
+      const fetchWards = async () => {
+        try {
+          // Gọi API lấy xã theo mã tỉnh
+          const res = await fetch(`https://34tinhthanh.com/api/wards?province_code=${selectedProvince.province_code}`);
+          if (!res.ok) throw new Error('Lỗi kết nối API');
+          const data = await res.json();
+          setWards(data);
+        } catch (error) {
+          console.error("Không tải được danh sách xã:", error);
+          setWards([]);
+        } finally {
+          setLoadingWards(false);
+        }
+      };
+      fetchWards();
+    } else {
+      setWards([]);
+    }
+  }, [selectedProvince]);
+
+  // --- LOGIC LỌC TÌM KIẾM (Client-side Filter) ---
+  const filteredProvinces = provinces.filter(p => 
+    p.name.toLowerCase().includes(searchProvinceTerm.toLowerCase())
+  );
+
+  const filteredWards = wards.filter(w => 
+    w.ward_name.toLowerCase().includes(searchWardTerm.toLowerCase())
+  );
+
+  // --- XỬ LÝ SỰ KIỆN CLICK RA NGOÀI ---
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (wrapperTinhRef.current && !wrapperTinhRef.current.contains(event.target as Node)) {
-        setShowTinhSuggestions(false);
+      if (wrapperProvinceRef.current && !wrapperProvinceRef.current.contains(event.target as Node)) {
+        setShowProvinceSuggestions(false);
       }
-      if (wrapperXaRef.current && !wrapperXaRef.current.contains(event.target as Node)) {
-        setShowXaSuggestions(false);
+      if (wrapperWardRef.current && !wrapperWardRef.current.contains(event.target as Node)) {
+        setShowWardSuggestions(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // --- HÀM XỬ LÝ (HANDLERS) ---
-  
-  // Chọn Tỉnh
-  const handleSelectTinh = (tinh: string) => {
-    setSelectedTinh(tinh);
-    setSearchTinhTerm(tinh);
-    setShowTinhSuggestions(false);
-    
-    // Reset Xã khi đổi Tỉnh
-    setSelectedXa('');
-    setSearchXaTerm('');
-  };
-
-  // Chọn Xã
-  const handleSelectXa = (xa: string) => {
-    setSelectedXa(xa);
-    setSearchXaTerm(xa);
-    setShowXaSuggestions(false);
-  };
-
   // --- GIAO DIỆN ---
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f0f2f5', padding: '40px 20px', fontFamily: 'sans-serif' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', padding: '40px 20px', fontFamily: 'sans-serif' }}>
       
-      <div style={{ maxWidth: '900px', margin: '0 auto', backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
         
         {/* HEADER */}
-        <div style={{ backgroundColor: '#0056b3', padding: '30px 20px', textAlign: 'center', color: 'white' }}>
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div style={{ background: 'linear-gradient(135deg, #0056b3 0%, #004494 100%)', padding: '35px 20px', textAlign: 'center', color: 'white' }}>
+          <h1 style={{ margin: 0, fontSize: '26px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>
             Tra Cứu Đơn Vị Hành Chính
           </h1>
-          <p style={{ margin: '8px 0 0 0', opacity: 0.9, fontSize: '14px' }}>
-            Dữ liệu sáp nhập mới nhất (2024 - 2025)
+          <p style={{ margin: '10px 0 0 0', opacity: 0.9, fontSize: '15px' }}>
+            Dữ liệu trực tuyến từ hệ thống 34tinhthanh.com
           </p>
         </div>
 
         <div style={{ padding: '40px 30px' }}>
           
-          {data.length === 0 && (
-            <div style={{ padding: '15px', backgroundColor: '#fff3cd', color: '#856404', borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}>
-              ⚠️ Chưa có dữ liệu. Vui lòng kiểm tra file data.ts
-            </div>
-          )}
-
           {/* GRID 2 CỘT */}
           <div style={{ 
             display: 'grid', 
@@ -118,40 +130,47 @@ export default function TraCuuDiaChiPage() {
             marginBottom: '40px'
           }}>
             
-            {/* Ô 1: TỈNH (SEARCHABLE) */}
-            <div ref={wrapperTinhRef} style={{ position: 'relative' }}>
-              <label style={labelStyle}>1. Nhập Tỉnh / Thành phố cũ</label>
+            {/* Ô 1: CHỌN TỈNH */}
+            <div ref={wrapperProvinceRef} style={{ position: 'relative' }}>
+              <label style={labelStyle}>1. Chọn Tỉnh / Thành phố</label>
               <div style={{ position: 'relative' }}>
                 <input 
                   type="text"
-                  placeholder="Gõ tên tỉnh (vd: Nam Định)..."
-                  value={searchTinhTerm}
+                  placeholder={loadingProvinces ? "Đang tải danh sách..." : "Gõ tên tỉnh (vd: Hà Nội)..."}
+                  value={searchProvinceTerm}
                   onChange={(e) => {
-                    setSearchTinhTerm(e.target.value);
-                    setSelectedTinh(''); // Reset chọn lại
-                    setSelectedXa('');
-                    setSearchXaTerm('');
-                    setShowTinhSuggestions(true);
+                    setSearchProvinceTerm(e.target.value);
+                    setSelectedProvince(null);
+                    setSelectedWard(null);
+                    setSearchWardTerm('');
+                    setShowProvinceSuggestions(true);
                   }}
-                  onFocus={() => setShowTinhSuggestions(true)}
+                  onFocus={() => setShowProvinceSuggestions(true)}
                   style={inputStyle}
+                  disabled={loadingProvinces}
                 />
-                <span style={iconSearchStyle}>🔍</span>
+                <span style={iconSearchStyle}>{loadingProvinces ? '⏳' : '🔍'}</span>
               </div>
 
-              {/* Gợi ý Tỉnh */}
-              {showTinhSuggestions && (
+              {showProvinceSuggestions && (
                 <ul style={suggestionListStyle}>
-                  {listTinhFiltered.length > 0 ? (
-                    listTinhFiltered.map((t, index) => (
+                  {filteredProvinces.length > 0 ? (
+                    filteredProvinces.map((p) => (
                       <li 
-                        key={index} 
-                        onClick={() => handleSelectTinh(t)}
+                        key={p.province_code} 
+                        onClick={() => {
+                          setSelectedProvince(p);
+                          setSearchProvinceTerm(p.name);
+                          setShowProvinceSuggestions(false);
+                          // Reset Ward
+                          setSelectedWard(null);
+                          setSearchWardTerm('');
+                        }}
                         style={suggestionItemStyle}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f9ff'}
                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
                       >
-                        {t}
+                        {p.name}
                       </li>
                     ))
                   ) : (
@@ -161,44 +180,50 @@ export default function TraCuuDiaChiPage() {
               )}
             </div>
 
-            {/* Ô 2: XÃ (SEARCHABLE - GIỜ ĐÃ CÓ TÌM KIẾM) */}
-            <div ref={wrapperXaRef} style={{ position: 'relative' }}>
-              <label style={labelStyle}>2. Nhập Phường / Xã cũ</label>
+            {/* Ô 2: CHỌN XÃ */}
+            <div ref={wrapperWardRef} style={{ position: 'relative' }}>
+              <label style={labelStyle}>2. Chọn Phường / Xã</label>
               <div style={{ position: 'relative' }}>
                 <input 
                   type="text"
-                  placeholder={!selectedTinh ? "Chọn Tỉnh trước..." : "Gõ tên xã (vd: Hòa Xá)..."}
-                  value={searchXaTerm}
+                  placeholder={
+                    !selectedProvince ? "Vui lòng chọn Tỉnh trước..." :
+                    loadingWards ? "Đang tải dữ liệu xã..." : "Gõ tên xã (vd: Phúc Xá)..."
+                  }
+                  value={searchWardTerm}
                   onChange={(e) => {
-                    setSearchXaTerm(e.target.value);
-                    setSelectedXa(''); // Reset chọn lại
-                    setShowXaSuggestions(true);
+                    setSearchWardTerm(e.target.value);
+                    setSelectedWard(null);
+                    setShowWardSuggestions(true);
                   }}
-                  onFocus={() => setShowXaSuggestions(true)}
-                  disabled={!selectedTinh}
-                  style={!selectedTinh ? disabledInputStyle : inputStyle}
+                  onFocus={() => setShowWardSuggestions(true)}
+                  disabled={!selectedProvince || loadingWards}
+                  style={(!selectedProvince || loadingWards) ? disabledInputStyle : inputStyle}
                 />
-                <span style={iconSearchStyle}>🔍</span>
+                <span style={iconSearchStyle}>{loadingWards ? '⏳' : '🔍'}</span>
               </div>
 
-              {/* Gợi ý Xã */}
-              {showXaSuggestions && selectedTinh && (
+              {showWardSuggestions && selectedProvince && (
                 <ul style={suggestionListStyle}>
-                  {listXaFiltered.length > 0 ? (
-                    listXaFiltered.map((x, index) => (
+                  {filteredWards.length > 0 ? (
+                    filteredWards.map((w) => (
                       <li 
-                        key={index} 
-                        onClick={() => handleSelectXa(x)}
+                        key={w.ward_code} 
+                        onClick={() => {
+                          setSelectedWard(w);
+                          setSearchWardTerm(w.ward_name);
+                          setShowWardSuggestions(false);
+                        }}
                         style={suggestionItemStyle}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f9ff'}
                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
                       >
-                        {x}
+                        {w.ward_name}
                       </li>
                     ))
                   ) : (
                     <li style={{ padding: '12px', color: '#999', textAlign: 'center' }}>
-                      {searchXaTerm ? "Không tìm thấy xã này" : "Nhập tên xã để tìm"}
+                      {loadingWards ? "Đang tải..." : "Không tìm thấy xã này"}
                     </li>
                   )}
                 </ul>
@@ -209,9 +234,9 @@ export default function TraCuuDiaChiPage() {
 
           <div style={{ borderTop: '1px dashed #e0e0e0', margin: '30px 0' }}></div>
 
-          {/* KẾT QUẢ */}
+          {/* KẾT QUẢ HIỂN THỊ */}
           <div style={{ textAlign: 'center', minHeight: '200px' }}>
-            {result ? (
+            {selectedWard && selectedProvince ? (
               <div style={{ animation: 'fadeIn 0.5s ease-out' }}>
                 <div style={{ 
                   backgroundColor: '#f0fff4', 
@@ -222,36 +247,40 @@ export default function TraCuuDiaChiPage() {
                   position: 'relative',
                   overflow: 'hidden'
                 }}>
-                  <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', backgroundColor: '#dcfce7', borderRadius: '50%', opacity: 0.5 }}></div>
+                  {/* Trang trí nền */}
+                  <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '120px', height: '120px', backgroundColor: '#dcfce7', borderRadius: '50%', opacity: 0.6 }}></div>
 
                   <p style={{ color: '#28a745', fontWeight: 'bold', fontSize: '13px', textTransform: 'uppercase', marginBottom: '15px', letterSpacing: '1px' }}>
-                    ✅ Đơn vị hành chính mới
+                    ✅ Thông tin đơn vị hành chính
                   </p>
                   
                   <h2 style={{ color: '#166534', fontSize: '32px', fontWeight: '800', margin: '0 0 10px 0', lineHeight: '1.2' }}>
-                    {result.xaMoi}
+                    {selectedWard.ward_name}
                   </h2>
                   
                   <p style={{ fontSize: '20px', color: '#374151', margin: 0, fontWeight: '500' }}>
-                    {result.tinhMoi}
+                    {selectedProvince.name}
                   </p>
                   
-                  <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', marginTop: '30px', paddingTop: '20px', borderTop: '1px dashed #bbf7d0' }}>
-                    <div>
-                      <span style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>Căn cứ pháp lý</span>
-                      <strong style={{ color: '#1f2937' }}>{result.nghiQuyet}</strong>
+                  {/* Hiển thị chi tiết sáp nhập nếu API trả về */}
+                  {(selectedWard.merger_details || (selectedWard.old_units && selectedWard.old_units.length > 0)) && (
+                    <div style={{ marginTop: '25px', padding: '15px', backgroundColor: 'rgba(255,255,255,0.6)', borderRadius: '8px', border: '1px dashed #28a745' }}>
+                       <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#166534' }}>Thông tin sáp nhập:</span>
+                       <p style={{ margin: '5px 0 0 0', color: '#333' }}>
+                         {selectedWard.merger_details || `Bao gồm: ${selectedWard.old_units?.join(', ')}`}
+                       </p>
                     </div>
-                    <div>
-                      <span style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px', textTransform: 'uppercase' }}>Ngày hiệu lực</span>
-                      <strong style={{ color: '#1f2937' }}>{result.ngayHieuLuc}</strong>
-                    </div>
+                  )}
+
+                  <div style={{ marginTop: '20px', fontSize: '12px', color: '#888' }}>
+                    Mã đơn vị: {selectedWard.ward_code} | Nguồn: 34tinhthanh.com
                   </div>
                 </div>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#9ca3af', padding: '20px' }}>
-                 <div style={{ fontSize: '60px', marginBottom: '15px', opacity: 0.5 }}>📂</div>
-                 <p style={{ fontSize: '16px' }}>Vui lòng nhập Tỉnh và Xã để xem kết quả.</p>
+                 <div style={{ fontSize: '60px', marginBottom: '15px', opacity: 0.5 }}>🌐</div>
+                 <p style={{ fontSize: '16px' }}>Kết nối API thành công.<br/>Vui lòng chọn địa phương để xem kết quả.</p>
               </div>
             )}
           </div>
@@ -268,7 +297,7 @@ export default function TraCuuDiaChiPage() {
   );
 }
 
-// --- STYLE OBJECTS ---
+// --- STYLE OBJECTS (Giữ nguyên style đẹp cũ) ---
 const labelStyle: React.CSSProperties = { 
   display: 'block', fontWeight: '600', marginBottom: '10px', color: '#374151', fontSize: '15px' 
 };
