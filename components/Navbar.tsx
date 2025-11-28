@@ -3,11 +3,11 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext' 
-import { useTheme, ThemeMode } from '../context/ThemeContext' // Nhớ import ThemeMode
+import { useTheme, ThemeMode } from '../context/ThemeContext'
 import { auth } from '../utils/firebaseClient' 
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaSun, FaMoon, FaSnowflake, FaChevronDown } from 'react-icons/fa' 
+import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaSun, FaMoon, FaSnowflake, FaChevronDown, FaStar } from 'react-icons/fa' 
 
 import styles from './Navbar.module.css' 
 
@@ -15,13 +15,12 @@ export default function Navbar() {
   const { user } = useAuth() 
   const { theme, setTheme } = useTheme()
   const router = useRouter()
-  const [showThemeMenu, setShowThemeMenu] = useState(false) // State cho dropdown
+  const [showThemeMenu, setShowThemeMenu] = useState(false) 
 
   const handleLogout = async () => {
     try { await signOut(auth); router.push('/login') } catch (err) { console.error(err) }
   }
 
-  // Danh sách theme để render
   const themes: { id: ThemeMode; label: string; icon: React.ReactNode }[] = [
     { id: 'light', label: 'Sáng', icon: <FaSun color="#FFA500"/> },
     { id: 'dark', label: 'Tối', icon: <FaMoon color="#FFD700"/> },
@@ -31,19 +30,45 @@ export default function Navbar() {
   return (
     <header style={{ position: 'relative' }}>
       
-      {/* 🎄 ẢNH TRANG TRÍ: Dây đèn góc phải (Chỉ hiện khi theme Noel) 🎄 */}
-      {/* class 'decor-img decor-nav-corner' đã định nghĩa trong globals.css */}
+      {/* Ảnh trang trí góc (chỉ hiện khi theme Noel) */}
       <img src="/assets/img/nav-light.png" alt="" className="decor-img decor-nav-corner" />
 
-      {/* THANH TOP */}
+      {/* THANH TOP HEADER */}
       <div className={styles.headerTop}>
         <div className={styles.topContainer}>
-          <Link href="/" className={styles.logo}>
-            Tư vấn và giáo dục Ninh Binh
+          
+          {/* 👇 KHU VỰC LOGO & TEXT ĐƯỢC CODE LẠI 👇 */}
+          <Link href="/" className={styles.brandArea}>
+            {/* Logo Bánh lái tàu */}
+            <img 
+              src="/assets/img/logo.png" 
+              alt="Logo TĐNB" 
+              className={styles.logoImg}
+            />
+            
+            {/* Nội dung chữ mô phỏng Banner */}
+            <div className={styles.brandText}>
+              <div className={styles.brandLine1}>CÔNG TY CỔ PHẦN</div>
+              <div className={styles.brandLine2}>
+                 <span className={styles.brandHighlight}>TƯ VẤN VÀ GIÁO DỤC NINH BÌNH</span>
+              </div>
+              <div className={styles.brandLine3}>
+                <FaStar className={styles.star} /> 
+                Đào tạo nâng hạng bằng thuyền, máy trưởng phương tiện thủy nội địa hạng nhất, nhì, ba
+              </div>
+              <div className={styles.brandLine3}>
+                <FaStar className={styles.star} /> 
+                Đào tạo và cấp các loại chứng chỉ chuyên môn cho người lái, thuyền viên phương tiện thủy nội địa:
+                Thủy thủ, thợ máy, an toàn ven biển ...
+              </div>
+            </div>
           </Link>
+          {/* 👆 KẾT THÚC KHU VỰC LOGO & TEXT 👆 */}
+
+
           <ul className={styles.topLinks}>
             
-            {/* 🔥 DROPDOWN CHỌN THEME 🔥 */}
+            {/* DROPDOWN CHỌN THEME */}
             <li style={{ position: 'relative' }}>
               <button 
                 onClick={() => setShowThemeMenu(!showThemeMenu)}
@@ -55,7 +80,8 @@ export default function Navbar() {
                   padding: '5px 12px',
                   borderRadius: '20px',
                   display: 'flex', alignItems: 'center', gap: '8px',
-                  fontSize: '0.85rem', fontWeight: '600'
+                  fontSize: '0.85rem', fontWeight: '600',
+                  backdropFilter: 'blur(4px)'
                 }}
               >
                 <FaPalette /> 
@@ -63,10 +89,9 @@ export default function Navbar() {
                 <FaChevronDown size={10} />
               </button>
 
-              {/* Menu con sổ xuống */}
               {showThemeMenu && (
                 <div style={{
-                  position: 'absolute', top: '110%', right: 0,
+                  position: 'absolute', top: '120%', right: 0,
                   backgroundColor: 'white',
                   borderRadius: '8px',
                   boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
@@ -94,7 +119,6 @@ export default function Navbar() {
               )}
             </li>
 
-            {/* User Info */}
             {user ? (
               <>
                 <li><span className={styles.welcomeText}>Chào, {user.fullName}!</span></li>
@@ -120,7 +144,6 @@ export default function Navbar() {
             <li><Link href="/thu-vien">Thư viện</Link></li>
             <li><Link href="/tai-lieu">Tài liệu</Link></li>
 
-            {/* Các icon hot */}
             <li>
               <Link href="/giai-tri" className={styles.hotLink}>
                 <FaGamepad className={styles.hotIcon} /> Giải trí
