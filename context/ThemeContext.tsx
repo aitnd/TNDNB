@@ -2,45 +2,46 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-// Định nghĩa kiểu dữ liệu cho Context
-type Theme = 'light' | 'dark'
+export type ThemeMode = 'light' | 'dark' | 'noel'
 
 interface ThemeContextType {
-  theme: Theme
-  toggleTheme: () => void
+  theme: ThemeMode
+  setTheme: (theme: ThemeMode) => void
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Mặc định là 'light' (sáng)
-  const [theme, setTheme] = useState<Theme>('light')
+  // 🔥 Mặc định state khởi tạo là 'noel'
+  const [theme, setThemeState] = useState<ThemeMode>('noel')
 
-  // Khi web vừa tải xong, kiểm tra xem trước đó người dùng chọn gì chưa
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme
+    const savedTheme = localStorage.getItem('theme') as ThemeMode
+    
     if (savedTheme) {
-      setTheme(savedTheme)
+      setThemeState(savedTheme)
       document.documentElement.setAttribute('data-theme', savedTheme)
+    } else {
+      // 🔥 Nếu chưa có lịch sử, ÉP MẶC ĐỊNH LÀ NOEL ngay lập tức
+      setThemeState('noel')
+      document.documentElement.setAttribute('data-theme', 'noel')
+      localStorage.setItem('theme', 'noel') // Lưu lại luôn
     }
   }, [])
 
-  // Hàm đổi giao diện
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    localStorage.setItem('theme', newTheme) // Lưu vào bộ nhớ trình duyệt
-    document.documentElement.setAttribute('data-theme', newTheme) // Đổi thuộc tính HTML để CSS bắt được
+  const setTheme = (newTheme: ThemeMode) => {
+    setThemeState(newTheme)
+    localStorage.setItem('theme', newTheme)
+    document.documentElement.setAttribute('data-theme', newTheme)
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   )
 }
 
-// Hook để dùng nhanh ở các component khác
 export const useTheme = () => {
   const context = useContext(ThemeContext)
   if (!context) {

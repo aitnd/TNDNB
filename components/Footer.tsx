@@ -1,104 +1,48 @@
 import React from 'react'
 import Link from 'next/link'
-// 💖 1. "TRIỆU HỒI" ICON FB, YOUTUBE 💖
-import { FaFacebookSquare, FaYoutube } from 'react-icons/fa'
-
-// "Triệu hồi" file CSS Module
 import styles from './Footer.module.css'
 
 export default function Footer() {
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} style={{ position: 'relative', overflow: 'hidden' }}>
+      
+      {/* 🎄 ẢNH TRANG TRÍ NOEL (Class đã định nghĩa ở globals.css) 🎄 */}
+      <img src="/assets/img/footer1.png" alt="" className="decor-img decor-footer-left" />
+      <img src="/assets/img/footer2.png" alt="" className="decor-img decor-footer-right" />
+
       <div className={styles.container}>
-        
-        {/* 💖 2. KHUNG LƯỚI 4 CỘT MỚI 💖 */}
-        <div className={styles.footerGrid}>
-
-          {/* --- CỘT 1: THÔNG TIN CTY --- */}
-          <div className={styles.footerColumn}>
-            <Link href="/" className={styles.footerLogo}>
-              CÔNG TY CỔ PHẦN
-              TƯ VẤN VÀ GIÁO DỤC NINH BÌNH
-            </Link>
-            <p>
-              <strong>Địa chỉ:</strong> Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình
-            </p>
-            <p><strong>MST:</strong> 2700960947</p>
-            <p><strong>SĐT:</strong> 022.96.282.969 </p>
-            <p><strong>Email:</strong> ninhbinheduco.jsc@gmail.com</p>
-	    <p><strong>      </strong> giaoducninhbinh@daotaothuyenvien.com</p>
-          </div>
-
-          {/* --- CỘT 2: LINK NHANH --- */}
-          <div className={styles.footerColumn}>
-            <h3 className={styles.footerTitle}>Về Chúng tôi</h3>
-            <ul className={styles.footerList}>
-              <li>
-                <Link href="/gioi-thieu">Giới thiệu chung</Link>
-              </li>
-              <li>
-                <Link href="/lien-he">Liên hệ</Link>
-              </li>
-              <li>
-                <Link href="/hoc-phi">Học phí</Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* --- CỘT 3: ĐÀO TẠO --- */}
-          <div className={styles.footerColumn}>
-            <h3 className={styles.footerTitle}>Đào tạo</h3>
-            <ul className={styles.footerList}>
-              <li>
-                <Link href="/tu-van-nghe-nghiep">Tư vấn nghề nghiệp</Link>
-              </li>
-              <li>
-                <Link href="/chuong-trinh-dao-tao">Chương trình đào tạo</Link>
-              </li>
-              <li>
-                <Link href="/thu-vien">Thư viện ảnh</Link>
-              </li>
-              <li>
-                <Link href="/tai-lieu">Tài liệu</Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* --- CỘT 4: KẾT NỐI --- */}
-          <div className={styles.footerColumn}>
-            <h3 className={styles.footerTitle}>Kết nối</h3>
-            <p>Theo dõi chúng tôi trên các nền tảng:</p>
-            <div className={styles.socialLinks}>
-              <a 
-                href="https://www.facebook.com/profile.php?id=61583836799509" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                title="Facebook"
-              >
-                <FaFacebookSquare />
-              </a>
-              <a 
-                href="https://www.youtube.com/@thuyenvienninhbinh" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                title="YouTube"
-                className={styles.youtube}
-              >
-                <FaYoutube />
-              </a>
-            </div>
-          </div>
-
-        </div> 
-        {/* (Hết cái lưới Grid) */}
-        
-        {/* (Dòng Copyright ở dưới cùng) */}
-        <div style={{textAlign: 'center', borderTop: '1px solid #444', paddingTop: '1.5rem', marginTop: '2rem', fontSize: '0.85rem'}}>
-          <p>
-            &copy; {new Date().getFullYear()} CÔNG TY CỔ PHẦN TƯ VẤN VÀ GIÁO DỤC NINH BÌNH. All rights reserved.
+        {/* Cột 1 */}
+        <div className={styles.col}>
+          <h3>VỀ CHÚNG TÔI</h3>
+          <p style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
+            Công ty CP Tư vấn và Giáo dục Ninh Bình chuyên đào tạo, bồi dưỡng cấp GCNKNCM và Chứng chỉ chuyên môn đường thủy nội địa.
           </p>
         </div>
+        
+        {/* Cột 2 */}
+        <div className={styles.col}>
+          <h3>LIÊN KẾT NHANH</h3>
+          <ul>
+            <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
+            <li><Link href="/chuong-trinh-dao-tao">Chương trình đào tạo</Link></li>
+            <li><Link href="/tuyen-dung">Tuyển dụng</Link></li>
+            <li><Link href="/lien-he">Liên hệ</Link></li>
+          </ul>
+        </div>
 
+        {/* Cột 3 */}
+        <div className={styles.col}>
+          <h3>LIÊN HỆ</h3>
+          <ul>
+             <li><i className="fas fa-map-marker-alt"></i> Số 1, Đường ABC, TP. Ninh Bình</li>
+             <li><i className="fas fa-phone"></i> 0912.345.678</li>
+             <li><i className="fas fa-envelope"></i> tuvan@tndnb.com</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className={styles.copyright}>
+        © {new Date().getFullYear()} TĐNB Ninh Bình. All rights reserved.
       </div>
     </footer>
   )

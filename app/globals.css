@@ -1,124 +1,229 @@
-/* === PHẦN 1: TRIỆU HỒI (IMPORTS) === */
+/* === PHẦN 1: IMPORT FONT & ICON === */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 
-/* === PHẦN 2: THIẾT LẬP BẢNG MÀU (THEME) === */
+/* === PHẦN 2: CẤU HÌNH 3 THEME === */
 :root {
-    /* --- Giao diện Sáng (Light Mode) --- */
-    /* Nền Header màu Trắng -> Chữ màu Xanh Đậm cho nổi */
-    --bg-header: #ffffff;      
-    --text-header: #004a99;    /* 💖 Màu chữ Header khi sáng (Logo & Link) */
-    
+    /* --- 1. Giao diện Sáng (Light) --- */
     --bg-body: #f3f4f6;
+    --bg-header: #ffffff;
+    --text-header: #004a99;
     --text-main: #333333;
     --text-link: #004a99;
     --bg-footer: #111827;
     --text-footer: #ffffff;
-    
-    /* Các biến cũ giữ nguyên */
     --mau-chinh: #004a99;
     --mau-nen-phu: #e6f0ff;
     --border-color: #e5e7eb;
 }
 
-/* --- Giao diện Tối (Dark Mode) --- */
 [data-theme='dark'] {
-    /* Nền Header màu Tối thẫm -> Chữ màu Trắng cho nổi */
-    --bg-header: #1f2937;      
-    --text-header: #ffffff;    /* 💖 Màu chữ Header khi tối (Logo & Link) */
-
+    /* --- 2. Giao diện Tối (Dark) --- */
     --bg-body: #111827;
+    --bg-header: #1f2937;
+    --text-header: #ffffff;
     --text-main: #f3f4f6;
     --text-link: #60a5fa;
     --bg-footer: #0f172a;
-
+    --text-footer: #9ca3af;
     --mau-chinh: #60a5fa;
     --mau-nen-phu: #374151;
     --border-color: #374151;
 }
 
-/* === PHẦN 3: STYLE CƠ BẢN (BODY) === */
+/* ... (Các phần trên giữ nguyên) ... */
+
+[data-theme='noel'] {
+    /* --- 3. Giao diện NOEL (Mới - Dùng ảnh nền) --- */
+    --christmas-red: #DA2535;
+    
+    /* 🔥 THAY ĐỔI Ở ĐÂY: Dùng ảnh nền thay cho gradient */
+    /* Anh thay 'noel-bg.jpg' bằng đúng tên file ảnh anh đã lưu nhé */
+    --bg-body: url('/assets/img/noel-bg.jpg') no-repeat center center fixed;
+    
+    /* Vì ảnh nền có thể sáng hoặc tối, mình nên để header bán trong suốt màu tối để dễ đọc chữ */
+    --bg-header: rgba(30, 10, 10, 0.85); 
+    --text-header: #ffffff;
+    --text-main: #e0e0e0;       /* Chữ nội dung màu sáng */
+    --text-link: #ff8fa3;       /* Link màu hồng/đỏ nổi bật */
+    --bg-footer: rgba(30, 10, 10, 0.9); /* Footer cũng bán trong suốt */
+    --text-footer: #cccccc;
+    --mau-chinh: #ff4757;
+    --mau-nen-phu: rgba(255, 255, 255, 0.1);
+    --border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* === PHẦN 3: STYLE CƠ BẢN === */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    /* Dùng biến --bg-body làm nền */
+    background: var(--bg-body);
+    /* Đảm bảo ảnh luôn phủ kín màn hình */
+    background-size: cover; 
     
-    /* 💖 Dùng biến màu ở đây để nó tự đổi nhé */
-    background-color: var(--bg-body);
     color: var(--text-main);
-    
+    font-family: 'Rubik', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0; padding: 0;
     line-height: 1.6;
     overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Hiệu ứng chuyển màu mượt */
+    min-height: 100vh;
+    transition: all 0.3s ease; /* Chuyển đổi mượt mà */
 }
+
+/* ... (Các phần dưới giữ nguyên) ... */
+
 
 a {
     color: var(--text-link);
     text-decoration: none;
-    transition: color 0.2s;
+    transition: all 0.2s;
 }
 a:hover {
     text-decoration: underline;
+    filter: brightness(1.2); /* Sáng lên khi hover */
 }
 
-/* Update màu cho Header/Navbar nếu cần (thêm class tiện ích) */
-header {
-    background-color: var(--bg-header);
-    transition: background-color 0.3s ease;
+/* Scrollbar đẹp hơn */
+::-webkit-scrollbar {
+    width: 0.6rem;
+    background: rgba(0,0,0,0.2);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--mau-chinh);
+    border-radius: 1rem;
 }
 
-/* === PHẦN NỘI DUNG BÀI VIẾT (Giữ nguyên cấu trúc, chỉ thay màu) === */
-.post-content {
-    line-height: 1.7;
-    font-size: 1.1rem;
-    color: var(--text-main); /* Đổi thành biến */
+/* Nội dung bài viết */
+.post-content h1, .post-content h2, .post-content h3 {
+    color: var(--mau-chinh);
 }
-.post-content h1,
-.post-content h2,
-.post-content h3,
-.post-content h4 {
-    color: var(--text-link); /* Đổi thành biến */
-    font-weight: 700;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-}
-.post-content blockquote {
-    margin: 1.5rem 0;
-    padding-left: 1.5rem;
-    border-left: 4px solid var(--mau-nen-phu);
-    font-style: italic;
-    color: var(--text-main);
-    opacity: 0.8;
+[data-theme='noel'] .post-content h1, 
+[data-theme='noel'] .post-content h2 {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Thêm bóng chữ cho nổi */
 }
 
-/* ... Giữ nguyên các phần CSS cho ảnh và video ở dưới của anh ... */
-.post-content img {
-  max-width: 100% !important; 
-  width: auto !important;     
-  height: auto !important;    
-  border-radius: 8px; 
-  margin: 1.5rem 0; 
-  display: block !important;   
-  margin-left: auto !important; 
-  margin-right: auto !important;
-  float: none !important;      
+/* === PHẦN 4: ẢNH TRANG TRÍ (CHỈ HIỆN Ở THEME NOEL) === */
+.decor-img {
+    display: none; 
+    position: absolute;
+    pointer-events: none; 
+    z-index: 10;
+}
+[data-theme='noel'] .decor-img { display: block; }
+
+/* Dây đèn */
+.decor-nav-corner {
+    top: 0; right: 0;
+    width: 140px; height: auto;
+    z-index: 101;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); /* Hiệu ứng phát sáng */
 }
 
-.post-content figure.se-video-container {
-  padding-bottom: 0 !important; 
-  height: auto !important;
-  position: static !important; 
+/* Footer Decor */
+.decor-footer-left {
+    bottom: 0; left: 0; width: 150px;
+    animation: swing 3s infinite ease-in-out;
+}
+.decor-footer-right {
+    bottom: 20px; right: -10px; width: 120px;
+    transform: rotate(10deg);
 }
 
-.post-content iframe {
-  width: 100% !important; 
-  aspect-ratio: 16 / 9; 
-  height: auto !important; 
-  border: none !important;
-  border-radius: 8px;
-  margin: 1.5rem 0;
+@keyframes swing {
+    0% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+    100% { transform: rotate(-5deg); }
 }
+
+/* === PHẦN 5: HIỆU ỨNG TUYẾT & QUÀ RƠI === */
+.snowflakes {
+    display: none;
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+[data-theme='noel'] .snowflakes { display: block; }
+
+.snowflake {
+    color: #fff;
+    font-size: 1.2em;
+    font-family: Arial, sans-serif;
+    text-shadow: 0 0 3px rgba(255,255,255,0.8); /* Tuyết phát sáng nhẹ */
+    position: fixed;
+    top: -10%;
+    z-index: 9999;
+    user-select: none;
+    cursor: default;
+    animation-name: snowflakes-fall, snowflakes-shake;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    animation-play-state: running, running;
+}
+
+.snowflake-img img {
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    width: 30px; 
+    height: auto;
+    opacity: 0.9;
+}
+
+@keyframes snowflakes-fall {
+    0% { top: -10%; }
+    100% { top: 100%; }
+}
+@keyframes snowflakes-shake {
+    0% { transform: translateX(0px) rotate(0deg); }
+    50% { transform: translateX(80px) rotate(180deg); }
+    100% { transform: translateX(0px) rotate(360deg); }
+}
+
+/* Cấu hình rơi ngẫu nhiên (Giữ nguyên logic cũ) */
+.snowflake:nth-of-type(1) { left: 1%; animation-duration: 12s, 4s; animation-delay: 0s, 0s; }
+.snowflake:nth-of-type(2) { left: 5%; animation-duration: 15s, 6s; animation-delay: 1s, 1s; }
+.snowflake:nth-of-type(3) { left: 10%; animation-duration: 10s, 3s; animation-delay: 2s, 0.5s; }
+.snowflake:nth-of-type(4) { left: 15%; animation-duration: 18s, 5s; animation-delay: 4s, 2s; }
+.snowflake:nth-of-type(5) { left: 20%; animation-duration: 11s, 4s; animation-delay: 2s, 2s; }
+.snowflake:nth-of-type(6) { left: 25%; animation-duration: 14s, 7s; animation-delay: 6s, 3s; }
+.snowflake:nth-of-type(7) { left: 30%; animation-duration: 16s, 5s; animation-delay: 3s, 2s; }
+.snowflake:nth-of-type(8) { left: 35%; animation-duration: 13s, 4s; animation-delay: 1s, 1s; }
+.snowflake:nth-of-type(9) { left: 40%; animation-duration: 17s, 6s; animation-delay: 0s, 0s; }
+.snowflake:nth-of-type(10) { left: 45%; animation-duration: 9s, 3s; animation-delay: 5s, 1.5s; }
+.snowflake:nth-of-type(11) { left: 50%; animation-duration: 14s, 5s; animation-delay: 2s, 3s; }
+.snowflake:nth-of-type(12) { left: 55%; animation-duration: 11s, 4s; animation-delay: 4s, 1s; }
+.snowflake:nth-of-type(13) { left: 60%; animation-duration: 19s, 7s; animation-delay: 1s, 2s; }
+.snowflake:nth-of-type(14) { left: 65%; animation-duration: 12s, 3s; animation-delay: 3s, 0s; }
+.snowflake:nth-of-type(15) { left: 70%; animation-duration: 15s, 6s; animation-delay: 5s, 4s; }
+.snowflake:nth-of-type(16) { left: 75%; animation-duration: 10s, 4s; animation-delay: 0s, 2s; }
+.snowflake:nth-of-type(17) { left: 80%; animation-duration: 16s, 5s; animation-delay: 2s, 1s; }
+.snowflake:nth-of-type(18) { left: 85%; animation-duration: 13s, 4s; animation-delay: 4s, 3s; }
+.snowflake:nth-of-type(19) { left: 90%; animation-duration: 18s, 6s; animation-delay: 1s, 2s; }
+.snowflake:nth-of-type(20) { left: 95%; animation-duration: 11s, 3s; animation-delay: 3s, 0s; }
+/* ... (Các dòng cấu hình random khác vẫn giữ nguyên như cũ để tuyết rơi đẹp) ... */
+.snowflake:nth-of-type(21) { left: 2%; animation-duration: 13s, 5s; animation-delay: 5s, 1s; }
+.snowflake:nth-of-type(22) { left: 8%; animation-duration: 10s, 3s; animation-delay: 2s, 4s; }
+.snowflake:nth-of-type(23) { left: 12%; animation-duration: 16s, 6s; animation-delay: 1s, 2s; }
+.snowflake:nth-of-type(24) { left: 18%; animation-duration: 12s, 4s; animation-delay: 6s, 0s; }
+.snowflake:nth-of-type(25) { left: 22%; animation-duration: 14s, 5s; animation-delay: 0s, 3s; }
+.snowflake:nth-of-type(26) { left: 28%; animation-duration: 11s, 3s; animation-delay: 4s, 2s; }
+.snowflake:nth-of-type(27) { left: 32%; animation-duration: 19s, 7s; animation-delay: 2s, 1s; }
+.snowflake:nth-of-type(28) { left: 38%; animation-duration: 15s, 6s; animation-delay: 5s, 5s; }
+.snowflake:nth-of-type(29) { left: 42%; animation-duration: 12s, 4s; animation-delay: 1s, 0s; }
+.snowflake:nth-of-type(30) { left: 48%; animation-duration: 17s, 5s; animation-delay: 3s, 2s; }
+.snowflake:nth-of-type(31) { left: 52%; animation-duration: 9s, 3s; animation-delay: 0s, 3s; }
+.snowflake:nth-of-type(32) { left: 58%; animation-duration: 14s, 6s; animation-delay: 4s, 1s; }
+.snowflake:nth-of-type(33) { left: 62%; animation-duration: 11s, 4s; animation-delay: 2s, 4s; }
+.snowflake:nth-of-type(34) { left: 68%; animation-duration: 16s, 5s; animation-delay: 6s, 0s; }
+.snowflake:nth-of-type(35) { left: 72%; animation-duration: 13s, 3s; animation-delay: 1s, 2s; }
+.snowflake:nth-of-type(36) { left: 78%; animation-duration: 18s, 7s; animation-delay: 5s, 1s; }
+.snowflake:nth-of-type(37) { left: 82%; animation-duration: 10s, 4s; animation-delay: 2s, 3s; }
+.snowflake:nth-of-type(38) { left: 88%; animation-duration: 15s, 6s; animation-delay: 4s, 0s; }
+.snowflake:nth-of-type(39) { left: 92%; animation-duration: 12s, 5s; animation-delay: 0s, 2s; }
+.snowflake:nth-of-type(40) { left: 98%; animation-duration: 17s, 4s; animation-delay: 3s, 5s; }
+
+.snowflake:nth-child(odd) { animation-direction: normal; }
+.snowflake:nth-child(even) { animation-direction: alternate; }
 
 @media (max-width: 768px) {
-  html { font-size: 14px; }
-  body { font-size: 1rem; }
+    .snowflake { font-size: 1em; }
+    .snowflake-img img { width: 20px; }
 }

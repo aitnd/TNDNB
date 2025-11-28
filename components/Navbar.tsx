@@ -1,32 +1,41 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext' 
-import { useTheme } from '../context/ThemeContext'
+import { useTheme, ThemeMode } from '../context/ThemeContext' // Nhớ import ThemeMode
 import { auth } from '../utils/firebaseClient' 
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaMoon, FaSun } from 'react-icons/fa' 
+import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaSun, FaMoon, FaSnowflake, FaChevronDown } from 'react-icons/fa' 
 
 import styles from './Navbar.module.css' 
 
 export default function Navbar() {
   const { user } = useAuth() 
-  const { theme, toggleTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const router = useRouter()
+  const [showThemeMenu, setShowThemeMenu] = useState(false) // State cho dropdown
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth)
-      router.push('/login') 
-    } catch (err) {
-      console.error('Lỗi khi đăng xuất:', err)
-    }
+    try { await signOut(auth); router.push('/login') } catch (err) { console.error(err) }
   }
 
+  // Danh sách theme để render
+  const themes: { id: ThemeMode; label: string; icon: React.ReactNode }[] = [
+    { id: 'light', label: 'Sáng', icon: <FaSun color="#FFA500"/> },
+    { id: 'dark', label: 'Tối', icon: <FaMoon color="#FFD700"/> },
+    { id: 'noel', label: 'Noel', icon: <FaSnowflake color="#fff"/> },
+  ]
+
   return (
-    <header>
+    <header style={{ position: 'relative' }}>
+      
+      {/* 🎄 ẢNH TRANG TRÍ: Dây đèn góc phải (Chỉ hiện khi theme Noel) 🎄 */}
+      {/* class 'decor-img decor-nav-corner' đã định nghĩa trong globals.css */}
+      <img src="/assets/img/nav-light.png" alt="" className="decor-img decor-nav-corner" />
+
+      {/* THANH TOP */}
       <div className={styles.headerTop}>
         <div className={styles.topContainer}>
           <Link href="/" className={styles.logo}>
@@ -34,38 +43,61 @@ export default function Navbar() {
           </Link>
           <ul className={styles.topLinks}>
             
-            {/* 💖 NÚT ĐỔI GIAO DIỆN (PHIÊN BẢN CHỮ TRẮNG TOÀN TẬP) 💖 */}
-            <li style={{ marginRight: '15px' }}>
+            {/* 🔥 DROPDOWN CHỌN THEME 🔥 */}
+            <li style={{ position: 'relative' }}>
               <button 
-                onClick={toggleTheme}
+                onClick={() => setShowThemeMenu(!showThemeMenu)}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.1)', // Nền mờ nhẹ
-                  border: '1px solid rgba(255, 255, 255, 0.5)', // Viền trắng mờ
-                  color: '#ffffff', // ⚡ LUÔN LÀ CHỮ TRẮNG (để nổi trên nền Xanh/Đen)
+                  background: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  color: 'var(--text-header)',
                   cursor: 'pointer',
                   padding: '5px 12px',
                   borderRadius: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '0.85rem',
-                  fontWeight: '600',
-                  transition: 'all 0.3s ease'
+                  display: 'flex', alignItems: 'center', gap: '8px',
+                  fontSize: '0.85rem', fontWeight: '600'
                 }}
-                title="Đổi giao diện Sáng/Tối"
               >
-                {theme === 'light' ? <FaMoon color="#FFD700" /> : <FaSun color="#FFA500" />}
-                <span>{theme === 'light' ? 'Giao diện Tối' : 'Giao diện Sáng'}</span>
+                <FaPalette /> 
+                <span>Giao diện</span>
+                <FaChevronDown size={10} />
               </button>
+
+              {/* Menu con sổ xuống */}
+              {showThemeMenu && (
+                <div style={{
+                  position: 'absolute', top: '110%', right: 0,
+                  backgroundColor: 'white',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  overflow: 'hidden', zIndex: 100,
+                  minWidth: '120px'
+                }}>
+                  {themes.map((t) => (
+                    <div 
+                      key={t.id}
+                      onClick={() => { setTheme(t.id); setShowThemeMenu(false) }}
+                      style={{
+                        padding: '10px 15px',
+                        cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '10px',
+                        color: theme === t.id ? 'var(--mau-chinh)' : '#333',
+                        fontWeight: theme === t.id ? 'bold' : 'normal',
+                        backgroundColor: theme === t.id ? '#f0f9ff' : 'transparent',
+                        borderBottom: '1px solid #eee'
+                      }}
+                    >
+                      {t.icon} {t.label}
+                    </div>
+                  ))}
+                </div>
+              )}
             </li>
 
+            {/* User Info */}
             {user ? (
               <>
-                <li>
-                  <span className={styles.welcomeText}>
-                    Chào, {user.fullName}!
-                  </span>
-                </li>
+                <li><span className={styles.welcomeText}>Chào, {user.fullName}!</span></li>
                 <li><Link href="/quan-ly">Quản lý</Link></li>
                 <li><button onClick={handleLogout}>Đăng xuất</button></li>
               </>
@@ -76,7 +108,7 @@ export default function Navbar() {
         </div>
       </div>
       
-      {/* (Phần dưới giữ nguyên) */}
+      {/* THANH MAIN NAV (Giữ nguyên) */}
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
           <ul className={styles.navLinks}>
@@ -88,35 +120,27 @@ export default function Navbar() {
             <li><Link href="/thu-vien">Thư viện</Link></li>
             <li><Link href="/tai-lieu">Tài liệu</Link></li>
 
+            {/* Các icon hot */}
             <li>
               <Link href="/giai-tri" className={styles.hotLink}>
                 <FaGamepad className={styles.hotIcon} /> Giải trí
               </Link>
             </li>
-
             <li>
-              <a 
-                href="https://ontap.daotaothuyenvien.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={styles.hotLink} 
-              >
+               <a href="https://ontap.daotaothuyenvien.com/" target="_blank" rel="noreferrer" className={styles.hotLink}>
                 <FaBookOpen className={styles.hotIcon} /> Ôn tập
               </a>
             </li>
-
             <li>
               <Link href="/thitructuyen" className={styles.hotLink}>
                 <FaLaptop className={styles.hotIcon} /> Thi Online
               </Link>
             </li>
-            
             <li>
               <Link href="/tra-cuu-dia-chi" className={styles.hotLink}>
                  <FaSearchLocation className={styles.hotIcon} /> Tra cứu ĐC
               </Link>
             </li>
-
             <li><Link href="/lien-he">Liên hệ</Link></li>
           </ul>
         </div>
