@@ -3,41 +3,45 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext' 
-import { useTheme, ThemeMode } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 import { auth } from '../utils/firebaseClient' 
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaSun, FaMoon, FaSnowflake, FaChevronDown, FaStar } from 'react-icons/fa' 
+// Icon
+import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaChevronDown, FaSun, FaMoon, FaSnowflake, FaStar, FaUserCog, FaSignOutAlt } from 'react-icons/fa' 
 
 import styles from './Navbar.module.css' 
 
 export default function Navbar() {
   const { user } = useAuth() 
-  const { theme, setTheme } = useTheme()
+  const { theme, toggleTheme } = useTheme()
   const router = useRouter()
-  const [showThemeMenu, setShowThemeMenu] = useState(false) 
-
+  
   const handleLogout = async () => {
-    try { await signOut(auth); router.push('/login') } catch (err) { console.error(err) }
+    try {
+      await signOut(auth)
+      router.push('/login') 
+    } catch (err) {
+      console.error('Lỗi khi đăng xuất:', err)
+    }
   }
 
-  const themes: { id: ThemeMode; label: string; icon: React.ReactNode }[] = [
-    { id: 'light', label: 'Sáng', icon: <FaSun color="#FFA500"/> },
-    { id: 'dark', label: 'Tối', icon: <FaMoon color="#FFD700"/> },
-    { id: 'noel', label: 'Noel', icon: <FaSnowflake color="#fff"/> },
-  ]
-
   return (
-    <header style={{ position: 'relative' }}>
-      
-      {/* Ảnh trang trí góc (chỉ hiện khi theme Noel) */}
-      <img src="/assets/img/nav-light.png" alt="" className="decor-img decor-nav-corner" />
+    <header>
+      {/* 🎄 ẢNH TRANG TRÍ (Chỉ hiện khi Theme Noel) 🎄 */}
+      {theme === 'noel' && (
+        <img 
+          src="/assets/img/nav-light.png" 
+          alt="" 
+          style={{ position: 'absolute', top: 0, right: 0, width: '120px', pointerEvents: 'none', zIndex: 60 }} 
+        />
+      )}
 
-      {/* THANH TOP HEADER */}
+      {/* === THANH TOP HEADER === */}
       <div className={styles.headerTop}>
         <div className={styles.topContainer}>
           
-          {/* 👇 KHU VỰC LOGO & TEXT ĐƯỢC CODE LẠI 👇 */}
+          {/* 👇 KHU VỰC LOGO & TEXT ĐƯỢC CODE LẠI THEO YÊU CẦU 👇 */}
           <Link href="/" className={styles.brandArea}>
             {/* Logo Bánh lái tàu */}
             <img 
@@ -66,73 +70,52 @@ export default function Navbar() {
           {/* 👆 KẾT THÚC KHU VỰC LOGO & TEXT 👆 */}
 
 
-          <ul className={styles.topLinks}>
+          {/* 2. KHU VỰC BÊN PHẢI (THEME & USER) */}
+          <div className={styles.rightArea}>
             
-            {/* DROPDOWN CHỌN THEME */}
-            <li style={{ position: 'relative' }}>
+            {/* Nút Đổi Theme */}
+            <div style={{ position: 'relative' }}>
               <button 
-                onClick={() => setShowThemeMenu(!showThemeMenu)}
-                style={{
-                  background: 'rgba(255,255,255,0.1)',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  color: 'var(--text-header)',
-                  cursor: 'pointer',
-                  padding: '5px 12px',
-                  borderRadius: '20px',
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  fontSize: '0.85rem', fontWeight: '600',
-                  backdropFilter: 'blur(4px)'
-                }}
+                className={styles.themeBtn}
+                onClick={toggleTheme}
+                title="Đổi giao diện"
               >
-                <FaPalette /> 
-                <span>Giao diện</span>
-                <FaChevronDown size={10} />
+                {theme === 'light' && <><FaSun color="orange"/> Sáng</>}
+                {theme === 'dark' && <><FaMoon color="yellow"/> Tối</>}
+                {theme === 'noel' && <><FaSnowflake color="white"/> Noel</>}
               </button>
+            </div>
 
-              {showThemeMenu && (
-                <div style={{
-                  position: 'absolute', top: '120%', right: 0,
-                  backgroundColor: 'white',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                  overflow: 'hidden', zIndex: 100,
-                  minWidth: '120px'
-                }}>
-                  {themes.map((t) => (
-                    <div 
-                      key={t.id}
-                      onClick={() => { setTheme(t.id); setShowThemeMenu(false) }}
-                      style={{
-                        padding: '10px 15px',
-                        cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', gap: '10px',
-                        color: theme === t.id ? 'var(--mau-chinh)' : '#333',
-                        fontWeight: theme === t.id ? 'bold' : 'normal',
-                        backgroundColor: theme === t.id ? '#f0f9ff' : 'transparent',
-                        borderBottom: '1px solid #eee'
-                      }}
-                    >
-                      {t.icon} {t.label}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </li>
-
+            {/* User Menu (GOM GỌN) */}
             {user ? (
-              <>
-                <li><span className={styles.welcomeText}>Chào, {user.fullName}!</span></li>
-                <li><Link href="/quan-ly">Quản lý</Link></li>
-                <li><button onClick={handleLogout}>Đăng xuất</button></li>
-              </>
+              <div className={styles.userBox}>
+                {/* Dòng 1: Tên User */}
+                <div className={styles.welcomeText}>
+                  Chào, {user.fullName}
+                </div>
+                
+                {/* Dòng 2: Nút Quản lý | Thoát */}
+                <div className={styles.userActions}>
+                  <Link href="/quan-ly" className={styles.actionLink}>
+                    <FaUserCog /> Quản lý
+                  </Link>
+                  <span className={styles.separator}>|</span>
+                  <button onClick={handleLogout} className={styles.actionLink}>
+                    <FaSignOutAlt /> Thoát
+                  </button>
+                </div>
+              </div>
             ) : (
-              <li><Link href="/login">Đăng nhập</Link></li>
+              <Link href="/login" className={styles.loginBtn}>
+                Đăng nhập
+              </Link>
             )}
-          </ul>
+
+          </div>
         </div>
       </div>
       
-      {/* THANH MAIN NAV (Giữ nguyên) */}
+      {/* === THANH MAIN NAV (Giữ nguyên) === */}
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
           <ul className={styles.navLinks}>
@@ -150,7 +133,7 @@ export default function Navbar() {
               </Link>
             </li>
             <li>
-               <a href="https://ontap.daotaothuyenvien.com/" target="_blank" rel="noreferrer" className={styles.hotLink}>
+              <a href="https://ontap.daotaothuyenvien.com/" target="_blank" className={styles.hotLink}>
                 <FaBookOpen className={styles.hotIcon} /> Ôn tập
               </a>
             </li>

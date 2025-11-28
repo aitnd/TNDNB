@@ -2,17 +2,19 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
+// Định nghĩa 3 loại theme
 export type ThemeMode = 'light' | 'dark' | 'noel'
 
 interface ThemeContextType {
   theme: ThemeMode
   setTheme: (theme: ThemeMode) => void
+  toggleTheme: () => void // ✅ THÊM DÒNG NÀY ĐỂ HẾT LỖI
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // 🔥 Mặc định state khởi tạo là 'noel'
+  // Mặc định state khởi tạo là 'noel'
   const [theme, setThemeState] = useState<ThemeMode>('noel')
 
   useEffect(() => {
@@ -22,21 +24,37 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setThemeState(savedTheme)
       document.documentElement.setAttribute('data-theme', savedTheme)
     } else {
-      // 🔥 Nếu chưa có lịch sử, ÉP MẶC ĐỊNH LÀ NOEL ngay lập tức
+      // Nếu chưa có lịch sử, ÉP MẶC ĐỊNH LÀ NOEL
       setThemeState('noel')
       document.documentElement.setAttribute('data-theme', 'noel')
-      localStorage.setItem('theme', 'noel') // Lưu lại luôn
+      localStorage.setItem('theme', 'noel')
     }
   }, [])
 
+  // Hàm set theme cụ thể (dùng khi chọn từ dropdown nếu có)
   const setTheme = (newTheme: ThemeMode) => {
     setThemeState(newTheme)
     localStorage.setItem('theme', newTheme)
     document.documentElement.setAttribute('data-theme', newTheme)
   }
 
+  // ✅ HÀM CHUYỂN ĐỔI VÒNG TRÒN (Sáng -> Tối -> Noel)
+  const toggleTheme = () => {
+    let nextTheme: ThemeMode = 'light'
+    
+    if (theme === 'light') {
+      nextTheme = 'dark'
+    } else if (theme === 'dark') {
+      nextTheme = 'noel'
+    } else {
+      nextTheme = 'light' // Từ Noel quay về Sáng
+    }
+
+    setTheme(nextTheme)
+  }
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   )

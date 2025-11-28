@@ -1,13 +1,12 @@
-/* === THANH TOP (Chứa Logo & Chữ) === */
+/* === THANH TOP (Chứa Banner, Theme & User) === */
 .headerTop {
+  background-color: var(--bg-header); /* Màu đổi theo theme */
+  color: var(--text-header);
   padding: 10px 0;
-  /* Nếu là theme Noel (đã set trong globals), nền sẽ là ảnh/gradient đỏ */
-  /* Nếu theme Sáng, nền trắng -> Cần CSS riêng để giống banner xanh nhạt (nếu muốn) */
-  background: var(--bg-header); 
   border-bottom: 1px solid rgba(255,255,255,0.1);
   transition: all 0.3s ease;
   position: relative;
-  z-index: 50; /* Đảm bảo nằm dưới dropdown nhưng trên nội dung trang */
+  z-index: 50;
 }
 
 .topContainer {
@@ -15,25 +14,27 @@
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; /* Căn giữa dọc */
   padding: 0 1rem;
 }
 
-/* === KHU VỰC LOGO & TEXT (Chiếm hết khoảng trống bên trái) === */
+/* === 1. KHU VỰC BANNER (LOGO + CHỮ) === */
 .brandArea {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Căn lề trên để logo không bị kéo dãn */
   gap: 15px;
   text-decoration: none;
-  flex: 1; /* Đẩy phần đăng nhập sang phải */
+  flex: 1; 
+  padding-right: 20px; /* Tạo khoảng cách với bên phải */
 }
 
-/* Ảnh Logo tròn (Bánh lái) */
+/* Ảnh Logo tròn */
 .logoImg {
-  width: 70px;
-  height: 70px;
+  width: 80px; /* Logo to hơn chút cho cân đối với nhiều chữ */
+  height: 80px;
   object-fit: contain;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  flex-shrink: 0;
 }
 
 /* Khối chứa chữ */
@@ -45,9 +46,9 @@
 
 /* Dòng 1: CÔNG TY CỔ PHẦN */
 .brandLine1 {
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 1px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   color: var(--text-header);
   opacity: 0.9;
@@ -56,97 +57,109 @@
 
 /* Dòng 2: TƯ VẤN VÀ GIÁO DỤC NINH BÌNH */
 .brandLine2 {
-  font-size: 1.4rem; /* Chữ to nổi bật */
-  font-weight: 800; /* In đậm */
+  font-size: 1.5rem;
+  font-weight: 300;
   text-transform: uppercase;
-  line-height: 1.1;
-  color: var(--mau-chinh); /* Màu chủ đạo (Xanh hoặc Đỏ tùy theme) */
-  
-  /* Tạo hiệu ứng chữ đẹp */
-  text-shadow: 1px 1px 0px rgba(255,255,255,0.5); 
+  line-height: 1.2;
+  margin-bottom: 6px;
+  color: var(--mau-chinh);
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
 }
 
-/* Riêng chữ NINH BÌNH có thể làm nổi bật hơn nếu cần */
+/* Chữ nổi bật */
 .brandHighlight {
-  color: #d32f2f; /* Màu đỏ đậm chuẩn banner */
+  color: #d32f2f; /* Đỏ đậm */
 }
-/* Khi ở theme Noel, chữ Ninh Bình chuyển sang màu Vàng/Trắng cho nổi trên nền đỏ */
+/* Theme Noel thì chữ vàng */
 :global([data-theme='noel']) .brandHighlight {
   color: #FFD700; 
 }
-:global([data-theme='noel']) .brandLine2 {
-  text-shadow: 0 2px 4px rgba(0,0,0,0.4); /* Bóng đen cho nền tối */
-  color: white;
-}
 
-/* Dòng 3: Slogan (Uy tín - Tận tâm...) */
+/* Dòng 3 & 4: Mô tả chi tiết */
 .brandLine3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: full-size-kana;
+  font-size: 1.2rem; /* Chữ nhỏ gọn */
+  font-weight: 500;
+  line-height: 1.4;
   color: var(--text-header);
-  opacity: 0.9;
+  display: flex;
+  align-items: flex-start; /* Icon căn theo dòng đầu tiên */
+  gap: 6px;
   margin-bottom: 2px;
-
-
-
+  opacity: 0.9;
 }
+
 .star {
   color: #f59e0b; /* Màu vàng ngôi sao */
-  font-size: 0.7rem;
+  font-size: 0.8rem;
+  margin-top: 2px; /* Căn chỉnh icon khớp dòng chữ */
+  flex-shrink: 0;
 }
 
-
-/* === KHU VỰC MENU PHẢI (Login/Theme) === */
-.topLinks {
-  list-style: none;
+/* === 2. KHU VỰC BÊN PHẢI (THEME + USER) === */
+.rightArea {
   display: flex;
-  gap: 15px;
-  margin: 0;
-  padding-left: 20px;
   align-items: center;
+  gap: 15px;
   flex-shrink: 0; 
+  align-self: flex-start; /* Đẩy lên trên cùng cho thẳng hàng với dòng 1 của logo */
+  margin-top: 5px;
 }
 
-/* Nút/Link bên phải */
-.topLinks li a, 
-.topLinks li button {
+/* Nút chọn Theme */
+.themeBtn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
   color: var(--text-header);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: opacity 0.3s;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; font-weight: 600;
+  transition: all 0.2s;
 }
-.topLinks li a:hover {
-  opacity: 0.8;
+.themeBtn:hover { background: rgba(255,255,255,0.2); }
+
+/* === 3. USER MENU === */
+.userBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  border-left: 1px solid rgba(255,255,255,0.2);
+  padding-left: 15px;
 }
 
-/* Text chào mừng */
 .welcomeText {
-  font-weight: bold;
-  color: var(--mau-chinh);
-  background: rgba(255,255,255,0.9);
-  padding: 2px 8px;
-  border-radius: 4px;
+  font-size: 0.9rem; font-weight: 700; color: var(--mau-chinh); margin-bottom: 2px;
 }
+:global([data-theme='noel']) .welcomeText { color: white; } /* Theme Noel thì chữ trắng */
 
-/* Responsive Mobile */
-@media (max-width: 768px) {
-  .headerTop { display: none; } /* Ẩn bớt trên mobile cho gọn hoặc style lại nhỏ hơn */
+.userActions { display: flex; align-items: center; gap: 8px; }
+.actionLink {
+  font-size: 0.75rem; color: var(--text-header); text-decoration: none; opacity: 0.8;
+  display: flex; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; padding: 0;
 }
+.actionLink:hover { opacity: 1; text-decoration: underline; color: var(--mau-chinh); }
+.separator { font-size: 0.7rem; color: #ccc; }
 
-/* Giữ nguyên các phần MainNav bên dưới */
+.loginBtn {
+  background: var(--mau-chinh); color: white !important; padding: 6px 18px;
+  border-radius: 20px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.loginBtn:hover { filter: brightness(1.1); text-decoration: none; }
+
+/* === THANH MAIN NAV === */
 .mainNav {
-  background-color: rgba(0,0,0,0.2); /* Làm tối nhẹ thanh menu để tách biệt */
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  padding: 8px 0;
+  background-color: var(--mau-chinh);
+  color: white; padding: 10px 0; transition: background 0.3s;
 }
 .mainContainer { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
 .navLinks { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; flex-wrap: wrap; }
-.navLinks li a {
-  color: var(--text-main); font-weight: 500; display: flex; align-items: center; gap: 5px; 
+.navLinks li a { color: white !important; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+.navLinks li a:hover { opacity: 0.9; }
+.hotLink { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
+.hotIcon { color: #FFD700; }
+
+@media (max-width: 768px) {
+  .headerTop { display: none; } /* Ẩn banner to trên mobile */
+  .navLinks { flex-direction: column; gap: 10px; }
 }
-.navLinks li a:hover { color: var(--mau-chinh); }
-.hotLink { background-color: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; }
-.hotIcon { color: var(--mau-chinh); }
