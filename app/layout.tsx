@@ -4,25 +4,24 @@ import './globals.css'
 import Script from 'next/script' 
 
 import { AuthProvider } from '../context/AuthContext' 
+// 1. Import thêm cái này nha anh
+import { ThemeProvider } from '../context/ThemeContext' 
+
 import Navbar from '../components/Navbar' 
 import Footer from '../components/Footer' 
 
 const inter = Inter({ subsets: ['latin'] })
 
-// (Mã GA4 của anh)
 const GA_TRACKING_ID = 'G-8NETMXL60S'; 
-// (Mã Ads Tracking của anh)
 const AW_TRACKING_ID = 'AW-16621935811'; 
-// 💖 (Mã AdSense "Kiếm tiền" của anh) 💖
 const ADSENSE_CLIENT_ID = 'ca-pub-6121118706628509';
 
-// ("Biển hiệu" SEO mình làm lúc nãy)
 export const metadata: Metadata = {
   title: {
     template: '%s | TĐNB', 
     default: 'Trang chủ | Công ty CP Tư vấn và Giáo dục Ninh Bình', 
   },
-  description: 'Chuyên đào tạo, bồi dưỡng cấp GCNKNCM và Chứng chỉ chuyên môn Thuyền, Máy trưởng hạng Nhất, Nhì, Ba và các chứng chỉ thủy thủ, thợ máy...',
+  description: 'Chuyên đào tạo, bồi dưỡng cấp GCNKNCM...',
   openGraph: {
     title: 'Công ty CP Tư vấn và Giáo dục Ninh Bình',
     description: 'Đào tạo thuyền, máy trưởng và chứng chỉ chuyên môn PTTNĐ.',
@@ -34,7 +33,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: {
@@ -42,22 +40,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
-      <body className={`${inter.className} bg-gray-50`} suppressHydrationWarning={true}>
+      <body className={`${inter.className}`} suppressHydrationWarning={true}>
         <AuthProvider>
-          
-          <Navbar />
-          
-          <main>
-            {children}
-          </main>
+          {/* 2. Bọc ThemeProvider ở đây, ngay trong AuthProvider */}
+          <ThemeProvider>
+            
+            <Navbar />
+            
+            <main style={{ minHeight: '80vh' }}>
+              {children}
+            </main>
 
-          <Footer />
+            <Footer />
 
+          </ThemeProvider>
         </AuthProvider>
         
-        {/* (Chỗ này anh dán Chatbot Script nè) */}
-
-        {/* 💖 GẮN "MÁY ĐẾM" (GA4) VÀ "THEO DÕI" (ADS) 💖 */}
+        {/* Scripts giữ nguyên */}
         <Script
           strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
@@ -77,14 +76,11 @@ export default function RootLayout({
             `,
           }}
         />
-        
-        {/* 💖 GẮN "BIỂN CHO THUÊ" (ADSENSE) 💖 */}
         <Script
           strategy="afterInteractive"
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
           crossOrigin="anonymous"
         />
-        
       </body>
     </html>
   )
