@@ -18,6 +18,7 @@ type License = {
   id: string; // (Đây là ID document, ví dụ: 'maytruong-h1')
   name: string;
   display_order: number;
+  description?: string;
 }
 
 export default function CreateRoomForm() {
@@ -31,6 +32,10 @@ export default function CreateRoomForm() {
   // 💖 THÊM STATE MỚI 💖
   const [duration, setDuration] = useState<number>(45) // Mặc định 45 phút
   const [allowReview, setAllowReview] = useState<boolean>(false)
+
+  // 💖 STATE CHO KHÓA HỌC 💖
+  const [courses, setCourses] = useState<any[]>([])
+  const [selectedCourseId, setSelectedCourseId] = useState('')
 
   const [loadingLicenses, setLoadingLicenses] = useState(true)
   const [isCreating, setIsCreating] = useState(false)
@@ -72,6 +77,17 @@ export default function CreateRoomForm() {
     fetchLicenses()
   }, []) // Chạy 1 lần duy nhất
 
+  // 💖 LẤY DANH SÁCH KHÓA HỌC 💖
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const q = query(collection(db, 'courses'), orderBy('createdAt', 'desc'))
+      const snapshot = await getDocs(q)
+      const courseData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      setCourses(courseData)
+    }
+    fetchCourses()
+  }, [])
+
   // 5. HÀM TẠO PHÒNG THI (Giữ nguyên)
   //    (Vì hàm này VỐN DĨ đã dùng Firestore, nên không cần sửa)
   const handleCreateRoom = async (e: React.FormEvent) => {
@@ -87,6 +103,7 @@ export default function CreateRoomForm() {
 
     const selectedLicense = licenses.find(l => l.id === selectedLicenseId);
     const licenseFullName = selectedLicense ? selectedLicense.name : selectedLicenseId;
+    const selectedCourse = courses.find(c => c.id === selectedCourseId);
 
     try {
       const roomCollection = collection(db, 'exam_rooms')
@@ -99,6 +116,8 @@ export default function CreateRoomForm() {
         status: 'waiting',
         duration: duration, // Thêm thời gian làm bài
         allow_review: allowReview, // Thêm tùy chọn xem lại
+        course_id: selectedCourseId || null, // Lưu ID khóa học
+        course_name: selectedCourse?.name || null, // Lưu tên khóa học
         created_at: serverTimestamp(),
       })
 
@@ -130,7 +149,25 @@ export default function CreateRoomForm() {
             onChange={(e) => setRoomName(e.target.value)}
             className={styles.input}
             placeholder="Gõ tên phòng thi..."
+            required
           />
+        </div>
+
+        {/* Chọn Khóa học (MỚI) */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Chọn Khóa học (Lớp thi):</label>
+          <select
+            value={selectedCourseId}
+            onChange={(e) => setSelectedCourseId(e.target.value)}
+            className={styles.select}
+          >
+            <option value="">-- Không thuộc khóa nào (Tự do) --</option>
+            {courses.map(course => (
+              <option key={course.id} value={course.id}>
+                {course.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className={styles.formGroup}>
@@ -145,10 +182,11 @@ export default function CreateRoomForm() {
               value={selectedLicenseId}
               onChange={(e) => setSelectedLicenseId(e.target.value)}
               className={styles.select}
+              required
             >
               {licenses.map((license) => (
                 <option key={license.id} value={license.id}>
-                  {license.name}
+                  {license.name} {license.description ? `(${license.description})` : ''}
                 </option>
               ))}
             </select>
@@ -167,6 +205,7 @@ export default function CreateRoomForm() {
             onChange={(e) => setDuration(parseInt(e.target.value))}
             className={styles.input}
             placeholder="Ví dụ: 45"
+            required
           />
         </div>
 

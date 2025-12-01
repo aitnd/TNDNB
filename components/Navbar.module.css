@@ -252,8 +252,36 @@
 }
 
 @media (max-width: 768px) {
+  /* .headerTop { display: none; } <-- BỎ DÒNG NÀY ĐỂ HIỆN HEADER */
+
   .headerTop {
+    padding: 5px 0;
+  }
+
+  /* Ẩn bớt chữ rườm rà, chỉ giữ Logo */
+  .brandText {
     display: none;
+  }
+
+  .logoImg {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Căn chỉnh lại khu vực bên phải cho gọn */
+  .rightArea {
+    margin-top: 0;
+    gap: 10px;
+  }
+
+  .welcomeText {
+    display: none;
+    /* Ẩn câu chào cho gọn */
+  }
+
+  .userBox {
+    border-left: none;
+    padding-left: 0;
   }
 
   /* Ẩn banner to trên mobile */

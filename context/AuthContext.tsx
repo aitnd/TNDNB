@@ -4,23 +4,27 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import { auth, db } from '../utils/firebaseClient' 
+import { auth, db } from '../utils/firebaseClient'
 import { supabase } from '../utils/supabaseClient' // 💖 "TRIỆU HỒI" SUPABASE 💖
 
 // 1. 💖 NÂNG CẤP "KIỂU" NGƯỜI DÙNG 💖
 interface AuthUser {
   uid: string
   email: string | null
-  role: string 
-  fullName: string 
-  phoneNumber: string | null 
-  birthDate: string | null   
+  role: 'hoc_vien' | 'giao_vien' | 'lanh_dao' | 'admin' | 'quan_ly'
+  fullName?: string
+  phoneNumber?: string
+  birthDate?: string
+  class?: string // Lớp học (tự điền)
+  courseId?: string // ID Khóa học (được gán)
+  courseName?: string // Tên Khóa học (được gán)
+  isVerified?: boolean // Đã được xác thực vào khóa học chưa
 }
 
 // 2. Định nghĩa "kiểu" của "Bộ não" (Context)
 interface AuthContextType {
-  user: AuthUser | null 
-  loading: boolean 
+  user: AuthUser | null
+  loading: boolean
 }
 
 // 3. Tạo "Bộ não" (Context)
@@ -29,7 +33,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 // 4. Tạo "Nhà cung cấp" (AuthProvider)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null)
-  const [loading, setLoading] = useState(true) 
+  const [loading, setLoading] = useState(true)
 
   // 5. "Phép thuật" tự động "lắng nghe" (ĐÃ NÂNG CẤP)
   useEffect(() => {
@@ -37,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (firebaseUser) {
         // --- Có người đăng nhập! ---
         console.log('Phát hiện người dùng đăng nhập:', firebaseUser.uid)
-        
+
         try {
           // 💖 BƯỚC 1: "BÁO CÁO" VỚI SUPABASE 💖
           // (Lấy "vé" từ Firebase)
@@ -46,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const { error: sessionError } = await supabase.auth.setSession({
             access_token: token,
             // (Refresh token đôi khi bị null, mình chỉ cần access_token là đủ)
-            refresh_token: firebaseUser.refreshToken || token, 
+            refresh_token: firebaseUser.refreshToken || token,
           });
           if (sessionError) {
             console.error("LỖI KHI SETSESSION SUPABASE:", sessionError.message);
@@ -55,14 +59,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             console.log('[AuthContext] Đã nạp "vé" SupABASE thành công!');
           }
         } catch (e: any) {
-           console.error("LỖI NGOẠI LỆ khi lấy token/setSession:", e.message);
+          console.error("LỖI NGOẠI LỆ khi lấy token/setSession:", e.message);
         }
 
         // (Lấy "hồ sơ" vai trò từ "Tủ" Firestore)
         const userDocRef = doc(db, 'users', firebaseUser.uid)
         const userDoc = await getDoc(userDocRef)
-        
-        let authUser: AuthUser; 
+
+        let authUser: AuthUser;
 
         if (userDoc.exists()) {
           const userData = userDoc.data()
@@ -71,23 +75,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             email: firebaseUser.email,
             role: userData.role || 'hoc_vien',
             fullName: userData.fullName || 'Người dùng mới',
-            phoneNumber: userData.phoneNumber || null,
-            birthDate: userData.birthDate || null,
+            phoneNumber: userData.phoneNumber || undefined,
+            birthDate: userData.birthDate || undefined,
+            class: userData.class || undefined,
+            courseId: userData.courseId || undefined,
+            courseName: userData.courseName || undefined,
+            isVerified: userData.isVerified || false,
           }
           setUser(authUser)
         } else {
-           authUser = {
+          authUser = {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
             role: 'hoc_vien',
             fullName: 'Người dùng (chưa có hồ sơ)',
-            phoneNumber: null, 
-            birthDate: null,   
           }
           setUser(authUser)
           console.warn('Không tìm thấy hồ sơ vai trò (role) cho user này!')
         }
-        
+
       } else {
         // --- Không có ai đăng nhập ---
         setUser(null)

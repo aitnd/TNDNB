@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext'
 import { db } from '../utils/firebaseClient'
 import { collection, query, where, onSnapshot, Timestamp, doc, updateDoc, orderBy, deleteDoc } from 'firebase/firestore'
 import styles from './TeacherRoomList.module.css'
+import Link from 'next/link'
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
 interface ExamRoom {
@@ -19,6 +20,7 @@ interface ExamRoom {
   teacher_name: string;
   status: 'waiting' | 'in_progress' | 'finished';
   created_at: Timestamp;
+  course_name?: string; // Tên khóa học
 }
 
 export default function TeacherRoomList() {
@@ -29,6 +31,16 @@ export default function TeacherRoomList() {
   const [rooms, setRooms] = useState<ExamRoom[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null) // (Lỗi sẽ được lưu ở đây)
+
+  // Helper function to translate status
+  const dichTrangThai = (status: 'waiting' | 'in_progress' | 'finished') => {
+    switch (status) {
+      case 'waiting': return 'Đang chờ';
+      case 'in_progress': return 'Đang thi';
+      case 'finished': return 'Đã kết thúc';
+      default: return status;
+    }
+  };
 
   // 1. "Phép thuật" Realtime (Nâng cấp)
   useEffect(() => {
@@ -125,8 +137,9 @@ export default function TeacherRoomList() {
         <table className={styles.roomTable}>
           <thead>
             <tr>
-              <th>Tên Phòng</th>
-              <th>Giáo viên</th>
+              <th>Tên phòng</th>
+              <th>Khóa học (Lớp)</th> {/* Cột mới */}
+              <th>Hạng bằng</th>
               <th>Trạng thái</th>
               <th>Hành động</th>
             </tr>
@@ -134,44 +147,42 @@ export default function TeacherRoomList() {
           <tbody>
             {rooms.map((room) => (
               <tr key={room.id}>
-                {/* Tên Phòng & Tên Hạng Bằng */}
                 <td>
-                  <div className={styles.roomName}>{room.room_name}</div>
-                  <div className={styles.licenseName}>{room.license_name}</div>
+                  <strong>{room.room_name}</strong>
+                  <br />
+                  <span className={styles.teacherName}>GV: {room.teacher_name}</span>
                 </td>
-                {/* Giáo viên */}
-                <td>{room.teacher_name}</td>
-                {/* Trạng thái */}
                 <td>
-                  {room.status === 'waiting' && (
-                    <span className={`${styles.pill} ${styles.pillWaiting}`}>Đang chờ</span>
-                  )}
-                  {room.status === 'in_progress' && (
-                    <span className={`${styles.pill} ${styles.pillInProgress}`}>Đang thi</span>
-                  )}
-                  {room.status === 'finished' && (
-                    <span className={`${styles.pill} ${styles.pillFinished}`}>Đã kết thúc</span>
+                  {room.course_name ? (
+                    <span style={{ background: '#e6f7ff', color: '#0070f3', padding: '2px 6px', borderRadius: '4px', fontSize: '0.85rem' }}>
+                      {room.course_name}
+                    </span>
+                  ) : (
+                    <span style={{ color: '#999', fontSize: '0.85rem' }}>Tự do</span>
                   )}
                 </td>
-                {/* Hành động */}
-                <td style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <button
-                    onClick={() => handleViewRoom(room.id)}
-                    className={styles.actionButton}
-                  >
-                    Xem
-                  </button>
-
-                  {/* 💖 NÚT XÓA (Chỉ hiện nếu có quyền) 💖 */}
-                  {(user?.role === 'admin' || user?.role === 'lanh_dao' || (user?.role === 'giao_vien' && room.teacher_id === user.uid)) && (
-                    <button
-                      onClick={() => handleDeleteRoom(room.id, room.room_name)}
-                      className={styles.actionButton}
-                      style={{ backgroundColor: '#ef4444', marginLeft: '5px' }}
-                    >
-                      Xóa
-                    </button>
-                  )}
+                <td>{room.license_name}</td>
+                <td>
+                  <span className={`${styles.status} ${styles[room.status]}`}>
+                    {dichTrangThai(room.status)}
+                  </span>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    <Link href={`/quan-ly/${room.id}`} className={styles.manageBtn}>
+                      Quản lý
+                    </Link>
+                    {/* Nút Xóa (Chỉ hiện nếu có quyền) */}
+                    {(user?.role === 'admin' || user?.role === 'lanh_dao' || (user?.role === 'giao_vien' && room.teacher_id === user.uid)) && (
+                      <button
+                        onClick={() => handleDeleteRoom(room.id, room.room_name)}
+                        className={styles.deleteBtn}
+                        title="Xóa phòng thi"
+                      >
+                        Xóa
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

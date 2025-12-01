@@ -24,6 +24,7 @@ import styles from './page.module.css'
 export default function LoginPage() {
   // (Não cũ - Giữ nguyên)
   const [fullName, setFullName] = useState('')
+  const [className, setClassName] = useState('') // State cho Lớp học
   const [phoneNumber, setPhoneNumber] = useState('')
   const [birthDate, setBirthDate] = useState('')
   const [email, setEmail] = useState('')
@@ -114,6 +115,7 @@ export default function LoginPage() {
         phoneNumber: phoneNumber,
         birthDate: birthDate,
         role: 'hoc_vien', // Mặc định là 'hoc_vien'
+        class: className, // Lưu lớp học tự điền
         createdAt: serverTimestamp()
       })
 
@@ -229,6 +231,21 @@ export default function LoginPage() {
                   required
                   className={styles.input}
                   placeholder="Nguyễn Văn A"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="className" className={styles.label}>
+                  Lớp học (Ví dụ: 12A1)
+                </label>
+                <input
+                  type="text"
+                  id="className"
+                  value={className}
+                  onChange={(e) => setClassName(e.target.value)}
+                  required
+                  className={styles.input}
+                  placeholder="Nhập lớp học của bạn"
                 />
               </div>
 

@@ -1,15 +1,16 @@
+
 // Đánh dấu đây là "Client Component"
 'use client'
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
-import { useAuth } from '../../../context/AuthContext' 
-import ProtectedRoute from '../../../components/ProtectedRoute' 
-import { db } from '../../../utils/firebaseClient' 
+import { useAuth } from '../../../context/AuthContext'
+import ProtectedRoute from '../../../components/ProtectedRoute'
+import { db } from '../../../utils/firebaseClient'
 import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import Link from 'next/link'
 
 // (Import CSS Module)
-import styles from './page.module.css' 
+import styles from './page.module.css'
 
 // 1. Định nghĩa "kiểu" của một Tài khoản
 interface UserAccount {
@@ -19,6 +20,8 @@ interface UserAccount {
   role: string;
   phoneNumber?: string;
   birthDate?: string;
+  class?: string; // 💖 THÊM LỚP 💖
+  courseName?: string; // 💖 THÊM KHÓA 💖
   createdAt: Timestamp;
 }
 
@@ -27,6 +30,7 @@ interface EditFormData {
   fullName: string;
   phoneNumber: string;
   birthDate: string;
+  class: string; // 💖 THÊM LỚP VÀO FORM 💖
   role: string;
 }
 
@@ -60,6 +64,7 @@ function UserManagementDashboard() {
     fullName: '',
     phoneNumber: '',
     birthDate: '',
+    class: '', // 💖 KHỞI TẠO LỚP 💖
     role: 'hoc_vien',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,7 +80,7 @@ function UserManagementDashboard() {
     try {
       const usersRef = collection(db, 'users');
       const q = query(usersRef, orderBy('createdAt', 'desc'));
-      
+
       const querySnapshot = await getDocs(q);
       const userList: UserAccount[] = [];
       querySnapshot.forEach((doc) => {
@@ -95,10 +100,10 @@ function UserManagementDashboard() {
   // 💖 4. "Phép thuật" MỚI: Chạy bộ lọc 💖
   // (Nó sẽ tự chạy lại mỗi khi 'users' (danh sách gốc) hoặc 'filter' (nút bấm) thay đổi)
   useEffect(() => {
-    console.log(`Đang chạy bộ lọc: ${filter}`);
+    console.log(`Đang chạy bộ lọc: ${filter} `);
     if (filter === 'all') {
       setFilteredUsers(users); // (Hiện tất cả)
-    } 
+    }
     else if (filter === 'staff') {
       // (Hiện nhóm "Giáo viên" như anh muốn)
       setFilteredUsers(users.filter(u => staffRoles.includes(u.role)));
@@ -119,11 +124,11 @@ function UserManagementDashboard() {
   const canEditUser = (targetUser: UserAccount): boolean => {
     if (!currentUser) return false;
     if (currentUser.role === 'admin') {
-      return true; 
+      return true;
     }
     if (currentUser.role === 'lanh_dao') {
       if (targetUser.role === 'admin') {
-        return false; 
+        return false;
       }
       return true;
     }
@@ -131,7 +136,7 @@ function UserManagementDashboard() {
       if (targetUser.role === 'admin' || targetUser.role === 'lanh_dao' || targetUser.role === 'quan_ly') {
         return false;
       }
-      return true; 
+      return true;
     }
     return false;
   }
@@ -158,6 +163,7 @@ function UserManagementDashboard() {
       fullName: user.fullName || '',
       phoneNumber: user.phoneNumber || '',
       birthDate: user.birthDate || '',
+      class: user.class || '', // 💖 LẤY LỚP CŨ 💖
       role: user.role || 'hoc_vien',
     });
     setIsModalOpen(true);
@@ -187,11 +193,12 @@ function UserManagementDashboard() {
         fullName: formData.fullName,
         phoneNumber: formData.phoneNumber,
         birthDate: formData.birthDate,
+        class: formData.class, // 💖 LƯU LỚP MỚI 💖
         role: formData.role,
       });
 
-      await fetchUsers(); 
-      handleCloseModal(); 
+      await fetchUsers();
+      handleCloseModal();
 
     } catch (err: any) {
       setError(err.message || 'Lỗi khi cập nhật.');
@@ -210,7 +217,7 @@ function UserManagementDashboard() {
       alert('Bạn không thể tự xóa chính mình!');
       return;
     }
-    if (confirm(`Anh có chắc chắn muốn XÓA VĨNH VIỄN tài khoản "${userToDelete.fullName}" không? Sẽ không thể khôi phục được nha!`)) {
+    if (confirm(`Anh có chắc chắn muốn XÓA VĨNH VIỄN tài khoản "${userToDelete.fullName}" không ? Sẽ không thể khôi phục được nha!`)) {
       try {
         const userDocRef = doc(db, 'users', userToDelete.id);
         await deleteDoc(userDocRef);
@@ -225,7 +232,7 @@ function UserManagementDashboard() {
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        
+
         <div className={styles.header}>
           <h1 className={styles.title}>Quản lý Tài khoản</h1>
           <Link href="/quan-ly" className={styles.backButton}>
@@ -238,23 +245,23 @@ function UserManagementDashboard() {
           <span>Lọc theo:</span>
           <button
             onClick={() => setFilter('all')}
-            className={`${styles.filterButton} ${filter === 'all' ? styles.filterButtonActive : ''}`}
+            className={`${styles.filterButton} ${filter === 'all' ? styles.filterButtonActive : ''} `}
           >
             Tất cả
           </button>
           <button
             onClick={() => setFilter('staff')}
-            className={`${styles.filterButton} ${filter === 'staff' ? styles.filterButtonActive : ''}`}
+            className={`${styles.filterButton} ${filter === 'staff' ? styles.filterButtonActive : ''} `}
           >
             Giáo viên / Quản lý
           </button>
           <button
             onClick={() => setFilter('hoc_vien')}
-            className={`${styles.filterButton} ${filter === 'hoc_vien' ? styles.filterButtonActive : ''}`}
+            className={`${styles.filterButton} ${filter === 'hoc_vien' ? styles.filterButtonActive : ''} `}
           >
             Học viên
           </button>
-          
+
           <span className={styles.filterInfo}>
             (Đang hiển thị {filteredUsers.length} / {users.length} tài khoản)
           </span>
@@ -271,6 +278,7 @@ function UserManagementDashboard() {
               <thead>
                 <tr>
                   <th>Họ và Tên</th>
+                  <th>Lớp / Khóa</th> {/* 💖 CỘT MỚI 💖 */}
                   <th>Email / SĐT</th>
                   <th>Ngày sinh</th>
                   <th>Vai trò</th>
@@ -286,26 +294,36 @@ function UserManagementDashboard() {
                   return (
                     <tr key={user.id}>
                       <td><strong>{user.fullName}</strong></td>
+                      {/* 💖 HIỂN THỊ LỚP / KHÓA 💖 */}
+                      <td>
+                        {user.class && <div>Lớp: {user.class}</div>}
+                        {user.courseName && (
+                          <div style={{ color: '#0070f3', fontSize: '0.85rem', fontWeight: 500 }}>
+                            {user.courseName}
+                          </div>
+                        )}
+                        {!user.class && !user.courseName && <span style={{ color: '#ccc' }}>--</span>}
+                      </td>
                       <td>
                         {user.email}
                         {user.phoneNumber && <div className={styles.subText}>{user.phoneNumber}</div>}
                       </td>
                       <td>{user.birthDate || '...'}</td>
                       <td>
-                        <span className={`${styles.rolePill} ${styles[user.role]}`}>
+                        <span className={`${styles.rolePill} ${styles[user.role]} `}>
                           {dichTenVaiTro(user.role)}
                         </span>
                       </td>
                       <td>
                         <div className={styles.actionButtons}>
-                          <button 
+                          <button
                             className={styles.buttonEdit}
                             onClick={() => handleOpenEditModal(user)}
                             disabled={!canEdit} // (Khóa nút nếu không có quyền)
                           >
                             Sửa
                           </button>
-                          <button 
+                          <button
                             className={styles.buttonDelete}
                             onClick={() => handleDeleteUser(user)}
                             disabled={!canEdit || user.id === currentUser?.uid} // (Khóa nút nếu là admin/quan_ly hoặc tự xóa)
@@ -320,7 +338,7 @@ function UserManagementDashboard() {
                 {/* (Nếu lọc mà không có ai) */}
                 {filteredUsers.length === 0 && (
                   <tr>
-                    <td colSpan={5} style={{textAlign: 'center', fontStyle: 'italic', color: '#777'}}>
+                    <td colSpan={6} style={{ textAlign: 'center', fontStyle: 'italic', color: '#777' }}>
                       Không tìm thấy tài khoản nào khớp với bộ lọc này.
                     </td>
                   </tr>
@@ -337,7 +355,7 @@ function UserManagementDashboard() {
         <div className={styles.modalBackdrop} onClick={handleCloseModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h2 className={styles.modalTitle}>Sửa thông tin: {editingUser.fullName}</h2>
-            
+
             <form onSubmit={handleSaveEdit}>
               {/* Ô Họ và Tên */}
               <div className={styles.formGroup}>
@@ -349,6 +367,20 @@ function UserManagementDashboard() {
                   value={formData.fullName}
                   onChange={handleFormChange}
                   className={styles.input}
+                />
+              </div>
+
+              {/* 💖 Ô LỚP HỌC (MỚI) 💖 */}
+              <div className={styles.formGroup}>
+                <label htmlFor="class">Lớp học</label>
+                <input
+                  type="text"
+                  id="class"
+                  name="class"
+                  value={formData.class}
+                  onChange={handleFormChange}
+                  className={styles.input}
+                  placeholder="Ví dụ: 12A1"
                 />
               </div>
 
@@ -377,7 +409,7 @@ function UserManagementDashboard() {
                   className={styles.input}
                 />
               </div>
-              
+
               {/* Ô VAI TRÒ (PHÂN QUYỀN) */}
               <div className={styles.formGroup}>
                 <label htmlFor="role">Vai trò</label>
@@ -420,7 +452,7 @@ function UserManagementDashboard() {
 export default function QuanLyTaiKhoanPage() {
   return (
     <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'quan_ly']}>
-      <UserManagementDashboard /> 
+      <UserManagementDashboard />
     </ProtectedRoute>
   )
 }
