@@ -33,7 +33,7 @@ export default function Navbar() {
         <img
           src="/assets/img/nav-light.png"
           alt=""
-          style={{ position: 'absolute', top: 0, right: 0, width: '120px', pointerEvents: 'none', zIndex: 60 }}
+          style={{ position: 'absolute', top: '60px', right: 0, width: '120px', pointerEvents: 'none', zIndex: 60 }}
         />
       )}
 
@@ -96,7 +96,7 @@ export default function Navbar() {
 
                 {/* Dòng 2: Nút Quản lý | Thoát */}
                 <div className={styles.userActions}>
-                  <Link href="/quan-ly" className={styles.actionLink}>
+                  <Link href="/quan-ly" className={styles.manageBtn}>
                     <FaUserCog /> Quản lý
                   </Link>
                   <span className={styles.separator}>|</span>
@@ -133,9 +133,9 @@ export default function Navbar() {
               </Link>
             </li>
             <li>
-              <a href="https://ontap.daotaothuyenvien.com/" target="_blank" className={styles.hotLink}>
+              <Link href="/ontap" className={styles.hotLink}>
                 <FaBookOpen className={styles.hotIcon} /> Ôn tập
-              </a>
+              </Link>
             </li>
             <li>
               <Link href="/thitructuyen" className={styles.hotLink}>
