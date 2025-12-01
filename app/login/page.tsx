@@ -2,41 +2,66 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation' 
+import { useRouter } from 'next/navigation'
 // 💖 1. "TRIỆU HỒI" THÊM ĐỒ NGHỀ CỦA "BẢO VỆ" 💖
-import { 
-  signInWithEmailAndPassword, 
+import {
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   GoogleAuthProvider, // (Mời "Bảo vệ" Google)
   signInWithPopup,    // (Cái "cửa" pop-up)
   sendPasswordResetEmail // (Cái "bưu điện" gửi link reset)
 } from 'firebase/auth'
-import { auth, db } from '../../utils/firebaseClient' 
+import { auth, db } from '../../utils/firebaseClient'
 // 💖 2. "TRIỆU HỒI" THÊM ĐỒ NGHỀ CỦA "TỦ" 💖
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
-import { useAuth } from '../../context/AuthContext' 
+import { useAuth } from '../../context/AuthContext'
 // 💖 3. "TRIỆU HỒI" ICON GOOGLE 💖
 import { FaGoogle } from 'react-icons/fa'
 
 // "Triệu hồi" file CSS Module
-import styles from './page.module.css' 
+import styles from './page.module.css'
 
 export default function LoginPage() {
   // (Não cũ - Giữ nguyên)
-  const [fullName, setFullName] = useState('') 
+  const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [birthDate, setBirthDate] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null) 
+  const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const [isRegistering, setIsRegistering] = useState(false) 
-  
+  const [isRegistering, setIsRegistering] = useState(false)
+
   // 💖 4. "NÃO" MỚI CHO CÁI LINK RESET MẬT KHẨU 💖
   const [resetMsg, setResetMsg] = useState<string | null>(null);
 
-  const router = useRouter() 
-  const { user } = useAuth() 
+  const router = useRouter()
+  const { user } = useAuth()
+
+  // 💖 HÀM DỊCH LỖI SANG TIẾNG VIỆT 💖
+  const getFriendlyErrorMessage = (error: any) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+
+    switch (errorCode) {
+      case 'auth/email-already-in-use':
+        return 'Email này đã được sử dụng. Vui lòng đăng nhập hoặc dùng email khác.';
+      case 'auth/wrong-password':
+        return 'Sai mật khẩu. Nếu quên mật khẩu, hãy chọn "Quên mật khẩu?" bên dưới.';
+      case 'auth/user-not-found':
+        return 'Tài khoản không tồn tại. Vui lòng kiểm tra lại email hoặc đăng ký mới.';
+      case 'auth/invalid-email':
+        return 'Email không hợp lệ. Vui lòng kiểm tra lại định dạng.';
+      case 'auth/weak-password':
+        return 'Mật khẩu quá yếu. Vui lòng chọn mật khẩu có ít nhất 6 ký tự.';
+      case 'auth/too-many-requests':
+        return 'Quá nhiều lần thử đăng nhập thất bại. Vui lòng thử lại sau.';
+      case 'auth/network-request-failed':
+        return 'Lỗi kết nối mạng. Vui lòng kiểm tra đường truyền.';
+      default:
+        return errorMessage || 'Có lỗi xảy ra. Vui lòng thử lại.';
+    }
+  }
 
   // --- HÀM XỬ LÝ ĐĂNG NHẬP (Giữ nguyên) ---
   const handleLogin = async (e: React.FormEvent) => {
@@ -44,15 +69,15 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
     setResetMsg(null) // (Tắt thông báo cũ)
-    
+
     try {
       await signInWithEmailAndPassword(auth, email, password)
       console.log('Đăng nhập thành công, điều hướng...')
-      router.push('/quan-ly') 
+      router.push('/quan-ly')
 
     } catch (err: any) {
       console.error(err)
-      setError(err.message || 'Có lỗi xảy ra khi đăng nhập.')
+      setError(getFriendlyErrorMessage(err))
       setLoading(false)
     }
   }
@@ -85,19 +110,19 @@ export default function LoginPage() {
       const userDocRef = doc(db, 'users', user.uid)
       await setDoc(userDocRef, {
         email: user.email,
-        fullName: fullName, 
-        phoneNumber: phoneNumber, 
-        birthDate: birthDate,     
+        fullName: fullName,
+        phoneNumber: phoneNumber,
+        birthDate: birthDate,
         role: 'hoc_vien', // Mặc định là 'hoc_vien'
         createdAt: serverTimestamp()
       })
-      
+
       console.log('Tạo hồ sơ Firestore thành công. Đang đăng nhập...')
       router.push('/quan-ly')
 
     } catch (err: any) {
       console.error(err)
-      setError(err.message || 'Có lỗi xảy ra khi đăng ký.')
+      setError(getFriendlyErrorMessage(err))
       setLoading(false)
     }
   }
@@ -107,7 +132,7 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     setResetMsg(null);
-    
+
     const provider = new GoogleAuthProvider(); // (Gọi "bảo vệ" Google)
 
     try {
@@ -126,7 +151,7 @@ export default function LoginPage() {
           email: user.email,
           fullName: user.displayName || 'Người dùng Google', // (Lấy tên từ Google)
           phoneNumber: user.phoneNumber || '', // (Lấy SĐT nếu có)
-          birthDate: '',     
+          birthDate: '',
           role: 'hoc_vien', // Mặc định là 'hoc_vien'
           createdAt: serverTimestamp()
         });
@@ -139,7 +164,7 @@ export default function LoginPage() {
 
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Lỗi khi đăng nhập Google.');
+      setError(getFriendlyErrorMessage(err));
       setLoading(false);
     }
   }
@@ -162,7 +187,7 @@ export default function LoginPage() {
       setResetMsg('Gửi thành công! Anh kiểm tra email để lấy link reset mật khẩu nha.');
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Lỗi khi gửi email reset.');
+      setError(getFriendlyErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -186,9 +211,9 @@ export default function LoginPage() {
         <h1 className={styles.title}>
           {isRegistering ? 'Đăng ký Tài khoản' : 'Đăng nhập Hệ thống'}
         </h1>
-        
+
         <form onSubmit={isRegistering ? handleRegister : handleLogin}>
-          
+
           {/* (Các ô đăng ký - Giữ nguyên) */}
           {isRegistering && (
             <>
@@ -301,7 +326,7 @@ export default function LoginPage() {
                 {loading ? 'Đang xử lý...' : 'Đăng nhập'}
               </button>
             )}
-            
+
             <button
               type="button"
               onClick={() => setIsRegistering(!isRegistering)}
@@ -344,7 +369,7 @@ export default function LoginPage() {
             </div>
           </>
         )}
-        
+
       </div>
     </div>
   )

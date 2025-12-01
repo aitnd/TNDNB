@@ -258,7 +258,31 @@
 
   /* Ẩn banner to trên mobile */
   .navLinks {
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row;
+    /* Xếp ngang */
+    gap: 15px;
+    overflow-x: auto;
+    /* Cho phép cuộn ngang */
+    white-space: nowrap;
+    /* Không xuống dòng */
+    padding-bottom: 5px;
+    /* Chừa chỗ cho thanh cuộn nếu có */
+    -webkit-overflow-scrolling: touch;
+    /* Cuộn mượt trên iOS */
+    scrollbar-width: none;
+    /* Ẩn thanh cuộn trên Firefox */
+  }
+
+  /* Ẩn thanh cuộn trên Chrome/Safari/Edge */
+  .navLinks::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navLinks li a {
+    font-size: 0.9rem;
+    /* Chữ nhỏ hơn xíu */
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
   }
 }
