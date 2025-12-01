@@ -1,13 +1,15 @@
+
 // Đánh dấu đây là "Client Component"
 'use client'
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { db } from '../utils/firebaseClient' // (Sửa đường dẫn ../)
+import { useAuth } from '../context/AuthContext' // (Import useAuth)
+import { db } from '../utils/firebaseClient'
 import { collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore'
 
 // 1. "Triệu hồi" file CSS Module MỚI
-import styles from './JoinRoomList.module.css' 
+import styles from './JoinRoomList.module.css'
 
 // 2. Định nghĩa "kiểu" của Phòng thi (NÂNG CẤP)
 interface ExamRoom {
@@ -21,21 +23,22 @@ interface ExamRoom {
 }
 
 export default function JoinRoomList() {
+  const { user } = useAuth() // (Lấy thông tin học viên)
   const router = useRouter() // "Điều hướng"
 
   // "Não" trạng thái
-  const [rooms, setRooms] = useState<ExamRoom[]>([]) 
+  const [rooms, setRooms] = useState<ExamRoom[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   // 3. "Phép thuật" Realtime (useEffect) - (Giữ nguyên)
   useEffect(() => {
     console.log('[HV] Bắt đầu "lắng nghe" phòng chờ...')
-    
+
     const roomCollection = collection(db, 'exam_rooms')
     const q = query(roomCollection, where('status', '==', 'waiting'))
 
-    const unsubscribe = onSnapshot(q, 
+    const unsubscribe = onSnapshot(q,
       (querySnapshot) => {
         const waitingRooms: ExamRoom[] = []
         querySnapshot.forEach((doc) => {
@@ -44,13 +47,13 @@ export default function JoinRoomList() {
             ...doc.data()
           } as ExamRoom)
         })
-        
+
         waitingRooms.sort((a, b) => b.created_at.toMillis() - a.created_at.toMillis())
-        
-        setRooms(waitingRooms) 
+
+        setRooms(waitingRooms)
         setLoading(false)
         console.log('[HV] Đã cập nhật danh sách phòng chờ:', waitingRooms)
-      }, 
+      },
       (err) => {
         console.error('Lỗi khi "lắng nghe" phòng chờ:', err)
         setError('Không thể tải danh sách phòng thi.')
@@ -61,7 +64,7 @@ export default function JoinRoomList() {
       console.log('Ngừng "lắng nghe" phòng chờ.')
       unsubscribe()
     }
-  }, []) 
+  }, [])
 
   // 4. Hàm xử lý khi Học viên bấm "Vào Phòng" (Giữ nguyên)
   const handleJoinRoom = (roomId: string) => {
@@ -72,12 +75,44 @@ export default function JoinRoomList() {
   // 5. GIAO DIỆN (Đã "mặc" CSS mới và sửa Tên)
   return (
     <div className={styles.listContainer}>
+
+      {/* 💖 THẺ HỌC VIÊN (STUDENT CARD) 💖 */}
+      {user && (
+        <div className={styles.studentCard}>
+          <div className={styles.cardHeader}>
+            <h3>Thẻ Dự Thi</h3>
+          </div>
+          <div className={styles.cardBody}>
+            <div className={styles.cardRow}>
+              <span className={styles.cardLabel}>Họ và tên:</span>
+              <span className={styles.cardValue}>{user.fullName}</span>
+            </div>
+            <div className={styles.cardRow}>
+              <span className={styles.cardLabel}>Ngày sinh:</span>
+              <span className={styles.cardValue}>{user.birthDate || '---'}</span>
+            </div>
+            <div className={styles.cardRow}>
+              <span className={styles.cardLabel}>Địa chỉ:</span>
+              <span className={styles.cardValue}>{user.address || '---'}</span>
+            </div>
+            <div className={styles.cardRow}>
+              <span className={styles.cardLabel}>Lớp / Khóa:</span>
+              <span className={styles.cardValue}>
+                {user.class ? `${user.class}` : ''}
+                {user.class && user.courseName ? ' - ' : ''}
+                {user.courseName ? `${user.courseName}` : 'Chưa vào khóa'}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <h2 className={styles.listTitle}>
         Danh sách Phòng Thi Đang Chờ
       </h2>
 
       {loading && <p>Đang tìm phòng thi...</p>}
-      {error && <p style={{color: 'red'}}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {!loading && rooms.length === 0 && (
         <p>
@@ -88,7 +123,7 @@ export default function JoinRoomList() {
       {/* "Vẽ" danh sách phòng */}
       <div className={styles.roomList}>
         {rooms.map((room) => (
-          <div 
+          <div
             key={room.id}
             className={styles.roomItem}
           >
