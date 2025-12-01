@@ -5,7 +5,7 @@ import styles from './Footer.module.css'
 export default function Footer() {
   return (
     <footer className={styles.footer} style={{ position: 'relative', overflow: 'hidden' }}>
-      
+
       {/* 🎄 ẢNH TRANG TRÍ NOEL (Class đã định nghĩa ở globals.css) 🎄 */}
       <img src="/assets/img/footer1.png" alt="" className="decor-img decor-footer-left" />
       <img src="/assets/img/footer2.png" alt="" className="decor-img decor-footer-right" />
@@ -15,10 +15,10 @@ export default function Footer() {
         <div className={styles.col}>
           <h3>VỀ CHÚNG TÔI</h3>
           <p style={{ fontSize: '0.9rem', lineHeight: '1.6' }}>
-            Công ty CP Tư vấn và Giáo dục Ninh Bình chuyên đào tạo, bồi dưỡng cấp GCNKNCM và Chứng chỉ chuyên môn đường thủy nội địa.
+            Công ty cổ phần Tư vấn và Giáo dục Ninh Bình
           </p>
         </div>
-        
+
         {/* Cột 2 */}
         <div className={styles.col}>
           <h3>LIÊN KẾT NHANH</h3>
@@ -34,15 +34,16 @@ export default function Footer() {
         <div className={styles.col}>
           <h3>LIÊN HỆ</h3>
           <ul>
-             <li><i className="fas fa-map-marker-alt"></i> Số 1, Đường ABC, TP. Ninh Bình</li>
-             <li><i className="fas fa-phone"></i> 0912.345.678</li>
-             <li><i className="fas fa-envelope"></i> tuvan@tndnb.com</li>
+            <li><i className="fas fa-map-marker-alt"></i> Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình </li>
+            <li><i className="fas fa-phone"></i> 022.96.282.969</li>
+            <li><i className="fas fa-envelope"></i> ninhbinheduco.jsc@gmail.com </li>
+            <li><i className="fas fa-envelope"></i> giaoducninhbinh@daotaothuyenvien.com </li>
           </ul>
         </div>
       </div>
 
       <div className={styles.copyright}>
-        © {new Date().getFullYear()} TĐNB Ninh Bình. All rights reserved.
+        © {new Date().getFullYear()} Công ty cổ phần Tư vấn và Giáo dục Ninh Bình
       </div>
     </footer>
   )

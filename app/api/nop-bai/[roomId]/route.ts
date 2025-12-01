@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 // 1. 💖 "TRIỆU HỒI" ĐÚNG "ĐỒ NGHỀ" ADMIN 💖
-import { adminDb, FieldValue } from '../../../../utils/firebaseAdmin' 
+import { adminDb, FieldValue } from '../../../../utils/firebaseAdmin'
 import { FieldPath } from 'firebase-admin/firestore' // (Import FieldPath của Admin)
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
@@ -17,21 +17,21 @@ export async function POST(
   try {
     const roomId = params.roomId
     const { userId, userEmail, ...studentAnswers } = await request.json();
-    const studentAnswerKeys = Object.keys(studentAnswers); 
+    const studentAnswerKeys = Object.keys(studentAnswers);
 
     if (!userId || !userEmail) {
       throw new Error('Bài nộp không hợp lệ, thiếu thông tin học viên (userId/userEmail).')
     }
-    
+
     console.log(`[API Chấm Bài] Nhận được bài làm cho phòng: ${roomId}`)
 
     // 2. "Mở khóa" Firestore, lấy thông tin phòng thi (Dùng Admin SDK)
     const roomRef = adminDb.collection('exam_rooms').doc(roomId)
     const roomSnap = await roomRef.get()
-    
+
     if (!roomSnap.exists) throw new Error('Phòng thi không tồn tại.')
     const roomData = roomSnap.data()
-    const licenseId = roomData?.license_id 
+    const licenseId = roomData?.license_id
 
     console.log(`[API Chấm Bài] Phòng thi hạng: ${licenseId}`)
 
@@ -41,7 +41,7 @@ export async function POST(
     const q = questionsRef
       .where('license_id', '==', licenseId) // (Lọc theo hạng bằng)
       .where(FieldPath.documentId(), 'in', studentAnswerKeys) // (Lọc theo các câu đã nộp)
-      
+
     const questionsSnapshot = await q.get(); // (Chạy "câu hỏi")
 
     if (questionsSnapshot.empty) {
@@ -84,7 +84,7 @@ export async function POST(
       submitted_at: FieldValue.serverTimestamp() // (Dùng FieldValue của Admin)
     });
     console.log(`[API Chấm Bài] Đã lưu kết quả cho: ${userEmail}`)
-    
+
     // 6. CẬP NHẬT "NGĂN CON" 'participants' (Cho Live Dashboard)
     try {
       const participantRef = adminDb.collection('exam_rooms').doc(roomId).collection('participants').doc(userId);
@@ -98,18 +98,29 @@ export async function POST(
       console.warn(`[API Chấm Bài] Lỗi (nhẹ): Không thể cập nhật 'participants': ${participantError}`)
     }
 
-    // 7. TRẢ KẾT QUẢ (Giữ nguyên)
-    return NextResponse.json({
+    // 7. TRẢ KẾT QUẢ
+    const responseData: any = {
       message: 'Nộp bài thành công!',
       score: score,
       totalQuestions: totalQuestions
-    })
+    }
+
+    // 💖 NẾU CHO PHÉP XEM LẠI -> TRẢ VỀ ĐÁP ÁN ĐÚNG 💖
+    if (roomData?.allow_review) {
+      const correctAnswersMap: Record<string, string> = {};
+      correctAnswers.forEach(ca => {
+        correctAnswersMap[ca.id] = ca.correct_answer_id;
+      });
+      responseData.correctAnswers = correctAnswersMap;
+    }
+
+    return NextResponse.json(responseData)
 
   } catch (error: any) {
     console.error('[API Chấm Bài] Lỗi nghiêm trọng:', error)
     return NextResponse.json(
       { error: error.message || "Lỗi không xác định khi chấm bài." },
-      { status: 500 } 
+      { status: 500 }
     )
   }
 }

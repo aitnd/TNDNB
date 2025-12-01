@@ -7,11 +7,11 @@ import { useRouter } from 'next/navigation'
 // import { supabase } from '../utils/supabaseClient' 
 
 // 2. 💖 "TRIỆU HỒI" ĐỒ NGHỀ FIRESTORE 💖
-import { db } from '../utils/firebaseClient' 
+import { db } from '../utils/firebaseClient'
 import { collection, addDoc, serverTimestamp, query, getDocs, orderBy } from 'firebase/firestore'
-import { useAuth } from '../context/AuthContext' 
+import { useAuth } from '../context/AuthContext'
 
-import styles from '../app/admin/page.module.css' 
+import styles from '../app/admin/page.module.css'
 
 // 3. 💖 "KIỂU" HẠNG BẰNG (Đọc từ Firestore) 💖
 type License = {
@@ -21,29 +21,32 @@ type License = {
 }
 
 export default function CreateRoomForm() {
-  const { user } = useAuth() 
-  const router = useRouter() 
+  const { user } = useAuth()
+  const router = useRouter()
 
   // (Não trạng thái - Giữ nguyên)
-  const [licenses, setLicenses] = useState<License[]>([]) 
-  const [selectedLicenseId, setSelectedLicenseId] = useState<string>('') 
-  const [roomName, setRoomName] = useState('') 
+  const [licenses, setLicenses] = useState<License[]>([])
+  const [selectedLicenseId, setSelectedLicenseId] = useState<string>('')
+  const [roomName, setRoomName] = useState('')
+  // 💖 THÊM STATE MỚI 💖
+  const [duration, setDuration] = useState<number>(45) // Mặc định 45 phút
+  const [allowReview, setAllowReview] = useState<boolean>(false)
 
   const [loadingLicenses, setLoadingLicenses] = useState(true)
-  const [isCreating, setIsCreating] = useState(false) 
+  const [isCreating, setIsCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // 4. 💖 HÀM LẤY HẠNG BẰNG (ĐÃ "PHẪU THUẬT" 100%) 💖
   useEffect(() => {
     async function fetchLicenses() {
       console.log('[GV] Đang gọi "kho" Firestore để lấy Hạng Bằng...')
-      
+
       try {
         // (Truy vấn collection 'licenses', sắp xếp theo 'display_order')
         const licensesRef = collection(db, 'licenses');
         const q = query(licensesRef, orderBy('display_order', 'asc'));
         const querySnapshot = await getDocs(q);
-        
+
         const data: License[] = [];
         querySnapshot.forEach((doc) => {
           // (ID là 'doc.id', data là 'doc.data()')
@@ -59,8 +62,8 @@ export default function CreateRoomForm() {
         }
 
       } catch (err: any) {
-         console.error('Lỗi khi lấy Hạng Bằng (Firestore):', err)
-         setError('Không thể tải danh sách hạng bằng từ Firestore.')
+        console.error('Lỗi khi lấy Hạng Bằng (Firestore):', err)
+        setError('Không thể tải danh sách hạng bằng từ Firestore.')
       } finally {
         setLoadingLicenses(false)
       }
@@ -73,8 +76,8 @@ export default function CreateRoomForm() {
   //    (Vì hàm này VỐN DĨ đã dùng Firestore, nên không cần sửa)
   const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user || !selectedLicenseId || !roomName) {
-      setError('Vui lòng điền "Tên phòng" và chọn "Hạng bằng".')
+    if (!user || !selectedLicenseId || !roomName || !duration || duration <= 0) {
+      setError('Vui lòng điền "Tên phòng", chọn "Hạng bằng" và nhập "Thời gian làm bài" hợp lệ.')
       return
     }
 
@@ -88,12 +91,14 @@ export default function CreateRoomForm() {
     try {
       const roomCollection = collection(db, 'exam_rooms')
       const newRoomDoc = await addDoc(roomCollection, {
-        license_id: selectedLicenseId, 
-        license_name: licenseFullName, 
-        room_name: roomName, 
+        license_id: selectedLicenseId,
+        license_name: licenseFullName,
+        room_name: roomName,
         teacher_id: user.uid,
-        teacher_name: user.fullName, 
-        status: 'waiting', 
+        teacher_name: user.fullName,
+        status: 'waiting',
+        duration: duration, // Thêm thời gian làm bài
+        allow_review: allowReview, // Thêm tùy chọn xem lại
         created_at: serverTimestamp(),
       })
 
@@ -113,7 +118,7 @@ export default function CreateRoomForm() {
         Tạo Phòng Thi Mới
       </h2>
       <form onSubmit={handleCreateRoom} className={styles.form}>
-        
+
         <div className={styles.formGroup}>
           <label htmlFor="roomName" className={styles.label}>
             Tên phòng thi (Ví dụ: "Thi thử M1 - Lần 1")
@@ -148,6 +153,34 @@ export default function CreateRoomForm() {
               ))}
             </select>
           )}
+        </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="duration" className={styles.label}>
+            Thời gian làm bài (phút):
+          </label>
+          <input
+            type="number"
+            id="duration"
+            min="1"
+            value={duration}
+            onChange={(e) => setDuration(parseInt(e.target.value))}
+            className={styles.input}
+            placeholder="Ví dụ: 45"
+          />
+        </div>
+
+        <div className={styles.formGroup} style={{ flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
+          <input
+            type="checkbox"
+            id="allowReview"
+            checked={allowReview}
+            onChange={(e) => setAllowReview(e.target.checked)}
+            style={{ width: '20px', height: '20px' }}
+          />
+          <label htmlFor="allowReview" className={styles.label} style={{ marginBottom: 0, cursor: 'pointer' }}>
+            Cho phép xem lại bài sau khi thi xong?
+          </label>
         </div>
 
         {error && (
