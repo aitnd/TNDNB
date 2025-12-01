@@ -2,14 +2,14 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '../../../context/AuthContext' 
-import ProtectedRoute from '../../../components/ProtectedRoute' 
-import { db } from '../../../utils/firebaseClient' 
+import { useAuth } from '../../../context/AuthContext'
+import ProtectedRoute from '../../../components/ProtectedRoute'
+import { db } from '../../../utils/firebaseClient'
 import { doc, updateDoc } from 'firebase/firestore'
 import Link from 'next/link'
 
 // (Import CSS Module - Mình mượn tạm style của trang Đăng bài)
-import styles from '../dang-bai/page.module.css' 
+import styles from '../dang-bai/page.module.css'
 
 // 1. TẠO "NỘI DUNG" TRANG
 function HoSoCaNhan() {
@@ -19,7 +19,9 @@ function HoSoCaNhan() {
   const [fullName, setFullName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [birthDate, setBirthDate] = useState('');
-  
+  const [className, setClassName] = useState(''); // Thêm trường Lớp
+  const [courseName, setCourseName] = useState(''); // Thêm trường Khóa học
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
@@ -30,6 +32,8 @@ function HoSoCaNhan() {
       setFullName(user.fullName || '');
       setPhoneNumber(user.phoneNumber || '');
       setBirthDate(user.birthDate || '');
+      setClassName(user.class || ''); // Load lớp
+      setCourseName(user.courseName || ''); // Load khóa học
     }
   }, [user]); // (Chạy lại khi "user" được tải xong)
 
@@ -57,7 +61,8 @@ function HoSoCaNhan() {
       await updateDoc(userDocRef, {
         fullName: fullName,
         phoneNumber: phoneNumber,
-        birthDate: birthDate
+        birthDate: birthDate,
+        class: className // Lưu lớp
       });
 
       setFormSuccess('Cập nhật hồ sơ thành công! Thông tin sẽ được làm mới ở lần tải trang sau.');
@@ -74,14 +79,14 @@ function HoSoCaNhan() {
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
-        
+
         <h1 className={styles.title}>
           Cập nhật Hồ sơ cá nhân
         </h1>
 
         <div className={styles.formBox}>
           <form onSubmit={handleUpdateProfile} className={styles.form}>
-            
+
             {/* Ô Email (Không cho sửa) */}
             <div className={styles.formGroup}>
               <label htmlFor="email" className={styles.label}>
@@ -140,6 +145,36 @@ function HoSoCaNhan() {
               />
             </div>
 
+            {/* Ô Lớp (Học viên tự điền) */}
+            <div className={styles.formGroup}>
+              <label htmlFor="className" className={styles.label}>
+                Lớp
+              </label>
+              <input
+                type="text"
+                id="className"
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+                className={styles.input}
+                placeholder="Ví dụ: 12A1"
+              />
+            </div>
+
+            {/* Ô Khóa học (Chỉ hiển thị) */}
+            <div className={styles.formGroup}>
+              <label htmlFor="courseName" className={styles.label}>
+                Khóa học (Được gán)
+              </label>
+              <input
+                type="text"
+                id="courseName"
+                value={courseName}
+                disabled
+                className={styles.input}
+                placeholder="Chưa có khóa học"
+              />
+            </div>
+
             {/* Thông báo Lỗi/Thành công */}
             {formError && (
               <div className={styles.error}>{formError}</div>
@@ -149,8 +184,8 @@ function HoSoCaNhan() {
             )}
 
             {/* Nút bấm */}
-            <div className={styles.buttonContainer} style={{justifyContent: 'space-between', display: 'flex'}}>
-              <Link href="/quan-ly" style={{color: '#555', textDecoration: 'underline'}}>
+            <div className={styles.buttonContainer} style={{ justifyContent: 'space-between', display: 'flex' }}>
+              <Link href="/quan-ly" style={{ color: '#555', textDecoration: 'underline' }}>
                 « Quay về Bảng điều khiển
               </Link>
               <button
@@ -172,7 +207,7 @@ function HoSoCaNhan() {
 export default function HoSoPage() {
   return (
     <ProtectedRoute>
-      <HoSoCaNhan /> 
+      <HoSoCaNhan />
     </ProtectedRoute>
   )
 }
