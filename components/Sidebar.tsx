@@ -4,6 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import styles from './Sidebar.module.css'
 import Searchbar from './Searchbar'
+import SidebarMediaWidgets from './SidebarMediaWidgets'
 
 export const revalidate = 0;
 
@@ -192,97 +193,8 @@ export default async function Sidebar() {
         </ul>
       </div>
 
-      {/* BOX "THƯ VIỆN" */}
-      <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-        <Link href="/thu-vien">
-          <h3 className={styles.sidebarTitle}>Thư viện</h3>
-        </Link>
-        <div className={styles.mediaPreviewGrid}>
-          {latestMedia.length > 0 ? (
-            latestMedia.map((item) => (
-              <Link href="/thu-vien" key={item.id} className={styles.mediaPreviewItem}>
-                {item.media_type === 'video' ? (
-                  <div style={{ position: 'relative', width: '100%', height: '100%', background: '#000' }}>
-                    <video
-                      src={item.media_url}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }}
-                      muted
-                    />
-                    <div style={{
-                      position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                      color: 'white', fontSize: '1.2rem'
-                    }}>
-                      <i className="fas fa-play-circle"></i>
-                    </div>
-                  </div>
-                ) : (
-                  <img src={item.media_url} alt="Thư viện" loading="lazy" />
-                )}
-              </Link>
-            ))
-          ) : (
-            <p className={styles.emptyMessage}>Chưa có ảnh/video nào.</p>
-          )}
-        </div>
-        <Link href="/thu-vien" className={styles.viewAllButton}>
-          Xem tất cả <i className="fas fa-arrow-right"></i>
-        </Link>
-      </div>
-
-      {/* 💖 BOX "TÀI LIỆU MỚI" (GRID VIEW) 💖 */}
-      <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
-        <Link href="/tai-lieu">
-          <h3 className={styles.sidebarTitle}>Tài liệu mới</h3>
-        </Link>
-
-        {/* Sử dụng Grid giống Thư viện nhưng custom nội dung */}
-        <div className={styles.mediaPreviewGrid}>
-          {latestFiles.length > 0 ? (
-            latestFiles.map((file) => (
-              <a
-                href={file.file_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                key={file.id}
-                className={styles.mediaPreviewItem}
-                title={file.file_name}
-              >
-                {/* Ảnh nền là Thumbnail bài viết (hoặc ảnh mặc định nếu ko có) */}
-                <img
-                  src={file.post_thumbnail || '/assets/img/document-placeholder.jpg'}
-                  alt={file.file_name}
-                  loading="lazy"
-                  style={{ filter: 'brightness(0.6)' }} // Làm tối ảnh nền để hiện chữ
-                />
-
-                {/* Overlay Icon & Tên file */}
-                <div style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                  padding: '4px', textAlign: 'center'
-                }}>
-                  <i className="fas fa-file-alt" style={{ color: '#fff', fontSize: '1.5rem', marginBottom: '4px' }}></i>
-                  <span style={{
-                    color: '#fff', fontSize: '0.6rem', fontWeight: '600',
-                    display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                  }}>
-                    {file.file_name}
-                  </span>
-                </div>
-              </a>
-            ))
-          ) : (
-            <p className={styles.emptyMessage} style={{ gridColumn: '1 / -1' }}>
-              Chưa có tài liệu nào.
-            </p>
-          )}
-        </div>
-
-        <Link href="/tai-lieu" className={styles.viewAllButton}>
-          Xem tất cả <i className="fas fa-arrow-right"></i>
-        </Link>
-      </div>
+      {/* BOX "THƯ VIỆN" VÀ "TÀI LIỆU MỚI" (ĐÃ TÁCH RA COMPONENT RIÊNG ĐỂ CÓ MODAL) */}
+      <SidebarMediaWidgets latestMedia={latestMedia} latestFiles={latestFiles} />
 
     </aside>
   )
