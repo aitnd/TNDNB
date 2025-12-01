@@ -9,7 +9,7 @@ import { doc, updateDoc } from 'firebase/firestore'
 import Link from 'next/link'
 
 // (Import CSS Module - Mình mượn tạm style của trang Đăng bài)
-import styles from '../dang-bai/page.module.css'
+import styles from './page.module.css'
 
 // 1. TẠO "NỘI DUNG" TRANG
 function HoSoCaNhan() {
@@ -21,6 +21,12 @@ function HoSoCaNhan() {
   const [birthDate, setBirthDate] = useState('');
   const [className, setClassName] = useState(''); // Thêm trường Lớp
   const [courseName, setCourseName] = useState(''); // Thêm trường Khóa học
+
+  // 💖 THÊM TRƯỜNG MỚI 💖
+  const [cccd, setCccd] = useState(''); // Số CCCD
+  const [cccdDate, setCccdDate] = useState(''); // Ngày cấp
+  const [cccdPlace, setCccdPlace] = useState(''); // Nơi cấp
+  const [address, setAddress] = useState(''); // Địa chỉ
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -34,6 +40,12 @@ function HoSoCaNhan() {
       setBirthDate(user.birthDate || '');
       setClassName(user.class || ''); // Load lớp
       setCourseName(user.courseName || ''); // Load khóa học
+
+      // Load thông tin mới
+      setCccd(user.cccd || '');
+      setCccdDate(user.cccdDate || '');
+      setCccdPlace(user.cccdPlace || '');
+      setAddress(user.address || '');
     }
   }, [user]); // (Chạy lại khi "user" được tải xong)
 
@@ -62,7 +74,13 @@ function HoSoCaNhan() {
         fullName: fullName,
         phoneNumber: phoneNumber,
         birthDate: birthDate,
-        class: className // Lưu lớp
+        class: className, // Lưu lớp
+
+        // Lưu thông tin mới
+        cccd: cccd,
+        cccdDate: cccdDate,
+        cccdPlace: cccdPlace,
+        address: address
       });
 
       setFormSuccess('Cập nhật hồ sơ thành công! Thông tin sẽ được làm mới ở lần tải trang sau.');
@@ -145,6 +163,52 @@ function HoSoCaNhan() {
               />
             </div>
 
+            {/* 💖 THÔNG TIN CCCD (Gộp chung 1 dòng hoặc tách ra tùy ý, ở đây mình tách ra cho rõ) 💖 */}
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Thông tin CCCD</label>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <input
+                  type="text"
+                  placeholder="Số CCCD"
+                  value={cccd}
+                  onChange={(e) => setCccd(e.target.value)}
+                  className={styles.input}
+                  style={{ flex: 2 }}
+                />
+                <input
+                  type="date"
+                  placeholder="Ngày cấp"
+                  value={cccdDate}
+                  onChange={(e) => setCccdDate(e.target.value)}
+                  className={styles.input}
+                  style={{ flex: 1 }}
+                />
+                <input
+                  type="text"
+                  placeholder="Nơi cấp"
+                  value={cccdPlace}
+                  onChange={(e) => setCccdPlace(e.target.value)}
+                  className={styles.input}
+                  style={{ flex: 1 }}
+                />
+              </div>
+            </div>
+
+            {/* 💖 ĐỊA CHỈ 💖 */}
+            <div className={styles.formGroup}>
+              <label htmlFor="address" className={styles.label}>
+                Địa chỉ liên hệ
+              </label>
+              <input
+                type="text"
+                id="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className={styles.input}
+                placeholder="Số nhà, đường, phường/xã..."
+              />
+            </div>
+
             {/* Ô Lớp (Học viên tự điền) */}
             <div className={styles.formGroup}>
               <label htmlFor="className" className={styles.label}>
@@ -184,8 +248,8 @@ function HoSoCaNhan() {
             )}
 
             {/* Nút bấm */}
-            <div className={styles.buttonContainer} style={{ justifyContent: 'space-between', display: 'flex' }}>
-              <Link href="/quan-ly" style={{ color: '#555', textDecoration: 'underline' }}>
+            <div className={styles.buttonContainer}>
+              <Link href="/quan-ly" className={styles.backLink}>
                 « Quay về Bảng điều khiển
               </Link>
               <button

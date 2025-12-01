@@ -1,4 +1,3 @@
-// 'use client'
 'use client'
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
@@ -19,6 +18,10 @@ interface AuthUser {
   courseId?: string // ID Khóa học (được gán)
   courseName?: string // Tên Khóa học (được gán)
   isVerified?: boolean // Đã được xác thực vào khóa học chưa
+  cccd?: string // Số CCCD
+  cccdDate?: string // Ngày cấp
+  cccdPlace?: string // Nơi cấp
+  address?: string // Địa chỉ
 }
 
 // 2. Định nghĩa "kiểu" của "Bộ não" (Context)
@@ -81,6 +84,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             courseId: userData.courseId || undefined,
             courseName: userData.courseName || undefined,
             isVerified: userData.isVerified || false,
+            cccd: userData.cccd || undefined,
+            cccdDate: userData.cccdDate || undefined,
+            cccdPlace: userData.cccdPlace || undefined,
+            address: userData.address || undefined,
           }
           setUser(authUser)
         } else {
