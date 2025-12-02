@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { db } from '../utils/firebaseClient'
-import { collection, query, where, onSnapshot, doc, getDoc } from 'firebase/firestore'
+import { collection, query, where, onSnapshot, doc, getDoc, documentId } from 'firebase/firestore'
 import { useAuth } from '../context/AuthContext'
 import styles from './StudentClassView.module.css'
 import { FaUserTie, FaUsers, FaIdCard } from 'react-icons/fa'
@@ -13,6 +13,7 @@ interface Course {
     name: string
     description?: string
     headTeacherId?: string
+    teacherIds?: string[]
 }
 
 interface UserData {
@@ -53,23 +54,31 @@ export default function StudentClassView() {
         fetchCourse()
     }, [user?.courseId])
 
-    // 2. Fetch Head Teacher
+    // 2. Fetch Teachers (assigned to course)
+    const [teachers, setTeachers] = useState<UserData[]>([])
     useEffect(() => {
-        if (!course?.headTeacherId) return
-
-        const fetchHeadTeacher = async () => {
-            try {
-                const docRef = doc(db, 'users', course.headTeacherId!)
-                const docSnap = await getDoc(docRef)
-                if (docSnap.exists()) {
-                    setHeadTeacher({ uid: docSnap.id, ...docSnap.data() } as UserData)
-                }
-            } catch (err) {
-                console.error("Error fetching head teacher:", err)
-            }
+        if (!course?.teacherIds || course.teacherIds.length === 0) {
+            setTeachers([])
+            return
         }
-        fetchHeadTeacher()
-    }, [course?.headTeacherId])
+        // 💖 FIX: Query by documentId() instead of 'uid' field 💖
+        const q = query(collection(db, 'users'), where(documentId(), 'in', course.teacherIds))
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const list = snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() })) as UserData[]
+            setTeachers(list)
+        })
+        return () => unsubscribe()
+    }, [course?.teacherIds])
+
+    // Resolve Head Teacher from teachers list
+    useEffect(() => {
+        if (course?.headTeacherId) {
+            const found = teachers.find(t => t.uid === course.headTeacherId)
+            if (found) setHeadTeacher(found)
+        } else if (teachers.length > 0) {
+            setHeadTeacher(teachers[0])
+        }
+    }, [course?.headTeacherId, teachers])
 
     // 3. Fetch Classmates
     useEffect(() => {
@@ -119,36 +128,42 @@ export default function StudentClassView() {
                     <div className={styles.card}>
                         <h3 className={styles.cardTitle}>
                             <FaUserTie style={{ color: '#52c41a' }} />
-                            Giáo viên
+                            Giáo viên ({teachers.length})
                         </h3>
-                        {headTeacher ? (
-                            <div className={styles.headTeacher}>
-                                <div className={styles.avatar}>
-                                    {headTeacher.fullName.charAt(0).toUpperCase()}
-                                </div>
-                                <div className={styles.teacherInfo}>
-                                    <h4>
-                                        {headTeacher.fullName}
-                                        {/* 💖 GHI CHÚ CHỦ NHIỆM 💖 */}
-                                        <span style={{
-                                            fontSize: '0.7rem',
-                                            backgroundColor: '#f6ffed',
-                                            color: '#52c41a',
-                                            border: '1px solid #b7eb8f',
-                                            padding: '2px 6px',
-                                            borderRadius: '4px',
-                                            marginLeft: '8px',
-                                            verticalAlign: 'middle'
-                                        }}>
-                                            Chủ nhiệm
-                                        </span>
-                                    </h4>
-                                    <p>{headTeacher.email}</p>
-                                    <p>{headTeacher.phoneNumber}</p>
-                                </div>
+                        {teachers.length > 0 ? (
+                            <div className={styles.teacherList}>
+                                {teachers.map(t => (
+                                    <div key={t.uid} className={styles.headTeacher} style={{ marginBottom: '15px', paddingBottom: '15px', borderBottom: '1px solid #f0f0f0' }}>
+                                        <div className={styles.avatar}>
+                                            {t.fullName ? t.fullName.charAt(0).toUpperCase() : '?'}
+                                        </div>
+                                        <div className={styles.teacherInfo}>
+                                            <h4>
+                                                {t.fullName}
+                                                {/* 💖 GHI CHÚ CHỦ NHIỆM 💖 */}
+                                                {course.headTeacherId === t.uid && (
+                                                    <span style={{
+                                                        fontSize: '0.7rem',
+                                                        backgroundColor: '#f6ffed',
+                                                        color: '#52c41a',
+                                                        border: '1px solid #b7eb8f',
+                                                        padding: '2px 6px',
+                                                        borderRadius: '4px',
+                                                        marginLeft: '8px',
+                                                        verticalAlign: 'middle'
+                                                    }}>
+                                                        Chủ nhiệm
+                                                    </span>
+                                                )}
+                                            </h4>
+                                            <p>{t.email}</p>
+                                            <p>{t.phoneNumber}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         ) : (
-                            <p style={{ color: '#8c8c8c', fontStyle: 'italic' }}>Chưa cập nhật GVCN</p>
+                            <p style={{ color: '#8c8c8c', fontStyle: 'italic' }}>Chưa cập nhật Giáo viên</p>
                         )}
                     </div>
                 </div>
@@ -165,7 +180,7 @@ export default function StudentClassView() {
                             {classmates.length > 0 ? classmates.map(mate => (
                                 <div key={mate.uid} className={styles.classmateItem}>
                                     <div className={styles.miniAvatar}>
-                                        {mate.fullName.charAt(0).toUpperCase()}
+                                        {mate.fullName ? mate.fullName.charAt(0).toUpperCase() : '?'}
                                     </div>
                                     <div className={styles.classmateName}>{mate.fullName}</div>
                                     <div className={styles.classmateDetail}>

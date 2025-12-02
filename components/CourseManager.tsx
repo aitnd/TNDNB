@@ -1,5 +1,3 @@
-
-
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -50,6 +48,7 @@ export default function CourseManager() {
     const [editingCourse, setEditingCourse] = useState<Course | null>(null)
     const [editName, setEditName] = useState('')
     const [editDesc, setEditDesc] = useState('')
+    const [editHeadTeacherId, setEditHeadTeacherId] = useState('')
     const [activeTab, setActiveTab] = useState<'info' | 'students' | 'teachers'>('info')
 
     // Student Management State
@@ -113,7 +112,8 @@ export default function CourseManager() {
     // 3. Fetch Teachers (When editing)
     useEffect(() => {
         if (editingCourse) {
-            const q = query(collection(db, 'users'), where('role', '==', 'giao_vien'))
+            // 💖 LẤY TẤT CẢ CÁC ROLE CÓ THỂ LÀ GIÁO VIÊN 💖
+            const q = query(collection(db, 'users'), where('role', 'in', ['giao_vien', 'quan_ly', 'lanh_dao', 'admin']))
             const unsubscribe = onSnapshot(q, (snapshot) => {
                 const teachersData = snapshot.docs.map(doc => ({
                     uid: doc.id,
@@ -167,7 +167,8 @@ export default function CourseManager() {
         try {
             await updateDoc(doc(db, 'courses', editingCourse.id), {
                 name: editName,
-                description: editDesc
+                description: editDesc,
+                headTeacherId: editHeadTeacherId
             })
             alert('Cập nhật thông tin khóa học thành công!')
         } catch (err: any) {
@@ -349,95 +350,96 @@ export default function CourseManager() {
         </div>
     )
 
-    // 💖 RENDER VIEW: DETAIL OR LIST 💖
-    if (viewingCourse) {
-        return (
-            <ClassDetailView
-                course={viewingCourse}
-                onBack={() => setViewingCourse(null)}
-                onEdit={() => {
-                    setEditingCourse(viewingCourse)
-                    setEditName(viewingCourse.name)
-                    setEditDesc(viewingCourse.description || '')
-                    setActiveTab('info')
-                }}
-            />
-        )
-    }
-
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <h2 className={styles.title}>Quản lý Khóa học (Lớp thi)</h2>
-            </div>
+        <>
+            {/* 💖 RENDER VIEW: DETAIL OR LIST 💖 */}
+            {viewingCourse ? (
+                <ClassDetailView
+                    course={viewingCourse}
+                    onBack={() => setViewingCourse(null)}
+                    onEdit={() => {
+                        setEditingCourse(viewingCourse)
+                        setEditName(viewingCourse.name)
+                        setEditDesc(viewingCourse.description || '')
+                        setEditHeadTeacherId(viewingCourse.headTeacherId || '')
+                        setActiveTab('info')
+                    }}
+                />
+            ) : (
+                <div className={styles.container}>
+                    <div className={styles.header}>
+                        <h2 className={styles.title}>Quản lý Khóa học (Lớp thi)</h2>
+                    </div>
 
-            {/* CREATE FORM */}
-            {canCreateDelete && (
-                <form onSubmit={handleAddCourse} className={styles.createForm}>
+                    {/* CREATE FORM */}
+                    {canCreateDelete && (
+                        <form onSubmit={handleAddCourse} className={styles.createForm}>
+                            <input
+                                type="text"
+                                placeholder="Tên khóa học (VD: TM-K1)"
+                                value={newCourseName}
+                                onChange={(e) => setNewCourseName(e.target.value)}
+                                required
+                                className={styles.input}
+                                style={{ flex: 1 }}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Mô tả (Tuỳ chọn)"
+                                value={newCourseDesc}
+                                onChange={(e) => setNewCourseDesc(e.target.value)}
+                                className={styles.input}
+                                style={{ flex: 2 }}
+                            />
+                            <button type="submit" disabled={loading} className={styles.buttonPrimary}>
+                                {loading ? 'Đang tạo...' : 'Tạo Khóa học'}
+                            </button>
+                        </form>
+                    )}
+
+                    {error && <p style={{ color: 'red', marginBottom: '16px' }}>{error}</p>}
+
+                    {/* SEARCH */}
                     <input
                         type="text"
-                        placeholder="Tên khóa học (VD: TM-K1)"
-                        value={newCourseName}
-                        onChange={(e) => setNewCourseName(e.target.value)}
-                        required
-                        className={styles.input}
-                        style={{ flex: 1 }}
+                        placeholder="Tìm kiếm khóa học..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className={styles.searchBar}
                     />
-                    <input
-                        type="text"
-                        placeholder="Mô tả (Tuỳ chọn)"
-                        value={newCourseDesc}
-                        onChange={(e) => setNewCourseDesc(e.target.value)}
-                        className={styles.input}
-                        style={{ flex: 2 }}
-                    />
-                    <button type="submit" disabled={loading} className={styles.buttonPrimary}>
-                        {loading ? 'Đang tạo...' : 'Tạo Khóa học'}
-                    </button>
-                </form>
+
+                    {/* COURSE LIST */}
+                    <div className={styles.grid}>
+                        {filteredCourses.map(course => (
+                            <div key={course.id} className={styles.card}>
+                                <h3 className={styles.cardTitle}>{course.name}</h3>
+                                <p className={styles.cardDesc}>{course.description || 'Không có mô tả'}</p>
+
+                                <div className={styles.cardActions}>
+                                    <button
+                                        onClick={() => setViewingCourse(course)}
+                                        className={styles.buttonEdit}
+                                    >
+                                        {canCreateDelete ? 'Chi tiết / Quản lý' : 'Xem chi tiết'}
+                                    </button>
+
+                                    {canCreateDelete && (
+                                        <button
+                                            onClick={() => handleDeleteCourse(course.id)}
+                                            className={styles.buttonDelete}
+                                        >
+                                            Xóa
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                        {filteredCourses.length === 0 && <p style={{ color: '#8c8c8c' }}>Không tìm thấy khóa học nào.</p>}
+                    </div>
+                </div>
             )}
 
-            {error && <p style={{ color: 'red', marginBottom: '16px' }}>{error}</p>}
-
-            {/* SEARCH */}
-            <input
-                type="text"
-                placeholder="Tìm kiếm khóa học..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={styles.searchBar}
-            />
-
-            {/* COURSE LIST */}
-            <div className={styles.grid}>
-                {filteredCourses.map(course => (
-                    <div key={course.id} className={styles.card}>
-                        <h3 className={styles.cardTitle}>{course.name}</h3>
-                        <p className={styles.cardDesc}>{course.description || 'Không có mô tả'}</p>
-
-                        <div className={styles.cardActions}>
-                            <button
-                                onClick={() => setViewingCourse(course)}
-                                className={styles.buttonEdit}
-                            >
-                                {canCreateDelete ? 'Chi tiết / Quản lý' : 'Xem chi tiết'}
-                            </button>
-
-                            {canCreateDelete && (
-                                <button
-                                    onClick={() => handleDeleteCourse(course.id)}
-                                    className={styles.buttonDelete}
-                                >
-                                    Xóa
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                ))}
-                {filteredCourses.length === 0 && <p style={{ color: '#8c8c8c' }}>Không tìm thấy khóa học nào.</p>}
-            </div>
-
-            {/* EDIT MODAL */}
+            {/* EDIT MODAL - Rendered regardless of view */}
             {editingCourse && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
@@ -489,6 +491,20 @@ export default function CourseManager() {
                                             className={styles.input}
                                             style={{ width: '100%' }}
                                         />
+                                    </div>
+                                    <div style={{ flex: 1 }}>
+                                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>Giáo viên Chủ nhiệm</label>
+                                        <select
+                                            value={editHeadTeacherId}
+                                            onChange={e => setEditHeadTeacherId(e.target.value)}
+                                            className={styles.input}
+                                            style={{ width: '100%' }}
+                                        >
+                                            <option value="">-- Chọn GVCN --</option>
+                                            {allTeachers.map(t => (
+                                                <option key={t.uid} value={t.uid}>{t.fullName}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div style={{ paddingTop: '28px' }}>
                                         <button onClick={handleUpdateCourse} className={styles.buttonPrimary}>
@@ -583,72 +599,75 @@ export default function CourseManager() {
                             )}
                         </div>
                     </div>
-                </div>
-            )}
+                </div >
+            )
+            }
 
             {/* STUDENT DETAIL MODAL */}
-            {viewingStudent && (
-                <div className={styles.modalOverlay} style={{ zIndex: 1100 }}>
-                    <div className={styles.modalContent} style={{ maxWidth: '600px' }}>
-                        <div className={styles.modalHeader}>
-                            <h2 className={styles.modalTitle}>Hồ sơ Học viên</h2>
-                            <button onClick={() => setViewingStudent(null)} className={styles.closeButton}>&times;</button>
-                        </div>
-                        <div className={styles.modalBody}>
-                            <div className={styles.infoGrid}>
-                                <div>
-                                    <span className={styles.infoLabel}>Họ và tên</span>
-                                    <div className={styles.infoValue}>{viewingStudent.fullName}</div>
-                                </div>
-                                <div>
-                                    <span className={styles.infoLabel}>Email</span>
-                                    <div className={styles.infoValue}>{viewingStudent.email}</div>
-                                </div>
-                                <div>
-                                    <span className={styles.infoLabel}>Số điện thoại</span>
-                                    <div className={styles.infoValue}>{viewingStudent.phoneNumber || '---'}</div>
-                                </div>
-                                <div>
-                                    <span className={styles.infoLabel}>Ngày sinh</span>
-                                    <div className={styles.infoValue}>{viewingStudent.birthDate || '---'}</div>
-                                </div>
-                                <div>
-                                    <span className={styles.infoLabel}>Lớp</span>
-                                    <div className={styles.infoValue}>{viewingStudent.class || '---'}</div>
-                                </div>
-                                <div>
-                                    <span className={styles.infoLabel}>Khóa học</span>
-                                    <div className={styles.infoValue} style={{ color: viewingStudent.courseName ? '#1890ff' : 'inherit' }}>
-                                        {viewingStudent.courseName || 'Chưa vào khóa'}
-                                    </div>
-                                </div>
+            {
+                viewingStudent && (
+                    <div className={styles.modalOverlay} style={{ zIndex: 1100 }}>
+                        <div className={styles.modalContent} style={{ maxWidth: '600px' }}>
+                            <div className={styles.modalHeader}>
+                                <h2 className={styles.modalTitle}>Hồ sơ Học viên</h2>
+                                <button onClick={() => setViewingStudent(null)} className={styles.closeButton}>&times;</button>
                             </div>
-
-                            <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #f0f0f0' }}>
-                                <h3 style={{ fontSize: '1rem', marginBottom: '16px' }}>Thông tin CCCD & Địa chỉ</h3>
+                            <div className={styles.modalBody}>
                                 <div className={styles.infoGrid}>
                                     <div>
-                                        <span className={styles.infoLabel}>Số CCCD</span>
-                                        <div className={styles.infoValue}>{viewingStudent.cccd || '---'}</div>
+                                        <span className={styles.infoLabel}>Họ và tên</span>
+                                        <div className={styles.infoValue}>{viewingStudent.fullName}</div>
                                     </div>
                                     <div>
-                                        <span className={styles.infoLabel}>Ngày cấp</span>
-                                        <div className={styles.infoValue}>{viewingStudent.cccdDate || '---'}</div>
+                                        <span className={styles.infoLabel}>Email</span>
+                                        <div className={styles.infoValue}>{viewingStudent.email}</div>
                                     </div>
                                     <div>
-                                        <span className={styles.infoLabel}>Nơi cấp</span>
-                                        <div className={styles.infoValue}>{viewingStudent.cccdPlace || '---'}</div>
+                                        <span className={styles.infoLabel}>Số điện thoại</span>
+                                        <div className={styles.infoValue}>{viewingStudent.phoneNumber || '---'}</div>
                                     </div>
                                     <div>
-                                        <span className={styles.infoLabel}>Địa chỉ</span>
-                                        <div className={styles.infoValue}>{viewingStudent.address || '---'}</div>
+                                        <span className={styles.infoLabel}>Ngày sinh</span>
+                                        <div className={styles.infoValue}>{viewingStudent.birthDate || '---'}</div>
+                                    </div>
+                                    <div>
+                                        <span className={styles.infoLabel}>Lớp</span>
+                                        <div className={styles.infoValue}>{viewingStudent.class || '---'}</div>
+                                    </div>
+                                    <div>
+                                        <span className={styles.infoLabel}>Khóa học</span>
+                                        <div className={styles.infoValue} style={{ color: viewingStudent.courseName ? '#1890ff' : 'inherit' }}>
+                                            {viewingStudent.courseName || 'Chưa vào khóa'}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #f0f0f0' }}>
+                                    <h3 style={{ fontSize: '1rem', marginBottom: '16px' }}>Thông tin CCCD & Địa chỉ</h3>
+                                    <div className={styles.infoGrid}>
+                                        <div>
+                                            <span className={styles.infoLabel}>Số CCCD</span>
+                                            <div className={styles.infoValue}>{viewingStudent.cccd || '---'}</div>
+                                        </div>
+                                        <div>
+                                            <span className={styles.infoLabel}>Ngày cấp</span>
+                                            <div className={styles.infoValue}>{viewingStudent.cccdDate || '---'}</div>
+                                        </div>
+                                        <div>
+                                            <span className={styles.infoLabel}>Nơi cấp</span>
+                                            <div className={styles.infoValue}>{viewingStudent.cccdPlace || '---'}</div>
+                                        </div>
+                                        <div>
+                                            <span className={styles.infoLabel}>Địa chỉ</span>
+                                            <div className={styles.infoValue}>{viewingStudent.address || '---'}</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </>
     )
 }
