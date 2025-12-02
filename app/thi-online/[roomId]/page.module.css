@@ -82,19 +82,27 @@
 /* === Style cho Trang Lỗi / Chờ (Legacy/Fallback) === */
 .errorContainer {
     text-align: center;
-    padding: 4rem 1rem;
+    padding: 3rem;
     min-height: 60vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    /* White background */
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    max-width: 800px;
 }
 
 .errorTitle {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    color: #9b2c2c;
-    /* (Màu đỏ) */
+    color: #dc2626;
+    /* Red text */
+    margin-bottom: 1rem;
+    line-height: 1.4;
 }
 
 /* === Nút Bấm === */

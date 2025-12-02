@@ -25,6 +25,11 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Nhận được bài làm cho phòng: ${roomId}`)
 
+    // 💖 CHECK ADMIN DB 💖
+    if (!adminDb) {
+      throw new Error('Lỗi cấu hình server: Thiếu FIREBASE_SERVICE_ACCOUNT_KEY hoặc lỗi khởi tạo Admin SDK.');
+    }
+
     // 2. "Mở khóa" Firestore, lấy thông tin phòng thi (Dùng Admin SDK)
     const roomRef = adminDb.collection('exam_rooms').doc(roomId)
     const roomSnap = await roomRef.get()

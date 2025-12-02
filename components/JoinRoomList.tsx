@@ -32,7 +32,8 @@ export default function JoinRoomList() {
     console.log('[HV] Bắt đầu "lắng nghe" phòng chờ...')
 
     const roomCollection = collection(db, 'exam_rooms')
-    const q = query(roomCollection, where('status', '==', 'waiting'))
+    // 💖 HIỆN TẤT CẢ TRẠNG THÁI ĐỂ HỌC VIÊN CÓ THỂ VÀO XEM LẠI 💖
+    const q = query(roomCollection, where('status', 'in', ['waiting', 'in_progress', 'finished']))
 
     const unsubscribe = onSnapshot(q,
       (querySnapshot) => {
@@ -83,7 +84,7 @@ export default function JoinRoomList() {
       </div>
 
       <h2 className={styles.listTitle}>
-        Danh sách Phòng Thi Đang Chờ
+        Danh sách Phòng Thi
       </h2>
 
       {loading && <p>Đang tìm phòng thi...</p>}
@@ -110,12 +111,15 @@ export default function JoinRoomList() {
               <p className={styles.roomId}>
                 (ID Phòng: {room.id})
               </p>
+              <p style={{ marginTop: '5px', fontWeight: 'bold', color: room.status === 'waiting' ? 'green' : room.status === 'in_progress' ? 'orange' : 'gray' }}>
+                {room.status === 'waiting' ? '🟢 Đang chờ' : room.status === 'in_progress' ? '🟠 Đang thi' : '⚫ Đã kết thúc'}
+              </p>
             </div>
             <button
               onClick={() => handleJoinRoom(room.id)}
               className={styles.joinButton}
             >
-              Vào Phòng
+              {room.status === 'finished' ? 'Xem lại' : 'Vào Phòng'}
             </button>
           </div>
         ))}

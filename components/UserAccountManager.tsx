@@ -27,7 +27,6 @@ interface UserAccount {
     cccdDate?: string;
     cccdPlace?: string;
     address?: string; // Địa chỉ
-    address?: string; // Địa chỉ
     createdAt: Timestamp;
     isVerified?: boolean; // Đã xác minh
 }

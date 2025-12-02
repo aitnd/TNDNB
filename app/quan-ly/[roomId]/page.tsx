@@ -8,7 +8,7 @@ import { db } from '../../../utils/firebaseClient'
 import { doc, onSnapshot, updateDoc, Timestamp, DocumentData, serverTimestamp, collection, query, getDocs, where } from 'firebase/firestore'
 import ProtectedRoute from '../../../components/ProtectedRoute'
 import styles from './page.module.css'
-import { FaClock, FaPaperPlane, FaFileExport, FaCheckSquare, FaSquare, FaPlusCircle } from 'react-icons/fa'
+import { FaClock, FaPaperPlane, FaFileExport, FaCheckSquare, FaSquare, FaPlusCircle, FaBan, FaRedo } from 'react-icons/fa'
 
 // (Định nghĩa "kiểu")
 interface ExamRoom {
@@ -20,13 +20,15 @@ interface ExamRoom {
   status: 'waiting' | 'in_progress' | 'finished';
   created_at: Timestamp;
   exam_data?: any; // Dữ liệu đề thi (để lấy thời gian làm bài)
+  password?: string; // Mật khẩu phòng
+  is_paused?: boolean; // Trạng thái tạm dừng
 }
 
 interface Participant {
   id: string;
   fullName: string;
   email: string;
-  status: 'waiting' | 'in_progress' | 'submitted';
+  status: 'waiting' | 'in_progress' | 'submitted' | 'kicked';
   score?: number;
   totalQuestions?: number;
   joinedAt: Timestamp;
@@ -35,6 +37,7 @@ interface Participant {
   extraTime?: number; // Thời gian cộng thêm (phút)
   birthDate?: string; // Ngày sinh
   address?: string; // Địa chỉ
+  violationCount?: number; // Số lần vi phạm (chuyển tab)
 }
 
 // --- Component "Nội dung" (Bên trong "Lính gác") ---
@@ -278,7 +281,7 @@ function RoomControlDashboard() {
     const countInfo = `Số lượng: ${participants.length} học viên`;
 
     // Table Header
-    const headers = ['STT', 'Họ và Tên', 'Ngày sinh', 'Địa chỉ', 'Trạng thái', 'Điểm số', 'Thời gian làm bài (phút)'];
+    const headers = ['STT', 'Họ và Tên', 'Ngày sinh', 'Địa chỉ', 'Trạng thái', 'Điểm số', 'Thời gian làm bài (phút)', 'Số lần vi phạm'];
 
     // Rows
     const rows = sortedParticipants.map((p, index) => {
@@ -298,7 +301,8 @@ function RoomControlDashboard() {
         p.address || '',
         p.status === 'waiting' ? 'Đang chờ' : p.status === 'in_progress' ? 'Đang thi' : 'Đã nộp',
         p.score !== undefined ? p.score : '',
-        timeTaken
+        timeTaken,
+        p.violationCount || 0
       ];
     });
 
@@ -323,6 +327,63 @@ function RoomControlDashboard() {
     link.click();
     document.body.removeChild(link);
   }
+
+  // 5. Tạm dừng / Tiếp tục
+  const handleTogglePause = async () => {
+    if (!room) return;
+    const newStatus = !room.is_paused;
+    const confirmMsg = newStatus
+      ? 'Bạn có chắc muốn TẠM DỪNG bài thi? (Học viên sẽ không thể làm bài tiếp)'
+      : 'Bạn có chắc muốn TIẾP TỤC bài thi?';
+    if (!confirm(confirmMsg)) return;
+
+    try {
+      await updateDoc(doc(db, 'exam_rooms', roomId), { is_paused: newStatus });
+    } catch (err: any) {
+      alert('Lỗi: ' + err.message);
+    }
+  };
+
+  // 6. Cập nhật mật khẩu
+  const handleUpdatePassword = async () => {
+    const newPass = prompt('Nhập mật khẩu mới cho phòng (Để trống để xóa mật khẩu):', room?.password || '');
+    if (newPass === null) return; // Cancelled
+
+    try {
+      await updateDoc(doc(db, 'exam_rooms', roomId), { password: newPass });
+      alert('Đã cập nhật mật khẩu!');
+    } catch (err: any) {
+      alert('Lỗi: ' + err.message);
+    }
+  };
+
+  // 7. Kick học viên
+  const handleKick = async (id: string) => {
+    if (!confirm('Bạn có chắc muốn MỜI học viên này ra khỏi phòng?')) return;
+    try {
+      await updateDoc(doc(db, 'exam_rooms', roomId, 'participants', id), { status: 'kicked' });
+    } catch (err: any) {
+      alert('Lỗi: ' + err.message);
+    }
+  };
+
+  // 8. Reset bài thi (Cho thi lại)
+  const handleReset = async (id: string) => {
+    if (!confirm('CẢNH BÁO: Hành động này sẽ XÓA TOÀN BỘ kết quả và cho phép học viên thi lại từ đầu. Bạn có chắc chắn không?')) return;
+    try {
+      // Dùng deleteField() nếu muốn xóa hẳn field, nhưng ở đây set null/undefined cho đơn giản với type
+      await updateDoc(doc(db, 'exam_rooms', roomId, 'participants', id), {
+        status: 'waiting',
+        startedAt: null,
+        submittedAt: null,
+        score: null,
+        violationCount: 0,
+        extraTime: 0
+      });
+    } catch (err: any) {
+      alert('Lỗi: ' + err.message);
+    }
+  };
 
   // Helper: Tính thời gian còn lại
   const calculateTimeRemaining = (p: Participant) => {
@@ -412,6 +473,25 @@ function RoomControlDashboard() {
         </div>
       </div>
 
+      {/* CÀI ĐẶT NÂNG CAO */}
+      <div className={styles.statusBox} style={{ marginTop: '1rem', backgroundColor: '#f0f9ff', border: '1px solid #bae6fd' }}>
+        <div className={styles.statusLeft}>
+          <h2 className={styles.label} style={{ color: '#0284c7' }}>Điều khiển & Bảo mật</h2>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <p><strong>Mật khẩu:</strong> {room.password || '(Không có)'}</p>
+            <p><strong>Trạng thái thi:</strong> {room.is_paused ? <span style={{ color: 'red', fontWeight: 'bold' }}>ĐANG TẠM DỪNG</span> : <span style={{ color: 'green', fontWeight: 'bold' }}>BÌNH THƯỜNG</span>}</p>
+          </div>
+        </div>
+        <div className={styles.statusRight} style={{ gap: '10px' }}>
+          <button onClick={handleUpdatePassword} className={styles.button} style={{ backgroundColor: '#0ea5e9' }}>
+            🔑 Đổi mật khẩu
+          </button>
+          <button onClick={handleTogglePause} className={styles.button} style={{ backgroundColor: room.is_paused ? '#22c55e' : '#f59e0b' }}>
+            {room.is_paused ? '▶️ Tiếp tục thi' : '⏸️ Tạm dừng thi'}
+          </button>
+        </div>
+      </div>
+
       {/* THANH CÔNG CỤ HÀNG LOẠT (Hiện khi có chọn) */}
       {selectedIds.size > 0 && (
         <div className={styles.bulkActions}>
@@ -444,13 +524,14 @@ function RoomControlDashboard() {
               <th>Trạng thái</th>
               <th>Thời gian còn lại</th>
               <th>Kết quả</th>
+              <th>Ghi chú</th>
               <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
             {participants.length === 0 ? (
               <tr>
-                <td colSpan={7} style={{ textAlign: 'center' }}>Đang chờ học viên vào phòng...</td>
+                <td colSpan={8} style={{ textAlign: 'center' }}>Đang chờ học viên vào phòng...</td>
               </tr>
             ) : (
               participants.map((p) => {
@@ -475,6 +556,7 @@ function RoomControlDashboard() {
                       {p.status === 'waiting' && <span className={`${styles.pill} ${styles.pillWaiting}`}>Đang chờ</span>}
                       {p.status === 'in_progress' && <span className={`${styles.pill} ${styles.pillInProgress}`}>Đang thi</span>}
                       {p.status === 'submitted' && <span className={`${styles.pill} ${styles.pillSubmitted}`}>Đã nộp</span>}
+                      {p.status === 'kicked' && <span className={`${styles.pill}`} style={{ backgroundColor: '#4b5563', color: 'white' }}>Đã mời ra</span>}
                     </td>
                     <td style={{ fontWeight: 'bold', color: timeRemaining === '00:00' ? 'red' : '#262626' }}>
                       {p.status === 'in_progress' ? (
@@ -488,6 +570,11 @@ function RoomControlDashboard() {
                       {p.status === 'submitted' ? (
                         <strong>{p.score} / {p.totalQuestions}</strong>
                       ) : '...'}
+                    </td>
+                    <td style={{ color: 'red', fontWeight: 'bold' }}>
+                      {p.violationCount && p.violationCount > 0 ? (
+                        <span>⚠️ Chuyển tab: {p.violationCount} lần</span>
+                      ) : ''}
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: '8px' }}>
@@ -506,6 +593,24 @@ function RoomControlDashboard() {
                           className={styles.actionBtn}
                         >
                           <FaPlusCircle />
+                        </button>
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '5px' }}>
+                        <button
+                          onClick={() => handleReset(p.id)}
+                          title="Cho thi lại (Reset)"
+                          className={styles.actionBtn}
+                          style={{ backgroundColor: '#ef4444' }}
+                        >
+                          <FaRedo />
+                        </button>
+                        <button
+                          onClick={() => handleKick(p.id)}
+                          title="Mời ra khỏi phòng (Kick)"
+                          className={styles.actionBtn}
+                          style={{ backgroundColor: '#4b5563' }}
+                        >
+                          <FaBan />
                         </button>
                       </div>
                     </td>

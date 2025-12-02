@@ -32,6 +32,7 @@ export default function CreateRoomForm() {
   // 💖 THÊM STATE MỚI 💖
   const [duration, setDuration] = useState<number>(45) // Mặc định 45 phút
   const [allowReview, setAllowReview] = useState<boolean>(false)
+  const [password, setPassword] = useState<string>('') // Mật khẩu
 
   // 💖 STATE CHO KHÓA HỌC 💖
   const [courses, setCourses] = useState<any[]>([])
@@ -118,6 +119,7 @@ export default function CreateRoomForm() {
         allow_review: allowReview, // Thêm tùy chọn xem lại
         course_id: selectedCourseId || null, // Lưu ID khóa học
         course_name: selectedCourse?.name || null, // Lưu tên khóa học
+        password: password || null, // Lưu mật khẩu (nếu có)
         created_at: serverTimestamp(),
       })
 
@@ -206,6 +208,21 @@ export default function CreateRoomForm() {
             className={styles.input}
             placeholder="Ví dụ: 45"
             required
+          />
+        </div>
+
+        {/* 💖 MẬT KHẨU PHÒNG (MỚI) 💖 */}
+        <div className={styles.formGroup}>
+          <label htmlFor="password" className={styles.label}>
+            Mật khẩu phòng (Tùy chọn):
+          </label>
+          <input
+            type="text"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={styles.input}
+            placeholder="Để trống nếu không cần mật khẩu"
           />
         </div>
 

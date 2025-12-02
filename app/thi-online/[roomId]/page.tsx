@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../../../context/AuthContext'
 import { db } from '../../../utils/firebaseClient'
-// 💖 THÊM 'getDoc' 💖
-import { doc, onSnapshot, DocumentData, setDoc, serverTimestamp, getDoc } from 'firebase/firestore'
+// 💖 THÊM 'getDoc', 'updateDoc' 💖
+import { doc, onSnapshot, DocumentData, setDoc, serverTimestamp, getDoc, updateDoc } from 'firebase/firestore'
 import styles from './page.module.css'
 import Link from 'next/link'
 import StudentCard from '../../../components/StudentCard' // 💖 IMPORT STUDENT CARD 💖
 
-// (Định nghĩa "kiểu" - Giữ nguyên)
+// (Định nghĩa "kiểu")
 interface ExamRoom {
   id: string;
   license_id: string;
@@ -23,6 +23,8 @@ interface ExamRoom {
   duration?: number; // (Phút)
   started_at?: any; // Timestamp
   allow_review?: boolean;
+  password?: string; // 💖 Mật khẩu
+  is_paused?: boolean; // 💖 Tạm dừng
 }
 type Answer = { id: string; text: string }
 type Question = { id: string; text: string; image: string | null; answers: Answer[] }
@@ -34,7 +36,7 @@ export default function ExamRoomPage() {
   const { user, loading: authLoading } = useAuth()
   const roomId = params.roomId as string
 
-  // (Não trạng thái - Giữ nguyên)
+  // (Não trạng thái)
   const [room, setRoom] = useState<ExamRoom | null>(null)
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
@@ -46,11 +48,16 @@ export default function ExamRoomPage() {
   // 💖 THÊM STATE CHO TIMER & SECURITY 💖
   const [timeLeft, setTimeLeft] = useState<number | null>(null) // (Giây)
   const [violationCount, setViolationCount] = useState(0)
-  const [showWarning, setShowWarning] = useState(false)
+  // const [showWarning, setShowWarning] = useState(false) // BỎ SHOW WARNING
   // 💖 THÊM STATE REVIEW 💖
   const [reviewData, setReviewData] = useState<Record<string, string> | null>(null)
 
-  // 3. "Phép thuật" Realtime (Lắng nghe phòng) - (Giữ nguyên)
+  // 💖 STATE BẢO MẬT & ĐIỀU KHIỂN 💖
+  const [isAuthorized, setIsAuthorized] = useState(false) // Đã nhập đúng mật khẩu chưa?
+  const [passwordInput, setPasswordInput] = useState('')
+  const [isPaused, setIsPaused] = useState(false) // Trạng thái tạm dừng local
+
+  // 3. "Phép thuật" Realtime (Lắng nghe phòng)
   useEffect(() => {
     if (!roomId || !user) return
     console.log(`[HV] Bắt đầu "lắng nghe" phòng thi: ${roomId}`)
@@ -66,6 +73,20 @@ export default function ExamRoomPage() {
             console.log('[HV] Giáo viên đã phát đề! Tải bộ đề...')
             setQuestions(roomData.exam_data.questions || [])
           }
+
+          // 💖 CHECK PASSWORD & PAUSE 💖
+          if (roomData.password) {
+            const savedPass = sessionStorage.getItem(`pass_${roomId}`);
+            if (savedPass === roomData.password) {
+              setIsAuthorized(true);
+            }
+            // Nếu chưa có savedPass -> isAuthorized mặc định false -> Hiện form nhập
+          } else {
+            setIsAuthorized(true); // Không pass -> auto vào
+          }
+
+          setIsPaused(roomData.is_paused || false);
+
           if (roomData.status === 'finished') {
             alert('Phòng thi này đã kết thúc.')
             router.push('/quan-ly')
@@ -113,6 +134,37 @@ export default function ExamRoomPage() {
     }
   }, [roomId, user]); // (Phụ thuộc vào roomId và user)
 
+  // 💖 LẮNG NGHE TRẠNG THÁI CÁ NHÂN (KICK / RESET) 💖
+  useEffect(() => {
+    if (!roomId || !user) return;
+    const pRef = doc(db, 'exam_rooms', roomId, 'participants', user.uid);
+    const unsub = onSnapshot(pRef, (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+
+        // 1. Xử lý KICK
+        if (data.status === 'kicked') {
+          alert('Bạn đã bị giáo viên mời ra khỏi phòng thi!');
+          router.push('/');
+          return;
+        }
+
+        // 2. Xử lý RESET (Nếu đang làm bài mà bị chuyển về waiting)
+        // Logic: Nếu status là waiting nhưng local đang có selectedAnswers hoặc đang submit -> Reset
+        if (data.status === 'waiting' && (Object.keys(selectedAnswers).length > 0 || finalScore)) {
+          alert('Giáo viên đã reset bài thi của bạn. Bạn sẽ thi lại từ đầu.');
+          setSelectedAnswers({});
+          setTimeLeft(null);
+          setViolationCount(0);
+          setFinalScore(null);
+          setIsSubmitting(false);
+          setReviewData(null);
+        }
+      }
+    });
+    return () => unsub();
+  }, [roomId, user, selectedAnswers, finalScore]);
+
   // 3.1 💖 TIMER LOGIC 💖
   useEffect(() => {
     if (room && room.status === 'in_progress' && room.started_at && room.duration) {
@@ -136,28 +188,37 @@ export default function ExamRoomPage() {
     }
   }, [room]);
 
-  // 3.2 💖 TAB SECURITY LOGIC 💖
+  // 3.2 💖 TAB SECURITY LOGIC (UPDATED: SOFT ALERT) 💖
   useEffect(() => {
-    if (room && room.status === 'in_progress' && !finalScore) {
-      const handleVisibilityChange = () => {
+    if (room && room.status === 'in_progress' && !finalScore && user) {
+      const handleVisibilityChange = async () => {
         if (document.hidden) {
-          setViolationCount(prev => {
-            const newCount = prev + 1;
-            if (newCount >= 3) {
-              alert('Bạn đã vi phạm quy chế thi (chuyển tab) quá 3 lần. Hệ thống sẽ tự động nộp bài.');
-              handleSubmitExam();
-            } else {
-              setShowWarning(true);
-            }
-            return newCount;
-          });
+          console.log('[HV] Phát hiện chuyển tab! Ghi nhận vi phạm...');
+
+          // Tăng biến đếm local
+          setViolationCount(prev => prev + 1);
+
+          // 💖 CẢNH BÁO NHẸ (SOFT ALERT) 💖
+          alert('⚠️ CẢNH BÁO: Bạn đang rời khỏi màn hình thi!\nHệ thống đã ghi nhận vi phạm. Vui lòng quay lại làm bài ngay.');
+
+          // 💖 GHI NHẬN VÀO FIRESTORE (ÂM THẦM) 💖
+          try {
+            const participantRef = doc(db, 'exam_rooms', roomId, 'participants', user.uid);
+            await updateDoc(participantRef, {
+              violationCount: violationCount + 1,
+              lastViolationAt: serverTimestamp()
+            });
+
+          } catch (err) {
+            console.error('[HV] Lỗi ghi nhận vi phạm:', err);
+          }
         }
       };
 
       document.addEventListener("visibilitychange", handleVisibilityChange);
       return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
     }
-  }, [room, finalScore]);
+  }, [room, finalScore, user, roomId, violationCount]);
 
   // 5. HÀM CHỌN ĐÁP ÁN (Giữ nguyên)
   const handleSelectAnswer = (questionId: string, answerId: string) => {
@@ -204,8 +265,18 @@ export default function ExamRoomPage() {
     }
   }
 
-  // 7. GIAO DIỆN (Giữ nguyên toàn bộ)
-  // (Phần JSX từ đây trở xuống không thay đổi)
+  // 💖 XỬ LÝ NHẬP MẬT KHẨU 💖
+  const handleLoginRoom = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (room?.password && passwordInput === room.password) {
+      setIsAuthorized(true);
+      sessionStorage.setItem(`pass_${roomId}`, passwordInput);
+    } else {
+      alert('Mật khẩu không đúng!');
+    }
+  }
+
+  // 7. GIAO DIỆN
   if (loading || authLoading) {
     return (
       <div className={styles.container} style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -220,6 +291,39 @@ export default function ExamRoomPage() {
       </div>
     )
   }
+
+  // 💖 UI: NHẬP MẬT KHẨU 💖
+  if (room && !isAuthorized) {
+    return (
+      <div className={styles.container} style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <form onSubmit={handleLoginRoom} className={styles.errorContainer} style={{ padding: '2rem', width: '100%', maxWidth: '400px', backgroundColor: 'white', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+          <h2 className={styles.title} style={{ textAlign: 'center', marginBottom: '1rem' }}>🔒 Phòng thi có mật khẩu</h2>
+          <input
+            type="password"
+            placeholder="Nhập mật khẩu phòng..."
+            value={passwordInput}
+            onChange={e => setPasswordInput(e.target.value)}
+            style={{ width: '100%', padding: '10px', marginBottom: '1rem', border: '1px solid #ddd', borderRadius: '5px' }}
+          />
+          <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#0284c7', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>
+            Vào phòng thi
+          </button>
+        </form>
+      </div>
+    )
+  }
+
+  // 💖 UI: TẠM DỪNG 💖
+  if (isPaused) {
+    return (
+      <div className={styles.container} style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff7ed' }}>
+        <h1 style={{ fontSize: '3rem' }}>⏸️</h1>
+        <h2 style={{ color: '#c2410c', marginTop: '1rem' }}>Bài thi đang tạm dừng</h2>
+        <p style={{ color: '#7c2d12' }}>Vui lòng chờ giáo viên mở lại...</p>
+      </div>
+    )
+  }
+
   if (room && room.status === 'waiting') {
     return (
       <div className={styles.container}>
@@ -353,33 +457,7 @@ export default function ExamRoomPage() {
           <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: timeLeft && timeLeft < 300 ? 'red' : '#1e3a8a' }}>
             ⏱ Thời gian còn lại: {timeLeft ? `${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}` : '--:--'}
           </div>
-          {violationCount > 0 && (
-            <div style={{ color: 'red', fontWeight: 'bold' }}>
-              ⚠️ Cảnh báo vi phạm: {violationCount}/3
-            </div>
-          )}
         </div>
-
-        {/* 💖 MODAL CẢNH BÁO 💖 */}
-        {showWarning && (
-          <div style={{
-            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000,
-            display: 'flex', justifyContent: 'center', alignItems: 'center'
-          }}>
-            <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px', maxWidth: '400px', textAlign: 'center' }}>
-              <h2 style={{ color: 'red', marginBottom: '10px' }}>CẢNH BÁO VI PHẠM!</h2>
-              <p>Bạn vừa chuyển tab hoặc rời khỏi màn hình thi.</p>
-              <p>Nếu vi phạm <strong>3 lần</strong>, bài thi sẽ bị nộp tự động.</p>
-              <button
-                onClick={() => setShowWarning(false)}
-                style={{ marginTop: '15px', padding: '10px 20px', backgroundColor: '#1e3a8a', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-              >
-                Đã hiểu, tôi sẽ không tái phạm
-              </button>
-            </div>
-          </div>
-        )}
 
         <form onSubmit={(e) => e.preventDefault()}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>

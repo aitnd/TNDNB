@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+desktop.ini
 
 # debug
 npm-debug.log*
