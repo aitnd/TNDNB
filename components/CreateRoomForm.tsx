@@ -3,8 +3,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-// 1. 💖 BỎ (import { supabase }) 💖
-// import { supabase } from '../utils/supabaseClient' 
+// 1. 💖 "TRIỆU HỒI" SUPABASE 💖
+import { supabase } from '../utils/supabaseClient'
 
 // 2. 💖 "TRIỆU HỒI" ĐỒ NGHỀ FIRESTORE 💖
 import { db } from '../utils/firebaseClient'
@@ -31,6 +31,7 @@ export default function CreateRoomForm() {
   const [roomName, setRoomName] = useState('')
   // 💖 THÊM STATE MỚI 💖
   const [duration, setDuration] = useState<number>(45) // Mặc định 45 phút
+  const [questionLimit, setQuestionLimit] = useState<number>(30) // Mặc định 30 câu
   const [allowReview, setAllowReview] = useState<boolean>(false)
 
   // 💖 STATE CHO KHÓA HỌC 💖
@@ -41,34 +42,39 @@ export default function CreateRoomForm() {
   const [isCreating, setIsCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // 4. 💖 HÀM LẤY HẠNG BẰNG (ĐÃ "PHẪU THUẬT" 100%) 💖
+  // 4. 💖 HÀM LẤY HẠNG BẰNG TỪ SUPABASE (ĐÃ "PHẪU THUẬT" 100%) 💖
   useEffect(() => {
     async function fetchLicenses() {
-      console.log('[GV] Đang gọi "kho" Firestore để lấy Hạng Bằng...')
+      console.log('[GV] Đang gọi "kho" Supabase để lấy Hạng Bằng...')
 
       try {
-        // (Truy vấn collection 'licenses', sắp xếp theo 'display_order')
-        const licensesRef = collection(db, 'licenses');
-        const q = query(licensesRef, orderBy('display_order', 'asc'));
-        const querySnapshot = await getDocs(q);
+        // (Truy vấn bảng 'licenses', sắp xếp theo 'display_order')
+        const { data, error } = await supabase
+          .from('licenses')
+          .select('id, name, display_order')
+          .order('display_order', { ascending: true })
 
-        const data: License[] = [];
-        querySnapshot.forEach((doc) => {
-          // (ID là 'doc.id', data là 'doc.data()')
-          data.push({
-            id: doc.id,
-            ...doc.data()
-          } as License);
-        });
+        if (error) {
+          throw error
+        }
 
-        setLicenses(data)
-        if (data && data.length > 0) {
-          setSelectedLicenseId(data[0].id) // (Chọn ID đầu tiên)
+        if (data) {
+          // Map data to match License type if needed, but structure is similar
+          const mappedLicenses: License[] = data.map((l: any) => ({
+            id: l.id,
+            name: l.name,
+            display_order: l.display_order
+          }))
+
+          setLicenses(mappedLicenses)
+          if (mappedLicenses.length > 0) {
+            setSelectedLicenseId(mappedLicenses[0].id)
+          }
         }
 
       } catch (err: any) {
-        console.error('Lỗi khi lấy Hạng Bằng (Firestore):', err)
-        setError('Không thể tải danh sách hạng bằng từ Firestore.')
+        console.error('Lỗi khi lấy Hạng Bằng (Supabase):', err)
+        setError('Không thể tải danh sách hạng bằng từ Supabase.')
       } finally {
         setLoadingLicenses(false)
       }
@@ -92,8 +98,8 @@ export default function CreateRoomForm() {
   //    (Vì hàm này VỐN DĨ đã dùng Firestore, nên không cần sửa)
   const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user || !selectedLicenseId || !roomName || !duration || duration <= 0) {
-      setError('Vui lòng điền "Tên phòng", chọn "Hạng bằng" và nhập "Thời gian làm bài" hợp lệ.')
+    if (!user || !selectedLicenseId || !roomName || !duration || duration <= 0 || !questionLimit || questionLimit <= 0) {
+      setError('Vui lòng điền đầy đủ thông tin hợp lệ.')
       return
     }
 
@@ -115,6 +121,7 @@ export default function CreateRoomForm() {
         teacher_name: user.fullName,
         status: 'waiting',
         duration: duration, // Thêm thời gian làm bài
+        question_limit: questionLimit, // 💖 Thêm giới hạn câu hỏi 💖
         allow_review: allowReview, // Thêm tùy chọn xem lại
         course_id: selectedCourseId || null, // Lưu ID khóa học
         course_name: selectedCourse?.name || null, // Lưu tên khóa học
@@ -205,6 +212,23 @@ export default function CreateRoomForm() {
             onChange={(e) => setDuration(parseInt(e.target.value))}
             className={styles.input}
             placeholder="Ví dụ: 45"
+            required
+          />
+        </div>
+
+        {/* 💖 INPUT SỐ CÂU HỎI 💖 */}
+        <div className={styles.formGroup}>
+          <label htmlFor="questionLimit" className={styles.label}>
+            Số lượng câu hỏi:
+          </label>
+          <input
+            type="number"
+            id="questionLimit"
+            min="1"
+            value={questionLimit}
+            onChange={(e) => setQuestionLimit(parseInt(e.target.value))}
+            className={styles.input}
+            placeholder="Ví dụ: 30"
             required
           />
         </div>

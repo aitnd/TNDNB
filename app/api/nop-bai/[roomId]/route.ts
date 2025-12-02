@@ -3,7 +3,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 // 1. 💖 "TRIỆU HỒI" ĐÚNG "ĐỒ NGHỀ" ADMIN 💖
 import { adminDb, FieldValue } from '../../../../utils/firebaseAdmin'
-import { FieldPath } from 'firebase-admin/firestore' // (Import FieldPath của Admin)
+// 2. 💖 "TRIỆU HỒI" SUPABASE 💖
+import { supabase } from '../../../../utils/supabaseClient'
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
 type StudentAnswers = Record<string, string>
@@ -25,6 +26,12 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Nhận được bài làm cho phòng: ${roomId}`)
 
+    // 💖 KIỂM TRA SERVER CONFIG 💖
+    if (!adminDb) {
+      console.error('[API Chấm Bài] Lỗi: adminDb chưa được khởi tạo (Thiếu Key).');
+      throw new Error('Lỗi cấu hình máy chủ (Firebase Admin Key missing). Vui lòng báo Admin.');
+    }
+
     // 2. "Mở khóa" Firestore, lấy thông tin phòng thi (Dùng Admin SDK)
     const roomRef = adminDb.collection('exam_rooms').doc(roomId)
     const roomSnap = await roomRef.get()
@@ -35,35 +42,51 @@ export async function POST(
 
     console.log(`[API Chấm Bài] Phòng thi hạng: ${licenseId}`)
 
-    // 3. 💖 LẤY "ĐÁP ÁN ĐÚNG" (DÙNG CÚ PHÁP ADMIN "XỊN") 💖
-    const questionsRef = adminDb.collection('questions_master');
-    // (Đây là cú pháp query của Admin SDK)
-    const q = questionsRef
-      .where('license_id', '==', licenseId) // (Lọc theo hạng bằng)
-      .where(FieldPath.documentId(), 'in', studentAnswerKeys) // (Lọc theo các câu đã nộp)
+    // 3. 💖 LẤY "ĐÁP ÁN ĐÚNG" TỪ SUPABASE 💖
+    const { data, error } = await supabase
+      .from('licenses')
+      .select(`
+        subjects (
+          questions (
+            id,
+            correct_answer_id
+          )
+        )
+      `)
+      .eq('id', licenseId)
+      .single()
 
-    const questionsSnapshot = await q.get(); // (Chạy "câu hỏi")
-
-    if (questionsSnapshot.empty) {
-      throw new Error('Không thể lấy đáp án từ CSDL Firestore (questions_master).');
+    if (error || !data) {
+      console.error('[API Chấm Bài] Lỗi Supabase:', error)
+      throw new Error('Không thể lấy đáp án từ Supabase.')
     }
 
-    const correctAnswers: CorrectAnswer[] = [];
-    questionsSnapshot.forEach(doc => {
-      correctAnswers.push({
-        id: doc.id,
-        correct_answer_id: doc.data().correct_answer_id
+    // Flatten data để lấy danh sách correct answers
+    let allCorrectAnswers: CorrectAnswer[] = [];
+    if (data.subjects) {
+      data.subjects.forEach((subject: any) => {
+        if (subject.questions) {
+          allCorrectAnswers = allCorrectAnswers.concat(subject.questions);
+        }
       });
+    }
+
+    // Lọc ra các câu hỏi có trong bài làm của học viên (để tối ưu và chính xác)
+    const correctAnswersMap = new Map<string, string>();
+    allCorrectAnswers.forEach(q => {
+      correctAnswersMap.set(q.id, q.correct_answer_id);
     });
 
-    // 4. "CHẤM BÀI" (Giữ nguyên)
+    // 4. "CHẤM BÀI"
     let score = 0
-    const totalQuestions = correctAnswers.length
-    console.log(`[API Chấm Bài] Đang so sánh ${totalQuestions} câu trả lời...`)
+    const totalQuestions = studentAnswerKeys.length // Hoặc lấy từ roomData.question_limit
+    console.log(`[API Chấm Bài] Đang chấm ${totalQuestions} câu trả lời...`)
 
-    correctAnswers.forEach((correctAnswer: CorrectAnswer) => {
-      const studentAnswer = studentAnswers[correctAnswer.id]
-      if (studentAnswer === correctAnswer.correct_answer_id) {
+    studentAnswerKeys.forEach((questionId) => {
+      const studentAnswer = studentAnswers[questionId]
+      const correctAnswer = correctAnswersMap.get(questionId)
+
+      if (correctAnswer && studentAnswer === correctAnswer) {
         score++
       }
     })
@@ -108,11 +131,14 @@ export async function POST(
 
     // 💖 NẾU CHO PHÉP XEM LẠI -> TRẢ VỀ ĐÁP ÁN ĐÚNG 💖
     if (roomData?.allow_review) {
-      const correctAnswersMap: Record<string, string> = {};
-      correctAnswers.forEach(ca => {
-        correctAnswersMap[ca.id] = ca.correct_answer_id;
+      const correctAnswersObj: Record<string, string> = {};
+      studentAnswerKeys.forEach(qid => {
+        const correct = correctAnswersMap.get(qid);
+        if (correct) {
+          correctAnswersObj[qid] = correct;
+        }
       });
-      responseData.correctAnswers = correctAnswersMap;
+      responseData.correctAnswers = correctAnswersObj;
     }
 
     return NextResponse.json(responseData)

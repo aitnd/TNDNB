@@ -1,14 +1,13 @@
 // File: app/api/thi/[licenseId]/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
-// 1. 💖 "TRIỆU HỒI" ĐÚNG "ĐỒ NGHỀ" ADMIN 💖
-import { adminDb } from '../../../../utils/firebaseAdmin' 
-import { FieldPath } from 'firebase-admin/firestore' // (Import FieldPath của Admin)
+// 1. 💖 "TRIỆU HỒI" SUPABASE 💖
+import { supabase } from '../../../../utils/supabaseClient'
 
 // --- CÔNG THỨC TRỘN ĐỀ (Giữ nguyên) ---
 const CONG_THUC_TRON_DE: Record<string, number> = {
-  'default_so_cau_moi_mon': 5, 
-  'maytruong-h1': 3, 
+  'default_so_cau_moi_mon': 5,
+  'maytruong-h1': 3,
 };
 
 // Hàm "xáo" bài (Giữ nguyên)
@@ -27,52 +26,89 @@ export async function GET(
 ) {
   try {
     const licenseId = params.licenseId
-    console.log(`[API Trộn Đề] Bắt đầu "trộn" đề cho hạng: ${licenseId}`)
+    console.log(`[API Trộn Đề] Bắt đầu "trộn" đề cho hạng: ${licenseId} (từ Supabase)`)
 
-    // 2. 💖 LẤY "KHO" CÂU HỎI (DÙNG CÚ PHÁP ADMIN "XỊN") 💖
-    const questionsRef = adminDb.collection('questions_master');
-    // (Đây là cú pháp query của Admin SDK)
-    const q = questionsRef
-      .where('license_id', '==', licenseId) // (Lọc theo đúng hạng bằng)
-      
-    // (Chạy "câu hỏi")
-    const questionsSnapshot = await q.get();
+    // 2. 💖 LẤY "KHO" CÂU HỎI TỪ SUPABASE 💖
+    // Truy vấn: licenses -> subjects -> questions -> answers
+    const { data, error } = await supabase
+      .from('licenses')
+      .select(`
+        name,
+        subjects (
+          questions (
+            id,
+            text,
+            image,
+            correct_answer_id,
+            answers (
+              id,
+              text
+            )
+          )
+        )
+      `)
+      .eq('id', licenseId)
+      .single()
 
-    if (questionsSnapshot.empty) {
-      throw new Error(`Không tìm thấy câu hỏi (questions_master) nào cho hạng bằng ${licenseId}`);
+    if (error || !data) {
+      console.error('[API Trộn Đề] Lỗi Supabase:', error)
+      throw new Error(`Không tìm thấy hạng bằng ${licenseId} hoặc lỗi kết nối.`)
     }
 
+    const licenseName = data.name;
+
+    // 3. "LÀM PHẲNG" DỮ LIỆU (Flatten)
+    // Supabase trả về dạng lồng nhau, ta cần gom hết câu hỏi lại thành 1 mảng
     let allQuestions: any[] = [];
-    questionsSnapshot.forEach(doc => {
-      allQuestions.push({
-        id: doc.id,
-        ...doc.data()
+    if (data.subjects) {
+      data.subjects.forEach((subject: any) => {
+        if (subject.questions) {
+          allQuestions = allQuestions.concat(subject.questions);
+        }
       });
-    });
+    }
 
     console.log(`[API Trộn Đề] Tìm thấy ${allQuestions.length} câu hỏi gốc.`)
 
-    // 3. "TRỘN" ĐỀ (Giữ nguyên)
-    let deThiCuoiCung = xaoTronBai(allQuestions);
-    
-    // (TODO: Giới hạn số câu)
-    // deThiCuoiCung = deThiCuoiCung.slice(0, 30); 
+    if (allQuestions.length === 0) {
+      throw new Error(`Hạng bằng ${licenseName} chưa có câu hỏi nào.`);
+    }
 
-    // 4. "LỌC" ĐÁP ÁN ĐÚNG (Giữ nguyên)
-    const deThiAnToan = deThiCuoiCung.map(q => {
+    // 4. "TRỘN" ĐỀ (Giữ nguyên logic)
+    let deThiCuoiCung = xaoTronBai(allQuestions);
+
+    // 💖 XỬ LÝ GIỚI HẠN CÂU HỎI 💖
+    const url = new URL(request.url);
+    const limitStr = url.searchParams.get('limit');
+    let limit = 30; // Mặc định 30 câu
+    if (limitStr) {
+      const parsedLimit = parseInt(limitStr);
+      if (!isNaN(parsedLimit) && parsedLimit > 0) {
+        limit = parsedLimit;
+      }
+    }
+
+    console.log(`[API Trộn Đề] Giới hạn số câu: ${limit}`);
+    deThiCuoiCung = deThiCuoiCung.slice(0, limit);
+
+    // 5. "LỌC" ĐÁP ÁN ĐÚNG & XÁO ĐÁP ÁN (Bảo mật)
+    const deThiAnToan = deThiCuoiCung.map((q: any) => {
+      // Tách correct_answer_id ra khỏi object trả về (để lộ là toang!)
       const { correct_answer_id, ...safeQuestion } = q;
+
+      // Xáo trộn thứ tự đáp án (a, b, c, d)
       if (safeQuestion.answers) {
         safeQuestion.answers = xaoTronBai(safeQuestion.answers);
       }
+
       return safeQuestion;
     });
 
-
     console.log(`[API Trộn Đề] "Trộn" đề thành công! Gửi ${deThiAnToan.length} câu.`)
 
-    // 5. "Gửi" bộ đề (Giữ nguyên)
+    // 6. "Gửi" bộ đề
     return NextResponse.json({
-      licenseName: allQuestions[0]?.license_name || licenseId, 
+      licenseName: licenseName,
       questions: deThiAnToan,
     })
 
@@ -80,7 +116,7 @@ export async function GET(
     console.error('[API Trộn Đề] Lỗi nghiêm trọng:', error)
     return NextResponse.json(
       { error: error.message || "Lỗi không xác định khi trộn đề." },
-      { status: 500 } 
+      { status: 500 }
     )
   }
 }
