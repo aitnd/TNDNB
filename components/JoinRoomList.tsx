@@ -1,37 +1,33 @@
-
-// Đánh dấu đây là "Client Component"
 'use client'
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '../context/AuthContext' // (Import useAuth)
+import { useAuth } from '../context/AuthContext'
 import { db } from '../utils/firebaseClient'
 import { collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore'
-
-// 1. "Triệu hồi" file CSS Module MỚI
+import StudentCard from './StudentCard' // 💖 IMPORT STUDENT CARD 💖
 import styles from './JoinRoomList.module.css'
 
-// 2. Định nghĩa "kiểu" của Phòng thi (NÂNG CẤP)
 interface ExamRoom {
-  id: string; // ID của document
+  id: string;
   license_id: string;
-  license_name: string; // (Tên đầy đủ: Máy trưởng...)
-  room_name: string; // (Tên phòng: 123)
+  license_name: string;
+  room_name: string;
   teacher_name: string;
   status: string;
   created_at: Timestamp;
 }
 
 export default function JoinRoomList() {
-  const { user } = useAuth() // (Lấy thông tin học viên)
-  const router = useRouter() // "Điều hướng"
+  const { user } = useAuth()
+  const router = useRouter()
 
-  // "Não" trạng thái
   const [rooms, setRooms] = useState<ExamRoom[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // 3. "Phép thuật" Realtime (useEffect) - (Giữ nguyên)
+  // 💖 KHÔNG CÒN STATE TAB NỮA 💖
+
   useEffect(() => {
     console.log('[HV] Bắt đầu "lắng nghe" phòng chờ...')
 
@@ -66,46 +62,25 @@ export default function JoinRoomList() {
     }
   }, [])
 
-  // 4. Hàm xử lý khi Học viên bấm "Vào Phòng" (Giữ nguyên)
   const handleJoinRoom = (roomId: string) => {
-    console.log(`Học viên yêu cầu vào phòng: ${roomId}`)
-    router.push(`/thi-online/${roomId}`)
+    if (!user) {
+      router.push('/login')
+      return
+    }
+    router.push(`/exam-room/${roomId}`)
   }
 
-  // 5. GIAO DIỆN (Đã "mặc" CSS mới và sửa Tên)
-  return (
-    <div className={styles.listContainer}>
+  if (!user) {
+    return <p>Vui lòng đăng nhập để xem danh sách phòng thi.</p>
+  }
 
-      {/* 💖 THẺ HỌC VIÊN (STUDENT CARD) 💖 */}
-      {user && (
-        <div className={styles.studentCard}>
-          <div className={styles.cardHeader}>
-            <h3>Thẻ Dự Thi</h3>
-          </div>
-          <div className={styles.cardBody}>
-            <div className={styles.cardRow}>
-              <span className={styles.cardLabel}>Họ và tên:</span>
-              <span className={styles.cardValue}>{user.fullName}</span>
-            </div>
-            <div className={styles.cardRow}>
-              <span className={styles.cardLabel}>Ngày sinh:</span>
-              <span className={styles.cardValue}>{user.birthDate || '---'}</span>
-            </div>
-            <div className={styles.cardRow}>
-              <span className={styles.cardLabel}>Địa chỉ:</span>
-              <span className={styles.cardValue}>{user.address || '---'}</span>
-            </div>
-            <div className={styles.cardRow}>
-              <span className={styles.cardLabel}>Lớp / Khóa:</span>
-              <span className={styles.cardValue}>
-                {user.class ? `${user.class}` : ''}
-                {user.class && user.courseName ? ' - ' : ''}
-                {user.courseName ? `${user.courseName}` : 'Chưa vào khóa'}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
+  return (
+    <div className={styles.container}>
+
+      {/* 💖 HIỂN THỊ THẺ HỌC VIÊN LUÔN 💖 */}
+      <div style={{ marginBottom: '24px' }}>
+        <StudentCard />
+      </div>
 
       <h2 className={styles.listTitle}>
         Danh sách Phòng Thi Đang Chờ
@@ -114,13 +89,14 @@ export default function JoinRoomList() {
       {loading && <p>Đang tìm phòng thi...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {!loading && rooms.length === 0 && (
-        <p>
-          Hiện chưa có phòng thi nào. Vui lòng chờ giáo viên tạo phòng.
-        </p>
-      )}
+      {
+        !loading && rooms.length === 0 && (
+          <p className={styles.emptyState}>
+            Hiện chưa có phòng thi nào. Vui lòng chờ giáo viên tạo phòng.
+          </p>
+        )
+      }
 
-      {/* "Vẽ" danh sách phòng */}
       <div className={styles.roomList}>
         {rooms.map((room) => (
           <div
@@ -128,7 +104,6 @@ export default function JoinRoomList() {
             className={styles.roomItem}
           >
             <div className={styles.roomInfo}>
-              {/* 💖 (Req 1) HIỂN THỊ TÊN PHÒNG VÀ TÊN HẠNG BẰNG 💖 */}
               <h3>{room.room_name}</h3>
               <p>Hạng thi: {room.license_name}</p>
               <p>Giáo viên: {room.teacher_name}</p>
@@ -145,6 +120,6 @@ export default function JoinRoomList() {
           </div>
         ))}
       </div>
-    </div>
+    </div >
   )
 }

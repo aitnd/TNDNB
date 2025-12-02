@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 // 1. Lấy "chìa khóa" từ "két sắt" (.env.local)
 const firebaseConfig = {
@@ -20,6 +21,7 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 // 3. "Mở" các dịch vụ chúng ta cần
 const auth = getAuth(app); // Dịch vụ "Bảo vệ" (Đăng nhập)
 const db = getFirestore(app); // Dịch vụ "Tủ" (Firestore Realtime)
+const storage = getStorage(app); // Dịch vụ "Kho" (Storage)
 
 // 4. "Gửi" các dịch vụ này cho cả "biệt thự" xài
-export { app, auth, db };
+export { app, auth, db, storage };

@@ -1,0 +1,345 @@
+.container {
+    margin-top: 20px;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.title {
+    color: #1a1a1a;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Form tạo mới */
+.createForm {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    border: 1px solid #e9ecef;
+}
+
+.input {
+    padding: 10px 14px;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.input:focus {
+    border-color: #40a9ff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.buttonPrimary {
+    background: #1890ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.buttonPrimary:hover {
+    background: #40a9ff;
+}
+
+.buttonPrimary:disabled {
+    background: #d9d9d9;
+    cursor: not-allowed;
+}
+
+/* Search Bar */
+.searchBar {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background: #f8f9fa;
+    font-size: 1rem;
+}
+
+.searchBar:focus {
+    background: #fff;
+    border-color: #40a9ff;
+    outline: none;
+}
+
+/* Grid Layout */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #d9d9d9;
+}
+
+.cardTitle {
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+    color: #262626;
+    font-weight: 600;
+}
+
+.cardDesc {
+    margin: 0 0 16px 0;
+    color: #595959;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.cardActions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.buttonEdit {
+    flex: 1;
+    padding: 8px;
+    background: #fff7e6;
+    color: #fa8c16;
+    border: 1px solid #ffd591;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.buttonEdit:hover {
+    background: #fa8c16;
+    color: white;
+    border-color: #fa8c16;
+}
+
+.buttonDelete {
+    padding: 8px 12px;
+    background: #fff1f0;
+    color: #ff4d4f;
+    border: 1px solid #ffa39e;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.buttonDelete:hover {
+    background: #ff4d4f;
+    color: white;
+    border-color: #ff4d4f;
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.modalContent {
+    background: white;
+    padding: 0;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.modalHeader {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modalTitle {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #262626;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #8c8c8c;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.closeButton:hover {
+    color: #262626;
+}
+
+.modalBody {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* Tabs */
+.tabContainer {
+    display: flex;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 20px;
+}
+
+.tabButton {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: #595959;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+}
+
+.tabButton:hover {
+    color: #1890ff;
+}
+
+.activeTab {
+    color: #1890ff;
+    border-bottom-color: #1890ff;
+}
+
+/* Table */
+.tableContainer {
+    overflow-x: auto;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.table th {
+    background: #fafafa;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #262626;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #595959;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover td {
+    background: #fafafa;
+}
+
+.actionButton {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.actionButton:hover {
+    opacity: 0.8;
+}
+
+.btnDetail {
+    background: #e6f7ff;
+    color: #1890ff;
+    margin-right: 8px;
+}
+
+.btnAdd {
+    background: #f6ffed;
+    color: #52c41a;
+}
+
+.btnRemove {
+    background: #fff1f0;
+    color: #ff4d4f;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 40px;
+    color: #8c8c8c;
+}
+
+/* Info Grid */
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.infoLabel {
+    display: block;
+    color: #8c8c8c;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.infoValue {
+    color: #262626;
+    font-weight: 500;
+    font-size: 1rem;
+}

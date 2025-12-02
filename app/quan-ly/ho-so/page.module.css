@@ -3,19 +3,26 @@
 .container {
     min-height: 80vh;
     padding: 2rem;
-    background-color: #f3f4f6; /* Nền xám nhạt */
+    background-color: #f3f4f6;
+    /* Nền xám nhạt */
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    /* Căn trên cùng */
+    width: 100%;
+    /* Đảm bảo full width */
 }
 
 .wrapper {
     width: 100%;
-    max-width: 600px; /* Giới hạn chiều rộng form */
+    max-width: 800px;
+    /* Tăng chiều rộng form */
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     padding: 2.5rem;
+    margin: 0 auto;
+    /* Căn giữa wrapper nếu cần */
 }
 
 .title {

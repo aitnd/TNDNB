@@ -1,0 +1,210 @@
+.container {
+    padding: 24px;
+    background: #f0f2f5;
+    min-height: 400px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header Card */
+.headerCard {
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    border-radius: 16px;
+    padding: 32px;
+    color: white;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.headerCard::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.courseName {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.courseDesc {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+    max-width: 600px;
+}
+
+/* Grid Layout */
+.grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Info Card */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+}
+
+.cardTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #262626;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 12px;
+}
+
+/* Head Teacher Section */
+.headTeacher {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    background: #e6f7ff;
+    color: #1890ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: 2px solid #bae7ff;
+}
+
+.teacherInfo h4 {
+    margin: 0 0 4px 0;
+    color: #262626;
+    font-size: 1rem;
+}
+
+.teacherInfo p {
+    margin: 0;
+    color: #8c8c8c;
+    font-size: 0.9rem;
+}
+
+/* Student Info Rows */
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.infoRow:last-child {
+    border-bottom: none;
+}
+
+.label {
+    color: #8c8c8c;
+    font-size: 0.95rem;
+}
+
+.value {
+    color: #262626;
+    font-weight: 500;
+}
+
+/* Classmates List */
+.classmateList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.classmateItem {
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.classmateItem:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: #d9d9d9;
+    background: white;
+}
+
+.miniAvatar {
+    width: 48px;
+    height: 48px;
+    background: #f5f5f5;
+    color: #595959;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+.classmateName {
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+.classmateDetail {
+    font-size: 0.85rem;
+    color: #8c8c8c;
+}
+
+.emptyState {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #8c8c8c;
+    font-style: italic;
+    background: #fafafa;
+    border-radius: 8px;
+}

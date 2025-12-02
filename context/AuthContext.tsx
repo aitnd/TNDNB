@@ -22,6 +22,7 @@ interface AuthUser {
   cccdDate?: string // Ngày cấp
   cccdPlace?: string // Nơi cấp
   address?: string // Địa chỉ
+  photoURL?: string // 💖 URL Avatar 💖
 }
 
 // 2. Định nghĩa "kiểu" của "Bộ não" (Context)
@@ -88,6 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             cccdDate: userData.cccdDate || undefined,
             cccdPlace: userData.cccdPlace || undefined,
             address: userData.address || undefined,
+            photoURL: userData.photoURL || undefined, // 💖 Map Avatar 💖
           }
           setUser(authUser)
         } else {

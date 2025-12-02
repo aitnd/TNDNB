@@ -1,133 +1,162 @@
-/* === CSS CHO DANH SÁCH PHÒNG THI === */
-
 .listContainer {
-    max-width: 800px;
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem;
+    padding: 20px;
+}
+
+/* Tab Navigation */
+.tabContainer {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 2px;
+}
+
+.tabButton {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #8c8c8c;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tabButton:hover {
+    color: #1890ff;
+}
+
+.activeTab {
+    color: #1890ff;
+    border-bottom-color: #1890ff;
+    font-weight: 600;
 }
 
 .listTitle {
-    text-align: center;
-    color: #1e293b;
-    /* Màu đậm hơn */
-    margin-bottom: 2rem;
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    color: #262626;
+    margin-bottom: 20px;
+    border-left: 5px solid #1890ff;
+    padding-left: 15px;
 }
 
-/* === 💖 STUDENT CARD (THẺ DỰ THI) 💖 === */
+/* Student Card (Old - can be removed or kept for Exam Tab) */
 .studentCard {
-    background-color: #ffffff;
+    background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    margin-bottom: 2.5rem;
-    border: 1px solid #e2e8f0;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0;
 }
 
 .cardHeader {
-    background-color: #0070f3;
-    /* Màu xanh chủ đạo */
+    background: #1890ff;
+    margin: -20px -20px 20px -20px;
+    padding: 15px 20px;
+    border-radius: 12px 12px 0 0;
     color: white;
-    padding: 1rem;
-    text-align: center;
 }
 
 .cardHeader h3 {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-align: center;
 }
 
 .cardBody {
-    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .cardRow {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.75rem;
-    border-bottom: 1px dashed #e2e8f0;
-    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed #f0f0f0;
+    padding-bottom: 8px;
 }
 
 .cardRow:last-child {
     border-bottom: none;
-    margin-bottom: 0;
 }
 
 .cardLabel {
-    font-weight: 600;
-    color: #64748b;
-    /* Xám đậm vừa phải */
+    color: #595959;
+    font-weight: 500;
 }
 
 .cardValue {
-    font-weight: 700;
-    color: #1e293b;
-    /* Đen xanh đậm */
-    text-align: right;
+    color: #262626;
+    font-weight: 600;
 }
 
-/* === DANH SÁCH PHÒNG === */
+/* Room List Grid */
 .roomList {
     display: grid;
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
 }
 
 .roomItem {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 10px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #f0f0f0;
     transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .roomItem:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: #cbd5e1;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-color: #bae7ff;
 }
 
 .roomInfo h3 {
-    margin: 0 0 0.5rem 0;
-    color: #0070f3;
+    margin: 0 0 10px 0;
+    color: #1890ff;
     font-size: 1.25rem;
 }
 
 .roomInfo p {
-    margin: 0.25rem 0;
-    color: #475569;
-    /* Xám đậm dễ đọc */
-    font-weight: 500;
+    margin: 6px 0;
+    color: #595959;
+    font-size: 0.95rem;
 }
 
 .roomId {
-    font-size: 0.85rem;
-    color: #94a3b8;
+    font-size: 0.85rem !important;
+    color: #bfbfbf !important;
     font-style: italic;
-    margin-top: 0.5rem !important;
+    margin-top: 12px !important;
 }
 
 .joinButton {
-    background-color: #22c55e;
-    /* Xanh lá nổi bật */
+    margin-top: 16px;
+    width: 100%;
+    padding: 10px;
+    background: #52c41a;
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 1rem;
-    white-space: nowrap;
+    transition: background 0.2s;
 }
 
 .joinButton:hover {
-    background-color: #16a34a;
+    background: #389e0d;
 }
