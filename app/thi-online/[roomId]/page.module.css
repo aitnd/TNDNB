@@ -1,31 +1,85 @@
 /* === Trang điểm cho Trang "Phòng Thi" / "Chờ" === */
 
 .container {
-    max-width: 800px;
+    max-width: 1000px;
+    /* Wider container for header */
     margin: 2rem auto;
-    padding: 2.5rem;
+    padding: 0;
+    /* Remove padding here, handle in children */
+    background-color: transparent;
+    /* Transparent background for container */
+    box-shadow: none;
+    /* Remove shadow from main container */
+}
+
+/* === 💖 NEW: HORIZONTAL HEADER LAYOUT 💖 === */
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Center vertically */
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1e3a8a; /* (Màu xanh đậm) */
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-}
-
-.subtitle {
-    font-size: 1rem;
-    color: #555;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     margin-bottom: 2rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
+    gap: 2rem;
+    border: 1px solid #e5e7eb;
 }
 
-/* === Style cho Trang Lỗi / Chờ === */
+.headerLeft {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.headerRight {
+    flex: 0 0 420px;
+    /* Fixed width for student card */
+    max-width: 100%;
+}
+
+/* Room Info Styles */
+.roomTitle {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1e3a8a;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.infoItem {
+    font-size: 1.1rem;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.infoLabel {
+    font-weight: 600;
+    color: #374151;
+    min-width: 80px;
+}
+
+.infoValue {
+    font-weight: 500;
+    color: #111827;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background-color: #fef3c7;
+    color: #d97706;
+    border: 1px solid #fcd34d;
+}
+
+/* === Style cho Trang Lỗi / Chờ (Legacy/Fallback) === */
 .errorContainer {
     text-align: center;
     padding: 4rem 1rem;
@@ -35,10 +89,12 @@
     justify-content: center;
     align-items: center;
 }
+
 .errorTitle {
     font-size: 2rem;
     font-weight: 700;
-    color: #9b2c2c; /* (Màu đỏ) */
+    color: #9b2c2c;
+    /* (Màu đỏ) */
 }
 
 /* === Nút Bấm === */
@@ -48,6 +104,7 @@
     padding-top: 1.5rem;
     text-align: center;
 }
+
 .backButton {
     display: inline-block;
     background-color: #004a99;
@@ -58,7 +115,55 @@
     text-decoration: none;
     transition: background-color 0.3s;
 }
+
 .backButton:hover {
     background-color: #003366;
     text-decoration: none;
+}
+
+.loadingSpinner {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .headerContainer {
+        flex-direction: column-reverse;
+        /* Student card on top on mobile? Or bottom? Let's keep standard column */
+        align-items: center;
+        text-align: center;
+    }
+
+    .headerLeft {
+        align-items: center;
+        width: 100%;
+    }
+
+    .infoItem {
+        justify-content: center;
+    }
+
+    .headerRight {
+        width: 100%;
+        max-width: 400px;
+        flex: 0 0 auto;
+    }
 }

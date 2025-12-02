@@ -7,26 +7,34 @@ import { useAuth } from '../../../context/AuthContext'
 import { db } from '../../../utils/firebaseClient'
 import { doc, onSnapshot, updateDoc, Timestamp, DocumentData, serverTimestamp, collection, query, getDocs, where } from 'firebase/firestore'
 import ProtectedRoute from '../../../components/ProtectedRoute'
-import styles from './page.module.css' 
+import styles from './page.module.css'
+import { FaClock, FaPaperPlane, FaFileExport, FaCheckSquare, FaSquare, FaPlusCircle } from 'react-icons/fa'
 
-// (Định nghĩa "kiểu" - Giữ nguyên)
+// (Định nghĩa "kiểu")
 interface ExamRoom {
   id: string;
   license_id: string;
-  license_name: string; 
-  room_name: string; 
+  license_name: string;
+  room_name: string;
   teacher_name: string;
   status: 'waiting' | 'in_progress' | 'finished';
   created_at: Timestamp;
+  exam_data?: any; // Dữ liệu đề thi (để lấy thời gian làm bài)
 }
+
 interface Participant {
   id: string;
   fullName: string;
   email: string;
-  status: 'waiting' | 'in_progress' | 'submitted'; 
-  score?: number; 
+  status: 'waiting' | 'in_progress' | 'submitted';
+  score?: number;
   totalQuestions?: number;
   joinedAt: Timestamp;
+  startedAt?: Timestamp; // Thời điểm bắt đầu làm bài
+  submittedAt?: Timestamp; // Thời điểm nộp bài
+  extraTime?: number; // Thời gian cộng thêm (phút)
+  birthDate?: string; // Ngày sinh
+  address?: string; // Địa chỉ
 }
 
 // --- Component "Nội dung" (Bên trong "Lính gác") ---
@@ -36,14 +44,18 @@ function RoomControlDashboard() {
   const { user } = useAuth()
   const roomId = params.roomId as string
 
-  // (Não trạng thái - Giữ nguyên)
+  // (Não trạng thái)
   const [room, setRoom] = useState<ExamRoom | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isStarting, setIsStarting] = useState(false) 
+  const [isStarting, setIsStarting] = useState(false)
   const [participants, setParticipants] = useState<Participant[]>([])
 
-  // (Phép thuật 1: Lắng nghe Phòng thi - Giữ nguyên)
+  // State mới cho các chức năng nâng cao
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [currentTime, setCurrentTime] = useState(Date.now())
+
+  // (Phép thuật 1: Lắng nghe Phòng thi)
   useEffect(() => {
     if (!roomId || !user) return
     const roomRef = doc(db, 'exam_rooms', roomId)
@@ -64,17 +76,48 @@ function RoomControlDashboard() {
   }, [roomId, user])
 
 
-  // (Phép thuật 2: Lắng nghe Học viên - Giữ nguyên)
+  // (Phép thuật 2: Lắng nghe Học viên & Lấy thông tin chi tiết)
   useEffect(() => {
     if (!roomId) return;
     const participantsRef = collection(db, 'exam_rooms', roomId, 'participants');
-    const q = query(participantsRef); 
-    const unsubscribe = onSnapshot(q, 
-      (querySnapshot) => {
+    const q = query(participantsRef);
+    const unsubscribe = onSnapshot(q,
+      async (querySnapshot) => {
         const participantList: Participant[] = [];
+        const userIds: string[] = [];
+
         querySnapshot.forEach((doc) => {
-          participantList.push({ id: doc.id, ...doc.data() } as Participant);
+          const data = doc.data();
+          participantList.push({ id: doc.id, ...data } as Participant);
+          userIds.push(doc.id);
         });
+
+        // Fetch user details (birthDate, address) if we have participants
+        if (userIds.length > 0) {
+          try {
+            // Fetching all users is heavy. Let's fetch individually for now or use a map if we had a user cache.
+            // Given the constraints, let's try to fetch all users and map.
+            const usersRef = collection(db, 'users');
+            // Optimization: In a real app, use 'where documentId in [...]' with batches.
+            // Here, we'll fetch all users to map. (Not ideal for large DB but works for MVP)
+            const usersSnapshot = await getDocs(usersRef);
+            const userMap: Record<string, any> = {};
+            usersSnapshot.forEach(doc => {
+              userMap[doc.id] = doc.data();
+            });
+
+            // Merge data
+            participantList.forEach(p => {
+              if (userMap[p.id]) {
+                p.birthDate = userMap[p.id].birthDate;
+                p.address = userMap[p.id].address;
+              }
+            });
+          } catch (err) {
+            console.error("Error fetching user details:", err);
+          }
+        }
+
         setParticipants(participantList);
       },
       (err) => {
@@ -83,41 +126,70 @@ function RoomControlDashboard() {
       }
     );
     return () => unsubscribe();
-  }, [roomId]); 
+  }, [roomId]);
+
+  // (Phép thuật 3: Đồng hồ đếm ngược)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now())
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
 
 
-  // (Hàm "Phát đề" - Giữ nguyên)
+  // (Hàm "Phát đề" - Có chọn lọc)
   const handleStartExam = async () => {
     if (!room) return
+
+    // Nếu có chọn học viên -> Chỉ phát cho người được chọn
+    // Nếu KHÔNG chọn ai -> Hỏi có muốn phát cho TẤT CẢ (đang chờ) không?
+    let targetIds: string[] = [];
+    if (selectedIds.size > 0) {
+      targetIds = Array.from(selectedIds);
+    } else {
+      if (!confirm('Bạn chưa chọn học viên nào. Bạn có muốn phát đề cho TẤT CẢ học viên đang chờ không?')) return;
+      targetIds = participants.filter(p => p.status === 'waiting').map(p => p.id);
+    }
+
+    if (targetIds.length === 0) {
+      alert('Không có học viên nào để phát đề.');
+      return;
+    }
+
     setIsStarting(true)
     setError(null)
     try {
-      const res = await fetch(`/api/thi/${room.license_id}`)
-      if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.error || `Lỗi máy chủ: ${res.status}`)
+      // 1. Lấy đề thi (nếu chưa có)
+      let examData = room.exam_data;
+      if (!examData) {
+        const res = await fetch(`/api/thi/${room.license_id}`)
+        if (!res.ok) {
+          const errorData = await res.json()
+          throw new Error(errorData.error || `Lỗi máy chủ: ${res.status}`)
+        }
+        examData = await res.json()
+
+        // Cập nhật đề vào phòng (chỉ làm 1 lần)
+        const roomRef = doc(db, 'exam_rooms', roomId)
+        await updateDoc(roomRef, {
+          status: 'in_progress',
+          exam_data: examData,
+          started_at: serverTimestamp()
+        })
       }
-      const examData = await res.json()
-      const roomRef = doc(db, 'exam_rooms', roomId)
-      await updateDoc(roomRef, {
-        status: 'in_progress',
-        exam_data: examData, 
-        started_at: serverTimestamp()
-      })
-      
-      // "Hét" (UPDATE) cho TẤT CẢ học viên đang 'waiting'
-      const participantsRef = collection(db, 'exam_rooms', roomId, 'participants');
-      const q = query(participantsRef, where('status', '==', 'waiting'));
-      const waitingParticipants = await getDocs(q);
-      const updatePromises: Promise<void>[] = [];
-      waitingParticipants.forEach((participantDoc) => {
-        const participantRef = doc(db, 'exam_rooms', roomId, 'participants', participantDoc.id);
-        updatePromises.push(
-          updateDoc(participantRef, { status: 'in_progress' })
-        );
+
+      // 2. Cập nhật trạng thái cho các học viên được chọn
+      const updatePromises = targetIds.map(id => {
+        const participantRef = doc(db, 'exam_rooms', roomId, 'participants', id);
+        return updateDoc(participantRef, {
+          status: 'in_progress',
+          startedAt: serverTimestamp()
+        });
       });
+
       await Promise.all(updatePromises);
-      console.log(`[GV] Đã cập nhật ${waitingParticipants.size} học viên sang "in_progress".`)
+      console.log(`[GV] Đã phát đề cho ${targetIds.length} học viên.`)
+      setSelectedIds(new Set()); // Clear selection
 
     } catch (err: any) {
       console.error('[GV] Lỗi khi "phát đề":', err)
@@ -126,8 +198,151 @@ function RoomControlDashboard() {
       setIsStarting(false)
     }
   }
-  
-  // 5. GIAO DIỆN (Đã cập nhật)
+
+  // --- CÁC HÀM XỬ LÝ MỚI ---
+
+  // 1. Chọn / Bỏ chọn học viên
+  const toggleSelection = (id: string) => {
+    const newSet = new Set(selectedIds)
+    if (newSet.has(id)) {
+      newSet.delete(id)
+    } else {
+      newSet.add(id)
+    }
+    setSelectedIds(newSet)
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === participants.length) {
+      setSelectedIds(new Set())
+    } else {
+      const allIds = new Set(participants.map(p => p.id))
+      setSelectedIds(allIds)
+    }
+  }
+
+  // 2. Nộp bài hộ (Force Submit)
+  const handleForceSubmit = async (ids: string[]) => {
+    if (!confirm(`Bạn có chắc muốn THU BÀI của ${ids.length} học viên này ngay lập tức?`)) return
+
+    try {
+      const updatePromises = ids.map(id => {
+        const ref = doc(db, 'exam_rooms', roomId, 'participants', id)
+        return updateDoc(ref, { status: 'submitted' })
+      })
+      await Promise.all(updatePromises)
+      alert('Đã thu bài thành công!')
+      setSelectedIds(new Set()) // Clear selection
+    } catch (err: any) {
+      console.error("Lỗi thu bài:", err)
+      alert('Lỗi khi thu bài: ' + err.message)
+    }
+  }
+
+  // 3. Cộng giờ (Add Time)
+  const handleAddTime = async (ids: string[]) => {
+    const minutesStr = prompt(`Nhập số phút muốn cộng thêm cho ${ids.length} học viên:`, '5')
+    if (!minutesStr) return
+    const minutes = parseInt(minutesStr)
+    if (isNaN(minutes) || minutes <= 0) {
+      alert('Vui lòng nhập số phút hợp lệ!')
+      return
+    }
+
+    try {
+      const updatePromises = ids.map(async (id) => {
+        const p = participants.find(user => user.id === id)
+        const currentExtra = p?.extraTime || 0
+
+        const ref = doc(db, 'exam_rooms', roomId, 'participants', id)
+        return updateDoc(ref, { extraTime: currentExtra + minutes })
+      })
+      await Promise.all(updatePromises)
+      alert(`Đã cộng thêm ${minutes} phút thành công!`)
+      setSelectedIds(new Set())
+    } catch (err: any) {
+      console.error("Lỗi cộng giờ:", err)
+      alert('Lỗi khi cộng giờ: ' + err.message)
+    }
+  }
+
+  // 4. Xuất Excel (CSV) - Chi tiết
+  const handleExportExcel = () => {
+    // Sắp xếp theo tên (A-Z)
+    const sortedParticipants = [...participants].sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+    // Header Info
+    const fileTitle = `DANH SÁCH KẾT QUẢ THI`;
+    const roomInfo = `Lớp: ${room?.room_name} - Hạng: ${room?.license_name}`;
+    const dateInfo = `Ngày thi: ${new Date().toLocaleDateString('vi-VN')}`;
+    const countInfo = `Số lượng: ${participants.length} học viên`;
+
+    // Table Header
+    const headers = ['STT', 'Họ và Tên', 'Ngày sinh', 'Địa chỉ', 'Trạng thái', 'Điểm số', 'Thời gian làm bài (phút)'];
+
+    // Rows
+    const rows = sortedParticipants.map((p, index) => {
+      // Tính thời gian làm bài thực tế
+      let timeTaken = '';
+      if (p.startedAt && p.submittedAt) {
+        const diffMs = p.submittedAt.toMillis() - p.startedAt.toMillis();
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffSecs = Math.floor((diffMs % 60000) / 1000);
+        timeTaken = `${diffMins}p ${diffSecs}s`;
+      }
+
+      return [
+        index + 1,
+        p.fullName,
+        p.birthDate ? new Date(p.birthDate).toLocaleDateString('vi-VN') : '',
+        p.address || '',
+        p.status === 'waiting' ? 'Đang chờ' : p.status === 'in_progress' ? 'Đang thi' : 'Đã nộp',
+        p.score !== undefined ? p.score : '',
+        timeTaken
+      ];
+    });
+
+    // Combine Content
+    const csvContent = [
+      `\uFEFF${fileTitle}`,
+      roomInfo,
+      dateInfo,
+      countInfo,
+      '', // Empty line
+      headers.join(','),
+      ...rows.map(row => row.map(item => `"${item}"`).join(','))
+    ].join('\n');
+
+    // Download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `KetQuaThi_${room?.room_name}_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Helper: Tính thời gian còn lại
+  const calculateTimeRemaining = (p: Participant) => {
+    if (p.status !== 'in_progress' || !p.startedAt || !room?.exam_data?.duration) return null
+
+    // Duration in minutes -> ms
+    const durationMs = room.exam_data.duration * 60 * 1000
+    const extraMs = (p.extraTime || 0) * 60 * 1000
+    const endTime = p.startedAt.toMillis() + durationMs + extraMs
+    const remaining = endTime - currentTime
+
+    if (remaining <= 0) return "00:00"
+
+    const m = Math.floor(remaining / 60000)
+    const s = Math.floor((remaining % 60000) / 1000)
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+  }
+
+
+  // 5. GIAO DIỆN
 
   if (loading) {
     return (
@@ -143,25 +358,33 @@ function RoomControlDashboard() {
       </div>
     )
   }
-  if (!room) return null; 
+  if (!room) return null;
 
   return (
     <div className={styles.container}>
-      {/* (Thông tin phòng - Giữ nguyên) */}
+      {/* (Thông tin phòng) */}
       <h1 className={styles.title}>
         Phòng: {room.room_name}
       </h1>
-      <p className={styles.info}>
-        <span className={styles.label}>Hạng thi:</span> {room.license_name}
-      </p>
-      <p className={styles.info}>
-        <span className={styles.label}>Giáo viên:</span> {room.teacher_name}
-      </p>
-      <p className={styles.info}>
-        <span className={styles.label}>ID Phòng:</span> {room.id}
-      </p>
-      
-      {/* 💖 (Req 1) THU GỌN TRẠNG THÁI VÀ NÚT BẤM 💖 */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <p className={styles.info}>
+            <span className={styles.label}>Hạng thi:</span> {room.license_name}
+          </p>
+          <p className={styles.info}>
+            <span className={styles.label}>Giáo viên:</span> {room.teacher_name}
+          </p>
+          <p className={styles.info}>
+            <span className={styles.label}>ID Phòng:</span> {room.id}
+          </p>
+        </div>
+        {/* Nút Xuất Excel */}
+        <button onClick={handleExportExcel} className={styles.buttonExport} title="Xuất kết quả ra Excel">
+          <FaFileExport /> Xuất Excel
+        </button>
+      </div>
+
+      {/* Trạng thái và Nút Bấm */}
       <div className={styles.statusBox}>
         <div className={styles.statusLeft}>
           <h2 className={styles.label}>Trạng thái</h2>
@@ -175,8 +398,7 @@ function RoomControlDashboard() {
             <p className={`${styles.status} ${styles.statusFinished}`}>ĐÃ KẾT THÚC</p>
           )}
         </div>
-        
-        {/* Nút "PHÁT ĐỀ" (Chỉ hiện khi đang "chờ") */}
+
         <div className={styles.statusRight}>
           {room.status === 'waiting' && (
             <button
@@ -187,62 +409,109 @@ function RoomControlDashboard() {
               {isStarting ? 'Đang trộn đề...' : 'BẮT ĐẦU PHÁT ĐỀ'}
             </button>
           )}
-          
-          {/* 💖 (Req 2) ĐÃ XÓA NÚT "ĐÓNG PHÒNG THI" 💖 */}
         </div>
       </div>
-      
-      {/* BẢNG LIVE DASHBOARD (Giữ nguyên) */}
+
+      {/* THANH CÔNG CỤ HÀNG LOẠT (Hiện khi có chọn) */}
+      {selectedIds.size > 0 && (
+        <div className={styles.bulkActions}>
+          <span>Đã chọn {selectedIds.size} học viên:</span>
+          <button onClick={() => handleForceSubmit(Array.from(selectedIds))} className={styles.bulkBtnSubmit}>
+            <FaPaperPlane /> Thu bài ngay
+          </button>
+          <button onClick={() => handleAddTime(Array.from(selectedIds))} className={styles.bulkBtnTime}>
+            <FaPlusCircle /> Cộng giờ
+          </button>
+        </div>
+      )}
+
+      {/* BẢNG LIVE DASHBOARD */}
       <div className={styles.dashboard}>
         <h2 className={styles.dashboardTitle}>
           Bảng điều khiển (Realtime) - ({participants.length} người tham gia)
         </h2>
-        
+
         <table className={styles.participantTable}>
           <thead>
             <tr>
+              <th style={{ width: '40px', textAlign: 'center' }}>
+                <div onClick={toggleSelectAll} style={{ cursor: 'pointer' }}>
+                  {participants.length > 0 && selectedIds.size === participants.length ? <FaCheckSquare /> : <FaSquare style={{ color: '#ddd' }} />}
+                </div>
+              </th>
               <th>Họ và Tên</th>
-              <th>Email</th>
+              <th>Năm sinh</th>
               <th>Trạng thái</th>
+              <th>Thời gian còn lại</th>
               <th>Kết quả</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
             {participants.length === 0 ? (
               <tr>
-                <td colSpan={4} style={{textAlign: 'center'}}>Đang chờ học viên vào phòng...</td>
+                <td colSpan={7} style={{ textAlign: 'center' }}>Đang chờ học viên vào phòng...</td>
               </tr>
             ) : (
-              participants.map((p) => (
-                <tr key={p.id}>
-                  <td>{p.fullName}</td>
-                  <td>{p.email}</td>
-                  <td>
-                    {p.status === 'waiting' && (
-                      <span className={`${styles.pill} ${styles.pillWaiting}`}>
-                        Đang chờ
-                      </span>
-                    )}
-                    {p.status === 'in_progress' && (
-                      <span className={`${styles.pill} ${styles.pillInProgress}`}>
-                        Đang thi
-                      </span>
-                    )}
-                    {p.status === 'submitted' && (
-                      <span className={`${styles.pill} ${styles.pillSubmitted}`}>
-                        Đã nộp bài
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    {p.status === 'submitted' ? (
-                      <strong>{p.score} / {p.totalQuestions}</strong>
-                    ) : (
-                      '...'
-                    )}
-                  </td>
-                </tr>
-              ))
+              participants.map((p) => {
+                const isSelected = selectedIds.has(p.id)
+                const timeRemaining = calculateTimeRemaining(p)
+
+                return (
+                  <tr key={p.id} className={isSelected ? styles.rowSelected : ''}>
+                    <td style={{ textAlign: 'center' }}>
+                      <div onClick={() => toggleSelection(p.id)} style={{ cursor: 'pointer', color: isSelected ? '#1890ff' : '#ccc' }}>
+                        {isSelected ? <FaCheckSquare /> : <FaSquare />}
+                      </div>
+                    </td>
+                    <td>
+                      <div><strong>{p.fullName}</strong></div>
+                      <div style={{ fontSize: '0.8rem', color: '#888' }}>{p.email}</div>
+                    </td>
+                    <td>
+                      {p.birthDate ? new Date(p.birthDate).getFullYear() : '--'}
+                    </td>
+                    <td>
+                      {p.status === 'waiting' && <span className={`${styles.pill} ${styles.pillWaiting}`}>Đang chờ</span>}
+                      {p.status === 'in_progress' && <span className={`${styles.pill} ${styles.pillInProgress}`}>Đang thi</span>}
+                      {p.status === 'submitted' && <span className={`${styles.pill} ${styles.pillSubmitted}`}>Đã nộp</span>}
+                    </td>
+                    <td style={{ fontWeight: 'bold', color: timeRemaining === '00:00' ? 'red' : '#262626' }}>
+                      {p.status === 'in_progress' ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <FaClock style={{ color: '#faad14' }} />
+                          {timeRemaining || '--:--'}
+                        </div>
+                      ) : '--'}
+                    </td>
+                    <td>
+                      {p.status === 'submitted' ? (
+                        <strong>{p.score} / {p.totalQuestions}</strong>
+                      ) : '...'}
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button
+                          onClick={() => handleForceSubmit([p.id])}
+                          title="Thu bài ngay"
+                          disabled={p.status !== 'in_progress'}
+                          className={styles.actionBtn}
+                        >
+                          <FaPaperPlane />
+                        </button>
+                        <button
+                          onClick={() => handleAddTime([p.id])}
+                          title="Cộng thêm giờ"
+                          disabled={p.status !== 'in_progress'}
+                          className={styles.actionBtn}
+                        >
+                          <FaPlusCircle />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })
             )}
           </tbody>
         </table>
@@ -256,7 +525,7 @@ function RoomControlDashboard() {
 export default function QuanLyRoomPage() {
   return (
     <ProtectedRoute allowedRoles={['giao_vien', 'admin', 'lanh_dao']}>
-      <RoomControlDashboard /> 
+      <RoomControlDashboard />
     </ProtectedRoute>
   )
 }

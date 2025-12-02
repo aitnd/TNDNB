@@ -9,6 +9,7 @@ import { db } from '../../../utils/firebaseClient'
 import { doc, onSnapshot, DocumentData, setDoc, serverTimestamp, getDoc } from 'firebase/firestore'
 import styles from './page.module.css'
 import Link from 'next/link'
+import StudentCard from '../../../components/StudentCard' // 💖 IMPORT STUDENT CARD 💖
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
 interface ExamRoom {
@@ -221,19 +222,48 @@ export default function ExamRoomPage() {
   }
   if (room && room.status === 'waiting') {
     return (
-      <div className={styles.errorContainer} style={{ backgroundColor: '#f3f4f6' }}>
-        <h1 className={styles.title} style={{ color: '#1e3a8a' }}>
-          Phòng Thi: {room.room_name}
-        </h1>
-        <p style={{ fontSize: '1.2rem', color: '#555' }}>
-          (Hạng thi: {room.license_name})
-        </p>
-        <p style={{ fontSize: '1.2rem', color: '#555' }}>Giáo viên: {room.teacher_name}</p>
-        <div style={{ margin: '2rem 0', width: '3rem', height: '3rem', borderTop: '4px solid #004a99', borderBottom: '4px solid #004a99', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-        <p style={{ fontSize: '1.5rem', fontWeight: 600 }}>Đang chờ giáo viên phát đề...</p>
-        <style jsx global>{`
-          @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        `}</style>
+      <div className={styles.container}>
+        {/* 💖 HEADER NGANG: THÔNG TIN PHÒNG + THẺ HỌC VIÊN 💖 */}
+        <div className={styles.headerContainer}>
+          {/* CỘT TRÁI: THÔNG TIN PHÒNG */}
+          <div className={styles.headerLeft}>
+            <h1 className={styles.roomTitle}>Thông tin Phòng Thi</h1>
+
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Tên phòng:</span>
+              <span className={styles.infoValue} style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{room.room_name}</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Hạng thi:</span>
+              <span className={styles.infoValue}>{room.license_name}</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Giáo viên:</span>
+              <span className={styles.infoValue}>{room.teacher_name}</span>
+            </div>
+            {/* 💖 MỚI: KHÓA THI 💖 */}
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Khóa thi:</span>
+              <span className={styles.infoValue}>{user?.courseName || 'Chưa cập nhật'}</span>
+            </div>
+
+            <div className={styles.infoItem} style={{ marginTop: '0.5rem' }}>
+              <span className={styles.infoLabel}>Trạng thái:</span>
+              <span className={styles.statusBadge}>
+                Đang chờ phát đề... <div className={styles.loadingSpinner}></div>
+              </span>
+            </div>
+
+            <p style={{ fontSize: '0.95rem', color: '#6b7280', fontStyle: 'italic', marginTop: '0.5rem' }}>
+              * Vui lòng giữ màn hình này và chờ giáo viên bắt đầu.
+            </p>
+          </div>
+
+          {/* CỘT PHẢI: THẺ HỌC VIÊN */}
+          <div className={styles.headerRight}>
+            <StudentCard />
+          </div>
+        </div>
       </div>
     )
   }

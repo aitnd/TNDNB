@@ -91,7 +91,8 @@ export async function POST(
       await participantRef.update({
         status: 'submitted',
         score: score,
-        totalQuestions: totalQuestions
+        totalQuestions: totalQuestions,
+        submittedAt: FieldValue.serverTimestamp() // 💖 Cập nhật thời gian nộp bài 💖
       });
       console.log(`[API Chấm Bài] Đã cập nhật trạng thái 'participants' cho: ${userEmail}`)
     } catch (participantError) {

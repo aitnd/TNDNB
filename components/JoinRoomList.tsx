@@ -67,7 +67,7 @@ export default function JoinRoomList() {
       router.push('/login')
       return
     }
-    router.push(`/exam-room/${roomId}`)
+    router.push(`/thi-online/${roomId}`)
   }
 
   if (!user) {
