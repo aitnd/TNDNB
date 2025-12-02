@@ -1,27 +1,98 @@
+/* Thẻ nhựa ID Card Style */
 .card {
-    background: white;
+    width: 100%;
+    max-width: 450px;
+    /* Kích thước tối đa giống thẻ thật */
+    aspect-ratio: 1.586;
+    /* Tỷ lệ chuẩn thẻ tín dụng/ID (85.6mm x 53.98mm) */
+    background: #fff;
     border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+    /* Font chân phương */
+    border: 1px solid #d9d9d9;
+    position: relative;
+    margin: 0 auto 24px auto;
+    /* Căn giữa */
+}
+
+/* === HEADER === */
+.header {
+    background: #2b6cb0;
+    /* Màu xanh dương đậm */
+    color: white;
+    padding: 10px 15px;
     display: flex;
     align-items: center;
-    gap: 24px;
-    margin-bottom: 24px;
-    border: 1px solid #f0f0f0;
+    gap: 10px;
+    height: 18%;
+    /* Chiếm khoảng 18% chiều cao thẻ */
 }
 
-.avatarSection {
-    flex-shrink: 0;
-    position: relative;
-}
-
-.avatarWrapper {
-    width: 100px;
-    height: 100px;
+.logoPlaceholder {
+    width: 40px;
+    height: 40px;
+    background: white;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2b6cb0;
+    font-weight: bold;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.schoolName {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+/* === BODY === */
+.body {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-image: radial-gradient(#f0f0f0 1px, transparent 1px);
+    /* Họa tiết chấm bi mờ nền */
+    background-size: 10px 10px;
+}
+
+.cardTitle {
+    text-align: center;
+    color: #c53030;
+    /* Màu đỏ đậm */
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 5px 0 15px 0;
+    letter-spacing: 1px;
+}
+
+.contentRow {
+    display: flex;
+    gap: 20px;
+}
+
+/* ẢNH 3x4 */
+.photoSection {
+    width: 100px;
+    flex-shrink: 0;
+}
+
+.photoWrapper {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: #e2e8f0;
+    border: 1px solid #cbd5e0;
     overflow: hidden;
-    border: 3px solid #1890ff;
-    box-shadow: 0 4px 10px rgba(24, 144, 255, 0.2);
 }
 
 .avatar {
@@ -30,67 +101,78 @@
     object-fit: cover;
 }
 
+/* THÔNG TIN */
 .infoSection {
-    flex-grow: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 24px;
-}
-
-.headerRow {
-    grid-column: 1 / -1;
-    margin-bottom: 4px;
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.cardTitle {
-    margin: 0;
-    font-size: 1rem;
-    color: #1890ff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 700;
-}
-
-.infoItem {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #2d3748;
+}
+
+.infoRow {
+    display: flex;
+    align-items: baseline;
 }
 
 .label {
-    font-size: 0.8rem;
-    color: #8c8c8c;
-    margin-bottom: 2px;
+    width: 75px;
+    /* Độ rộng cố định cho nhãn */
+    color: #4a5568;
+    font-weight: 600;
+    flex-shrink: 0;
 }
 
 .value {
-    font-size: 0.95rem;
-    color: #262626;
-    font-weight: 500;
+    font-weight: 750;
+    color: #1a202c;
 }
 
-/* Responsive: Stack on mobile */
-@media (max-width: 600px) {
+.valueHighlight {
+    color: #c53030;
+    /* Tên màu đỏ */
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+/* === FOOTER (BARCODE) === */
+.footer {
+    height: 40px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 10px;
+}
+
+.barcode {
+    height: 25px;
+    width: 80%;
+    /* Giả lập mã vạch bằng gradient */
+    background: repeating-linear-gradient(90deg,
+            #000,
+            #000 2px,
+            #fff 2px,
+            #fff 4px);
+}
+
+/* Responsive cho mobile */
+@media (max-width: 480px) {
     .card {
-        flex-direction: column;
-        text-align: center;
-        gap: 16px;
+        max-width: 100%;
+        aspect-ratio: auto;
+        /* Bỏ tỷ lệ cứng trên mobile nhỏ */
+        height: auto;
     }
 
-    .infoSection {
-        grid-template-columns: 1fr;
-        width: 100%;
-        text-align: left;
+    .header {
+        height: auto;
+        padding: 15px;
     }
 
-    .headerRow {
-        justify-content: center;
+    .body {
+        padding: 20px;
     }
 }

@@ -3,8 +3,7 @@
 import React from 'react'
 import { useAuth } from '../context/AuthContext'
 import styles from './StudentCard.module.css'
-import { FaIdCard, FaCheckCircle } from 'react-icons/fa'
-import UserName from './UserName'
+import { FaUniversity } from 'react-icons/fa'
 
 export default function StudentCard() {
     const { user } = useAuth()
@@ -13,56 +12,65 @@ export default function StudentCard() {
 
     return (
         <div className={styles.card}>
-            {/* LEFT: AVATAR */}
-            <div className={styles.avatarSection}>
-                <div className={styles.avatarWrapper}>
-                    <img
-                        src={user.photoURL || 'https://via.placeholder.com/150'}
-                        alt="Avatar"
-                        className={styles.avatar}
-                    />
+            {/* === HEADER === */}
+            <div className={styles.header}>
+                <div className={styles.logoPlaceholder}>
+                    <FaUniversity size={20} />
+                </div>
+                <div className={styles.schoolName}>
+                    Công ty Cổ phần<br />
+                    TƯ VẤN VÀ GIÁO DỤC NINH BÌNH
                 </div>
             </div>
 
-            {/* RIGHT: INFO GRID */}
-            <div className={styles.infoSection}>
-                <div className={styles.headerRow}>
-                    <h3 className={styles.cardTitle}>
-                        <FaIdCard /> Thẻ Học Viên
-                    </h3>
-                </div>
+            {/* === BODY === */}
+            <div className={styles.body}>
+                <h2 className={styles.cardTitle}>THẺ HỌC VIÊN</h2>
 
-                {/* Họ và tên */}
-                <div className={styles.infoItem}>
-                    <span className={styles.label}>Họ và tên</span>
-                    <span className={styles.value}>
-                        <UserName name={user.fullName || ''} role={user.role} courseId={user.courseId} />
-                    </span>
-                </div>
+                <div className={styles.contentRow}>
+                    {/* ẢNH 3x4 */}
+                    <div className={styles.photoSection}>
+                        <div className={styles.photoWrapper}>
+                            <img
+                                src={user.photoURL || 'https://via.placeholder.com/150'}
+                                alt="Avatar"
+                                className={styles.avatar}
+                            />
+                        </div>
+                    </div>
 
-                {/* Lớp / Khóa học */}
-                <div className={styles.infoItem}>
-                    <span className={styles.label}>Lớp học</span>
-                    <span className={styles.value}>
-                        {user.class || '---'}
-                        {user.courseName && (
-                            <span style={{ color: '#1890ff', marginLeft: '6px', fontSize: '0.9em' }}>
-                                ({user.courseName} <FaCheckCircle style={{ verticalAlign: 'middle' }} />)
+                    {/* THÔNG TIN */}
+                    <div className={styles.infoSection}>
+                        <div className={styles.infoRow}>
+                            <span className={styles.label}>Họ tên:</span>
+                            <span className={`${styles.value} ${styles.valueHighlight}`}>
+                                {user.fullName || 'NGUYỄN VĂN A'}
                             </span>
-                        )}
-                    </span>
-                </div>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.label}>Ngày sinh: </span>
+                            <span className={styles.value}> {user.birthDate || ' --/--/----'}</span>
+                        </div>
 
-                {/* Ngày sinh */}
-                <div className={styles.infoItem}>
-                    <span className={styles.label}>Ngày sinh</span>
-                    <span className={styles.value}>{user.birthDate || '---'}</span>
+                        <div className={styles.infoRow}>
+                            <span className={styles.label}>Lớp học: </span>
+                            <span className={styles.value}>{user.courseName || 'Chưa vào khóa'}</span>
+                        </div>
+                        <div className={styles.infoRow}>
+                            <span className={styles.label}>Địa chỉ:</span>
+                            <span className={styles.value} style={{ fontSize: '0.9rem' }}>
+                                {user.address || '---'}
+                            </span>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                {/* Địa chỉ */}
-                <div className={styles.infoItem}>
-                    <span className={styles.label}>Địa chỉ</span>
-                    <span className={styles.value}>{user.address || '---'}</span>
+            {/* === FOOTER (BARCODE) === */}
+            <div className={styles.footer}>
+                <div className={styles.barcode}></div>
+                <div style={{ position: 'absolute', bottom: '5px', fontSize: '0.6rem', color: '#718096' }}>
+                    ID: {user.uid.substring(0, 10).toUpperCase()}
                 </div>
             </div>
         </div>
