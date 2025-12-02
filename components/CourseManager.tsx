@@ -12,6 +12,7 @@ interface Course {
     name: string
     description?: string
     createdAt: any
+    teacherIds?: string[]
 }
 
 interface Student {
@@ -52,18 +53,28 @@ export default function CourseManager() {
     // 💖 STATE CHO MODAL CHI TIẾT HỌC VIÊN 💖
     const [viewingStudent, setViewingStudent] = useState<Student | null>(null)
 
+    // Check permissions
+    const isTeacher = user?.role === 'giao_vien';
+    const canCreateDelete = user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role);
+
     // Lấy danh sách khóa học
     useEffect(() => {
         const q = query(collection(db, 'courses'), orderBy('createdAt', 'desc'))
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const courseData = snapshot.docs.map(doc => ({
+            let courseData = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             })) as Course[]
+
+            // Filter for teachers: only see assigned courses
+            if (isTeacher && user?.uid) {
+                courseData = courseData.filter(c => c.teacherIds?.includes(user.uid));
+            }
+
             setCourses(courseData)
         })
         return () => unsubscribe()
-    }, [])
+    }, [user, isTeacher])
 
     // Lấy danh sách TOÀN BỘ học viên (để thêm vào khóa)
     useEffect(() => {
@@ -92,7 +103,8 @@ export default function CourseManager() {
                 name: newCourseName,
                 description: newCourseDesc,
                 createdBy: user?.uid,
-                createdAt: serverTimestamp()
+                createdAt: serverTimestamp(),
+                teacherIds: [user?.uid] // Assign creator as teacher
             })
             setNewCourseName('')
             setNewCourseDesc('')
@@ -175,38 +187,40 @@ export default function CourseManager() {
         <div style={{ marginTop: '20px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', background: '#fff' }}>
             <h2 style={{ color: '#0070f3', marginBottom: '15px' }}>Quản lý Khóa học (Lớp thi)</h2>
 
-            {/* Form tạo mới */}
-            <form onSubmit={handleAddCourse} style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
-                <input
-                    type="text"
-                    placeholder="Tên khóa học (VD: TM-K1)"
-                    value={newCourseName}
-                    onChange={(e) => setNewCourseName(e.target.value)}
-                    required
-                    style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', flex: 1 }}
-                />
-                <input
-                    type="text"
-                    placeholder="Mô tả (Tuỳ chọn)"
-                    value={newCourseDesc}
-                    onChange={(e) => setNewCourseDesc(e.target.value)}
-                    style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', flex: 2 }}
-                />
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{
-                        padding: '8px 16px',
-                        background: '#0070f3',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                    }}
-                >
-                    {loading ? 'Đang tạo...' : 'Tạo Khóa học'}
-                </button>
-            </form>
+            {/* Form tạo mới - Chỉ hiện nếu có quyền */}
+            {canCreateDelete && (
+                <form onSubmit={handleAddCourse} style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+                    <input
+                        type="text"
+                        placeholder="Tên khóa học (VD: TM-K1)"
+                        value={newCourseName}
+                        onChange={(e) => setNewCourseName(e.target.value)}
+                        required
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', flex: 1 }}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Mô tả (Tuỳ chọn)"
+                        value={newCourseDesc}
+                        onChange={(e) => setNewCourseDesc(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', flex: 2 }}
+                    />
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        style={{
+                            padding: '8px 16px',
+                            background: '#0070f3',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {loading ? 'Đang tạo...' : 'Tạo Khóa học'}
+                    </button>
+                </form>
+            )}
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -245,24 +259,26 @@ export default function CourseManager() {
                                     fontSize: '0.8rem'
                                 }}
                             >
-                                Sửa / QL Học viên
+                                {canCreateDelete ? 'Sửa / QL Học viên' : 'Xem / QL Học viên'}
                             </button>
 
-                            {/* Nút Xóa */}
-                            <button
-                                onClick={() => handleDeleteCourse(course.id)}
-                                style={{
-                                    padding: '5px 10px',
-                                    background: '#ff4d4f',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    fontSize: '0.8rem'
-                                }}
-                            >
-                                Xóa
-                            </button>
+                            {/* Nút Xóa - Chỉ hiện nếu có quyền */}
+                            {canCreateDelete && (
+                                <button
+                                    onClick={() => handleDeleteCourse(course.id)}
+                                    style={{
+                                        padding: '5px 10px',
+                                        background: '#ff4d4f',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        fontSize: '0.8rem'
+                                    }}
+                                >
+                                    Xóa
+                                </button>
+                            )}
                         </div>
                     </div>
                 ))}

@@ -13,8 +13,9 @@ import CourseManager from '../../components/CourseManager'
 import UserAccountManager from '../../components/UserAccountManager'
 import PostManager from '../../components/PostManager'
 import ExamManager from '../../components/ExamManager'
+import ReviewManager from '../../components/ReviewManager' // 💖 IMPORT REVIEW MANAGER 💖
 
-import { FaHome, FaBook, FaUsers, FaNewspaper, FaLaptop } from 'react-icons/fa' // (Icon cho đẹp)
+import { FaHome, FaBook, FaUsers, FaNewspaper, FaLaptop, FaClipboardList } from 'react-icons/fa' // (Icon cho đẹp)
 
 // (Import CSS Module)
 import styles from './page.module.css'
@@ -26,7 +27,7 @@ function QuanLyDashboard() {
   const [resetError, setResetError] = useState('');
 
   // 💖 STATE CHO TAB QUẢN LÝ 💖
-  // ('dashboard' | 'courses' | 'accounts' | 'posts' | 'exams')
+  // ('dashboard' | 'courses' | 'accounts' | 'posts' | 'exams' | 'reviews')
   const [activeTab, setActiveTab] = useState<string>('dashboard');
 
   // (Hàm Đổi mật khẩu - Giữ nguyên)
@@ -60,6 +61,7 @@ function QuanLyDashboard() {
   // (Kiểm tra quyền hạn)
   const canManagePosts = user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role);
   const canManageExams = user && ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(user.role);
+  const canManageReviews = user && ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(user.role); // 💖 QUYỀN QUẢN LÝ ÔN TẬP 💖
   const canManageAccounts = user && ['admin', 'lanh_dao', 'quan_ly'].includes(user.role);
   const canManageCourses = user && ['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(user.role);
 
@@ -97,6 +99,8 @@ function QuanLyDashboard() {
           {canManagePosts && renderTabButton('posts', 'Quản lý Bài viết', <FaNewspaper />)}
 
           {canAccessExams && renderTabButton('exams', 'Thi Trực Tuyến', <FaLaptop />)}
+
+          {canManageReviews && renderTabButton('reviews', 'Quản lý Ôn tập', <FaClipboardList />)}
         </div>
 
         {/* 💖 NỘI DUNG TAB 💖 */}
@@ -168,6 +172,9 @@ function QuanLyDashboard() {
 
           {/* 5. THI TRỰC TUYẾN */}
           {activeTab === 'exams' && canAccessExams && <ExamManager />}
+
+          {/* 6. QUẢN LÝ ÔN TẬP */}
+          {activeTab === 'reviews' && canManageReviews && <ReviewManager />}
 
         </div>
 
