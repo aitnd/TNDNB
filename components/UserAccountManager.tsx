@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext'
 import { db } from '../utils/firebaseClient'
 import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import Link from 'next/link'
+import { FaSearch, FaEdit, FaTrash, FaFilter, FaSave } from 'react-icons/fa'
 
 // (Import CSS Module)
 import styles from './UserAccountManager.module.css'
@@ -19,12 +20,13 @@ interface UserAccount {
     role: string;
     phoneNumber?: string;
     birthDate?: string;
-    class?: string; // 💖 THÊM LỚP 💖
-    courseName?: string; // 💖 THÊM KHÓA 💖
-    cccd?: string; // 💖 THÊM CCCD 💖
+    class?: string; // Lớp
+    courseId?: string; // ID Khóa học
+    courseName?: string; // Khóa học
+    cccd?: string; // CCCD
     cccdDate?: string;
     cccdPlace?: string;
-    address?: string; // 💖 THÊM ĐỊA CHỈ 💖
+    address?: string; // Địa chỉ
     createdAt: Timestamp;
 }
 
@@ -34,6 +36,7 @@ interface EditFormData {
     phoneNumber: string;
     birthDate: string;
     class: string;
+    courseId: string;
     role: string;
     cccd: string;
     cccdDate: string;
@@ -57,22 +60,26 @@ const staffRoles = ['giao_vien', 'lanh_dao', 'quan_ly'];
 export default function UserAccountManager() {
     const { user: currentUser } = useAuth() // (User đang đăng nhập)
     const [users, setUsers] = useState<UserAccount[]>([]) // (Danh sách GỐC)
+    const [courses, setCourses] = useState<{ id: string, name: string }[]>([]) // (Danh sách Khóa học)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
-    // 💖 "Não" trạng thái MỚI cho bộ lọc 💖
+    // State cho bộ lọc & Tìm kiếm
     const [filter, setFilter] = useState<string>('all'); // ('all', 'staff', 'hoc_vien')
+    const [selectedCourse, setSelectedCourse] = useState<string>('all'); // Lọc theo khóa học
+    const [searchTerm, setSearchTerm] = useState(''); // Tìm kiếm
     const [filteredUsers, setFilteredUsers] = useState<UserAccount[]>([]); // (Danh sách ĐÃ LỌC)
 
     // "Não" cho Modal (Cửa sổ Chi tiết / Sửa)
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [viewMode, setViewMode] = useState<'view' | 'edit'>('view'); // 💖 CHẾ ĐỘ XEM / SỬA 💖
+    const [viewMode, setViewMode] = useState<'view' | 'edit'>('view'); // Chế độ xem / sửa
     const [editingUser, setEditingUser] = useState<UserAccount | null>(null);
     const [formData, setFormData] = useState<EditFormData>({
         fullName: '',
         phoneNumber: '',
         birthDate: '',
         class: '',
+        courseId: '',
         role: 'hoc_vien',
         cccd: '',
         cccdDate: '',
@@ -84,7 +91,19 @@ export default function UserAccountManager() {
     // 3. "Phép thuật" Lấy danh sách Users (Chỉ lấy 1 lần)
     useEffect(() => {
         fetchUsers();
+        fetchCourses();
     }, []);
+
+    async function fetchCourses() {
+        try {
+            const q = query(collection(db, 'courses'), orderBy('createdAt', 'desc'));
+            const snapshot = await getDocs(q);
+            const list = snapshot.docs.map(doc => ({ id: doc.id, name: doc.data().name }));
+            setCourses(list);
+        } catch (error) {
+            console.error("Error fetching courses:", error);
+        }
+    }
 
     async function fetchUsers() {
         setLoading(true);
@@ -109,18 +128,34 @@ export default function UserAccountManager() {
         }
     }
 
-    // 💖 4. "Phép thuật" MỚI: Chạy bộ lọc 💖
+    // 4. Chạy bộ lọc & Tìm kiếm
     useEffect(() => {
-        if (filter === 'all') {
-            setFilteredUsers(users);
+        let result = users;
+
+        // 4.1 Lọc theo Vai trò
+        if (filter === 'staff') {
+            result = result.filter(u => staffRoles.includes(u.role));
+        } else if (filter === 'hoc_vien') {
+            result = result.filter(u => u.role === 'hoc_vien');
         }
-        else if (filter === 'staff') {
-            setFilteredUsers(users.filter(u => staffRoles.includes(u.role)));
+
+        // 4.2 Lọc theo Khóa học
+        if (selectedCourse !== 'all') {
+            result = result.filter(u => u.courseId === selectedCourse);
         }
-        else if (filter === 'hoc_vien') {
-            setFilteredUsers(users.filter(u => u.role === 'hoc_vien'));
+
+        // 4.3 Tìm kiếm (Tên, Email, SĐT)
+        if (searchTerm.trim() !== '') {
+            const lowerTerm = searchTerm.toLowerCase();
+            result = result.filter(u =>
+                u.fullName.toLowerCase().includes(lowerTerm) ||
+                u.email.toLowerCase().includes(lowerTerm) ||
+                (u.phoneNumber && u.phoneNumber.includes(lowerTerm))
+            );
         }
-    }, [filter, users]);
+
+        setFilteredUsers(result);
+    }, [filter, selectedCourse, searchTerm, users]);
 
     // (Hàm dịch tên vai trò)
     const dichTenVaiTro = (role: string) => {
@@ -152,7 +187,7 @@ export default function UserAccountManager() {
 
     // --- HÀNH ĐỘNG VỚI MODAL ---
 
-    // 💖 MỞ MODAL (Xem hoặc Sửa) 💖
+    // MỞ MODAL (Xem hoặc Sửa)
     const handleOpenModal = (user: UserAccount, mode: 'view' | 'edit') => {
         setEditingUser(user);
         setViewMode(mode);
@@ -163,6 +198,7 @@ export default function UserAccountManager() {
             phoneNumber: user.phoneNumber || '',
             birthDate: user.birthDate || '',
             class: user.class || '',
+            courseId: user.courseId || '',
             role: user.role || 'hoc_vien',
             cccd: user.cccd || '',
             cccdDate: user.cccdDate || '',
@@ -197,6 +233,8 @@ export default function UserAccountManager() {
                 phoneNumber: formData.phoneNumber,
                 birthDate: formData.birthDate,
                 class: formData.class,
+                courseId: formData.courseId,
+                courseName: courses.find(c => c.id === formData.courseId)?.name || '',
                 role: formData.role,
                 cccd: formData.cccd,
                 cccdDate: formData.cccdDate,
@@ -245,13 +283,41 @@ export default function UserAccountManager() {
                     <h2 className={styles.title}>Quản lý Tài khoản</h2>
                 </div>
 
-                {/* BỘ LỌC */}
-                <div className={styles.filterContainer}>
-                    <span>Lọc theo:</span>
-                    <button onClick={() => setFilter('all')} className={`${styles.filterButton} ${filter === 'all' ? styles.filterButtonActive : ''} `}>Tất cả</button>
-                    <button onClick={() => setFilter('staff')} className={`${styles.filterButton} ${filter === 'staff' ? styles.filterButtonActive : ''} `}>Giáo viên / Quản lý</button>
-                    <button onClick={() => setFilter('hoc_vien')} className={`${styles.filterButton} ${filter === 'hoc_vien' ? styles.filterButtonActive : ''} `}>Học viên</button>
-                    <span className={styles.filterInfo}>(Đang hiển thị {filteredUsers.length} / {users.length} tài khoản)</span>
+                {/* THANH CÔNG CỤ (Filter & Search) */}
+                <div className={styles.toolbar}>
+                    <div className={styles.searchBox}>
+                        <FaSearch className={styles.searchIcon} />
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm theo tên, email, SĐT..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className={styles.searchInput}
+                        />
+                    </div>
+
+                    <div className={styles.filters}>
+                        <select
+                            value={selectedCourse}
+                            onChange={(e) => setSelectedCourse(e.target.value)}
+                            className={styles.filterSelect}
+                        >
+                            <option value="all">-- Tất cả Khóa học --</option>
+                            {courses.map(c => (
+                                <option key={c.id} value={c.id}>{c.name}</option>
+                            ))}
+                        </select>
+
+                        <div className={styles.roleFilters}>
+                            <button onClick={() => setFilter('all')} className={`${styles.filterButton} ${filter === 'all' ? styles.filterButtonActive : ''} `}>Tất cả</button>
+                            <button onClick={() => setFilter('staff')} className={`${styles.filterButton} ${filter === 'staff' ? styles.filterButtonActive : ''} `}>Giáo viên / Quản lý</button>
+                            <button onClick={() => setFilter('hoc_vien')} className={`${styles.filterButton} ${filter === 'hoc_vien' ? styles.filterButtonActive : ''} `}>Học viên</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ marginBottom: '10px', textAlign: 'right', fontSize: '0.9rem', color: '#666', fontStyle: 'italic' }}>
+                    (Đang hiển thị {filteredUsers.length} / {users.length} tài khoản)
                 </div>
 
                 {loading && <p>Đang tải danh sách người dùng...</p>}
@@ -275,11 +341,12 @@ export default function UserAccountManager() {
                                     const canEdit = canEditUser(user);
                                     return (
                                         <tr key={user.id}>
-                                            {/* 💖 TÊN CLICK ĐƯỢC -> MỞ CHI TIẾT 💖 */}
+                                            {/* TÊN CLICK ĐƯỢC -> MỞ CHI TIẾT */}
                                             <td>
                                                 <strong
                                                     onClick={() => handleOpenModal(user, 'view')}
-                                                    style={{ cursor: 'pointer', color: '#0070f3' }}
+                                                    className={user.role !== 'hoc_vien' ? styles.goldText : ''}
+                                                    style={{ cursor: 'pointer', color: user.role === 'hoc_vien' ? '#0070f3' : undefined }}
                                                     title="Xem chi tiết"
                                                 >
                                                     {user.fullName}
@@ -296,26 +363,30 @@ export default function UserAccountManager() {
                                             </td>
                                             <td>{user.birthDate || '...'}</td>
                                             <td>
-                                                <span className={`${styles.rolePill} ${styles[user.role]} `}>
-                                                    {dichTenVaiTro(user.role)}
+                                                <span className={`${styles.rolePill} ${styles[user.role]} ${user.role !== 'hoc_vien' ? styles.goldPill : ''} `}>
+                                                    <span className={user.role !== 'hoc_vien' ? styles.goldText : ''}>
+                                                        {dichTenVaiTro(user.role)}
+                                                    </span>
                                                 </span>
                                             </td>
                                             <td>
                                                 <div className={styles.actionButtons}>
-                                                    {/* 💖 NÚT SỬA -> MỞ MODAL EDIT 💖 */}
+                                                    {/* NÚT SỬA -> MỞ MODAL EDIT */}
                                                     <button
                                                         className={styles.buttonEdit}
                                                         onClick={() => handleOpenModal(user, 'edit')}
                                                         disabled={!canEdit}
+                                                        title="Chỉnh sửa"
                                                     >
-                                                        Sửa
+                                                        <FaEdit />
                                                     </button>
                                                     <button
                                                         className={styles.buttonDelete}
                                                         onClick={() => handleDeleteUser(user)}
                                                         disabled={!canEdit || user.id === currentUser?.uid}
+                                                        title="Xóa tài khoản"
                                                     >
-                                                        Xóa
+                                                        <FaTrash />
                                                     </button>
                                                 </div>
                                             </td>
@@ -332,7 +403,7 @@ export default function UserAccountManager() {
 
             </div>
 
-            {/* 💖 MODAL THỐNG NHẤT (CHI TIẾT & SỬA) 💖 */}
+            {/* MODAL THỐNG NHẤT (CHI TIẾT & SỬA) */}
             {isModalOpen && editingUser && (
                 <div className={styles.modalBackdrop} onClick={handleCloseModal}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '700px' }}>
@@ -345,8 +416,8 @@ export default function UserAccountManager() {
                         </div>
 
                         {viewMode === 'view' ? (
-                            // 💖 CHẾ ĐỘ XEM CHI TIẾT 💖
-                            <div style={{ color: '#000000' }}> {/* 💖 FORCE BLACK COLOR 💖 */}
+                            // CHẾ ĐỘ XEM CHI TIẾT
+                            <div style={{ color: '#000000' }}>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
                                     <div><strong style={{ color: '#000' }}>Họ và tên:</strong> <div style={{ color: '#000' }}>{editingUser.fullName}</div></div>
                                     <div><strong style={{ color: '#000' }}>Email:</strong> <div style={{ color: '#000' }}>{editingUser.email}</div></div>
@@ -369,12 +440,14 @@ export default function UserAccountManager() {
                                 <div className={styles.modalActions} style={{ marginTop: '20px' }}>
                                     <button onClick={handleCloseModal} className={styles.buttonSecondary}>Đóng</button>
                                     {canEditUser(editingUser) && (
-                                        <button onClick={() => setViewMode('edit')} className={styles.buttonEdit}>Chỉnh sửa</button>
+                                        <button onClick={() => setViewMode('edit')} className={styles.buttonPrimary}>
+                                            <FaEdit /> Chỉnh sửa
+                                        </button>
                                     )}
                                 </div>
                             </div>
                         ) : (
-                            // 💖 CHẾ ĐỘ CHỈNH SỬA 💖
+                            // CHẾ ĐỘ CHỈNH SỬA
                             <form onSubmit={handleSaveEdit}>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                                     <div className={styles.formGroup}>
@@ -392,6 +465,15 @@ export default function UserAccountManager() {
                                     <div className={styles.formGroup}>
                                         <label>Lớp học</label>
                                         <input type="text" name="class" value={formData.class} onChange={handleFormChange} className={styles.input} placeholder="VD: 12A1" />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label>Khóa học</label>
+                                        <select name="courseId" value={formData.courseId} onChange={handleFormChange} className={styles.input}>
+                                            <option value="">-- Chọn khóa học --</option>
+                                            {courses.map(c => (
+                                                <option key={c.id} value={c.id}>{c.name}</option>
+                                            ))}
+                                        </select>
                                     </div>
 
                                     {/* CCCD & Địa chỉ */}
@@ -424,8 +506,8 @@ export default function UserAccountManager() {
 
                                 <div className={styles.modalActions} style={{ marginTop: '20px' }}>
                                     <button type="button" onClick={() => setViewMode('view')} className={styles.buttonSecondary}>Hủy bỏ</button>
-                                    <button type="submit" disabled={isSubmitting} className={styles.buttonEdit}>
-                                        {isSubmitting ? 'Đang lưu...' : 'Lưu thay đổi'}
+                                    <button type="submit" disabled={isSubmitting} className={styles.buttonPrimary}>
+                                        <FaSave /> {isSubmitting ? 'Đang lưu...' : 'Lưu thay đổi'}
                                     </button>
                                 </div>
                             </form>

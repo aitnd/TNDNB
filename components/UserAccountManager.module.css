@@ -40,6 +40,95 @@
     text-decoration: underline;
 }
 
+/* === TOOLBAR (Search & Filter) === */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.searchBox {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filterSelect {
+    padding: 0.6rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: white;
+    min-width: 180px;
+    cursor: pointer;
+}
+
+.roleFilters {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filterButton {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e5e7eb;
+    background-color: white;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filterButton:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.filterButtonActive {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-color: #bfdbfe;
+    font-weight: 600;
+}
+
 /* (Box chứa bảng) */
 .tableContainer {
     background-color: #ffffff;
@@ -129,45 +218,253 @@
 }
 
 .buttonEdit,
-.buttonDelete,
-.buttonSecondary,
-.buttonShare {
+.buttonDelete {
     border: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 5px;
-    font-weight: 500;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 0.875rem;
+    transition: all 0.2s;
+    font-size: 0.9rem;
     color: white;
 }
 
 .buttonEdit:disabled,
-.buttonDelete:disabled,
-.buttonShare:disabled {
+.buttonDelete:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+    background-color: #ccc !important;
 }
 
 .buttonEdit {
-    background-color: #004a99;
-    color: white;
+    background-color: #3b82f6;
+    /* Blue 500 */
 }
 
 .buttonEdit:hover:not(:disabled) {
-    background-color: #003366;
+    background-color: #2563eb;
+    /* Blue 600 */
 }
 
 .buttonDelete {
-    background-color: #d9534f;
-    color: white;
+    background-color: #ef4444;
+    /* Red 500 */
 }
 
 .buttonDelete:hover:not(:disabled) {
-    background-color: #c9302c;
+    background-color: #dc2626;
+    /* Red 600 */
 }
 
 .buttonSecondary {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.buttonSecondary:hover {
+    background-color: #d1d5db;
+}
+
+.searchInput:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filterSelect {
+    padding: 0.6rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: white;
+    min-width: 180px;
+    cursor: pointer;
+}
+
+.roleFilters {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filterButton {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e5e7eb;
+    background-color: white;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filterButton:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.filterButtonActive {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-color: #bfdbfe;
+    font-weight: 600;
+}
+
+/* (Box chứa bảng) */
+.tableContainer {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+    /* (Cho phép cuộn ngang nếu bảng quá rộng) */
+}
+
+/* (Bảng danh sách) */
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.userTable th,
+.userTable td {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+.userTable th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+    color: #004a99;
+}
+
+.userTable td strong {
+    font-weight: 600;
+    color: #000;
+    /* Đen đậm */
+}
+
+.subText {
+    font-size: 0.85rem;
+    color: #333;
+    /* Đậm hơn (trước là #555) */
+    font-weight: 500;
+}
+
+/* (Nhãn vai trò) */
+.rolePill {
+    padding: 0.25rem 0.75rem;
+    border-radius: 99px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    /* Đậm hơn */
+    white-space: nowrap;
+    color: #000;
+    /* Chữ đen cho dễ đọc */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin {
+    background-color: #fde8e8;
+    color: #9b2c2c;
+}
+
+.quan_ly {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.lanh_dao {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.giao_vien {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.hoc_vien {
+    background-color: #e5e7eb;
+    color: #111827;
+    /* Đen đậm */
+}
+
+
+/* (Nút Sửa/Xóa/Share) */
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.buttonEdit,
+.buttonDelete {
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.buttonEdit:disabled,
+.buttonDelete:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: #ccc !important;
+}
+
+.buttonEdit {
+    background-color: #3b82f6;
+    /* Blue 500 */
+}
+
+.buttonEdit:hover:not(:disabled) {
+    background-color: #2563eb;
+    /* Blue 600 */
+}
+
+.buttonDelete {
+    background-color: #ef4444;
+    /* Red 500 */
+}
+
+.buttonDelete:hover:not(:disabled) {
+    background-color: #dc2626;
+    /* Red 600 */
+}
+
+.buttonSecondary {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
     background-color: #e5e7eb;
     color: #374151;
 }
@@ -182,6 +479,32 @@
 
 .buttonShare:hover:not(:disabled) {
     background-color: #166fe5;
+}
+
+/* Button Primary (Dùng cho Modal Save) */
+.buttonPrimary {
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #004a99;
+    color: white;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.buttonPrimary:hover:not(:disabled) {
+    background-color: #003366;
+}
+
+.buttonPrimary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 
@@ -214,30 +537,6 @@
     margin-top: 1.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid #eee;
-}
-
-/* === (CSS CHO BỘ LỌC TÀI KHOẢN) === */
-.filterContainer {
-    margin-bottom: 1.5rem;
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    border-color: #ccc;
-}
-
-.filterButtonActive {
-    background-color: #004a99;
-    color: white;
-    border-color: #004a99;
-}
-
-.filterInfo {
-    margin-left: auto;
-    font-size: 0.9rem;
-    color: #333;
-    /* Đậm hơn (trước là #777) */
-    font-style: italic;
-    font-weight: 500;
 }
 
 /* === 💖 CSS MỚI CHO LINK TIÊU ĐỀ BÀI VIẾT 💖 === */
@@ -275,4 +574,67 @@
     border-radius: 99px;
     font-size: 0.75rem;
     font-weight: 600;
+}
+
+/* === MODAL STYLES (Added) === */
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modalTitle {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #004a99;
+    font-weight: 700;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === GOLDEN METAL EFFECT === */
+.goldPill {
+    background-color: #fff;
+    border: 1px solid #B38728;
+    box-shadow: 0 2px 4px rgba(179, 135, 40, 0.2);
+}
+
+.goldText {
+    background: linear-gradient(to bottom, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    display: inline-block;
+    text-shadow: none;
+    /* Text shadow can mess up background-clip */
 }

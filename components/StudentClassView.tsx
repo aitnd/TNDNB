@@ -24,6 +24,7 @@ interface UserData {
     birthDate?: string
     address?: string
     phoneNumber?: string
+    photoURL?: string
 }
 
 export default function StudentClassView() {
@@ -93,7 +94,6 @@ export default function StudentClassView() {
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const list = snapshot.docs
                 .map(doc => ({ uid: doc.id, ...doc.data() } as UserData))
-                .filter(u => u.uid !== user.uid) // Exclude self
             setClassmates(list)
             setLoading(false)
         })
@@ -135,10 +135,14 @@ export default function StudentClassView() {
                                 {teachers.map(t => (
                                     <div key={t.uid} className={styles.headTeacher} style={{ marginBottom: '15px', paddingBottom: '15px', borderBottom: '1px solid #f0f0f0' }}>
                                         <div className={styles.avatar}>
-                                            {t.fullName ? t.fullName.charAt(0).toUpperCase() : '?'}
+                                            {t.photoURL ? (
+                                                <img src={t.photoURL} alt={t.fullName} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                            ) : (
+                                                t.fullName ? t.fullName.charAt(0).toUpperCase() : '?'
+                                            )}
                                         </div>
                                         <div className={styles.teacherInfo}>
-                                            <h4>
+                                            <h4 className={styles.goldText} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                 {t.fullName}
                                                 {/* 💖 GHI CHÚ CHỦ NHIỆM 💖 */}
                                                 {course.headTeacherId === t.uid && (
@@ -149,15 +153,12 @@ export default function StudentClassView() {
                                                         border: '1px solid #b7eb8f',
                                                         padding: '2px 6px',
                                                         borderRadius: '4px',
-                                                        marginLeft: '8px',
-                                                        verticalAlign: 'middle'
+                                                        whiteSpace: 'nowrap'
                                                     }}>
                                                         Chủ nhiệm
                                                     </span>
                                                 )}
                                             </h4>
-                                            <p>{t.email}</p>
-                                            <p>{t.phoneNumber}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -173,16 +174,20 @@ export default function StudentClassView() {
                     <div className={styles.card}>
                         <h3 className={styles.cardTitle}>
                             <FaUsers style={{ color: '#722ed1' }} />
-                            Danh sách Bạn học ({classmates.length})
+                            Danh sách Học viên ({classmates.length})
                         </h3>
 
                         <div className={styles.classmateList}>
                             {classmates.length > 0 ? classmates.map(mate => (
                                 <div key={mate.uid} className={styles.classmateItem}>
                                     <div className={styles.miniAvatar}>
-                                        {mate.fullName ? mate.fullName.charAt(0).toUpperCase() : '?'}
+                                        {mate.photoURL ? (
+                                            <img src={mate.photoURL} alt={mate.fullName} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                        ) : (
+                                            mate.fullName ? mate.fullName.charAt(0).toUpperCase() : '?'
+                                        )}
                                     </div>
-                                    <div className={styles.classmateName}>{mate.fullName}</div>
+                                    <div className={`${styles.classmateName} ${styles.blueText}`}>{mate.fullName}</div>
                                     <div className={styles.classmateDetail}>
                                         {mate.birthDate ? mate.birthDate.split('/').pop() : '---'}
                                     </div>
