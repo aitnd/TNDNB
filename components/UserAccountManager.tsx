@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext'
 import { db } from '../utils/firebaseClient'
 import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import Link from 'next/link'
-import { FaSearch, FaEdit, FaTrash, FaFilter, FaSave } from 'react-icons/fa'
+import { FaSearch, FaEdit, FaTrash, FaFilter, FaSave, FaCheckCircle } from 'react-icons/fa'
 
 // (Import CSS Module)
 import styles from './UserAccountManager.module.css'
@@ -27,7 +27,9 @@ interface UserAccount {
     cccdDate?: string;
     cccdPlace?: string;
     address?: string; // Địa chỉ
+    address?: string; // Địa chỉ
     createdAt: Timestamp;
+    isVerified?: boolean; // Đã xác minh
 }
 
 // (Kiểu dữ liệu cho form)
@@ -351,6 +353,9 @@ export default function UserAccountManager() {
                                                 >
                                                     {user.fullName}
                                                 </strong>
+                                                {user.role === 'hoc_vien' && user.isVerified && (
+                                                    <FaCheckCircle style={{ color: '#1890ff', marginLeft: '6px', verticalAlign: 'middle' }} title="Đã xác minh" />
+                                                )}
                                             </td>
                                             <td>
                                                 {user.class && <div>Lớp: {user.class}</div>}
