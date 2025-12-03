@@ -5,7 +5,7 @@ import { FaMusic, FaVolumeMute } from 'react-icons/fa'
 
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
-  const audioUrl = '/music/jingle-bells.mp3' 
+  const audioUrl = '/music/jingle-bells.mp3'
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
@@ -13,9 +13,9 @@ export default function MusicPlayer() {
     const attemptPlay = async () => {
       if (audioRef.current) {
         try {
-          audioRef.current.volume = 0.4
+          audioRef.current.volume = 0.15
           // Trình duyệt có thể chặn dòng này nếu người dùng chưa tương tác
-          await audioRef.current.play() 
+          await audioRef.current.play()
           setIsPlaying(true)
         } catch (err) {
           console.log('Autoplay bị chặn bởi trình duyệt (cần tương tác người dùng).')
@@ -48,11 +48,11 @@ export default function MusicPlayer() {
     }}>
       {/* 🔥 Thêm autoPlay loop để tăng khả năng tự phát */}
       <audio ref={audioRef} src={audioUrl} loop autoPlay />
-      
-      <button 
+
+      <button
         onClick={togglePlay}
         style={{
-          backgroundColor: 'var(--mau-chinh)', 
+          backgroundColor: 'var(--mau-chinh)',
           color: 'white',
           border: '2px solid white',
           borderRadius: '50%',
