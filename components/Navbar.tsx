@@ -122,6 +122,7 @@ export default function Navbar() {
             <li><Link href="/">Trang chủ</Link></li>
             <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
             <li><Link href="/tu-van-nghe-nghiep">Tư vấn</Link></li>
+            <li><Link href="/danh-muc/gioi-thieu-viec-lam">Giới thiệu việc làm</Link></li>{/* Force Refresh */}
             <li><Link href="/chuong-trinh-dao-tao">Đào tạo</Link></li>
             <li><Link href="/hoc-phi">Học phí</Link></li>
             <li><Link href="/thu-vien">Thư viện</Link></li>

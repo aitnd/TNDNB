@@ -26,6 +26,13 @@ export default function Footer() {
             <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
             <li><Link href="/chuong-trinh-dao-tao">Chương trình đào tạo</Link></li>
             <li><Link href="/tuyen-dung">Tuyển dụng</Link></li>
+            <li><Link href="/giai-tri">Giải trí</Link></li>
+            <li><Link href="/ontap">Ôn tập</Link></li>
+            <li><Link href="/thitructuyen">Thi trực tuyến</Link></li>
+            <li><Link href="/tra-cuu-dia-chi">Tra cứu địa chỉ</Link></li>
+            <li><Link href="/thu-vien">Thư viện</Link></li>
+            <li><Link href="/tai-lieu">Tài liệu</Link></li>
+            <li><Link href="/hoc-phi">Học phí</Link></li>
             <li><Link href="/lien-he">Liên hệ</Link></li>
           </ul>
         </div>

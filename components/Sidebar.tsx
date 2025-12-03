@@ -54,6 +54,17 @@ async function getTinTucSuKien(): Promise<Post[]> {
   return data || [];
 }
 
+async function getViecLamPosts(): Promise<Post[]> {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('id, title')
+    .eq('category_id', 'gioi-thieu-viec-lam')
+    .order('created_at', { ascending: false })
+    .limit(5);
+  if (error) return [];
+  return data || [];
+}
+
 async function getLatestMediaForSidebar(): Promise<MediaItem[]> {
   const { data, error } = await supabase
     .from('media_library')
@@ -108,10 +119,11 @@ async function getLatestFilesForSidebar(): Promise<any[]> {
 
 export default async function Sidebar() {
 
-  const [tuyenSinhPosts, phapQuyPosts, tinTucPosts, latestMedia, latestFiles] = await Promise.all([
+  const [tuyenSinhPosts, phapQuyPosts, tinTucPosts, viecLamPosts, latestMedia, latestFiles] = await Promise.all([
     getTuyenSinhPosts(),
     getPhapQuyPosts(),
     getTinTucSuKien(),
+    getViecLamPosts(),
     getLatestMediaForSidebar(),
     getLatestFilesForSidebar()
   ]);
@@ -149,6 +161,26 @@ export default async function Sidebar() {
             ))
           ) : (
             <li><p className={styles.emptyMessage}>Chưa có tin tức nào.</p></li>
+          )}
+        </ul>
+      </div>
+
+      {/* Box "Giới thiệu việc làm" */}
+      <div className={`${styles.widgetBox} ${styles.sidebarWidget}`}>
+        <Link href="/danh-muc/gioi-thieu-viec-lam">
+          <h3 className={styles.sidebarTitle}>Giới thiệu việc làm</h3>
+        </Link>
+        <ul className={styles.linkList}>
+          {viecLamPosts.length > 0 ? (
+            viecLamPosts.map((post) => (
+              <li key={post.id}>
+                <Link href={`/bai-viet/${post.id}`}>
+                  <i className="fas fa-caret-right"></i> {post.title}
+                </Link>
+              </li>
+            ))
+          ) : (
+            <li><p className={styles.emptyMessage}>Chưa có bài viết nào.</p></li>
           )}
         </ul>
       </div>

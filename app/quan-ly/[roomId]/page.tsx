@@ -8,7 +8,6 @@ import { db } from '../../../utils/firebaseClient'
 import { doc, onSnapshot, updateDoc, collection, getDocs, writeBatch, serverTimestamp, deleteDoc } from 'firebase/firestore'
 import styles from './page.module.css'
 import Link from 'next/link'
-import * as XLSX from 'xlsx'
 
 // (Định nghĩa kiểu dữ liệu)
 interface Participant {
@@ -226,18 +225,6 @@ export default function TeacherRoomPage() {
     try {
       const batch = writeBatch(db);
       const now = new Date(); // Lấy thời gian client làm mốc (hoặc serverTimestamp tốt hơn nhưng cần tính toán)
-      // Lưu ý: Để tính duration chính xác, ta nên dùng serverTimestamp cho lastPausedAt.
-      // Nhưng khi resume, ta cần tính (now - lastPausedAt). Firestore không hỗ trợ tính toán trực tiếp trong update.
-      // Giải pháp: Khi resume, ta chỉ set isPaused = false. 
-      // Logic tính toán duration sẽ phải làm ở Client (khi render) hoặc Cloud Function.
-      // NHƯNG user muốn "thời gian đếm ngược cũng sẽ dừng".
-      // Cách đơn giản nhất:
-      // Pause: isPaused = true, lastPausedAt = serverTimestamp()
-      // Resume: isPaused = false, totalPausedDuration += (now - lastPausedAt)
-      // Vấn đề: 'now' ở client giáo viên có thể lệch. Nhưng chấp nhận được.
-
-      // Để làm được Resume, ta cần biết lastPausedAt của từng user.
-      // Vì selectedIds có thể gồm nhiều user với lastPausedAt khác nhau, ta phải loop qua participants data.
 
       selectedIds.forEach(pid => {
         const p = participants.find(x => x.id === pid);
@@ -256,9 +243,6 @@ export default function TeacherRoomPage() {
         } else {
           // Resume
           if (p.isPaused && p.lastPausedAt) {
-            // Tính duration. lastPausedAt là Timestamp.
-            // Cần convert Timestamp sang millis.
-            // Lưu ý: p.lastPausedAt từ snapshot có thể là Timestamp object.
             const lastPausedMillis = p.lastPausedAt?.toMillis ? p.lastPausedAt.toMillis() : Date.now();
             const duration = Date.now() - lastPausedMillis;
 
@@ -307,18 +291,34 @@ export default function TeacherRoomPage() {
   }
 
   const handleExportExcel = () => {
-    const data = participants.map((p, index) => ({
-      STT: index + 1,
-      'Họ và Tên': p.fullName,
-      'Email': p.email,
-      'Trạng thái': p.status,
-      'Điểm số': p.score !== undefined ? `${p.score}/${p.totalQuestions}` : '',
-      'Vi phạm': p.violationCount || 0
-    }))
-    const worksheet = XLSX.utils.json_to_sheet(data)
-    const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, "KetQuaThi")
-    XLSX.writeFile(workbook, `KetQua_${room?.room_name}.xlsx`)
+    // 1. Tạo header
+    const headers = ['STT', 'Họ và Tên', 'Email', 'Trạng thái', 'Điểm số', 'Vi phạm'];
+
+    // 2. Map dữ liệu
+    const rows = participants.map((p, index) => [
+      index + 1,
+      `"${p.fullName}"`, // Quote để tránh lỗi nếu tên có dấu phẩy
+      p.email,
+      p.status,
+      p.score !== undefined ? `'${p.score}/${p.totalQuestions}` : '', // Thêm ' để Excel không tự format ngày tháng
+      p.violationCount || 0
+    ]);
+
+    // 3. Gộp thành chuỗi CSV
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    // 4. Tạo Blob và tải xuống
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' }); // Thêm BOM để Excel đọc đúng tiếng Việt
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `KetQua_${room?.room_name || 'PhongThi'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   if (loading) return <div className={styles.container}>Đang tải...</div>

@@ -73,7 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               ))}
             </div>
 
-            <Navbar />
+            <Navbar />{/* Force Rebuild Layout */}
             {/* ... (Phần dưới giữ nguyên) ... */}
 
             <main style={{ minHeight: '80vh', position: 'relative' }}>

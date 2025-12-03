@@ -128,6 +128,8 @@ export default function PostManager() {
                 return 'Tuyển sinh';
             case 'van-ban-phap-quy':
                 return 'Văn bản pháp quy';
+            case 'gioi-thieu-viec-lam':
+                return 'Giới thiệu việc làm';
             default:
                 return categoryId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         }
