@@ -42,24 +42,29 @@ export async function POST(
 
     // 3. 💖 LẤY "ĐÁP ÁN ĐÚNG" (DÙNG CÚ PHÁP ADMIN "XỊN") 💖
     const questionsRef = adminDb.collection('questions_master');
-    // (Đây là cú pháp query của Admin SDK)
-    const q = questionsRef
-      .where('license_id', '==', licenseId) // (Lọc theo hạng bằng)
-      .where(FieldPath.documentId(), 'in', studentAnswerKeys) // (Lọc theo các câu đã nộp)
 
-    const questionsSnapshot = await q.get(); // (Chạy "câu hỏi")
+    let correctAnswers: CorrectAnswer[] = [];
 
-    if (questionsSnapshot.empty) {
-      throw new Error('Không thể lấy đáp án từ CSDL Firestore (questions_master).');
+    // 💖 FIX: CHỈ QUERY NẾU CÓ CÂU TRẢ LỜI 💖
+    if (studentAnswerKeys.length > 0) {
+      // (Đây là cú pháp query của Admin SDK)
+      const q = questionsRef
+        .where('license_id', '==', licenseId) // (Lọc theo hạng bằng)
+        .where(FieldPath.documentId(), 'in', studentAnswerKeys) // (Lọc theo các câu đã nộp)
+
+      const questionsSnapshot = await q.get(); // (Chạy "câu hỏi")
+
+      if (!questionsSnapshot.empty) {
+        questionsSnapshot.forEach(doc => {
+          correctAnswers.push({
+            id: doc.id,
+            correct_answer_id: doc.data().correct_answer_id
+          });
+        });
+      }
+    } else {
+      console.log('[API Chấm Bài] Học viên nộp giấy trắng (không có câu trả lời nào).');
     }
-
-    const correctAnswers: CorrectAnswer[] = [];
-    questionsSnapshot.forEach(doc => {
-      correctAnswers.push({
-        id: doc.id,
-        correct_answer_id: doc.data().correct_answer_id
-      });
-    });
 
     // 4. "CHẤM BÀI" (Giữ nguyên)
     let score = 0

@@ -1,270 +1,298 @@
-/* === Trang điểm cho Trang Phòng Điều Khiển === */
-
 .container {
-    max-width: 900px;
-    /* Tăng chiều rộng để chứa bảng mới */
-    margin: 2rem auto;
-    padding: 2.5rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 20px;
+}
+
+.backLink {
+    text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    font-size: 0.9rem;
 }
 
 .title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #004a99;
-    margin-bottom: 1.5rem;
-    line-height: 1.3;
+    font-size: 1.8rem;
+    color: #1e3a8a;
+    margin: 0;
 }
 
-.titleError {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #9b2c2c;
+.statusBadge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    background-color: #e0f2fe;
+    color: #0284c7;
+    text-transform: uppercase;
 }
 
-.info {
-    font-size: 1.1rem;
-    color: #333;
-    margin-bottom: 0.5rem;
-}
-
-.label {
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 0.25rem;
-    /* (Thêm margin bottom) */
-}
-
-/* 💖 (Req 1) CHIA 2 CỘT CHO STATUS BOX 💖 */
-.statusBox {
-    margin: 2rem 0;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    padding: 1.5rem 0;
-
+/* --- CONTROL PANEL --- */
+.controlPanel {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
-.statusLeft {
+.controlGroup {
     flex: 1;
-    /* (Phần Trạng thái) */
+    min-width: 300px;
 }
 
-.statusRight {
-    flex-shrink: 0;
-    /* (Phần Nút bấm) */
+.controlGroup h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #0f172a;
 }
 
-.status {
-    font-size: 1.8rem;
-    font-weight: 700;
+.controlRow {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
-.statusWaiting {
-    color: #d97706;
+.infoText {
+    font-size: 0.95rem;
+    color: #475569;
 }
 
-.statusInProgress {
-    color: #16a34a;
+.toggleGroup {
+    display: flex;
+    gap: 15px;
 }
 
-.statusFinished {
-    color: #777;
-}
-
-/* 💖 (Req 1+2) THU GỌN NÚT BẤM 💖 */
-.button {
-    /* (Không 'width: 100%' nữa) */
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    /* (Nhỏ lại) */
-    font-weight: 600;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    color: white;
-}
-
-.button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.buttonStart {
-    background-color: #16a34a;
-}
-
-.buttonStart:hover:not(:disabled) {
-    background-color: #14833a;
-}
-
-.buttonExport {
-    background-color: #1890ff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
+.toggleLabel {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-weight: 500;
-    transition: all 0.2s;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
 }
 
-.buttonExport:hover {
-    background-color: #096dd9;
+.actionButtons {
+    display: flex;
+    gap: 10px;
 }
 
-/* === CSS CHO LIVE DASHBOARD (Giữ nguyên) === */
-.dashboard {
-    margin-top: 2.5rem;
-    border-top: 1px solid #eee;
-    padding-top: 2rem;
-}
-
-.dashboardTitle {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
-.participantTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.participantTable th,
-.participantTable td {
-    border: 1px solid #ddd;
-    padding: 0.75rem 1rem;
-    text-align: left;
-    vertical-align: middle;
-}
-
-.participantTable th {
-    background-color: #f3f4f6;
-    font-weight: 600;
-}
-
-.participantTable td strong {
-    color: #1e3a8a;
-    font-size: 1.1rem;
-}
-
-.pill {
-    padding: 0.25rem 0.75rem;
-    border-radius: 99px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.pillWaiting {
-    background-color: #fef3c7;
-    color: #92400e;
-}
-
-.pillInProgress {
-    background-color: #dbeafe;
-    color: #1e40af;
-}
-
-.pillSubmitted {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-/* === CÁC STYLE MỚI CHO BULK ACTIONS & TABLE === */
-.bulkActions {
-    background-color: #e6f7ff;
-    border: 1px solid #91d5ff;
-    padding: 12px 20px;
+.startBtn {
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
     border-radius: 6px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    animation: fadeIn 0.3s ease;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.bulkBtnSubmit {
-    background-color: #ff4d4f;
+.startBtn:hover {
+    background-color: #15803d;
+}
+
+.finishBtn {
+    background-color: #dc2626;
     color: white;
     border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 500;
+    transition: background 0.2s;
 }
 
-.bulkBtnSubmit:hover {
-    background-color: #cf1322;
+.finishBtn:hover {
+    background-color: #b91c1c;
 }
 
-.bulkBtnTime {
-    background-color: #52c41a;
+.distributeBtn {
+    background-color: #0ea5e9;
     color: white;
     border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 500;
+    transition: background 0.2s;
 }
 
-.bulkBtnTime:hover {
-    background-color: #389e0d;
+.distributeBtn:hover:not(:disabled) {
+    background-color: #0284c7;
 }
 
-.rowSelected {
-    background-color: #e6f7ff;
-}
-
-.actionBtn {
-    background: none;
-    border: 1px solid #ddd;
-    padding: 6px;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #666;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.actionBtn:hover:not(:disabled) {
-    background-color: #f0f0f0;
-    color: #1890ff;
-    border-color: #1890ff;
-}
-
-.actionBtn:disabled {
-    opacity: 0.4;
+.distributeBtn:disabled {
+    background-color: #94a3b8;
     cursor: not-allowed;
 }
 
-@keyframes fadeIn {
+.excelBtn {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.excelBtn:hover {
+    background-color: #1d4ed8;
+}
+
+/* --- BULK ACTION BAR --- */
+.bulkActionBar {
+    background-color: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
     from {
         opacity: 0;
-        transform: translateY(-5px);
+        transform: translateY(-10px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.bulkButtons {
+    display: flex;
+    gap: 10px;
+}
+
+.resetBtn {
+    background-color: #f59e0b;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.resetBtn:hover {
+    background-color: #d97706;
+}
+
+.kickBtn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.kickBtn:hover {
+    background-color: #b91c1c;
+}
+
+/* --- TABLE --- */
+.tableContainer {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.table th,
+.table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.selectedRow {
+    background-color: #fff7ed !important;
+}
+
+.statusTag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.statusTag.waiting {
+    background-color: #f3f4f6;
+    color: #6b7280;
+}
+
+.statusTag.in_progress {
+    background-color: #dbeafe;
+    color: #2563eb;
+}
+
+.statusTag.submitted {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.statusTag.kicked {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.scoreCell {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #0f172a;
+}
+
+.empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 40px;
+    font-style: italic;
 }
