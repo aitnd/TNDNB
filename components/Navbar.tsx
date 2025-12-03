@@ -115,40 +115,52 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* === THANH MAIN NAV (Giữ nguyên) === */}
+      {/* === THANH MAIN NAV === */}
       <nav className={styles.mainNav}>
         <div className={styles.mainContainer}>
           <ul className={styles.navLinks}>
-            <li><Link href="/">Trang chủ</Link></li>
-            <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
-            <li><Link href="/tu-van-nghe-nghiep">Tư vấn</Link></li>
-            <li><Link href="/danh-muc/gioi-thieu-viec-lam">Giới thiệu việc làm</Link></li>{/* Force Refresh */}
-            <li><Link href="/chuong-trinh-dao-tao">Đào tạo</Link></li>
-            <li><Link href="/hoc-phi">Học phí</Link></li>
-            <li><Link href="/thu-vien">Thư viện</Link></li>
-            <li><Link href="/tai-lieu">Tài liệu</Link></li>
 
-            <li>
-              <Link href="/giai-tri" className={styles.hotLink}>
-                <FaGamepad className={styles.hotIcon} /> Giải trí
-              </Link>
-            </li>
-            <li>
-              <Link href="/ontap" className={styles.hotLink}>
-                <FaBookOpen className={styles.hotIcon} /> Ôn tập
-              </Link>
-            </li>
-            <li>
-              <Link href="/thitructuyen" className={styles.hotLink}>
-                <FaLaptop className={styles.hotIcon} /> Thi Online
-              </Link>
-            </li>
-            <li>
-              <Link href="/tra-cuu-dia-chi" className={styles.hotLink}>
-                <FaSearchLocation className={styles.hotIcon} /> Tra cứu ĐC
-              </Link>
-            </li>
-            <li><Link href="/lien-he">Liên hệ</Link></li>
+            {/* DÒNG 1: CÁC TRANG CHÍNH */}
+            <div className={styles.navRow}>
+              <li><Link href="/">Trang chủ</Link></li>
+              <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
+              <li><Link href="/tu-van-nghe-nghiep">Tư vấn</Link></li>
+              <li><Link href="/chuong-trinh-dao-tao">Đào tạo</Link></li>
+              <li><Link href="/hoc-phi">Học phí</Link></li>
+              <li><Link href="/thu-vien">Thư viện</Link></li>
+              <li><Link href="/tai-lieu">Tài liệu</Link></li>
+              <li><Link href="/lien-he">Liên hệ</Link></li>
+            </div>
+
+            {/* DÒNG 2: CÁC DANH MỤC & TIỆN ÍCH */}
+            <div className={styles.navRow}>
+              <li><Link href="/danh-muc/tin-tuc-su-kien">Tin tức - Sự kiện</Link></li>
+              <li><Link href="/danh-muc/gioi-thieu-viec-lam">Giới thiệu việc làm</Link></li>
+              <li><Link href="/danh-muc/van-ban-phap-quy">Văn bản pháp quy</Link></li>
+              <li><Link href="/danh-muc/tuyen-sinh">Thông báo tuyển sinh</Link></li>
+
+              <li>
+                <Link href="/giai-tri" className={styles.hotLink}>
+                  <FaGamepad className={styles.hotIcon} /> Giải trí
+                </Link>
+              </li>
+              <li>
+                <Link href="/ontap" className={styles.hotLink}>
+                  <FaBookOpen className={styles.hotIcon} /> Ôn tập
+                </Link>
+              </li>
+              <li>
+                <Link href="/thitructuyen" className={styles.hotLink}>
+                  <FaLaptop className={styles.hotIcon} /> Thi Online
+                </Link>
+              </li>
+              <li>
+                <Link href="/tra-cuu-dia-chi" className={styles.hotLink}>
+                  <FaSearchLocation className={styles.hotIcon} /> Tra cứu ĐC
+                </Link>
+              </li>
+            </div>
+
           </ul>
         </div>
       </nav>

@@ -1,7 +1,6 @@
 /* === THANH TOP (Chứa Banner, Theme & User) === */
 .headerTop {
   background-color: var(--bg-header);
-  /* Màu đổi theo theme */
   color: var(--text-header);
   padding: 10px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -16,7 +15,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* Căn giữa dọc */
   padding: 0 1rem;
 }
 
@@ -24,32 +22,26 @@
 .brandArea {
   display: flex;
   align-items: flex-start;
-  /* Căn lề trên để logo không bị kéo dãn */
   gap: 15px;
   text-decoration: none;
   flex: 1;
   padding-right: 20px;
-  /* Tạo khoảng cách với bên phải */
 }
 
-/* Ảnh Logo tròn */
 .logoImg {
   width: 80px;
-  /* Logo to hơn chút cho cân đối với nhiều chữ */
   height: 80px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   flex-shrink: 0;
 }
 
-/* Khối chứa chữ */
 .brandText {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-/* Dòng 1: CÔNG TY CỔ PHẦN */
 .brandLine1 {
   font-size: 0.9rem;
   font-weight: 800;
@@ -60,7 +52,6 @@
   margin-bottom: 2px;
 }
 
-/* Dòng 2: TƯ VẤN VÀ GIÁO DỤC NINH BÌNH */
 .brandLine2 {
   font-size: 1.5rem;
   font-weight: 300;
@@ -71,27 +62,21 @@
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-/* Chữ nổi bật */
 .brandHighlight {
   color: #d32f2f;
-  /* Đỏ đậm */
 }
 
-/* Theme Noel thì chữ vàng */
 :global([data-theme='noel']) .brandHighlight {
   color: #FFD700;
 }
 
-/* Dòng 3 & 4: Mô tả chi tiết */
 .brandLine3 {
   font-size: 1.0rem;
-  /* Chữ nhỏ gọn */
   font-weight: 500;
   line-height: 1.4;
   color: var(--text-header);
   display: flex;
   align-items: flex-start;
-  /* Icon căn theo dòng đầu tiên */
   gap: 6px;
   margin-bottom: 2px;
   opacity: 0.9;
@@ -99,10 +84,8 @@
 
 .star {
   color: #f59e0b;
-  /* Màu vàng ngôi sao */
   font-size: 0.8rem;
   margin-top: 2px;
-  /* Căn chỉnh icon khớp dòng chữ */
   flex-shrink: 0;
 }
 
@@ -113,11 +96,9 @@
   gap: 15px;
   flex-shrink: 0;
   align-self: flex-start;
-  /* Đẩy lên trên cùng cho thẳng hàng với dòng 1 của logo */
   margin-top: 5px;
 }
 
-/* Nút chọn Theme */
 .themeBtn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -157,15 +138,12 @@
   color: white;
 }
 
-/* Theme Noel thì chữ trắng */
-
 .userActions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* Nút Quản lý nổi bật */
 .manageBtn {
   background: linear-gradient(to right, #FFD700, #FDB931);
   color: #d32f2f;
@@ -247,10 +225,19 @@
 .navLinks {
   list-style: none;
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  /* Xếp dọc 2 dòng */
+  gap: 10px;
   margin: 0;
   padding: 0;
+  width: 100%;
+}
+
+.navRow {
+  display: flex;
+  gap: 20px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .navLinks li a {
@@ -277,13 +264,10 @@
 }
 
 @media (max-width: 768px) {
-  /* .headerTop { display: none; } <-- BỎ DÒNG NÀY ĐỂ HIỆN HEADER */
-
   .headerTop {
     padding: 5px 0;
   }
 
-  /* Ẩn bớt chữ rườm rà, chỉ giữ Logo */
   .brandText {
     display: none;
   }
@@ -293,7 +277,6 @@
     height: 40px;
   }
 
-  /* Căn chỉnh lại khu vực bên phải cho gọn */
   .rightArea {
     margin-top: 0;
     gap: 10px;
@@ -301,7 +284,6 @@
 
   .welcomeText {
     display: none;
-    /* Ẩn câu chào cho gọn */
   }
 
   .userBox {
@@ -309,31 +291,22 @@
     padding-left: 0;
   }
 
-  /* Ẩn banner to trên mobile */
   .navLinks {
     flex-direction: row;
-    /* Xếp ngang */
     gap: 15px;
     overflow-x: auto;
-    /* Cho phép cuộn ngang */
     white-space: nowrap;
-    /* Không xuống dòng */
     padding-bottom: 5px;
-    /* Chừa chỗ cho thanh cuộn nếu có */
     -webkit-overflow-scrolling: touch;
-    /* Cuộn mượt trên iOS */
     scrollbar-width: none;
-    /* Ẩn thanh cuộn trên Firefox */
   }
 
-  /* Ẩn thanh cuộn trên Chrome/Safari/Edge */
   .navLinks::-webkit-scrollbar {
     display: none;
   }
 
   .navLinks li a {
     font-size: 0.9rem;
-    /* Chữ nhỏ hơn xíu */
     padding: 6px 10px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;

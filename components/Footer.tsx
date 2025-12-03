@@ -31,9 +31,13 @@ export default function Footer() {
               <li><Link href="/giai-tri">Giải trí</Link></li>
               <li><Link href="/ontap">Ôn tập</Link></li>
               <li><Link href="/thitructuyen">Thi trực tuyến</Link></li>
+              <li><Link href="/danh-muc/tin-tuc-su-kien">Tin tức - Sự kiện</Link></li>
+              <li><Link href="/danh-muc/gioi-thieu-viec-lam">Giới thiệu việc làm</Link></li>
             </ul>
             {/* Cột nhỏ 2 */}
             <ul>
+              <li><Link href="/danh-muc/van-ban-phap-quy">Văn bản pháp quy</Link></li>
+              <li><Link href="/danh-muc/tuyen-sinh">Thông báo tuyển sinh</Link></li>
               <li><Link href="/tra-cuu-dia-chi">Tra cứu địa chỉ</Link></li>
               <li><Link href="/thu-vien">Thư viện</Link></li>
               <li><Link href="/tai-lieu">Tài liệu</Link></li>
