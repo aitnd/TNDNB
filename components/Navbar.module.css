@@ -212,8 +212,8 @@
 .mainNav {
   background-color: var(--mau-chinh);
   color: white;
-  padding: 10px 0;
   transition: background 0.3s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .mainContainer {
@@ -223,52 +223,138 @@
 }
 
 .navLinks {
-  list-style: none;
   display: flex;
   flex-direction: column;
-  /* Xếp dọc 2 dòng */
-  gap: 10px;
-  margin: 0;
-  padding: 0;
+  /* Luôn xếp dọc 2 dòng */
   width: 100%;
 }
 
-.navRow {
+/* --- DÒNG 1: MENU CHÍNH (Button Lớn) --- */
+.navRow1 {
   display: flex;
-  gap: 20px;
+  justify-content: center;
   flex-wrap: wrap;
-  align-items: center;
+  /* Cho phép xuống dòng nếu màn hình nhỏ */
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.navLinks li a {
+.navRow1 a {
+  color: var(--mau-chinh) !important;
+  background-color: white;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: 30px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  /* Không ngắt dòng trong nút */
+}
+
+.navRow1 a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  background-color: #FFD700;
+  color: #d32f2f !important;
+  border-color: #FFD700;
+}
+
+/* --- DÒNG 2: DANH MỤC & TIỆN ÍCH (Button Nhỏ hơn) --- */
+.navRow2 {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  /* Cho phép xuống dòng */
+  gap: 30px;
+  align-items: center;
+  padding: 12px 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  margin: 0 -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Nhóm Danh mục */
+.categoryGroup {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.categoryGroup a {
   color: white !important;
   text-decoration: none;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Nền mờ */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s;
+  white-space: nowrap;
 }
 
-.navLinks li a:hover {
-  opacity: 0.9;
+.categoryGroup a:hover {
+  background-color: white;
+  color: var(--mau-chinh) !important;
+  transform: translateY(-2px);
+}
+
+/* Nhóm Tiện ích */
+.utilityGroup {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .hotLink {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 4px 12px;
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  /* Nền gradient vàng cam */
+  color: #d32f2f !important;
+  padding: 6px 14px;
   border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border: none;
+  white-space: nowrap;
+}
+
+.hotLink:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.1);
 }
 
 .hotIcon {
-  color: #FFD700;
+  color: #d32f2f;
+  font-size: 1rem;
 }
 
+/* === MOBILE RESPONSIVE === */
 @media (max-width: 768px) {
   .headerTop {
     padding: 5px 0;
   }
 
-  .brandText {
+  .brandText,
+  .welcomeText {
     display: none;
   }
 
@@ -282,33 +368,56 @@
     gap: 10px;
   }
 
-  .welcomeText {
-    display: none;
-  }
-
   .userBox {
     border-left: none;
     padding-left: 0;
   }
 
-  .navLinks {
-    flex-direction: row;
-    gap: 15px;
+  /* Mobile: Cho phép lướt ngang (Horizontal Scroll) */
+  .navRow1,
+  .navRow2 {
+    flex-wrap: nowrap;
+    /* Không xuống dòng */
+    justify-content: flex-start;
+    /* Căn trái để lướt từ đầu */
     overflow-x: auto;
-    white-space: nowrap;
-    padding-bottom: 5px;
+    /* Cho phép cuộn ngang */
+    padding-left: 5px;
+    padding-right: 5px;
     -webkit-overflow-scrolling: touch;
+    /* Cuộn mượt trên iOS */
     scrollbar-width: none;
+    /* Ẩn thanh cuộn Firefox */
   }
 
-  .navLinks::-webkit-scrollbar {
+  .navRow1::-webkit-scrollbar,
+  .navRow2::-webkit-scrollbar {
     display: none;
+    /* Ẩn thanh cuộn Chrome/Safari */
   }
 
-  .navLinks li a {
-    font-size: 0.9rem;
-    padding: 6px 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
+  .navRow1 a {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    flex-shrink: 0;
+    /* Không bị co lại */
+  }
+
+  .categoryGroup,
+  .utilityGroup {
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .categoryGroup a,
+  .hotLink {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    flex-shrink: 0;
+  }
+
+  .navRow2 {
+    gap: 15px;
+    /* Giảm khoảng cách giữa 2 nhóm trên mobile */
   }
 }
