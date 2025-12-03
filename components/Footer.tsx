@@ -19,22 +19,28 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Cột 2 */}
+        {/* Cột 2: LIÊN KẾT NHANH (Chia 2 cột nhỏ) */}
         <div className={styles.col}>
           <h3>LIÊN KẾT NHANH</h3>
-          <ul>
-            <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
-            <li><Link href="/chuong-trinh-dao-tao">Chương trình đào tạo</Link></li>
-            <li><Link href="/tuyen-dung">Tuyển dụng</Link></li>
-            <li><Link href="/giai-tri">Giải trí</Link></li>
-            <li><Link href="/ontap">Ôn tập</Link></li>
-            <li><Link href="/thitructuyen">Thi trực tuyến</Link></li>
-            <li><Link href="/tra-cuu-dia-chi">Tra cứu địa chỉ</Link></li>
-            <li><Link href="/thu-vien">Thư viện</Link></li>
-            <li><Link href="/tai-lieu">Tài liệu</Link></li>
-            <li><Link href="/hoc-phi">Học phí</Link></li>
-            <li><Link href="/lien-he">Liên hệ</Link></li>
-          </ul>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            {/* Cột nhỏ 1 */}
+            <ul>
+              <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
+              <li><Link href="/chuong-trinh-dao-tao">Chương trình đào tạo</Link></li>
+              <li><Link href="/tuyen-dung">Tuyển dụng</Link></li>
+              <li><Link href="/giai-tri">Giải trí</Link></li>
+              <li><Link href="/ontap">Ôn tập</Link></li>
+              <li><Link href="/thitructuyen">Thi trực tuyến</Link></li>
+            </ul>
+            {/* Cột nhỏ 2 */}
+            <ul>
+              <li><Link href="/tra-cuu-dia-chi">Tra cứu địa chỉ</Link></li>
+              <li><Link href="/thu-vien">Thư viện</Link></li>
+              <li><Link href="/tai-lieu">Tài liệu</Link></li>
+              <li><Link href="/hoc-phi">Học phí</Link></li>
+              <li><Link href="/lien-he">Liên hệ</Link></li>
+            </ul>
+          </div>
         </div>
 
         {/* Cột 3 */}

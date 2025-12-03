@@ -1,7 +1,8 @@
 import { supabase } from '../../../utils/supabaseClient' // (3 dấu ../)
 import Link from 'next/link'
 import Sidebar from '../../../components/Sidebar' // (3 dấu ../)
-import styles from './page.module.css' 
+import PostImage from '../../../components/PostImage' // 💖 Import Component Mới
+import styles from './page.module.css'
 
 // 💖 "THẦN CHÚ" BẮT TẢI LẠI DỮ LIỆU MỚI 💖
 export const revalidate = 0; // ✨ "Thần chú" mới đây ạ
@@ -10,7 +11,7 @@ type Post = {
   id: string;
   created_at: string;
   title: string;
-  image_url: string | null;
+  thumbnail_url: string | null; // 💖 Đổi image_url -> thumbnail_url
   content: string; // 💖 Thêm cột này
 }
 // (Kiểu "dữ liệu" trang)
@@ -33,7 +34,7 @@ async function getCategoryData(categoryId: string): Promise<CategoryPageData> {
   // (Gọi "kho" 2: Lấy các bài viết - 💖 THÊM 'content' VÀO ĐÂY)
   const { data: postsData, error: postsError } = await supabase
     .from('posts')
-    .select('id, created_at, title, image_url, content') // 💖 Đã thêm 'content'
+    .select('id, created_at, title, thumbnail_url, content') // 💖 Đã thêm 'content'
     .eq('category_id', categoryId)
     .order('created_at', { ascending: false });
 
@@ -47,19 +48,55 @@ async function getCategoryData(categoryId: string): Promise<CategoryPageData> {
   }
 }
 
-// 💖 HÀM "THẦN KỲ" TẠO TÓM TẮT (ĐÃ NÂNG CẤP) 💖
+// 💖 HÀM "THẦN KỲ" TẠO TÓM TẮT (ĐÃ NÂNG CẤP V2 - GIẢI MÃ HTML) 💖
 function taoTomTat(htmlContent: string, length: number = 120): string {
   if (!htmlContent) {
     return '';
   }
   // 1. Lột vỏ HTML
   let text = htmlContent.replace(/<[^>]+>/g, '');
-  
-  // 2. ✨ SỬA LỖI: Thay thế mã &nbsp; bằng dấu cách thường ✨
-  text = text.replace(/&nbsp;/g, ' ');
 
-  // 3. ✨ SỬA LỖI: Xóa khoảng trắng thừa ở đầu/cuối sau khi thay thế ✨
-  text = text.trim(); 
+  // 2. ✨ GIẢI MÃ HTML ENTITIES (Thủ công vì không có thư viện) ✨
+  const entities: { [key: string]: string } = {
+    '&nbsp;': ' ',
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&apos;': "'",
+    '&agrave;': 'à', '&Agrave;': 'À',
+    '&aacute;': 'á', '&Aacute;': 'Á',
+    '&Tgrave;': 'T', '&Tacute;': 'T', // Fix lỗi gõ sai nếu có
+    '&acirc;': 'â', '&Acirc;': 'Â',
+    '&atilde;': 'ã', '&Atilde;': 'Ã',
+    '&egrave;': 'è', '&Egrave;': 'È',
+    '&eacute;': 'é', '&Eacute;': 'É',
+    '&ecirc;': 'ê', '&Ecirc;': 'Ê',
+    '&igrave;': 'ì', '&Igrave;': 'Ì',
+    '&iacute;': 'í', '&Iacute;': 'Í',
+    '&ograve;': 'ò', '&Ograve;': 'Ò',
+    '&oacute;': 'ó', '&Oacute;': 'Ó',
+    '&ocirc;': 'ô', '&Ocirc;': 'Ô',
+    '&otilde;': 'õ', '&Otilde;': 'Õ',
+    '&ugrave;': 'ù', '&Ugrave;': 'Ù',
+    '&uacute;': 'ú', '&Uacute;': 'Ú',
+    '&ygrave;': 'ỳ', '&Ygrave;': 'Ỳ',
+    '&yacute;': 'ý', '&Yacute;': 'Ý',
+    '&yuml;': 'ÿ', '&Yuml;': 'Ÿ',
+    '&ordf;': 'ª', '&ordm;': 'º',
+    '&ndash;': '-', '&mdash;': '—',
+    '&lsquo;': '‘', '&rsquo;': '’',
+    '&sbquo;': '‚', '&ldquo;': '“',
+    '&rdquo;': '”', '&bdquo;': '„',
+    '&dagger;': '†', '&Dagger;': '‡',
+    '&permil;': '‰', '&lsaquo;': '‹',
+    '&rsaquo;': '›', '&euro;': '€'
+  };
+
+  text = text.replace(/&[a-zA-Z]+;/g, (match) => entities[match] || match);
+
+  // 3. Xóa khoảng trắng thừa
+  text = text.trim().replace(/\s+/g, ' ');
 
   // 4. Cắt ngắn
   if (text.length <= length) {
@@ -70,7 +107,7 @@ function taoTomTat(htmlContent: string, length: number = 120): string {
 
 // 3. TRANG DANH MỤC (SERVER COMPONENT)
 export default async function CategoryPage({ params }: { params: { categoryId: string } }) {
-  
+
   // 4. "Chờ" máy chủ lấy dữ liệu
   const { categoryName, posts } = await getCategoryData(params.categoryId)
 
@@ -81,19 +118,21 @@ export default async function CategoryPage({ params }: { params: { categoryId: s
 
         {/* ===== CỘT TRÁI (NỘI DUNG CHÍNH) ===== */}
         <main className={styles.mainContent}>
-          
+
           {/* Box Tin Tức (ĐỘNG) */}
           <section className={styles.widgetBox}>
             {/* (Tiêu đề "động" theo tên Danh mục) */}
             <h2 className={styles.widgetTitle}>{categoryName}</h2>
-            
+
             <div className={styles.newsList}>
               {posts.length > 0 ? (
                 posts.map((post) => (
                   <div key={post.id} className={styles.newsItemLarge}>
-                    <img
-                      src={post.image_url || 'https://via.placeholder.com/150x100'}
+                    {/* 💖 DÙNG COMPONENT MỚI THAY VÌ IMG THƯỜNG 💖 */}
+                    <PostImage
+                      src={post.thumbnail_url || '/assets/img/logo.png'}
                       alt={post.title}
+                      style={{ objectFit: 'cover' }}
                     />
                     <div>
                       <h3>
@@ -106,7 +145,7 @@ export default async function CategoryPage({ params }: { params: { categoryId: s
                       </p>
                       {/* ✨ Dòng này sẽ tự động cập nhật theo hàm mới ✨ */}
                       <p className={styles.excerpt}>
-                        {taoTomTat(post.content, 120)}
+                        {taoTomTat(post.content, 150)}
                       </p>
                     </div>
                   </div>
