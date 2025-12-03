@@ -610,6 +610,13 @@ export default function ExamRoomPage() {
   return (
     <div className={styles.errorContainer}>
       <h1 className={styles.errorTitle}>Trạng thái phòng thi không xác định.</h1>
+      <div style={{ textAlign: 'left', marginTop: '20px', background: '#f3f4f6', padding: '15px', borderRadius: '8px', fontFamily: 'monospace' }}>
+        <p><strong>Debug Info:</strong></p>
+        <p>Room Status: {room?.status}</p>
+        <p>Questions Loaded: {questions.length}</p>
+        <p>Participant Status: {participantStatus}</p>
+        <p>Has Exam Data: {room?.exam_data ? 'Yes' : 'No'}</p>
+      </div>
     </div>
   )
 }
