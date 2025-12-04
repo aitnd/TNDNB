@@ -3,31 +3,33 @@
 .sliderContainer {
   width: 100%;
   border-radius: 8px;
-  overflow: hidden; /* (Rất quan trọng) */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  /* (Rất quan trọng) */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: #f3f4f6;
   border: 1px solid #ddd;
 }
 
 .mySwiper {
   width: 100%;
-  height: 400px; /* (Anh chỉnh độ cao ở đây nha) */
+  height: 400px;
+  /* (Anh chỉnh độ cao ở đây nha) */
 }
 
 .slideBackground {
   width: 100%;
   height: 100%;
-  
+
   /* 💖 1. SỬA LỖI (Quay về 'contain') 💖 */
-  background-size: contain; 
+  background-size: contain;
   background-position: center;
-  
+
   /* 💖 2. SỬA LỖI (Đổi nền đen thành trắng) 💖 */
-  background-color: #ffffff; 
-  
+  background-color: #ffffff;
+
   /* 💖 3. THÊM (Để ảnh không bị lặp) 💖 */
-  background-repeat: no-repeat; 
-  
+  background-repeat: no-repeat;
+
   transition: transform 0.6s ease;
 }
 
@@ -46,12 +48,14 @@
   left: 0;
   width: 100%;
   height: 100%;
-  
+
   /* (Vẫn giữ lớp mờ DƯỚI để đọc chữ) */
-  background: linear-gradient(to top, 
-    rgba(0,0,0,0.8) 0%,  /* (Đen 80% ở dưới cùng) */
-    rgba(0,0,0,0) 60%   /* (Trong suốt từ 60% trở lên) */
-  );
+  background: linear-gradient(to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      /* (Đen 80% ở dưới cùng) */
+      rgba(0, 0, 0, 0) 60%
+      /* (Trong suốt từ 60% trở lên) */
+    );
 }
 
 .slideContent {
@@ -61,18 +65,20 @@
   padding: 2rem;
   z-index: 10;
   color: white;
-  width: 100%; 
-  box-sizing: border-box; 
+  width: 100%;
+  box-sizing: border-box;
 }
+
 .slideContent h2 {
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .slideContent a:hover {
   text-decoration: none;
 }
@@ -84,6 +90,7 @@
   opacity: 0.7;
   transition: opacity 0.3s;
 }
+
 .mySwiper :global(.swiper-button-prev):hover,
 .mySwiper :global(.swiper-button-next):hover {
   opacity: 1;
@@ -95,6 +102,33 @@
   width: 10px;
   height: 10px;
 }
+
 .mySwiper :global(.swiper-pagination-bullet-active) {
   background-color: #ffffff;
+}
+
+/* === RESPONSIVE MOBILE === */
+@media (max-width: 768px) {
+  .mySwiper {
+    height: 220px;
+    /* Giảm chiều cao trên mobile */
+  }
+
+  .slideContent {
+    padding: 1rem;
+  }
+
+  .slideContent h2 {
+    font-size: 1.1rem;
+    /* Chữ nhỏ lại */
+    white-space: normal;
+    /* Cho phép xuống dòng */
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    /* Tối đa 2 dòng */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }

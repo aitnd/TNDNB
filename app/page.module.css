@@ -3,7 +3,8 @@
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem 1rem;
-    overflow-x: hidden; /* Chống tràn ngang toàn trang */
+    overflow-x: hidden;
+    /* Chống tràn ngang toàn trang */
 }
 
 .featuredSection {
@@ -13,7 +14,8 @@
 /* === 2. BỐ CỤC GRID (DÀNH CHO PC) === */
 .layoutGrid {
     display: grid;
-    grid-template-columns: 1fr 340px; /* Cột trái tự do - Cột phải 340px */
+    grid-template-columns: 1fr 340px;
+    /* Cột trái tự do - Cột phải 340px */
     gap: 2.5rem;
     align-items: start;
 }
@@ -28,6 +30,7 @@
     padding-bottom: 0.5rem;
     position: relative;
 }
+
 .sectionTitle::after {
     content: '';
     position: absolute;
@@ -53,15 +56,18 @@
     border-radius: 8px;
     padding: 1.5rem;
     transition: box-shadow 0.3s ease;
-    overflow: hidden; /* Chống tràn nội dung ra khỏi thẻ */
+    overflow: hidden;
+    /* Chống tràn nội dung ra khỏi thẻ */
 }
+
 .newsItemLarge:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .imageWrapper {
-    flex-shrink: 0; /* Ảnh không được co lại */
-    width: 280px; 
+    flex-shrink: 0;
+    /* Ảnh không được co lại */
+    width: 280px;
     height: 180px;
     position: relative;
     overflow: hidden;
@@ -74,6 +80,7 @@
     object-fit: cover;
     transition: transform 0.5s ease;
 }
+
 .newsItemLarge:hover .postThumb {
     transform: scale(1.05);
 }
@@ -84,7 +91,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-width: 0; /* 💖 Cực kỳ quan trọng để text wrap trong Flexbox 💖 */
+    min-width: 0;
+    /* 💖 Cực kỳ quan trọng để text wrap trong Flexbox 💖 */
 }
 
 .postTitle {
@@ -98,10 +106,13 @@
     /* Cắt dòng thông minh 2 dòng */
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    word-break: break-word; /* Ngắt từ dài nếu cần */
+    word-break: break-word;
+    /* Ngắt từ dài nếu cần */
 }
+
 .postTitle:hover {
     color: #004a99;
 }
@@ -125,6 +136,7 @@
     /* Cắt dòng thông minh 3 dòng */
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     word-break: break-word;
@@ -135,9 +147,11 @@
     font-weight: 600;
     color: #004a99;
     text-decoration: none;
-    margin-top: auto; /* Đẩy xuống đáy */
+    margin-top: auto;
+    /* Đẩy xuống đáy */
     display: inline-block;
 }
+
 .readMore:hover {
     text-decoration: underline;
 }
@@ -145,7 +159,7 @@
 
 /* === 4. RESPONSIVE (MÁY TÍNH BẢNG & MÀN HÌNH NHỎ) === */
 @media (max-width: 992px) {
-    
+
     /* Chuyển Grid sang Flex cột dọc */
     .layoutGrid {
         display: flex;
@@ -174,74 +188,93 @@
 
 /* === 5. RESPONSIVE (ĐIỆN THOẠI - MOBILE) - ĐÃ FIX LỖI HIỂN THỊ === */
 @media (max-width: 768px) {
-    .container { 
-        padding: 0.75rem; 
-    }
-    
-    .sectionTitle {
-        font-size: 1.4rem;
-        margin-bottom: 1rem;
+    .container {
+        padding: 0.5rem;
     }
 
-    /* Tin tức: Dùng Block để an toàn tuyệt đối */
-    .newsItemLarge { 
-        display: block; 
-        padding: 1rem; 
-        height: auto;
-        background: #fff; /* Đảm bảo nền trắng */
-    }
-    
-    /* Ảnh */
-    .imageWrapper { 
-        width: 100%; 
-        height: 180px; 
-        margin-bottom: 0.8rem; 
-        margin-right: 0;
-        border-radius: 6px; /* Bo góc nhẹ */
-    }
-    
-    /* Phần chữ */
-    .postContent {
-        display: block; 
-        width: 100%;
-    }
-    
-    .postTitle { 
+    .sectionTitle {
         font-size: 1.2rem;
-        line-height: 1.4; /* Giãn dòng ra chút cho dễ đọc */
-        margin-bottom: 0.5rem;
-        display: block;
-    }
-    
-    .postDate {
-        margin-bottom: 0.5rem;
-        font-size: 0.85rem;
-        /* 💖 Căn icon lên trên cùng nếu chữ bị xuống dòng 💖 */
-        align-items: flex-start; 
+        margin-bottom: 0.75rem;
+        padding-left: 0.5rem;
+        border-left: 4px solid #004a99;
+        border-bottom: none;
         line-height: 1.2;
     }
-    .postDate i {
-        margin-top: 2px; /* Chỉnh icon xuống xíu cho khớp chữ */
+
+    .sectionTitle::after {
+        display: none;
     }
-    
-    .postExcerpt {
+
+    .newsList {
+        gap: 0.75rem;
+    }
+
+    /* Tin tức: Chuyển sang Flex ngang */
+    .newsItemLarge {
+        display: flex;
+        flex-direction: row;
+        padding: 0.75rem;
+        gap: 0.75rem;
+        align-items: flex-start;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Ảnh nhỏ bên trái */
+    .imageWrapper {
+        width: 110px;
+        height: 80px;
+        flex-shrink: 0;
+        margin-bottom: 0;
+        margin-right: 0;
+        border-radius: 6px;
+    }
+
+    /* Phần chữ bên phải */
+    .postContent {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-width: 0;
+    }
+
+    .postTitle {
         font-size: 0.95rem;
-        line-height: 1.5;
-        margin-bottom: 1rem; /* Cách nút xem thêm ra xa chút */
-        color: #666;
-        /* Vẫn giữ cắt dòng 3 dòng */
+        line-height: 1.3;
+        margin-bottom: 0.25rem;
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    
-    /* 💖 Nút Xem thêm: Cho ra dòng riêng 💖 */
+
+    .postDate {
+        margin-bottom: 0.25rem;
+        font-size: 0.75rem;
+        color: #999;
+    }
+
+    .postExcerpt {
+        font-size: 0.8rem;
+        line-height: 1.4;
+        margin-bottom: 0.25rem;
+        color: #666;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        /* Chỉ hiện 2 dòng mô tả */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
     .readMore {
-        display: block; /* Ra dòng riêng */
-        margin-top: 0.5rem;
-        text-align: right; /* Căn phải cho đẹp (hoặc left tuỳ anh) */
-        padding: 0.5rem 0; /* Tăng vùng bấm */
-        font-size: 0.9rem;
+        display: block;
+        text-align: right;
+        font-size: 0.8rem;
+        margin-top: 0;
+        padding: 0;
     }
 }

@@ -9,6 +9,7 @@ import { ThemeProvider } from '../context/ThemeContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import MusicPlayer from '../components/MusicPlayer'
+import MobileBottomNav from '../components/MobileBottomNav'
 
 // Cấu hình font Rubik (Hỗ trợ tiếng Việt đầy đủ)
 const rubik = Rubik({
@@ -76,12 +77,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Navbar />{/* Force Rebuild Layout */}
             {/* ... (Phần dưới giữ nguyên) ... */}
 
-            <main style={{ minHeight: '80vh', position: 'relative' }}>
+            <main style={{ minHeight: '80vh', position: 'relative', paddingBottom: '64px' }}>
               {children}
             </main>
 
             {/* Gắn nhạc nền Noel */}
             <MusicPlayer />
+            <MobileBottomNav />
 
             <Footer />
 
