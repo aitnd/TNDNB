@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 // Định nghĩa 3 loại theme
-export type ThemeMode = 'light' | 'dark' | 'noel'
+export type ThemeMode = 'light' | 'dark' | 'modern' | 'classic' | 'sunrise' | 'tri-an' | 'noel'
 
 interface ThemeContextType {
   theme: ThemeMode
@@ -19,7 +19,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as ThemeMode
-    
+
     if (savedTheme) {
       setThemeState(savedTheme)
       document.documentElement.setAttribute('data-theme', savedTheme)
@@ -38,19 +38,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.setAttribute('data-theme', newTheme)
   }
 
-  // ✅ HÀM CHUYỂN ĐỔI VÒNG TRÒN (Sáng -> Tối -> Noel)
+  // ✅ HÀM CHUYỂN ĐỔI VÒNG TRÒN (Sáng -> Tối -> Noel -> Modern -> Classic -> Sunrise -> Tri Ân)
   const toggleTheme = () => {
-    let nextTheme: ThemeMode = 'light'
-    
-    if (theme === 'light') {
-      nextTheme = 'dark'
-    } else if (theme === 'dark') {
-      nextTheme = 'noel'
-    } else {
-      nextTheme = 'light' // Từ Noel quay về Sáng
-    }
-
-    setTheme(nextTheme)
+    const themes: ThemeMode[] = ['light', 'dark', 'noel', 'modern', 'classic', 'sunrise', 'tri-an']
+    const currentIndex = themes.indexOf(theme)
+    const nextIndex = (currentIndex + 1) % themes.length
+    setTheme(themes[nextIndex])
   }
 
   return (

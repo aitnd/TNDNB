@@ -128,11 +128,218 @@ a:hover {
     transform: rotate(10deg);
 }
 
-@keyframes swing {
-    0% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-    100% { transform: rotate(-5deg); }
+/* === THEME CỔ ĐIỂN (Classic) === */
+[data-theme='classic'] {
+    --font-sans: 'Playfair Display', serif;
+
+    --background: 39 52% 95%; /* beige-50 */
+    --foreground: 39 33% 20%; /* dark brown */
+    
+    --card: 40 71% 98%; /* lighter beige */
+    --card-foreground: 39 33% 20%;
+    
+    --popover: 39 52% 95%;
+    --popover-foreground: 39 33% 20%;
+    
+    --primary: 221 39% 28%; /* navy */
+    --primary-foreground: 39 52% 95%;
+    
+    --secondary: 39 33% 85%;
+    --secondary-foreground: 39 33% 20%;
+
+    --muted: 39 33% 90%;
+    --muted-foreground: 39 33% 40%;
+    
+    --accent: 39 33% 85%;
+    --accent-foreground: 39 33% 20%;
+    
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    
+    --border: 39 33% 80%;
+    --input: 39 33% 80%;
+    --ring: 221 39% 28%;
+
+    --gradient-from: #fdf6e3;
+    --gradient-to: #f0e6d2;
+    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+
+    /* Colors for old CSS vars compatibility */
+    --bg-body: #fdf6e3;
+    --bg-header: #fdf6e3;
+    --text-header: #5c4033;
+    --text-main: #4a3728;
+    --text-link: #1d3557;
+    --bg-footer: #e6dfd1;
+    --text-footer: #5c4033;
+    --mau-chinh: #1d3557;
+    --mau-nen-phu: #e6dfd1;
+    --border-color: #d4c5b0;
 }
+
+/* === THEME HIỆN ĐẠI (Modern) === */
+[data-theme='modern'] {
+    --font-sans: 'Be Vietnam Pro', sans-serif;
+    
+    --background: 222 84% 9.8%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 84% 12.0%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 84% 9.8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 243 75% 58%;
+    --primary-foreground: 210 40% 98%;
+    
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 213 31% 91%;
+    
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --success: 142 76% 36%;
+    --success-foreground: 142 100% 96%;
+
+    --border: 217 33% 27%;
+    --input: 217 33% 27%;
+    --ring: 243 75% 58%;
+    
+    --radius: 0.75rem;
+
+    --gradient-from: #111827;
+    --gradient-to: #1f2937;
+    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+
+    /* Colors for old CSS vars compatibility */
+    --bg-body: #0f172a;
+    --bg-header: #1e293b;
+    --text-header: #f8fafc;
+    --text-main: #cbd5e1;
+    --text-link: #818cf8;
+    --bg-footer: #020617;
+    --text-footer: #94a3b8;
+    --mau-chinh: #6366f1;
+    --mau-nen-phu: #1e293b;
+    --border-color: #334155;
+}
+
+/* === THEME BÌNH MINH (Sunrise) === */
+[data-theme='sunrise'] {
+    --font-sans: 'Nunito', sans-serif;
+
+    --background: 220 13% 11%;
+    --foreground: 210 20% 98%;
+
+    --card: 215 19% 15%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 220 13% 11%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 13 96% 56%; /* orange */
+    --primary-foreground: 13 100% 96%;
+
+    --secondary: 215 19% 25%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 215 19% 25%;
+    --muted-foreground: 210 20% 70%;
+    
+    --accent: 215 19% 25%;
+    --accent-foreground: 210 20% 98%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    
+    --border: 215 19% 30%;
+    --input: 215 19% 30%;
+    --ring: 13 96% 56%;
+
+    --gradient-from: #0d1b2a;
+    --gradient-to: #1b263b;
+    --gradient-body: linear-gradient(160deg, #FF8C42 0%, #FF3C83 35%, #6C47FF 70%, #0396FF 100%);
+
+    /* Colors for old CSS vars compatibility */
+    --bg-body: #1a1a2e;
+    --bg-header: #16213e;
+    --text-header: #fff;
+    --text-main: #eaeaea;
+    --text-link: #ff2a6d;
+    --bg-footer: #0f3460;
+    --text-footer: #ccc;
+    --mau-chinh: #ff2a6d;
+    --mau-nen-phu: #16213e;
+    --border-color: #0f3460;
+}
+
+/* === THEME TRI ÂN (Tri-an) === */
+[data-theme='tri-an'] {
+    --font-sans: 'Nunito', sans-serif;
+    
+    --background: 160 34% 26%; /* chalkboard green */
+    --foreground: 150 8% 95%; /* chalk white */
+
+    --card: 160 34% 30%;
+    --card-foreground: 150 8% 95%;
+
+    --popover: 160 34% 22%;
+    --popover-foreground: 150 8% 95%;
+
+    --primary: 0 63% 67%; /* chalk red */
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 160 34% 35%;
+    --secondary-foreground: 150 8% 95%;
+
+    --muted: 160 34% 35%;
+    --muted-foreground: 150 8% 80%;
+    
+    --accent: 160 34% 40%;
+    --accent-foreground: 150 8% 98%;
+
+    --destructive: 0 50% 55%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --success: 130 50% 60%;
+    --success-foreground: 130 100% 96%;
+
+    --border: 150 8% 85%; /* chalk border */
+    --input: 160 34% 28%;
+    --ring: 0 63% 67%;
+    
+    --radius: 0.75rem;
+
+    --gradient-from: hsl(160 34% 22%);
+    --gradient-to: hsl(160 34% 26%);
+    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+
+    /* Colors for old CSS vars compatibility */
+    --bg-body: #1e3d2f;
+    --bg-header: #142b22;
+    --text-header: #fff;
+    --text-main: #eaeaea;
+    --text-link: #ff9f1c;
+    --bg-footer: #11241c;
+    --text-footer: #ccc;
+    --mau-chinh: #ff9f1c;
+    --mau-nen-phu: #2d5a45;
+    --border-color: #4b7a63;
+}
+
 
 /* === PHẦN 5: HIỆU ỨNG TUYẾT & QUÀ RƠI === */
 .snowflakes {

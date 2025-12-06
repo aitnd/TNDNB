@@ -83,7 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {/* Gắn nhạc nền Noel */}
             <MusicPlayer />
-            <MobileBottomNav />
+            {/* MobileBottomNav removed */}
 
             <Footer />
 

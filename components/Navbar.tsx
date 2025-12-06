@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import ThemeSwitcher from './ThemeSwitcher'
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
@@ -73,19 +74,6 @@ export default function Navbar() {
           {/* 2. KHU VỰC BÊN PHẢI (THEME & USER) */}
           <div className={styles.rightArea}>
 
-            {/* Nút Đổi Theme */}
-            <div style={{ position: 'relative' }}>
-              <button
-                className={styles.themeBtn}
-                onClick={toggleTheme}
-                title="Đổi giao diện"
-              >
-                {theme === 'light' && <><FaSun color="orange" /> Sáng</>}
-                {theme === 'dark' && <><FaMoon color="yellow" /> Tối</>}
-                {theme === 'noel' && <><FaSnowflake color="white" /> Noel</>}
-              </button>
-            </div>
-
             {/* User Menu (GOM GỌN) */}
             {user ? (
               <div className={styles.userBox}>
@@ -104,11 +92,19 @@ export default function Navbar() {
                     <FaSignOutAlt /> Thoát
                   </button>
                 </div>
+
+                {/* Dòng 3: Theme Switcher (Mới chuyển xuống đây) */}
+                <div className="mt-2">
+                  <ThemeSwitcher />
+                </div>
               </div>
             ) : (
-              <Link href="/login" className={styles.loginBtn}>
-                Đăng nhập
-              </Link>
+              <div className="flex flex-col items-end gap-2">
+                <Link href="/login" className={styles.loginBtn}>
+                  Đăng nhập
+                </Link>
+                <ThemeSwitcher />
+              </div>
             )}
 
           </div>
