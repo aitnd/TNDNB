@@ -9,7 +9,7 @@ import { auth } from '../utils/firebaseClient'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 // Icon
-import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaChevronDown, FaSun, FaMoon, FaSnowflake, FaStar, FaUserCog, FaSignOutAlt } from 'react-icons/fa'
+import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaChevronDown, FaSun, FaMoon, FaSnowflake, FaStar, FaUserCog, FaSignOutAlt, FaCloudDownloadAlt } from 'react-icons/fa'
 
 import styles from './Navbar.module.css'
 
@@ -147,8 +147,11 @@ export default function Navbar() {
                 <Link href="/ontap" className={styles.hotLink}>
                   <FaBookOpen className={styles.hotIcon} /> Ôn tập
                 </Link>
-                <Link href="/thitructuyen" className={styles.hotLink}>
+                <Link href="/thi-online" className={styles.hotLink}>
                   <FaLaptop className={styles.hotIcon} /> Thi Online
+                </Link>
+                <Link href="/tai-app" className={styles.hotLink}>
+                  <FaCloudDownloadAlt className={styles.hotIcon} /> Tải App
                 </Link>
                 <Link href="/tra-cuu-dia-chi" className={styles.hotLink}>
                   <FaSearchLocation className={styles.hotIcon} /> Tra cứu ĐC

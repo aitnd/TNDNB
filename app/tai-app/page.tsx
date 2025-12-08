@@ -23,7 +23,7 @@ export default function DownloadAppPage() {
                     {/* Main Download Button */}
                     <div className="text-center">
                         <a
-                            href="/download/ontap.apk"
+                            href="/download/onthi.apk"
                             download
                             className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
                         >
