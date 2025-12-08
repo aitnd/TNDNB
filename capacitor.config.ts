@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.ontap.tnd',
-  appName: 'Ôn Tập TND',
+  appId: 'com.onthi.duongthuy',
+  appName: 'ÔN thi đường thủy',
   webDir: 'public',
   server: {
     url: 'http://daotaothuyenvien.com',

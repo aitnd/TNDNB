@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Ôn Tập TND</string>
-    <string name="title_activity_main">Ôn Tập TND</string>
-    <string name="package_name">com.ontap.tnd</string>
-    <string name="custom_url_scheme">com.ontap.tnd</string>
+    <string name="app_name">ÔN thi đường thủy</string>
+    <string name="title_activity_main">ÔN thi đường thủy</string>
+    <string name="package_name">com.onthi.duongthuy</string>
+    <string name="custom_url_scheme">com.onthi.duongthuy</string>
 </resources>
