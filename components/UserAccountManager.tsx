@@ -47,7 +47,7 @@ interface EditFormData {
 
 // (Danh sách vai trò - Sắp xếp theo cấp bậc)
 const allRoles = [
-    { id: 'admin', name: 'Quản trị viên (Admin)' },
+    { id: 'admin', name: 'Quản trị viên' },
     { id: 'lanh_dao', name: 'Lãnh đạo' },
     { id: 'quan_ly', name: 'Quản lý' },
     { id: 'giao_vien', name: 'Giáo viên' },
@@ -330,7 +330,7 @@ export default function UserAccountManager() {
                             <thead>
                                 <tr>
                                     <th>Họ và Tên</th>
-                                    <th>Lớp / Khóa</th>
+                                    <th>Lớp học (Khóa/Tên)</th>
                                     <th>Email / SĐT</th>
                                     <th>Ngày sinh</th>
                                     <th>Vai trò</th>
@@ -427,8 +427,8 @@ export default function UserAccountManager() {
                                     <div><strong style={{ color: '#000' }}>Email:</strong> <div style={{ color: '#000' }}>{editingUser.email}</div></div>
                                     <div><strong style={{ color: '#000' }}>SĐT:</strong> <div style={{ color: '#000' }}>{editingUser.phoneNumber || '---'}</div></div>
                                     <div><strong style={{ color: '#000' }}>Ngày sinh:</strong> <div style={{ color: '#000' }}>{editingUser.birthDate || '---'}</div></div>
-                                    <div><strong style={{ color: '#000' }}>Lớp:</strong> <div style={{ color: '#000' }}>{editingUser.class || '---'}</div></div>
-                                    <div><strong style={{ color: '#000' }}>Khóa học:</strong> <div style={{ color: '#000' }}>{editingUser.courseName || '---'}</div></div>
+                                    <div><strong style={{ color: '#000' }}>Lớp học (tự điền):</strong> <div style={{ color: '#000' }}>{editingUser.class || '---'}</div></div>
+                                    <div><strong style={{ color: '#000' }}>Lớp học (Khóa học):</strong> <div style={{ color: '#000' }}>{editingUser.courseName || '---'}</div></div>
                                     <div><strong style={{ color: '#000' }}>Vai trò:</strong> <div style={{ color: '#000' }}>{dichTenVaiTro(editingUser.role)}</div></div>
                                     <div><strong style={{ color: '#000' }}>Ngày tạo:</strong> <div style={{ color: '#000' }}>{editingUser.createdAt ? new Date(editingUser.createdAt.seconds * 1000).toLocaleDateString('vi-VN') : '---'}</div></div>
                                 </div>
@@ -467,11 +467,11 @@ export default function UserAccountManager() {
                                         <input type="date" name="birthDate" value={formData.birthDate} onChange={handleFormChange} className={styles.input} />
                                     </div>
                                     <div className={styles.formGroup}>
-                                        <label>Lớp học</label>
-                                        <input type="text" name="class" value={formData.class} onChange={handleFormChange} className={styles.input} placeholder="VD: 12A1" />
+                                        <label>Lớp học (tự điền)</label>
+                                        <input type="text" name="class" value={formData.class} onChange={handleFormChange} className={styles.input} placeholder="VD: Thợ máy K2" />
                                     </div>
                                     <div className={styles.formGroup}>
-                                        <label>Khóa học</label>
+                                        <label>Lớp học (Khóa học)</label>
                                         <select name="courseId" value={formData.courseId} onChange={handleFormChange} className={styles.input}>
                                             <option value="">-- Chọn khóa học --</option>
                                             {courses.map(c => (

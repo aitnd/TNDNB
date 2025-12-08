@@ -12,14 +12,14 @@ import PostFooterActions from '../../../components/PostFooterActions'
 
 
 // "THẦN CHÚ" BẮT TẢI LẠI DỮ LIỆU MỚI
-export const revalidate = 0; 
+export const revalidate = 0;
 
 // (Kiểu 'Attachment' - Giữ nguyên)
 type Attachment = {
-  file_name: string; 
-  file_url: string;  
-  file_size: number; 
-  file_type: string; 
+  file_name: string;
+  file_url: string;
+  file_size: number;
+  file_type: string;
 };
 
 // (Kiểu 'Post' - Giữ nguyên)
@@ -27,13 +27,13 @@ type Post = {
   id: string;
   created_at: string;
   title: string;
-  content: string; 
+  content: string;
   image_url: string | null;
-  thumbnail_url: string | null; 
+  thumbnail_url: string | null;
   category_id: string;
   is_featured: boolean;
-  author_id: string; 
-  attachments: Attachment[] | null; 
+  author_id: string;
+  attachments: Attachment[] | null;
 }
 
 // (Kiểu 'PostPageData' - Giữ nguyên)
@@ -44,14 +44,14 @@ type PostPageData = {
 
 // (Hàm lấy dữ liệu - Giữ nguyên)
 async function getPostDetails(postId: string): Promise<PostPageData | null> {
-  
+
   // (Lấy Bài viết từ Supabase)
   console.log(`[Server] Lấy bài viết ID: ${postId} từ Supabase...`);
   const { data: postData, error: postError } = await supabase
     .from('posts')
-    .select('*') 
-    .eq('id', postId) 
-    .single() 
+    .select('*')
+    .eq('id', postId)
+    .single()
 
   if (postError || !postData) {
     console.error('Lỗi Supabase (lấy post):', postError);
@@ -59,22 +59,22 @@ async function getPostDetails(postId: string): Promise<PostPageData | null> {
   }
 
   let authorName: string | null = null;
-  
+
   // (Lấy Tên Tác giả từ Firestore)
   if (postData.author_id) {
     try {
       console.log(`[Server] Lấy tác giả ID: ${postData.author_id} từ Firestore...`);
       const userDocRef = adminDb.collection('users').doc(postData.author_id);
       const userDoc = await userDocRef.get();
-      
-      if (userDoc.exists) { 
+
+      if (userDoc.exists) {
         authorName = userDoc.data()?.fullName || 'Tác giả';
       } else {
         authorName = 'Tác giả không xác định';
       }
     } catch (firestoreError) {
       console.error('Lỗi Firestore (lấy user):', firestoreError);
-      authorName = 'Lỗi khi tải tác giả'; 
+      authorName = 'Lỗi khi tải tác giả';
     }
   }
 
@@ -127,7 +127,7 @@ function getFileIcon(fileType: string) {
 
 // (TRANG ĐỌC BÀI VIẾT - ĐÃ SỬA)
 export default async function PostPage({ params }: { params: { postId: string } }) {
-  
+
   const data = await getPostDetails(params.postId)
 
   if (!data) {
@@ -135,7 +135,7 @@ export default async function PostPage({ params }: { params: { postId: string } 
       <div className={styles.errorContainer}>
         <h1 className={styles.errorTitle}>Lỗi 404</h1>
         <p className={styles.errorMessage}>Không tìm thấy bài viết này.</p>
-        <div className={styles.backButtonContainer} style={{borderTop: 'none', marginTop: '1.5rem'}}>
+        <div className={styles.backButtonContainer} style={{ borderTop: 'none', marginTop: '1.5rem' }}>
           <Link href="/" className={styles.backButton}>
             Quay về Trang chủ
           </Link>
@@ -152,7 +152,7 @@ export default async function PostPage({ params }: { params: { postId: string } 
   return (
     <>
       <div className={styles.container}>
-        
+
         <h1 className={styles.title}>
           {post.title}
         </h1>
@@ -175,7 +175,7 @@ export default async function PostPage({ params }: { params: { postId: string } 
           className="post-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
-        
+
         {/* (KHU VỰC TỆP ĐÍNH KÈM - Giữ nguyên) */}
         {post.attachments && post.attachments.length > 0 && (
           <section className={styles.attachmentSection}>
@@ -183,28 +183,28 @@ export default async function PostPage({ params }: { params: { postId: string } 
             <ul className={styles.attachmentList}>
               {post.attachments.map((file, index) => (
                 <li key={index}>
-                  
+
                   {/* (Nếu là PDF -> Hiện khung xem) */}
                   {file.file_type === 'application/pdf' ? (
                     <div className={styles.pdfViewerContainer}>
                       <h3 className={styles.pdfViewerTitle}>{file.file_name}</h3>
-                      <iframe 
-                        src={file.file_url} 
+                      <iframe
+                        src={file.file_url}
                         className={styles.pdfViewer}
                         title={file.file_name}
                       >
-                        Trình duyệt của bạn không hỗ trợ xem PDF. 
+                        Trình duyệt của bạn không hỗ trợ xem PDF.
                         <a href={file.file_url} download={file.file_name} rel="noopener noreferrer">
                           Tải tệp về
                         </a>
                       </iframe>
                     </div>
                   ) : (
-                    
+
                     /* (Nếu là file khác -> Hiện link tải) */
-                    <a 
-                      href={file.file_url} 
-                      download={file.file_name} 
+                    <a
+                      href={file.file_url}
+                      download={file.file_name}
                       className={styles.downloadLink}
                       rel="noopener noreferrer"
                     >
@@ -215,7 +215,7 @@ export default async function PostPage({ params }: { params: { postId: string } 
                           ({formatFileSize(file.file_size)})
                         </span>
                       </div>
-                      <FaDownload style={{marginLeft: 'auto', color: '#555'}} />
+                      <FaDownload style={{ marginLeft: 'auto', color: '#555' }} />
                     </a>
                   )}
                 </li>
@@ -231,27 +231,27 @@ export default async function PostPage({ params }: { params: { postId: string } 
             Đăng bởi: {authorName}
           </p>
         )}
-        
+
         {/* 💖 1. KHU VỰC "BÀI VIẾT KHÁC" (ĐÃ "PHẪU THUẬT" LẠI LINK) 💖 */}
         {relatedPosts.length > 0 && (
           <section className={styles.relatedSection}>
             <h2 className={styles.relatedTitle}>Bài viết khác</h2>
             <div className={styles.relatedGrid}>
               {relatedPosts.map((relatedPost) => (
-                
+
                 // (Giờ cái Card không phải là link nữa)
                 <div key={relatedPost.id} className={styles.relatedCard}>
-                  
+
                   {/* (Link 1: Bọc cái ảnh) */}
                   <Link href={`/bai-viet/${relatedPost.id}`}>
-                    <img 
+                    <img
                       src={relatedPost.thumbnail_url || 'https://via.placeholder.com/300x150?text=TND+Ninh+Binh'}
                       alt={relatedPost.title}
                       className={styles.relatedImage}
                       loading="lazy"
                     />
                   </Link>
-                  
+
                   {/* (Phần thông tin) */}
                   <div className={styles.relatedInfo}>
                     {/* (Link 2: Bọc cái tiêu đề H3) */}
@@ -269,15 +269,15 @@ export default async function PostPage({ params }: { params: { postId: string } 
             </div>
           </section>
         )}
-        
+
         {/* (Nút Bấm Cuối bài - Giữ nguyên) */}
         <PostFooterActions />
-      
+
       </div>
 
       {/* (Box Bình luận Facebook - Giữ nguyên) */}
       <FacebookComments />
-    
-    </> 
+
+    </>
   )
 }

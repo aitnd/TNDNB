@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { db } from '../utils/firebaseClient'
-import { collection, getDocs, query, orderBy, Timestamp, where, collectionGroup } from 'firebase/firestore'
+import { collection, getDocs, query, orderBy, Timestamp, where, collectionGroup, doc, getDoc } from 'firebase/firestore'
 import { useAuth } from '../context/AuthContext'
 import styles from './StudentHistory.module.css'
 import { FaHistory } from 'react-icons/fa'
@@ -14,12 +14,14 @@ interface HistoryItem {
     score: number;
     total: number;
     date: Timestamp;
+    roomId?: string;
 }
 
 export default function StudentHistory() {
     const { user } = useAuth()
     const [history, setHistory] = useState<HistoryItem[]>([])
     const [loading, setLoading] = useState(true)
+    const [roomDetails, setRoomDetails] = useState<Record<string, any>>({});
 
     useEffect(() => {
         if (!user) return
@@ -27,76 +29,9 @@ export default function StudentHistory() {
         const fetchHistory = async () => {
             setLoading(true)
             try {
-                const historyList: HistoryItem[] = []
-
-                // 1. Fetch Practice/Mock Results (exam_results)
-                const resultsRef = collection(db, 'exam_results')
-                // Note: Composite index might be needed for userId + completedAt
-                // For now, let's query by userId and sort in memory if needed, or try orderBy
-                const qResults = query(
-                    resultsRef,
-                    where('studentId', '==', user.uid)
-                )
-                const resultSnapshot = await getDocs(qResults)
-
-                resultSnapshot.forEach(doc => {
-                    const data = doc.data()
-                    let typeLabel: HistoryItem['type'] = 'Ôn tập'
-                    // Simple logic to distinguish types based on quizId or other fields if available
-                    // Assuming 'licenseId' or 'quizId' helps. 
-                    // For now, default to 'Ôn tập' or 'Thi thử' if we can distinguish.
-                    // Let's assume everything in exam_results is 'Ôn tập' unless specified.
-
-                    historyList.push({
-                        id: doc.id,
-                        type: typeLabel,
-                        title: `Bài làm ${data.licenseId || ''}`, // Customize title if possible
-                        score: data.score,
-                        total: data.totalQuestions,
-                        date: data.submitted_at || data.completedAt // Handle different field names
-                    })
-                })
-
-                // 2. Fetch Online Exam Results (participants)
-                // We need to find where this user is a participant
-                // collectionGroup query is powerful but requires index
-                // Let's try to query 'participants' where documentId is user.uid? 
-                // No, documentId query on collectionGroup is tricky.
-                // But usually participant doc ID IS the user ID.
-                // Let's try querying collectionGroup 'participants'
-                // But wait, we can't filter by doc ID easily in collectionGroup without knowing the path.
-                // Actually, if we stored userId as a field in participant doc, it's easier.
-                // ReviewManager uses: const userId = doc.id;
-
-                // Alternative: We can't easily query all exams the user participated in without an index or a 'userId' field.
-                // Let's assume for now we only show 'exam_results' which is the main storage for results.
-                // Wait, 'exam_results' IS where the final score is stored for online exams too (in the route.ts I saw earlier)!
-                // "5. LƯU KẾT QUẢ VÀO FIRESTORE (Ngăn 'exam_results')" -> So exam_results covers BOTH!
-                // Excellent. I just need to distinguish them.
-
-                // Refine Type Logic:
-                // If it has 'roomId', it's likely 'Thi Trực Tuyến'.
-                // If it has 'quizId', it's 'Ôn tập' or 'Thi thử'.
-
-                const refinedList = historyList.map(item => {
-                    // We need to check the data again. 
-                    // Let's re-map inside the loop for efficiency, but here is fine for clarity.
-                    return item;
-                })
-
-            } catch (err) {
-                console.error("Error fetching history:", err)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        // RE-IMPLEMENTING FETCH WITH BETTER LOGIC
-        const fetchBetterHistory = async () => {
-            setLoading(true)
-            try {
                 const list: HistoryItem[] = []
 
+                // Query exam_results
                 const q = query(collection(db, 'exam_results'), where('studentId', '==', user.uid))
                 const snapshot = await getDocs(q)
 
@@ -115,19 +50,40 @@ export default function StudentHistory() {
                         title = data.quizTitle || 'Bài ôn tập'
                     }
 
+                    // Handle timestamps: Online Exam uses submitted_at, Practice uses completedAt
+                    const timestamp = data.submitted_at || data.completedAt || Timestamp.now();
+
                     list.push({
                         id: doc.id,
                         type,
                         title,
+                        roomId: data.roomId,
                         score: data.score,
                         total: data.totalQuestions,
-                        date: data.submitted_at || data.completedAt || Timestamp.now()
+                        date: timestamp
                     })
                 })
 
                 // Sort by date desc
                 list.sort((a, b) => b.date.seconds - a.date.seconds)
                 setHistory(list)
+
+                // 💖 FETCH ROOM DETAILS 💖
+                const roomIds = Array.from(new Set(list.filter(item => item.roomId).map(item => item.roomId!)));
+                if (roomIds.length > 0) {
+                    const details: Record<string, any> = {};
+                    await Promise.all(roomIds.map(async (rid) => {
+                        try {
+                            const roomSnap = await getDoc(doc(db, 'exam_rooms', rid));
+                            if (roomSnap.exists()) {
+                                details[rid] = roomSnap.data();
+                            }
+                        } catch (err) {
+                            console.error("Error fetch room", rid, err);
+                        }
+                    }));
+                    setRoomDetails(details);
+                }
 
             } catch (error) {
                 console.error("Error fetching history:", error)
@@ -136,10 +92,18 @@ export default function StudentHistory() {
             }
         }
 
-        fetchBetterHistory()
+        fetchHistory()
     }, [user])
 
     if (loading) return <div className={styles.container}>Đang tải lịch sử...</div>
+
+    const getDisplayName = (item: HistoryItem) => {
+        if (item.roomId && roomDetails[item.roomId]) {
+            const r = roomDetails[item.roomId];
+            return `Phòng thi ${r.name} / ${r.course_name || 'Tự do'} / ${r.license_name || ''}`;
+        }
+        return item.title;
+    };
 
     return (
         <div className={styles.container}>
@@ -156,7 +120,8 @@ export default function StudentHistory() {
                                 <th>Loại</th>
                                 <th>Bài thi</th>
                                 <th>Điểm số</th>
-                                <th>Ngày làm</th>
+                                <th>Giờ nộp</th>
+                                <th>Ngày nộp</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -164,15 +129,18 @@ export default function StudentHistory() {
                                 <tr key={item.id}>
                                     <td>
                                         <span className={`${styles.typeTag} ${item.type === 'Thi Trực Tuyến' ? styles.typeOnline :
-                                                item.type === 'Thi thử' ? styles.typeExam :
-                                                    styles.typeReview
+                                            item.type === 'Thi thử' ? styles.typeExam :
+                                                styles.typeReview
                                             }`}>
                                             {item.type}
                                         </span>
                                     </td>
-                                    <td>{item.title}</td>
+                                    <td>{getDisplayName(item)}</td>
                                     <td>
                                         <span className={styles.score}>{item.score}</span> / {item.total}
+                                    </td>
+                                    <td>
+                                        {new Date(item.date.seconds * 1000).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                                     </td>
                                     <td>
                                         {new Date(item.date.seconds * 1000).toLocaleDateString('vi-VN')}

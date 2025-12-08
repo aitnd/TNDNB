@@ -10,20 +10,20 @@ export default function MusicPlayer() {
 
   useEffect(() => {
     // 🔥 Cố gắng phát nhạc ngay khi load trang
-    const attemptPlay = async () => {
-      if (audioRef.current) {
-        try {
-          audioRef.current.volume = 0.15
-          // Trình duyệt có thể chặn dòng này nếu người dùng chưa tương tác
-          await audioRef.current.play()
-          setIsPlaying(true)
-        } catch (err) {
-          console.log('Autoplay bị chặn bởi trình duyệt (cần tương tác người dùng).')
-          setIsPlaying(false) // Nếu bị chặn thì hiển thị icon tắt tiếng
-        }
-      }
-    }
-    attemptPlay()
+    // const attemptPlay = async () => {
+    //   if (audioRef.current) {
+    //     try {
+    //       audioRef.current.volume = 0.05
+    //       // Trình duyệt có thể chặn dòng này nếu người dùng chưa tương tác
+    //       // await audioRef.current.play()
+    //       // setIsPlaying(true)
+    //     } catch (err) {
+    //       console.log('Autoplay bị chặn bởi trình duyệt (cần tương tác người dùng).')
+    //       setIsPlaying(false) // Nếu bị chặn thì hiển thị icon tắt tiếng
+    //     }
+    //   }
+    // }
+    // attemptPlay()
   }, [])
 
   const togglePlay = () => {
@@ -31,6 +31,7 @@ export default function MusicPlayer() {
     if (isPlaying) {
       audioRef.current.pause()
     } else {
+      audioRef.current.volume = 0.05 // Set volume when playing manually
       audioRef.current.play()
     }
     setIsPlaying(!isPlaying)
@@ -47,7 +48,7 @@ export default function MusicPlayer() {
       gap: '10px'
     }}>
       {/* 🔥 Thêm autoPlay loop để tăng khả năng tự phát */}
-      <audio ref={audioRef} src={audioUrl} loop autoPlay />
+      <audio ref={audioRef} src={audioUrl} loop />
 
       <button
         onClick={togglePlay}
