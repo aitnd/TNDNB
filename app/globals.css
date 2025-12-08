@@ -434,3 +434,26 @@ a:hover {
     .snowflake { font-size: 1em; }
     .snowflake-img img { width: 20px; }
 }
+
+/* === CAPACITOR MOBILE APP STYLES === */
+
+/* 1. Ẩn Header, Footer, Music, Snowflakes KHI LÀ APP */
+body.is-mobile-app nav,         /* Ẩn Navbar trên */
+body.is-mobile-app footer,      /* Ẩn Footer dưới */
+body.is-mobile-app .music-player, /* Ẩn nhạc */
+body.is-mobile-app .snowflakes    /* Ẩn tuyết rơi */
+{
+    display: none !important;
+}
+
+/* 2. Style cho Body khi là App */
+body.is-mobile-app {
+    padding-bottom: 70px !important; /* Chừa chỗ cho Bottom Nav */
+    padding-top: 0 !important; /* Xóa khoảng trống của Navbar */
+}
+
+/* 3. Đảm bảo Bottom Nav hiện trên App (Kể cả trên Tablet nếu muốn) */
+body.is-mobile-app .fixed.bottom-0 {
+    display: flex !important; /* Force hiện Bottom Nav */
+    visibility: visible !important;
+}

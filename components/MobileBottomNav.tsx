@@ -10,7 +10,7 @@ export default function MobileBottomNav() {
   const navItems = [
     { name: 'Trang chủ', href: '/', icon: 'fa-home' },
     { name: 'Tin tức', href: '/tin-tuc', icon: 'fa-newspaper' },
-    { name: 'Khóa học', href: '/khoa-hoc', icon: 'fa-book-open' },
+    { name: 'Ôn tập', href: '/ontap', icon: 'fa-laptop-code' },
     { name: 'Hồ sơ', href: '/ho-so', icon: 'fa-user' },
     { name: 'Thêm', href: '/them', icon: 'fa-ellipsis-h' },
   ]

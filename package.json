@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1",
     "@formspree/react": "^3.0.0",
     "@google-analytics/data": "^5.2.1",
     "@supabase/supabase-js": "^2.80.0",

@@ -10,6 +10,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import MusicPlayer from '../components/MusicPlayer'
 import MobileBottomNav from '../components/MobileBottomNav'
+import CapacitorDetector from './components/CapacitorDetector'
 
 // Cấu hình font Rubik (Hỗ trợ tiếng Việt đầy đủ)
 const rubik = Rubik({
@@ -83,7 +84,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {/* Gắn nhạc nền Noel */}
             <MusicPlayer />
-            {/* MobileBottomNav removed */}
+            <MobileBottomNav />
+            <CapacitorDetector />
 
             <Footer />
 
