@@ -14,20 +14,27 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // Mặc định state khởi tạo là 'noel'
-  const [theme, setThemeState] = useState<ThemeMode>('noel')
+  // Mặc định state khởi tạo là 'light'
+  const [theme, setThemeState] = useState<ThemeMode>('light')
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as ThemeMode
 
     if (savedTheme) {
-      setThemeState(savedTheme)
-      document.documentElement.setAttribute('data-theme', savedTheme)
+      if (savedTheme === 'noel') {
+        // Force migration to light if noel is found
+        setThemeState('light')
+        document.documentElement.setAttribute('data-theme', 'light')
+        localStorage.setItem('theme', 'light')
+      } else {
+        setThemeState(savedTheme)
+        document.documentElement.setAttribute('data-theme', savedTheme)
+      }
     } else {
-      // Nếu chưa có lịch sử, ÉP MẶC ĐỊNH LÀ NOEL
-      setThemeState('noel')
-      document.documentElement.setAttribute('data-theme', 'noel')
-      localStorage.setItem('theme', 'noel')
+      // Nếu chưa có lịch sử, ÉP MẶC ĐỊNH LÀ LIGHT
+      setThemeState('light')
+      document.documentElement.setAttribute('data-theme', 'light')
+      localStorage.setItem('theme', 'light')
     }
   }, [])
 

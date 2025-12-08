@@ -13,7 +13,7 @@ import {
 } from 'firebase/auth'
 import { auth, db } from '../../utils/firebaseClient'
 // 💖 2. "TRIỆU HỒI" THÊM ĐỒ NGHỀ CỦA "TỦ" 💖
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, getDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore'
 import { useAuth } from '../../context/AuthContext'
 // 💖 3. "TRIỆU HỒI" ICON GOOGLE 💖
 import { FaGoogle } from 'react-icons/fa'
@@ -64,15 +64,29 @@ export default function LoginPage() {
     }
   }
 
-  // --- HÀM XỬ LÝ ĐĂNG NHẬP (Giữ nguyên) ---
+  // 💖 HÀM GIẢI MÃ USERNAME -> EMAIL 💖
+  // 💖 HÀM GIẢI MÃ USERNAME -> EMAIL (Đã Đơn giản hóa) 💖
+  const resolveEmailFromUsername = async (input: string): Promise<string> => {
+    const trimmedInput = input.trim();
+    // Nếu có @ -> giữ nguyên
+    if (trimmedInput.includes('@')) {
+      return trimmedInput;
+    }
+    // Nếu không có @ -> tự thêm @gmail.com
+    console.log(`Không thấy '@', tự động thêm @gmail.com vào: ${trimmedInput}`);
+    return `${trimmedInput}@gmail.com`;
+  };
+
+  // --- HÀM XỬ LÝ ĐĂNG NHẬP (Đã cập nhật) ---
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    setResetMsg(null) // (Tắt thông báo cũ)
+    setResetMsg(null)
 
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      const loginEmail = await resolveEmailFromUsername(email);
+      await signInWithEmailAndPassword(auth, loginEmail, password)
       console.log('Đăng nhập thành công, điều hướng...')
       router.push('/quan-ly')
 
@@ -116,6 +130,7 @@ export default function LoginPage() {
         birthDate: birthDate,
         role: 'hoc_vien', // Mặc định là 'hoc_vien'
         class: className, // Lưu lớp học tự điền
+        username: user.email ? user.email.split('@')[0].toLowerCase() : '', // 💖 LƯU USERNAME MỚI 💖
         createdAt: serverTimestamp()
       })
 

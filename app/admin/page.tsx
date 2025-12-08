@@ -3,10 +3,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic' 
-import { useAuth } from '../../context/AuthContext' 
-import ProtectedRoute from '../../components/ProtectedRoute' 
-import { supabase } from '../../utils/supabaseClient' 
+import dynamic from 'next/dynamic'
+import { useAuth } from '../../context/AuthContext'
+import ProtectedRoute from '../../components/ProtectedRoute'
+import { supabase } from '../../utils/supabaseClient'
 
 // 1. "TRIỆU HỒI" TRÌNH SOẠN THẢO "SUNEDITOR" (MỚI)
 const SunEditor = dynamic(() => import('suneditor-react'), { ssr: false });
@@ -16,7 +16,7 @@ import 'suneditor/dist/css/suneditor.min.css'; // (CSS của nó)
 import vi from 'suneditor/src/lang/en';
 
 // 3. "Triệu hồi" file CSS Module
-import styles from './page.module.css' 
+import styles from './page.module.css'
 
 // (Định nghĩa "kiểu" Category - Giữ nguyên)
 type Category = {
@@ -30,10 +30,10 @@ function AdminDashboard() {
   const router = useRouter()
 
   // (Não trạng thái - Giữ nguyên)
-  const [categories, setCategories] = useState<Category[]>([]) 
+  const [categories, setCategories] = useState<Category[]>([])
   const [loadingCategories, setLoadingCategories] = useState(true)
   const [title, setTitle] = useState('')
-  const [content, setContent] = useState('') 
+  const [content, setContent] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [isFeatured, setIsFeatured] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -60,8 +60,8 @@ function AdminDashboard() {
       setLoadingCategories(false)
     }
     fetchCategories()
-  }, []) 
-  
+  }, [])
+
   // 5. HÀM "ĐĂNG BÀI" (Giữ nguyên)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -77,11 +77,11 @@ function AdminDashboard() {
     console.log('Đang cất bài viết vào Supabase...')
     try {
       const { data, error } = await supabase
-        .from('posts') 
+        .from('posts')
         .insert([
           { title: title, content: content, category_id: categoryId, is_featured: isFeatured }
         ])
-      if (error) throw error 
+      if (error) throw error
       console.log('Đăng bài thành công!', data)
       setFormSuccess('Đăng bài thành công!')
       setTitle('')
@@ -157,14 +157,14 @@ function AdminDashboard() {
                 Đánh dấu là "Tin tiêu điểm"
               </label>
             </div>
-            
+
             {/* 💖 TRÌNH SOẠN THẢO "SUNEDITOR" (ĐÃ SỬA LỖI "lang") 💖 */}
             <div className={styles.formGroup}>
               <label className={styles.label}>
                 Nội dung bài viết
               </label>
-              <SunEditor 
-                lang={vi} 
+              <SunEditor
+                lang={vi}
                 setContents={content}
                 onChange={setContent}
                 setOptions={{
@@ -213,7 +213,7 @@ function AdminDashboard() {
 export default function AdminPage() {
   return (
     <ProtectedRoute allowedRoles={['admin', 'lanh_dao', 'giao_vien']}>
-      <AdminDashboard /> 
+      <AdminDashboard />
     </ProtectedRoute>
   )
 }
