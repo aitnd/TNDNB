@@ -23,8 +23,9 @@ export default function DownloadAppPage() {
                     {/* Main Download Button */}
                     <div className="text-center">
                         <a
-                            href="/download/onthi.apk"
-                            download
+                            href="https://drive.google.com/uc?export=download&id=1IYURjsSBrkXl1XkWWFA2AGOUXNp5Rvq4"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
                         >
                             <FaDownload className="animate-bounce" />
