@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { fetchActiveMarqueeNotifications, Notification } from '../../ontap/services/notificationService';
+import { fetchActiveMarqueeNotifications, Notification } from '../services/notificationService';
 
 const GlobalNotificationHandler = () => {
     useEffect(() => {
