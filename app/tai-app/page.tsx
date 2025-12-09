@@ -23,7 +23,7 @@ export default function DownloadAppPage() {
                     {/* Main Download Button */}
                     <div className="text-center">
                         <a
-                            href="https://drive.google.com/uc?export=download&id=1IYURjsSBrkXl1XkWWFA2AGOUXNp5Rvq4"
+                            href="https://drive.google.com/file/d/1lgw7fRxZjsJg-YhivlEspDzCp2sKxIZ1/view?usp=drive_link"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
