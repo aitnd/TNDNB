@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "107125875663",
+    "firebase_url": "https://thi-tnd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "thi-tnd",
+    "storage_bucket": "thi-tnd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107125875663:android:7e001d1afec2df24c828ba",
+        "android_client_info": {
+          "package_name": "com.onthi.duongthuy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107125875663-btb5921tdborugolq56aoosfr6oetf7e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKDILGI56Ci0o3jc8MioAQLVB4sOOBdJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107125875663-btb5921tdborugolq56aoosfr6oetf7e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

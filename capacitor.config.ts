@@ -2,10 +2,10 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.onthi.duongthuy',
-  appName: 'ÔN thi đường thủy',
+  appName: 'Ôn thi đường thủy',
   webDir: 'public',
   server: {
-    url: 'http://daotaothuyenvien.com',
+    url: 'https://daotaothuyenvien.com',
     cleartext: true,
     allowNavigation: ['daotaothuyenvien.com', '*.daotaothuyenvien.com', 'daotaothuyenvien.com/*']
   }

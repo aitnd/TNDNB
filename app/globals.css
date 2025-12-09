@@ -1,7 +1,14 @@
-/* === PHẦN 1: IMPORT FONT & ICON === */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* === PHẦN 2: CẤU HÌNH 3 THEME === */
+.mobile-nav-glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
 :root {
     /* --- 1. Giao diện Sáng (Light) --- */
     --bg-body: #f3f4f6;

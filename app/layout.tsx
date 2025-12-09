@@ -10,8 +10,11 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import MusicPlayer from '../components/MusicPlayer'
 import ThemeEffects from '../components/ThemeEffects'
-import MobileBottomNav from '../components/MobileBottomNav'
-import CapacitorDetector from './components/CapacitorDetector'
+import dynamic from 'next/dynamic'
+
+const MobileBottomNav = dynamic(() => import('../components/MobileBottomNav'), { ssr: false })
+const CapacitorDetector = dynamic(() => import('./components/CapacitorDetector'), { ssr: false })
+const GlobalNotificationHandler = dynamic(() => import('./components/GlobalNotificationHandler'), { ssr: false })
 
 // Cấu hình font Rubik (Hỗ trợ tiếng Việt đầy đủ)
 const rubik = Rubik({
@@ -69,6 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <MusicPlayer />
             <MobileBottomNav />
             <CapacitorDetector />
+            <GlobalNotificationHandler />
 
             <Footer />
 
