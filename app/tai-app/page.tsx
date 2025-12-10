@@ -24,7 +24,7 @@ export default function DownloadAppPage() {
                     {/* Main Download Button */}
                     <div className="text-center flex flex-col items-center gap-4">
                         <a
-                            href="https://drive.google.com/file/d/1CXwdBhsGvuhxV2xCKc40DbCp3DeHeL0B/view?usp=sharing"
+                            href="https://drive.google.com/file/d/1z0eAPNfDbpg2-T6BGrnVEgRbsF2tK7tQ/view?usp=sharing"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
@@ -33,18 +33,8 @@ export default function DownloadAppPage() {
                             Tải File APK (Cài Ngay)
                         </a>
 
-                        <a
-                            href="https://drive.google.com/file/d/1KvvK1q_QGwNeEOWA36gsXWAclnu4O4cq/view?usp=sharing"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-6 rounded-full text-sm transition-colors"
-                        >
-                            <FaAndroid />
-                            Tải File .AAB (Dự phòng)
-                        </a>
-
                         <p className="text-sm text-gray-500 mt-1 italic">
-                            Phiên bản 1.3 • Cập nhật mới nhất
+                            Phiên bản 1.5 • Cập nhật mới nhất
                         </p>
                     </div>
 
