@@ -21,18 +21,30 @@ export default function DownloadAppPage() {
                 <div className="p-8 space-y-8">
 
                     {/* Main Download Button */}
-                    <div className="text-center">
+                    {/* Main Download Button */}
+                    <div className="text-center flex flex-col items-center gap-4">
                         <a
-                            href="https://drive.google.com/file/d/1lgw7fRxZjsJg-YhivlEspDzCp2sKxIZ1/view?usp=drive_link"
+                            href="https://drive.google.com/file/d/1CXwdBhsGvuhxV2xCKc40DbCp3DeHeL0B/view?usp=sharing"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
                         >
                             <FaDownload className="animate-bounce" />
-                            Tải File APK Ngay (Android)
+                            Tải File APK (Cài Ngay)
                         </a>
-                        <p className="text-sm text-gray-500 mt-3 italic">
-                            Phiên bản 1.0.0 • Dung lượng ~15MB
+
+                        <a
+                            href="https://drive.google.com/file/d/1KvvK1q_QGwNeEOWA36gsXWAclnu4O4cq/view?usp=sharing"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-6 rounded-full text-sm transition-colors"
+                        >
+                            <FaAndroid />
+                            Tải File .AAB (Dự phòng)
+                        </a>
+
+                        <p className="text-sm text-gray-500 mt-1 italic">
+                            Phiên bản 1.3 • Cập nhật mới nhất
                         </p>
                     </div>
 

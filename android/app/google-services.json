@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:107125875663:android:7e001d1afec2df24c828ba",
+        "mobilesdk_app_id": "1:107125875663:android:4235787438301829c828ba",
         "android_client_info": {
-          "package_name": "com.onthi.duongthuy"
+          "package_name": "com.horizon.tnd"
         }
       },
       "oauth_client": [
@@ -21,7 +21,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCKDILGI56Ci0o3jc8MioAQLVB4sOOBdJY"
+          "current_key": "AIzaSyAqc-ct97cFYhUbX1qQA08zUDD6xAz6Ias"
         }
       ],
       "services": {
