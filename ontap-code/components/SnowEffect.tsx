@@ -1,11 +1,12 @@
 import React from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const SnowEffect: React.FC = () => {
   // Danh sách các icon ảnh thực tế có trong thư mục assets
   const fallingIcons = [
-    'gift1.png', 
-    'bell.png', 
-    'star-gold.png', 
+    'gift1.png',
+    'bell.png',
+    'star-gold.png',
     'ball.png',
     'gift2.png',
     'gift3.png',
@@ -13,9 +14,14 @@ const SnowEffect: React.FC = () => {
     'gift5.png'
   ];
 
+  const { theme } = useTheme();
+
+  if (theme !== 'noel') return null;
+
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         /* === PHẦN 5: HIỆU ỨNG TUYẾT & QUÀ RƠI === */
         .snowflakes {
             position: fixed; top: 0; left: 0;
@@ -124,10 +130,10 @@ const SnowEffect: React.FC = () => {
           const iconName = fallingIcons[i % fallingIcons.length];
           return (
             <div key={`img-${i}`} className="snowflake snowflake-img">
-              <img 
-                src={`/assets/img/${iconName}`} 
-                alt="" 
-                style={{ width: '25px', height: 'auto' }} 
+              <img
+                src={`/assets/img/${iconName}`}
+                alt=""
+                style={{ width: '25px', height: 'auto' }}
               />
             </div>
           );

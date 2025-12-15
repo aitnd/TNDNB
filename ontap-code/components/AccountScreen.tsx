@@ -1,7 +1,8 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { UserProfile } from '../types';
-import { supabase } from '@/services/supabaseClient';
-import { getDefaultAvatar, uploadAvatar } from '@/services/userService';
+import { db } from '../services/firebaseClient';
+import { getDefaultAvatar, uploadAvatar } from '../services/userService';
+import { doc, updateDoc, collection, query, orderBy, getDocs, deleteDoc } from 'firebase/firestore';
 import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera } from 'react-icons/fa';
 
 interface AccountScreenProps {
@@ -12,7 +13,7 @@ interface AccountScreenProps {
 // Reuse logic from UserAccountManager
 interface UserAccount {
     id: string;
-    full_name: string; // Changed from fullName to match DB/types if possible, or mapped
+    fullName: string;
     email: string;
     role: string;
     phoneNumber?: string;
@@ -24,9 +25,8 @@ interface UserAccount {
     cccdDate?: string;
     cccdPlace?: string;
     address?: string;
-    created_at?: any;
+    createdAt?: any;
     isVerified?: boolean;
-    photoURL?: string;
 }
 
 const allRoles = [
@@ -71,8 +71,8 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
             if (searchTerm.trim()) {
                 const lower = searchTerm.toLowerCase();
                 result = result.filter(u =>
-                    (u.full_name && u.full_name.toLowerCase().includes(lower)) ||
-                    (u.email && u.email.toLowerCase().includes(lower)) ||
+                    u.fullName.toLowerCase().includes(lower) ||
+                    u.email.toLowerCase().includes(lower) ||
                     (u.phoneNumber && u.phoneNumber.includes(lower))
                 );
             }
@@ -83,19 +83,13 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
     const fetchUsers = async () => {
         setLoadingUsers(true);
         try {
-            const { data, error } = await supabase
-                .from('users')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-
-            const list = data?.map(user => ({
-                ...user,
-                photoURL: user.photoURL || getDefaultAvatar(user.photoURL ? undefined : user.role)
-            })) as UserAccount[];
-
-            setUsers(list || []);
+            const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
+            const snap = await getDocs(q);
+            const list = snap.docs.map(doc => {
+                const data = doc.data();
+                return { id: doc.id, ...data, photoURL: data.photoURL || getDefaultAvatar(data.photoURL ? undefined : data.role) } as unknown as UserAccount;
+            });
+            setUsers(list);
         } catch (error) {
             console.error("Error fetching users:", error);
         } finally {
@@ -108,25 +102,16 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
         setIsSavingMyInfo(true);
         try {
             const clean = (val: any) => (val === undefined ? null : val);
-
-            const updates = {
-                full_name: clean(myInfo.full_name),
+            await updateDoc(doc(db, 'users', userProfile.id), {
+                fullName: clean(myInfo.full_name),
                 phoneNumber: clean(myInfo.phoneNumber),
                 birthDate: clean(myInfo.birthDate),
                 address: clean(myInfo.address),
                 cccd: clean(myInfo.cccd),
                 cccdDate: clean(myInfo.cccdDate),
                 cccdPlace: clean(myInfo.cccdPlace),
-                class: clean(myInfo.class)
-            };
-
-            const { error } = await supabase
-                .from('users')
-                .update(updates)
-                .eq('id', userProfile.id);
-
-            if (error) throw error;
-
+                class: clean(myInfo.class) // Allow student to update their self-filled class
+            });
             alert('Cập nhật thông tin thành công!');
         } catch (error) {
             console.error(error);
@@ -140,13 +125,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
     const handleDeleteUser = async (uid: string) => {
         if (!confirm('Bạn có chắc chắn muốn xóa tài khoản này?')) return;
         try {
-            const { error } = await supabase
-                .from('users')
-                .delete()
-                .eq('id', uid);
-
-            if (error) throw error;
-
+            await deleteDoc(doc(db, 'users', uid));
             setUsers(prev => prev.filter(u => u.id !== uid));
         } catch (e) {
             console.error(e);
@@ -159,9 +138,8 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
         if (!editingUser) return;
         try {
             const clean = (val: any) => (val === undefined ? null : val);
-
-            const updates = {
-                full_name: editingUser.full_name,
+            await updateDoc(doc(db, 'users', editingUser.id), {
+                fullName: editingUser.fullName,
                 phoneNumber: clean(editingUser.phoneNumber),
                 birthDate: clean(editingUser.birthDate),
                 role: editingUser.role,
@@ -170,15 +148,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
                 cccdDate: clean(editingUser.cccdDate),
                 cccdPlace: clean(editingUser.cccdPlace),
                 address: clean(editingUser.address)
-            };
-
-            const { error } = await supabase
-                .from('users')
-                .update(updates)
-                .eq('id', editingUser.id);
-
-            if (error) throw error;
-
+            });
             alert('Đã cập nhật!');
             setShowEditModal(false);
             fetchUsers();
@@ -211,13 +181,10 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
             setUploadingAvatar(true);
             const publicUrl = await uploadAvatar(file, userProfile.id);
 
-            // Update Supabase
-            const { error } = await supabase
-                .from('users')
-                .update({ photoURL: publicUrl })
-                .eq('id', userProfile.id);
-
-            if (error) throw error;
+            // Update Firestore
+            await updateDoc(doc(db, 'users', userProfile.id), {
+                photoURL: publicUrl
+            });
 
             // Update Local State
             setMyInfo(prev => ({ ...prev, photoURL: publicUrl }));
@@ -275,7 +242,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
                     <div className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium mb-1 dark:text-gray-300">Họ và Tên</label>
-                            <input className="w-full p-2 border rounded dark:bg-slate-700" value={myInfo.full_name || ''} onChange={e => setMyInfo({ ...myInfo, full_name: e.target.value })} required />
+                            <input className="w-full p-2 border rounded dark:bg-slate-700" value={myInfo.full_name} onChange={e => setMyInfo({ ...myInfo, full_name: e.target.value })} required />
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1 dark:text-gray-300">Email (Không đổi)</label>
@@ -371,7 +338,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
                                     filteredUsers.map(u => (
                                         <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
                                             <td className="p-3 font-medium text-gray-900 dark:text-white">
-                                                {u.full_name}
+                                                {u.fullName}
                                                 {u.role === 'hoc_vien' && u.isVerified && <FaCheckCircle className="inline ml-1 text-blue-500 text-xs" />}
                                             </td>
                                             <td className="p-3 text-sm">{u.courseName || u.courseId || '--'}</td>
@@ -401,10 +368,10 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
             {showEditModal && editingUser && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowEditModal(false)}>
                     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <h2 className="text-lg font-bold mb-4">Sửa tài khoản: {editingUser.full_name}</h2>
+                        <h2 className="text-lg font-bold mb-4">Sửa tài khoản: {editingUser.fullName}</h2>
                         <form onSubmit={handleSaveOtherUser} className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
-                                <div><label className="block text-sm font-bold mb-1">Họ tên</label><input className="w-full p-2 border rounded dark:bg-slate-700" value={editingUser.full_name || ''} onChange={e => setEditingUser({ ...editingUser, full_name: e.target.value })} /></div>
+                                <div><label className="block text-sm font-bold mb-1">Họ tên</label><input className="w-full p-2 border rounded dark:bg-slate-700" value={editingUser.fullName} onChange={e => setEditingUser({ ...editingUser, fullName: e.target.value })} /></div>
                                 <div><label className="block text-sm font-bold mb-1">SĐT</label><input className="w-full p-2 border rounded dark:bg-slate-700" value={editingUser.phoneNumber || ''} onChange={e => setEditingUser({ ...editingUser, phoneNumber: e.target.value })} /></div>
                                 <div><label className="block text-sm font-bold mb-1">Ngày sinh</label><input type="date" className="w-full p-2 border rounded dark:bg-slate-700" value={editingUser.birthDate || ''} onChange={e => setEditingUser({ ...editingUser, birthDate: e.target.value })} /></div>
                                 <div><label className="block text-sm font-bold mb-1">Lớp học (tự điền)</label><input className="w-full p-2 border rounded dark:bg-slate-700" value={editingUser.class || ''} onChange={e => setEditingUser({ ...editingUser, class: e.target.value })} /></div>

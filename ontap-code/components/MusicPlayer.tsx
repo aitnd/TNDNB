@@ -9,7 +9,7 @@ const MusicPlayer: React.FC = () => {
     const playMusic = async () => {
       if (audioRef.current) {
         try {
-          audioRef.current.volume = 0.5; // Âm lượng vừa phải
+          audioRef.current.volume = 0.05; // Âm lượng 5/100
           await audioRef.current.play();
           setIsPlaying(true);
         } catch (err) {
@@ -19,7 +19,7 @@ const MusicPlayer: React.FC = () => {
       }
     };
 
-    playMusic();
+    // playMusic();
   }, []);
 
   const toggleMusic = () => {
@@ -45,9 +45,9 @@ const MusicPlayer: React.FC = () => {
         title={isPlaying ? "Tắt nhạc Giáng sinh" : "Bật nhạc Giáng sinh"}
       >
         {isPlaying ? (
-           <img src="/assets/img/bell.png" alt="Playing" className="w-8 h-8 object-contain" />
+          <img src="/assets/img/bell.png" alt="Playing" className="w-8 h-8 object-contain" />
         ) : (
-           <img src="/assets/img/MusicPlayer.png" alt="Muted" className="w-8 h-8 object-contain opacity-50 grayscale" />
+          <img src="/assets/img/MusicPlayer.png" alt="Muted" className="w-8 h-8 object-contain opacity-50 grayscale" />
         )}
       </button>
     </div>

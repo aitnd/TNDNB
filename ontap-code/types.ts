@@ -1,6 +1,6 @@
 import type { Session } from '@supabase/supabase-js';
 
-export type Theme = 'modern' | 'classic' | 'sunrise' | 'tri-an' | 'noel';
+export type Theme = 'light' | 'dark' | 'modern' | 'classic' | 'sunrise' | 'tri-an' | 'noel';
 
 export interface Answer {
   id: string;
@@ -53,22 +53,28 @@ export type AppState =
   | 'subject_selection' // For Practice mode
   | 'in_quiz'
   | 'in_online_exam'
-  | 'results';
+  | 'results'
+  | 'exam_result'
+  | 'history'
+  | 'account';
 
 export type UserAnswers = Record<string, string>;
 
 export interface UserProfile {
   id: string;
   email?: string;
-  role: 'admin' | 'teacher' | 'student' | 'lanh_dao' | 'quan_ly' | 'giao_vien' | 'hoc_vien';
-  full_name?: string;
-  phoneNumber?: string;
+  full_name: string;
+  role: 'admin' | 'giao_vien' | 'hoc_vien' | 'quan_ly' | 'lanh_dao';
+  photoURL?: string;
   birthDate?: string;
   address?: string;
+  class?: string; // Lớp học (e.g. Thợ máy k2)
+  phoneNumber?: string;
+  courseName?: string;
+  courseId?: string;
   cccd?: string;
   cccdDate?: string;
   cccdPlace?: string;
-  class?: string;
-  photoURL?: string;
-  isVerified?: boolean;
+  courseCode?: string; // Keeping for compatibility if needed, but primary is courseName
+  defaultLicenseId?: string; // License ID assigned by class
 }

@@ -9,12 +9,18 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>('noel');
+  const [theme, setThemeState] = useState<Theme>('light');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('app-theme') as Theme | null;
-    // Nếu chưa có theme được lưu, sử dụng 'noel' làm mặc định
-    const initialTheme = savedTheme || 'noel';
+    const savedTheme = localStorage.getItem('theme') as Theme | null;
+    let initialTheme = savedTheme;
+
+    // Nếu chưa có theme hoặc theme là 'noel' thì force về 'light'
+    if (!initialTheme || initialTheme === 'noel') {
+      initialTheme = 'light';
+      localStorage.setItem('theme', 'light');
+    }
+
     setThemeState(initialTheme);
     document.documentElement.setAttribute('data-theme', initialTheme);
   }, []);
@@ -22,7 +28,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('app-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
   return (

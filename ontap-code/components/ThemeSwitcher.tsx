@@ -4,6 +4,8 @@ import { PaletteIcon } from './icons';
 import type { Theme } from '../types';
 
 const themes: { name: Theme; label: string; color: string }[] = [
+  { name: 'light', label: 'Sáng', color: 'bg-white' },
+  { name: 'dark', label: 'Tối', color: 'bg-slate-900' },
   { name: 'noel', label: 'Giáng Sinh', color: 'bg-[#8B0000]' },
   { name: 'modern', label: 'Hiện Đại', color: 'bg-indigo-600' },
   { name: 'classic', label: 'Cổ Điển', color: 'bg-[#6F6049]' },
@@ -28,11 +30,10 @@ const ThemeSwitcher: React.FC = () => {
             <button
               key={t.name}
               onClick={() => handleThemeChange(t.name)}
-              className={`w-full text-left px-3 py-2 text-sm font-semibold rounded-md flex items-center gap-3 transition-colors ${
-                theme === t.name
+              className={`w-full text-left px-3 py-2 text-sm font-semibold rounded-md flex items-center gap-3 transition-colors ${theme === t.name
                   ? 'bg-primary/20 text-primary'
                   : 'text-card-foreground hover:bg-secondary'
-              }`}
+                }`}
             >
               <span className={`w-4 h-4 rounded-full ${t.color} border border-white/20`}></span>
               {t.label}

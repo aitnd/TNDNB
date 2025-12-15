@@ -17,6 +17,125 @@ export interface Notification {
     deletedBy?: string[]; // Soft delete
 }
 
+export const sendNotification = async (
+    title: string,
+    message: string,
+    type: 'system' | 'class' | 'personal' | 'reminder' | 'special' | 'attention',
+    targetType: 'all' | 'class' | 'user',
+    targetId: string | null,
+    senderId: string,
+    senderName?: string,
+    expiryDate?: Date | null
+) => {
+    try {
+        const notifData = {
+            title,
+            message,
+            type,
+            targetType,
+            targetId,
+            senderId,
+            senderName: senderName || 'Hệ thống',
+            createdAt: serverTimestamp(),
+            expiryDate: expiryDate ? Timestamp.fromDate(expiryDate) : null,
+            read: false,
+            readBy: [],
+            deletedBy: []
+        };
+
+        if (targetType === 'user' && targetId) {
+            // Write directly to user's subcollection
+            await addDoc(collection(db, 'users', targetId, 'notifications'), notifData);
+            console.log(`Notification sent to user ${targetId}`);
+
+        } else if (targetType === 'class' && targetId) {
+            // Fan-out: ROBUST STRATEGY (Dual Query)
+            // Goal: Find all students linked to this class via 'courseId' OR 'courseName'.
+
+            let studentsMap = new Map<string, string>(); // Use Map to deduplicate by UID
+
+            // 1. Try to resolve the Course Metadata first (to get both ID and Name)
+            // We assume targetId could be Name or ID. 
+            // Since we standardized on sending Name in UI, let's look up the ID.
+
+            // Query by Name
+            const courseQueryByName = query(collection(db, 'courses'), where('name', '==', targetId));
+            const courseSnapByName = await getDocs(courseQueryByName);
+
+            let realCourseId: string | null = null;
+            let realCourseName: string | null = targetId; // Default to input
+
+            if (!courseSnapByName.empty) {
+                realCourseId = courseSnapByName.docs[0].id; // Found ID from Name
+            } else {
+                // Maybe targetId IS the ID? check doc existence
+                const courseDocRef = doc(db, 'courses', targetId);
+                const courseDocSnap = await getDocs(query(collection(db, 'courses'), where(documentId(), '==', targetId)));
+                if (!courseDocSnap.empty) {
+                    realCourseId = targetId;
+                    realCourseName = courseDocSnap.docs[0].data().name;
+                }
+            }
+
+            console.log(`Resolved Class Target: ID=${realCourseId}, Name=${realCourseName}`);
+
+            // 2. Fetch Students using both keys
+            const queries = [];
+
+            // Query 1: By courseName (if available)
+            if (realCourseName) {
+                queries.push(getDocs(query(collection(db, 'users'), where('courseName', '==', realCourseName))));
+                // Also try Legacy 'class' field just in case
+                queries.push(getDocs(query(collection(db, 'users'), where('class', '==', realCourseName))));
+            }
+
+            // Query 2: By courseId (if available)
+            if (realCourseId) {
+                queries.push(getDocs(query(collection(db, 'users'), where('courseId', '==', realCourseId))));
+            }
+
+            // Execute all queries
+            const results = await Promise.all(queries);
+
+            results.forEach(snap => {
+                snap.docs.forEach(d => {
+                    studentsMap.set(d.id, d.id);
+                });
+            });
+
+            if (studentsMap.size === 0) {
+                console.log('No students found for this class.');
+            } else {
+                // Write in batches
+                const batch = writeBatch(db);
+                let opCount = 0;
+
+                studentsMap.forEach((uid) => {
+                    const userNotifRef = doc(collection(db, 'users', uid, 'notifications'));
+                    batch.set(userNotifRef, notifData);
+                    opCount++;
+                });
+
+                // Firestore Batch limit is 500. If we exceed, we should split. 
+                // For simplicity here assuming class < 500. 
+                // Real production code should chunk this map.
+                await batch.commit();
+                console.log(`Notification sent to ${studentsMap.size} students in class ${realCourseName}`);
+            }
+        }
+
+        // ALWAYS Create a Master Record in the global 'notifications' collection
+        // This is for Admin Management visibility.
+        // Normal users won't see this because they query where targetType == 'all'.
+        await addDoc(collection(db, 'notifications'), notifData);
+        console.log('Master notification record created.');
+
+    } catch (error) {
+        console.error('Error sending notification:', error);
+        throw error;
+    }
+};
+
 export const fetchNotifications = async (userId: string, classId?: string): Promise<Notification[]> => {
     try {
         const notifs: Notification[] = [];

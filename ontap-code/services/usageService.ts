@@ -16,7 +16,7 @@ const getConfig = async (): Promise<UsageConfig> => {
 };
 
 // --- HELPER: Determine User Role Config ---
-export const getUserRoleConfig = (config: UsageConfig, userProfile: any | null): { param: RoleConfig, type: 'guest' | 'free' | 'verified' | 'vip' | 'teacher' | 'manager' | 'admin' } => {
+const getUserRoleConfig = (config: UsageConfig, userProfile: any | null): { param: RoleConfig, type: 'guest' | 'free' | 'verified' | 'vip' | 'teacher' | 'manager' | 'admin' } => {
     if (!userProfile) return { param: config.guest, type: 'guest' };
 
     const role = userProfile.role;
