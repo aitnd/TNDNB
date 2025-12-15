@@ -452,6 +452,21 @@
             md: "calc(var(--radius) - 2px)",
             sm: "calc(var(--radius) - 4px)",
           },
+          animation: {
+            'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+            'shine': 'shine 3s linear infinite',
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            shine: {
+              '0%': { transform: 'translateX(-100%) skewX(12deg)' },
+              '20%': { transform: 'translateX(100%) skewX(12deg)' },
+              '100%': { transform: 'translateX(100%) skewX(12deg)' },
+            }
+          }
         }
       }
     }
@@ -467,8 +482,8 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/ontap/assets/index-JJzHhunE.js"></script>
-  <link rel="stylesheet" crossorigin href="/ontap/assets/index-B4iga5Rg.css">
+  <script type="module" crossorigin src="/ontap/assets/index-YpzKJcQ1.js"></script>
+  <link rel="stylesheet" crossorigin href="/ontap/assets/index-CU4bvY0p.css">
 </head>
 
 <body class="font-sans">

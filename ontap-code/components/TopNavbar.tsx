@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserProfile } from '../types';
-import { FaHome, FaBookOpen, FaHistory, FaUserCog, FaSignOutAlt, FaUserGraduate, FaSchool, FaExclamationTriangle, FaCogs } from 'react-icons/fa';
+import { FaHome, FaBookOpen, FaHistory, FaUserCog, FaSignOutAlt, FaUserGraduate, FaSchool, FaExclamationTriangle, FaCogs, FaCheckCircle } from 'react-icons/fa';
 import UsageConfigPanel from './UsageConfigPanel';
 
 interface TopNavbarProps {
@@ -108,7 +108,13 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                             <div className="hidden md:flex flex-col items-end">
                                 <span className="text-xs text-gray-500 dark:text-gray-400">Xin chào,</span>
                                 <span className="text-sm font-bold text-gray-800 dark:text-white max-w-[150px] truncate">
-                                    {userProfile.full_name}
+                                    {userProfile.isVerified ? (
+                                        <span className="flex items-center gap-1 text-blue-600">
+                                            {userProfile.full_name} <FaCheckCircle className="text-green-500 text-xs" />
+                                        </span>
+                                    ) : (
+                                        userProfile.full_name
+                                    )}
                                 </span>
                             </div>
 

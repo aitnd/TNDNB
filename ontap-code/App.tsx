@@ -342,12 +342,14 @@ const AppContent: React.FC = () => {
       id: `exam_${Date.now()}`,
       title: `Thi Thử - ${selectedLicense.name}`,
       questions: selected,
-      timeLimit: 1200
+      timeLimit: 2700
     };
 
     setCurrentQuiz(examQuiz);
     setUserAnswers({});
     setScore(0);
+    // Clear any previous session to ensure fresh start (especially timer)
+    localStorage.removeItem('ontap_quiz_session');
     setAppState(AppState.IN_ONLINE_EXAM);
   };
 
@@ -379,6 +381,7 @@ const AppContent: React.FC = () => {
     };
     setCurrentQuiz(newQuiz);
     setUserAnswers({});
+    localStorage.removeItem('ontap_quiz_session');
     setAppState(AppState.IN_QUIZ);
   };
 

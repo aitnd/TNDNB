@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserProfile } from '../types';
 import styles from './StudentCard.module.css';
-import { FaUniversity } from 'react-icons/fa';
+import { FaUniversity, FaCheckCircle } from 'react-icons/fa';
 
 interface StudentCardProps {
     user: UserProfile;
@@ -57,6 +57,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                             <span className={styles.label}>Họ tên:</span>
                             <span className={`${styles.value} ${styles.valueHighlight}`} style={isTeacher ? { color: '#b91c1c' } : {}}>
                                 {user.full_name || '---'}
+                                {user.isVerified && <span style={{ marginLeft: '4px', color: '#22c55e', display: 'inline-flex', alignItems: 'center' }}><FaCheckCircle size={14} /></span>}
                             </span>
                         </div>
                         <div className={styles.infoRow}>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave } from 'react-icons/fa';
+import { createPortal } from 'react-dom';
+import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle } from 'react-icons/fa';
 import { db } from '../services/firebaseClient';
 import { collection, query, where, getDocs, doc, getDoc, updateDoc, arrayUnion, addDoc, arrayRemove, serverTimestamp, onSnapshot, documentId } from 'firebase/firestore';
 import { UserProfile } from '../types';
@@ -115,6 +116,9 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     // Default to 'list' view
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
     const [licenses, setLicenses] = useState<any[]>([]);
+
+    // --- SORTING STATE ---
+    const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
 
     // Edit Course State
     const [showEditCourseModal, setShowEditCourseModal] = useState(false);
@@ -358,9 +362,21 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const handleDeleteCourse = async (courseId: string) => {
         if (!confirm('Bạn có chắc chắn muốn xóa lớp này? Hành động này không thể hoàn tác!')) return;
         try {
-            // Optional: Remove courseId from all students in this course?
-            // For now just delete the course document
+            // Remove courseId from all students in this course and reset verified status
+            const q = query(collection(db, 'users'), where('courseId', '==', courseId));
+            const snap = await getDocs(q);
+
+            const updates = snap.docs.map(studentDoc => updateDoc(doc(db, 'users', studentDoc.id), {
+                courseId: null,
+                courseName: null,
+                class: null,
+                isVerified: false
+            }));
+            await Promise.all(updates);
+
+            // Delete the course document
             await import('firebase/firestore').then(({ deleteDoc }) => deleteDoc(doc(db, 'courses', courseId)));
+
             setCourses(prev => prev.filter(c => c.id !== courseId));
             alert('Đã xóa lớp học!');
             if (selectedCourse?.id === courseId) setSelectedCourse(null);
@@ -452,7 +468,9 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         try {
             await updateDoc(doc(db, 'users', studentId), {
                 courseId: null,
-                courseName: null
+                courseName: null,
+                class: null,
+                isVerified: false
             });
         } catch (e) { console.error(e); }
     };
@@ -527,13 +545,77 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     };
 
 
+    // --- SORTING LOGIC ---
+    const sortedStudents = React.useMemo(() => {
+        if (!sortConfig) return students;
+
+        return [...students].sort((a, b) => {
+            const resultA = studentLatestResults[a.uid] || { type: '', time: '', score: '' };
+            const resultB = studentLatestResults[b.uid] || { type: '', time: '', score: '' };
+
+            let valA: any = '';
+            let valB: any = '';
+
+            switch (sortConfig.key) {
+                case 'fullName':
+                    valA = a.fullName || '';
+                    valB = b.fullName || '';
+                    break;
+                case 'birthDate':
+                    // Parse if possible, else compare strings
+                    valA = a.birthDate ? new Date(a.birthDate.split('/').reverse().join('-')).getTime() : 0; // Simple assume dd/mm/yyyy or yyyy-mm-dd
+                    if (isNaN(valA)) valA = a.birthDate || '';
+                    valB = b.birthDate ? new Date(b.birthDate.split('/').reverse().join('-')).getTime() : 0;
+                    if (isNaN(valB)) valB = b.birthDate || '';
+                    break;
+                case 'recentExam':
+                    valA = resultA.type || '';
+                    valB = resultB.type || '';
+                    break;
+                case 'time':
+                    // Time string "10:30" etc.
+                    valA = resultA.time || '';
+                    valB = resultB.time || '';
+                    break;
+                case 'score':
+                    // format "25/30"
+                    valA = resultA.score ? parseInt(resultA.score.toString().split('/')[0]) : -1;
+                    valB = resultB.score ? parseInt(resultB.score.toString().split('/')[0]) : -1;
+                    if (isNaN(valA)) valA = -1;
+                    if (isNaN(valB)) valB = -1;
+                    break;
+                default:
+                    return 0;
+            }
+
+            if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }, [students, sortConfig, studentLatestResults]);
+
+    const handleSort = (key: string) => {
+        setSortConfig(current => {
+            if (current && current.key === key) {
+                return { key, direction: current.direction === 'asc' ? 'desc' : 'asc' };
+            }
+            return { key, direction: 'asc' };
+        });
+    };
+
+    const getSortIcon = (key: string) => {
+        if (!sortConfig || sortConfig.key !== key) return <FaSort className="ml-1 text-gray-300 inline" />;
+        return sortConfig.direction === 'asc' ? <FaSortUp className="ml-1 text-blue-600 inline" /> : <FaSortDown className="ml-1 text-blue-600 inline" />;
+    };
+
+
     // --- RENDER ---
     if (!selectedCourse) {
         return (
             <div className="w-full max-w-6xl mx-auto p-4 animate-slide-in-right relative">
                 {/* Create Modal */}
-                {showCreateModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                {showCreateModal && createPortal(
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
                         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
                             <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Tạo Lớp Học Mới</h2>
                             <form onSubmit={handleCreateClass} className="space-y-4">
@@ -555,13 +637,14 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                 </div>
                             </form>
                         </div>
-                    </div>
+                    </div>,
+                    document.body
                 )}
 
                 {/* Edit Course Modal */}
                 {
-                    showEditCourseModal && editingCourse && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                    showEditCourseModal && editingCourse && createPortal(
+                        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
                             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
                                 <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Chỉnh Sửa Lớp Học</h2>
                                 <form onSubmit={handleUpdateCourse} className="space-y-4">
@@ -582,7 +665,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div>,
+                        document.body
                     )
                 }
 
@@ -663,7 +747,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                 {course.description || 'Chưa có mô tả khóa học.'}
                                             </p>
                                             <div className="flex justify-between items-center text-sm font-medium pt-4 border-t border-gray-100 dark:border-slate-700">
-                                                <span className="text-gray-500 flex items-center gap-1">
+                                                <span className={`flex items-center gap-1 ${course.headTeacherId ? 'text-blue-600 font-bold' : 'text-gray-500'}`}>
                                                     <FaUserTie /> GVCN: {course.headTeacherId ? (headTeacherNames[course.headTeacherId] || '...') : 'Chưa có'}
                                                 </span>
                                                 <span className="text-blue-600 group-hover:underline flex items-center gap-1">Chi tiết <FaArrowLeft className="rotate-180" /></span>
@@ -712,8 +796,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             </div>
 
             {/* ADD STUDENT MODAL */}
-            {showAddStudentModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowAddStudentModal(false)}>
+            {showAddStudentModal && createPortal(
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onClick={() => setShowAddStudentModal(false)}>
                     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl p-6 h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
                         <button onClick={() => setShowAddStudentModal(false)} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full border border-gray-200 dark:border-slate-600"><FaTimes /></button>
                         <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -804,301 +888,315 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                 ))}
                         </div>
                     </div>
-                </div>
-            )}
+                </div>,
+                document.body
+            )
+            }
 
             {/* ADD TEACHER MODAL */}
-            {showAddTeacherModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowAddTeacherModal(false)}>
-                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => setShowAddTeacherModal(false)} className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full"><FaTimes /></button>
-                        <h2 className="text-xl font-bold mb-4">Thêm Giáo Viên</h2>
-                        <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded mb-4">
-                            <input type="checkbox" checked={setAsHeadTeacher} onChange={e => setSetAsHeadTeacher(e.target.checked)} className="w-5 h-5 text-yellow-600" />
-                            <label className="text-sm font-medium">Đặt làm GVCN</label>
-                        </div>
-                        <div className="relative mb-4">
-                            <FaSearch className="absolute left-3 top-3 text-gray-400" />
-                            <input className="w-full pl-10 pr-4 py-2 border rounded dark:bg-slate-700" placeholder="Tìm kiếm giáo viên..." value={teacherSearchTerm} onChange={e => setTeacherSearchTerm(e.target.value)} />
-                        </div>
-                        <div className="flex-1 overflow-y-auto pr-2 space-y-2">
-                            {availableTeachers
-                                .filter(t => safeLower(t.fullName).includes(safeLower(teacherSearchTerm)) || safeLower(t.email).includes(safeLower(teacherSearchTerm)))
-                                .map(t => (
-                                    <div key={t.uid} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg hover:bg-gray-100 transition">
-                                        <div className="flex items-center gap-3">
-                                            <img src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`} className="w-10 h-10 rounded-full" />
-                                            <div>
-                                                <p className="font-bold text-sm">{t.fullName}</p>
-                                                <p className="text-xs text-gray-500">{t.email}</p>
+            {
+                showAddTeacherModal && createPortal(
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onClick={() => setShowAddTeacherModal(false)}>
+                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setShowAddTeacherModal(false)} className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full"><FaTimes /></button>
+                            <h2 className="text-xl font-bold mb-4">Thêm Giáo Viên</h2>
+                            <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded mb-4">
+                                <input type="checkbox" checked={setAsHeadTeacher} onChange={e => setSetAsHeadTeacher(e.target.checked)} className="w-5 h-5 text-yellow-600" />
+                                <label className="text-sm font-medium">Đặt làm GVCN</label>
+                            </div>
+                            <div className="relative mb-4">
+                                <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                                <input className="w-full pl-10 pr-4 py-2 border rounded dark:bg-slate-700" placeholder="Tìm kiếm giáo viên..." value={teacherSearchTerm} onChange={e => setTeacherSearchTerm(e.target.value)} />
+                            </div>
+                            <div className="flex-1 overflow-y-auto pr-2 space-y-2">
+                                {availableTeachers
+                                    .filter(t => safeLower(t.fullName).includes(safeLower(teacherSearchTerm)) || safeLower(t.email).includes(safeLower(teacherSearchTerm)))
+                                    .map(t => (
+                                        <div key={t.uid} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg hover:bg-gray-100 transition">
+                                            <div className="flex items-center gap-3">
+                                                <img src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`} className="w-10 h-10 rounded-full" />
+                                                <div>
+                                                    <p className="font-bold text-sm">{t.fullName}</p>
+                                                    <p className="text-xs text-gray-500">{t.email}</p>
+                                                </div>
                                             </div>
+                                            <button onClick={() => handleAddTeacherToClass(t.uid)} disabled={addingTeacher} className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50 text-sm">Thêm</button>
                                         </div>
-                                        <button onClick={() => handleAddTeacherToClass(t.uid)} disabled={addingTeacher} className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50 text-sm">Thêm</button>
-                                    </div>
-                                ))}
+                                    ))}
+                            </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    </div>,
+                    document.body
+                )
+            }
 
             {/*  NEW MODALS: HISTORY & EDIT  */}
             {/* VIEW HISTORY MODAL (UPDATED UI) */}
-            {showHistoryModal && historyStudent && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowHistoryModal(false)}>
-                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-5xl p-6 h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => setShowHistoryModal(false)} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full"><FaTimes /></button>
-                        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                            <FaHistory className="text-blue-500" /> Lịch sử làm bài: <span className="text-blue-600">{historyStudent.fullName}</span>
-                        </h2>
+            {
+                showHistoryModal && historyStudent && createPortal(
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onClick={() => setShowHistoryModal(false)}>
+                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-5xl p-6 h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setShowHistoryModal(false)} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full"><FaTimes /></button>
+                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                <FaHistory className="text-blue-500" /> Lịch sử làm bài: <span className="text-blue-600">{historyStudent.fullName}</span>
+                            </h2>
 
-                        <div className="flex-1 overflow-y-auto">
-                            {loadingHistory ? (
-                                <div className="p-10 text-center text-gray-500">Đang tải lịch sử...</div>
-                            ) : studentHistory.length === 0 ? (
-                                <div className="p-10 text-center text-gray-500 italic">Học viên này chưa làm bài thi nào.</div>
-                            ) : (
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-left text-sm border-collapse">
-                                        <thead className="bg-gray-50 dark:bg-slate-700 sticky top-0 text-gray-500 uppercase text-xs">
-                                            <tr>
-                                                <th className="p-4 font-semibold">Loại</th>
-                                                <th className="p-4 font-semibold">Bài thi</th>
-                                                <th className="p-4 font-semibold text-center">Điểm số</th>
-                                                <th className="p-4 font-semibold">Giờ nộp</th>
-                                                <th className="p-4 font-semibold">Ngày nộp</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
-                                            {studentHistory.map((item) => {
-                                                const type = getExamType(item);
-                                                return (
-                                                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
-                                                        <td className="p-4 align-middle">
-                                                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold border ${getTypeStyles(type)}`}>
-                                                                {type}
-                                                            </span>
-                                                        </td>
-                                                        <td className="p-4 align-middle font-medium text-gray-900 dark:text-gray-100">
-                                                            {getDisplayName(item)}
-                                                        </td>
-                                                        <td className="p-4 align-middle text-center">
-                                                            <span className="font-bold text-blue-600 dark:text-blue-400">{item.score}</span>
-                                                            <span className="text-gray-400 text-xs"> / {item.totalQuestions}</span>
-                                                        </td>
-                                                        <td className="p-4 align-middle text-gray-500">
-                                                            {new Date(item.completedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
-                                                        </td>
-                                                        <td className="p-4 align-middle text-gray-500">
-                                                            {new Date(item.completedAt).toLocaleDateString('vi-VN')}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            )}
+                            <div className="flex-1 overflow-y-auto">
+                                {loadingHistory ? (
+                                    <div className="p-10 text-center text-gray-500">Đang tải lịch sử...</div>
+                                ) : studentHistory.length === 0 ? (
+                                    <div className="p-10 text-center text-gray-500 italic">Học viên này chưa làm bài thi nào.</div>
+                                ) : (
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left text-sm border-collapse">
+                                            <thead className="bg-gray-50 dark:bg-slate-700 sticky top-0 text-gray-500 uppercase text-xs">
+                                                <tr>
+                                                    <th className="p-4 font-semibold">Loại</th>
+                                                    <th className="p-4 font-semibold">Bài thi</th>
+                                                    <th className="p-4 font-semibold text-center">Điểm số</th>
+                                                    <th className="p-4 font-semibold">Giờ nộp</th>
+                                                    <th className="p-4 font-semibold">Ngày nộp</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
+                                                {studentHistory.map((item) => {
+                                                    const type = getExamType(item);
+                                                    return (
+                                                        <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                                                            <td className="p-4 align-middle">
+                                                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold border ${getTypeStyles(type)}`}>
+                                                                    {type}
+                                                                </span>
+                                                            </td>
+                                                            <td className="p-4 align-middle font-medium text-gray-900 dark:text-gray-100">
+                                                                {getDisplayName(item)}
+                                                            </td>
+                                                            <td className="p-4 align-middle text-center">
+                                                                <span className="font-bold text-blue-600 dark:text-blue-400">{item.score}</span>
+                                                                <span className="text-gray-400 text-xs"> / {item.totalQuestions}</span>
+                                                            </td>
+                                                            <td className="p-4 align-middle text-gray-500">
+                                                                {new Date(item.completedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                                                            </td>
+                                                            <td className="p-4 align-middle text-gray-500">
+                                                                {new Date(item.completedAt).toLocaleDateString('vi-VN')}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    </div>,
+                    document.body
+                )
+            }
 
             {/* EDIT STUDENT MODAL */}
-            {showEditStudentModal && editStudent && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowEditStudentModal(false)}>
-                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl p-6 relative animate-scale-up max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => { setShowEditStudentModal(false); setIsEditingMode(false); }} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full hover:bg-gray-200 transition"><FaTimes /></button>
+            {
+                showEditStudentModal && editStudent && createPortal(
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onClick={() => setShowEditStudentModal(false)}>
+                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl p-6 relative animate-scale-up max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                            <button onClick={() => { setShowEditStudentModal(false); setIsEditingMode(false); }} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full hover:bg-gray-200 transition"><FaTimes /></button>
 
-                        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-blue-700 dark:text-blue-400">
-                            {isEditingMode ? <><FaEdit className="text-yellow-500" /> Cập Nhật Thông Tin</> : <><FaUserTie className="text-blue-500" /> Hồ Sơ Học Viên</>}
-                        </h2>
+                            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-blue-700 dark:text-blue-400">
+                                {isEditingMode ? <><FaEdit className="text-yellow-500" /> Cập Nhật Thông Tin</> : <><FaUserTie className="text-blue-500" /> Hồ Sơ Học Viên</>}
+                            </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Col 1 */}
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Họ và Tên</label>
-                                    <input
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.fullName}
-                                        readOnly={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, fullName: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Ngày sinh</label>
-                                    <input
-                                        type="date"
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.birthDate || ''}
-                                        readOnly={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, birthDate: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Lớp học (Khóa học)</label>
-                                    <input
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 bg-gray-50 border-transparent cursor-default`}
-                                        value={editStudent.courseName || editStudent.courseCode || '--'}
-                                        readOnly={true}
-                                    />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Col 1 */}
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Họ và Tên</label>
+                                        <input
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.fullName}
+                                            readOnly={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, fullName: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Ngày sinh</label>
+                                        <input
+                                            type="date"
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.birthDate || ''}
+                                            readOnly={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, birthDate: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Lớp học (Khóa học)</label>
+                                        <input
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 bg-gray-50 border-transparent cursor-default`}
+                                            value={editStudent.courseName || editStudent.courseCode || '--'}
+                                            readOnly={true}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Ngày cấp CCCD</label>
+                                        <input
+                                            type={isEditingMode ? "date" : "text"}
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.cccdDate || ''}
+                                            readOnly={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, cccdDate: e.target.value })}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Địa chỉ</label>
+                                        <input
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.address || ''}
+                                            readOnly={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, address: e.target.value })}
+                                        />
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Ngày cấp CCCD</label>
-                                    <input
-                                        type={isEditingMode ? "date" : "text"}
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.cccdDate || ''}
-                                        readOnly={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, cccdDate: e.target.value })}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Địa chỉ</label>
-                                    <input
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.address || ''}
-                                        readOnly={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, address: e.target.value })}
-                                    />
+                                {/* Col 2 */}
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Số điện thoại</label>
+                                        <input
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.phoneNumber || ''}
+                                            readOnly={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, phoneNumber: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Lớp học (tự điền)</label>
+                                        <input
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.class || ''}
+                                            placeholder="Ví dụ: Thợ máy k2"
+                                            readOnly={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, class: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Số CCCD</label>
+                                        <input
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.cccd || ''}
+                                            readOnly={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, cccd: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Nơi cấp</label>
+                                        <input
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.cccdPlace || ''}
+                                            readOnly={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, cccdPlace: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Vai trò</label>
+                                        <select
+                                            className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default appearance-none pointer-events-none' : 'focus:ring-2 focus:ring-blue-500'}`}
+                                            value={editStudent.role}
+                                            disabled={!isEditingMode}
+                                            onChange={e => setEditStudent({ ...editStudent, role: e.target.value })}
+                                        >
+                                            <option value="hoc_vien">Học viên</option>
+                                            <option value="student">Học sinh</option>
+                                            <option value="teacher">Giáo viên</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Col 2 */}
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Số điện thoại</label>
-                                    <input
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.phoneNumber || ''}
-                                        readOnly={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, phoneNumber: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Lớp học (tự điền)</label>
-                                    <input
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.class || ''}
-                                        placeholder="Ví dụ: Thợ máy k2"
-                                        readOnly={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, class: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Số CCCD</label>
-                                    <input
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.cccd || ''}
-                                        readOnly={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, cccd: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Nơi cấp</label>
-                                    <input
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.cccdPlace || ''}
-                                        readOnly={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, cccdPlace: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">Vai trò</label>
-                                    <select
-                                        className={`w-full p-2.5 border rounded-lg dark:bg-slate-700 ${!isEditingMode ? 'bg-gray-50 border-transparent cursor-default appearance-none pointer-events-none' : 'focus:ring-2 focus:ring-blue-500'}`}
-                                        value={editStudent.role}
-                                        disabled={!isEditingMode}
-                                        onChange={e => setEditStudent({ ...editStudent, role: e.target.value })}
-                                    >
-                                        <option value="hoc_vien">Học viên</option>
-                                        <option value="student">Học sinh</option>
-                                        <option value="teacher">Giáo viên</option>
-                                    </select>
-                                </div>
+                            <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100 dark:border-slate-700">
+                                {!isEditingMode ? (
+                                    <>
+                                        <button onClick={() => setShowEditStudentModal(false)} className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-gray-700 font-medium">Đóng</button>
+                                        <button onClick={() => setIsEditingMode(true)} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 shadow-lg font-medium transition-transform active:scale-95">
+                                            <FaEdit /> Chỉnh sửa
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button onClick={() => setIsEditingMode(false)} className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-gray-700 font-medium">Hủy bỏ</button>
+                                        <button onClick={handleSaveStudentInfo} disabled={savingStudent} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 shadow-lg font-medium transition-transform active:scale-95">
+                                            <FaSave /> {savingStudent ? 'Đang lưu...' : 'Lưu Thay Đổi'}
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
-
-                        <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100 dark:border-slate-700">
-                            {!isEditingMode ? (
-                                <>
-                                    <button onClick={() => setShowEditStudentModal(false)} className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-gray-700 font-medium">Đóng</button>
-                                    <button onClick={() => setIsEditingMode(true)} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 shadow-lg font-medium transition-transform active:scale-95">
-                                        <FaEdit /> Chỉnh sửa
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <button onClick={() => setIsEditingMode(false)} className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-gray-700 font-medium">Hủy bỏ</button>
-                                    <button onClick={handleSaveStudentInfo} disabled={savingStudent} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 shadow-lg font-medium transition-transform active:scale-95">
-                                        <FaSave /> {savingStudent ? 'Đang lưu...' : 'Lưu Thay Đổi'}
-                                    </button>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
+                    </div>,
+                    document.body
+                )
+            }
 
             {/* NOTIFICATION MODAL */}
-            {showNotifModal && notifTarget && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowNotifModal(false)}>
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-md animate-scale-up" onClick={e => e.stopPropagation()}>
-                        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                            <FaPaperPlane className="text-yellow-500" /> Gửi Thông Báo
-                        </h2>
-                        <p className="text-sm text-gray-500 mb-6">To: <span className="font-bold text-blue-600">{notifTarget.name}</span></p>
-                        <form onSubmit={handleSendNotificationSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Loại thông báo</label>
-                                <select
-                                    className="w-full px-4 py-2 border rounded-lg dark:bg-slate-700 outline-none focus:ring-2 focus:ring-blue-500"
-                                    value={notifType}
-                                    onChange={(e: any) => setNotifType(e.target.value)}
-                                >
-                                    <option value="system">Bình thường</option>
-                                    {/* Permission Check for Special Types */}
-                                    {['admin', 'lanh_dao', 'quan_ly'].includes(userProfile.role) && (
-                                        <>
-                                            <option value="attention">⚠️ Chú ý (Chạy chữ vàng)</option>
-                                            <option value="special">🚨 ĐẶC BIỆT (Chạy chữ đỏ)</option>
-                                        </>
-                                    )}
-                                </select>
-                            </div>
-
-                            {(notifType === 'special' || notifType === 'attention') && (
+            {
+                showNotifModal && notifTarget && createPortal(
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4" onClick={() => setShowNotifModal(false)}>
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-md animate-scale-up" onClick={e => e.stopPropagation()}>
+                            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                                <FaPaperPlane className="text-yellow-500" /> Gửi Thông Báo
+                            </h2>
+                            <p className="text-sm text-gray-500 mb-6">To: <span className="font-bold text-blue-600">{notifTarget.name}</span></p>
+                            <form onSubmit={handleSendNotificationSubmit} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Hiệu lực chạy chữ đến</label>
-                                    <input
-                                        type="datetime-local"
+                                    <label className="block text-sm font-medium mb-1">Loại thông báo</label>
+                                    <select
                                         className="w-full px-4 py-2 border rounded-lg dark:bg-slate-700 outline-none focus:ring-2 focus:ring-blue-500"
-                                        value={notifExpiry}
-                                        onChange={e => setNotifExpiry(e.target.value)}
-                                        required
-                                    />
-                                    <p className="text-xs text-gray-500 mt-1">Sau thời gian này, thông báo sẽ ngừng chạy ngang màn hình.</p>
+                                        value={notifType}
+                                        onChange={(e: any) => setNotifType(e.target.value)}
+                                    >
+                                        <option value="system">Bình thường</option>
+                                        {/* Permission Check for Special Types */}
+                                        {['admin', 'lanh_dao', 'quan_ly'].includes(userProfile.role) && (
+                                            <>
+                                                <option value="attention">⚠️ Chú ý (Chạy chữ vàng)</option>
+                                                <option value="special">🚨 ĐẶC BIỆT (Chạy chữ đỏ)</option>
+                                            </>
+                                        )}
+                                    </select>
                                 </div>
-                            )}
 
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Tiêu đề</label>
-                                <input className="w-full px-4 py-2 border rounded-lg dark:bg-slate-700 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Tiêu đề..." value={notifTitle} onChange={e => setNotifTitle(e.target.value)} required />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Tin nhắn</label>
-                                <textarea className="w-full px-4 py-2 border rounded-lg dark:bg-slate-700 h-24 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Nội dung..." value={notifMessage} onChange={e => setNotifMessage(e.target.value)} required />
-                            </div>
-                            <div className="flex justify-end gap-3 pt-2">
-                                <button type="button" onClick={() => setShowNotifModal(false)} className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200">Hủy</button>
-                                <button type="submit" disabled={sendingNotif} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 shadow-lg font-medium">{sendingNotif ? 'Đang gửi...' : 'Gửi Ngay'}</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                                {(notifType === 'special' || notifType === 'attention') && (
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">Hiệu lực chạy chữ đến</label>
+                                        <input
+                                            type="datetime-local"
+                                            className="w-full px-4 py-2 border rounded-lg dark:bg-slate-700 outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={notifExpiry}
+                                            onChange={e => setNotifExpiry(e.target.value)}
+                                            required
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">Sau thời gian này, thông báo sẽ ngừng chạy ngang màn hình.</p>
+                                    </div>
+                                )}
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Tiêu đề</label>
+                                    <input className="w-full px-4 py-2 border rounded-lg dark:bg-slate-700 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Tiêu đề..." value={notifTitle} onChange={e => setNotifTitle(e.target.value)} required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Tin nhắn</label>
+                                    <textarea className="w-full px-4 py-2 border rounded-lg dark:bg-slate-700 h-24 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="Nội dung..." value={notifMessage} onChange={e => setNotifMessage(e.target.value)} required />
+                                </div>
+                                <div className="flex justify-end gap-3 pt-2">
+                                    <button type="button" onClick={() => setShowNotifModal(false)} className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200">Hủy</button>
+                                    <button type="submit" disabled={sendingNotif} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 shadow-lg font-medium">{sendingNotif ? 'Đang gửi...' : 'Gửi Ngay'}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>,
+                    document.body
+                )
+            }
 
 
             {/* HEADER DETAIL */}
@@ -1205,7 +1303,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
                         {viewMode === 'grid' ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                {students.map(s => {
+                                {sortedStudents.map(s => {
                                     const result = studentLatestResults[s.uid] || { type: '--', time: '--', score: '--' };
                                     return (
                                         <div key={s.uid} className="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-4 border border-gray-100 dark:border-slate-700 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-500/30 transition-all duration-300 group relative overflow-hidden">
@@ -1220,8 +1318,9 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                     />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <h4 className="font-bold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors text-base">
+                                                    <h4 className="font-bold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors text-base flex items-center gap-1">
                                                         {s.fullName}
+                                                        {(s as any).isVerified && <FaCheckCircle className="text-green-500 text-xs shrink-0" />}
                                                     </h4>
                                                     <p className="text-xs text-gray-500 truncate">{s.email}</p>
 
@@ -1261,25 +1360,38 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                         ) : (
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left text-sm">
-                                    <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-300">
+                                    <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-300 select-none">
                                         <tr>
-                                            <th className="px-4 py-3 rounded-l-lg">Học viên</th>
-                                            <th className="px-4 py-3">Ngày sinh</th>
-                                            <th className="px-4 py-3">Bài làm gần nhất</th>
-                                            <th className="px-4 py-3">Thời gian</th>
-                                            <th className="px-4 py-3">Điểm</th>
+                                            <th onClick={() => handleSort('fullName')} className="px-4 py-3 rounded-l-lg cursor-pointer hover:bg-gray-200 transition">
+                                                <div className="flex items-center">Học viên {getSortIcon('fullName')}</div>
+                                            </th>
+                                            <th onClick={() => handleSort('birthDate')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
+                                                <div className="flex items-center">Ngày sinh {getSortIcon('birthDate')}</div>
+                                            </th>
+                                            <th onClick={() => handleSort('recentExam')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
+                                                <div className="flex items-center">Bài làm gần nhất {getSortIcon('recentExam')}</div>
+                                            </th>
+                                            <th onClick={() => handleSort('time')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
+                                                <div className="flex items-center">Thời gian {getSortIcon('time')}</div>
+                                            </th>
+                                            <th onClick={() => handleSort('score')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
+                                                <div className="flex items-center">Điểm {getSortIcon('score')}</div>
+                                            </th>
                                             <th className="px-4 py-3 text-center rounded-r-lg">Hành động</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
-                                        {students.map(s => {
+                                        {sortedStudents.map(s => {
                                             const result = studentLatestResults[s.uid] || { type: '--', time: '--', score: '--' };
                                             return (
                                                 <tr key={s.uid} className="group hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
                                                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                                         <img src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`} className="w-8 h-8 rounded-full border border-gray-200" />
                                                         <div>
-                                                            <p>{s.fullName}</p>
+                                                            <p className="flex items-center gap-1">
+                                                                {s.fullName}
+                                                                {(s as any).isVerified && <FaCheckCircle className="text-green-500 text-xs" />}
+                                                            </p>
                                                             <p className="text-xs text-gray-500 font-normal">{s.email}</p>
                                                         </div>
                                                     </td>
@@ -1325,7 +1437,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
             </div>
 
-        </div>
+        </div >
     );
 };
 
