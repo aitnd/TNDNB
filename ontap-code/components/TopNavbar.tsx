@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { UserProfile } from '../types';
 import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail } from 'lucide-react';
 import UsageConfigPanel from './UsageConfigPanel';
@@ -29,6 +29,23 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                     >
                         <BookOpen size={18} className="text-blue-600 dark:text-blue-400" />
                         <span className="font-semibold text-sm md:text-base">Ôn tập</span>
+                    </button>
+
+                    {/* 1.1 Thi Trực Tuyến */}
+                    <button
+                        onClick={() => {
+                            if (!userProfile) {
+                                window.location.href = '/thitructuyen';
+                            } else if (['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role)) {
+                                onNavigate('online_exam_management');
+                            } else {
+                                onNavigate('thi_truc_tuyen');
+                            }
+                        }}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+                    >
+                        <Newspaper size={18} className="text-red-600 dark:text-red-400" />
+                        <span className="font-semibold text-sm md:text-base">Thi trực tuyến</span>
                     </button>
 
                     {/* 2. Trang chủ (Link ngoài) */}
@@ -125,7 +142,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                     onClick={() => setShowChangelog(true)}
                                     className="text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors"
                                 >
-                                    v3.6.0
+                                    v3.7.0
                                 </button>
                             </div>
 
@@ -134,18 +151,18 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 <span className="text-sm font-bold text-gray-800 dark:text-white max-w-[150px] truncate">
                                     {userProfile.isVerified || userProfile.courseId ? (
                                         <span className={`flex items-center gap-1 font-bold ${userProfile.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
-                                                userProfile.role === 'quan_ly' || userProfile.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
-                                                    userProfile.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
-                                                        'text-blue-600'
+                                            userProfile.role === 'quan_ly' || userProfile.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
+                                                userProfile.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
+                                                    'text-blue-600'
                                             }`}>
                                             {userProfile.full_name || userProfile.fullName || '---'}
                                             {userProfile.role === 'hoc_vien' && <CheckCircle size={14} className="text-green-500" />}
                                         </span>
                                     ) : (
                                         <span className={`font-bold ${userProfile.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
-                                                userProfile.role === 'quan_ly' || userProfile.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
-                                                    userProfile.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
-                                                        'text-gray-800 dark:text-white'
+                                            userProfile.role === 'quan_ly' || userProfile.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
+                                                userProfile.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
+                                                    'text-gray-800 dark:text-white'
                                             }`}>
                                             {userProfile.full_name || userProfile.fullName || '---'}
                                         </span>

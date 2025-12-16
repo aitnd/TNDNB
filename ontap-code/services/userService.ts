@@ -8,10 +8,10 @@ export const getDefaultAvatar = (role?: string) => {
     const r = (role || '').toLowerCase();
     // Student
     if (r === 'hoc_vien' || r === 'student' || r === 'hoc-vien') {
-        return '/assets/img/avatar.webp1.webp';
+        return '/ontap/assets/img/avatar1.webp';
     }
     // Teachers and others (admin, quan_ly, lanh_dao, giao_vien)
-    return '/assets/img/avatar.webp.webp';
+    return '/ontap/assets/img/avatar.webp';
 };
 
 /**

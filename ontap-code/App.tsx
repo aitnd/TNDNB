@@ -30,15 +30,15 @@ import TopNavbar from './components/TopNavbar';
 import MailboxScreen from './components/MailboxScreen';
 import AdSenseLoader from './components/AdSenseLoader';
 import MobileBottomNav from './components/MobileBottomNav';
+import ThiTrucTuyenPage from './components/ThiTrucTuyenPage';
+import OnlineExamManagementScreen from './components/OnlineExamManagementScreen';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
 import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
 import { Capacitor } from '@capacitor/core';
-
-
-
 import usePresence from './hooks/usePresence';
+import AlertMarquee from './components/AlertMarquee';
 
 const AppContent: React.FC = () => {
   // Global Presence Hook
@@ -113,6 +113,13 @@ const AppContent: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Check for specific routes
+    const path = window.location.pathname;
+    if (path === '/thitructuyen') {
+      setAppState(AppState.THI_TRUC_TUYEN);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // 1. Authenticated
@@ -125,14 +132,7 @@ const AppContent: React.FC = () => {
               setUserName(profile.full_name || firebaseUser.displayName || '');
             }
           });
-          // Cleanup listener on auth change/unmount is tricky inside here without ref, but OK for top level app structure usually
-          // Better to store unsub in a ref if we want to unsubscribe cleanly on logout, but onAuthStateChanged handles session switch.
-          // For simplicity/robustness in this structure: ensuring we don't leak is important.
         });
-
-        // const profile = await getUserProfile(firebaseUser.uid);
-        // setUserProfile(profile); 
-        // setUserName(profile?.full_name || firebaseUser.displayName || '');
 
         // Initial fetch for immediate render and for downstream logic that relies on 'profile' variable
         let profile = null;
@@ -140,7 +140,6 @@ const AppContent: React.FC = () => {
           profile = await getUserProfile(firebaseUser.uid);
         } catch (fetchErr) {
           console.error("❌ Critical: Could not fetch user profile (Network/Permission):", fetchErr);
-          // Stop here or retry? For now, we avoid self-healing overwrite.
         }
 
         // --- SELF-HEAL: Create Profile ONLY if missing (returns null) AND no error occurred ---
@@ -156,8 +155,6 @@ const AppContent: React.FC = () => {
           };
 
           try {
-            // Check again or just write with merge to be safe?
-            // Since profile is null, it means document.exists() was false.
             const { setDoc, doc } = await import('firebase/firestore');
             await setDoc(doc(db, 'users', firebaseUser.uid), defaultProfile, { merge: true });
             profile = defaultProfile;
@@ -526,6 +523,8 @@ const AppContent: React.FC = () => {
       }
     } else if (screen === 'notification_mgmt') {
       setAppState(AppState.NOTIFICATION_MGMT);
+    } else if (screen === 'online_exam_management') {
+      setAppState(AppState.ONLINE_EXAM_MANAGEMENT);
     } else if (screen === 'mailbox') {
       setAppState(AppState.MAILBOX);
     }
@@ -548,6 +547,8 @@ const AppContent: React.FC = () => {
       >
         {(() => {
           switch (appState) {
+            case AppState.THI_TRUC_TUYEN:
+              return <ThiTrucTuyenPage />;
             case AppState.WELCOME:
               return <WelcomeModal onStart={handleStart} onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />;
             case AppState.LOGIN:
@@ -649,6 +650,7 @@ const AppContent: React.FC = () => {
                   onStart={() => setAppState(AppState.LICENSE_SELECTION)}
                   onHistoryClick={() => setAppState(AppState.HISTORY)}
                   onClassClick={() => handleTopNavNavigate((userProfile!.role === 'hoc_vien') ? 'my_class' : 'class_management')}
+                  onOnlineExamClick={() => setAppState(AppState.ONLINE_EXAM_MANAGEMENT)}
                 />
               );
             case AppState.HISTORY:
@@ -661,6 +663,8 @@ const AppContent: React.FC = () => {
               return <AccountScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} onNavigate={handleTopNavNavigate} />;
             case AppState.NOTIFICATION_MGMT:
               return userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : null;
+            case AppState.ONLINE_EXAM_MANAGEMENT:
+              return userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => setAppState(AppState.DASHBOARD)} /> : null;
             case AppState.MAILBOX:
               return userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => setAppState(AppState.DASHBOARD)} /> : null;
             default:
@@ -671,8 +675,12 @@ const AppContent: React.FC = () => {
     </AnimatePresence>
   );
 
+  if (appState === AppState.THI_TRUC_TUYEN) {
+    return <ThiTrucTuyenPage />;
+  }
+
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans transition-colors duration-300 pt-16">
+    <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-16' : 'pt-16'}`}>
       <SweetAlertPopup />
       <Toaster position="top-right" richColors expand={true} />
 
@@ -688,11 +696,14 @@ const AppContent: React.FC = () => {
 
       {/* Hide TopNavbar on Native App */}
       {!isMobileApp && (
-        <TopNavbar
-          userProfile={userProfile}
-          onNavigate={handleTopNavNavigate}
-          onLogout={handleLogout}
-        />
+        <>
+          <TopNavbar
+            userProfile={userProfile}
+            onNavigate={handleTopNavNavigate}
+            onLogout={handleLogout}
+          />
+          <AlertMarquee />
+        </>
       )}
 
       {animatedContent}

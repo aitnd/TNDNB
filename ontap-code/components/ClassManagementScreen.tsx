@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle } from 'react-icons/fa';
-import { db } from '../services/firebaseClient';
+import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey } from 'react-icons/fa';
+import { db, auth } from '../services/firebaseClient'; // Ensure auth is imported
+
+
 import { collection, query, where, getDocs, doc, getDoc, updateDoc, arrayUnion, addDoc, arrayRemove, serverTimestamp, onSnapshot, documentId } from 'firebase/firestore';
 import { UserProfile } from '../types';
 import { getExamHistory, ExamResult } from '../services/historyService';
@@ -641,6 +643,27 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
     };
 
+    const handleResetPassword = async (studentId: string, studentName: string) => {
+        const newPassword = prompt(`Nhập mật khẩu mới cho học viên ${studentName}:`, '123456');
+        if (newPassword === null) return;
+        if (!newPassword || newPassword.length < 6) {
+            alert('Mật khẩu phải có ít nhất 6 ký tự.');
+            return;
+        }
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            if (!token) { alert('Lỗi xác thực.'); return; }
+            const response = await fetch('/api/admin/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ targetUserId: studentId, newPassword })
+            });
+            const data = await response.json();
+            if (response.ok) alert(`Đã đổi mật khẩu cho ${studentName} thành công!`);
+            else alert(`Lỗi: ${data.error}`);
+        } catch (error) { console.error(error); alert('Lỗi kết nối.'); }
+    };
+
     const handleSaveStudentInfo = async () => {
         if (!editStudent) return;
         setSavingStudent(true);
@@ -938,7 +961,11 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
                                         {/* Name & Basic Info */}
                                         <div className="col-span-4 flex items-center gap-3 overflow-hidden">
-                                            <img src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`} className="w-10 h-10 rounded-full border border-gray-200 flex-shrink-0" />
+                                            <img
+                                                src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`}
+                                                onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`; }}
+                                                className="w-10 h-10 rounded-full border border-gray-200 flex-shrink-0"
+                                            />
                                             <div className="min-w-0">
                                                 <p className="font-bold text-sm truncate text-gray-900 dark:text-white" title={s.fullName}>{s.fullName}</p>
                                                 <p className="text-xs text-gray-500 truncate" title={s.email}>{s.email}</p>
@@ -1030,7 +1057,11 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     .map(t => (
                                         <div key={t.uid} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg hover:bg-gray-100 transition">
                                             <div className="flex items-center gap-3">
-                                                <img src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`} className="w-10 h-10 rounded-full" />
+                                                <img
+                                                    src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`}
+                                                    onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`; }}
+                                                    className="w-10 h-10 rounded-full"
+                                                />
                                                 <div>
                                                     <p className="font-bold text-sm">{t.fullName}</p>
                                                     <p className="text-xs text-gray-500">{t.email}</p>
@@ -1358,7 +1389,11 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                             {teachers.map(t => (
                                 <div key={t.uid} className="flex items-center gap-3 p-2 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors group relative cursor-pointer">
                                     <div className="relative">
-                                        <img src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`} className="w-10 h-10 rounded-full border border-gray-200" />
+                                        <img
+                                            src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`}
+                                            onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`; }}
+                                            className="w-10 h-10 rounded-full border border-gray-200"
+                                        />
                                         {selectedCourse.headTeacherId === t.uid && <div className="absolute -top-1 -right-1 bg-yellow-400 text-white rounded-full p-0.5 border-2 border-white"><FaGraduationCap size={10} /></div>}
                                     </div>
                                     <div className="min-w-0 flex-1">
@@ -1429,6 +1464,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                 <div className="relative">
                                                     <img
                                                         src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}&background=random`}
+                                                        onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}&background=random`; }}
                                                         alt={s.fullName}
                                                         className="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm group-hover:border-blue-500 transition-colors"
                                                     />
@@ -1456,6 +1492,11 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                         <button onClick={() => { setEditStudent(s); setShowEditStudentModal(true); }} className="text-blue-600 bg-blue-50 hover:bg-blue-100 p-1.5 rounded text-xs flex items-center gap-1" title="Sửa thông tin">
                                                             <FaEdit />
                                                         </button>
+                                                        {canManageStudents && (
+                                                            <button onClick={() => handleResetPassword(s.uid, s.fullName)} className="text-yellow-600 bg-yellow-50 hover:bg-yellow-100 p-1.5 rounded text-xs flex items-center gap-1" title="Reset Mật khẩu">
+                                                                <FaKey />
+                                                            </button>
+                                                        )}
 
                                                         <button onClick={() => { setHistoryStudent(s); setShowHistoryModal(true); }} className="text-purple-600 bg-purple-50 hover:bg-purple-100 p-1.5 rounded text-xs flex items-center gap-1" title="Xem lịch sử">
                                                             <FaHistory />
@@ -1502,7 +1543,11 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                             return (
                                                 <tr key={s.uid} className="group hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
                                                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white flex items-center gap-3">
-                                                        <img src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`} className="w-8 h-8 rounded-full border border-gray-200" />
+                                                        <img
+                                                            src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`}
+                                                            onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`; }}
+                                                            className="w-8 h-8 rounded-full border border-gray-200"
+                                                        />
                                                         <div>
                                                             <p className="flex items-center gap-1">
                                                                 {s.fullName}
@@ -1528,6 +1573,10 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                             <button onClick={() => handleOpenNotifModal('user', s.uid, s.fullName)} className="text-yellow-500 hover:bg-yellow-50 p-2 rounded-lg transition" title="Gửi tin nhắn"><FaPaperPlane /></button>
 
                                                             <button onClick={() => { setEditStudent(s); setShowEditStudentModal(true); }} className="text-blue-500 hover:bg-blue-50 p-2 rounded-lg transition" title="Sửa thông tin"><FaEdit /></button>
+
+                                                            {canManageStudents && (
+                                                                <button onClick={() => handleResetPassword(s.uid, s.fullName)} className="text-yellow-500 hover:bg-yellow-50 p-2 rounded-lg transition" title="Reset Mật khẩu"><FaKey /></button>
+                                                            )}
 
                                                             <button onClick={() => { setHistoryStudent(s); setShowHistoryModal(true); }} className="text-purple-500 hover:bg-purple-50 p-2 rounded-lg transition" title="Xem lịch sử thi"><FaHistory /></button>
 

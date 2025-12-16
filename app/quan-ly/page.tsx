@@ -13,7 +13,6 @@ import UserName from '../../components/UserName'
 import CourseManager from '../../components/CourseManager'
 import UserAccountManager from '../../components/UserAccountManager'
 import PostManager from '../../components/PostManager'
-import ExamManager from '../../components/ExamManager'
 import ReviewManager from '../../components/ReviewManager'
 import StudentClassView from '../../components/StudentClassView'
 import StudentCard from '../../components/StudentCard'
@@ -27,7 +26,7 @@ function QuanLyDashboard() {
   const [resetError, setResetError] = useState('');
 
   // 💖 STATE CHO TAB QUẢN LÝ 💖
-  // ('dashboard' | 'courses' | 'accounts' | 'posts' | 'exams' | 'reviews' | 'my_class')
+  // ('dashboard' | 'courses' | 'accounts' | 'posts' | 'reviews' | 'my_class')
   const [activeTab, setActiveTab] = useState<string>('dashboard');
 
   // (Hàm Đổi mật khẩu - Giữ nguyên)
@@ -60,13 +59,9 @@ function QuanLyDashboard() {
 
   // (Kiểm tra quyền hạn)
   const canManagePosts = user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role);
-  const canManageExams = user && ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(user.role);
   const canManageReviews = user && ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(user.role); // 💖 QUYỀN QUẢN LÝ ÔN TẬP 💖
   const canManageAccounts = user && ['admin', 'lanh_dao', 'quan_ly'].includes(user.role);
   const canManageCourses = user && ['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(user.role);
-
-  // Học viên cũng được vào tab Thi (để làm bài)
-  const canAccessExams = user && (canManageExams || user.role === 'hoc_vien');
 
   // 💖 QUYỀN TRUY CẬP LỚP CỦA TÔI (CHỈ HỌC VIÊN) 💖
   const canAccessMyClass = user && user.role === 'hoc_vien';
@@ -98,7 +93,6 @@ function QuanLyDashboard() {
           {canManageCourses && renderTabButton('courses', 'Quản lý Khóa học', <FaBook />)}
           {canManageAccounts && renderTabButton('accounts', 'Quản lý Tài khoản', <FaUsers />)}
           {canManagePosts && renderTabButton('posts', 'Quản lý Bài viết', <FaNewspaper />)}
-          {canAccessExams && renderTabButton('exams', 'Thi trực tuyến', <FaClipboardList />)} {/* 💖 ĐỔI TÊN TAB 💖 */}
           {canManageReviews && renderTabButton('reviews', 'Kết quả Ôn tập', <FaStar />)}
         </div>
 
@@ -196,9 +190,6 @@ function QuanLyDashboard() {
 
         {/* 4. BÀI VIẾT */}
         {activeTab === 'posts' && canManagePosts && <PostManager />}
-
-        {/* 5. THI CỬ */}
-        {activeTab === 'exams' && canAccessExams && <ExamManager />}
 
         {/* 6. KẾT QUẢ ÔN TẬP */}
         {activeTab === 'reviews' && canManageReviews && <ReviewManager />}

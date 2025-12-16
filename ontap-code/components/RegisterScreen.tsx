@@ -12,6 +12,7 @@ interface RegisterScreenProps {
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ onBack, onSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [fullName, setFullName] = useState('');
     const [className, setClassName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -27,6 +28,12 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onBack, onSuccess }) =>
 
         if (password.length < 6) {
             setError('Mật khẩu phải có ít nhất 6 ký tự.');
+            setLoading(false);
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError('Mật khẩu xác nhận không khớp.');
             setLoading(false);
             return;
         }
@@ -153,6 +160,18 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onBack, onSuccess }) =>
                             required
                             className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
                             placeholder="Ít nhất 6 ký tự"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-card-foreground mb-1">Xác nhận mật khẩu *</label>
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={e => setConfirmPassword(e.target.value)}
+                            required
+                            className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                            placeholder="Nhập lại mật khẩu"
                         />
                     </div>
 

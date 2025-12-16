@@ -10,6 +10,7 @@ export interface Notification {
     senderName?: string;
     targetType: 'all' | 'class' | 'user';
     targetId: string | null;
+    targetName?: string; // Added for UI display
     createdAt: any; // Timestamp
     expiryDate?: any; // Timestamp for Special/Attention
     read?: boolean;
@@ -25,7 +26,8 @@ export const sendNotification = async (
     targetId: string | null,
     senderId: string,
     senderName?: string,
-    expiryDate?: Date | null
+    expiryDate?: Date | null,
+    targetName?: string // Optional display name for the target
 ) => {
     try {
         const notifData = {
@@ -34,6 +36,7 @@ export const sendNotification = async (
             type,
             targetType,
             targetId,
+            targetName: targetName || null,
             senderId,
             senderName: senderName || 'Hệ thống',
             createdAt: serverTimestamp(),
@@ -235,35 +238,58 @@ export const deleteNotificationForUser = async (notificationId: string, userId: 
     }
 };
 
-export const fetchActiveMarqueeNotifications = async (): Promise<Notification[]> => {
+export const fetchActiveMarqueeNotifications = async (userId?: string): Promise<Notification[]> => {
     try {
         const now = Timestamp.now();
-        // Query Global notifications
-        // AVOID complex index requirements by filtering Expiry client-side for now
-        const q = query(
+        const results: Notification[] = [];
+
+        // 1. Query Global notifications
+        const qGlobal = query(
             collection(db, 'notifications'),
             where('targetType', '==', 'all'),
-            limit(20) // Limit to 20 (doc order)
+            limit(20)
         );
 
-        const snap = await getDocs(q);
-        const results: Notification[] = [];
-        snap.forEach(d => {
+        const snapGlobal = await getDocs(qGlobal);
+        snapGlobal.forEach(d => {
             const data = d.data() as Notification;
-            // Client-side filter for Type and Expiry
             if ((data.type === 'special' || data.type === 'attention')) {
-                // Check expiry if exists; if NOT exists, assume active (essential for legacy or simplified creation)
-                if (data.expiryDate && data.expiryDate.seconds) {
-                    if (data.expiryDate.seconds > now.seconds) {
-                        results.push({ id: d.id, ...data });
-                    }
-                } else {
-                    // No expiry set -> Always show (or limit to X days logic if desired, but for now show)
+                if (!data.expiryDate || (data.expiryDate.seconds && data.expiryDate.seconds > now.seconds)) {
                     results.push({ id: d.id, ...data });
                 }
             }
         });
-        return results;
+
+        // 2. Query Personal notifications (if userId provided)
+        if (userId) {
+            const qPersonal = query(
+                collection(db, 'users', userId, 'notifications'),
+                // We can't easily filter by multiple types AND expiry in one query without complex indexes.
+                // So fetch recent ones and filter in memory.
+                orderBy('createdAt', 'desc'),
+                limit(20)
+            );
+
+            const snapPersonal = await getDocs(qPersonal);
+            snapPersonal.forEach(d => {
+                const data = d.data() as Notification;
+                if ((data.type === 'special' || data.type === 'attention')) {
+                    if (!data.expiryDate || (data.expiryDate.seconds && data.expiryDate.seconds > now.seconds)) {
+                        results.push({ id: d.id, ...data });
+                    }
+                }
+            });
+        }
+
+        // Deduplicate (just in case) and Sort
+        const uniqueResults = Array.from(new Map(results.map(item => [item.id, item])).values());
+
+        return uniqueResults.sort((a, b) => {
+            const timeA = a.createdAt?.seconds || 0;
+            const timeB = b.createdAt?.seconds || 0;
+            return timeB - timeA;
+        });
+
     } catch (e) {
         console.error("Error fetching marquee:", e);
         return [];

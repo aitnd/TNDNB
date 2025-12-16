@@ -20,7 +20,9 @@ export const AppState = {
     REGISTER: 'register',
     ACCOUNT: 'account',
     NOTIFICATION_MGMT: 'notification_mgmt',
-    MAILBOX: 'mailbox'
+    MAILBOX: 'mailbox',
+    THI_TRUC_TUYEN: 'thi_truc_tuyen',
+    ONLINE_EXAM_MANAGEMENT: 'online_exam_management'
 } as const;
 
 export type AppStateType = typeof AppState[keyof typeof AppState];

@@ -15,6 +15,22 @@ admin.initializeApp({
 const app = express();
 app.use(cors());
 
+// Serve Static Files (Production Build)
+const path = require('path');
+const buildPath = path.join(__dirname, '../../public/ontap');
+app.use('/ontap', express.static(buildPath));
+
+// Redirect root to /ontap (Removed per user request)
+// app.get('/', (req, res) => {
+//     res.redirect('/ontap');
+// });
+
+// Fallback for SPA (React Router) - Using Regex to avoid path-to-regexp errors
+app.get([/^\/ontap\/.*$/, /^\/thitructuyen\/?.*$/], (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(buildPath, 'index.html'));
+});
+
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
@@ -42,6 +58,54 @@ io.use(async (socket, next) => {
     } catch (error) {
         console.error("Auth Fail:", error.message);
         next(new Error("Authentication error"));
+    }
+});
+
+// Middleware xác thực API REST
+const authenticateAPI = async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const token = authHeader.split(' ')[1];
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        req.user = decodedToken;
+        next();
+    } catch (error) {
+        console.error("API Auth Fail:", error);
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+};
+
+app.use(express.json()); // Enable JSON body parsing
+
+// API Reset Password
+app.post('/api/admin/reset-password', authenticateAPI, async (req, res) => {
+    const { targetUserId, newPassword } = req.body;
+    const requesterUid = req.user.uid;
+
+    if (!targetUserId || !newPassword) {
+        return res.status(400).json({ error: 'Missing targetUserId or newPassword' });
+    }
+
+    try {
+        // Check requester role (Optional: fetch from Firestore if claims not set)
+        // For now, assume if they have valid token and calling this, we check Firestore
+        const requesterDoc = await admin.firestore().collection('users').doc(requesterUid).get();
+        if (!requesterDoc.exists || !['admin', 'quan_ly', 'lanh_dao'].includes(requesterDoc.data().role)) {
+            return res.status(403).json({ error: 'Permission denied' });
+        }
+
+        await admin.auth().updateUser(targetUserId, {
+            password: newPassword
+        });
+
+        console.log(`Admin ${requesterUid} reset password for user ${targetUserId}`);
+        res.json({ success: true, message: 'Password updated successfully' });
+    } catch (error) {
+        console.error("Error resetting password:", error);
+        res.status(500).json({ error: error.message });
     }
 });
 

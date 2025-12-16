@@ -104,7 +104,8 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                 targetId,
                 userProfile.id,
                 userProfile.full_name,
-                expiryDate ? new Date(expiryDate) : null
+                expiryDate ? new Date(expiryDate) : null,
+                targetType === 'user' && selectedUser ? `${selectedUser.full_name} (${selectedUser.email})` : undefined
             );
 
             // 2. Emit Real-time Socket Event
@@ -120,7 +121,8 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                         to: selectedUser.id,
                         title: title,
                         body: message,
-                        link: null
+                        link: null,
+                        type: type // Send type for realtime filtering/styling
                     });
                 } else if (targetType === 'class') {
                     // Client-side Loop or Server-side Room?
@@ -131,7 +133,6 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                     // OR: Fetch text-based members and emit loop (not efficient but works for small app)
                     // Implementation skipped for Class to avoid complexity overflow, focusing on All/User.
                     // User requested "connect buttons", so I should try.
-
                     // Simple solution for this turn: Just broadcast/user logic is solid.
                     // Class logic requires fetching users of that class.
                     // I will leave a TODO comment or try to implemented if easy.
@@ -166,12 +167,54 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                                 : 'Bạn có toàn quyền quản lý thông báo.'}
                         </p>
                     </div>
-                    <button
-                        onClick={() => setShowCreateModal(true)}
-                        className="bg-white text-teal-600 px-4 py-2 rounded-lg font-bold shadow hover:bg-teal-50 transition flex items-center gap-2"
-                    >
-                        <FaPlus /> Tạo mới
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={async () => {
+                                if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ thông báo trong hộp thư riêng của TẤT CẢ học viên.\nChỉ giữ lại thông báo chung (Toàn hệ thống).\nBạn có chắc chắn muốn dọn dẹp không?')) {
+                                    setLoading(true);
+                                    try {
+                                        const { collection, getDocs, deleteDoc, writeBatch, doc } = await import('firebase/firestore');
+                                        const { db } = await import('../services/firebaseClient');
+
+                                        // 1. Get all users
+                                        const usersSnap = await getDocs(collection(db, 'users'));
+                                        let deletedCount = 0;
+
+                                        // Process in chunks to avoid memory issues, but for now simple loop
+                                        for (const userDoc of usersSnap.docs) {
+                                            const notifsRef = collection(db, 'users', userDoc.id, 'notifications');
+                                            const notifsSnap = await getDocs(notifsRef);
+
+                                            if (!notifsSnap.empty) {
+                                                const batch = writeBatch(db);
+                                                notifsSnap.docs.forEach(n => {
+                                                    batch.delete(n.ref);
+                                                    deletedCount++;
+                                                });
+                                                await batch.commit();
+                                            }
+                                        }
+                                        alert(`Đã dọn dẹp thành công ${deletedCount} thông báo rác từ học viên.`);
+                                    } catch (e) {
+                                        console.error(e);
+                                        alert('Có lỗi xảy ra khi dọn dẹp.');
+                                    } finally {
+                                        setLoading(false);
+                                    }
+                                }
+                            }}
+                            className="bg-red-100 text-red-600 px-4 py-2 rounded-lg font-bold shadow hover:bg-red-200 transition flex items-center gap-2"
+                            title="Xóa tất cả thông báo trong hộp thư học viên (dùng khi bị lỗi hiển thị)"
+                        >
+                            <FaTrash /> Dọn dẹp rác
+                        </button>
+                        <button
+                            onClick={() => setShowCreateModal(true)}
+                            className="bg-white text-teal-600 px-4 py-2 rounded-lg font-bold shadow hover:bg-teal-50 transition flex items-center gap-2"
+                        >
+                            <FaPlus /> Tạo mới
+                        </button>
+                    </div>
                 </div>
 
                 {/* Content */}
@@ -212,8 +255,14 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                                                             {n.targetType === 'class' && <><FaUsers /> Lớp</>}
                                                             {n.targetType === 'user' && <><FaUser /> Cá nhân</>}
                                                         </span>
-                                                        {n.targetId && n.targetType !== 'all' && (
-                                                            <div className="text-xs text-gray-500 mt-1 font-mono">{n.targetId}</div>
+                                                        {n.targetType !== 'all' && (
+                                                            <div className="text-xs text-gray-500 mt-1 font-mono break-words max-w-[150px]">
+                                                                {n.targetName ? (
+                                                                    <span className="font-semibold text-gray-700 dark:text-gray-300">{n.targetName}</span>
+                                                                ) : (
+                                                                    n.targetId
+                                                                )}
+                                                            </div>
                                                         )}
                                                     </td>
                                                     <td className="p-4 align-top">

@@ -2,9 +2,11 @@ import { useEffect } from 'react';
 import { ref, onValue, onDisconnect, set, serverTimestamp } from 'firebase/database';
 import { rtdb } from '../services/firebaseClient';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppStore } from '../stores/useAppStore';
 
 const usePresence = () => {
-    const { user, userProfile } = useAuth();
+    const { user } = useAuth();
+    const userProfile = useAppStore(state => state.userProfile);
 
     useEffect(() => {
         if (!user || !userProfile || !rtdb) return;

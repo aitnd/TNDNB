@@ -3,7 +3,7 @@ import { UserProfile } from '../types';
 import StudentCard from './StudentCard';
 import { useTheme } from '../contexts/ThemeContext';
 import { HelmIcon3D, BookOpenIcon3D, ClipboardListIcon3D } from './icons';
-import { HelmIcon3D, BookOpenIcon3D, ClipboardListIcon3D } from './icons';
+
 import { useState, useEffect } from 'react';
 
 import OnlineStatsWidget from './OnlineStatsWidget';
@@ -13,9 +13,10 @@ interface DashboardProps {
     onStart: () => void;
     onHistoryClick: () => void;
     onClassClick: () => void;
+    onOnlineExamClick?: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryClick, onClassClick }) => {
+const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryClick, onClassClick, onOnlineExamClick }) => {
     const { theme } = useTheme();
 
     return (
@@ -47,6 +48,17 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
                             <BookOpenIcon3D className="w-8 h-8" />
                             <span>Vào Ôn Tập / Thi Thử</span>
                         </button>
+
+                        {/* Admin/Teacher Actions */}
+                        {['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role) && (
+                            <button
+                                onClick={onOnlineExamClick}
+                                className="w-full bg-blue-600 text-white font-bold text-lg py-4 px-6 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3 shadow-lg"
+                            >
+                                <ClipboardListIcon3D className="w-8 h-8" />
+                                <span>Quản lý Thi Trực Tuyến</span>
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

@@ -3,7 +3,9 @@ import { UserProfile } from '../types';
 import { db } from '../services/firebaseClient';
 import { getDefaultAvatar, uploadAvatar } from '../services/userService';
 import { doc, updateDoc, collection, query, orderBy, getDocs, deleteDoc } from 'firebase/firestore';
-import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes } from 'react-icons/fa';
+import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes, FaKey, FaLock } from 'react-icons/fa';
+import { auth } from '../services/firebaseClient';
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 
 interface AccountScreenProps {
     userProfile: UserProfile;
@@ -69,6 +71,13 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
     const [currentPage, setCurrentPage] = useState(1);
     const [sortField, setSortField] = useState<keyof UserAccount>('createdAt');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+    // --- CHANGE PASSWORD STATE ---
+    const [showChangePassModal, setShowChangePassModal] = useState(false);
+    const [oldPass, setOldPass] = useState('');
+    const [newPass, setNewPass] = useState('');
+    const [confirmPass, setConfirmPass] = useState('');
+    const [loadingChangePass, setLoadingChangePass] = useState(false);
 
     useEffect(() => {
         if (isManager) {
@@ -220,7 +229,91 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
         }
     };
 
+    // Admin Reset Password Logic
+    const handleResetPassword = async (targetUserId: string, targetUserName: string) => {
+        const newPassword = prompt(`Nhập mật khẩu mới cho ${targetUserName}:`, '123456');
+        if (newPassword === null) return; // Cancelled
+        if (!newPassword || newPassword.length < 6) {
+            alert('Mật khẩu phải có ít nhất 6 ký tự.');
+            return;
+        }
+
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            if (!token) {
+                alert('Lỗi xác thực: Không tìm thấy token admin.');
+                return;
+            }
+
+            // Call Server API
+            const response = await fetch('/api/admin/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ targetUserId, newPassword })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(`Đã đổi mật khẩu cho ${targetUserName} thành công!`);
+            } else {
+                alert(`Lỗi: ${data.error || 'Không xác định'}`);
+            }
+        } catch (error) {
+            console.error('Reset password error:', error);
+            alert('Lỗi kết nối đến server.');
+        }
+    };
+
     const roleName = (r: string) => allRoles.find(x => x.id === r)?.name || r;
+
+    // --- CHANGE PASSWORD LOGIC ---
+    const handleChangeMyPassword = async (e: FormEvent) => {
+        e.preventDefault();
+        if (newPass !== confirmPass) {
+            alert('Mật khẩu mới không khớp!');
+            return;
+        }
+        if (newPass.length < 6) {
+            alert('Mật khẩu mới phải có ít nhất 6 ký tự.');
+            return;
+        }
+
+        setLoadingChangePass(true);
+        try {
+            const user = auth.currentUser;
+            if (!user || !user.email) {
+                alert('Lỗi xác thực.');
+                return;
+            }
+
+            // 1. Re-authenticate
+            const credential = EmailAuthProvider.credential(user.email, oldPass);
+            await reauthenticateWithCredential(user, credential);
+
+            // 2. Update Password
+            await updatePassword(user, newPass);
+
+            alert('Đổi mật khẩu thành công!');
+            setShowChangePassModal(false);
+            setOldPass('');
+            setNewPass('');
+            setConfirmPass('');
+        } catch (error: any) {
+            console.error('Change password error:', error);
+            if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                alert('Mật khẩu cũ không đúng.');
+            } else if (error.code === 'auth/weak-password') {
+                alert('Mật khẩu quá yếu.');
+            } else {
+                alert('Lỗi khi đổi mật khẩu: ' + error.message);
+            }
+        } finally {
+            setLoadingChangePass(false);
+        }
+    };
 
     // --- AVATAR UPLOAD LOGIC ---
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -350,7 +443,14 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                         </div>
                     </div>
 
-                    <div className="md:col-span-2 flex justify-end mt-4">
+                    <div className="md:col-span-2 flex justify-end mt-4 gap-3">
+                        <button
+                            type="button"
+                            onClick={() => setShowChangePassModal(true)}
+                            className="flex items-center gap-2 bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition shadow-md"
+                        >
+                            <FaLock /> Đổi mật khẩu
+                        </button>
                         <button type="submit" disabled={isSavingMyInfo} className="flex items-center gap-2 bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition shadow-md disabled:opacity-50">
                             <FaSave /> {isSavingMyInfo ? 'Đang lưu...' : 'Cập nhật thông tin'}
                         </button>
@@ -514,8 +614,19 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                                 </span>
                                             </td>
                                             <td className="p-3 flex justify-center gap-2">
-                                                <button onClick={() => { setEditingUser(u); setShowEditModal(true); }} className="p-2 text-blue-600 hover:bg-blue-50 rounded"><FaEdit /></button>
-                                                {userProfile.role === 'admin' && <button onClick={() => handleDeleteUser(u.id)} className="p-2 text-red-600 hover:bg-red-50 rounded"><FaTrash /></button>}
+                                                <button onClick={() => { setEditingUser(u); setShowEditModal(true); }} className="p-2 text-blue-600 hover:bg-blue-50 rounded" title="Sửa thông tin"><FaEdit /></button>
+                                                {userProfile.role === 'admin' && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => handleResetPassword(u.id, u.fullName)}
+                                                            className="p-2 text-yellow-600 hover:bg-yellow-50 rounded"
+                                                            title="Đổi mật khẩu"
+                                                        >
+                                                            <FaKey />
+                                                        </button>
+                                                        <button onClick={() => handleDeleteUser(u.id)} className="p-2 text-red-600 hover:bg-red-50 rounded" title="Xóa tài khoản"><FaTrash /></button>
+                                                    </>
+                                                )}
                                             </td>
                                         </tr>
                                     ))
@@ -689,6 +800,62 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                 )}
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+            {/* CHANGE PASSWORD MODAL */}
+            {showChangePassModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowChangePassModal(false)}>
+                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 relative" onClick={e => e.stopPropagation()}>
+                        <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-gray-800 dark:text-white">
+                            <FaLock className="text-blue-600" /> Đổi mật khẩu
+                        </h2>
+                        <form onSubmit={handleChangeMyPassword} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-bold mb-1 dark:text-gray-300">Mật khẩu cũ</label>
+                                <input
+                                    type="password"
+                                    className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                    value={oldPass}
+                                    onChange={e => setOldPass(e.target.value)}
+                                    required
+                                    placeholder="Nhập mật khẩu hiện tại"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold mb-1 dark:text-gray-300">Mật khẩu mới</label>
+                                <input
+                                    type="password"
+                                    className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                    value={newPass}
+                                    onChange={e => setNewPass(e.target.value)}
+                                    required
+                                    placeholder="Ít nhất 6 ký tự"
+                                    minLength={6}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold mb-1 dark:text-gray-300">Xác nhận mật khẩu mới</label>
+                                <input
+                                    type="password"
+                                    className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                                    value={confirmPass}
+                                    onChange={e => setConfirmPass(e.target.value)}
+                                    required
+                                    placeholder="Nhập lại mật khẩu mới"
+                                />
+                            </div>
+                            <div className="flex justify-end gap-2 pt-4">
+                                <button type="button" onClick={() => setShowChangePassModal(false)} className="px-4 py-2 bg-gray-200 dark:bg-slate-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-slate-600 transition">Hủy</button>
+                                <button
+                                    type="submit"
+                                    disabled={loadingChangePass}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2"
+                                >
+                                    {loadingChangePass ? 'Đang xử lý...' : 'Đổi mật khẩu'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

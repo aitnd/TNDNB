@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 import { auth } from '../services/firebaseClient';
 import { ArrowLeftIcon3D, HelmIcon3D } from './icons';
-import { FaFingerprint, FaCheckSquare, FaSquare } from 'react-icons/fa';
+import { FaFingerprint, FaCheckSquare, FaSquare, FaKey } from 'react-icons/fa';
 import { saveCredentials, performBiometricLogin, hasSavedCredentials } from '../services/biometricService';
 
 import { resolveEmailFromUsername } from '../services/authService';
@@ -16,6 +16,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Forgot Password State
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
 
   // Biometric States
   const [rememberMe, setRememberMe] = useState(false);
@@ -36,6 +41,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     const creds = await performBiometricLogin();
     if (creds) {
       try {
+        // Biometric implies persistence usually, but let's stick to default or user pref?
+        // Usually biometric is for quick access, so maybe SESSION is fine, but let's default to LOCAL for convenience if they used bio.
+        await setPersistence(auth, browserLocalPersistence);
         await signInWithEmailAndPassword(auth, creds.email, creds.pass);
         // Success handled by App.tsx
       } catch (err: any) {
@@ -57,9 +65,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
       // Resolve username to email if necessary
       const loginEmail = await resolveEmailFromUsername(account);
 
+      // Set Persistence based on Remember Me
+      if (rememberMe) {
+        await setPersistence(auth, browserLocalPersistence);
+      } else {
+        await setPersistence(auth, browserSessionPersistence);
+      }
+
       await signInWithEmailAndPassword(auth, loginEmail, password);
 
-      // Save credentials if "Remember Me" is checked
+      // Save credentials for Biometric if "Remember Me" is checked (and supported)
       if (rememberMe) {
         await saveCredentials(loginEmail, password);
       }
@@ -80,6 +95,83 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     }
   };
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetEmail) return;
+    setLoading(true);
+    setError(null);
+    setSuccessMsg(null);
+
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      setSuccessMsg(`Đã gửi email khôi phục đến ${resetEmail}. Vui lòng kiểm tra hộp thư (cả mục Spam).`);
+      setResetEmail('');
+    } catch (err: any) {
+      console.error("Reset password failed:", err);
+      if (err.code === 'auth/user-not-found') {
+        setError('Email này chưa được đăng ký.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Email không hợp lệ.');
+      } else {
+        setError('Gửi email thất bại. Vui lòng thử lại sau.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- RENDER: FORGOT PASSWORD SCREEN ---
+  if (showForgotPassword) {
+    return (
+      <div className="w-full max-w-md mx-auto p-4 animate-slide-in-right">
+        <div className="relative text-center mb-10">
+          <button
+            onClick={() => { setShowForgotPassword(false); setError(null); setSuccessMsg(null); }}
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-card/50 p-3 rounded-full shadow-md hover:bg-muted transition-all duration-300"
+          >
+            <ArrowLeftIcon3D className="h-10 w-10 text-primary" />
+          </button>
+          <div className="h-20 w-20 mx-auto text-primary mb-4 flex items-center justify-center bg-primary/10 rounded-full">
+            <FaKey className="text-4xl" />
+          </div>
+          <h1 className="text-3xl font-bold text-foreground">Khôi phục mật khẩu</h1>
+          <p className="text-sm text-muted-foreground mt-2">
+            Nhập email của bạn để nhận liên kết đặt lại mật khẩu.
+          </p>
+        </div>
+
+        <div className="bg-card p-8 rounded-2xl shadow-lg">
+          <form onSubmit={handleResetPassword}>
+            {error && <p className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-center text-sm">{error}</p>}
+            {successMsg && <p className="bg-green-100 text-green-700 p-3 rounded-md mb-4 text-center text-sm">{successMsg}</p>}
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-card-foreground mb-2">Email đăng ký</label>
+              <input
+                type="email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                placeholder="email@example.com"
+                className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-300"
+                required
+                autoFocus
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary text-primary-foreground font-bold py-3 px-6 rounded-lg hover:bg-primary/90 transition-all duration-300 disabled:opacity-50"
+            >
+              {loading ? 'Đang gửi...' : 'Gửi yêu cầu'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // --- RENDER: LOGIN SCREEN ---
   return (
     <div className="w-full max-w-md mx-auto p-4 animate-slide-in-right">
       <div className="relative text-center mb-10">
@@ -132,6 +224,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
             />
           </div>
 
+          <div className="flex justify-end mb-4">
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(true)}
+              className="text-sm text-primary hover:underline"
+            >
+              Quên mật khẩu?
+            </button>
+          </div>
+
           {/* REMEMBER ME CHECKBOX */}
           <div className="mb-6 flex items-center gap-2 cursor-pointer" onClick={() => setRememberMe(!rememberMe)}>
             {rememberMe ? (
@@ -139,7 +241,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
             ) : (
               <FaSquare className="text-gray-400 text-xl" />
             )}
-            <span className="text-sm text-muted-foreground select-none">Ghi nhớ đăng nhập (Vân tay)</span>
+            <span className="text-sm text-muted-foreground select-none">Ghi nhớ đăng nhập</span>
           </div>
 
           <button
