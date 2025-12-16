@@ -1,5 +1,11 @@
 # HÀNH TRÌNH PHÁT TRIỂN DỰ ÁN (CHANGELOG)
 
+## [v3.5.1] - 16/12/2025: NÂNG CẤP HỆ THỐNG & UI
+**Trạng thái**: ✨ Cập nhật nhỏ
+- **Admin System**: Thêm công cụ "Hệ Thống & Dữ Liệu" giúp quét và sửa lỗi Orphaned Student Data (dữ liệu rác khi lớp bị xóa).
+- **Account UI**: Bổ sung hiển thị Avatar (Ảnh đại diện) trong danh sách quản lý tài khoản.
+- **Improvements**: Nâng cấp trải nghiệm người dùng và sửa các lỗi nhỏ.
+
 ## [v3.5.0] - 15/12/2025: QUẢN LÝ THÀNH VIÊN & FIXES
 **Trạng thái**: 🚀 Đã triển khai (Deployed)
 Tập trung vào tính năng quản lý lớp học và trải nghiệm người dùng.

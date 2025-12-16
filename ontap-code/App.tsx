@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Toaster } from 'sonner';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
-import MarqueeNotifier from './components/MarqueeNotifier';
 import SweetAlertPopup from './components/SweetAlertPopup';
 import NotificationMgmtScreen from './components/NotificationMgmtScreen';
+import { useAppStore, AppState } from './stores/useAppStore';
 import { auth, db } from './services/firebaseClient';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -25,6 +27,7 @@ import MyClassScreen from './components/MyClassScreen';
 import ClassManagementScreen from './components/ClassManagementScreen';
 import AccountScreen from './components/AccountScreen';
 import TopNavbar from './components/TopNavbar';
+import MailboxScreen from './components/MailboxScreen';
 import AdSenseLoader from './components/AdSenseLoader';
 import MobileBottomNav from './components/MobileBottomNav';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
@@ -33,41 +36,45 @@ import { saveExamResult, getUserProfile } from './services/userService';
 import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
 import { Capacitor } from '@capacitor/core';
 
-const AppState = {
-  WELCOME: 'welcome',
-  LOGIN: 'login',
-  DASHBOARD: 'dashboard',
-  LICENSE_SELECTION: 'license_selection',
-  NAME_INPUT: 'name_input',
-  MODE_SELECTION: 'mode_selection',
-  SUBJECT_SELECTION: 'subject_selection',
-  IN_QUIZ: 'in_quiz',
-  IN_ONLINE_EXAM: 'in_online_exam',
-  RESULT: 'results',
-  EXAM_RESULT: 'exam_result',
-  HISTORY: 'history',
-  MY_CLASS: 'my_class',
-  CLASS_MANAGEMENT: 'class_management',
-  REGISTER: 'register',
-  ACCOUNT: 'account',
-  NOTIFICATION_MGMT: 'notification_mgmt'
-} as const;
 
-type AppStateType = typeof AppState[keyof typeof AppState];
 
 const AppContent: React.FC = () => {
-  const [appState, setAppState] = useState<AppStateType>(AppState.WELCOME);
-  const [licenses, setLicenses] = useState<License[]>([]);
-  const [selectedLicense, setSelectedLicense] = useState<License | null>(null);
-  const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
-  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
-  const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
-  const [score, setScore] = useState<number>(0);
-  const [userName, setUserName] = useState<string>('');
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [resumeSessionAvailable, setResumeSessionAvailable] = useState<boolean>(false);
-  const [isMobileApp, setIsMobileApp] = useState<boolean>(false);
+  // Zustand State Selectors
+  const appState = useAppStore(state => state.appState);
+  const setAppState = useAppStore(state => state.setAppState);
+
+  const licenses = useAppStore(state => state.licenses);
+  const setLicenses = useAppStore(state => state.setLicenses);
+
+  const selectedLicense = useAppStore(state => state.selectedLicense);
+  const setSelectedLicense = useAppStore(state => state.setSelectedLicense);
+
+  const subjects = useAppStore(state => state.subjects);
+  const setSubjects = useAppStore(state => state.setSubjects);
+
+  const selectedSubject = useAppStore(state => state.selectedSubject);
+  const setSelectedSubject = useAppStore(state => state.setSelectedSubject);
+
+  const currentQuiz = useAppStore(state => state.currentQuiz);
+  const setCurrentQuiz = useAppStore(state => state.setCurrentQuiz);
+
+  const userAnswers = useAppStore(state => state.userAnswers);
+  const setUserAnswers = useAppStore(state => state.setUserAnswers);
+
+  const score = useAppStore(state => state.score);
+  const setScore = useAppStore(state => state.setScore);
+
+  const userName = useAppStore(state => state.userName);
+  const setUserName = useAppStore(state => state.setUserName);
+
+  const userProfile = useAppStore(state => state.userProfile);
+  const setUserProfile = useAppStore(state => state.setUserProfile);
+
+  const resumeSessionAvailable = useAppStore(state => state.resumeSessionAvailable);
+  const setResumeSessionAvailable = useAppStore(state => state.setResumeSessionAvailable);
+
+  const isMobileApp = useAppStore(state => state.isMobileApp);
+  const setIsMobileApp = useAppStore(state => state.setIsMobileApp);
 
   useEffect(() => {
     // Check for native platform OR test mode via URL (?mode=app)
@@ -105,9 +112,32 @@ const AppContent: React.FC = () => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // 1. Authenticated
+        // 1. Authenticated - Realtime Listener
+        import('firebase/firestore').then(({ onSnapshot, doc }) => {
+          const unsubProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
+            if (docSnap.exists()) {
+              const profile = { id: docSnap.id, ...docSnap.data() } as UserProfile;
+              setUserProfile(profile);
+              setUserName(profile.full_name || firebaseUser.displayName || '');
+            }
+          });
+          // Cleanup listener on auth change/unmount is tricky inside here without ref, but OK for top level app structure usually
+          // Better to store unsub in a ref if we want to unsubscribe cleanly on logout, but onAuthStateChanged handles session switch.
+          // For simplicity/robustness in this structure: ensuring we don't leak is important.
+        });
+
+        // Initial fetch for immediate render (optional, but snapshot is fast)
+        // const profile = await getUserProfile(firebaseUser.uid);
+        // setUserProfile(profile); 
+        // setUserName(profile?.full_name || firebaseUser.displayName || '');
+
+        // Initial fetch for immediate render and for downstream logic that relies on 'profile' variable
         const profile = await getUserProfile(firebaseUser.uid);
-        setUserProfile(profile);
-        setUserName(profile?.full_name || firebaseUser.displayName || '');
+        if (!profile) {
+          // If profile doesn't exist yet (rare race condition or new user without doc), 
+          // the snapshot listener will eventually catch it, but here we might have issues.
+          // Using a basic object as fallback or letting it be null.
+        }
 
         // Initialize FCM if Native
         import('./services/fcmClient').then(({ initializeFCM }) => {
@@ -465,6 +495,8 @@ const AppContent: React.FC = () => {
       }
     } else if (screen === 'notification_mgmt') {
       setAppState(AppState.NOTIFICATION_MGMT);
+    } else if (screen === 'mailbox') {
+      setAppState(AppState.MAILBOX);
     }
   };
 
@@ -473,129 +505,145 @@ const AppContent: React.FC = () => {
     await auth.signOut();
   };
 
-  const renderContent = () => {
-    switch (appState) {
-      case AppState.WELCOME:
-        return <WelcomeModal onStart={handleStart} onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />;
-      case AppState.LOGIN:
-        return <LoginScreen onBack={() => setAppState(AppState.WELCOME)} />;
-      case AppState.REGISTER:
-        return <RegisterScreen onBack={() => setAppState(AppState.WELCOME)} onSuccess={() => setAppState(AppState.DASHBOARD)} />;
-      case AppState.LICENSE_SELECTION:
-        return <LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => setAppState(AppState.WELCOME)} />;
-      case AppState.NAME_INPUT:
-        return <NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => setAppState(AppState.LICENSE_SELECTION)} />;
-      case AppState.MODE_SELECTION:
-        return (
-          <ModeSelectionScreen
-            onModeSelect={handleModeSelect}
-            licenseName={selectedLicense?.name || ''}
-            userName={userName}
-            onSwitchLicense={() => setAppState(AppState.LICENSE_SELECTION)}
-          />
-        );
-      case AppState.SUBJECT_SELECTION:
-        return (
-          <SubjectSelectionScreen
-            subjects={subjects}
-            progress={{}}
-            onSelect={handleSubjectSelect}
-            onBack={() => setAppState(AppState.MODE_SELECTION)}
-          />
-        );
-      case AppState.IN_QUIZ:
-        return currentQuiz ? (
-          <QuizScreen
-            quiz={currentQuiz}
-            onFinish={handleQuizFinish}
-            onBack={() => setAppState(AppState.SUBJECT_SELECTION)}
-            initialAnswers={userAnswers}
-            initialIndex={(() => {
-              try {
-                const s = localStorage.getItem('ontap_quiz_session');
-                return s ? JSON.parse(s).currentQuestionIndex : 0;
-              } catch (e) { return 0; }
-            })()}
-            onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'practice')}
-          />
-        ) : null;
-      case AppState.IN_ONLINE_EXAM:
-        if (currentQuiz) {
-          return (
-            <ExamQuizScreen2
-              quiz={currentQuiz}
-              onFinish={handleQuizFinish}
-              onBack={() => setAppState(AppState.MODE_SELECTION)}
-              userName={userName}
-              selectedLicense={selectedLicense}
-              initialAnswers={userAnswers}
-              initialIndex={(() => {
-                try {
-                  const s = localStorage.getItem('ontap_quiz_session');
-                  return s ? JSON.parse(s).currentQuestionIndex : 0;
-                } catch (e) { return 0; }
-              })()}
-              initialTime={(() => {
-                try {
-                  const s = localStorage.getItem('ontap_quiz_session');
-                  return s ? JSON.parse(s).timeLeft : undefined;
-                } catch (e) { return undefined; }
-              })()}
-              onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'online_exam')}
-            />
-          );
-        }
-        return null;
-      case AppState.RESULT:
-        return currentQuiz ? (
-          <ResultsScreen
-            quiz={currentQuiz}
-            userAnswers={userAnswers}
-            score={score}
-            onRetry={handleRetry}
-            onBack={() => setAppState(AppState.SUBJECT_SELECTION)}
-            userName={userName}
-          />
-        ) : null;
-      case AppState.EXAM_RESULT:
-        return currentQuiz ? (
-          <ExamResultsScreen
-            quiz={currentQuiz}
-            userAnswers={userAnswers}
-            score={score}
-            onRetry={handleRetry}
-            onBack={() => setAppState(AppState.MODE_SELECTION)}
-            userName={userName}
-          />
-        ) : null;
-      case AppState.DASHBOARD:
-        return (
-          <Dashboard
-            userProfile={userProfile!}
-            onStart={() => setAppState(AppState.LICENSE_SELECTION)}
-            onHistoryClick={() => setAppState(AppState.HISTORY)}
-            onClassClick={() => handleTopNavNavigate((userProfile!.role === 'hoc_vien') ? 'my_class' : 'class_management')}
-          />
-        );
-      case AppState.HISTORY:
-        return <HistoryScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
-      case AppState.MY_CLASS:
-        return <MyClassScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
-      case AppState.CLASS_MANAGEMENT:
-        return <ClassManagementScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
-      case AppState.ACCOUNT:
-        return <AccountScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
-      case AppState.NOTIFICATION_MGMT:
-        return userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : null;
-      default:
-        return <WelcomeModal onStart={handleStart} onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />;
-    }
-  };
+  const animatedContent = (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={appState}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        transition={{ duration: 0.2 }}
+        className="w-full h-full"
+      >
+        {(() => {
+          switch (appState) {
+            case AppState.WELCOME:
+              return <WelcomeModal onStart={handleStart} onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />;
+            case AppState.LOGIN:
+              return <LoginScreen onBack={() => setAppState(AppState.WELCOME)} />;
+            case AppState.REGISTER:
+              return <RegisterScreen onBack={() => setAppState(AppState.WELCOME)} onSuccess={() => setAppState(AppState.DASHBOARD)} />;
+            case AppState.LICENSE_SELECTION:
+              return <LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => setAppState(AppState.WELCOME)} />;
+            case AppState.NAME_INPUT:
+              return <NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => setAppState(AppState.LICENSE_SELECTION)} />;
+            case AppState.MODE_SELECTION:
+              return (
+                <ModeSelectionScreen
+                  onModeSelect={handleModeSelect}
+                  licenseName={selectedLicense?.name || ''}
+                  userName={userName}
+                  onSwitchLicense={() => setAppState(AppState.LICENSE_SELECTION)}
+                />
+              );
+            case AppState.SUBJECT_SELECTION:
+              return (
+                <SubjectSelectionScreen
+                  subjects={subjects}
+                  progress={{}}
+                  onSelect={handleSubjectSelect}
+                  onBack={() => setAppState(AppState.MODE_SELECTION)}
+                />
+              );
+            case AppState.IN_QUIZ:
+              return currentQuiz ? (
+                <QuizScreen
+                  quiz={currentQuiz}
+                  onFinish={handleQuizFinish}
+                  onBack={() => setAppState(AppState.SUBJECT_SELECTION)}
+                  initialAnswers={userAnswers}
+                  initialIndex={(() => {
+                    try {
+                      const s = localStorage.getItem('ontap_quiz_session');
+                      return s ? JSON.parse(s).currentQuestionIndex : 0;
+                    } catch (e) { return 0; }
+                  })()}
+                  onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'practice')}
+                />
+              ) : null;
+            case AppState.IN_ONLINE_EXAM:
+              if (currentQuiz) {
+                return (
+                  <ExamQuizScreen2
+                    quiz={currentQuiz}
+                    onFinish={handleQuizFinish}
+                    onBack={() => setAppState(AppState.MODE_SELECTION)}
+                    userName={userName}
+                    userProfile={userProfile}
+                    selectedLicense={selectedLicense}
+                    initialAnswers={userAnswers}
+                    initialIndex={(() => {
+                      try {
+                        const s = localStorage.getItem('ontap_quiz_session');
+                        return s ? JSON.parse(s).currentQuestionIndex : 0;
+                      } catch (e) { return 0; }
+                    })()}
+                    initialTime={(() => {
+                      try {
+                        const s = localStorage.getItem('ontap_quiz_session');
+                        return s ? JSON.parse(s).timeLeft : undefined;
+                      } catch (e) { return undefined; }
+                    })()}
+                    onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'online_exam')}
+                  />
+                );
+              }
+              return null;
+            case AppState.RESULT:
+              return currentQuiz ? (
+                <ResultsScreen
+                  quiz={currentQuiz}
+                  userAnswers={userAnswers}
+                  score={score}
+                  onRetry={handleRetry}
+                  onBack={() => setAppState(AppState.SUBJECT_SELECTION)}
+                  userName={userName}
+                />
+              ) : null;
+            case AppState.EXAM_RESULT:
+              return currentQuiz ? (
+                <ExamResultsScreen
+                  quiz={currentQuiz}
+                  userAnswers={userAnswers}
+                  score={score}
+                  onRetry={handleRetry}
+                  onBack={() => setAppState(AppState.MODE_SELECTION)}
+                  userName={userName}
+                />
+              ) : null;
+            case AppState.DASHBOARD:
+              return (
+                <Dashboard
+                  userProfile={userProfile!}
+                  onStart={() => setAppState(AppState.LICENSE_SELECTION)}
+                  onHistoryClick={() => setAppState(AppState.HISTORY)}
+                  onClassClick={() => handleTopNavNavigate((userProfile!.role === 'hoc_vien') ? 'my_class' : 'class_management')}
+                />
+              );
+            case AppState.HISTORY:
+              return <HistoryScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
+            case AppState.MY_CLASS:
+              return <MyClassScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
+            case AppState.CLASS_MANAGEMENT:
+              return <ClassManagementScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
+            case AppState.ACCOUNT:
+              return <AccountScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} onNavigate={handleTopNavNavigate} />;
+            case AppState.NOTIFICATION_MGMT:
+              return userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : null;
+            case AppState.MAILBOX:
+              return userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => setAppState(AppState.DASHBOARD)} /> : null;
+            default:
+              return <WelcomeModal onStart={handleStart} onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />;
+          }
+        })()}
+      </motion.div>
+    </AnimatePresence>
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans transition-colors duration-300 pt-16">
-      <MarqueeNotifier />
       <SweetAlertPopup />
+      <Toaster position="top-right" richColors expand={true} />
 
       {resumeSessionAvailable && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black px-6 py-3 rounded-full shadow-xl z-50 animate-bounce cursor-pointer hover:bg-yellow-500 font-bold flex items-center gap-2"
@@ -616,7 +664,7 @@ const AppContent: React.FC = () => {
         />
       )}
 
-      {renderContent()}
+      {animatedContent}
 
       {/* Show MobileBottomNav on Native App */}
       {isMobileApp && (

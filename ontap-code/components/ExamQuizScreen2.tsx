@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import type { Quiz, UserAnswers, License } from '../types';
+import type { Quiz, UserAnswers, License, UserProfile } from '../types';
 
 interface ExamQuizScreen2Props {
     quiz: Quiz;
     onFinish: (answers: UserAnswers) => void;
     onBack: () => void;
     userName: string;
+    userProfile: UserProfile | null;
     selectedLicense: License | null;
     initialIndex?: number;
     initialAnswers?: UserAnswers;
@@ -31,11 +32,23 @@ const SquareCheckbox = ({ checked, onChange }: { checked: boolean, onChange: () 
     </div>
 );
 
+// Helper for date formatting
+const formatDate = (dateString?: string) => {
+    if (!dateString) return '---';
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        const [year, month, day] = dateString.split('-');
+        return `${day}/${month}/${year}`;
+    }
+    return dateString;
+};
+
 const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
     quiz,
     onFinish,
     onBack,
     userName,
+    userProfile,
     selectedLicense,
     initialIndex = 0,
     initialAnswers = {},
@@ -119,13 +132,22 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
             <div className="h-3 bg-yellow-700 rounded-t-md border-b-2 border-yellow-900"></div>
             <div className="bg-white p-4">
                 <div className="flex justify-between items-start pb-4 border-b border-gray-300">
-                    <div className="flex gap-4 items-center">
-                        <img src="https://i.postimg.cc/8PDn1wfM/favicon.png" alt="Avatar" className="w-20 h-[100px] border border-gray-300 object-contain p-1" />
-                        <div className="text-sm">
-                            <p>Số báo danh:</p>
-                            <p>Ngày sinh:</p>
-                            <p className="mt-2">Họ tên: <span className="font-bold text-blue-700">{userName || 'Học viên'}</span></p>
-                            <p>Hạng bằng: <span className="font-bold text-blue-700">{selectedLicense?.name || 'Thuyền trưởng hạng ba - T3'}</span></p>
+                    <div className="flex gap-4 items-start">
+                        <img
+                            src={userProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`}
+                            alt="Avatar"
+                            className="w-[100px] h-[130px] border border-gray-300 object-cover p-1 bg-white"
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).src = 'https://i.postimg.cc/8PDn1wfM/favicon.png';
+                            }}
+                        />
+                        <div className="text-sm space-y-1">
+                            <p className="font-bold text-blue-700 text-lg uppercase">{userName || 'Học viên'}</p>
+                            <p>Số báo danh: <span className="font-semibold text-gray-800">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
+                            <p>Ngày sinh: <span className="font-semibold text-gray-800">{formatDate(userProfile?.birthDate)}</span></p>
+                            <p>Địa chỉ: <span className="font-semibold text-gray-800">{userProfile?.address || '---'}</span></p>
+                            <p>Lớp: <span className="font-semibold text-gray-800">{userProfile?.class || userProfile?.courseName || '---'}</span></p>
+                            <p>Hạng bằng: <span className="font-bold text-red-600 border border-red-500 px-1 rounded bg-red-50">{selectedLicense?.name || '---'}</span></p>
                         </div>
                     </div>
                     <div className="flex items-start gap-4">

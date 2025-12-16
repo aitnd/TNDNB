@@ -7,6 +7,16 @@ interface StudentCardProps {
     user: UserProfile;
 }
 
+const formatDate = (dateString?: string) => {
+    if (!dateString) return ' --/--/----';
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        const [year, month, day] = dateString.split('-');
+        return `${day}/${month}/${year}`;
+    }
+    return dateString;
+};
+
 const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
     const isTeacher = user.role !== 'hoc_vien';
     const cardTitle = isTeacher ? 'THẺ GIÁO VIÊN' : 'THẺ HỌC VIÊN';
@@ -56,13 +66,13 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                         <div className={styles.infoRow}>
                             <span className={styles.label}>Họ tên:</span>
                             <span className={`${styles.value} ${styles.valueHighlight}`} style={isTeacher ? { color: '#b91c1c' } : {}}>
-                                {user.full_name || '---'}
+                                {user.full_name || user.fullName || '---'}
                                 {user.isVerified && <span style={{ marginLeft: '4px', color: '#22c55e', display: 'inline-flex', alignItems: 'center' }}><FaCheckCircle size={14} /></span>}
                             </span>
                         </div>
                         <div className={styles.infoRow}>
                             <span className={styles.label}>Ngày sinh: </span>
-                            <span className={styles.value}> {user.birthDate || ' --/--/----'}</span>
+                            <span className={styles.value}> {formatDate(user.birthDate)}</span>
                         </div>
 
                         {isTeacher ? (

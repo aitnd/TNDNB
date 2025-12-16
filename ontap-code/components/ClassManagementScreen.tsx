@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle } from 'react-icons/fa';
 import { db } from '../services/firebaseClient';
@@ -35,6 +35,7 @@ interface UserData {
     cccdPlace?: string;     // Renamed from citizenIdPlace
     class?: string;         // Renamed from className
     courseCode?: string;
+    isVerified?: boolean;
 }
 
 interface ClassManagementScreenProps {
@@ -86,6 +87,9 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [teacherSearchTerm, setTeacherSearchTerm] = useState('');
     const [addingStudent, setAddingStudent] = useState(false);
     const [addingTeacher, setAddingTeacher] = useState(false);
+    // Bulk Add State
+    const [selectedStudentIds, setSelectedStudentIds] = useState<Set<string>>(new Set());
+    const [isBulkAdding, setIsBulkAdding] = useState(false);
     // --- NEW FEATURES STATES ---
     const [showHistoryModal, setShowHistoryModal] = useState(false);
     const [historyStudent, setHistoryStudent] = useState<UserData | null>(null);
@@ -117,8 +121,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
     const [licenses, setLicenses] = useState<any[]>([]);
 
-    // --- SORTING STATE ---
-    const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
+
 
     // Edit Course State
     const [showEditCourseModal, setShowEditCourseModal] = useState(false);
@@ -127,6 +130,12 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [editCourseDesc, setEditCourseDesc] = useState('');
     const [editCourseLicenseId, setEditCourseLicenseId] = useState('');
     const [newCourseLicenseId, setNewCourseLicenseId] = useState('');
+
+    // --- PAGINATION & SORTING STATE ---
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [sortField, setSortField] = useState<keyof UserData | 'status' | 'recentExam' | 'time' | 'score'>('fullName');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
     const canCreateClass = getRoleRank(userProfile.role) >= 2;
     const canManageStudents = ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role);
@@ -253,6 +262,63 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
 
     }, [selectedCourse]);
+
+    // --- HELPER FUNCTIONS FOR LIST ---
+    const getFilteredAndSortedStudents = useMemo(() => {
+        let result = [...students];
+
+        // 1. Search
+        if (studentSearchTerm) {
+            const lower = studentSearchTerm.toLowerCase();
+            result = result.filter(s =>
+                s.fullName?.toLowerCase().includes(lower) ||
+                s.email?.toLowerCase().includes(lower) ||
+                s.phoneNumber?.includes(lower)
+            );
+        }
+
+        // 2. Sorting
+        result.sort((a, b) => {
+            let valA: any = a[sortField as keyof UserData];
+            let valB: any = b[sortField as keyof UserData];
+
+            if (sortField === 'status') {
+                valA = (a.isVerified || a.courseId) ? 1 : 0;
+                valB = (b.isVerified || b.courseId) ? 1 : 0;
+            }
+
+            if (!valA) valA = '';
+            if (!valB) valB = '';
+
+            if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        return result;
+    }, [students, studentSearchTerm, sortField, sortDirection]);
+
+    const totalPages = Math.ceil(getFilteredAndSortedStudents.length / itemsPerPage);
+    const paginatedStudents = getFilteredAndSortedStudents.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handleSort = (field: keyof UserData | 'status' | 'recentExam' | 'time' | 'score') => {
+        if (sortField === field) {
+            setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDirection('asc');
+        }
+    };
+
+
+
+    const getSortIcon = (field: keyof UserData | 'status' | 'recentExam' | 'time' | 'score') => {
+        if (sortField !== field) return <FaSort className="ml-1 text-gray-300 inline" />;
+        return sortDirection === 'asc' ? <FaSortUp className="ml-1 text-blue-500 inline" /> : <FaSortDown className="ml-1 text-blue-500 inline" />;
+    };
 
     useEffect(() => {
         if (showAddStudentModal) {
@@ -407,7 +473,10 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             await updateDoc(doc(db, 'users', studentId), {
                 courseId: selectedCourse.id,
                 courseName: selectedCourse.name,
-                defaultLicenseId: selectedCourse.licenseId || null
+                class: selectedCourse.name, // Đồng bộ trường class
+                isVerified: true, // Tự động verified khi vào lớp
+                defaultLicenseId: selectedCourse.licenseId || null,
+                updatedAt: serverTimestamp()
             });
             setAvailableStudents(prev => prev.filter(x => x.uid !== studentId)); // Remove from list
             alert(`Đã thêm học viên vào lớp ${selectedCourse.name}`);
@@ -473,6 +542,64 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 isVerified: false
             });
         } catch (e) { console.error(e); }
+    };
+
+    // --- BULK ADD LOGIC ---
+    const toggleSelectOne = (uid: string) => {
+        const newSet = new Set(selectedStudentIds);
+        if (newSet.has(uid)) newSet.delete(uid);
+        else newSet.add(uid);
+        setSelectedStudentIds(newSet);
+    };
+
+    const toggleSelectAll = (filteredStudents: UserData[]) => {
+        if (selectedStudentIds.size === filteredStudents.length && filteredStudents.length > 0) {
+            setSelectedStudentIds(new Set()); // Deselect all
+        } else {
+            const newSet = new Set(filteredStudents.map(s => s.uid));
+            setSelectedStudentIds(newSet);
+        }
+    };
+
+    const handleBulkAddStudents = async () => {
+        if (selectedStudentIds.size === 0 || !selectedCourse) return;
+        if (!confirm(`Bạn có chắc muốn thêm ${selectedStudentIds.size} học viên vào lớp ${selectedCourse.name}?`)) return;
+
+        setIsBulkAdding(true);
+        try {
+            const promises = Array.from(selectedStudentIds).map(async (uid) => {
+                const student = availableStudents.find(s => s.uid === uid);
+                if (!student) return;
+
+                // 1. Update Student Doc
+                const userRef = doc(db, 'users', uid);
+                await updateDoc(userRef, {
+                    courseId: selectedCourse.id,
+                    courseName: selectedCourse.name,
+                    isVerified: true,
+                    defaultLicenseId: selectedCourse.licenseId || null,
+                    class: selectedCourse.name,
+                    updatedAt: serverTimestamp()
+                });
+
+                // 2. Add to Course 'students' array
+                const courseRef = doc(db, 'courses', selectedCourse.id);
+                await updateDoc(courseRef, {
+                    students: arrayUnion(uid)
+                });
+            });
+
+            await Promise.all(promises);
+
+            alert(`Đã thêm thành công ${selectedStudentIds.size} học viên!`);
+            setShowAddStudentModal(false);
+            setSelectedStudentIds(new Set());
+        } catch (error) {
+            console.error(error);
+            alert('Có lỗi xảy ra khi thêm nhiều học viên.');
+        } finally {
+            setIsBulkAdding(false);
+        }
     };
 
     const handleOpenNotifModal = (type: 'class' | 'user', id: string, name: string) => {
@@ -545,68 +672,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     };
 
 
-    // --- SORTING LOGIC ---
-    const sortedStudents = React.useMemo(() => {
-        if (!sortConfig) return students;
 
-        return [...students].sort((a, b) => {
-            const resultA = studentLatestResults[a.uid] || { type: '', time: '', score: '' };
-            const resultB = studentLatestResults[b.uid] || { type: '', time: '', score: '' };
-
-            let valA: any = '';
-            let valB: any = '';
-
-            switch (sortConfig.key) {
-                case 'fullName':
-                    valA = a.fullName || '';
-                    valB = b.fullName || '';
-                    break;
-                case 'birthDate':
-                    // Parse if possible, else compare strings
-                    valA = a.birthDate ? new Date(a.birthDate.split('/').reverse().join('-')).getTime() : 0; // Simple assume dd/mm/yyyy or yyyy-mm-dd
-                    if (isNaN(valA)) valA = a.birthDate || '';
-                    valB = b.birthDate ? new Date(b.birthDate.split('/').reverse().join('-')).getTime() : 0;
-                    if (isNaN(valB)) valB = b.birthDate || '';
-                    break;
-                case 'recentExam':
-                    valA = resultA.type || '';
-                    valB = resultB.type || '';
-                    break;
-                case 'time':
-                    // Time string "10:30" etc.
-                    valA = resultA.time || '';
-                    valB = resultB.time || '';
-                    break;
-                case 'score':
-                    // format "25/30"
-                    valA = resultA.score ? parseInt(resultA.score.toString().split('/')[0]) : -1;
-                    valB = resultB.score ? parseInt(resultB.score.toString().split('/')[0]) : -1;
-                    if (isNaN(valA)) valA = -1;
-                    if (isNaN(valB)) valB = -1;
-                    break;
-                default:
-                    return 0;
-            }
-
-            if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
-            if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
-            return 0;
-        });
-    }, [students, sortConfig, studentLatestResults]);
-
-    const handleSort = (key: string) => {
-        setSortConfig(current => {
-            if (current && current.key === key) {
-                return { key, direction: current.direction === 'asc' ? 'desc' : 'asc' };
-            }
-            return { key, direction: 'asc' };
-        });
-    };
-
-    const getSortIcon = (key: string) => {
-        if (!sortConfig || sortConfig.key !== key) return <FaSort className="ml-1 text-gray-300 inline" />;
-        return sortConfig.direction === 'asc' ? <FaSortUp className="ml-1 text-blue-600 inline" /> : <FaSortDown className="ml-1 text-blue-600 inline" />;
-    };
 
 
     // --- RENDER ---
@@ -821,11 +887,32 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                         </div>
 
                         {/* HEADERS */}
-                        <div className="grid grid-cols-12 gap-2 text-xs font-bold text-gray-500 uppercase px-3 pb-2 border-b border-gray-100 dark:border-slate-700">
+                        {/* HEADERS */}
+                        <div className="grid grid-cols-12 gap-2 text-xs font-bold text-gray-500 uppercase px-3 pb-2 border-b border-gray-100 dark:border-slate-700 items-center">
+                            <div className="col-span-1 flex justify-center">
+                                <input
+                                    type="checkbox"
+                                    className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                                    checked={availableStudents.filter(s => {
+                                        const matchSearch = safeLower(s.fullName).includes(safeLower(studentSearchTerm)) || safeLower(s.email).includes(safeLower(studentSearchTerm)) || safeLower(s.phoneNumber).includes(safeLower(studentSearchTerm));
+                                        const matchClass = filterNoClass ? !s.courseId : true;
+                                        return matchSearch && matchClass;
+                                    }).length > 0 && selectedStudentIds.size === availableStudents.filter(s => {
+                                        const matchSearch = safeLower(s.fullName).includes(safeLower(studentSearchTerm)) || safeLower(s.email).includes(safeLower(studentSearchTerm)) || safeLower(s.phoneNumber).includes(safeLower(studentSearchTerm));
+                                        const matchClass = filterNoClass ? !s.courseId : true;
+                                        return matchSearch && matchClass;
+                                    }).length}
+                                    onChange={() => toggleSelectAll(availableStudents.filter(s => {
+                                        const matchSearch = safeLower(s.fullName).includes(safeLower(studentSearchTerm)) || safeLower(s.email).includes(safeLower(studentSearchTerm)) || safeLower(s.phoneNumber).includes(safeLower(studentSearchTerm));
+                                        const matchClass = filterNoClass ? !s.courseId : true;
+                                        return matchSearch && matchClass;
+                                    }))}
+                                />
+                            </div>
                             <div className="col-span-4">Học viên</div>
                             <div className="col-span-2">Ngày sinh/SĐT</div>
-                            <div className="col-span-3">Địa chỉ/Quê quán</div>
-                            <div className="col-span-2">Lớp hiện tại</div>
+                            <div className="col-span-2">Địa chỉ</div>
+                            <div className="col-span-2">Lớp (Tự điền)</div>
                             <div className="col-span-1 text-center">Thao tác</div>
                         </div>
 
@@ -837,7 +924,18 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     return matchSearch && matchClass;
                                 })
                                 .map(s => (
-                                    <div key={s.uid} className="grid grid-cols-12 gap-2 items-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition border border-transparent hover:border-gray-200 dark:hover:border-slate-600">
+                                    <div key={s.uid} className={`grid grid-cols-12 gap-2 items-center p-3 rounded-lg border transition ${selectedStudentIds.has(s.uid) ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800' : 'bg-gray-50 border-transparent hover:bg-gray-100 dark:bg-slate-700/50 dark:hover:bg-slate-700'}`}>
+
+                                        {/* Checkbox */}
+                                        <div className="col-span-1 flex justify-center">
+                                            <input
+                                                type="checkbox"
+                                                className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                                                checked={selectedStudentIds.has(s.uid)}
+                                                onChange={() => toggleSelectOne(s.uid)}
+                                            />
+                                        </div>
+
                                         {/* Name & Basic Info */}
                                         <div className="col-span-4 flex items-center gap-3 overflow-hidden">
                                             <img src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`} className="w-10 h-10 rounded-full border border-gray-200 flex-shrink-0" />
@@ -854,22 +952,22 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                         </div>
 
                                         {/* Address */}
-                                        <div className="col-span-3 text-sm text-gray-700 dark:text-gray-300">
+                                        <div className="col-span-2 text-sm text-gray-700 dark:text-gray-300">
                                             <p className="line-clamp-2 text-xs" title={s.address || s.cccdPlace}>
                                                 {s.address || s.cccdPlace || '---'}
                                             </p>
                                         </div>
 
-                                        {/* Current Class */}
+                                        {/* Class (Self-filled) */}
                                         <div className="col-span-2 text-sm">
-                                            {s.courseName ? (
-                                                <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-md text-xs font-semibold border border-yellow-200 truncate block text-center" title={s.courseName}>
-                                                    {s.courseName}
-                                                </span>
-                                            ) : (
-                                                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-md text-xs font-semibold border border-green-200 block text-center">
-                                                    Chưa có
-                                                </span>
+                                            <div className="text-xs text-gray-900 dark:text-gray-100 font-medium truncate" title={s.class}>
+                                                {s.class || '---'}
+                                            </div>
+                                            {/* Show current course if exists */}
+                                            {s.courseName && (
+                                                <div className="text-[10px] text-yellow-600 bg-yellow-50 px-1 rounded inline-block mt-1 truncate max-w-full">
+                                                    Đang học: {s.courseName}
+                                                </div>
                                             )}
                                         </div>
 
@@ -887,6 +985,24 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     </div>
                                 ))}
                         </div>
+                        {/* BULK ACTION FOOTER */}
+                        {selectedStudentIds.size > 0 && (
+                            <div className="absolute bottom-6 right-6 left-6 flex justify-center z-10 animate-bounce-in">
+                                <button
+                                    onClick={handleBulkAddStudents}
+                                    disabled={isBulkAdding}
+                                    className="bg-blue-600 text-white px-8 py-3 rounded-full shadow-xl hover:bg-blue-700 hover:scale-105 transition flex items-center gap-2 font-bold text-lg disabled:opacity-70 disabled:scale-100"
+                                >
+                                    {isBulkAdding ? (
+                                        <>Adding...</>
+                                    ) : (
+                                        <>
+                                            <FaPlus /> Thêm {selectedStudentIds.size} học viên
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>,
                 document.body
@@ -1303,7 +1419,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
                         {viewMode === 'grid' ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                {sortedStudents.map(s => {
+                                {paginatedStudents.map(s => {
                                     const result = studentLatestResults[s.uid] || { type: '--', time: '--', score: '--' };
                                     return (
                                         <div key={s.uid} className="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-4 border border-gray-100 dark:border-slate-700 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-500/30 transition-all duration-300 group relative overflow-hidden">
@@ -1320,7 +1436,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                 <div className="flex-1 min-w-0">
                                                     <h4 className="font-bold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors text-base flex items-center gap-1">
                                                         {s.fullName}
-                                                        {(s as any).isVerified && <FaCheckCircle className="text-green-500 text-xs shrink-0" />}
+                                                        {(s.isVerified || s.courseId) && <FaCheckCircle className="text-green-500 text-xs shrink-0" />}
                                                     </h4>
                                                     <p className="text-xs text-gray-500 truncate">{s.email}</p>
 
@@ -1381,7 +1497,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
-                                        {sortedStudents.map(s => {
+                                        {paginatedStudents.map(s => {
                                             const result = studentLatestResults[s.uid] || { type: '--', time: '--', score: '--' };
                                             return (
                                                 <tr key={s.uid} className="group hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
@@ -1390,7 +1506,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                         <div>
                                                             <p className="flex items-center gap-1">
                                                                 {s.fullName}
-                                                                {(s as any).isVerified && <FaCheckCircle className="text-green-500 text-xs" />}
+                                                                {((s as any).isVerified || (s as any).courseId) && <FaCheckCircle className="text-green-500 text-xs" />}
                                                             </p>
                                                             <p className="text-xs text-gray-500 font-normal">{s.email}</p>
                                                         </div>
@@ -1430,6 +1546,62 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                         )}
                                     </tbody>
                                 </table>
+                            </div>
+
+
+                        )}
+
+                        {/* PAGINATION CONTROLS */}
+                        {totalPages > 1 && (
+                            <div className="flex flex-col sm:flex-row justify-between items-center mt-6 pt-4 border-t border-gray-100 dark:border-slate-700 gap-4">
+                                <div className="text-sm text-gray-500">
+                                    Hiển thị trang <span className="font-bold text-gray-900 dark:text-gray-200">{currentPage}</span> / <span className="font-semibold">{totalPages}</span>
+                                    <span className="mx-2">|</span>
+                                    Tổng <span className="font-bold text-blue-600">{getFilteredAndSortedStudents.length}</span> kết quả
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <select
+                                        className="border border-gray-300 dark:border-slate-600 rounded-md text-sm p-1.5 focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200"
+                                        value={itemsPerPage}
+                                        onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                                    >
+                                        <option value={5}>5 / trang</option>
+                                        <option value={10}>10 / trang</option>
+                                        <option value={20}>20 / trang</option>
+                                        <option value={50}>50 / trang</option>
+                                    </select>
+
+                                    <div className="flex gap-1">
+                                        <button
+                                            onClick={() => setCurrentPage(1)}
+                                            disabled={currentPage === 1}
+                                            className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+                                        >
+                                            Đầu
+                                        </button>
+                                        <button
+                                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                            disabled={currentPage === 1}
+                                            className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+                                        >
+                                            Trước
+                                        </button>
+                                        <button
+                                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                            disabled={currentPage === totalPages}
+                                            className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+                                        >
+                                            Sau
+                                        </button>
+                                        <button
+                                            onClick={() => setCurrentPage(totalPages)}
+                                            disabled={currentPage === totalPages}
+                                            className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+                                        >
+                                            Cuối
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>

@@ -64,6 +64,7 @@ export interface UserProfile {
   id: string;
   email?: string;
   full_name: string;
+  fullName?: string; // Add camelCase support
   role: 'admin' | 'giao_vien' | 'hoc_vien' | 'quan_ly' | 'lanh_dao';
   photoURL?: string;
   birthDate?: string;
@@ -77,4 +78,5 @@ export interface UserProfile {
   cccdPlace?: string;
   courseCode?: string; // Keeping for compatibility if needed, but primary is courseName
   defaultLicenseId?: string; // License ID assigned by class
+  isVerified?: boolean;
 }

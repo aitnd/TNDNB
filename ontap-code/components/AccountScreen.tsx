@@ -1,13 +1,14 @@
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent, useMemo } from 'react';
 import { UserProfile } from '../types';
 import { db } from '../services/firebaseClient';
 import { getDefaultAvatar, uploadAvatar } from '../services/userService';
 import { doc, updateDoc, collection, query, orderBy, getDocs, deleteDoc } from 'firebase/firestore';
-import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera } from 'react-icons/fa';
+import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes } from 'react-icons/fa';
 
 interface AccountScreenProps {
     userProfile: UserProfile;
     onBack: () => void;
+    onNavigate: (screen: string) => void;
 }
 
 // Reuse logic from UserAccountManager
@@ -27,6 +28,7 @@ interface UserAccount {
     address?: string;
     createdAt?: any;
     isVerified?: boolean;
+    photoURL?: string; // Added for Detail Modal
 }
 
 const allRoles = [
@@ -39,7 +41,7 @@ const allRoles = [
 
 const staffRoles = ['giao_vien', 'lanh_dao', 'quan_ly'];
 
-const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) => {
+const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNavigate }) => {
     // --- PERSONAL INFO STATE ---
     const [myInfo, setMyInfo] = useState<UserProfile>(userProfile);
     const [isSavingMyInfo, setIsSavingMyInfo] = useState(false);
@@ -48,13 +50,25 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
     const isManager = userProfile.role !== 'hoc_vien';
     const [users, setUsers] = useState<UserAccount[]>([]);
     const [loadingUsers, setLoadingUsers] = useState(false);
-    const [filteredUsers, setFilteredUsers] = useState<UserAccount[]>([]);
+
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterRole, setFilterRole] = useState('all');
+    const [filterRole, setFilterRole] = useState<'all' | 'staff' | 'hoc_vien'>('all');
+    const [filterVerified, setFilterVerified] = useState<'all' | 'verified' | 'unverified'>('all');
+    const [filterClass, setFilterClass] = useState<string>('all');
 
     // Edit Other User Modal
     const [editingUser, setEditingUser] = useState<UserAccount | null>(null);
     const [showEditModal, setShowEditModal] = useState(false);
+
+    // Detail Modal State
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<UserAccount | null>(null);
+
+    // --- PAGINATION & SORTING STATE ---
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [sortField, setSortField] = useState<keyof UserAccount>('createdAt');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
     useEffect(() => {
         if (isManager) {
@@ -62,23 +76,70 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
         }
     }, [isManager]);
 
-    useEffect(() => {
-        if (isManager) {
-            let result = users;
-            if (filterRole === 'staff') result = result.filter(u => staffRoles.includes(u.role));
-            else if (filterRole === 'hoc_vien') result = result.filter(u => u.role === 'hoc_vien');
+    // --- HELPER FUNCTIONS ---
+    const getFilteredAndSortedUsers = useMemo(() => {
+        let result = users;
 
-            if (searchTerm.trim()) {
-                const lower = searchTerm.toLowerCase();
-                result = result.filter(u =>
-                    u.fullName.toLowerCase().includes(lower) ||
-                    u.email.toLowerCase().includes(lower) ||
-                    (u.phoneNumber && u.phoneNumber.includes(lower))
-                );
-            }
-            setFilteredUsers(result);
+        // 1. Filter Role
+        if (filterRole === 'staff') result = result.filter(u => staffRoles.includes(u.role));
+        else if (filterRole === 'hoc_vien') result = result.filter(u => u.role === 'hoc_vien');
+
+        // 1.5 Filter Verified
+        if (filterVerified === 'verified') result = result.filter(u => u.isVerified || u.courseId);
+        else if (filterVerified === 'unverified') result = result.filter(u => !u.isVerified && !u.courseId);
+
+        // 1.6 Filter Class
+        if (filterClass !== 'all') {
+            if (filterClass === 'no_class') result = result.filter(u => !u.courseId && !u.courseName);
+            else result = result.filter(u => u.courseName === filterClass);
         }
-    }, [users, filterRole, searchTerm, isManager]);
+
+        // 2. Search
+        if (searchTerm.trim()) {
+            const lower = searchTerm.toLowerCase();
+            result = result.filter(u =>
+                u.fullName.toLowerCase().includes(lower) ||
+                u.email.toLowerCase().includes(lower) ||
+                (u.phoneNumber && u.phoneNumber.includes(lower))
+            );
+        }
+
+        // 3. Sort
+        result.sort((a, b) => {
+            let valA: any = a[sortField];
+            let valB: any = b[sortField];
+
+            // Handle date strings if needed, but assuming mostly strings
+            if (!valA) valA = '';
+            if (!valB) valB = '';
+
+            if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        return result;
+    }, [users, filterRole, filterVerified, filterClass, searchTerm, sortField, sortDirection]);
+
+    const totalPages = Math.ceil(getFilteredAndSortedUsers.length / itemsPerPage);
+    const paginatedUsers = getFilteredAndSortedUsers.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handleSort = (field: keyof UserAccount) => {
+        if (sortField === field) {
+            setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortField(field);
+            setSortDirection('asc');
+        }
+    };
+
+    const getSortIcon = (field: keyof UserAccount) => {
+        if (sortField !== field) return <FaSort className="ml-1 text-gray-300 inline" />;
+        return sortDirection === 'asc' ? <FaSortUp className="ml-1 text-blue-500 inline" /> : <FaSortDown className="ml-1 text-blue-500 inline" />;
+    };
 
     const fetchUsers = async () => {
         setLoadingUsers(true);
@@ -242,7 +303,12 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
                     <div className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium mb-1 dark:text-gray-300">Họ và Tên</label>
-                            <input className="w-full p-2 border rounded dark:bg-slate-700" value={myInfo.full_name} onChange={e => setMyInfo({ ...myInfo, full_name: e.target.value })} required />
+                            <input
+                                className="w-full p-2 border rounded dark:bg-slate-700"
+                                value={myInfo.full_name || myInfo.fullName || ''}
+                                onChange={e => setMyInfo({ ...myInfo, full_name: e.target.value, fullName: e.target.value })}
+                                required
+                            />
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1 dark:text-gray-300">Email (Không đổi)</label>
@@ -300,21 +366,59 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
                     </h2>
 
                     {/* Toolbar */}
-                    <div className="flex flex-col md:flex-row gap-4 mb-6 justify-between items-center">
-                        <div className="relative flex-1 max-w-md w-full">
+                    <div className="flex flex-col md:flex-row gap-4 mb-4">
+                        <div className="relative flex-1">
                             <FaSearch className="absolute left-3 top-3 text-gray-400" />
                             <input
-                                className="w-full pl-10 pr-4 py-2 border rounded-lg dark:bg-slate-700"
+                                className="w-full pl-10 pr-4 py-2 border rounded-full dark:bg-slate-700 outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Tìm học viên, giáo viên..."
                                 value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <select className="p-2 border rounded-lg dark:bg-slate-700 flex-1 md:flex-none" value={filterRole} onChange={e => setFilterRole(e.target.value)}>
-                            <option value="all">Tất cả vai trò</option>
-                            <option value="staff">Giáo viên/Quản lý</option>
-                            <option value="hoc_vien">Học viên</option>
-                        </select>
+
+                        {/* Status Filter */}
+                        <div className="relative">
+                            <select
+                                className="appearance-none bg-white dark:bg-slate-700 border hover:border-blue-500 px-4 py-2 pr-8 rounded-full shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                                value={filterVerified}
+                                onChange={(e) => setFilterVerified(e.target.value as any)}
+                            >
+                                <option value="all">Tất cả trạng thái</option>
+                                <option value="verified">Đã xác thực (Vào lớp)</option>
+                                <option value="unverified">Chưa xác thực</option>
+                            </select>
+                            <FaFilter className="absolute right-3 top-3 text-gray-400 pointer-events-none text-xs" />
+                        </div>
+
+                        {/* Class Filter */}
+                        <div className="relative">
+                            <select
+                                className="appearance-none bg-white dark:bg-slate-700 border hover:border-blue-500 px-4 py-2 pr-8 rounded-full shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer max-w-[200px]"
+                                value={filterClass}
+                                onChange={(e) => setFilterClass(e.target.value)}
+                            >
+                                <option value="all">Tất cả lớp học</option>
+                                <option value="no_class">Chưa vào lớp</option>
+                                {Array.from(new Set(users.map(u => u.courseName).filter(Boolean))).sort().map(c => (
+                                    <option key={c} value={c}>{c}</option>
+                                ))}
+                            </select>
+                            <FaFilter className="absolute right-3 top-3 text-gray-400 pointer-events-none text-xs" />
+                        </div>
+
+                        <div className="relative">
+                            <select
+                                className="appearance-none bg-white dark:bg-slate-700 border hover:border-blue-500 px-4 py-2 pr-8 rounded-full shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                                value={filterRole}
+                                onChange={(e) => setFilterRole(e.target.value as any)}
+                            >
+                                <option value="all">Tất cả vai trò</option>
+                                <option value="hoc_vien">Học viên</option>
+                                <option value="staff">Nhân sự (GV/QL/Admin)</option>
+                            </select>
+                            <FaFilter className="absolute right-3 top-3 text-gray-400 pointer-events-none text-xs" />
+                        </div>
                     </div>
 
                     {/* Table */}
@@ -322,26 +426,83 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
                         <table className="w-full text-left border-collapse min-w-[800px]">
                             <thead className="bg-gray-50 dark:bg-slate-900 text-sm uppercase text-gray-500 font-bold">
                                 <tr>
-                                    <th className="p-3 border-b dark:border-slate-700">Họ và Tên</th>
-                                    <th className="p-3 border-b dark:border-slate-700">Lớp học (Khóa/Tên)</th>
-                                    <th className="p-3 border-b dark:border-slate-700">Liên hệ</th>
-                                    <th className="p-3 border-b dark:border-slate-700">Vai trò</th>
+                                    <th className="p-3 border-b dark:border-slate-700 cursor-pointer hover:bg-gray-100 transition" onClick={() => handleSort('fullName')}>
+                                        Họ và Tên {getSortIcon('fullName')}
+                                    </th>
+                                    <th className="p-3 border-b dark:border-slate-700 cursor-pointer hover:bg-gray-100 transition" onClick={() => handleSort('class')}>
+                                        Lớp học {getSortIcon('class')}
+                                    </th>
+                                    <th className="p-3 border-b dark:border-slate-700 cursor-pointer hover:bg-gray-100 transition" onClick={() => handleSort('email')}>
+                                        Liên hệ {getSortIcon('email')}
+                                    </th>
+                                    <th className="p-3 border-b dark:border-slate-700 cursor-pointer hover:bg-gray-100 transition" onClick={() => handleSort('role')}>
+                                        Vai trò {getSortIcon('role')}
+                                    </th>
                                     <th className="p-3 border-b dark:border-slate-700 text-center">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
                                 {loadingUsers ? (
                                     <tr><td colSpan={5} className="p-4 text-center">Đang tải...</td></tr>
-                                ) : filteredUsers.length === 0 ? (
+                                ) : paginatedUsers.length === 0 ? (
                                     <tr><td colSpan={5} className="p-4 text-center italic text-gray-500">Không tìm thấy người dùng.</td></tr>
                                 ) : (
-                                    filteredUsers.map(u => (
+                                    paginatedUsers.map(u => (
                                         <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
-                                            <td className="p-3 font-medium text-gray-900 dark:text-white">
-                                                {u.fullName}
-                                                {u.role === 'hoc_vien' && u.isVerified && <FaCheckCircle className="inline ml-1 text-blue-500 text-xs" />}
+                                            {/* Name - Click to View Detail */}
+                                            <td className="p-3 font-medium text-gray-900 dark:text-white cursor-pointer group" onClick={() => { setSelectedUser(u); setShowDetailModal(true); }}>
+                                                <div className="flex items-center gap-3">
+                                                    <img
+                                                        src={u.photoURL}
+                                                        alt={u.fullName}
+                                                        className="w-9 h-9 rounded-full object-cover border border-gray-200 dark:border-gray-600 shadow-sm"
+                                                        onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + u.fullName; }}
+                                                    />
+                                                    <div className="flex flex-col">
+                                                        <div className="flex items-center gap-1">
+                                                            {u.role === 'hoc_vien' && (u.isVerified || u.courseId) ? (
+                                                                <span className="flex items-center gap-1 text-blue-600 font-semibold group-hover:underline">
+                                                                    {u.fullName} <FaCheckCircle className="text-blue-500 text-xs" />
+                                                                </span>
+                                                            ) : u.role === 'giao_vien' ? (
+                                                                <span className="font-bold text-yellow-600 dark:text-yellow-400 group-hover:underline">
+                                                                    {u.fullName}
+                                                                </span>
+                                                            ) : u.role === 'quan_ly' || u.role === 'lanh_dao' ? (
+                                                                <span className="font-bold text-red-600 dark:text-red-400 group-hover:underline">
+                                                                    {u.fullName}
+                                                                </span>
+                                                            ) : u.role === 'admin' ? (
+                                                                <span className="font-bold text-purple-600 dark:text-purple-400 group-hover:underline">
+                                                                    {u.fullName}
+                                                                </span>
+                                                            ) : (
+                                                                <span className="group-hover:underline">{u.fullName}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <FaInfoCircle className="opacity-0 group-hover:opacity-100 text-gray-400 text-xs ml-auto" />
+                                                </div>
                                             </td>
-                                            <td className="p-3 text-sm">{u.courseName || u.courseId || '--'}</td>
+
+                                            {/* Course/Class - Click to Navigate (if exists) */}
+                                            <td className="p-3 text-sm">
+                                                {(u.courseName || u.courseId) ? (
+                                                    <span
+                                                        className="cursor-pointer text-blue-600 hover:underline hover:text-blue-800 flex items-center gap-1"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            onNavigate('class_management');
+                                                        }}
+                                                        title="Đi tới quản lý lớp"
+                                                    >
+                                                        {u.courseName || u.courseId} <FaArrowRight className="text-xs" />
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-gray-400">--</span>
+                                                )}
+                                            </td>
+
                                             <td className="p-3 text-sm">
                                                 <div>{u.email}</div>
                                                 <div className="text-xs text-gray-500">{u.phoneNumber}</div>
@@ -361,6 +522,60 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
                             </tbody>
                         </table>
                     </div>
+
+                    {/* PAGINATION CONTROLS */}
+                    {totalPages > 1 && (
+                        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 pt-4 border-t border-gray-100 dark:border-slate-700 gap-4">
+                            <div className="text-sm text-gray-500">
+                                Hiển thị trang <span className="font-bold text-gray-900 dark:text-gray-200">{currentPage}</span> / <span className="font-semibold">{totalPages}</span>
+                                <span className="mx-2">|</span>
+                                Tổng <span className="font-bold text-blue-600">{getFilteredAndSortedUsers.length}</span> kết quả
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <select
+                                    className="border border-gray-300 dark:border-slate-600 rounded-md text-sm p-1.5 focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200"
+                                    value={itemsPerPage}
+                                    onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                                >
+                                    <option value={5}>5 / trang</option>
+                                    <option value={10}>10 / trang</option>
+                                    <option value={20}>20 / trang</option>
+                                    <option value={50}>50 / trang</option>
+                                </select>
+
+                                <div className="flex gap-1">
+                                    <button
+                                        onClick={() => setCurrentPage(1)}
+                                        disabled={currentPage === 1}
+                                        className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+                                    >
+                                        Đầu
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                        disabled={currentPage === 1}
+                                        className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+                                    >
+                                        Trước
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+                                    >
+                                        Sau
+                                    </button>
+                                    <button
+                                        onClick={() => setCurrentPage(totalPages)}
+                                        disabled={currentPage === totalPages}
+                                        className="px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm"
+                                    >
+                                        Cuối
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -391,6 +606,88 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack }) =>
                                 <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Lưu</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* DETAIL MODAL */}
+            {showDetailModal && selectedUser && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowDetailModal(false)}>
+                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg p-0 relative overflow-hidden animate-bounce-in" onClick={e => e.stopPropagation()}>
+
+                        {/* Header Image */}
+                        <div className="h-32 bg-gradient-to-r from-blue-500 to-cyan-500 relative">
+                            <button onClick={() => setShowDetailModal(false)} className="absolute top-4 right-4 bg-black/20 text-white p-2 rounded-full hover:bg-black/40"><FaTimes /></button>
+                            <div className="absolute -bottom-10 left-6">
+                                <img
+                                    src={selectedUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedUser.fullName)}`}
+                                    className="w-24 h-24 rounded-full border-4 border-white dark:border-slate-800 shadow-md bg-white"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="pt-12 px-6 pb-6">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                        {selectedUser.fullName}
+                                        {selectedUser.isVerified && <FaCheckCircle className="text-blue-500 text-lg" />}
+                                    </h2>
+                                    <p className="text-gray-500 text-sm font-medium uppercase tracking-wide">{allRoles.find(r => r.id === selectedUser.role)?.name || selectedUser.role}</p>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setEditingUser(selectedUser);
+                                        setShowDetailModal(false);
+                                        setShowEditModal(true);
+                                    }}
+                                    className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-full font-bold hover:bg-blue-200 dark:hover:bg-blue-900/50 transition"
+                                >
+                                    <FaEdit /> Sửa
+                                </button>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                        <p className="text-xs text-gray-400 uppercase font-bold">Lớp học</p>
+                                        <p className="font-semibold">{selectedUser.courseName || selectedUser.class || 'Chưa có'}</p>
+                                    </div>
+                                    <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                        <p className="text-xs text-gray-400 uppercase font-bold">Ngày sinh</p>
+                                        <p className="font-semibold">{selectedUser.birthDate || '--/--/----'}</p>
+                                    </div>
+                                    <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                        <p className="text-xs text-gray-400 uppercase font-bold">Số điện thoại</p>
+                                        <p className="font-semibold">{selectedUser.phoneNumber || '---'}</p>
+                                    </div>
+                                    <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                        <p className="text-xs text-gray-400 uppercase font-bold">Email</p>
+                                        <p className="font-semibold text-sm truncate" title={selectedUser.email}>{selectedUser.email}</p>
+                                    </div>
+                                </div>
+
+                                <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                    <p className="text-xs text-gray-400 uppercase font-bold">Địa chỉ</p>
+                                    <p className="font-semibold text-sm">{selectedUser.address || selectedUser.cccdPlace || '---'}</p>
+                                </div>
+
+                                {selectedUser.cccd && (
+                                    <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg flex justify-between">
+                                        <div>
+                                            <p className="text-xs text-gray-400 uppercase font-bold">CCCD</p>
+                                            <p className="font-semibold text-sm">{selectedUser.cccd}</p>
+                                        </div>
+                                        {selectedUser.cccdDate && (
+                                            <div className="text-right">
+                                                <p className="text-xs text-gray-400 uppercase font-bold">Ngày cấp</p>
+                                                <p className="font-semibold text-sm">{selectedUser.cccdDate}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
