@@ -1,7 +1,7 @@
 {
-  "name": "ôn-thi-hàng-hải",
+  "name": "dao-tao-thuyen-vien",
   "private": true,
-  "version": "3.5.1",
+  "version": "3.6.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

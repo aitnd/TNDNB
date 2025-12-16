@@ -31,6 +31,15 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
 
         <div className="text-sm text-left text-muted-foreground max-h-[70vh] overflow-y-auto pr-2 space-y-4">
           <div>
+            <p className="font-semibold text-foreground"><strong>Phiên bản v3.6.0 (16/12/2025 - Messenger UI & Real-time):</strong></p>
+            <ul className="list-disc list-inside mt-1 space-y-1">
+              <li>💬 <strong>Messenger UI:</strong> Giao diện Hộp thư mới chuẩn Facebook (Gradient bubble, Layout 2 cột).</li>
+              <li>🟢 <strong>Real-time Online:</strong> Hiển thị trạng thái Online/Offline chính xác của người dùng khác.</li>
+              <li>⚡ <strong>Hiệu năng:</strong> Tích hợp `Zustand` & `Framer Motion` giúp ứng dụng mượt mà hơn.</li>
+              <li>🎨 <strong>Visuals:</strong> Bộ icon `Lucide` mới hiện đại.</li>
+            </ul>
+          </div>
+          <div>
             <p className="font-semibold text-foreground"><strong>Phiên bản v3.5.1 (16/12/2025 - System Upgrade):</strong></p>
             <ul className="list-disc list-inside mt-1 space-y-1">
               <li>🛠️ <strong>Hệ Thống Admin:</strong> Ra mắt công cụ quét và sửa dữ liệu học viên lỗi (Orphaned Data).</li>

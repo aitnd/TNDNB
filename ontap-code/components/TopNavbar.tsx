@@ -125,7 +125,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                     onClick={() => setShowChangelog(true)}
                                     className="text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors"
                                 >
-                                    v3.5.1
+                                    v3.6.0
                                 </button>
                             </div>
 
