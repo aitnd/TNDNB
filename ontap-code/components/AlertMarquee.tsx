@@ -3,15 +3,17 @@ import Marquee from 'react-fast-marquee';
 import { fetchActiveMarqueeNotifications, Notification } from '../services/notificationService';
 import { useSocket } from '../contexts/SocketContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppStore } from '../stores/useAppStore';
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa';
 
 const AlertMarquee: React.FC = () => {
     const [alerts, setAlerts] = useState<Notification[]>([]);
     const { socket } = useSocket();
     const { user } = useAuth();
+    const { userProfile } = useAppStore(state => state); // Need to import useAppStore
 
     const loadAlerts = async () => {
-        const data = await fetchActiveMarqueeNotifications(user?.uid);
+        const data = await fetchActiveMarqueeNotifications(user?.uid, userProfile?.role);
         setAlerts(data);
     };
 
@@ -21,7 +23,7 @@ const AlertMarquee: React.FC = () => {
         // Refresh every 5 minutes to check expiry
         const interval = setInterval(loadAlerts, 5 * 60 * 1000);
         return () => clearInterval(interval);
-    }, [user]); // Reload when user changes
+    }, [user, userProfile]); // Reload when user/profile changes
 
     useEffect(() => {
         if (!socket) return;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSocket } from '../contexts/SocketContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useAppStore } from '../stores/useAppStore';
 import { fetchNotifications, markNotificationAsRead, deleteNotificationForUser } from '../services/notificationService';
 import { FaBell, FaTrash, FaCircle, FaCheckDouble } from 'react-icons/fa';
 import { toast } from 'sonner';
@@ -12,12 +13,13 @@ interface NotificationItem {
     link?: string;
     timestamp: Date;
     read: boolean;
-    type?: string; // Add type to check for special/attention
+    type?: string;
 }
 
 const NotificationBell: React.FC = () => {
     const { socket } = useSocket();
     const { user } = useAuth();
+    const { userProfile } = useAppStore(state => state);
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
@@ -36,8 +38,8 @@ const NotificationBell: React.FC = () => {
 
     // Load initial notifications
     useEffect(() => {
-        if (user) {
-            fetchNotifications(user.uid).then(data => {
+        if (user && userProfile) {
+            fetchNotifications(user.uid, undefined, userProfile.role).then(data => {
                 const mapped: NotificationItem[] = data.map(n => ({
                     id: n.id,
                     title: n.title,
@@ -51,7 +53,7 @@ const NotificationBell: React.FC = () => {
                 setUnreadCount(mapped.filter(n => !n.read).length);
             });
         }
-    }, [user]);
+    }, [user, userProfile]);
 
     // Listen for real-time notifications
     useEffect(() => {
@@ -90,7 +92,6 @@ const NotificationBell: React.FC = () => {
 
     const handleToggle = () => {
         setIsOpen(!isOpen);
-        // REMOVED: Auto mark as read logic
     };
 
     const handleMarkAllRead = async () => {

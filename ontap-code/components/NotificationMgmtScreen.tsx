@@ -54,11 +54,12 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [type, setType] = useState<'system' | 'special' | 'attention'>('system');
-    const [targetType, setTargetType] = useState<'all' | 'class' | 'user'>('all');
+    const [targetType, setTargetType] = useState<'all' | 'class' | 'user' | 'role'>('all');
 
     // Target Data
     const [availableClasses, setAvailableClasses] = useState<{ id: string, name: string }[]>([]);
     const [selectedClass, setSelectedClass] = useState('');
+    const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
 
     const [userSearchTerm, setUserSearchTerm] = useState('');
     const [foundUsers, setFoundUsers] = useState<UserProfile[]>([]);
@@ -89,6 +90,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
         if (!title || !message) return alert('Vui lòng nhập tiêu đề và nội dung');
         if (targetType === 'class' && !selectedClass) return alert('Vui lòng chọn lớp');
         if (targetType === 'user' && !selectedUser) return alert('Vui lòng chọn người nhận');
+        if (targetType === 'role' && selectedRoles.length === 0) return alert('Vui lòng chọn ít nhất một vai trò');
 
         try {
             let targetId = null;
@@ -105,7 +107,8 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                 userProfile.id,
                 userProfile.full_name,
                 expiryDate ? new Date(expiryDate) : null,
-                targetType === 'user' && selectedUser ? `${selectedUser.full_name} (${selectedUser.email})` : undefined
+                targetType === 'user' && selectedUser ? `${selectedUser.full_name} (${selectedUser.email})` : undefined,
+                targetType === 'role' ? selectedRoles : undefined
             );
 
             // 2. Emit Real-time Socket Event
@@ -114,7 +117,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                     socket.emit('broadcast_notification', {
                         title: title,
                         body: message,
-                        link: null // Optional: Add link field later if needed
+                        link: null
                     });
                 } else if (targetType === 'user' && selectedUser) {
                     socket.emit('send_notification', {
@@ -122,20 +125,16 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                         title: title,
                         body: message,
                         link: null,
-                        type: type // Send type for realtime filtering/styling
+                        type: type
                     });
-                } else if (targetType === 'class') {
-                    // Client-side Loop or Server-side Room?
-                    // MVP: Loop here or implement Room logic on Server.
-                    // For now, let's skip optimized class broadcast and rely on Firestore polling for class (or add basic loop)
-                    // If we want real-time for class, we need to fetch class members.
-                    // Let's keep it simple for now: 'class' notifications might define room logic later.
-                    // OR: Fetch text-based members and emit loop (not efficient but works for small app)
-                    // Implementation skipped for Class to avoid complexity overflow, focusing on All/User.
-                    // User requested "connect buttons", so I should try.
-                    // Simple solution for this turn: Just broadcast/user logic is solid.
-                    // Class logic requires fetching users of that class.
-                    // I will leave a TODO comment or try to implemented if easy.
+                } else if (targetType === 'role') {
+                    // For 'role', we can broadcast with a filter payload, client will filter
+                    socket.emit('broadcast_notification', {
+                        title: title,
+                        body: message,
+                        link: null,
+                        targetRoles: selectedRoles // Client needs to handle this
+                    });
                 }
             }
 
@@ -145,6 +144,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
             setTitle('');
             setMessage('');
             setType('system');
+            setSelectedRoles([]);
             loadData();
         } catch (error) {
             console.error(error);
@@ -343,6 +343,10 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                                         <input type="radio" name="target" value="class" checked={targetType === 'class'} onChange={() => setTargetType('class')} className="hidden" />
                                         <FaUsers /> Lớp học
                                     </label>
+                                    <label className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer flex-1 justify-center transition-all ${targetType === 'role' ? 'bg-orange-50 border-orange-500 text-orange-700 ring-1 ring-orange-500' : 'border-gray-200 hover:bg-gray-50'}`}>
+                                        <input type="radio" name="target" value="role" checked={targetType === 'role'} onChange={() => setTargetType('role')} className="hidden" />
+                                        <FaUsers /> Theo Vai trò
+                                    </label>
                                     <label className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer flex-1 justify-center transition-all ${targetType === 'user' ? 'bg-pink-50 border-pink-500 text-pink-700 ring-1 ring-pink-500' : 'border-gray-200 hover:bg-gray-50'}`}>
                                         <input type="radio" name="target" value="user" checked={targetType === 'user'} onChange={() => setTargetType('user')} className="hidden" />
                                         <FaUser /> Cá nhân
@@ -367,6 +371,38 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                                             </option>
                                         ))}
                                     </select>
+                                </div>
+                            )}
+
+                            {targetType === 'role' && (
+                                <div>
+                                    <label className="block text-sm font-bold mb-2">Chọn Vai trò:</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {[
+                                            { id: 'hoc_vien', label: 'Học viên' },
+                                            { id: 'giao_vien', label: 'Giáo viên' },
+                                            { id: 'quan_ly', label: 'Quản lý' },
+                                            { id: 'lanh_dao', label: 'Lãnh đạo' },
+                                            { id: 'admin', label: 'Admin' }
+                                        ].map(role => (
+                                            <label key={role.id} className="flex items-center gap-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    value={role.id}
+                                                    checked={selectedRoles.includes(role.id)}
+                                                    onChange={e => {
+                                                        if (e.target.checked) {
+                                                            setSelectedRoles([...selectedRoles, role.id]);
+                                                        } else {
+                                                            setSelectedRoles(selectedRoles.filter(r => r !== role.id));
+                                                        }
+                                                    }}
+                                                    className="w-4 h-4 text-teal-600"
+                                                />
+                                                <span>{role.label}</span>
+                                            </label>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 
