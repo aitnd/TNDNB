@@ -20,18 +20,40 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-fast-marquee": "^1.6.5",
-    "react-icons": "^5.5.0",
-    "react-virtuoso": "^4.17.0",
-    "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1",
-    "sonner": "^2.0.7",
-    "sweetalert2": "^11.26.4",
-    "zustand": "^5.0.9"
-  },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
-  }
-}
+    {
+      "name": "dao-tao-thuyen-vien",
+      "private": true,
+      "version": "3.6.0",
+      "type": "module",
+      "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+      },
+      "dependencies": {
+        "@supabase/supabase-js": "2",
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.3",
+        "express": "^5.2.1",
+        "firebase": "^12.6.0",
+        "firebase-admin": "^13.6.0",
+        "framer-motion": "^12.23.26",
+        "lucide-react": "^0.561.0",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+        "react-fast-marquee": "^1.6.5",
+        "react-icons": "^5.5.0",
+        "react-virtuoso": "^4.17.0",
+        "socket.io": "^4.8.1",
+        "socket.io-client": "^4.8.1",
+        "sonner": "^2.0.7",
+        "sweetalert2": "^11.26.4",
+        "zustand": "^5.0.9",
+        "@vitejs/plugin-react": "^5.0.0",
+        "vite": "^6.2.0"
+      },
+      "devDependencies": {
+        "@types/node": "^22.14.0",
+        "typescript": "~5.8.2"
+      }
+    }
