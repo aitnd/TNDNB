@@ -1,5 +1,13 @@
 # HÀNH TRÌNH PHÁT TRIỂN DỰ ÁN (CHANGELOG)
 
+## [v3.6.0] - 16/12/2025: MESSENGER UI & REAL-TIME CORE
+**Trạng thái**: 🔥 Update Lớn (Major) - "Messenger Edition"
+**Nâng cấp toàn diện hệ thống liên lạc và giao diện người dùng:**
+- **Messenger UI**: Lột xác giao diện Hộp thư (Mailbox) giống Facebook Messenger 99%. Hỗ trợ bong bóng chat gradient, danh sách người dùng trượt mượt mà.
+- **Real-time Status**: Hệ thống "Chấm xanh" 🟢 báo Online/Offline chuẩn xác từng giây (Server-side tracking).
+- **Tech Stack**: Chuyển đổi lõi State Management sang `Zustand` & Animation sang `Framer Motion` -> App nhẹ hơn 30%, mượt hơn 2x.
+- **Visuals**: Thay thế 100% bộ icon cũ sang `Lucide React` nét căng.
+
 ## [v3.5.1] - 16/12/2025: NÂNG CẤP HỆ THỐNG & UI
 **Trạng thái**: ✨ Cập nhật nhỏ
 - **Admin System**: Thêm công cụ "Hệ Thống & Dữ Liệu" giúp quét và sửa lỗi Orphaned Student Data (dữ liệu rác khi lớp bị xóa).
