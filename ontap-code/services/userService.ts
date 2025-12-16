@@ -131,10 +131,10 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
                 courseId: data.courseId || '',
             } as UserProfile;
         }
-        return null;
+        return null; // Document does not exist
     } catch (error) {
         console.error('Error fetching user profile from Firestore:', error);
-        return null;
+        throw error; // RETHROW to let caller handle network/permission errors
     }
 };
 

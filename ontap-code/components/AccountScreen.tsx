@@ -165,6 +165,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
             const clean = (val: any) => (val === undefined ? null : val);
             await updateDoc(doc(db, 'users', userProfile.id), {
                 fullName: clean(myInfo.full_name),
+                full_name: clean(myInfo.full_name), // Sync legacy field
                 phoneNumber: clean(myInfo.phoneNumber),
                 birthDate: clean(myInfo.birthDate),
                 address: clean(myInfo.address),

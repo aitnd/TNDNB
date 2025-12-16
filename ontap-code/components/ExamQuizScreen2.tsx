@@ -142,7 +142,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                             }}
                         />
                         <div className="text-sm space-y-1">
-                            <p className="font-bold text-blue-700 text-lg uppercase">{userName || 'Học viên'}</p>
+                            <p className="font-bold text-blue-700 text-lg uppercase">{userProfile?.full_name || userProfile?.fullName || userName || 'Học viên'}</p>
                             <p>Số báo danh: <span className="font-semibold text-gray-800">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
                             <p>Ngày sinh: <span className="font-semibold text-gray-800">{formatDate(userProfile?.birthDate)}</span></p>
                             <p>Địa chỉ: <span className="font-semibold text-gray-800">{userProfile?.address || '---'}</span></p>

@@ -49,28 +49,142 @@ io.use(async (socket, next) => {
 io.on('connection', (socket) => {
     // Map userId -> socketId (In-memory - Prod nên dùng Redis)
     const userId = socket.user ? socket.user.uid : 'anonymous';
+    const userRole = socket.user ? socket.user.role : ''; // Claims require setting in Firebase logic
+    // Or fetch role from Firestore if not in token
 
     if (userId !== 'anonymous') {
         // Track Online User
         socket.join(userId);
         console.log(`User ${userId} CONNECTED (${socket.id})`);
 
+        // Update Firestore isOnline = true
+        admin.firestore().collection('users').doc(userId).update({
+            isOnline: true,
+            lastSeen: admin.firestore.FieldValue.serverTimestamp()
+        }).catch(err => console.log("Error updating online status:", err.message));
+
+        // ADMIN SUPPORT: If user is admin/teacher, join 'admin_support'
+        // Since we might not have role in token claims yet, let's allow client to join.
+        // OR: Fetch user role here?
+        // Let's rely on client emitting 'join_admin' or just broadacast to specific admins.
+        // For now: Simpler - If client says "I am admin", believe them? No.
+        // Safest: Check DB.
+        admin.firestore().collection('users').doc(userId).get().then(doc => {
+            if (doc.exists) {
+                const data = doc.data();
+                if (['admin', 'quan_ly', 'giao_vien'].includes(data.role)) {
+                    socket.join('admin_support');
+                    console.log(`User ${userId} joined admin_support`);
+                }
+            }
+        });
+
         // Broadcast to ALL clients that this user is now Online
         io.emit('user_status_change', { userId, isOnline: true });
     }
 
+    // Handle Disconnect
+    socket.on('disconnect', () => {
+        if (userId !== 'anonymous') {
+            admin.firestore().collection('users').doc(userId).update({
+                isOnline: false,
+                lastSeen: admin.firestore.FieldValue.serverTimestamp()
+            }).catch(err => console.log("Error updating offline status:", err.message));
+
+            io.emit('user_status_change', { userId, isOnline: false });
+        }
+    });
+
     // --- Mailbox Logic ---
-    socket.on('send_message', async (data) => {
+    socket.on('send_message', async (data, callback) => {
         // data: { to: 'userId', content: '...' }
         const { to, content } = data;
         const senderId = socket.user ? socket.user.uid : 'anonymous';
 
-        // Emit to recipient if online/in-room
-        io.to(to).emit('receive_message', {
-            senderId,
-            content,
-            timestamp: new Date()
-        });
+        // 1. Save to Firestore (Persistence)
+        try {
+            const conversationId = [senderId, to].sort().join('_');
+            const messageData = {
+                senderId,
+                receiverId: to,
+                content,
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                visibleTo: [senderId, to], // For "Delete for me" feature
+                conversationId
+            };
+
+            // Special handling for messages TO 'admin_support'
+            // We still need to save it. But conversationId might need care.
+            // If sender is Student, to is 'admin_support'. convId = 'admin_support_studentID'.
+            // Admins need to query this.
+
+            const docRef = await admin.firestore().collection('messages').add(messageData);
+
+            // Acknowledge success to sender (Optimistic UI)
+            if (callback) callback({ status: 'ok', id: docRef.id });
+
+        } catch (error) {
+            console.error("Error saving message:", error);
+            if (callback) callback({ status: 'error' });
+        }
+
+        // 2. Emit to receiver
+        if (to === 'admin_support') {
+            io.to('admin_support').emit('receive_message', {
+                senderId,
+                content,
+                timestamp: new Date()
+            });
+        } else {
+            io.to(to).emit('receive_message', {
+                senderId,
+                content,
+                timestamp: new Date()
+            });
+        }
+    });
+
+    // --- Typing Indicators ---
+    socket.on('typing', (data) => {
+        const { to } = data;
+        const senderId = socket.user ? socket.user.uid : 'anonymous';
+        if (to === 'admin_support') {
+            io.to('admin_support').emit('user_typing', { senderId: userId });
+        } else {
+            io.to(to).emit('user_typing', { senderId: userId });
+        }
+    });
+
+    socket.on('stop_typing', (data) => {
+        const { to } = data;
+        const senderId = socket.user ? socket.user.uid : 'anonymous';
+        if (to === 'admin_support') {
+            io.to('admin_support').emit('user_stop_typing', { senderId: userId });
+        } else {
+            io.to(to).emit('user_stop_typing', { senderId: userId });
+        }
+    });
+
+
+    // --- Delete Message Logic (Delete for Me) ---
+    socket.on('delete_message', async (messageId) => {
+        const userId = socket.user ? socket.user.uid : 'anonymous';
+        if (userId === 'anonymous') return;
+
+        try {
+            // Remove user from 'visibleTo' array
+            await admin.firestore().collection('messages').doc(messageId).update({
+                visibleTo: admin.firestore.FieldValue.arrayRemove(userId)
+            });
+
+            // Notify client to remove from UI
+            socket.emit('delete_message_success', messageId);
+            console.log(`User ${userId} deleted message ${messageId}`);
+
+        } catch (error) {
+            console.error("Error deleting message:", error);
+            socket.emit('delete_message_error', "Không thể xóa tin nhắn");
+        }
     });
 
     // --- Notification Logic ---

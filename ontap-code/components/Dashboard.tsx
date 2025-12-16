@@ -6,6 +6,8 @@ import { HelmIcon3D, BookOpenIcon3D, ClipboardListIcon3D } from './icons';
 import { HelmIcon3D, BookOpenIcon3D, ClipboardListIcon3D } from './icons';
 import { useState, useEffect } from 'react';
 
+import OnlineStatsWidget from './OnlineStatsWidget';
+
 interface DashboardProps {
     userProfile: UserProfile;
     onStart: () => void;
@@ -18,6 +20,9 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-slide-in-right">
+            {/* Realtime Stats for Admin */}
+            <OnlineStatsWidget userRole={userProfile.role} />
+
             <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
 
                 {/* Left Column: Student Card */}

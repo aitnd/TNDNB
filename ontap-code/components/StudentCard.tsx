@@ -54,7 +54,12 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                     <div className={styles.photoSection}>
                         <div className={styles.photoWrapper} style={isTeacher ? { borderColor: '#fcd34d' } : {}}>
                             <img
-                                src={user.photoURL || 'https://via.placeholder.com/150'}
+                                src={user.photoURL || (isTeacher ? '/assets/img/avatar.webp.webp' : '/assets/img/avatar.webp1.webp')}
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.onerror = null; // Prevent loop
+                                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name || 'User')}&background=random&size=150`;
+                                }}
                                 alt="Avatar"
                                 className={styles.avatar}
                             />

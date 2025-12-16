@@ -67,8 +67,8 @@
 
 .cardTitle {
     text-align: center;
-    color: #c53030;
-    /* Màu đỏ đậm */
+    color: #2b6cb0;
+    /* Changed from Red to Blue */
     font-size: 1.6rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -131,8 +131,8 @@
 }
 
 .valueHighlight {
-    color: #c53030;
-    /* Tên màu đỏ */
+    color: #2b6cb0;
+    /* Changed from Red to Blue */
     text-transform: uppercase;
     font-size: 1rem;
 }

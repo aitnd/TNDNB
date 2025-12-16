@@ -38,7 +38,11 @@ import { Capacitor } from '@capacitor/core';
 
 
 
+import usePresence from './hooks/usePresence';
+
 const AppContent: React.FC = () => {
+  // Global Presence Hook
+  usePresence();
   // Zustand State Selectors
   const appState = useAppStore(state => state.appState);
   const setAppState = useAppStore(state => state.setAppState);
@@ -126,18 +130,45 @@ const AppContent: React.FC = () => {
           // For simplicity/robustness in this structure: ensuring we don't leak is important.
         });
 
-        // Initial fetch for immediate render (optional, but snapshot is fast)
         // const profile = await getUserProfile(firebaseUser.uid);
         // setUserProfile(profile); 
         // setUserName(profile?.full_name || firebaseUser.displayName || '');
 
         // Initial fetch for immediate render and for downstream logic that relies on 'profile' variable
-        const profile = await getUserProfile(firebaseUser.uid);
-        if (!profile) {
-          // If profile doesn't exist yet (rare race condition or new user without doc), 
-          // the snapshot listener will eventually catch it, but here we might have issues.
-          // Using a basic object as fallback or letting it be null.
+        let profile = null;
+        try {
+          profile = await getUserProfile(firebaseUser.uid);
+        } catch (fetchErr) {
+          console.error("❌ Critical: Could not fetch user profile (Network/Permission):", fetchErr);
+          // Stop here or retry? For now, we avoid self-healing overwrite.
         }
+
+        // --- SELF-HEAL: Create Profile ONLY if missing (returns null) AND no error occurred ---
+        if (profile === null) {
+          console.log("⚠️ User Profile missing for Auth UID:", firebaseUser.uid, "- Creating default profile...");
+          const defaultProfile: UserProfile = {
+            id: firebaseUser.uid,
+            full_name: firebaseUser.displayName || 'Người dùng mới',
+            email: firebaseUser.email || '',
+            role: 'hoc_vien',
+            photoURL: firebaseUser.photoURL || '',
+            isVerified: false
+          };
+
+          try {
+            // Check again or just write with merge to be safe?
+            // Since profile is null, it means document.exists() was false.
+            const { setDoc, doc } = await import('firebase/firestore');
+            await setDoc(doc(db, 'users', firebaseUser.uid), defaultProfile, { merge: true });
+            profile = defaultProfile;
+            setUserProfile(profile);
+            setUserName(profile.full_name);
+            console.log("✅ Created default profile successfully.");
+          } catch (err) {
+            console.error("❌ Failed to create default profile:", err);
+          }
+        }
+        // -----------------------------------------------------------
 
         // Initialize FCM if Native
         import('./services/fcmClient').then(({ initializeFCM }) => {

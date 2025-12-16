@@ -13,10 +13,13 @@ const firebaseConfig = {
     databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
 };
 
+import { getDatabase } from 'firebase/database';
+
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = getFirestore(app); // Firestore
+const rtdb = getDatabase(app); // Realtime Database
 const storage = getStorage(app);
 
-export { app, auth, db, storage };
+export { app, auth, db, rtdb, storage };

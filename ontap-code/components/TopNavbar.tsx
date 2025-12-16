@@ -133,11 +133,22 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 <span className="text-xs text-gray-500 dark:text-gray-400">Xin chào,</span>
                                 <span className="text-sm font-bold text-gray-800 dark:text-white max-w-[150px] truncate">
                                     {userProfile.isVerified || userProfile.courseId ? (
-                                        <span className="flex items-center gap-1 text-blue-600">
-                                            {userProfile.full_name || userProfile.fullName || '---'} <CheckCircle size={14} className="text-green-500" />
+                                        <span className={`flex items-center gap-1 font-bold ${userProfile.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
+                                                userProfile.role === 'quan_ly' || userProfile.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
+                                                    userProfile.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
+                                                        'text-blue-600'
+                                            }`}>
+                                            {userProfile.full_name || userProfile.fullName || '---'}
+                                            {userProfile.role === 'hoc_vien' && <CheckCircle size={14} className="text-green-500" />}
                                         </span>
                                     ) : (
-                                        userProfile.full_name || userProfile.fullName || '---'
+                                        <span className={`font-bold ${userProfile.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
+                                                userProfile.role === 'quan_ly' || userProfile.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
+                                                    userProfile.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
+                                                        'text-gray-800 dark:text-white'
+                                            }`}>
+                                            {userProfile.full_name || userProfile.fullName || '---'}
+                                        </span>
                                     )}
                                 </span>
                             </div>
