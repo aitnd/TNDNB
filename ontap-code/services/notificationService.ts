@@ -339,4 +339,18 @@ export const hardDeleteNotification = async (notificationId: string) => {
     }
 };
 
+export const updateNotification = async (id: string, data: any) => {
+    try {
+        const ref = doc(db, 'notifications', id);
+        await updateDoc(ref, {
+            ...data,
+            updatedAt: serverTimestamp()
+        });
+        return true;
+    } catch (e) {
+        console.error("Error updating notification:", e);
+        return false;
+    }
+};
+
 

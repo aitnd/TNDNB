@@ -107,191 +107,293 @@ app.post('/api/admin/reset-password', authenticateAPI, async (req, res) => {
         console.error("Error resetting password:", error);
         res.status(500).json({ error: error.message });
     }
-});
+    // 4. Google Analytics Data API
+    const { BetaAnalyticsDataClient } = require('@google-analytics/data');
 
-// 3. Socket Logic
-io.on('connection', (socket) => {
-    // Map userId -> socketId (In-memory - Prod nên dùng Redis)
-    const userId = socket.user ? socket.user.uid : 'anonymous';
-    const userRole = socket.user ? socket.user.role : ''; // Claims require setting in Firebase logic
-    // Or fetch role from Firestore if not in token
+    const analyticsDataClient = new BetaAnalyticsDataClient({
+        credentials: {
+            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+            private_key: process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined,
+        },
+    });
 
-    if (userId !== 'anonymous') {
-        // Track Online User
-        socket.join(userId);
-        console.log(`User ${userId} CONNECTED (${socket.id})`);
+    const PROPERTY_ID = process.env.GOOGLE_ANALYTICS_PROPERTY_ID || '471809055'; // Default from user context if missing
 
-        // Update Firestore isOnline = true
-        admin.firestore().collection('users').doc(userId).update({
-            isOnline: true,
-            lastSeen: admin.firestore.FieldValue.serverTimestamp()
-        }).catch(err => console.log("Error updating online status:", err.message));
+    app.post('/api/analytics', authenticateAPI, async (req, res) => {
+        try {
+            const { dateRange = '7d' } = req.body;
+            let startDate = '7daysAgo';
 
-        // ADMIN SUPPORT: If user is admin/teacher, join 'admin_support'
-        // Since we might not have role in token claims yet, let's allow client to join.
-        // OR: Fetch user role here?
-        // Let's rely on client emitting 'join_admin' or just broadacast to specific admins.
-        // For now: Simpler - If client says "I am admin", believe them? No.
-        // Safest: Check DB.
-        admin.firestore().collection('users').doc(userId).get().then(doc => {
-            if (doc.exists) {
-                const data = doc.data();
-                if (['admin', 'quan_ly', 'giao_vien'].includes(data.role)) {
-                    socket.join('admin_support');
-                    console.log(`User ${userId} joined admin_support`);
+            if (dateRange === '30d') startDate = '30daysAgo';
+            if (dateRange === 'today') startDate = 'today';
+
+            // 1. Run Report for Chart (Sessions by Date)
+            const [response] = await analyticsDataClient.runReport({
+                property: `properties/${PROPERTY_ID}`,
+                dateRanges: [
+                    {
+                        startDate: startDate,
+                        endDate: 'today',
+                    },
+                ],
+                dimensions: [
+                    {
+                        name: dateRange === 'today' ? 'hour' : 'date',
+                    },
+                ],
+                metrics: [
+                    {
+                        name: 'sessions',
+                    },
+                    {
+                        name: 'activeUsers',
+                    },
+                ],
+                orderBys: [
+                    {
+                        dimension: {
+                            orderType: 'ALPHANUMERIC',
+                            dimensionName: dateRange === 'today' ? 'hour' : 'date',
+                        },
+                    },
+                ],
+            });
+
+            // 2. Run Report for Key Metrics (Totals)
+            const [metricsResponse] = await analyticsDataClient.runReport({
+                property: `properties/${PROPERTY_ID}`,
+                dateRanges: [
+                    {
+                        startDate: startDate,
+                        endDate: 'today',
+                    },
+                ],
+                metrics: [
+                    { name: 'newUsers' },
+                    { name: 'averageSessionDuration' },
+                    { name: 'sessions' },
+                    { name: 'bounceRate' }
+                ]
+            });
+
+            // Process Chart Data
+            const chartData = response.rows.map(row => {
+                let name = row.dimensionValues[0].value;
+                // Format date if needed (YYYYMMDD -> DD/MM)
+                if (dateRange !== 'today' && name.length === 8) {
+                    const day = name.substring(6, 8);
+                    const month = name.substring(4, 6);
+                    name = `${day}/${month}`;
+                } else if (dateRange === 'today') {
+                    name = `${name}h`;
                 }
+                return {
+                    name,
+                    visits: parseInt(row.metricValues[0].value),
+                    users: parseInt(row.metricValues[1].value)
+                };
+            });
+
+            // Process Metrics Data
+            const mValues = metricsResponse.rows[0].metricValues;
+            const metrics = {
+                newUsers: parseInt(mValues[0].value),
+                avgSessionDuration: parseFloat(mValues[1].value),
+                totalSessions: parseInt(mValues[2].value),
+                bounceRate: parseFloat(mValues[3].value) * 100 // rate is 0-1
+            };
+
+            res.json({ chart: chartData, metrics });
+
+        } catch (error) {
+            console.error("Analytics API Error:", error);
+            res.status(500).json({ error: error.message });
+        }
+    });
+
+    // 3. Socket Logic
+    io.on('connection', (socket) => {
+        // Map userId -> socketId (In-memory - Prod nên dùng Redis)
+        const userId = socket.user ? socket.user.uid : 'anonymous';
+        const userRole = socket.user ? socket.user.role : ''; // Claims require setting in Firebase logic
+        // Or fetch role from Firestore if not in token
+
+        if (userId !== 'anonymous') {
+            // Track Online User
+            socket.join(userId);
+            console.log(`User ${userId} CONNECTED (${socket.id})`);
+
+            // Update Firestore isOnline = true
+            admin.firestore().collection('users').doc(userId).update({
+                isOnline: true,
+                lastSeen: admin.firestore.FieldValue.serverTimestamp()
+            }).catch(err => console.log("Error updating online status:", err.message));
+
+            // ADMIN SUPPORT: If user is admin/teacher, join 'admin_support'
+            // Since we might not have role in token claims yet, let's allow client to join.
+            // OR: Fetch user role here?
+            // Let's rely on client emitting 'join_admin' or just broadacast to specific admins.
+            // For now: Simpler - If client says "I am admin", believe them? No.
+            // Safest: Check DB.
+            admin.firestore().collection('users').doc(userId).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (['admin', 'quan_ly', 'giao_vien'].includes(data.role)) {
+                        socket.join('admin_support');
+                        console.log(`User ${userId} joined admin_support`);
+                    }
+                }
+            });
+
+            // Broadcast to ALL clients that this user is now Online
+            io.emit('user_status_change', { userId, isOnline: true });
+        }
+
+        // Handle Disconnect
+        socket.on('disconnect', () => {
+            if (userId !== 'anonymous') {
+                admin.firestore().collection('users').doc(userId).update({
+                    isOnline: false,
+                    lastSeen: admin.firestore.FieldValue.serverTimestamp()
+                }).catch(err => console.log("Error updating offline status:", err.message));
+
+                io.emit('user_status_change', { userId, isOnline: false });
             }
         });
 
-        // Broadcast to ALL clients that this user is now Online
-        io.emit('user_status_change', { userId, isOnline: true });
-    }
+        // --- Mailbox Logic ---
+        socket.on('send_message', async (data, callback) => {
+            // data: { to: 'userId', content: '...' }
+            const { to, content } = data;
+            const senderId = socket.user ? socket.user.uid : 'anonymous';
 
-    // Handle Disconnect
-    socket.on('disconnect', () => {
-        if (userId !== 'anonymous') {
-            admin.firestore().collection('users').doc(userId).update({
-                isOnline: false,
-                lastSeen: admin.firestore.FieldValue.serverTimestamp()
-            }).catch(err => console.log("Error updating offline status:", err.message));
+            // 1. Save to Firestore (Persistence)
+            try {
+                const conversationId = [senderId, to].sort().join('_');
+                const messageData = {
+                    senderId,
+                    receiverId: to,
+                    content,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    visibleTo: [senderId, to], // For "Delete for me" feature
+                    conversationId
+                };
 
-            io.emit('user_status_change', { userId, isOnline: false });
-        }
-    });
+                // Special handling for messages TO 'admin_support'
+                // We still need to save it. But conversationId might need care.
+                // If sender is Student, to is 'admin_support'. convId = 'admin_support_studentID'.
+                // Admins need to query this.
 
-    // --- Mailbox Logic ---
-    socket.on('send_message', async (data, callback) => {
-        // data: { to: 'userId', content: '...' }
-        const { to, content } = data;
-        const senderId = socket.user ? socket.user.uid : 'anonymous';
+                const docRef = await admin.firestore().collection('messages').add(messageData);
 
-        // 1. Save to Firestore (Persistence)
-        try {
-            const conversationId = [senderId, to].sort().join('_');
-            const messageData = {
-                senderId,
-                receiverId: to,
-                content,
-                timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                visibleTo: [senderId, to], // For "Delete for me" feature
-                conversationId
-            };
+                // Acknowledge success to sender (Optimistic UI)
+                if (callback) callback({ status: 'ok', id: docRef.id });
 
-            // Special handling for messages TO 'admin_support'
-            // We still need to save it. But conversationId might need care.
-            // If sender is Student, to is 'admin_support'. convId = 'admin_support_studentID'.
-            // Admins need to query this.
+            } catch (error) {
+                console.error("Error saving message:", error);
+                if (callback) callback({ status: 'error' });
+            }
 
-            const docRef = await admin.firestore().collection('messages').add(messageData);
+            // 2. Emit to receiver
+            if (to === 'admin_support') {
+                io.to('admin_support').emit('receive_message', {
+                    senderId,
+                    content,
+                    timestamp: new Date()
+                });
+            } else {
+                io.to(to).emit('receive_message', {
+                    senderId,
+                    content,
+                    timestamp: new Date()
+                });
+            }
+        });
 
-            // Acknowledge success to sender (Optimistic UI)
-            if (callback) callback({ status: 'ok', id: docRef.id });
+        // --- Typing Indicators ---
+        socket.on('typing', (data) => {
+            const { to } = data;
+            const senderId = socket.user ? socket.user.uid : 'anonymous';
+            if (to === 'admin_support') {
+                io.to('admin_support').emit('user_typing', { senderId: userId });
+            } else {
+                io.to(to).emit('user_typing', { senderId: userId });
+            }
+        });
 
-        } catch (error) {
-            console.error("Error saving message:", error);
-            if (callback) callback({ status: 'error' });
-        }
+        socket.on('stop_typing', (data) => {
+            const { to } = data;
+            const senderId = socket.user ? socket.user.uid : 'anonymous';
+            if (to === 'admin_support') {
+                io.to('admin_support').emit('user_stop_typing', { senderId: userId });
+            } else {
+                io.to(to).emit('user_stop_typing', { senderId: userId });
+            }
+        });
 
-        // 2. Emit to receiver
-        if (to === 'admin_support') {
-            io.to('admin_support').emit('receive_message', {
-                senderId,
-                content,
-                timestamp: new Date()
+
+        // --- Delete Message Logic (Delete for Me) ---
+        socket.on('delete_message', async (messageId) => {
+            const userId = socket.user ? socket.user.uid : 'anonymous';
+            if (userId === 'anonymous') return;
+
+            try {
+                // Remove user from 'visibleTo' array
+                await admin.firestore().collection('messages').doc(messageId).update({
+                    visibleTo: admin.firestore.FieldValue.arrayRemove(userId)
+                });
+
+                // Notify client to remove from UI
+                socket.emit('delete_message_success', messageId);
+                console.log(`User ${userId} deleted message ${messageId}`);
+
+            } catch (error) {
+                console.error("Error deleting message:", error);
+                socket.emit('delete_message_error', "Không thể xóa tin nhắn");
+            }
+        });
+
+        // --- Notification Logic ---
+        socket.on('send_notification', (data) => {
+            const { to, title, body, link } = data;
+            io.to(to).emit('receive_notification', {
+                title,
+                body,
+                link,
+                timestamp: new Date(),
+                read: false
             });
-        } else {
-            io.to(to).emit('receive_message', {
-                senderId,
-                content,
-                timestamp: new Date()
+        });
+
+        socket.on('broadcast_notification', (data) => {
+            io.emit('receive_notification', {
+                title: data.title,
+                body: data.body,
+                link: data.link,
+                timestamp: new Date(),
+                read: false,
+                broadcast: true
             });
-        }
-    });
+        });
 
-    // --- Typing Indicators ---
-    socket.on('typing', (data) => {
-        const { to } = data;
-        const senderId = socket.user ? socket.user.uid : 'anonymous';
-        if (to === 'admin_support') {
-            io.to('admin_support').emit('user_typing', { senderId: userId });
-        } else {
-            io.to(to).emit('user_typing', { senderId: userId });
-        }
-    });
+        // --- Check Online Status ---
+        socket.on('check_online_status', (data, callback) => {
+            // Client asks if specific users are online
+            // For MVP, just return if specific rooms exist
+            // Better way: maintain a Map<userId, socketId> global
+        });
 
-    socket.on('stop_typing', (data) => {
-        const { to } = data;
-        const senderId = socket.user ? socket.user.uid : 'anonymous';
-        if (to === 'admin_support') {
-            io.to('admin_support').emit('user_stop_typing', { senderId: userId });
-        } else {
-            io.to(to).emit('user_stop_typing', { senderId: userId });
-        }
-    });
-
-
-    // --- Delete Message Logic (Delete for Me) ---
-    socket.on('delete_message', async (messageId) => {
-        const userId = socket.user ? socket.user.uid : 'anonymous';
-        if (userId === 'anonymous') return;
-
-        try {
-            // Remove user from 'visibleTo' array
-            await admin.firestore().collection('messages').doc(messageId).update({
-                visibleTo: admin.firestore.FieldValue.arrayRemove(userId)
-            });
-
-            // Notify client to remove from UI
-            socket.emit('delete_message_success', messageId);
-            console.log(`User ${userId} deleted message ${messageId}`);
-
-        } catch (error) {
-            console.error("Error deleting message:", error);
-            socket.emit('delete_message_error', "Không thể xóa tin nhắn");
-        }
-    });
-
-    // --- Notification Logic ---
-    socket.on('send_notification', (data) => {
-        const { to, title, body, link } = data;
-        io.to(to).emit('receive_notification', {
-            title,
-            body,
-            link,
-            timestamp: new Date(),
-            read: false
+        socket.on('disconnect', () => {
+            if (userId !== 'anonymous') {
+                console.log(`User ${userId} DISCONNECTED`);
+                // Broadcast Offline
+                io.emit('user_status_change', { userId, isOnline: false });
+            }
         });
     });
 
-    socket.on('broadcast_notification', (data) => {
-        io.emit('receive_notification', {
-            title: data.title,
-            body: data.body,
-            link: data.link,
-            timestamp: new Date(),
-            read: false,
-            broadcast: true
-        });
+    const PORT = process.env.PORT || 3001;
+    server.listen(PORT, () => {
+        console.log(`SERVER RUNNING on port ${PORT}`);
+        console.log(`Firebase Admin Initialized for Project: ${serviceAccount.project_id}`);
     });
-
-    // --- Check Online Status ---
-    socket.on('check_online_status', (data, callback) => {
-        // Client asks if specific users are online
-        // For MVP, just return if specific rooms exist
-        // Better way: maintain a Map<userId, socketId> global
-    });
-
-    socket.on('disconnect', () => {
-        if (userId !== 'anonymous') {
-            console.log(`User ${userId} DISCONNECTED`);
-            // Broadcast Offline
-            io.emit('user_status_change', { userId, isOnline: false });
-        }
-    });
-});
-
-const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
-    console.log(`SERVER RUNNING on port ${PORT}`);
-    console.log(`Firebase Admin Initialized for Project: ${serviceAccount.project_id}`);
-});

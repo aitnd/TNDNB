@@ -32,6 +32,7 @@ import AdSenseLoader from './components/AdSenseLoader';
 import MobileBottomNav from './components/MobileBottomNav';
 import ThiTrucTuyenPage from './components/ThiTrucTuyenPage';
 import OnlineExamManagementScreen from './components/OnlineExamManagementScreen';
+import AnalyticsPage from './components/AnalyticsPage';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
@@ -667,6 +668,8 @@ const AppContent: React.FC = () => {
               return userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => setAppState(AppState.DASHBOARD)} /> : null;
             case AppState.MAILBOX:
               return userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => setAppState(AppState.DASHBOARD)} /> : null;
+            case AppState.ANALYTICS:
+              return <AnalyticsPage onBack={() => setAppState(AppState.DASHBOARD)} />;
             default:
               return <WelcomeModal onStart={handleStart} onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />;
           }

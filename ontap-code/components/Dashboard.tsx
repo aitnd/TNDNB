@@ -7,6 +7,7 @@ import { HelmIcon3D, BookOpenIcon3D, ClipboardListIcon3D } from './icons';
 import { useState, useEffect } from 'react';
 
 import OnlineStatsWidget from './OnlineStatsWidget';
+import CustomAnalyticsWidget from './CustomAnalyticsWidget';
 
 interface DashboardProps {
     userProfile: UserProfile;
@@ -21,6 +22,9 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-slide-in-right">
+            {/* Custom Analytics Widget */}
+            <CustomAnalyticsWidget userRole={userProfile.role} />
+
             {/* Realtime Stats for Admin */}
             <OnlineStatsWidget userRole={userProfile.role} />
 

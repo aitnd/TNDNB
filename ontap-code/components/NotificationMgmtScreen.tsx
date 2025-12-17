@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSocket } from '../contexts/SocketContext';
-import { Notification, fetchAllGlobalNotifications, hardDeleteNotification, sendNotification } from '../services/notificationService';
+import { Notification, fetchAllGlobalNotifications, hardDeleteNotification, sendNotification, updateNotification } from '../services/notificationService';
 import { getAllClasses, getUserProfile, searchUsersByEmail } from '../services/userService';
-import { FaTrash, FaExclamationTriangle, FaClock, FaCheckCircle, FaBan, FaPlus, FaUsers, FaUser, FaGlobe } from 'react-icons/fa';
+import { FaTrash, FaExclamationTriangle, FaClock, FaCheckCircle, FaBan, FaPlus, FaUsers, FaUser, FaGlobe, FaEdit } from 'react-icons/fa';
 import { UserProfile } from '../types';
 
 interface NotificationMgmtScreenProps {
@@ -66,6 +66,37 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
     const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
 
     const [expiryDate, setExpiryDate] = useState('');
+    const [editingNotification, setEditingNotification] = useState<Notification | null>(null);
+
+    const handleEditClick = (n: Notification) => {
+        setEditingNotification(n);
+        setTitle(n.title);
+        setMessage(n.message);
+        setType(n.type as any);
+        setTargetType(n.targetType === 'all' && n.targetRoles && n.targetRoles.length > 0 ? 'role' : n.targetType);
+
+        if (n.targetType === 'class') setSelectedClass(n.targetName || '');
+        if (n.targetType === 'user') {
+            // Can't easily restore selectedUser object without fetching, but we can show the name
+            // For simplicity, we might lock target editing or just show current target
+        }
+        if (n.targetRoles) setSelectedRoles(n.targetRoles);
+
+        if (n.expiryDate) {
+            // Format for datetime-local: YYYY-MM-DDTHH:mm
+            const d = new Date(n.expiryDate.seconds * 1000);
+            const iso = d.toISOString().slice(0, 16);
+            // Adjust for timezone offset if needed, but simple ISO slice is UTC. 
+            // Better:
+            const offset = d.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(d.getTime() - offset)).toISOString().slice(0, 16);
+            setExpiryDate(localISOTime);
+        } else {
+            setExpiryDate('');
+        }
+
+        setShowCreateModal(true);
+    };
 
     useEffect(() => {
         if (showCreateModal && targetType === 'class') {
@@ -89,66 +120,101 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
         e.preventDefault();
         if (!title || !message) return alert('Vui lòng nhập tiêu đề và nội dung');
         if (targetType === 'class' && !selectedClass) return alert('Vui lòng chọn lớp');
-        if (targetType === 'user' && !selectedUser) return alert('Vui lòng chọn người nhận');
+        if (targetType === 'user' && !selectedUser && !editingNotification) return alert('Vui lòng chọn người nhận'); // Relax for edit
         if (targetType === 'role' && selectedRoles.length === 0) return alert('Vui lòng chọn ít nhất một vai trò');
 
         try {
-            let targetId = null;
-            if (targetType === 'class') targetId = selectedClass;
-            if (targetType === 'user') targetId = selectedUser!.id;
+            if (editingNotification) {
+                // UPDATE MODE
+                const updateData: any = {
+                    title,
+                    message,
+                    type,
+                    // We typically don't allow changing targetType/TargetId easily as it implies moving data
+                    // But we can update expiryDate
+                    expiryDate: expiryDate ? new Date(expiryDate) : null,
+                };
 
-            // 1. Save to Firestore (Persistence)
-            await sendNotification(
-                title,
-                message,
-                type,
-                targetType,
-                targetId,
-                userProfile.id,
-                userProfile.full_name,
-                expiryDate ? new Date(expiryDate) : null,
-                targetType === 'user' && selectedUser ? `${selectedUser.full_name} (${selectedUser.email})` : undefined,
-                targetType === 'role' ? selectedRoles : undefined
-            );
-
-            // 2. Emit Real-time Socket Event
-            if (socket) {
-                if (targetType === 'all') {
-                    socket.emit('broadcast_notification', {
-                        title: title,
-                        body: message,
-                        link: null
-                    });
-                } else if (targetType === 'user' && selectedUser) {
-                    socket.emit('send_notification', {
-                        to: selectedUser.id,
-                        title: title,
-                        body: message,
-                        link: null,
-                        type: type
-                    });
-                } else if (targetType === 'role') {
-                    // For 'role', we can broadcast with a filter payload, client will filter
-                    socket.emit('broadcast_notification', {
-                        title: title,
-                        body: message,
-                        link: null,
-                        targetRoles: selectedRoles // Client needs to handle this
-                    });
+                // Only update target roles if it was a role notification
+                if (targetType === 'role') {
+                    updateData.targetRoles = selectedRoles;
                 }
+
+                const success = await updateNotification(editingNotification.id, updateData);
+                if (success) {
+                    alert('Đã cập nhật thông báo!');
+                    setShowCreateModal(false);
+                    setEditingNotification(null);
+                    loadData();
+                } else {
+                    alert('Lỗi khi cập nhật.');
+                }
+            } else {
+                // CREATE MODE
+                let targetId = null;
+                if (targetType === 'class') targetId = selectedClass;
+                if (targetType === 'user') targetId = selectedUser!.id;
+
+                // 1. Save to Firestore (Persistence)
+                await sendNotification(
+                    title,
+                    message,
+                    type,
+                    targetType,
+                    targetId,
+                    userProfile.id,
+                    userProfile.full_name,
+                    expiryDate ? new Date(expiryDate) : null,
+                    targetType === 'user' && selectedUser ? `${selectedUser.full_name} (${selectedUser.email})` : undefined,
+                    targetType === 'role' ? selectedRoles : undefined
+                );
+
+                // 2. Emit Real-time Socket Event
+                if (socket) {
+                    if (targetType === 'all') {
+                        socket.emit('broadcast_notification', {
+                            title: title,
+                            body: message,
+                            link: null
+                        });
+                    } else if (targetType === 'user' && selectedUser) {
+                        socket.emit('send_notification', {
+                            to: selectedUser.id,
+                            title: title,
+                            body: message,
+                            link: null,
+                            type: type
+                        });
+                    } else if (targetType === 'role') {
+                        socket.emit('broadcast_notification', {
+                            title: title,
+                            body: message,
+                            link: null,
+                            targetRoles: selectedRoles
+                        });
+                    }
+                }
+
+                alert('Đã gửi thông báo thành công!');
+                setShowCreateModal(false);
+                loadData();
             }
 
-            alert('Đã gửi thông báo thành công!');
-            setShowCreateModal(false);
             // Reset form
             setTitle('');
             setMessage('');
             setType('system');
             setSelectedRoles([]);
-            loadData();
+            setEditingNotification(null);
+            setExpiryDate('');
+            setSelectedClass('');
+            setSelectedUser(null);
+            setFoundUsers([]);
+            setUserSearchTerm('');
+
         } catch (error) {
             console.error(error);
-            alert('Lỗi khi gửi thông báo');
+            alert('Lỗi khi xử lý thông báo');
         }
     };
 
@@ -295,13 +361,22 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                                                     </td>
                                                     <td className="p-4 align-top text-center">
                                                         {isDeletable ? (
-                                                            <button
-                                                                onClick={() => handleDelete(n.id)}
-                                                                className="text-red-500 hover:text-red-700 p-2 bg-red-50 hover:bg-red-100 rounded-lg transition-colors flex items-center gap-1 mx-auto"
-                                                                title="Xóa vĩnh viễn"
-                                                            >
-                                                                <FaTrash size={14} /> <span className="text-xs font-bold">Xóa</span>
-                                                            </button>
+                                                            <div className="flex items-center justify-center gap-2">
+                                                                <button
+                                                                    onClick={() => handleEditClick(n)}
+                                                                    className="text-blue-500 hover:text-blue-700 p-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors flex items-center gap-1"
+                                                                    title="Sửa"
+                                                                >
+                                                                    <FaEdit size={14} /> <span className="text-xs font-bold">Sửa</span>
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleDelete(n.id)}
+                                                                    className="text-red-500 hover:text-red-700 p-2 bg-red-50 hover:bg-red-100 rounded-lg transition-colors flex items-center gap-1"
+                                                                    title="Xóa vĩnh viễn"
+                                                                >
+                                                                    <FaTrash size={14} /> <span className="text-xs font-bold">Xóa</span>
+                                                                </button>
+                                                            </div>
                                                         ) : (
                                                             <div className="text-gray-300 flex justify-center p-2 cursor-not-allowed" title="Bạn không có quyền xóa thông báo cấp cao này">
                                                                 <FaBan />
@@ -325,7 +400,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-scale-in" onClick={e => e.stopPropagation()}>
                         <div className="p-6 border-b dark:border-slate-700 bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
                             <h2 className="text-xl font-bold flex items-center gap-2 text-gray-800 dark:text-white">
-                                <FaPlus className="text-teal-600" /> Tạo thông báo mới
+                                {editingNotification ? <><FaEdit className="text-blue-600" /> Cập nhật thông báo</> : <><FaPlus className="text-teal-600" /> Tạo thông báo mới</>}
                             </h2>
                             <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
                         </div>
@@ -468,7 +543,9 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
 
                             <div className="flex justify-end gap-3 pt-4 border-t dark:border-slate-700 mt-6">
                                 <button type="button" onClick={() => setShowCreateModal(false)} className="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition">Hủy</button>
-                                <button type="submit" className="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold shadow-lg shadow-teal-500/30 transition transform hover:-translate-y-0.5">Gửi thông báo</button>
+                                <button type="submit" className="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold shadow-lg shadow-teal-500/30 transition transform hover:-translate-y-0.5">
+                                    {editingNotification ? 'Cập nhật' : 'Gửi thông báo'}
+                                </button>
                             </div>
                         </form>
                     </div>

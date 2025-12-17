@@ -22,7 +22,8 @@ export const AppState = {
     NOTIFICATION_MGMT: 'notification_mgmt',
     MAILBOX: 'mailbox',
     THI_TRUC_TUYEN: 'thi_truc_tuyen',
-    ONLINE_EXAM_MANAGEMENT: 'online_exam_management'
+    ONLINE_EXAM_MANAGEMENT: 'online_exam_management',
+    ANALYTICS: 'analytics'
 } as const;
 
 export type AppStateType = typeof AppState[keyof typeof AppState];

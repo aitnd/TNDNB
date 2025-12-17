@@ -1,71 +1,170 @@
 import { NextResponse } from 'next/server';
-// 1. "Triệu hồi" cái 'thợ' nói chuyện với Google
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
-// 2. Điền "Mã Tài sản" (Property ID) của anh vào đây
-// (Đây là cái mã 512039111 anh tìm thấy ở bước trước đó)
-const PROPERTY_ID = '512039111';
+// Initialize Client
+import fs from 'fs';
+import path from 'path';
 
-// 3. Hàm 'bí mật' này sẽ chạy trên máy chủ (Server)
-export async function GET(request: Request) {
+const keyFilePath = path.join(process.cwd(), 'google-credentials.json');
+let clientConfig = {};
 
-    // 4. Lấy 'chìa khóa' từ 'két sắt' Vercel ra
-    const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+if (fs.existsSync(keyFilePath)) {
+    clientConfig = { keyFilename: keyFilePath };
+} else {
+    clientConfig = {
+        credentials: {
+            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+            private_key: process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined,
+        },
+    };
+}
 
-    // (Vercel nó hay lưu \n thành \\n, mình phải 'sửa' lại cho đúng)
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+const analyticsDataClient = new BetaAnalyticsDataClient(clientConfig);
 
-    if (!clientEmail || !privateKey) {
-        console.error('Lỗi: Thiếu chìa khóa Google Service Account trong biến môi trường!');
-        return NextResponse.json(
-            { error: 'Lỗi cấu hình máy chủ. Không tìm thấy chìa khóa.' },
-            { status: 500 }
-        );
-    }
+const PROPERTY_ID = process.env.GOOGLE_ANALYTICS_PROPERTY_ID || '512039111';
 
+export async function POST(request: Request) {
     try {
-        // 5. 'Khởi động' cái 'thợ' với 'chìa khóa' bí mật
-        const analyticsDataClient = new BetaAnalyticsDataClient({
-            credentials: {
-                client_email: clientEmail,
-                private_key: privateKey,
-            },
-        });
+        const body = await request.json();
+        const { dateRange = '7d' } = body;
+        let startDate = '7daysAgo';
 
-        // 6. 'Hỏi' Google: "Cho tui số liệu 7 ngày qua!"
+        if (dateRange === '30d') startDate = '30daysAgo';
+        if (dateRange === 'today') startDate = 'today';
+
+        // 1. Run Report for Chart (Sessions by Date)
         const [response] = await analyticsDataClient.runReport({
             property: `properties/${PROPERTY_ID}`,
             dateRanges: [
                 {
-                    startDate: '7daysAgo', // (Từ 7 ngày trước)
-                    endDate: 'today',    // (Đến hôm nay)
+                    startDate: startDate,
+                    endDate: 'today',
                 },
             ],
-            // (Mình muốn 2 con số: Tổng người dùng, và Tổng số lần xem trang)
-            metrics: [{ name: 'totalUsers' }, { name: 'screenPageViews' }],
+            dimensions: [
+                {
+                    name: dateRange === 'today' ? 'hour' : 'date',
+                },
+            ],
+            metrics: [
+                {
+                    name: 'sessions',
+                },
+                {
+                    name: 'activeUsers',
+                },
+            ],
+            orderBys: [
+                {
+                    dimension: {
+                        orderType: 'ALPHANUMERIC',
+                        dimensionName: dateRange === 'today' ? 'hour' : 'date',
+                    },
+                },
+            ],
         });
 
-        // 7. 'Lọc' kết quả cho nó đẹp
-        let totalUsers = '0';
-        let totalPageViews = '0';
+        // 2. Run Report for Key Metrics (Totals)
+        const [metricsResponse] = await analyticsDataClient.runReport({
+            property: `properties/${PROPERTY_ID}`,
+            dateRanges: [
+                {
+                    startDate: startDate,
+                    endDate: 'today',
+                },
+            ],
+            metrics: [
+                { name: 'newUsers' },
+                { name: 'averageSessionDuration' },
+                { name: 'sessions' },
+                { name: 'bounceRate' }
+            ]
+        });
 
-        if (response.rows && response.rows.length > 0) {
-            // (Google trả về 1 hàng duy nhất cho tổng 7 ngày)
-            totalUsers = response.rows[0].metricValues?.[0]?.value || '0';
-            totalPageViews = response.rows[0].metricValues?.[1]?.value || '0';
+        // Process Chart Data
+        const chartData = response.rows ? response.rows.map((row: any) => {
+            let name = row.dimensionValues[0].value;
+            // Format date if needed (YYYYMMDD -> DD/MM)
+            if (dateRange !== 'today' && name.length === 8) {
+                const day = name.substring(6, 8);
+                const month = name.substring(4, 6);
+                name = `${day}/${month}`;
+            } else if (dateRange === 'today') {
+                name = `${name}h`;
+            }
+            return {
+                name,
+                visits: parseInt(row.metricValues[0].value ?? '0'),
+                users: parseInt(row.metricValues[1].value ?? '0')
+            };
+        }) : [];
+
+        // Process Metrics Data
+        const mValues = metricsResponse.rows && metricsResponse.rows[0] ? metricsResponse.rows[0].metricValues : null;
+
+        let metrics = {
+            newUsers: 0,
+            avgSessionDuration: 0,
+            totalSessions: 0,
+            bounceRate: 0
+        };
+
+        if (mValues) {
+            metrics = {
+                newUsers: parseInt(mValues[0].value ?? '0'),
+                avgSessionDuration: parseFloat(mValues[1].value ?? '0'),
+                totalSessions: parseInt(mValues[2].value ?? '0'),
+                bounceRate: parseFloat(mValues[3].value ?? '0') * 100 // rate is 0-1
+            };
         }
 
-        // 8. 'Gửi' 2 con số này về cho trang Quản lý
-        return NextResponse.json({
-            totalUsers: totalUsers,
-            totalPageViews: totalPageViews,
+        // 3. Top Pages
+        const [pagesResponse] = await analyticsDataClient.runReport({
+            property: `properties/${PROPERTY_ID}`,
+            dateRanges: [{ startDate, endDate: 'today' }],
+            dimensions: [{ name: 'pageTitle' }],
+            metrics: [{ name: 'screenPageViews' }],
+            limit: 10,
+            orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }]
         });
 
-    } catch (err: any) {
-        console.error('Lỗi khi gọi API Google Analytics:', err.message);
-        return NextResponse.json(
-            { error: `Lỗi khi lấy dữ liệu: ${err.message}` },
-            { status: 500 }
-        );
+        // 4. Devices
+        const [devicesResponse] = await analyticsDataClient.runReport({
+            property: `properties/${PROPERTY_ID}`,
+            dateRanges: [{ startDate, endDate: 'today' }],
+            dimensions: [{ name: 'deviceCategory' }],
+            metrics: [{ name: 'activeUsers' }]
+        });
+
+        // 5. Cities
+        const [citiesResponse] = await analyticsDataClient.runReport({
+            property: `properties/${PROPERTY_ID}`,
+            dateRanges: [{ startDate, endDate: 'today' }],
+            dimensions: [{ name: 'city' }],
+            metrics: [{ name: 'activeUsers' }],
+            limit: 10,
+            orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }]
+        });
+
+        const topPages = pagesResponse.rows ? pagesResponse.rows.map((row: any) => ({
+            name: row.dimensionValues[0].value,
+            value: parseInt(row.metricValues[0].value ?? '0')
+        })) : [];
+
+        const devices = devicesResponse.rows ? devicesResponse.rows.map((row: any) => ({
+            name: row.dimensionValues[0].value,
+            value: parseInt(row.metricValues[0].value ?? '0')
+        })) : [];
+
+        const cities = citiesResponse.rows ? citiesResponse.rows.map((row: any) => ({
+            name: row.dimensionValues[0].value,
+            value: parseInt(row.metricValues[0].value ?? '0')
+        })) : [];
+
+        return NextResponse.json({ chart: chartData, metrics, topPages, devices, cities });
+
+    } catch (error: any) {
+        console.error("Analytics API Error:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
