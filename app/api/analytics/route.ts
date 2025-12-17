@@ -26,7 +26,20 @@ const PROPERTY_ID = process.env.GOOGLE_ANALYTICS_PROPERTY_ID || '512039111';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { dateRange = '7d' } = body;
+        const { dateRange = '7d', realtime = false } = body;
+
+        // 0. Realtime Report (Active Users Right Now)
+        if (realtime) {
+            const [response] = await analyticsDataClient.runRealtimeReport({
+                property: `properties/${PROPERTY_ID}`,
+                metrics: [{ name: 'activeUsers' }]
+            });
+            const activeUsers = response.rows && response.rows.length > 0
+                ? parseInt(response.rows[0].metricValues[0].value ?? '0')
+                : 0;
+            return NextResponse.json({ activeUsers });
+        }
+
         let startDate = '7daysAgo';
 
         if (dateRange === '30d') startDate = '30daysAgo';

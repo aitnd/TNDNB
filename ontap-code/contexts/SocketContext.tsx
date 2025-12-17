@@ -28,8 +28,9 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             if (user) {
                 try {
                     const token = await user.getIdToken();
-                    // In dev, use port 3001. In prod, use relative or env var.
-                    newSocket = io('http://localhost:3001', {
+                    // Use env var for production, fallback to localhost for dev
+                    const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
+                    newSocket = io(socketUrl, {
                         autoConnect: true,
                         query: { token: token }
                     });
