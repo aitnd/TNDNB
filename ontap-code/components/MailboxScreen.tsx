@@ -30,7 +30,27 @@ interface ChatUser {
     lastMessageTime?: string;
     unreadCount?: number;
     isOnline?: boolean;
+    email?: string;
 }
+
+const getRoleBadge = (role: string) => {
+    switch (role) {
+        case 'admin':
+            return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-600 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800">Admin</span>;
+        case 'lanh_dao':
+        case 'quan_ly':
+            return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600 border border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800">Quản lý</span>;
+        case 'giao_vien':
+            return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-yellow-100 text-yellow-600 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800">Giáo viên</span>;
+        case 'hoc_vien':
+            // Assuming verified students have a specific flag or just treating 'hoc_vien' as verified for now if needed.
+            // User said "hoc vien xac minh xanh", "hoc vien dang nhap trang".
+            // Since we don't have verification status, let's default 'hoc_vien' to Blue (Verified-like) and others to Gray.
+            return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-600 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800">Học viên</span>;
+        default:
+            return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-50 text-gray-500 border border-gray-200 dark:bg-zinc-800 dark:text-gray-400 dark:border-zinc-700">Khách</span>;
+    }
+};
 
 interface MailboxScreenProps {
     userProfile: UserProfile;
@@ -40,8 +60,9 @@ interface MailboxScreenProps {
 
 const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) => {
     // const { socket, isConnected } = useSocket(); // Removed
-    const isConnected = true; // Firebase handles connection state internally, or we can listen to .info/connected
+    const isConnected = true;
     const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
+    // const [chatMode, setChatMode] = useState<'private' | 'support'>('private'); // REMOVED
     const [messageInput, setMessageInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [otherUserTyping, setOtherUserTyping] = useState(false);
@@ -63,22 +84,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
 
     // 1. Fetch Users / Setup Sidebar
     useEffect(() => {
-        if (!isAdmin) {
-            // ROLE: STUDENT - Only show Admin/Support
-            const adminUser: ChatUser = {
-                id: 'admin_support',
-                name: 'Ban Quản Trị',
-                role: 'admin',
-                photoURL: '/assets/img/avatar.webp.webp',
-                lastMessage: 'Chào bạn, chúng tôi có thể giúp gì?',
-                isOnline: true
-            };
-            setUsersList([adminUser]);
-            setFilteredUsers([adminUser]);
-            // Auto select admin for student convenience? Maybe not force it, let them choose.
-            // But usually Messenger on mobile opens the list. On web maybe same.
-            return;
-        }
+
 
         // ROLE: STAFF - Fetch All but filter UI
         const fetchUsers = async () => {
@@ -95,13 +101,31 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                             name: data.full_name || data.fullName || 'Người dùng',
                             photoURL: data.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.full_name || 'User')}&background=random`,
                             role: data.role || 'hoc_vien',
+                            email: data.email || '',
                             lastMessage: '', // Initially empty (No persistence yet)
                             lastMessageTime: '',
                             unreadCount: 0
                         });
                     }
                 });
+                // Sort Users: Admin > Lanh Dao > Quan Ly > Giao Vien > Hoc Vien
+                const rolePriority: Record<string, number> = {
+                    'admin': 1,
+                    'lanh_dao': 2,
+                    'quan_ly': 3,
+                    'giao_vien': 4,
+                    'hoc_vien': 5,
+                    'guest': 6
+                };
+
+                fetchedUsers.sort((a, b) => {
+                    const pA = rolePriority[a.role] || 99;
+                    const pB = rolePriority[b.role] || 99;
+                    return pA - pB;
+                });
+
                 setUsersList(fetchedUsers);
+                // Removed Admin Group Logic
             } catch (error) {
                 console.error("Error fetching users:", error);
             } finally {
@@ -114,7 +138,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
 
     // Filter Logic: Active vs Search
     useEffect(() => {
-        if (!isAdmin) return;
+        // if (!isAdmin) return; // Removed restriction
 
         if (searchTerm.trim()) {
             // Search Mode: Show matches
@@ -133,6 +157,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
         if (!selectedUser) return;
 
         // A. Message Listener (Firestore)
+        // A. Message Listener (Firestore)
         const conversationId = [userProfile.id, selectedUser.id].sort().join('_');
         const q = query(
             collection(db, 'messages'),
@@ -149,7 +174,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                 msgs.push({
                     id: doc.id,
                     senderId: data.senderId,
-                    senderName: '',
+                    senderName: data.senderName || '', // Use stored name
                     content: data.content,
                     timestamp: data.timestamp ? data.timestamp.toDate() : new Date(),
                     status: 'sent'
@@ -185,11 +210,58 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
         });
         return () => unsubscribeStatus();
     }, []);
+    // D. Global Message Listener (Sidebar Update)
+    useEffect(() => {
+        // Listen to recent messages for the current user to update sidebar
+        // Note: This query requires a Composite Index: visibleTo (Arrays) + timestamp (Desc)
+        const q = query(
+            collection(db, 'messages'),
+            where('visibleTo', 'array-contains', userProfile.id),
+            orderBy('timestamp', 'desc'),
+            limit(20)
+        );
+
+        const handleSnapshot = (snapshot: any) => {
+            snapshot.docChanges().forEach((change: any) => {
+                if (change.type === 'added') {
+                    const data = change.doc.data();
+
+                    // Determine "Other User" ID
+                    const otherId = data.senderId === userProfile.id ? data.receiverId : data.senderId;
+
+                    setUsersList(prev => {
+                        const newList = [...prev];
+                        const idx = newList.findIndex(u => u.id === otherId);
+
+                        if (idx > -1) {
+                            const user = { ...newList[idx] };
+                            if (!user.lastMessageTime || (data.timestamp?.toDate() > new Date(user.lastMessageTime))) {
+                                user.lastMessage = data.content;
+                                user.lastMessageTime = 'Vừa xong';
+                                if (selectedUser?.id !== otherId) {
+                                    user.unreadCount = (user.unreadCount || 0) + 1;
+                                }
+                                newList.splice(idx, 1);
+                                newList.unshift(user);
+                            }
+                            return newList;
+                        } else {
+                            return prev;
+                        }
+                    });
+                }
+            });
+        };
+
+        const unsubscribe = onSnapshot(q, handleSnapshot);
+        return () => unsubscribe();
+    }, [userProfile.id, selectedUser]);
 
     const handleTypingInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessageInput(e.target.value);
 
         if (!selectedUser) return;
+
         const conversationId = [userProfile.id, selectedUser.id].sort().join('_');
         const myTypingRef = ref(rtdb, `typing/${conversationId}/${userProfile.id}`);
 
@@ -220,13 +292,12 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
             if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         }
 
-        // Optimistic UI (Optional, since Firestore is fast/offline capable)
-        // But Firestore listener will update UI anyway.
-
         try {
             const conversationId = [userProfile.id, selectedUser.id].sort().join('_');
+
             await addDoc(collection(db, 'messages'), {
                 senderId: userProfile.id,
+                senderName: userProfile.full_name || 'Người dùng',
                 receiverId: selectedUser.id,
                 content: content,
                 timestamp: serverTimestamp(),
@@ -270,15 +341,6 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
     const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot | null>(null);
     const [loadingMore, setLoadingMore] = useState(false);
     const virtuosoRef = useRef<VirtuosoHandle>(null);
-
-    // Initial Fetch (History) - REMOVED because onSnapshot handles it
-    // But we might need it for pagination if onSnapshot only gets recent.
-    // Actually, onSnapshot with limit(50) is fine for initial.
-    // Pagination logic needs to be adjusted to use startAfter with a one-time fetch, not snapshot.
-    // For simplicity in this migration, let's rely on the snapshot for the first 50.
-    // Load More can still use getDocs.
-
-    // useEffect(() => { ... }, [selectedUser]); // Replaced by onSnapshot effect above
 
     const loadMoreMessages = async () => {
         if (!selectedUser || !lastVisible || loadingMore) return;
@@ -324,11 +386,6 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
         }
     };
 
-    // 3. Auto-scroll
-    // Removed messagesEndRef and its useEffect as Virtuoso handles scrolling.
-
-
-
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -340,7 +397,6 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
     return (
         <div className="w-full h-[calc(100vh-64px)] bg-white dark:bg-black flex">
             {/* LEFT SIDEBAR - Users List */}
-            {/* Show for EVERYONE now, but filtered */}
             <div className={`w-full md:w-[360px] border-r border-gray-200 dark:border-gray-800 flex flex-col bg-white dark:bg-black ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
                 {/* Header Sidebar */}
                 <div className="p-4 flex flex-col gap-4">
@@ -354,19 +410,17 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                         </div>
                     </div>
 
-                    {/* Search Bar - Hidden for students if mostly just Admin */}
-                    {isAdmin && (
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-                            <input
-                                type="text"
-                                value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
-                                placeholder="Tìm người dùng..."
-                                className="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-zinc-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-gray-700 dark:text-gray-200"
-                            />
-                        </div>
-                    )}
+                    {/* Search Bar */}
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            placeholder="Tìm người dùng..."
+                            className="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-zinc-800 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-gray-700 dark:text-gray-200"
+                        />
+                    </div>
                 </div>
 
                 {/* Users List */}
@@ -375,7 +429,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                         <div className="flex justify-center p-4"><div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full"></div></div>
                     ) : (
                         <>
-                            {isAdmin && !searchTerm && filteredUsers.length === 0 && (
+                            {!searchTerm && filteredUsers.length === 0 && (
                                 <div className="text-center p-8 text-gray-500 text-sm">
                                     <p>Chưa có cuộc trò chuyện nào.</p>
                                     <p className="mt-1">Tìm kiếm để bắt đầu chat!</p>
@@ -395,7 +449,11 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                                         {u.isOnline && <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-black rounded-full"></div>}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">{u.name}</h3>
+                                        <div className="flex items-center gap-2">
+                                            <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">{u.name}</h3>
+                                            {getRoleBadge(u.role)}
+                                        </div>
+                                        {u.email && <p className="text-xs text-gray-500 truncate">{u.email}</p>}
                                         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                                             <span className={`truncate max-w-[140px] ${u.unreadCount ? 'font-bold text-gray-900 dark:text-gray-100' : ''}`}>
                                                 {u.lastMessage || (u.role === 'admin' ? 'Hỗ trợ trực tuyến' : 'Bắt đầu trò chuyện')}
@@ -435,17 +493,23 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                                     {selectedUser.isOnline && <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-black rounded-full"></div>}
                                 </div>
                                 <div>
-                                    <h2 className="font-bold text-gray-900 dark:text-gray-100 leading-tight">{selectedUser.name}</h2>
+                                    <div className="flex items-center gap-2">
+                                        <h2 className="font-bold text-gray-900 dark:text-gray-100 leading-tight">{selectedUser.name}</h2>
+                                        {getRoleBadge(selectedUser.role)}
+                                    </div>
+                                    {selectedUser.email && <p className="text-xs text-gray-500">{selectedUser.email}</p>}
                                     <span className={`text-xs font-medium flex items-center gap-1 ${selectedUser.isOnline ? 'text-green-600' : 'text-gray-500'}`}>
                                         {selectedUser.isOnline ? <><div className="w-1.5 h-1.5 bg-green-500 rounded-full" /> Đang hoạt động</> : 'Ngoại tuyến'}
                                     </span>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-4 text-blue-600">
-                                <Phone size={24} className="cursor-pointer hover:opacity-80 disabled-opacity" />
-                                <Video size={24} className="cursor-pointer hover:opacity-80 disabled-opacity" />
-                                <Info size={24} className="cursor-pointer hover:opacity-80" />
+                            <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-4 text-blue-600">
+                                    <Phone size={24} className="cursor-pointer hover:opacity-80 disabled-opacity" />
+                                    <Video size={24} className="cursor-pointer hover:opacity-80 disabled-opacity" />
+                                    <Info size={24} className="cursor-pointer hover:opacity-80" />
+                                </div>
                             </div>
                         </div>
 
