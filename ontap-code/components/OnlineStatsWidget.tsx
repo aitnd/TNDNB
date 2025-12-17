@@ -20,7 +20,7 @@ const OnlineStatsWidget = ({ userRole }: { userRole: string }) => {
     const [stats, setStats] = useState({ total: 0, admins: 0, teachers: 0, students: 0 });
     const [realtimeUsers, setRealtimeUsers] = useState(0);
 
-    // 1. Listen to Firebase RTDB for Logged-in Users
+    // 1. Listen to Firebase RTDB for All Users (Authenticated + Guests)
     useEffect(() => {
         if (!rtdb) return;
         const statusRef = ref(rtdb, 'status');
@@ -32,63 +32,33 @@ const OnlineStatsWidget = ({ userRole }: { userRole: string }) => {
             }
 
             const data = snapshot.val();
-            let total = 0, admins = 0, teachers = 0, students = 0;
+            let total = 0, admins = 0, teachers = 0, students = 0, guests = 0;
 
             Object.values(data).forEach((user: any) => {
                 if (user.state === 'online') {
                     total++;
                     if (['admin', 'quan_ly', 'lanh_dao'].includes(user.role)) admins++;
                     else if (user.role === 'giao_vien') teachers++;
-                    else students++;
+                    else if (user.role === 'guest') guests++;
+                    else students++; // Default to students for other roles
                 }
             });
 
             setStats({ total, admins, teachers, students });
+            setRealtimeUsers(guests); // Reusing realtimeUsers state for guests count
         });
 
         return () => unsubscribe();
     }, []);
 
-    // 2. Fetch Google Analytics Realtime Users (Includes Guests)
-    useEffect(() => {
-        const fetchRealtime = async () => {
-            try {
-                const res = await fetch('/api/analytics', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ realtime: true })
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    setRealtimeUsers(data.activeUsers || 0);
-                }
-            } catch (e) {
-                console.error("Error fetching realtime users:", e);
-            }
-        };
-
-        fetchRealtime();
-        const interval = setInterval(fetchRealtime, 60000); // Update every 1 minute
-        return () => clearInterval(interval);
-    }, []);
-
-    // Calculate Guests
-    // GA Realtime (30 min window) vs Firebase (Instant) might differ.
-    // We assume Realtime Users >= Logged In Users.
-    // If Realtime < Logged In (due to lag), we default Guests to 0.
-    // Or we can just use Realtime Users as "Total Visitors" and Logged In as subset.
-
-    // Let's try to estimate Guests.
-    const estimatedGuests = Math.max(0, realtimeUsers - stats.total);
-
     return (
         <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-5xl mb-6 grid grid-cols-2 md:grid-cols-5 gap-4"
+            className="w-full max-w-4xl mb-4 grid grid-cols-2 md:grid-cols-5 gap-4"
         >
-            <StatCard label="Trực tuyến (GA)" count={realtimeUsers} color="bg-blue-600" />
-            <StatCard label="Khách" count={estimatedGuests} color="bg-gray-500" />
+            <StatCard label="Trực tuyến" count={stats.total} color="bg-blue-600" />
+            <StatCard label="Khách" count={realtimeUsers} color="bg-gray-500" />
             <StatCard label="Học viên" count={stats.students} color="bg-green-600" />
             <StatCard label="Giáo viên" count={stats.teachers} color="bg-orange-600" />
             <StatCard label="Quản lý" count={stats.admins} color="bg-purple-600" />

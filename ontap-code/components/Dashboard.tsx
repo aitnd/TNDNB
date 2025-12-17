@@ -28,7 +28,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
             {/* Realtime Stats for Admin */}
             <OnlineStatsWidget userRole={userProfile.role} />
 
-            <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
 
                 {/* Left Column: Student Card */}
                 <div className="flex flex-col items-center">
@@ -36,7 +36,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
                 </div>
 
                 {/* Right Column: Actions */}
-                <div className="bg-card/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-border">
+                <div className="bg-card/90 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-border">
                     <h1 className="text-3xl font-bold text-primary mb-6 text-center">
                         Xin chào, {userProfile.full_name || 'Học viên'}!
                     </h1>

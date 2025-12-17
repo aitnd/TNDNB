@@ -9,23 +9,43 @@ const usePresence = () => {
     const userProfile = useAppStore(state => state.userProfile);
 
     useEffect(() => {
-        if (!user || !userProfile || !rtdb) return;
+        if (!rtdb) return;
 
         const connectedRef = ref(rtdb, '.info/connected');
-        const userStatusDatabaseRef = ref(rtdb, '/status/' + user.uid);
+        let userStatusDatabaseRef: any;
+        let isOnlineForDatabase: any;
 
-        const unsubscribe = onValue(connectedRef, (snapshot) => {
-            if (snapshot.val() === false) {
-                return;
-            };
-
-            const isOnlineForDatabase = {
+        if (user && userProfile) {
+            // Authenticated User
+            userStatusDatabaseRef = ref(rtdb, '/status/' + user.uid);
+            isOnlineForDatabase = {
                 state: 'online',
                 last_changed: serverTimestamp(),
                 role: userProfile.role || 'unknown',
                 name: userProfile.full_name || userProfile.fullName || 'User',
                 photoURL: userProfile.photoURL || '',
-                device: 'web' // Could add more info
+                device: 'web'
+            };
+        } else {
+            // Guest User
+            let guestId = localStorage.getItem('guest_session_id');
+            if (!guestId) {
+                guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('guest_session_id', guestId);
+            }
+            userStatusDatabaseRef = ref(rtdb, '/status/' + guestId);
+            isOnlineForDatabase = {
+                state: 'online',
+                last_changed: serverTimestamp(),
+                role: 'guest',
+                name: 'Khách',
+                device: 'web'
+            };
+        }
+
+        const unsubscribe = onValue(connectedRef, (snapshot) => {
+            if (snapshot.val() === false) {
+                return;
             };
 
             const isOfflineForDatabase = {
@@ -40,6 +60,8 @@ const usePresence = () => {
 
         return () => {
             unsubscribe();
+            // Optional: Set offline on unmount if needed, but onDisconnect handles tab close
+            // set(userStatusDatabaseRef, { state: 'offline', last_changed: serverTimestamp() });
         };
     }, [user, userProfile]);
 };

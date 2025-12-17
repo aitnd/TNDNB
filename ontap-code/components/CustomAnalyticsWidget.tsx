@@ -99,7 +99,7 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-4xl mb-8"
+            className="w-full max-w-4xl mb-4"
         >
             <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 overflow-hidden transition-all duration-300">
                 {/* Header */}

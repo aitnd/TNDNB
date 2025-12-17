@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSocket } from '../contexts/SocketContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppStore } from '../stores/useAppStore';
 import { fetchNotifications, markNotificationAsRead, deleteNotificationForUser } from '../services/notificationService';
+import { collection, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore';
+import { db } from '../services/firebaseClient';
 import { FaBell, FaTrash, FaCircle, FaCheckDouble } from 'react-icons/fa';
 import { toast } from 'sonner';
 
@@ -17,7 +18,7 @@ interface NotificationItem {
 }
 
 const NotificationBell: React.FC = () => {
-    const { socket } = useSocket();
+    // const { socket } = useSocket(); // Removed
     const { user } = useAuth();
     const { userProfile } = useAppStore(state => state);
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -55,40 +56,105 @@ const NotificationBell: React.FC = () => {
         }
     }, [user, userProfile]);
 
-    // Listen for real-time notifications
+    // Listen for real-time notifications (Firestore)
     useEffect(() => {
-        if (!socket) return;
+        if (!user || !userProfile) return;
 
-        socket.on('receive_notification', (payload: any) => {
-            console.log("New notification:", payload);
-            const newNotif: NotificationItem = {
-                id: Date.now().toString(),
-                title: payload.title,
-                body: payload.body,
-                link: payload.link,
-                timestamp: new Date(payload.timestamp || Date.now()),
-                read: false,
-                type: payload.type || 'system'
-            };
+        // 1. Global Notifications Listener
+        const qGlobal = query(
+            collection(db, 'notifications'),
+            where('targetType', '==', 'all'),
+            orderBy('createdAt', 'desc'),
+            limit(10)
+        );
 
-            setNotifications(prev => [newNotif, ...prev]);
-            setUnreadCount(prev => prev + 1);
+        const unsubGlobal = onSnapshot(qGlobal, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === 'added') {
+                    const data = change.doc.data();
+                    // Filter by Role
+                    if (data.targetRoles && Array.isArray(data.targetRoles) && data.targetRoles.length > 0) {
+                        if (!userProfile.role || !data.targetRoles.includes(userProfile.role)) return;
+                    }
 
-            // Sonner Toast
-            toast(newNotif.title, {
-                description: newNotif.body,
-                action: newNotif.link ? {
-                    label: 'Xem ngay',
-                    onClick: () => window.location.href = newNotif.link!
-                } : undefined,
-                duration: 5000,
+                    // Check if already exists (dedup)
+                    setNotifications(prev => {
+                        if (prev.some(n => n.id === change.doc.id)) return prev;
+
+                        const newNotif: NotificationItem = {
+                            id: change.doc.id,
+                            title: data.title,
+                            body: data.message,
+                            link: undefined,
+                            timestamp: data.createdAt ? new Date(data.createdAt.seconds * 1000) : new Date(),
+                            read: data.readBy?.includes(user.uid) || false,
+                            type: data.type
+                        };
+
+                        // Toast for new notification (only if recent)
+                        const isRecent = (Date.now() - newNotif.timestamp.getTime()) < 10000; // 10 seconds
+                        if (isRecent && !newNotif.read) {
+                            toast(newNotif.title, {
+                                description: newNotif.body,
+                                duration: 5000,
+                            });
+                        }
+
+                        return [newNotif, ...prev].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+                    });
+                }
+            });
+        });
+
+        // 2. Personal Notifications Listener
+        const qPersonal = query(
+            collection(db, 'users', user.uid, 'notifications'),
+            orderBy('createdAt', 'desc'),
+            limit(10)
+        );
+
+        const unsubPersonal = onSnapshot(qPersonal, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === 'added') {
+                    const data = change.doc.data();
+                    setNotifications(prev => {
+                        if (prev.some(n => n.id === change.doc.id)) return prev;
+
+                        const newNotif: NotificationItem = {
+                            id: change.doc.id,
+                            title: data.title,
+                            body: data.message,
+                            link: undefined,
+                            timestamp: data.createdAt ? new Date(data.createdAt.seconds * 1000) : new Date(),
+                            read: data.read || false,
+                            type: data.type
+                        };
+
+                        // Toast
+                        const isRecent = (Date.now() - newNotif.timestamp.getTime()) < 10000;
+                        if (isRecent && !newNotif.read) {
+                            toast(newNotif.title, {
+                                description: newNotif.body,
+                                duration: 5000,
+                            });
+                        }
+
+                        return [newNotif, ...prev].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+                    });
+                }
             });
         });
 
         return () => {
-            socket.off('receive_notification');
+            unsubGlobal();
+            unsubPersonal();
         };
-    }, [socket]);
+    }, [user, userProfile]);
+
+    // Recalculate unread count whenever notifications change
+    useEffect(() => {
+        setUnreadCount(notifications.filter(n => !n.read).length);
+    }, [notifications]);
 
     const handleToggle = () => {
         setIsOpen(!isOpen);

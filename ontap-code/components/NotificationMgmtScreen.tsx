@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSocket } from '../contexts/SocketContext';
+
 import { Notification, fetchAllGlobalNotifications, hardDeleteNotification, sendNotification, updateNotification } from '../services/notificationService';
 import { getAllClasses, getUserProfile, searchUsersByEmail } from '../services/userService';
 import { FaTrash, FaExclamationTriangle, FaClock, FaCheckCircle, FaBan, FaPlus, FaUsers, FaUser, FaGlobe, FaEdit } from 'react-icons/fa';
@@ -114,7 +114,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
         }
     }, [userSearchTerm, targetType]);
 
-    const { socket } = useSocket();
+
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -169,31 +169,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                     targetType === 'role' ? selectedRoles : undefined
                 );
 
-                // 2. Emit Real-time Socket Event
-                if (socket) {
-                    if (targetType === 'all') {
-                        socket.emit('broadcast_notification', {
-                            title: title,
-                            body: message,
-                            link: null
-                        });
-                    } else if (targetType === 'user' && selectedUser) {
-                        socket.emit('send_notification', {
-                            to: selectedUser.id,
-                            title: title,
-                            body: message,
-                            link: null,
-                            type: type
-                        });
-                    } else if (targetType === 'role') {
-                        socket.emit('broadcast_notification', {
-                            title: title,
-                            body: message,
-                            link: null,
-                            targetRoles: selectedRoles
-                        });
-                    }
-                }
+
 
                 alert('Đã gửi thông báo thành công!');
                 setShowCreateModal(false);

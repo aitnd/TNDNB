@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
-import { SocketProvider } from './contexts/SocketContext';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -15,11 +14,9 @@ const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <SocketProvider>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </SocketProvider>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </AuthProvider>
   </React.StrictMode>
 );

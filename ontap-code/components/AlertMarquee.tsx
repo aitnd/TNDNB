@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Marquee from 'react-fast-marquee';
 import { fetchActiveMarqueeNotifications, Notification } from '../services/notificationService';
-import { useSocket } from '../contexts/SocketContext';
+import { collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
+import { db } from '../services/firebaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppStore } from '../stores/useAppStore';
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa';
 
 const AlertMarquee: React.FC = () => {
     const [alerts, setAlerts] = useState<Notification[]>([]);
-    const { socket } = useSocket();
+    // const { socket } = useSocket(); // Removed
     const { user } = useAuth();
     const { userProfile } = useAppStore(state => state); // Need to import useAppStore
 
@@ -26,26 +27,39 @@ const AlertMarquee: React.FC = () => {
     }, [user, userProfile]); // Reload when user/profile changes
 
     useEffect(() => {
-        if (!socket) return;
+        // Realtime Listener for Global Alerts
+        const qGlobal = query(
+            collection(db, 'notifications'),
+            where('targetType', '==', 'all'),
+            where('type', 'in', ['special', 'attention'])
+        );
 
-        // Listen for new global notifications to update marquee immediately
-        socket.on('receive_notification', (payload: any) => {
-            // We can just reload data to be safe and simple
-            // Or check if payload.broadcast is true
-            if (payload.broadcast) {
-                loadAlerts();
-            }
+        const unsubGlobal = onSnapshot(qGlobal, () => {
+            loadAlerts(); // Reload all alerts (including personal) when global changes
         });
 
+        // Realtime Listener for Personal Alerts (if user exists)
+        let unsubPersonal = () => { };
+        if (user) {
+            const qPersonal = query(
+                collection(db, 'users', user.uid, 'notifications'),
+                where('type', 'in', ['special', 'attention'])
+            );
+            unsubPersonal = onSnapshot(qPersonal, () => {
+                loadAlerts();
+            });
+        }
+
         return () => {
-            socket.off('receive_notification');
+            unsubGlobal();
+            unsubPersonal();
         };
-    }, [socket]);
+    }, [user]);
 
     if (alerts.length === 0) return null;
 
     return (
-        <div className="w-full z-30 relative">
+        <div className="w-full z-30 sticky top-16">
             {alerts.map(alert => (
                 <div
                     key={alert.id}
