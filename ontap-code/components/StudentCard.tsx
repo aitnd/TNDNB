@@ -54,7 +54,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                     <div className={styles.photoSection}>
                         <div className={styles.photoWrapper} style={isTeacher ? { borderColor: '#fcd34d' } : {}}>
                             <img
-                                src={user.photoURL || (isTeacher ? '/assets/img/avatar.webp.webp' : '/assets/img/avatar.webp1.webp')}
+                                src={user.photoURL || (isTeacher ? '/assets/img/avatar.webp' : '/assets/img/avatar1.webp')}
                                 onError={(e) => {
                                     const target = e.target as HTMLImageElement;
                                     target.onerror = null; // Prevent loop

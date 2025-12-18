@@ -35,7 +35,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                     <button
                         onClick={() => {
                             if (!userProfile) {
-                                window.location.href = '/thitructuyen';
+                                onNavigate('thi_truc_tuyen');
                             } else if (['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role)) {
                                 onNavigate('online_exam_management');
                             } else {

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { db, auth } from '../services/firebaseClient';
-import { collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { UserProfile, License } from '../types';
+import { db } from '../services/firebaseClient';
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, getDocs, where } from 'firebase/firestore';
 import { toast } from 'sonner';
-import { FaPlus, FaTrash, FaPlay, FaPause, FaStop, FaEye, FaEdit } from 'react-icons/fa';
+import { FaPlus, FaEye } from 'react-icons/fa';
+import ExamRoomDetailScreen from './ExamRoomDetailScreen';
+import { UserProfile } from '../types';
 
 interface OnlineExamManagementScreenProps {
     userProfile: UserProfile;
@@ -20,10 +21,9 @@ interface ExamRoom {
     teacher_id: string;
     teacher_name: string;
     status: 'waiting' | 'in_progress' | 'finished';
-    duration: number; // minutes
+    duration: number;
     created_at: any;
     password?: string;
-    is_paused?: boolean;
 }
 
 const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({ userProfile, onBack }) => {
@@ -36,23 +36,32 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
     const [duration, setDuration] = useState(45);
     const [password, setPassword] = useState('');
     const [selectedLicenseId, setSelectedLicenseId] = useState('');
+    const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
     // Mock Data for Licenses (Should fetch from store or API)
     const [licenses, setLicenses] = useState<any[]>([]);
+    const [courses, setCourses] = useState<any[]>([]);
+    const [selectedCourseId, setSelectedCourseId] = useState('');
 
     useEffect(() => {
         fetchRooms();
-        // Fetch licenses if needed, or pass from props
-        // For now, we'll assume some basic licenses or fetch them
+        // Fetch licenses
         import('../services/dataService').then(({ fetchLicenses }) => {
             fetchLicenses().then(setLicenses);
         });
+
+        // Fetch Courses
+        const fetchCourses = async () => {
+            const q = query(collection(db, 'courses'), orderBy('createdAt', 'desc'));
+            const snapshot = await getDocs(q);
+            setCourses(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+        };
+        fetchCourses();
     }, []);
 
     const fetchRooms = async () => {
         setLoading(true);
         try {
-            // Admin sees all, Teacher sees their own
             let q;
             if (['admin', 'quan_ly', 'lanh_dao'].includes(userProfile.role)) {
                 q = query(collection(db, 'exam_rooms'), orderBy('created_at', 'desc'));
@@ -61,11 +70,17 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
             }
 
             const snapshot = await getDocs(q);
-            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ExamRoom));
+            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any } as ExamRoom));
             setRooms(data);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error fetching rooms:", error);
-            toast.error("Lỗi tải danh sách phòng thi.");
+            if (error?.code === 'permission-denied') {
+                toast.error("Bạn không có quyền truy cập danh sách phòng thi.");
+            } else if (error?.message?.includes('index')) {
+                toast.warning("Hệ thống đang khởi tạo dữ liệu (Tạo Index). Vui lòng đợi 1-2 phút rồi tải lại trang.");
+            } else {
+                toast.error("Không thể tải danh sách phòng thi. Vui lòng kiểm tra kết nối.");
+            }
         } finally {
             setLoading(false);
         }
@@ -79,6 +94,7 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
         }
 
         const selectedLicense = licenses.find(l => l.id === selectedLicenseId);
+        const selectedCourse = courses.find(c => c.id === selectedCourseId);
 
         try {
             await addDoc(collection(db, 'exam_rooms'), {
@@ -86,17 +102,20 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
                 license_id: selectedLicenseId,
                 license_name: selectedLicense?.name || 'Unknown',
                 teacher_id: userProfile.id,
-                teacher_name: userProfile.full_name,
+                teacher_name: userProfile.full_name || userProfile.email || 'Unknown',
                 status: 'waiting',
                 duration: Number(duration),
                 password: password || null,
                 created_at: serverTimestamp(),
-                is_paused: false
+                is_paused: false,
+                course_id: selectedCourseId || null,
+                course_name: selectedCourse?.name || null
             });
             toast.success("Tạo phòng thi thành công!");
             setShowCreateModal(false);
             setRoomName('');
             setPassword('');
+            setSelectedCourseId('');
             fetchRooms();
         } catch (error) {
             console.error(error);
@@ -104,26 +123,9 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
         }
     };
 
-    const handleUpdateStatus = async (roomId: string, newStatus: string) => {
-        try {
-            await updateDoc(doc(db, 'exam_rooms', roomId), { status: newStatus });
-            toast.success(`Đã chuyển trạng thái sang ${newStatus}`);
-            fetchRooms();
-        } catch (error) {
-            toast.error("Lỗi cập nhật trạng thái.");
-        }
-    };
-
-    const handleDeleteRoom = async (roomId: string) => {
-        if (!confirm("Bạn có chắc chắn muốn xóa phòng thi này?")) return;
-        try {
-            await deleteDoc(doc(db, 'exam_rooms', roomId));
-            toast.success("Đã xóa phòng thi.");
-            setRooms(prev => prev.filter(r => r.id !== roomId));
-        } catch (error) {
-            toast.error("Lỗi khi xóa.");
-        }
-    };
+    if (selectedRoomId) {
+        return <ExamRoomDetailScreen roomId={selectedRoomId} onBack={() => { setSelectedRoomId(null); fetchRooms(); }} />;
+    }
 
     return (
         <div className="p-6 max-w-7xl mx-auto font-sans text-gray-800">
@@ -149,7 +151,7 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạng Bằng</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giáo Viên</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng Thái</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hành Động</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chi tiết</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -172,14 +174,13 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
                                                 room.status === 'in_progress' ? 'Đang thi' : 'Kết thúc'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
-                                        {room.status === 'waiting' && (
-                                            <button onClick={() => handleUpdateStatus(room.id, 'in_progress')} className="text-green-600 hover:text-green-900" title="Bắt đầu"><FaPlay /></button>
-                                        )}
-                                        {room.status === 'in_progress' && (
-                                            <button onClick={() => handleUpdateStatus(room.id, 'finished')} className="text-red-600 hover:text-red-900" title="Kết thúc"><FaStop /></button>
-                                        )}
-                                        <button onClick={() => handleDeleteRoom(room.id)} className="text-gray-600 hover:text-red-600" title="Xóa"><FaTrash /></button>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button
+                                            onClick={() => setSelectedRoomId(room.id)}
+                                            className="text-blue-600 hover:text-blue-900 flex items-center gap-1"
+                                        >
+                                            <FaEye /> Xem chi tiết
+                                        </button>
                                     </td>
                                 </tr>
                             ))
@@ -216,6 +217,19 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
                                     <option value="">-- Chọn hạng bằng --</option>
                                     {licenses.map(l => (
                                         <option key={l.id} value={l.id}>{l.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Lớp (Tùy chọn - Để tự động vào phòng)</label>
+                                <select
+                                    value={selectedCourseId}
+                                    onChange={e => setSelectedCourseId(e.target.value)}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                >
+                                    <option value="">-- Không chọn lớp --</option>
+                                    {courses.map(c => (
+                                        <option key={c.id} value={c.id}>{c.name}</option>
                                     ))}
                                 </select>
                             </div>

@@ -116,7 +116,7 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     // Check for specific routes
     const path = window.location.pathname;
-    if (path === '/thitructuyen') {
+    if (path === '/thitructuyen' || path === '/ontap/thitructuyen') {
       setAppState(AppState.THI_TRUC_TUYEN);
       return;
     }
@@ -528,6 +528,8 @@ const AppContent: React.FC = () => {
       setAppState(AppState.ONLINE_EXAM_MANAGEMENT);
     } else if (screen === 'mailbox') {
       setAppState(AppState.MAILBOX);
+    } else if (screen === 'thi_truc_tuyen') {
+      setAppState(AppState.THI_TRUC_TUYEN);
     }
   };
 

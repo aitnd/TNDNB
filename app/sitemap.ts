@@ -39,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/lien-he`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
 
     // 💖 4. THÊM LINK MỚI VÀO ĐÂY NÈ ANH 💖
-    { url: `${baseUrl}/thitructuyen`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/ontap/thitructuyen`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/tai-app`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/danh-muc/gioi-thieu-viec-lam`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
     { url: `${baseUrl}/danh-muc/tin-tuc-su-kien`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },

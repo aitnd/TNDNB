@@ -147,7 +147,7 @@ export default function Navbar() {
                 <Link href="/ontap" className={styles.hotLink}>
                   <FaBookOpen className={styles.hotIcon} /> Ôn tập
                 </Link>
-                <Link href="/thitructuyen" className={styles.hotLink}>
+                <Link href={user ? '/ontap/thitructuyen' : '/login?redirect=/ontap/thitructuyen'} className={styles.hotLink}>
                   <FaLaptop className={styles.hotIcon} /> Thi trực tuyến
                 </Link>
                 <Link href="/tai-app" className={styles.hotLink}>

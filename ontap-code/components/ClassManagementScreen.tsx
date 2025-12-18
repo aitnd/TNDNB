@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey } from 'react-icons/fa';
+import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus } from 'react-icons/fa';
 import { db, auth } from '../services/firebaseClient'; // Ensure auth is imported
 
 
@@ -9,6 +9,8 @@ import { UserProfile } from '../types';
 import { getExamHistory, ExamResult } from '../services/historyService';
 import { sendNotification } from '../services/notificationService';
 import { getDefaultAvatar } from '../services/userService';
+import ImportStudentModal from './ImportStudentModal';
+import CreateStudentModal from './CreateStudentModal';
 
 interface Course {
     id: string;
@@ -103,6 +105,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [editStudent, setEditStudent] = useState<UserData | null>(null);
     const [savingStudent, setSavingStudent] = useState(false);
     const [isEditingMode, setIsEditingMode] = useState(false); // New state for View/Edit mode toggle
+    const [showImportModal, setShowImportModal] = useState(false);
+    const [showManualCreateModal, setShowManualCreateModal] = useState(false);
 
     // Missing State Restoration
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -1446,9 +1450,17 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                             </div>
 
                             {canManageStudents && (
-                                <button onClick={() => setShowAddStudentModal(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition flex items-center gap-2 text-sm font-medium">
-                                    <FaPlus /> Thêm Học Viên
-                                </button>
+                                <>
+                                    <button onClick={() => setShowImportModal(true)} className="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition flex items-center gap-2 text-sm font-medium">
+                                        <FaFileExcel /> Import Excel
+                                    </button>
+                                    <button onClick={() => setShowManualCreateModal(true)} className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 hover:shadow-lg transition flex items-center gap-2 text-sm font-medium">
+                                        <FaUserPlus /> Thêm thủ công
+                                    </button>
+                                    <button onClick={() => setShowAddStudentModal(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition flex items-center gap-2 text-sm font-medium">
+                                        <FaPlus /> Thêm Học Viên (Có sẵn)
+                                    </button>
+                                </>
                             )}
                         </div>
 
@@ -1657,6 +1669,32 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 </div>
 
             </div>
+
+            {/* IMPORT MODAL */}
+            {showImportModal && selectedCourse && (
+                <ImportStudentModal
+                    courseId={selectedCourse.id}
+                    courseName={selectedCourse.name}
+                    licenseId={selectedCourse.licenseId}
+                    onClose={() => setShowImportModal(false)}
+                    onSuccess={() => {
+                        // Refresh logic if needed, but onSnapshot handles it
+                    }}
+                />
+            )}
+
+            {/* MANUAL CREATE MODAL */}
+            {showManualCreateModal && selectedCourse && (
+                <CreateStudentModal
+                    courseId={selectedCourse.id}
+                    courseName={selectedCourse.name}
+                    licenseId={selectedCourse.licenseId}
+                    onClose={() => setShowManualCreateModal(false)}
+                    onSuccess={() => {
+                        // Refresh logic if needed
+                    }}
+                />
+            )}
 
         </div >
     );

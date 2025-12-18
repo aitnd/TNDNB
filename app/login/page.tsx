@@ -88,7 +88,15 @@ export default function LoginPage() {
       const loginEmail = await resolveEmailFromUsername(email);
       await signInWithEmailAndPassword(auth, loginEmail, password)
       console.log('Đăng nhập thành công, điều hướng...')
-      router.push('/quan-ly')
+
+      // 💖 CHECK REDIRECT PARAM 💖
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get('redirect');
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else {
+        router.push('/quan-ly');
+      }
 
     } catch (err: any) {
       console.error(err)
@@ -177,7 +185,14 @@ export default function LoginPage() {
         console.log('Người dùng Google đã có hồ sơ, đang đăng nhập...');
       }
 
-      router.push('/quan-ly'); // (Cho vào!)
+      // 💖 CHECK REDIRECT PARAM 💖
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get('redirect');
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else {
+        router.push('/quan-ly');
+      }
 
     } catch (err: any) {
       console.error(err);
@@ -213,7 +228,18 @@ export default function LoginPage() {
 
   // (Logic "đá" về trang quản lý - Giữ nguyên)
   if (user && !loading) {
-    router.push('/quan-ly')
+    // Check redirect here too? No, handleLogin handles it.
+    // But if user is already logged in and visits /login?redirect=...
+    // We should redirect them.
+    const params = new URLSearchParams(window.location.search);
+    const redirectUrl = params.get('redirect');
+
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    } else {
+      router.push('/quan-ly');
+    }
+
     return (
       <div className={styles.container}>
         <p className={styles.loadingText}>Đang điều hướng...</p>
