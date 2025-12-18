@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../services/firebaseClient';
+import { auth, db, rtdb } from '../services/firebaseClient';
+import { supabase } from '../services/supabaseClient';
 import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, set, update, onDisconnect, serverTimestamp as rtdbTimestamp } from 'firebase/database';
 import ExamQuizScreen2 from './ExamQuizScreen2';
 import { toast } from 'sonner';
 
@@ -103,33 +105,41 @@ const ThiTrucTuyenPage: React.FC = () => {
                 return;
             }
 
-            // Fetch Questions based on License
+            // Fetch Questions based on License (Supabase)
             const licenseId = roomData.license_id;
 
-            // Fetch questions directly from Firestore 'questions' collection
-            // Assuming questions have a 'licenseId' field or similar.
-            // If not, we might need to fetch all or use a specific strategy.
-            // For now, let's try to fetch by licenseId if possible, or just fetch a batch.
-            // NOTE: Adjust 'licenseId' field name based on actual DB schema.
-            let q = query(collection(db, 'questions'), where('licenseId', '==', licenseId));
-            let snapshot = await getDocs(q);
+            let query = supabase
+                .from('questions')
+                .select('*')
+                .eq('license_id', licenseId);
 
-            if (snapshot.empty) {
-                // Fallback: try fetching without filter or different field if needed
-                // Or maybe the field is 'license_id'
-                q = query(collection(db, 'questions'), where('license_id', '==', licenseId));
-                snapshot = await getDocs(q);
+            if (roomData.subject_id) {
+                query = query.eq('subject_id', roomData.subject_id);
             }
 
-            let allQuestions = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            const { data, error } = await query;
 
-            if (allQuestions.length === 0) {
-                // Fallback to fetch *some* questions if none found for license (for testing)
-                // In production, this should probably error out.
-                const qAll = query(collection(db, 'questions'), limit(100));
-                const snapAll = await getDocs(qAll);
-                allQuestions = snapAll.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (error) {
+                console.error("Supabase Error:", error);
+                toast.error("Lỗi kết nối dữ liệu câu hỏi.");
+                setLoading(false);
+                return;
             }
+
+            if (!data || data.length === 0) {
+                toast.error("Không tìm thấy câu hỏi phù hợp!");
+                setLoading(false);
+                return;
+            }
+
+            const allQuestions = data.map((q: any) => ({
+                id: q.id,
+                content: q.question,
+                options: q.options,
+                correctAnswerId: q.correct_answer,
+                explanation: q.explanation,
+                image: q.image
+            }));
 
             // Shuffle and pick 30
             const shuffled = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 30);
@@ -137,11 +147,31 @@ const ThiTrucTuyenPage: React.FC = () => {
             setQuestions(shuffled);
             setExamRoom({ id: roomDoc.id, ...roomData });
 
-            // Prepare User Profile
+            // Prepare User Profile & RTDB
             if (user) {
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
-                setExamProfile(userDoc.data());
+                const userDocSnap = await getDoc(doc(db, 'users', user.uid));
+                const userData = userDocSnap.exists() ? userDocSnap.data() : null;
+                setExamProfile(userData);
+
+                // --- RTDB: Initialize Progress Node ---
+                const userRef = ref(rtdb, `exam_progress/${roomDoc.id}/${user.uid}`);
+                const initialData = {
+                    user_name: userData?.fullName || user.displayName || user.email,
+                    user_email: user.email,
+                    user_sbd: user.email?.split('@')[0] || '',
+                    status: 'doing', // joined -> doing
+                    joined_at: rtdbTimestamp(),
+                    total_questions: shuffled.length,
+                    score: 0,
+                    time_left: (roomData.duration || 45) * 60,
+                    last_updated: rtdbTimestamp()
+                };
+                await set(userRef, initialData);
+                // Optional: Handle disconnect
+                onDisconnect(userRef).update({ status: 'offline' });
+                // --------------------------------------
             }
+            // --------------------------------------
 
             setIsExamStarted(true);
             toast.success("Đã vào phòng thi thành công!");
@@ -152,6 +182,27 @@ const ThiTrucTuyenPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleProgressUpdate = async (index: number, timeLeft: number, answers: any) => {
+        if (!user || !examRoom) return;
+
+        // Calculate temporary score
+        let correctCount = 0;
+        questions.forEach((q) => {
+            if (answers[q.id] === q.correctAnswerId) correctCount++;
+        });
+        const currentScore = (correctCount / questions.length) * 10;
+
+        const userRef = ref(rtdb, `exam_progress/${examRoom.id}/${user.uid}`);
+        update(userRef, {
+            current_question_index: index,
+            time_left: timeLeft,
+            answers_count: Object.keys(answers).length,
+            score: currentScore, // Live score
+            last_updated: rtdbTimestamp(),
+            status: 'doing'
+        }).catch(err => console.error("RTDB Update Error:", err));
     };
 
     const handleFinishExam = async (answers: any) => {
@@ -166,6 +217,16 @@ const ThiTrucTuyenPage: React.FC = () => {
         const isPass = score >= 5;
 
         try {
+            // --- RTDB: Update Status to Submitted ---
+            const userRef = ref(rtdb, `exam_progress/${examRoom.id}/${user.uid}`);
+            await update(userRef, {
+                status: 'submitted',
+                score: score,
+                time_left: 0,
+                finished_at: rtdbTimestamp()
+            });
+            // ----------------------------------------
+
             await addDoc(collection(db, 'exam_results'), {
                 room_id: examRoom.id,
                 user_id: user.uid,
@@ -206,6 +267,7 @@ const ThiTrucTuyenPage: React.FC = () => {
                     userName={examProfile?.fullName || user?.email || ''}
                     userProfile={examProfile}
                     selectedLicense={{ id: examRoom.license_id, name: `Hạng ${examRoom.license_id}`, subjects: [] }}
+                    onProgressUpdate={handleProgressUpdate}
                 />
             </div>
         );
