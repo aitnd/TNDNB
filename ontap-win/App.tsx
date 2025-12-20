@@ -12,6 +12,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import WelcomeModal from './components/WelcomeModal';
 import LoginScreen from './components/LoginScreen';
+import WindowsLoginScreen from './components/WindowsLoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import LicenseSelectionScreen from './components/LicenseSelectionScreen';
 import NameInputScreen from './components/NameInputScreen';
@@ -33,71 +34,141 @@ import MobileBottomNav from './components/MobileBottomNav';
 import ThiTrucTuyenPage from './components/ThiTrucTuyenPage';
 import OnlineExamManagementScreen from './components/OnlineExamManagementScreen';
 import AnalyticsPage from './components/AnalyticsPage';
+import DownloadAppPage from './components/DownloadAppPage';
+import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
+import UsageConfigPanel from './components/UsageConfigPanel';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
 import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
-import { Capacitor } from '@capacitor/core';
+// import { Capacitor } from '@capacitor/core';
 import usePresence from './hooks/usePresence';
 import AlertMarquee from './components/AlertMarquee';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 
 const AppContent: React.FC = () => {
-  // Global Presence Hook
   usePresence();
-  // Zustand State Selectors
-  const appState = useAppStore(state => state.appState);
-  const setAppState = useAppStore(state => state.setAppState);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const licenses = useAppStore(state => state.licenses);
   const setLicenses = useAppStore(state => state.setLicenses);
-
   const selectedLicense = useAppStore(state => state.selectedLicense);
   const setSelectedLicense = useAppStore(state => state.setSelectedLicense);
-
   const subjects = useAppStore(state => state.subjects);
   const setSubjects = useAppStore(state => state.setSubjects);
-
   const selectedSubject = useAppStore(state => state.selectedSubject);
   const setSelectedSubject = useAppStore(state => state.setSelectedSubject);
-
   const currentQuiz = useAppStore(state => state.currentQuiz);
   const setCurrentQuiz = useAppStore(state => state.setCurrentQuiz);
-
   const userAnswers = useAppStore(state => state.userAnswers);
   const setUserAnswers = useAppStore(state => state.setUserAnswers);
-
   const score = useAppStore(state => state.score);
   const setScore = useAppStore(state => state.setScore);
-
   const userName = useAppStore(state => state.userName);
   const setUserName = useAppStore(state => state.setUserName);
-
   const userProfile = useAppStore(state => state.userProfile);
   const setUserProfile = useAppStore(state => state.setUserProfile);
-
   const resumeSessionAvailable = useAppStore(state => state.resumeSessionAvailable);
   const setResumeSessionAvailable = useAppStore(state => state.setResumeSessionAvailable);
-
   const isMobileApp = useAppStore(state => state.isMobileApp);
   const setIsMobileApp = useAppStore(state => state.setIsMobileApp);
 
   useEffect(() => {
-    // Check for native platform OR test mode via URL (?mode=app)
     const params = new URLSearchParams(window.location.search);
     const isTestMode = params.get('mode') === 'app';
-    const isNative = Capacitor.isNativePlatform();
+    // const isNative = Capacitor.isNativePlatform();
 
-    console.log("DEBUG: Checking Platform Mode");
-    console.log("- URL Search:", window.location.search);
-    console.log("- isTestMode:", isTestMode);
-    console.log("- isNative:", isNative);
-
-    if (isNative || isTestMode) {
-      console.log("SETTING MOBILE APP MODE: TRUE");
+    if (isTestMode) { // Removed isNative check for Windows App
       setIsMobileApp(true);
     } else {
-      console.log("SETTING MOBILE APP MODE: FALSE");
       setIsMobileApp(false);
+    }
+
+    // --- CUSTOM AUTO UPDATE CHECK (Windows) ---
+    // @ts-ignore
+    if (window.electron?.isElectron) {
+      const checkUpdate = async () => {
+        try {
+          const { getUsageConfig } = await import('./services/adminConfigService');
+          const config = await getUsageConfig();
+          // @ts-ignore
+          const currentVersion = window.electron.appVersion;
+          const remoteVersion = config.app_links?.version;
+          const downloadUrl = config.app_links?.windows;
+
+          console.log(`Current: ${currentVersion}, Remote: ${remoteVersion}`);
+
+          if (currentVersion && remoteVersion && downloadUrl) {
+            const v1 = currentVersion.split('.').map(Number);
+            const v2 = remoteVersion.split('.').map(Number);
+            let hasUpdate = false;
+
+            for (let i = 0; i < 3; i++) {
+              if (v2[i] > v1[i]) { hasUpdate = true; break; }
+              if (v2[i] < v1[i]) break;
+            }
+
+            if (hasUpdate) {
+              const { default: Swal } = await import('sweetalert2');
+              const result = await Swal.fire({
+                title: 'Có bản cập nhật mới!',
+                text: `Phiên bản ${remoteVersion} đã sẵn sàng. Bạn có muốn cập nhật ngay không?`,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Cập nhật ngay',
+                cancelButtonText: 'Để sau'
+              });
+
+              if (result.isConfirmed) {
+                Swal.fire({
+                  title: 'Đang tải cập nhật...',
+                  html: 'Vui lòng không tắt ứng dụng.<br><b>0%</b>',
+                  allowOutsideClick: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    // @ts-ignore
+                    window.electron.downloadUpdate(downloadUrl);
+                  }
+                });
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Update check failed:", err);
+        }
+      };
+
+      setTimeout(checkUpdate, 3000);
+
+      // @ts-ignore
+      window.electron.onUpdateProgress((percent) => {
+        const b = document.querySelector('.swal2-html-container b');
+        if (b) b.textContent = `${Math.round(percent)}%`;
+      });
+
+      // @ts-ignore
+      window.electron.onUpdateDownloaded(() => {
+        import('sweetalert2').then(({ default: Swal }) => {
+          Swal.fire({
+            title: 'Tải xong!',
+            text: 'Ứng dụng sẽ khởi động lại để cài đặt.',
+            icon: 'success',
+            timer: 3000,
+            showConfirmButton: false
+          }).then(() => {
+            // @ts-ignore
+            window.electron.installUpdate();
+          });
+        });
+      });
+
+      // @ts-ignore
+      window.electron.onUpdateError((err) => {
+        import('sweetalert2').then(({ default: Swal }) => {
+          Swal.fire('Lỗi', 'Không thể tải bản cập nhật. Vui lòng thử lại sau.', 'error');
+        });
+      });
     }
   }, []);
 
@@ -114,17 +185,8 @@ const AppContent: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Check for specific routes
-    const path = window.location.pathname;
-    if (path === '/thitructuyen' || path === '/ontap/thitructuyen') {
-      setAppState(AppState.THI_TRUC_TUYEN);
-      return;
-    }
-
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // 1. Authenticated
-        // 1. Authenticated - Realtime Listener
         import('firebase/firestore').then(({ onSnapshot, doc }) => {
           const unsubProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
             if (docSnap.exists()) {
@@ -135,17 +197,14 @@ const AppContent: React.FC = () => {
           });
         });
 
-        // Initial fetch for immediate render and for downstream logic that relies on 'profile' variable
         let profile = null;
         try {
           profile = await getUserProfile(firebaseUser.uid);
         } catch (fetchErr) {
-          console.error("❌ Critical: Could not fetch user profile (Network/Permission):", fetchErr);
+          console.error("❌ Critical: Could not fetch user profile:", fetchErr);
         }
 
-        // --- SELF-HEAL: Create Profile ONLY if missing (returns null) AND no error occurred ---
         if (profile === null) {
-          console.log("⚠️ User Profile missing for Auth UID:", firebaseUser.uid, "- Creating default profile...");
           const defaultProfile: UserProfile = {
             id: firebaseUser.uid,
             full_name: firebaseUser.displayName || 'Người dùng mới',
@@ -161,103 +220,54 @@ const AppContent: React.FC = () => {
             profile = defaultProfile;
             setUserProfile(profile);
             setUserName(profile.full_name);
-            console.log("✅ Created default profile successfully.");
           } catch (err) {
             console.error("❌ Failed to create default profile:", err);
           }
         }
-        // -----------------------------------------------------------
 
-        // Initialize FCM if Native
         import('./services/fcmClient').then(({ initializeFCM }) => {
           initializeFCM(firebaseUser.uid);
         });
 
-        // 2. CHECK FOR ACTIVE SESSION (Priority 1)
         import('./services/sessionService').then(({ loadSession, getLicensePreference }) => {
           const session = loadSession(firebaseUser.uid);
           if (session) {
-            console.log("Restoring session...", session);
             setCurrentQuiz(session.quiz);
             setUserAnswers(session.userAnswers);
             setSelectedLicense(session.selectedLicense);
             setSelectedSubject(session.selectedSubject);
 
-            if (session.mode === 'online_exam') {
-              setAppState(AppState.IN_ONLINE_EXAM);
-            } else {
-              setAppState(AppState.IN_QUIZ);
-            }
-            return; // Stop here if session restored
+            // Do NOT auto-navigate. Just let the banner appear.
+            // if (session.mode === 'online_exam') {
+            //   navigate('/ontap/thithu');
+            // } else {
+            //   navigate('/ontap/lam-bai');
+            // }
+            return;
           }
 
-          // 3. CHECK FOR DEFAULT LICENSE FROM CLASS (Priority 2)
           const checkLicenseLogic = async () => {
-            // A. Check Default License ID in Profile
             if (profile?.defaultLicenseId) {
               const fastFound = licenses.find(l => l.id === profile.defaultLicenseId);
               if (fastFound) {
                 setSelectedLicense(fastFound);
-                setAppState(AppState.MODE_SELECTION);
                 return;
               }
             }
-
-            // B. Fallback: Check Course ID (Self-Heal)
-            if (profile?.courseId) {
-              try {
-                const courseRef = doc(db, 'courses', profile.courseId);
-                const courseSnap = await getDoc(courseRef);
-                if (courseSnap.exists()) {
-                  const cData = courseSnap.data();
-                  if (cData.licenseId) {
-                    const fallbackFound = licenses.find(l => l.id === cData.licenseId);
-                    if (fallbackFound) {
-                      setSelectedLicense(fallbackFound);
-                      setAppState(AppState.MODE_SELECTION);
-
-                      import('firebase/firestore').then(({ updateDoc }) => {
-                        updateDoc(doc(db, 'users', firebaseUser.uid), {
-                          defaultLicenseId: cData.licenseId
-                        }).catch(e => console.error("Self-heal error:", e));
-                      });
-                      return;
-                    }
-                  }
-                }
-              } catch (e) { console.error("Error in auth fallback:", e); }
-            }
-
-            // C. Check Personal Preference
-            const savedLicenseId = getLicensePreference();
-            if (savedLicenseId) {
-              const foundLicense = licenses.find(l => l.id === savedLicenseId);
-              if (foundLicense) {
-                setSelectedLicense(foundLicense);
-                setAppState(AppState.DASHBOARD);
-              } else {
-                setAppState(AppState.DASHBOARD);
-              }
-            } else {
-              setAppState(AppState.DASHBOARD);
-            }
           };
-
           checkLicenseLogic();
         });
 
       } else {
-        // Signed out
         setUserProfile(null);
         setUserName('');
-        setAppState(AppState.WELCOME);
       }
     });
 
     return () => {
       unsubscribe();
     };
-  }, [licenses]);
+  }, [licenses, navigate, location.pathname]);
 
   const persistSession = useCallback((
     idx: number,
@@ -273,7 +283,7 @@ const AppContent: React.FC = () => {
   }, [selectedLicense, selectedSubject, userProfile]);
 
   useEffect(() => {
-    if (appState === AppState.IN_QUIZ || appState === AppState.IN_ONLINE_EXAM) {
+    if (location.pathname === '/ontap/lam-bai' || location.pathname === '/ontap/thithu') {
       setResumeSessionAvailable(false);
       return;
     }
@@ -288,7 +298,7 @@ const AppContent: React.FC = () => {
         }
       });
     }
-  }, [appState, userProfile]);
+  }, [location.pathname, userProfile]);
 
   const resumeSession = () => {
     import('./services/sessionService').then(({ loadSession }) => {
@@ -301,9 +311,9 @@ const AppContent: React.FC = () => {
         setSelectedSubject(session.selectedSubject);
 
         if (session.mode === 'online_exam') {
-          setAppState(AppState.IN_ONLINE_EXAM);
+          navigate('/ontap/thithu');
         } else {
-          setAppState(AppState.IN_QUIZ);
+          navigate('/ontap/lam-bai');
         }
       }
     });
@@ -315,52 +325,14 @@ const AppContent: React.FC = () => {
         const found = licenses.find(l => l.id === userProfile.defaultLicenseId);
         if (found) {
           setSelectedLicense(found);
-          setAppState(AppState.MODE_SELECTION);
+          navigate('/ontap/chon-che-do');
           return;
         }
-      } else if (userProfile.courseId) {
-        try {
-          const courseRef = doc(db, 'courses', userProfile.courseId);
-          const courseSnap = await getDoc(courseRef);
-          if (courseSnap.exists()) {
-            const cData = courseSnap.data();
-            if (cData.licenseId) {
-              const found = licenses.find(l => l.id === cData.licenseId);
-              if (found) {
-                setSelectedLicense(found);
-                setAppState(AppState.MODE_SELECTION);
-                import('firebase/firestore').then(({ updateDoc }) => {
-                  updateDoc(doc(db, 'users', userProfile.id), {
-                    defaultLicenseId: cData.licenseId
-                  }).catch(err => console.error("Self-heal failed:", err));
-                });
-                return;
-              }
-            }
-          }
-        } catch (e) { console.error("Error in license fallback:", e); }
       }
-
-      import('./services/sessionService').then(({ getLicensePreference }) => {
-        const saved = getLicensePreference();
-        if (saved && licenses.find(l => l.id === saved)) {
-          setSelectedLicense(licenses.find(l => l.id === saved)!);
-          setAppState(AppState.DASHBOARD);
-        } else {
-          setAppState(AppState.LICENSE_SELECTION);
-        }
-      });
+      navigate('/ontap/chon-bang');
     } else {
-      setAppState(AppState.LICENSE_SELECTION);
+      navigate('/ontap/chon-bang');
     }
-  };
-
-  const handleLoginClick = () => {
-    setAppState(AppState.LOGIN);
-  };
-
-  const handleRegisterClick = () => {
-    setAppState(AppState.REGISTER);
   };
 
   const handleLicenseSelect = async (license: License) => {
@@ -370,22 +342,22 @@ const AppContent: React.FC = () => {
     });
 
     if (userProfile) {
-      setAppState(AppState.MODE_SELECTION);
+      navigate('/ontap/chon-che-do');
     } else {
-      setAppState(AppState.NAME_INPUT);
+      navigate('/ontap/nhap-ten');
     }
   };
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
-    setAppState(AppState.MODE_SELECTION);
+    navigate('/ontap/chon-che-do');
   };
 
   const startOnlineExam = async () => {
     if (!selectedLicense) return;
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
-      await showLimitAlert(userProfile, () => setAppState(AppState.LOGIN));
+      await showLimitAlert(userProfile, () => navigate('/ontap/dang-nhap'));
       return;
     }
     await incrementUsage(userProfile);
@@ -397,6 +369,11 @@ const AppContent: React.FC = () => {
     const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, 30);
 
+    if (selected.length === 0) {
+      alert("Chưa có câu hỏi nào cho hạng bằng này. Vui lòng thử lại sau.");
+      return;
+    }
+
     const examQuiz: Quiz = {
       id: `exam_${Date.now()}`,
       title: `Thi Thử - ${selectedLicense.name}`,
@@ -407,16 +384,15 @@ const AppContent: React.FC = () => {
     setCurrentQuiz(examQuiz);
     setUserAnswers({});
     setScore(0);
-    // Clear any previous session to ensure fresh start (especially timer)
     localStorage.removeItem('ontap_quiz_session');
-    setAppState(AppState.IN_ONLINE_EXAM);
+    navigate('/ontap/thithu');
   };
 
   const handleModeSelect = async (mode: 'practice' | 'exam' | 'online_exam') => {
     if (mode === 'practice') {
       if (selectedLicense) {
         setSubjects(selectedLicense.subjects);
-        setAppState(AppState.SUBJECT_SELECTION);
+        navigate('/ontap/chon-mon');
       }
     } else if (mode === 'online_exam') {
       startOnlineExam();
@@ -426,7 +402,7 @@ const AppContent: React.FC = () => {
   const handleSubjectSelect = async (subject: Subject) => {
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
-      await showLimitAlert(userProfile, () => setAppState(AppState.LOGIN));
+      await showLimitAlert(userProfile, () => navigate('/ontap/dang-nhap'));
       return;
     }
     await incrementUsage(userProfile);
@@ -441,7 +417,7 @@ const AppContent: React.FC = () => {
     setCurrentQuiz(newQuiz);
     setUserAnswers({});
     localStorage.removeItem('ontap_quiz_session');
-    setAppState(AppState.IN_QUIZ);
+    navigate('/ontap/lam-bai');
   };
 
   const handleQuizFinish = (answers: UserAnswers) => {
@@ -458,7 +434,7 @@ const AppContent: React.FC = () => {
       setScore(correctCount);
       setUserAnswers(answers);
 
-      if (appState === AppState.IN_ONLINE_EXAM) {
+      if (location.pathname === '/ontap/thithu') {
         if (userProfile) {
           saveExamResult(
             userProfile.id,
@@ -471,7 +447,7 @@ const AppContent: React.FC = () => {
             currentQuiz.timeLimit! - 0
           );
         }
-        setAppState(AppState.EXAM_RESULT);
+        navigate('/ontap/ket-qua-thi');
       } else {
         if (userProfile && selectedLicense) {
           const subjName = selectedSubject ? selectedSubject.name : null;
@@ -486,13 +462,13 @@ const AppContent: React.FC = () => {
             0
           );
         }
-        setAppState(AppState.RESULT);
+        navigate('/ontap/ket-qua');
       }
     }
   };
 
   const handleRetry = () => {
-    if (appState === AppState.EXAM_RESULT) {
+    if (location.pathname === '/ontap/ket-qua-thi') {
       startOnlineExam();
     } else {
       if (selectedSubject && selectedLicense) {
@@ -502,186 +478,41 @@ const AppContent: React.FC = () => {
   };
 
   const handleTopNavNavigate = (screen: string) => {
-    if (screen === 'dashboard') {
-      if (userProfile) {
-        setAppState(AppState.DASHBOARD);
-      } else {
-        setAppState(AppState.WELCOME);
-      }
-    } else if (screen === 'history') {
-      setAppState(AppState.HISTORY);
-    } else if (screen === 'login') {
-      setAppState(AppState.LOGIN);
-    } else if (screen === 'my_class') {
-      setAppState(AppState.MY_CLASS);
-    } else if (screen === 'class_management') {
-      setAppState(AppState.CLASS_MANAGEMENT);
-    } else if (screen === 'account') {
-      if (userProfile) {
-        setAppState(AppState.ACCOUNT);
-      } else {
-        setAppState(AppState.LOGIN);
-      }
-    } else if (screen === 'notification_mgmt') {
-      setAppState(AppState.NOTIFICATION_MGMT);
-    } else if (screen === 'online_exam_management') {
-      setAppState(AppState.ONLINE_EXAM_MANAGEMENT);
-    } else if (screen === 'mailbox') {
-      setAppState(AppState.MAILBOX);
-    } else if (screen === 'thi_truc_tuyen') {
-      setAppState(AppState.THI_TRUC_TUYEN);
+    switch (screen) {
+      case 'dashboard': navigate('/ontap/dashboard'); break;
+      case 'history': navigate('/ontap/lich-su'); break;
+      case 'login': navigate('/ontap/dang-nhap'); break;
+      case 'my_class': navigate('/ontap/lop-cua-toi'); break;
+      case 'class_management': navigate('/ontap/quan-ly-lop'); break;
+      case 'account': navigate(userProfile ? '/ontap/taikhoan' : '/ontap/dang-nhap'); break;
+      case 'config': navigate('/ontap/cauhinh'); break;
+      case 'notification_mgmt': navigate('/ontap/thongbao'); break;
+      case 'online_exam_management': navigate('/ontap/quanlythi'); break;
+      case 'mailbox': navigate('/ontap/hom-thu'); break;
+      case 'thi_truc_tuyen': navigate('/ontap/thitructuyen'); break;
+      case 'download_app': navigate('/ontap/download'); break;
+      case 'analytics': navigate('/ontap/thong-ke'); break;
+      default: navigate('/ontap/dashboard');
     }
   };
 
   const handleLogout = async () => {
     import('./services/sessionService').then(({ clearSession }) => clearSession());
     await auth.signOut();
+    navigate('/');
   };
 
-  const animatedContent = (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={appState}
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -20 }}
-        transition={{ duration: 0.2 }}
-        className="w-full h-full"
-      >
-        {(() => {
-          switch (appState) {
-            case AppState.THI_TRUC_TUYEN:
-              return <ThiTrucTuyenPage />;
-            case AppState.WELCOME:
-              return <WelcomeModal onStart={handleStart} onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />;
-            case AppState.LOGIN:
-              return <LoginScreen onBack={() => setAppState(AppState.WELCOME)} />;
-            case AppState.REGISTER:
-              return <RegisterScreen onBack={() => setAppState(AppState.WELCOME)} onSuccess={() => setAppState(AppState.DASHBOARD)} />;
-            case AppState.LICENSE_SELECTION:
-              return <LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => setAppState(AppState.WELCOME)} />;
-            case AppState.NAME_INPUT:
-              return <NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => setAppState(AppState.LICENSE_SELECTION)} />;
-            case AppState.MODE_SELECTION:
-              return (
-                <ModeSelectionScreen
-                  onModeSelect={handleModeSelect}
-                  licenseName={selectedLicense?.name || ''}
-                  userName={userName}
-                  onSwitchLicense={() => setAppState(AppState.LICENSE_SELECTION)}
-                />
-              );
-            case AppState.SUBJECT_SELECTION:
-              return (
-                <SubjectSelectionScreen
-                  subjects={subjects}
-                  progress={{}}
-                  onSelect={handleSubjectSelect}
-                  onBack={() => setAppState(AppState.MODE_SELECTION)}
-                />
-              );
-            case AppState.IN_QUIZ:
-              return currentQuiz ? (
-                <QuizScreen
-                  quiz={currentQuiz}
-                  onFinish={handleQuizFinish}
-                  onBack={() => setAppState(AppState.SUBJECT_SELECTION)}
-                  initialAnswers={userAnswers}
-                  initialIndex={(() => {
-                    try {
-                      const s = localStorage.getItem('ontap_quiz_session');
-                      return s ? JSON.parse(s).currentQuestionIndex : 0;
-                    } catch (e) { return 0; }
-                  })()}
-                  onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'practice')}
-                />
-              ) : null;
-            case AppState.IN_ONLINE_EXAM:
-              if (currentQuiz) {
-                return (
-                  <ExamQuizScreen2
-                    quiz={currentQuiz}
-                    onFinish={handleQuizFinish}
-                    onBack={() => setAppState(AppState.MODE_SELECTION)}
-                    userName={userName}
-                    userProfile={userProfile}
-                    selectedLicense={selectedLicense}
-                    initialAnswers={userAnswers}
-                    initialIndex={(() => {
-                      try {
-                        const s = localStorage.getItem('ontap_quiz_session');
-                        return s ? JSON.parse(s).currentQuestionIndex : 0;
-                      } catch (e) { return 0; }
-                    })()}
-                    initialTime={(() => {
-                      try {
-                        const s = localStorage.getItem('ontap_quiz_session');
-                        return s ? JSON.parse(s).timeLeft : undefined;
-                      } catch (e) { return undefined; }
-                    })()}
-                    onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'online_exam')}
-                  />
-                );
-              }
-              return null;
-            case AppState.RESULT:
-              return currentQuiz ? (
-                <ResultsScreen
-                  quiz={currentQuiz}
-                  userAnswers={userAnswers}
-                  score={score}
-                  onRetry={handleRetry}
-                  onBack={() => setAppState(AppState.SUBJECT_SELECTION)}
-                  userName={userName}
-                />
-              ) : null;
-            case AppState.EXAM_RESULT:
-              return currentQuiz ? (
-                <ExamResultsScreen
-                  quiz={currentQuiz}
-                  userAnswers={userAnswers}
-                  score={score}
-                  onRetry={handleRetry}
-                  onBack={() => setAppState(AppState.MODE_SELECTION)}
-                  userName={userName}
-                />
-              ) : null;
-            case AppState.DASHBOARD:
-              return (
-                <Dashboard
-                  userProfile={userProfile!}
-                  onStart={() => setAppState(AppState.LICENSE_SELECTION)}
-                  onHistoryClick={() => setAppState(AppState.HISTORY)}
-                  onClassClick={() => handleTopNavNavigate((userProfile!.role === 'hoc_vien') ? 'my_class' : 'class_management')}
-                  onOnlineExamClick={() => setAppState(AppState.ONLINE_EXAM_MANAGEMENT)}
-                />
-              );
-            case AppState.HISTORY:
-              return <HistoryScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
-            case AppState.MY_CLASS:
-              return <MyClassScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
-            case AppState.CLASS_MANAGEMENT:
-              return <ClassManagementScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} />;
-            case AppState.ACCOUNT:
-              return <AccountScreen userProfile={userProfile!} onBack={() => setAppState(AppState.DASHBOARD)} onNavigate={handleTopNavNavigate} />;
-            case AppState.NOTIFICATION_MGMT:
-              return userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : null;
-            case AppState.ONLINE_EXAM_MANAGEMENT:
-              return userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => setAppState(AppState.DASHBOARD)} /> : null;
-            case AppState.MAILBOX:
-              return userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => setAppState(AppState.DASHBOARD)} /> : null;
-            case AppState.ANALYTICS:
-              return <AnalyticsPage onBack={() => setAppState(AppState.DASHBOARD)} />;
-            default:
-              return <WelcomeModal onStart={handleStart} onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />;
-          }
-        })()}
-      </motion.div>
-    </AnimatePresence>
-  );
+  // --- STRICT WINDOWS APP LOGIC ---
+  // @ts-ignore
+  const isElectron = window.electron?.isElectron || window.location.protocol === 'file:' || navigator.userAgent.toLowerCase().includes('electron');
 
-  if (appState === AppState.THI_TRUC_TUYEN) {
-    return <ThiTrucTuyenPage />;
+  if (isElectron && !userProfile) {
+    return (
+      <div className={`min-h-screen bg-background text-foreground font-sans ${isMobileApp ? 'pb-16' : 'pt-0'}`}>
+        <Toaster position="top-right" richColors expand={true} />
+        <WindowsLoginScreen />
+      </div>
+    );
   }
 
   return (
@@ -699,7 +530,6 @@ const AppContent: React.FC = () => {
 
       <AdSenseLoader userProfile={userProfile} />
 
-      {/* Hide TopNavbar on Native App */}
       {!isMobileApp && (
         <>
           <TopNavbar
@@ -711,17 +541,126 @@ const AppContent: React.FC = () => {
         </>
       )}
 
-      {animatedContent}
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Navigate to="/ontap/dashboard" replace />} />
+          <Route path="/ontap" element={<Navigate to="/ontap/dashboard" replace />} />
 
-      {/* Show MobileBottomNav on Native App */}
-      {isMobileApp && (
-        <MobileBottomNav
-          userProfile={userProfile}
-          currentScreen={appState}
-          onNavigate={handleTopNavNavigate}
-          onLogout={handleLogout}
-        />
-      )}
+          <Route path="/ontap/dashboard" element={
+            userProfile ? (
+              <Dashboard
+                userProfile={userProfile}
+                onStart={() => navigate('/ontap/chon-bang')}
+                onHistoryClick={() => navigate('/ontap/lich-su')}
+                onClassClick={() => handleTopNavNavigate((userProfile?.role === 'hoc_vien') ? 'my_class' : 'class_management')}
+                onOnlineExamClick={() => navigate('/ontap/quanlythi')}
+              />
+            ) : (
+              <WelcomeModal onStart={handleStart} onLoginClick={() => navigate('/ontap/dang-nhap')} onRegisterClick={() => navigate('/ontap/dang-ky')} />
+            )
+          } />
+
+          <Route path="/ontap/dang-nhap" element={!userProfile ? <LoginScreen onBack={() => navigate('/')} /> : <Navigate to="/ontap/dashboard" />} />
+          <Route path="/ontap/windows-login" element={!userProfile ? <WindowsLoginScreen /> : <Navigate to="/ontap/dashboard" />} />
+          <Route path="/ontap/dang-ky" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
+
+          <Route path="/ontap/chon-bang" element={<LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => navigate('/')} />} />
+          <Route path="/ontap/nhap-ten" element={<NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => navigate('/ontap/chon-bang')} />} />
+
+          <Route path="/ontap/chon-che-do" element={
+            <ModeSelectionScreen
+              onModeSelect={handleModeSelect}
+              licenseName={selectedLicense?.name || ''}
+              userName={userName}
+              onSwitchLicense={() => navigate('/ontap/chon-bang')}
+            />
+          } />
+
+          <Route path="/ontap/chon-mon" element={
+            <SubjectSelectionScreen
+              subjects={subjects}
+              progress={{}}
+              onSelect={handleSubjectSelect}
+              onBack={() => navigate('/ontap/chon-che-do')}
+            />
+          } />
+
+          <Route path="/ontap/lam-bai" element={
+            currentQuiz ? (
+              <QuizScreen
+                quiz={currentQuiz}
+                onFinish={handleQuizFinish}
+                onBack={() => navigate('/ontap/chon-mon')}
+                initialAnswers={userAnswers}
+                initialIndex={0}
+                onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'practice')}
+              />
+            ) : <Navigate to="/ontap/chon-mon" replace />
+          } />
+
+          <Route path="/ontap/thithu" element={
+            currentQuiz ? (
+              <ExamQuizScreen2
+                quiz={currentQuiz}
+                onFinish={handleQuizFinish}
+                onBack={() => navigate('/ontap/chon-che-do')}
+                userName={userName}
+                userProfile={userProfile}
+                selectedLicense={selectedLicense}
+                initialAnswers={userAnswers}
+                onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'online_exam')}
+              />
+            ) : <Navigate to="/ontap/chon-che-do" replace />
+          } />
+
+          <Route path="/ontap/ket-qua" element={
+            currentQuiz ? (
+              <ResultsScreen
+                quiz={currentQuiz}
+                userAnswers={userAnswers}
+                score={score}
+                onRetry={handleRetry}
+                onBack={() => navigate('/ontap/chon-mon')}
+                userName={userName}
+              />
+            ) : <Navigate to="/ontap/chon-mon" replace />
+          } />
+
+          <Route path="/ontap/ket-qua-thi" element={
+            currentQuiz ? (
+              <ExamResultsScreen
+                quiz={currentQuiz}
+                userAnswers={userAnswers}
+                score={score}
+                onRetry={handleRetry}
+                onBack={() => navigate('/ontap/chon-che-do')}
+                userName={userName}
+              />
+            ) : <Navigate to="/ontap/chon-che-do" replace />
+          } />
+
+          <Route path="/ontap/lich-su" element={<HistoryScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/lop-cua-toi" element={<MyClassScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/quan-ly-lop" element={<ClassManagementScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/taikhoan" element={<AccountScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} />} />
+          <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel /> : <Navigate to="/ontap/dang-nhap" />} />
+          <Route path="/ontap/thongbao" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/dang-nhap" />} />
+          <Route path="/ontap/hom-thu" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dang-nhap" />} />
+          <Route path="/ontap/quanlythi" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dang-nhap" />} />
+          <Route path="/ontap/thitructuyen" element={<ThiTrucTuyenPage />} />
+          <Route path="/ontap/download" element={<DownloadAppPage />} />
+          <Route path="/ontap/thong-ke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
+
+          {isMobileApp && (
+            <MobileBottomNav
+              userProfile={userProfile}
+              currentScreen={location.pathname}
+              onNavigate={handleTopNavNavigate}
+              onLogout={handleLogout}
+            />
+          )}
+        </Routes>
+      </AnimatePresence>
     </div>
   );
 };

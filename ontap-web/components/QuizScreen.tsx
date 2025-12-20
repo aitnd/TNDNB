@@ -116,7 +116,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
           )}
 
           <div className="space-y-3">
-            {currentQuestion.answers.map(answer => {
+            {currentQuestion.answers.map((answer, index) => {
               const isSelected = selectedAnswer === answer.id;
               let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-between text-lg';
 
@@ -144,7 +144,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
                   disabled={isAnswered}
                   className={buttonClass}
                 >
-                  <span className="flex-grow">{answer.text}</span>
+                  <span className="flex-grow"><span className='font-bold mr-2'>{String.fromCharCode(65 + index)}. </span>{answer.text}</span>
                   {isAnswered && (
                     <>
                       {isCorrect && <CheckIcon3D className="h-6 w-6 text-success ml-3" />}

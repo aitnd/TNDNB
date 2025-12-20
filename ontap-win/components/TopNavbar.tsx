@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail } from 'lucide-react';
-import UsageConfigPanel from './UsageConfigPanel';
-import ChangelogModal from './ChangelogModal';
+import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download } from 'lucide-react';
+import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
+
+// declare const __APP_VERSION__: string; // Removed in favor of dynamic version
 
 interface TopNavbarProps {
     userProfile: UserProfile | null;
@@ -12,7 +13,6 @@ interface TopNavbarProps {
 }
 
 const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout }) => {
-    const [showConfigPanel, setShowConfigPanel] = React.useState(false);
     const [showChangelog, setShowChangelog] = React.useState(false);
 
     return (
@@ -46,6 +46,15 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                     >
                         <Newspaper size={18} className="text-red-600 dark:text-red-400" />
                         <span className="font-semibold text-sm md:text-base">Thi trực tuyến</span>
+                    </button>
+
+                    {/* 1.2 Tải App */}
+                    <button
+                        onClick={() => onNavigate('download_app')}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+                    >
+                        <Download size={18} className="text-green-600 dark:text-green-400" />
+                        <span className="font-semibold text-sm md:text-base">Tải App</span>
                     </button>
 
                     {/* 2. Trang chủ (Link ngoài) */}
@@ -111,7 +120,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                             {/* Admin Config Button (ONLY ADMIN) */}
                             {userProfile.role === 'admin' && (
                                 <button
-                                    onClick={() => setShowConfigPanel(true)}
+                                    onClick={() => onNavigate('config')}
                                     className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap border-l border-gray-200 dark:border-gray-700 ml-2 pl-4"
                                 >
                                     <Settings size={18} className="text-purple-600 animate-spin-slow" />
@@ -142,7 +151,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                     onClick={() => setShowChangelog(true)}
                                     className="text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors"
                                 >
-                                    v3.7.0
+                                    v{getLatestVersion()}
                                 </button>
                             </div>
 
@@ -196,7 +205,6 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                     )}
                 </div>
             </div>
-            {showConfigPanel && <UsageConfigPanel onClose={() => setShowConfigPanel(false)} />}
             {showChangelog && <ChangelogModal onClose={() => setShowChangelog(false)} />}
         </>
     );

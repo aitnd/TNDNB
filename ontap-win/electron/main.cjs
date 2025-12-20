@@ -18,18 +18,26 @@ function createWindow() {
             contextIsolation: false, // For easier IPC in this specific legacy app structure
             webSecurity: false // Often needed for local file access in simple apps, though less secure
         },
-        icon: path.join(__dirname, '../public/assets/img/favicon.ico')
+        icon: path.join(__dirname, '../public/assets/img/logo-app.ico')
     });
 
     // Remove menu bar
     mainWindow.setMenuBarVisibility(false);
 
     if (isDev) {
-        mainWindow.loadURL('http://localhost:5173');
-        mainWindow.webContents.openDevTools();
+        // Try to load the URL with retries
+        const loadDevUrl = () => {
+            mainWindow.loadURL('http://127.0.0.1:5173').catch((err) => {
+                console.log('Error loading URL, retrying in 1s...', err);
+                setTimeout(loadDevUrl, 1000);
+            });
+        };
+        loadDevUrl();
     } else {
         mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
     }
+    // Always open DevTools for now to debug
+    mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {

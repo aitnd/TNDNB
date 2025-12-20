@@ -8,6 +8,20 @@ interface ChangelogModalProps {
 const CHANGELOG_CONTENT = `
 # Changelog
 
+## [v3.8.0] - 2025-12-20
+### 🌟 Tính năng Mới & Đồng bộ
+- **Đồng bộ Đăng nhập:** Học viên đăng nhập 1 lần tại Trang chủ sẽ tự động đăng nhập vào App Ôn tập (và ngược lại).
+- **Hệ thống Version:** Số phiên bản trên giao diện tự động cập nhật theo thời gian thực.
+
+### 🎨 Cải thiện Giao diện (UI/UX)
+- **Thi & Ôn tập:**
+  - Thêm tiền tố **A, B, C, D** cho các đáp án dễ quan sát.
+  - Sửa lỗi không thoát được bài thi (loại bỏ chuyển hướng chặn người dùng).
+  - Tối ưu Banner nhắc nhở "Làm tiếp bài cũ".
+- **Cấu hình:** Sửa icon giao diện cấu hình chuẩn kích thước.
+
+## [v3.7.1] - 2025-12-20
+
 ## [v3.7.0] - 2025-12-16
 ### 🚀 Tính năng mới
 - **Hệ thống Thi Trực Tuyến (Online Exam):**
@@ -37,6 +51,11 @@ const CHANGELOG_CONTENT = `
 - Cập nhật giao diện Dashboard.
 - Tối ưu hóa hiệu năng tải trang.
 `;
+
+export const getLatestVersion = () => {
+  const match = CHANGELOG_CONTENT.match(/\[v(\d+\.\d+\.\d+)\]/);
+  return match ? match[1] : '3.0.0'; // Fallback
+};
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   return (
