@@ -23,8 +23,19 @@ const WindowsLoginScreen: React.FC = () => {
             await signInWithEmailAndPassword(auth, email, password);
             // App.tsx auth listener handles the rest
         } catch (err: any) {
-            console.error(err);
-            setError('Tên đăng nhập hoặc mật khẩu không đúng.');
+            console.error("Login Error:", err);
+            let msg = 'Đăng nhập thất bại.';
+            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                msg = 'Sai tên đăng nhập hoặc mật khẩu.';
+            } else if (err.code === 'auth/too-many-requests') {
+                msg = 'Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau.';
+            } else if (err.code === 'auth/network-request-failed') {
+                msg = 'Lỗi kết nối mạng. Vui lòng kiểm tra Internet.';
+            } else {
+                msg = `Lỗi: ${err.message}`;
+            }
+            setError(msg);
+            alert(msg); // Force alert to ensure user sees it
         } finally {
             setLoading(false);
         }

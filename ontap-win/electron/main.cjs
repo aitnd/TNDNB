@@ -36,8 +36,24 @@ function createWindow() {
     } else {
         mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
     }
-    // Always open DevTools for now to debug
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools(); // Disable auto-open
+
+    ipcMain.on('toggle-devtools', () => {
+        mainWindow.webContents.toggleDevTools();
+    });
+
+    // --- FIX FIREBASE REFERER ERROR ---
+    // Electron (file:// or custom protocol) doesn't send Referer by default.
+    // Firebase requires a valid Referer from the Authorized Domains list.
+    // We inject 'http://localhost' which is allowed by default in Firebase.
+    mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
+        { urls: ['*://*.googleapis.com/*', '*://*.firebaseio.com/*', '*://*.firebaseapp.com/*'] },
+        (details, callback) => {
+            details.requestHeaders['Referer'] = 'http://localhost';
+            details.requestHeaders['Origin'] = 'http://localhost';
+            callback({ cancel: false, requestHeaders: details.requestHeaders });
+        }
+    );
 }
 
 app.whenReady().then(() => {
