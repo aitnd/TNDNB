@@ -20,7 +20,8 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetch('/api/analytics', {
+                const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+                const response = await fetch(`${baseUrl}/api/analytics`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ dateRange: timeRange })

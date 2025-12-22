@@ -657,7 +657,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         try {
             const token = await auth.currentUser?.getIdToken();
             if (!token) { alert('Lỗi xác thực.'); return; }
-            const response = await fetch('/api/admin/reset-password', {
+            const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+            const response = await fetch(`${baseUrl}/api/admin/reset-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ targetUserId: studentId, newPassword })

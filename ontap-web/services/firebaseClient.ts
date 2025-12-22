@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore'; // Optional if needed directly
 import { getStorage } from 'firebase/storage';
 
@@ -18,6 +18,10 @@ import { getDatabase } from 'firebase/database';
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
+// Enforce Local Persistence to share session with Next.js (Home)
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.error('Auth Persistence Error:', error);
+});
 const db = getFirestore(app); // Firestore
 const rtdb = getDatabase(app); // Realtime Database
 const storage = getStorage(app);

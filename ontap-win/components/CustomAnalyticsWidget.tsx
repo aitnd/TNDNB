@@ -48,7 +48,8 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
                 // const { auth } = await import('../services/firebaseClient');
                 // const token = await auth.currentUser?.getIdToken();
 
-                const response = await fetch('/api/analytics', {
+                const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+                const response = await fetch(`${baseUrl}/api/analytics`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

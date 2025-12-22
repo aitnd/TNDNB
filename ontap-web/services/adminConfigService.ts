@@ -20,6 +20,12 @@ export interface UsageConfig {
     teacher: RoleConfig; // giao_vien
     manager: RoleConfig; // quan_ly, lanh_dao
     admin: RoleConfig;   // admin
+    app_links?: {        // Added for App Download Links
+        version?: string;
+        windows?: string;
+        android?: string;
+        ios?: string;
+    };
 }
 
 const DEFAULT_CONFIG: UsageConfig = {
@@ -92,6 +98,7 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 teacher: { ...DEFAULT_CONFIG.teacher, ...(data.teacher || {}) },
                 manager: { ...DEFAULT_CONFIG.manager, ...(data.manager || {}) },
                 admin: { ...DEFAULT_CONFIG.admin, ...(data.admin || {}) },
+                app_links: data.app_links || DEFAULT_CONFIG.app_links // Include app_links
             };
         } else {
             // Initialize if not exists

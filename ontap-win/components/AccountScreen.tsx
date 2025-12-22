@@ -246,7 +246,8 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
             }
 
             // Call Server API
-            const response = await fetch('/api/admin/reset-password', {
+            const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+            const response = await fetch(`${baseUrl}/api/admin/reset-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

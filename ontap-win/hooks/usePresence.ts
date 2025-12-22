@@ -24,23 +24,11 @@ const usePresence = () => {
                 role: userProfile.role || 'unknown',
                 name: userProfile.full_name || userProfile.fullName || 'User',
                 photoURL: userProfile.photoURL || '',
-                device: 'web'
+                device: 'electron'
             };
         } else {
-            // Guest User
-            let guestId = localStorage.getItem('guest_session_id');
-            if (!guestId) {
-                guestId = 'guest_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('guest_session_id', guestId);
-            }
-            userStatusDatabaseRef = ref(rtdb, '/status/' + guestId);
-            isOnlineForDatabase = {
-                state: 'online',
-                last_changed: serverTimestamp(),
-                role: 'guest',
-                name: 'Khách',
-                device: 'web'
-            };
+            // Skip presence for guests in Electron to avoid PERMISSION_DENIED
+            return;
         }
 
         const unsubscribe = onValue(connectedRef, (snapshot) => {

@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore'; // Optional if needed directly
 import { getStorage } from 'firebase/storage';
 
@@ -32,6 +32,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
+// Enforce Local Persistence to share session with Ontap Web
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.error('Auth Persistence Error:', error);
+});
 const db = getFirestore(app);
 const storage = getStorage(app);
 
