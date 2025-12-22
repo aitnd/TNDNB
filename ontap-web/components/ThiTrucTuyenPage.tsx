@@ -415,9 +415,6 @@ const ThiTrucTuyenPage: React.FC = () => {
 
             {/* FOOTER */}
             <div className="bg-[#0d47a1] text-white py-4 text-center text-xs space-y-1">
-                <div className="flex justify-center mb-2">
-                    <img src="/ontap/assets/img/logo1.ico" alt="Logo Footer" className="h-16 w-16 object-contain opacity-80" onError={(e) => e.currentTarget.style.display = 'none'} />
-                </div>
                 <p className="uppercase font-bold">Công ty cổ phần Tư vấn và Giáo dục Ninh Bình</p>
                 <p>Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình</p>
                 <p>022.96.282.969</p>
