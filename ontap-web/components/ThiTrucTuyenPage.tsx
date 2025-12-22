@@ -277,11 +277,11 @@ const ThiTrucTuyenPage: React.FC = () => {
         <div className="min-h-screen flex flex-col font-sans text-[#333]">
             {/* HEADER */}
             <div className="bg-white">
-                <div className="w-full h-[150px] bg-cover bg-center relative" style={{ backgroundImage: "url('/ontap/assets/img/banner_thitructuyen.jpg')" }}>
+                <div className="w-full h-[150px] bg-cover bg-center relative" style={{ backgroundImage: "url('/ontap/assets/img/banner1.png')" }}>
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-200 opacity-50"></div>
                     <div className="container mx-auto h-full flex items-center px-4 relative z-10">
                         <div className="flex items-center gap-4">
-                            <img src="/ontap/assets/img/logo_viwa.png" alt="Logo" className="h-24 w-24 object-contain" onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/100?text=LOGO'} />
+                            <img src="/ontap/assets/img/logo1.ico" alt="Logo" className="h-24 w-24 object-contain" onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/100?text=LOGO'} />
                             <div className="text-blue-800 uppercase font-bold drop-shadow-sm">
                                 <h1 className="text-3xl">CÔNG TY CP TƯ VẤN VÀ GIÁO DỤC NINH BÌNH</h1>
                                 <h2 className="text-xl text-red-600 mt-1">NINH BINH CONSULTING AND EDUCATION JOINT STOCK COMPANY</h2>
@@ -416,7 +416,7 @@ const ThiTrucTuyenPage: React.FC = () => {
             {/* FOOTER */}
             <div className="bg-[#0d47a1] text-white py-4 text-center text-xs space-y-1">
                 <div className="flex justify-center mb-2">
-                    <img src="/ontap/assets/img/logo_viwa_white.png" alt="Logo Footer" className="h-16 w-16 object-contain opacity-80" onError={(e) => e.currentTarget.style.display = 'none'} />
+                    <img src="/ontap/assets/img/logo1.ico" alt="Logo Footer" className="h-16 w-16 object-contain opacity-80" onError={(e) => e.currentTarget.style.display = 'none'} />
                 </div>
                 <p className="uppercase font-bold">Công ty cổ phần Tư vấn và Giáo dục Ninh Bình</p>
                 <p>Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình</p>

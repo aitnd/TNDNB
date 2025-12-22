@@ -8,6 +8,11 @@ interface ChangelogModalProps {
 const CHANGELOG_CONTENT = `
 # Changelog
 
+## [v3.8.7] - 2025-12-22
+### 🚀 Tính năng mới (Windows App)
+- **Tự khởi động:** Thêm tùy chọn "Tự khởi động cùng Windows" trong trang Tài khoản.
+- **Đồng bộ phiên bản:** Đồng bộ hóa phiên bản giữa bản Web và bản Windows.
+
 ## [v3.8.0] - 2025-12-20
 ### 🌟 Tính năng Mới & Đồng bộ
 - **Đồng bộ Đăng nhập:** Học viên đăng nhập 1 lần tại Trang chủ sẽ tự động đăng nhập vào App Ôn tập (và ngược lại).

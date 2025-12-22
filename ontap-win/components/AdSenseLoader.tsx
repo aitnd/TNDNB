@@ -10,6 +10,13 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
     const [shouldLoadAds, setShouldLoadAds] = useState(false);
 
     useEffect(() => {
+        // Skip AdSense in Electron
+        if (window.electron) {
+            setShouldLoadAds(false);
+            injectHideAdsStyle();
+            return;
+        }
+
         const checkConfig = async () => {
             try {
                 const config: UsageConfig = await getUsageConfig();

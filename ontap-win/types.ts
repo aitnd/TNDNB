@@ -1,5 +1,24 @@
 import type { Session } from '@supabase/supabase-js';
 
+declare global {
+  interface Window {
+    electron: {
+      isElectron: boolean;
+      appVersion: string;
+      invoke: (channel: string, ...args: any[]) => Promise<any>;
+      on: (channel: string, func: (...args: any[]) => void) => void;
+      onUpdateProgress: (callback: (percent: number) => void) => void;
+      onUpdateDownloaded: (callback: () => void) => void;
+      onUpdateError: (callback: (err: string) => void) => void;
+      downloadUpdate: (url?: string) => void;
+      installUpdate: () => void;
+      getAutoLaunch: () => Promise<boolean>;
+      setAutoLaunch: (value: boolean) => Promise<boolean>;
+    };
+  }
+}
+
+
 export type Theme = 'light' | 'dark' | 'modern' | 'classic' | 'sunrise' | 'tri-an' | 'noel';
 
 export interface Answer {

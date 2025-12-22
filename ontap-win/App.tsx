@@ -86,13 +86,11 @@ const AppContent: React.FC = () => {
     }
 
     // --- CUSTOM AUTO UPDATE CHECK (Windows) ---
-    // @ts-ignore
     if (window.electron?.isElectron) {
       const checkUpdate = async () => {
         try {
           const { getUsageConfig } = await import('./services/adminConfigService');
           const config = await getUsageConfig();
-          // @ts-ignore
           const currentVersion = window.electron.appVersion;
           const remoteVersion = config.app_links?.version;
           const downloadUrl = config.app_links?.windows;
