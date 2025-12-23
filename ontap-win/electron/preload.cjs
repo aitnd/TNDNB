@@ -24,4 +24,13 @@ window.electron = {
     installUpdate: () => ipcRenderer.send('install-update'),
 };
 
+
+window.addEventListener('error', (event) => {
+    console.error('Renderer error:', event.error);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('Unhandled promise rejection:', event.reason);
+});
+
 console.log('Preload script loaded');

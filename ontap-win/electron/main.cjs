@@ -1,6 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
+const log = require('electron-log');
+
+// Cấu hình log
+log.transports.file.level = 'info';
+log.info('App starting...');
 const isDev = process.env.ELECTRON_MODE === 'true';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -28,7 +33,7 @@ function createWindow() {
         width: 1280,
         height: 800,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            preload: path.join(__dirname, 'preload.cjs'),
             nodeIntegration: true,
             contextIsolation: false, // For easier IPC in this specific legacy app structure
             webSecurity: false // Often needed for local file access in simple apps, though less secure
@@ -49,11 +54,17 @@ function createWindow() {
         };
         loadDevUrl();
     } else {
-        mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+        const indexPath = path.join(__dirname, '../dist/index.html');
+        log.info('Loading file:', indexPath);
+        mainWindow.loadFile(indexPath).catch(err => {
+            log.error('Failed to load index.html:', err);
+        });
     }
-    // mainWindow.webContents.openDevTools(); // Mở DevTools để kiểm tra lỗi
 
-    // Thêm phím tắt F12 để bật/tắt DevTools
+    // Mở DevTools mặc định để kiểm tra lỗi trắng màn hình - Đã tắt sau khi ổn định
+    // mainWindow.webContents.openDevTools(); 
+
+    // Thêm phím tắt F12 để bật/tắt DevTools - Đã vô hiệu hóa theo yêu cầu
     /*
     mainWindow.webContents.on('before-input-event', (event, input) => {
         if (input.key === 'F12' && input.type === 'keyDown') {
