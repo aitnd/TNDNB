@@ -28,6 +28,13 @@ export interface UsageConfig {
     };
 }
 
+// Cấu hình GitHub cho Release Manager
+export interface GitHubConfig {
+    token?: string;  // Personal Access Token (mã hóa)
+    owner?: string;  // Mặc định: aitnd
+    repo?: string;   // Mặc định: TNDNB
+}
+
 const DEFAULT_CONFIG: UsageConfig = {
     guest: {
         limit: 5,
@@ -119,6 +126,32 @@ export const saveUsageConfig = async (config: UsageConfig): Promise<void> => {
         await setDoc(docRef, config);
     } catch (error) {
         console.error('Error saving usage config:', error);
+        throw error;
+    }
+};
+
+// 3. Get GitHub Config
+export const getGitHubConfig = async (): Promise<GitHubConfig> => {
+    try {
+        const docRef = doc(db, SETTINGS_COLLECTION, 'github_config');
+        const snapshot = await getDoc(docRef);
+        if (snapshot.exists()) {
+            return snapshot.data() as GitHubConfig;
+        }
+        return { owner: 'aitnd', repo: 'TNDNB' };
+    } catch (error) {
+        console.error('Error fetching GitHub config:', error);
+        return { owner: 'aitnd', repo: 'TNDNB' };
+    }
+};
+
+// 4. Save GitHub Config
+export const saveGitHubConfig = async (config: GitHubConfig): Promise<void> => {
+    try {
+        const docRef = doc(db, SETTINGS_COLLECTION, 'github_config');
+        await setDoc(docRef, config);
+    } catch (error) {
+        console.error('Error saving GitHub config:', error);
         throw error;
     }
 };

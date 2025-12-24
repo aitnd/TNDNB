@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus } from 'react-icons/fa';
-import { db, auth } from '../services/firebaseClient'; // Ensure auth is imported
-
-
+import {
+    FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus,
+    FaWifi, FaPlaneSlash
+} from 'react-icons/fa';
+import { db, auth } from '../services/firebaseClient';
 import { collection, query, where, getDocs, doc, getDoc, updateDoc, arrayUnion, addDoc, arrayRemove, serverTimestamp, onSnapshot, documentId } from 'firebase/firestore';
 import { UserProfile } from '../types';
 import { getExamHistory, ExamResult } from '../services/historyService';
@@ -686,7 +687,9 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 cccdPlace: cleanValue(editStudent.cccdPlace), // Updated
                 class: cleanValue(editStudent.class),       // Updated
                 courseCode: cleanValue(editStudent.courseCode),
-                role: cleanValue(editStudent.role)
+                role: cleanValue(editStudent.role),
+                offlineAccess: cleanValue((editStudent as any).offlineAccess),
+                updatedAt: serverTimestamp()
             });
             alert("Đã cập nhật thông tin học viên!");
             setShowEditStudentModal(false);
@@ -699,6 +702,59 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
     };
 
+    const toggleOfflineAccess = async (studentId: string, currentStatus: boolean) => {
+        try {
+            await updateDoc(doc(db, 'users', studentId), {
+                offlineAccess: !currentStatus,
+                updatedAt: serverTimestamp()
+            });
+        } catch (e) {
+            console.error("Error toggling offline access:", e);
+            alert("Lỗi khi cập nhật quyền Offline.");
+        }
+    };
+
+    // Bulk toggle offline cho nhiều học viên
+    const [selectedForOffline, setSelectedForOffline] = useState<Set<string>>(new Set());
+    const [isBulkOfflineToggling, setIsBulkOfflineToggling] = useState(false);
+
+    const toggleSelectForOffline = (uid: string) => {
+        const newSet = new Set(selectedForOffline);
+        if (newSet.has(uid)) newSet.delete(uid);
+        else newSet.add(uid);
+        setSelectedForOffline(newSet);
+    };
+
+    const toggleSelectAllForOffline = () => {
+        if (selectedForOffline.size === paginatedStudents.length && paginatedStudents.length > 0) {
+            setSelectedForOffline(new Set());
+        } else {
+            setSelectedForOffline(new Set(paginatedStudents.map(s => s.uid)));
+        }
+    };
+
+    const handleBulkToggleOffline = async (enableOffline: boolean) => {
+        if (selectedForOffline.size === 0) return;
+        if (!confirm(`Bạn có chắc muốn ${enableOffline ? 'BẬT' : 'TẮT'} quyền Offline cho ${selectedForOffline.size} học viên?`)) return;
+
+        setIsBulkOfflineToggling(true);
+        try {
+            const promises = Array.from(selectedForOffline).map(uid =>
+                updateDoc(doc(db, 'users', uid), {
+                    offlineAccess: enableOffline,
+                    updatedAt: serverTimestamp()
+                })
+            );
+            await Promise.all(promises);
+            alert(`Đã ${enableOffline ? 'bật' : 'tắt'} Offline cho ${selectedForOffline.size} học viên!`);
+            setSelectedForOffline(new Set());
+        } catch (e) {
+            console.error("Bulk offline toggle error:", e);
+            alert("Có lỗi xảy ra.");
+        } finally {
+            setIsBulkOfflineToggling(false);
+        }
+    };
 
 
 
@@ -1511,6 +1567,14 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                             </button>
                                                         )}
 
+                                                        <button
+                                                            onClick={() => toggleOfflineAccess(s.uid, !!(s as any).offlineAccess)}
+                                                            className={`p-1.5 rounded text-xs flex items-center gap-1 ${(s as any).offlineAccess ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-gray-400 bg-gray-50 hover:bg-gray-100'}`}
+                                                            title={(s as any).offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}
+                                                        >
+                                                            {(s as any).offlineAccess ? <FaWifi /> : <FaPlaneSlash />}
+                                                        </button>
+
                                                         <button onClick={() => { setHistoryStudent(s); setShowHistoryModal(true); }} className="text-purple-600 bg-purple-50 hover:bg-purple-100 p-1.5 rounded text-xs flex items-center gap-1" title="Xem lịch sử">
                                                             <FaHistory />
                                                         </button>
@@ -1532,7 +1596,16 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                 <table className="w-full text-left text-sm">
                                     <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-300 select-none">
                                         <tr>
-                                            <th onClick={() => handleSort('fullName')} className="px-4 py-3 rounded-l-lg cursor-pointer hover:bg-gray-200 transition">
+                                            <th className="px-2 py-3 w-10">
+                                                <input
+                                                    type="checkbox"
+                                                    className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                                                    checked={selectedForOffline.size === paginatedStudents.length && paginatedStudents.length > 0}
+                                                    onChange={toggleSelectAllForOffline}
+                                                    title="Chọn tất cả"
+                                                />
+                                            </th>
+                                            <th onClick={() => handleSort('fullName')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
                                                 <div className="flex items-center">Học viên {getSortIcon('fullName')}</div>
                                             </th>
                                             <th onClick={() => handleSort('birthDate')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
@@ -1555,6 +1628,14 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                             const result = studentLatestResults[s.uid] || { type: '--', time: '--', score: '--' };
                                             return (
                                                 <tr key={s.uid} className="group hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
+                                                    <td className="px-2 py-3 w-10">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                                                            checked={selectedForOffline.has(s.uid)}
+                                                            onChange={() => toggleSelectForOffline(s.uid)}
+                                                        />
+                                                    </td>
                                                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                                         <img
                                                             src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`}
@@ -1591,6 +1672,14 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                                 <button onClick={() => handleResetPassword(s.uid, s.fullName)} className="text-yellow-500 hover:bg-yellow-50 p-2 rounded-lg transition" title="Reset Mật khẩu"><FaKey /></button>
                                                             )}
 
+                                                            <button
+                                                                onClick={() => toggleOfflineAccess(s.uid, !!(s as any).offlineAccess)}
+                                                                className={`p-2 rounded-lg transition ${(s as any).offlineAccess ? 'text-green-500 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-50'}`}
+                                                                title={(s as any).offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}
+                                                            >
+                                                                {(s as any).offlineAccess ? <FaWifi /> : <FaPlaneSlash />}
+                                                            </button>
+
                                                             <button onClick={() => { setHistoryStudent(s); setShowHistoryModal(true); }} className="text-purple-500 hover:bg-purple-50 p-2 rounded-lg transition" title="Xem lịch sử thi"><FaHistory /></button>
 
                                                             {canManageStudents && (
@@ -1608,6 +1697,36 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                         )}
                                     </tbody>
                                 </table>
+
+                                {/* Bulk Offline Action Bar */}
+                                {selectedForOffline.size > 0 && (
+                                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white dark:bg-slate-800 rounded-full shadow-2xl px-6 py-3 flex items-center gap-4 border border-gray-200 dark:border-slate-700">
+                                        <span className="font-medium text-gray-700 dark:text-gray-200">
+                                            Đã chọn {selectedForOffline.size} học viên
+                                        </span>
+                                        <button
+                                            onClick={() => handleBulkToggleOffline(true)}
+                                            disabled={isBulkOfflineToggling}
+                                            className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition flex items-center gap-2 disabled:opacity-50"
+                                        >
+                                            <FaWifi /> Bật Offline
+                                        </button>
+                                        <button
+                                            onClick={() => handleBulkToggleOffline(false)}
+                                            disabled={isBulkOfflineToggling}
+                                            className="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition flex items-center gap-2 disabled:opacity-50"
+                                        >
+                                            <FaPlaneSlash /> Tắt Offline
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedForOffline(new Set())}
+                                            className="text-gray-500 hover:text-gray-700 p-2"
+                                            title="Bỏ chọn"
+                                        >
+                                            <FaTimes />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
 

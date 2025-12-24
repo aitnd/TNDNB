@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { getUsageConfig, saveUsageConfig, UsageConfig, RoleConfig } from '../services/adminConfigService';
-import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, FaUser, FaChalkboardTeacher, FaUserAstronaut, FaTools, FaBroom, FaDownload, FaArrowLeft, FaShieldAlt, FaMobileAlt, FaServer, FaCheckCircle } from 'react-icons/fa';
+import { getUsageConfig, saveUsageConfig, UsageConfig, RoleConfig, getGitHubConfig, saveGitHubConfig, GitHubConfig } from '../services/adminConfigService';
+import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, FaUser, FaChalkboardTeacher, FaUserAstronaut, FaTools, FaBroom, FaDownload, FaArrowLeft, FaShieldAlt, FaMobileAlt, FaServer, FaCheckCircle, FaRocket, FaGithub, FaKey, FaUpload, FaFileAlt } from 'react-icons/fa';
 import { db } from '../services/firebaseClient';
 import { collection, getDocs, doc, updateDoc, writeBatch, query, where } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease } from '../services/githubService';
 
 const UsageConfigPanel: React.FC = () => {
     const navigate = useNavigate();
@@ -24,6 +25,18 @@ const UsageConfigPanel: React.FC = () => {
     const [scanning, setScanning] = useState(false);
     const [fixing, setFixing] = useState(false);
 
+    // --- RELEASE MANAGER ---
+    const [githubConfig, setGithubConfig] = useState<GitHubConfig>({ owner: 'aitnd', repo: 'TNDNB' });
+    const [latestRelease, setLatestRelease] = useState<GitHubRelease | null>(null);
+    const [releaseVersion, setReleaseVersion] = useState('');
+    const [releaseNotes, setReleaseNotes] = useState('');
+    const [exeFile, setExeFile] = useState<File | null>(null);
+    const [ymlFile, setYmlFile] = useState<File | null>(null);
+    const [blockmapFile, setBlockmapFile] = useState<File | null>(null);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [publishing, setPublishing] = useState(false);
+    const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+
     useEffect(() => {
         loadConfig();
     }, []);
@@ -32,7 +45,122 @@ const UsageConfigPanel: React.FC = () => {
         setLoading(true);
         const data = await getUsageConfig();
         setConfig(data);
+        // Load GitHub config
+        const ghConfig = await getGitHubConfig();
+        setGithubConfig(ghConfig);
+        // Validate token if exists
+        if (ghConfig.token) {
+            const valid = await validateToken(ghConfig.token);
+            setTokenValid(valid);
+            if (valid) {
+                const latest = await getLatestRelease(ghConfig.token);
+                setLatestRelease(latest);
+            }
+        }
         setLoading(false);
+    };
+
+    // --- RELEASE MANAGER FUNCTIONS ---
+    const handleSaveGitHubToken = async () => {
+        if (!githubConfig.token) return;
+        try {
+            const valid = await validateToken(githubConfig.token);
+            setTokenValid(valid);
+            if (valid) {
+                await saveGitHubConfig(githubConfig);
+                const latest = await getLatestRelease(githubConfig.token);
+                setLatestRelease(latest);
+                Swal.fire('Thành công', 'Token hợp lệ và đã lưu!', 'success');
+            } else {
+                Swal.fire('Lỗi', 'Token không hợp lệ hoặc không có quyền repo.', 'error');
+            }
+        } catch (err) {
+            Swal.fire('Lỗi', 'Không thể kiểm tra token', 'error');
+        }
+    };
+
+    const handlePublishRelease = async () => {
+        if (!githubConfig.token || !releaseVersion) {
+            Swal.fire('Lỗi', 'Vui lòng nhập phiên bản và cấu hình token.', 'error');
+            return;
+        }
+        if (!exeFile || !ymlFile) {
+            Swal.fire('Lỗi', 'Vui lòng chọn file .exe và latest.yml', 'error');
+            return;
+        }
+
+        setPublishing(true);
+        setUploadProgress(0);
+
+        try {
+            // 1. Tạo Release
+            const release = await createRelease(githubConfig.token, {
+                tag_name: `v${releaseVersion}`,
+                name: `Version ${releaseVersion}`,
+                body: releaseNotes || `Phát hành phiên bản ${releaseVersion}`,
+                draft: false,
+                prerelease: false
+            });
+
+            // 2. Upload file .exe
+            setUploadProgress(10);
+            await uploadReleaseAsset(githubConfig.token, release.id, exeFile, (p) => {
+                setUploadProgress(10 + Math.round(p * 0.6)); // 10-70%
+            });
+
+            // 3. Upload file latest.yml
+            setUploadProgress(75);
+            await uploadReleaseAsset(githubConfig.token, release.id, ymlFile, (p) => {
+                setUploadProgress(75 + Math.round(p * 0.15)); // 75-90%
+            });
+
+            // 4. Upload blockmap nếu có
+            if (blockmapFile) {
+                setUploadProgress(90);
+                await uploadReleaseAsset(githubConfig.token, release.id, blockmapFile, (p) => {
+                    setUploadProgress(90 + Math.round(p * 0.1)); // 90-100%
+                });
+            }
+
+            setUploadProgress(100);
+
+            // 5. Cập nhật app_links trong config
+            const windowsUrl = release.html_url.replace('/releases/tag/', '/releases/download/') + '/' + encodeURIComponent(exeFile.name);
+            if (config) {
+                const updatedConfig = {
+                    ...config,
+                    app_links: {
+                        ...config.app_links,
+                        version: releaseVersion,
+                        windows: windowsUrl
+                    }
+                };
+                await saveUsageConfig(updatedConfig);
+                setConfig(updatedConfig);
+            }
+
+            // 6. Cập nhật latest release
+            setLatestRelease(release);
+
+            Swal.fire({
+                title: 'Phát hành thành công!',
+                html: `<p>Phiên bản <strong>v${releaseVersion}</strong> đã được đẩy lên GitHub.</p><a href="${release.html_url}" target="_blank" class="text-blue-600 underline">Xem trên GitHub</a>`,
+                icon: 'success'
+            });
+
+            // Reset form
+            setReleaseVersion('');
+            setReleaseNotes('');
+            setExeFile(null);
+            setYmlFile(null);
+            setBlockmapFile(null);
+
+        } catch (err: any) {
+            console.error('Publish error:', err);
+            Swal.fire('Lỗi phát hành', err.message || 'Không thể phát hành release', 'error');
+        } finally {
+            setPublishing(false);
+        }
     };
 
     const handleSave = async () => {
@@ -391,6 +519,113 @@ const UsageConfigPanel: React.FC = () => {
                                             className="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
                                         />
                                     </div>
+                                </div>
+
+                                {/* Release Manager Section */}
+                                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-600">
+                                    <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+                                        <FaRocket className="text-green-600" />
+                                        Phát hành bản cập nhật mới
+                                    </h3>
+
+                                    {/* GitHub Token Config */}
+                                    <div className="mb-6 p-4 bg-gray-50 dark:bg-slate-700/30 rounded-xl border border-gray-200 dark:border-slate-600">
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <FaGithub className="text-xl" />
+                                            <span className="font-bold">Cấu hình GitHub</span>
+                                            {tokenValid === true && <span className="text-green-500 text-sm flex items-center gap-1"><FaCheckCircle /> Đã kết nối</span>}
+                                            {tokenValid === false && <span className="text-red-500 text-sm">Token không hợp lệ</span>}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="password"
+                                                value={githubConfig.token || ''}
+                                                onChange={(e) => setGithubConfig({ ...githubConfig, token: e.target.value })}
+                                                placeholder="GitHub Personal Access Token..."
+                                                className="flex-1 p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
+                                            />
+                                            <button
+                                                onClick={handleSaveGitHubToken}
+                                                className="px-4 py-2 bg-gray-800 text-white rounded-lg font-bold hover:bg-gray-900 flex items-center gap-2"
+                                            >
+                                                <FaKey /> Lưu Token
+                                            </button>
+                                        </div>
+                                        {latestRelease && (
+                                            <p className="mt-2 text-sm text-gray-500">
+                                                Release mới nhất: <a href={latestRelease.html_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">{latestRelease.tag_name}</a>
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Publish Form */}
+                                    {tokenValid && (
+                                        <div className="space-y-4 animate-fade-in">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-bold mb-2">Phiên bản mới</label>
+                                                    <input
+                                                        type="text"
+                                                        value={releaseVersion}
+                                                        onChange={(e) => setReleaseVersion(e.target.value)}
+                                                        placeholder="VD: 3.8.8"
+                                                        className="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-green-500 outline-none"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-bold mb-2">Ghi chú</label>
+                                                    <input
+                                                        type="text"
+                                                        value={releaseNotes}
+                                                        onChange={(e) => setReleaseNotes(e.target.value)}
+                                                        placeholder="Tùy chọn..."
+                                                        className="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-green-500 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-bold mb-2">File .exe *</label>
+                                                    <label className={`flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-lg cursor-pointer ${exeFile ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 dark:border-slate-600 hover:border-blue-400'}`}>
+                                                        <input type="file" accept=".exe" className="hidden" onChange={(e) => setExeFile(e.target.files?.[0] || null)} />
+                                                        <FaUpload className={exeFile ? 'text-green-600' : ''} />
+                                                        <span className="text-sm truncate">{exeFile ? exeFile.name : 'Chọn file...'}</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-bold mb-2">latest.yml *</label>
+                                                    <label className={`flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-lg cursor-pointer ${ymlFile ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 dark:border-slate-600 hover:border-blue-400'}`}>
+                                                        <input type="file" accept=".yml,.yaml" className="hidden" onChange={(e) => setYmlFile(e.target.files?.[0] || null)} />
+                                                        <FaFileAlt className={ymlFile ? 'text-green-600' : ''} />
+                                                        <span className="text-sm truncate">{ymlFile ? ymlFile.name : 'Chọn file...'}</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-bold mb-2">.blockmap</label>
+                                                    <label className={`flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-lg cursor-pointer ${blockmapFile ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 dark:border-slate-600 hover:border-blue-400'}`}>
+                                                        <input type="file" accept=".blockmap" className="hidden" onChange={(e) => setBlockmapFile(e.target.files?.[0] || null)} />
+                                                        <FaFileAlt className={blockmapFile ? 'text-green-600' : ''} />
+                                                        <span className="text-sm truncate">{blockmapFile ? blockmapFile.name : 'Tùy chọn'}</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            {publishing && (
+                                                <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-3">
+                                                    <div className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all" style={{ width: `${uploadProgress}%` }} />
+                                                </div>
+                                            )}
+
+                                            <button
+                                                onClick={handlePublishRelease}
+                                                disabled={publishing || !releaseVersion || !exeFile || !ymlFile}
+                                                className="w-full py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                                            >
+                                                {publishing ? `Đang phát hành... ${uploadProgress}%` : <><FaRocket /> Phát hành lên GitHub</>}
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}

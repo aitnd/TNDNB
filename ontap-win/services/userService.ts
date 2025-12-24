@@ -2,6 +2,7 @@ import { db } from './firebaseClient';
 import { supabase } from './supabaseClient';
 import { doc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { UserProfile } from '../types';
+import { saveResultOffline } from './offlineService';
 
 
 export const getDefaultAvatar = (role?: string) => {
@@ -156,18 +157,49 @@ export const saveExamResult = async (
             title = `${licenseName} (Thi thử)`;
         }
 
-        await addDoc(collection(db, 'exam_results'), {
-            studentId: userId,
-            licenseId: licenseId,
-            score: score,
-            totalQuestions: totalQuestions,
-            timeTaken: timeTaken,
-            completedAt: serverTimestamp(),
-            type: examType,
-            quizTitle: title
-        });
+        if (navigator.onLine) {
+            await addDoc(collection(db, 'exam_results'), {
+                studentId: userId,
+                licenseId: licenseId,
+                score: score,
+                totalQuestions: totalQuestions,
+                timeTaken: timeTaken,
+                completedAt: serverTimestamp(),
+                type: examType,
+                quizTitle: title
+            });
+        } else {
+            // Lưu offline
+            await saveResultOffline({
+                userId,
+                licenseId,
+                licenseName,
+                subjectName,
+                examType,
+                score,
+                totalQuestions,
+                timeSpent: timeTaken,
+                createdAt: Date.now()
+            });
+        }
     } catch (error) {
-        console.error('Error saving exam result to Firestore:', error);
+        console.error('Error saving exam result:', error);
+        // Fallback lưu offline nếu lỗi mạng đột ngột
+        try {
+            await saveResultOffline({
+                userId,
+                licenseId,
+                licenseName,
+                subjectName,
+                examType,
+                score,
+                totalQuestions,
+                timeSpent: timeTaken,
+                createdAt: Date.now()
+            });
+        } catch (e) {
+            console.error('Critical: Failed to save result even offline', e);
+        }
     }
 };
 
