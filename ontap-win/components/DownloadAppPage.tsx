@@ -1,15 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { FaWindows, FaAndroid, FaApple, FaDownload, FaDesktop, FaMobileAlt } from 'react-icons/fa';
 import { getUsageConfig, UsageConfig } from '../services/adminConfigService';
+import { getLatestRelease } from '../services/githubService';
+import { getGitHubConfig } from '../services/adminConfigService';
 
 const DownloadAppPage: React.FC = () => {
     const [config, setConfig] = useState<UsageConfig | null>(null);
     const [loading, setLoading] = useState(true);
+    const [windowsLink, setWindowsLink] = useState<string>(''); // 💖 Link Windows từ GitHub (MỚI)
 
     useEffect(() => {
         const fetchConfig = async () => {
             const data = await getUsageConfig();
             setConfig(data);
+
+            // 💖 Nếu config không có link Windows, thử lấy từ GitHub Releases (MỚI)
+            if (!data?.app_links?.windows) {
+                try {
+                    const ghConfig = await getGitHubConfig();
+                    if (ghConfig.token) {
+                        // getLatestRelease chỉ nhận 1 tham số (token)
+                        const release = await getLatestRelease(ghConfig.token);
+                        if (release && release.assets) {
+                            const exeAsset = release.assets.find((a) => a.name.endsWith('.exe'));
+                            if (exeAsset) {
+                                setWindowsLink(exeAsset.browser_download_url);
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not fetch Windows link from GitHub:', e);
+                }
+            } else {
+                setWindowsLink(data.app_links.windows);
+            }
+
+
             setLoading(false);
         };
         fetchConfig();
@@ -23,7 +49,13 @@ const DownloadAppPage: React.FC = () => {
         );
     }
 
-    const appLinks = config?.app_links || { windows: '', android: '', ios: '', version: '' };
+    const appLinks = {
+        windows: windowsLink || config?.app_links?.windows || '',
+        android: config?.app_links?.android || '',
+        ios: config?.app_links?.ios || '',
+        version: config?.app_links?.version || ''
+    };
+
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-slate-900 pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -31,7 +63,7 @@ const DownloadAppPage: React.FC = () => {
                 {/* Header Section */}
                 <div className="text-center mb-16 animate-fade-in-down">
                     <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
-                        Tải Ứng Dụng <span className="text-blue-600">Ôn Thi Thuyền Viên</span>
+                        Tải Ứng Dụng <span className="text-blue-600">Ôn Thi Đường Thuỷ</span>
                     </h1>
                     <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                         Ôn tập mọi lúc, mọi nơi trên mọi thiết bị. Đồng bộ dữ liệu, làm bài thi thử và theo dõi tiến độ học tập của bạn.
@@ -43,8 +75,8 @@ const DownloadAppPage: React.FC = () => {
                     )}
                 </div>
 
-                {/* Download Options Grid */}
-                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                {/* Download Options Grid - Luôn 3 cột */}
+                <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
 
                     {/* Windows Card */}
                     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-slate-700 flex flex-col">
@@ -114,15 +146,43 @@ const DownloadAppPage: React.FC = () => {
                         </div>
                     </div>
 
+                    {/* 💖 iOS Card - LUÔN HIỂN THỊ */}
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-slate-700 flex flex-col">
+                        <div className="p-8 flex-1 flex flex-col items-center text-center">
+                            <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800/50 rounded-2xl flex items-center justify-center mb-6 text-gray-700 dark:text-gray-300">
+                                <FaApple className="text-5xl" />
+                            </div>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Phiên bản iOS</h2>
+                            <p className="text-gray-600 dark:text-gray-400 mb-6">
+                                Dành cho iPhone và iPad. Trải nghiệm mượt mà trên hệ sinh thái Apple.
+                            </p>
+                            <ul className="text-left text-sm text-gray-500 dark:text-gray-400 space-y-2 mb-8 w-full px-4">
+                                <li className="flex items-center gap-2"><FaMobileAlt className="text-gray-500" /> Hỗ trợ iOS 14.0 trở lên</li>
+                                <li className="flex items-center gap-2"><FaDownload className="text-gray-500" /> Tải qua TestFlight/App Store</li>
+                                <li className="flex items-center gap-2"><FaApple className="text-gray-500" /> Tối ưu cho iPhone & iPad</li>
+                            </ul>
+                        </div>
+                        <div className="p-6 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-700">
+                            {appLinks.ios ? (
+                                <a
+                                    href={appLinks.ios}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block w-full py-3 px-6 bg-gray-800 hover:bg-black text-white font-bold rounded-xl text-center transition-colors shadow-lg hover:shadow-gray-500/30 flex items-center justify-center gap-2"
+                                >
+                                    <FaApple /> Tải về cho iOS
+                                </a>
+                            ) : (
+                                <button disabled className="block w-full py-3 px-6 bg-gray-300 dark:bg-slate-700 text-gray-500 dark:text-gray-400 font-bold rounded-xl text-center cursor-not-allowed">
+                                    Đang cập nhật link...
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
                 </div>
 
-                {/* iOS Section (Optional/Coming Soon) */}
-                <div className="mt-12 text-center">
-                    <div className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400 bg-white dark:bg-slate-800 px-6 py-3 rounded-full shadow-sm border border-gray-200 dark:border-slate-700">
-                        <FaApple className="text-xl" />
-                        <span>Phiên bản iOS đang được phát triển và sẽ sớm ra mắt.</span>
-                    </div>
-                </div>
+
             </div>
         </div>
     );

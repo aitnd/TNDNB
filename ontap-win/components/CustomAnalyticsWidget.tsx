@@ -48,7 +48,12 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
                 // const { auth } = await import('../services/firebaseClient');
                 // const token = await auth.currentUser?.getIdToken();
 
-                const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+                // 💖 Trong Electron app, cần URL đầy đủ đến server production
+                // @ts-ignore
+                const isElectron = window.electron?.isElectron;
+                const baseUrl = import.meta.env.VITE_API_BASE_URL
+                    || (isElectron ? 'https://daotaothuyenvien.vn' : '');
+
                 const response = await fetch(`${baseUrl}/api/analytics`, {
                     method: 'POST',
                     headers: {
@@ -57,6 +62,7 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
                     },
                     body: JSON.stringify({ dateRange: timeRange })
                 });
+
 
                 if (response.ok) {
                     const data = await response.json();

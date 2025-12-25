@@ -22,13 +22,18 @@ window.electron = {
     invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
     on: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args)),
 
+    // --- App Info ---
+    getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+
     // --- Update Functions ---
+    onUpdateAvailable: (callback) => ipcRenderer.on('update-available', (event, version) => callback(version)),
     onUpdateProgress: (callback) => ipcRenderer.on('update-progress', (event, percent) => callback(percent)),
     onUpdateDownloaded: (callback) => ipcRenderer.on('update-downloaded', () => callback()),
     onUpdateError: (callback) => ipcRenderer.on('update-error', (event, err) => callback(err)),
     downloadUpdate: (url) => ipcRenderer.send('download-update', url),
     installUpdate: () => ipcRenderer.send('install-update'),
 };
+
 
 
 window.addEventListener('error', (event) => {

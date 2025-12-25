@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus, FaWifi } from 'react-icons/fa';
+import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus, FaWifi, FaLaptop, FaMobileAlt, FaSignOutAlt } from 'react-icons/fa';
 import { TbPlaneOff } from 'react-icons/tb';
 import { db, auth } from '../services/firebaseClient'; // Ensure auth is imported
 
@@ -12,6 +12,7 @@ import { sendNotification } from '../services/notificationService';
 import { getDefaultAvatar } from '../services/userService';
 import ImportStudentModal from './ImportStudentModal';
 import CreateStudentModal from './CreateStudentModal';
+import { getDeviceCount, getActiveSessions, logoutRemoteSession } from '../services/authSessionService';
 
 interface Course {
     id: string;
@@ -144,6 +145,13 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [sortField, setSortField] = useState<keyof UserData | 'status' | 'recentExam' | 'time' | 'score'>('fullName');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
+    // 💖 SESSION/DEVICE MANAGEMENT STATE (MỚI) 💖
+    const [deviceCounts, setDeviceCounts] = useState<Record<string, number>>({});
+    const [showSessionModal, setShowSessionModal] = useState(false);
+    const [sessionStudent, setSessionStudent] = useState<UserData | null>(null);
+    const [studentSessions, setStudentSessions] = useState<any[]>([]);
+    const [loadingSessions, setLoadingSessions] = useState(false);
+
     const canCreateClass = getRoleRank(userProfile.role) >= 2;
     const canManageStudents = ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role);
     const canAddTeachers = getRoleRank(userProfile.role) >= 2;
@@ -269,6 +277,59 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
 
     }, [selectedCourse]);
+
+    // 💖 Lấy số lượng thiết bị cho tất cả học viên trong lớp (MỚI) 💖
+    useEffect(() => {
+        if (students.length > 0) {
+            const fetchAllDeviceCounts = async () => {
+                const counts: Record<string, number> = {};
+                await Promise.all(students.map(async (s) => {
+                    try {
+                        const count = await getDeviceCount(s.uid);
+                        counts[s.uid] = count;
+                    } catch (e) {
+                        counts[s.uid] = 0;
+                    }
+                }));
+                setDeviceCounts(counts);
+            };
+            fetchAllDeviceCounts();
+        }
+    }, [students]);
+
+    // Handler để mở session modal
+    const handleOpenSessionModal = async (student: UserData) => {
+        setSessionStudent(student);
+        setShowSessionModal(true);
+        setLoadingSessions(true);
+        try {
+            const sessions = await getActiveSessions(student.uid);
+            setStudentSessions(sessions);
+        } catch (e) {
+            console.error("Error fetching sessions:", e);
+            setStudentSessions([]);
+        } finally {
+            setLoadingSessions(false);
+        }
+    };
+
+    // Handler để đăng xuất session từ xa
+    const handleLogoutSession = async (sessionId: string) => {
+        if (!confirm('Đăng xuất tằiết bị này?')) return;
+        try {
+            await logoutRemoteSession(sessionId);
+            // Refresh sessions
+            if (sessionStudent) {
+                const updated = await getActiveSessions(sessionStudent.uid);
+                setStudentSessions(updated);
+                // Update device count
+                setDeviceCounts(prev => ({ ...prev, [sessionStudent.uid]: updated.length }));
+            }
+        } catch (e) {
+            console.error("Error logging out session:", e);
+            alert('Lỗi khi đăng xuất.');
+        }
+    };
 
     // --- HELPER FUNCTIONS FOR LIST ---
     const getFilteredAndSortedStudents = useMemo(() => {
@@ -1303,6 +1364,67 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 )
             }
 
+            {/* 💖 SESSION MANAGEMENT MODAL (MỚI) 💖 */}
+            {
+                showSessionModal && sessionStudent && createPortal(
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onClick={() => setShowSessionModal(false)}>
+                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 max-h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setShowSessionModal(false)} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full hover:bg-gray-200"><FaTimes /></button>
+                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                <FaLaptop className="text-green-500" /> Phiên đăng nhập: <span className="text-green-600">{sessionStudent.fullName}</span>
+                            </h2>
+
+                            <div className="flex-1 overflow-y-auto">
+                                {loadingSessions ? (
+                                    <div className="p-10 text-center text-gray-500">Đang tải phiên đăng nhập...</div>
+                                ) : studentSessions.length === 0 ? (
+                                    <div className="p-10 text-center text-gray-500 italic">Học viên này không có phiên đăng nhập nào đang hoạt động.</div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {studentSessions.map((session: any) => {
+                                            const loginAt = session.loginAt?.toDate ? new Date(session.loginAt.toDate()) : null;
+                                            const lastActive = session.lastActive?.toDate ? new Date(session.lastActive.toDate()) : null;
+                                            const isMobile = session.platform === 'mobile' || session.platform === 'capacitor';
+                                            return (
+                                                <div key={session.id} className="bg-gray-50 dark:bg-slate-700/50 rounded-lg p-4 border border-gray-200 dark:border-slate-600">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={`p-2 rounded-full ${isMobile ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'}`}>
+                                                                {isMobile ? <FaMobileAlt size={16} /> : <FaLaptop size={16} />}
+                                                            </div>
+                                                            <div>
+                                                                <p className="font-medium text-gray-900 dark:text-gray-100">
+                                                                    {session.deviceName || 'Unknown Device'}
+                                                                    {session.platform === 'electron' && <span className="ml-2 text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">Windows App</span>}
+                                                                </p>
+                                                                <p className="text-xs text-gray-500">{session.browser || session.userAgent || 'Unknown Browser'}</p>
+                                                                <p className="text-xs text-gray-400">IP: {session.ip || 'Unknown'}</p>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => handleLogoutSession(session.id)}
+                                                            className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition flex items-center gap-1 text-xs font-medium"
+                                                            title="Đăng xuất thiết bị này"
+                                                        >
+                                                            <FaSignOutAlt /> Đăng xuất
+                                                        </button>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 text-xs text-gray-500 mt-2 pt-2 border-t border-gray-200 dark:border-slate-600">
+                                                        <span>Đăng nhập: {loginAt ? loginAt.toLocaleString('vi-VN') : '--'}</span>
+                                                        <span>Hoạt động: {lastActive ? lastActive.toLocaleString('vi-VN') : '--'}</span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>,
+                    document.body
+                )
+            }
+
             {/* EDIT STUDENT MODAL */}
             {
                 showEditStudentModal && editStudent && createPortal(
@@ -1712,6 +1834,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                             <th onClick={() => handleSort('score')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
                                                 <div className="flex items-center">Điểm {getSortIcon('score')}</div>
                                             </th>
+                                            <th className="px-4 py-3 text-center">Thiết bị</th>
                                             <th className="px-4 py-3 text-center rounded-r-lg">Hành động</th>
                                         </tr>
                                     </thead>
@@ -1754,6 +1877,18 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                     </td>
                                                     <td className="px-4 py-3 text-gray-500">{result.time}</td>
                                                     <td className="px-4 py-3 font-bold text-teal-600">{result.score}</td>
+                                                    {/* 💖 CỘT THIẾT BỊ (MỚI) 💖 */}
+                                                    <td className="px-4 py-3 text-center">
+                                                        <button
+                                                            onClick={() => handleOpenSessionModal(s)}
+                                                            className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition ${(deviceCounts[s.uid] || 0) > 0 ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                                                                }`}
+                                                            title="Quản lý phiên đăng nhập"
+                                                        >
+                                                            <FaLaptop className="text-xs" />
+                                                            {deviceCounts[s.uid] || 0}
+                                                        </button>
+                                                    </td>
                                                     <td className="px-4 py-3 text-center">
                                                         <div className="flex items-center justify-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                                                             <button onClick={() => handleOpenNotifModal('user', s.uid, s.fullName)} className="text-yellow-500 hover:bg-yellow-50 p-2 rounded-lg transition" title="Gửi tin nhắn"><FaPaperPlane /></button>
@@ -1785,7 +1920,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                         })}
                                         {students.length === 0 && (
                                             <tr>
-                                                <td colSpan={6} className="text-center py-10 text-gray-400 italic">Lớp chưa có học viên nào.</td>
+                                                <td colSpan={8} className="text-center py-10 text-gray-400 italic">Lớp chưa có học viên nào.</td>
                                             </tr>
                                         )}
                                     </tbody>

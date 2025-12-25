@@ -102,9 +102,9 @@ const UsageConfigPanel: React.FC = () => {
                 prerelease: false
             });
 
-            // 2. Upload file .exe
+            // 2. Upload file .exe và lấy browser_download_url
             setUploadProgress(10);
-            await uploadReleaseAsset(githubConfig.token, release.id, exeFile, (p) => {
+            const exeAsset = await uploadReleaseAsset(githubConfig.token, release.id, exeFile, (p) => {
                 setUploadProgress(10 + Math.round(p * 0.6)); // 10-70%
             });
 
@@ -125,7 +125,8 @@ const UsageConfigPanel: React.FC = () => {
             setUploadProgress(100);
 
             // 5. Cập nhật app_links trong config
-            const windowsUrl = release.html_url.replace('/releases/tag/', '/releases/download/') + '/' + encodeURIComponent(exeFile.name);
+            // 💖 Sử dụng browser_download_url trực tiếp từ asset thay vì tự tạo URL (SỬA LỖI)
+            const windowsUrl = exeAsset.browser_download_url;
             if (config) {
                 const updatedConfig = {
                     ...config,
@@ -138,6 +139,7 @@ const UsageConfigPanel: React.FC = () => {
                 await saveUsageConfig(updatedConfig);
                 setConfig(updatedConfig);
             }
+
 
             // 6. Cập nhật latest release
             setLatestRelease(release);
@@ -464,36 +466,41 @@ const UsageConfigPanel: React.FC = () => {
                                 </h2>
 
                                 <div className="space-y-6 max-w-2xl">
-                                    <div>
-                                        <label className="block text-sm font-bold mb-2 dark:text-gray-300">Phiên bản App hiện tại</label>
-                                        <input
-                                            type="text"
-                                            value={config.app_links?.version || ''}
-                                            onChange={(e) => setConfig({
-                                                ...config,
-                                                app_links: { ...config.app_links, version: e.target.value }
-                                            })}
-                                            placeholder="Ví dụ: 3.7.1"
-                                            className="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
-                                        />
+                                    {/* 💖 Phiên bản Windows - Tự động từ GitHub (MỚI) */}
+                                    <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-700/50 dark:to-slate-600/50 rounded-xl border border-blue-200 dark:border-slate-600">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+                                                <FaRocket className="text-blue-600 dark:text-blue-400" />
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-gray-800 dark:text-white">Windows App</h4>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">Tự động từ GitHub Releases</p>
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4 text-sm">
+                                            <div>
+                                                <span className="text-gray-500 dark:text-gray-400">Phiên bản:</span>
+                                                <span className="ml-2 font-bold text-blue-600 dark:text-blue-400">
+                                                    {latestRelease?.tag_name || config.app_links?.version || 'Chưa có'}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-500 dark:text-gray-400">Trạng thái:</span>
+                                                <span className={`ml-2 font-bold ${tokenValid ? 'text-green-600' : 'text-orange-500'}`}>
+                                                    {tokenValid ? '✅ Đã kết nối GitHub' : '⚠️ Chưa cấu hình'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {config.app_links?.windows && (
+                                            <div className="mt-3 text-xs text-gray-500 dark:text-gray-400 truncate">
+                                                🔗 <a href={config.app_links.windows} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{config.app_links.windows}</a>
+                                            </div>
+                                        )}
                                     </div>
 
+                                    {/* 💖 Link Android - Thủ công */}
                                     <div>
-                                        <label className="block text-sm font-bold mb-2 dark:text-gray-300">Link Tải Windows (.exe)</label>
-                                        <input
-                                            type="text"
-                                            value={config.app_links?.windows || ''}
-                                            onChange={(e) => setConfig({
-                                                ...config,
-                                                app_links: { ...config.app_links, windows: e.target.value }
-                                            })}
-                                            placeholder="https://..."
-                                            className="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-bold mb-2 dark:text-gray-300">Link Tải Android (.apk / Play Store)</label>
+                                        <label className="block text-sm font-bold mb-2 dark:text-gray-300">📱 Link Tải Android (.apk / Play Store)</label>
                                         <input
                                             type="text"
                                             value={config.app_links?.android || ''}
@@ -501,13 +508,15 @@ const UsageConfigPanel: React.FC = () => {
                                                 ...config,
                                                 app_links: { ...config.app_links, android: e.target.value }
                                             })}
-                                            placeholder="https://..."
+                                            placeholder="https://play.google.com/... hoặc link APK"
                                             className="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
                                         />
+                                        <p className="text-xs text-gray-500 mt-1">Nhập link Google Play Store hoặc link tải trực tiếp APK</p>
                                     </div>
 
+                                    {/* 💖 Link iOS - Thủ công */}
                                     <div>
-                                        <label className="block text-sm font-bold mb-2 dark:text-gray-300">Link Tải iOS (TestFlight / App Store)</label>
+                                        <label className="block text-sm font-bold mb-2 dark:text-gray-300">🍎 Link Tải iOS (TestFlight / App Store)</label>
                                         <input
                                             type="text"
                                             value={config.app_links?.ios || ''}
@@ -515,11 +524,13 @@ const UsageConfigPanel: React.FC = () => {
                                                 ...config,
                                                 app_links: { ...config.app_links, ios: e.target.value }
                                             })}
-                                            placeholder="https://..."
+                                            placeholder="https://testflight.apple.com/... hoặc App Store"
                                             className="w-full p-3 border rounded-lg dark:bg-slate-700 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
                                         />
+                                        <p className="text-xs text-gray-500 mt-1">Nhập link TestFlight hoặc App Store</p>
                                     </div>
                                 </div>
+
 
                                 {/* Release Manager Section */}
                                 <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-600">

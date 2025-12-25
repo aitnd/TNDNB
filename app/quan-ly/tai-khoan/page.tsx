@@ -11,6 +11,8 @@ import Link from 'next/link'
 
 // (Import CSS Module)
 import styles from './page.module.css'
+import { FaLaptop, FaMobileAlt, FaSignOutAlt, FaHistory } from 'react-icons/fa'
+import { getDeviceCount, getActiveSessions, logoutRemoteSession } from '../../services/authSessionService'
 
 // 1. Định nghĩa "kiểu" của một Tài khoản
 interface UserAccount {
@@ -60,6 +62,7 @@ function UserManagementDashboard() {
   const [users, setUsers] = useState<UserAccount[]>([]) // (Danh sách GỐC)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deviceCounts, setDeviceCounts] = useState<{ [userId: string]: number }>({})
 
   // 💖 "Não" trạng thái MỚI cho bộ lọc 💖
   const [filter, setFilter] = useState<string>('all'); // ('all', 'staff', 'hoc_vien')
@@ -109,6 +112,21 @@ function UserManagementDashboard() {
       setLoading(false);
     }
   }
+
+  // 💖 Lấy số lượng thiết bị cho tất cả users 💖
+  useEffect(() => {
+    if (users.length > 0) {
+      const fetchAllDeviceCounts = async () => {
+        const counts: { [userId: string]: number } = {};
+        for (const user of users) {
+          const count = await getDeviceCount(user.id);
+          counts[user.id] = count;
+        }
+        setDeviceCounts(counts);
+      };
+      fetchAllDeviceCounts();
+    }
+  }, [users]);
 
   // 💖 4. "Phép thuật" MỚI: Chạy bộ lọc 💖
   useEffect(() => {
@@ -271,6 +289,7 @@ function UserManagementDashboard() {
                   <th>Email / SĐT</th>
                   <th>Ngày sinh</th>
                   <th>Vai trò</th>
+                  <th>Thiết bị</th>
                   <th>Hành động</th>
                 </tr>
               </thead>
@@ -303,6 +322,15 @@ function UserManagementDashboard() {
                         <span className={`${styles.rolePill} ${styles[user.role]} `}>
                           {dichTenVaiTro(user.role)}
                         </span>
+                      </td>
+                      <td style={{ textAlign: 'center' }}>
+                        {deviceCounts[user.id] > 0 ? (
+                          <span style={{ backgroundColor: '#e6fffa', color: '#2c7a7b', padding: '2px 8px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                            {deviceCounts[user.id]} active
+                          </span>
+                        ) : (
+                          <span style={{ color: '#ccc', fontSize: '0.75rem' }}>0</span>
+                        )}
                       </td>
                       <td>
                         <div className={styles.actionButtons}>
@@ -368,6 +396,14 @@ function UserManagementDashboard() {
                   <div><strong>Ngày cấp:</strong> <div>{editingUser.cccdDate || '---'}</div></div>
                   <div><strong>Nơi cấp:</strong> <div>{editingUser.cccdPlace || '---'}</div></div>
                   <div><strong>Địa chỉ:</strong> <div>{editingUser.address || '---'}</div></div>
+                </div>
+
+                {/* 💖 ADMIN: LOGIN SESSIONS (MỚI) 💖 */}
+                <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+                  <h3 style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                    <FaHistory style={{ color: '#0070f3' }} /> Phiên đăng nhập hoạt động
+                  </h3>
+                  <AdminSessionList userId={editingUser.id} onUpdate={() => fetchUsers()} />
                 </div>
 
                 <div className={styles.modalActions} style={{ marginTop: '20px' }}>
@@ -441,6 +477,61 @@ function UserManagementDashboard() {
     </div>
   )
 }
+
+// 💖 COMPONENT PHỤ CHO ADMIN QUẢN LÝ SESSION (MỚI) 💖
+const AdminSessionList: React.FC<{ userId: string, onUpdate: () => void }> = ({ userId, onUpdate }) => {
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchSessions = async () => {
+    setLoading(true);
+    try {
+      const data = await getActiveSessions(userId);
+      setSessions(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSessions();
+  }, [userId]);
+
+  const handleLogout = async (sid: string) => {
+    if (!confirm('Đăng xuất thiết bị này?')) return;
+    try {
+      await logoutRemoteSession(sid);
+      fetchSessions();
+      onUpdate();
+    } catch (e) {
+      alert('Lỗi khi đăng xuất.');
+    }
+  };
+
+  if (loading) return <div style={{ fontSize: '0.8rem', color: '#999' }}>Đang tải phiên...</div>;
+  if (sessions.length === 0) return <div style={{ fontSize: '0.8rem', color: '#999', fontStyle: 'italic' }}>Không có phiên hoạt động.</div>;
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', maxHeight: '200px', overflowY: 'auto', paddingRight: '5px' }}>
+      {sessions.map(s => (
+        <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px', backgroundColor: '#f9f9f9', borderRadius: '6px', border: '1px solid #eee' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {s.deviceName.toLowerCase().includes('windows') ? <FaLaptop style={{ color: '#0070f3', fontSize: '0.9rem' }} /> : <FaMobileAlt style={{ color: '#38a169', fontSize: '0.9rem' }} />}
+            <div style={{ fontSize: '0.75rem' }}>
+              <div style={{ fontWeight: 'bold' }}>{s.deviceName}</div>
+              <div style={{ color: '#666' }}>{s.ip}</div>
+            </div>
+          </div>
+          <button onClick={() => handleLogout(s.id)} style={{ color: '#e53e3e', background: 'none', border: 'none', cursor: 'pointer', padding: '5px' }} title="Đăng xuất thiết bị này">
+            <FaSignOutAlt size={14} />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // 8. "BỌC" NỘI DUNG BẰNG "LÍNH GÁC"
 export default function QuanLyTaiKhoanPage() {

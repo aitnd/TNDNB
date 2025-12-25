@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import {
-    FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus,
-    FaWifi, FaPlaneSlash
-} from 'react-icons/fa';
-import { db, auth } from '../services/firebaseClient';
+import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus, FaWifi, FaLaptop, FaMobileAlt, FaSignOutAlt } from 'react-icons/fa';
+import { TbPlaneOff } from 'react-icons/tb';
+import { db, auth } from '../services/firebaseClient'; // Ensure auth is imported
+
+
 import { collection, query, where, getDocs, doc, getDoc, updateDoc, arrayUnion, addDoc, arrayRemove, serverTimestamp, onSnapshot, documentId } from 'firebase/firestore';
 import { UserProfile } from '../types';
 import { getExamHistory, ExamResult } from '../services/historyService';
@@ -12,6 +12,7 @@ import { sendNotification } from '../services/notificationService';
 import { getDefaultAvatar } from '../services/userService';
 import ImportStudentModal from './ImportStudentModal';
 import CreateStudentModal from './CreateStudentModal';
+import { getDeviceCount, getActiveSessions, logoutRemoteSession } from '../services/authSessionService';
 
 interface Course {
     id: string;
@@ -144,6 +145,13 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [sortField, setSortField] = useState<keyof UserData | 'status' | 'recentExam' | 'time' | 'score'>('fullName');
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
+    // 💖 SESSION/DEVICE MANAGEMENT STATE (MỚI) 💖
+    const [deviceCounts, setDeviceCounts] = useState<Record<string, number>>({});
+    const [showSessionModal, setShowSessionModal] = useState(false);
+    const [sessionStudent, setSessionStudent] = useState<UserData | null>(null);
+    const [studentSessions, setStudentSessions] = useState<any[]>([]);
+    const [loadingSessions, setLoadingSessions] = useState(false);
+
     const canCreateClass = getRoleRank(userProfile.role) >= 2;
     const canManageStudents = ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role);
     const canAddTeachers = getRoleRank(userProfile.role) >= 2;
@@ -269,6 +277,59 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
 
     }, [selectedCourse]);
+
+    // 💖 Lấy số lượng thiết bị cho tất cả học viên trong lớp (MỚI) 💖
+    useEffect(() => {
+        if (students.length > 0) {
+            const fetchAllDeviceCounts = async () => {
+                const counts: Record<string, number> = {};
+                await Promise.all(students.map(async (s) => {
+                    try {
+                        const count = await getDeviceCount(s.uid);
+                        counts[s.uid] = count;
+                    } catch (e) {
+                        counts[s.uid] = 0;
+                    }
+                }));
+                setDeviceCounts(counts);
+            };
+            fetchAllDeviceCounts();
+        }
+    }, [students]);
+
+    // Handler để mở session modal
+    const handleOpenSessionModal = async (student: UserData) => {
+        setSessionStudent(student);
+        setShowSessionModal(true);
+        setLoadingSessions(true);
+        try {
+            const sessions = await getActiveSessions(student.uid);
+            setStudentSessions(sessions);
+        } catch (e) {
+            console.error("Error fetching sessions:", e);
+            setStudentSessions([]);
+        } finally {
+            setLoadingSessions(false);
+        }
+    };
+
+    // Handler để đăng xuất session từ xa
+    const handleLogoutSession = async (sessionId: string) => {
+        if (!confirm('Đăng xuất tằiết bị này?')) return;
+        try {
+            await logoutRemoteSession(sessionId);
+            // Refresh sessions
+            if (sessionStudent) {
+                const updated = await getActiveSessions(sessionStudent.uid);
+                setStudentSessions(updated);
+                // Update device count
+                setDeviceCounts(prev => ({ ...prev, [sessionStudent.uid]: updated.length }));
+            }
+        } catch (e) {
+            console.error("Error logging out session:", e);
+            alert('Lỗi khi đăng xuất.');
+        }
+    };
 
     // --- HELPER FUNCTIONS FOR LIST ---
     const getFilteredAndSortedStudents = useMemo(() => {
@@ -658,8 +719,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         try {
             const token = await auth.currentUser?.getIdToken();
             if (!token) { alert('Lỗi xác thực.'); return; }
-            const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
-            const response = await fetch(`${baseUrl}/api/admin/reset-password`, {
+            const response = await fetch('/api/admin/reset-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ targetUserId: studentId, newPassword })
@@ -687,9 +747,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 cccdPlace: cleanValue(editStudent.cccdPlace), // Updated
                 class: cleanValue(editStudent.class),       // Updated
                 courseCode: cleanValue(editStudent.courseCode),
-                role: cleanValue(editStudent.role),
-                offlineAccess: cleanValue((editStudent as any).offlineAccess),
-                updatedAt: serverTimestamp()
+                role: cleanValue(editStudent.role)
             });
             alert("Đã cập nhật thông tin học viên!");
             setShowEditStudentModal(false);
@@ -702,6 +760,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
     };
 
+    // --- OFFLINE ACCESS TOGGLE ---
     const toggleOfflineAccess = async (studentId: string, currentStatus: boolean) => {
         try {
             await updateDoc(doc(db, 'users', studentId), {
@@ -807,9 +866,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
         setIsSendingBulkNotif(true);
         try {
-            // Gửi thông báo cho từng học viên được chọn
             for (const uid of Array.from(selectedForOffline)) {
-                const student = students.find(s => s.uid === uid);
                 await sendNotification(
                     bulkNotifTitle,
                     bulkNotifMessage,
@@ -828,7 +885,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             setSelectedForOffline(new Set());
         } catch (e) {
             console.error("Bulk notification error:", e);
-            alert("Có lỗi xảy ra khi gửi thông báo.");
+            alert("Có lỗi xảy ra.");
         } finally {
             setIsSendingBulkNotif(false);
         }
@@ -860,54 +917,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             setIsBulkDeleting(false);
         }
     };
-
-    // --- Modal JSX cho Bulk Notification ---
-    const BulkNotifModalJSX = showBulkNotifModal && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
-                <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
-                    <FaPaperPlane className="text-blue-500" />
-                    Gửi thông báo cho {selectedForOffline.size} học viên
-                </h2>
-                <form onSubmit={handleBulkSendNotification} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium mb-1 dark:text-gray-300">Loại thông báo</label>
-                        <select
-                            className="w-full p-2 border rounded dark:bg-slate-700"
-                            value={bulkNotifType}
-                            onChange={e => setBulkNotifType(e.target.value as any)}
-                        >
-                            <option value="personal">Cá nhân</option>
-                            <option value="reminder">Nhắc nhở</option>
-                            <option value="special">Đặc biệt</option>
-                            <option value="attention">Chú ý</option>
-                        </select>
-                    </div>
-                    <input
-                        className="w-full p-2 border rounded dark:bg-slate-700"
-                        placeholder="Tiêu đề thông báo"
-                        value={bulkNotifTitle}
-                        onChange={e => setBulkNotifTitle(e.target.value)}
-                        required
-                    />
-                    <textarea
-                        className="w-full p-2 border rounded dark:bg-slate-700 min-h-[100px]"
-                        placeholder="Nội dung thông báo..."
-                        value={bulkNotifMessage}
-                        onChange={e => setBulkNotifMessage(e.target.value)}
-                        required
-                    />
-                    <div className="flex justify-end gap-2">
-                        <button type="button" onClick={() => setShowBulkNotifModal(false)} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Hủy</button>
-                        <button type="submit" disabled={isSendingBulkNotif} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2">
-                            {isSendingBulkNotif ? 'Đang gửi...' : <><FaPaperPlane /> Gửi</>}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>,
-        document.body
-    );
 
 
 
@@ -1355,6 +1364,67 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 )
             }
 
+            {/* 💖 SESSION MANAGEMENT MODAL (MỚI) 💖 */}
+            {
+                showSessionModal && sessionStudent && createPortal(
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onClick={() => setShowSessionModal(false)}>
+                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl p-6 max-h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setShowSessionModal(false)} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full hover:bg-gray-200"><FaTimes /></button>
+                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                <FaLaptop className="text-green-500" /> Phiên đăng nhập: <span className="text-green-600">{sessionStudent.fullName}</span>
+                            </h2>
+
+                            <div className="flex-1 overflow-y-auto">
+                                {loadingSessions ? (
+                                    <div className="p-10 text-center text-gray-500">Đang tải phiên đăng nhập...</div>
+                                ) : studentSessions.length === 0 ? (
+                                    <div className="p-10 text-center text-gray-500 italic">Học viên này không có phiên đăng nhập nào đang hoạt động.</div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {studentSessions.map((session: any) => {
+                                            const loginAt = session.loginAt?.toDate ? new Date(session.loginAt.toDate()) : null;
+                                            const lastActive = session.lastActive?.toDate ? new Date(session.lastActive.toDate()) : null;
+                                            const isMobile = session.platform === 'mobile' || session.platform === 'capacitor';
+                                            return (
+                                                <div key={session.id} className="bg-gray-50 dark:bg-slate-700/50 rounded-lg p-4 border border-gray-200 dark:border-slate-600">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={`p-2 rounded-full ${isMobile ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'}`}>
+                                                                {isMobile ? <FaMobileAlt size={16} /> : <FaLaptop size={16} />}
+                                                            </div>
+                                                            <div>
+                                                                <p className="font-medium text-gray-900 dark:text-gray-100">
+                                                                    {session.deviceName || 'Unknown Device'}
+                                                                    {session.platform === 'electron' && <span className="ml-2 text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">Windows App</span>}
+                                                                </p>
+                                                                <p className="text-xs text-gray-500">{session.browser || session.userAgent || 'Unknown Browser'}</p>
+                                                                <p className="text-xs text-gray-400">IP: {session.ip || 'Unknown'}</p>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => handleLogoutSession(session.id)}
+                                                            className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition flex items-center gap-1 text-xs font-medium"
+                                                            title="Đăng xuất thiết bị này"
+                                                        >
+                                                            <FaSignOutAlt /> Đăng xuất
+                                                        </button>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 text-xs text-gray-500 mt-2 pt-2 border-t border-gray-200 dark:border-slate-600">
+                                                        <span>Đăng nhập: {loginAt ? loginAt.toLocaleString('vi-VN') : '--'}</span>
+                                                        <span>Hoạt động: {lastActive ? lastActive.toLocaleString('vi-VN') : '--'}</span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>,
+                    document.body
+                )
+            }
+
             {/* EDIT STUDENT MODAL */}
             {
                 showEditStudentModal && editStudent && createPortal(
@@ -1719,14 +1789,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                             </button>
                                                         )}
 
-                                                        <button
-                                                            onClick={() => toggleOfflineAccess(s.uid, !!(s as any).offlineAccess)}
-                                                            className={`p-1.5 rounded text-xs flex items-center gap-1 ${(s as any).offlineAccess ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-gray-400 bg-gray-50 hover:bg-gray-100'}`}
-                                                            title={(s as any).offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}
-                                                        >
-                                                            {(s as any).offlineAccess ? <FaWifi /> : <FaPlaneSlash />}
-                                                        </button>
-
                                                         <button onClick={() => { setHistoryStudent(s); setShowHistoryModal(true); }} className="text-purple-600 bg-purple-50 hover:bg-purple-100 p-1.5 rounded text-xs flex items-center gap-1" title="Xem lịch sử">
                                                             <FaHistory />
                                                         </button>
@@ -1772,6 +1834,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                             <th onClick={() => handleSort('score')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
                                                 <div className="flex items-center">Điểm {getSortIcon('score')}</div>
                                             </th>
+                                            <th className="px-4 py-3 text-center">Thiết bị</th>
                                             <th className="px-4 py-3 text-center rounded-r-lg">Hành động</th>
                                         </tr>
                                     </thead>
@@ -1814,6 +1877,18 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                     </td>
                                                     <td className="px-4 py-3 text-gray-500">{result.time}</td>
                                                     <td className="px-4 py-3 font-bold text-teal-600">{result.score}</td>
+                                                    {/* 💖 CỘT THIẾT BỊ (MỚI) 💖 */}
+                                                    <td className="px-4 py-3 text-center">
+                                                        <button
+                                                            onClick={() => handleOpenSessionModal(s)}
+                                                            className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition ${(deviceCounts[s.uid] || 0) > 0 ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                                                                }`}
+                                                            title="Quản lý phiên đăng nhập"
+                                                        >
+                                                            <FaLaptop className="text-xs" />
+                                                            {deviceCounts[s.uid] || 0}
+                                                        </button>
+                                                    </td>
                                                     <td className="px-4 py-3 text-center">
                                                         <div className="flex items-center justify-center gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                                                             <button onClick={() => handleOpenNotifModal('user', s.uid, s.fullName)} className="text-yellow-500 hover:bg-yellow-50 p-2 rounded-lg transition" title="Gửi tin nhắn"><FaPaperPlane /></button>
@@ -1824,19 +1899,20 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                                 <button onClick={() => handleResetPassword(s.uid, s.fullName)} className="text-yellow-500 hover:bg-yellow-50 p-2 rounded-lg transition" title="Reset Mật khẩu"><FaKey /></button>
                                                             )}
 
-                                                            <button
-                                                                onClick={() => toggleOfflineAccess(s.uid, !!(s as any).offlineAccess)}
-                                                                className={`p-2 rounded-lg transition ${(s as any).offlineAccess ? 'text-green-500 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-50'}`}
-                                                                title={(s as any).offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}
-                                                            >
-                                                                {(s as any).offlineAccess ? <FaWifi /> : <FaPlaneSlash />}
-                                                            </button>
-
                                                             <button onClick={() => { setHistoryStudent(s); setShowHistoryModal(true); }} className="text-purple-500 hover:bg-purple-50 p-2 rounded-lg transition" title="Xem lịch sử thi"><FaHistory /></button>
 
                                                             {canManageStudents && (
                                                                 <button onClick={() => handleRemoveStudentFromClass(s.uid)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition" title="Xóa khỏi lớp"><FaTrash /></button>
                                                             )}
+
+                                                            {/* Offline Toggle */}
+                                                            <button
+                                                                onClick={() => toggleOfflineAccess(s.uid, !!(s as any).offlineAccess)}
+                                                                className={`p-2 rounded-lg transition ${(s as any).offlineAccess ? 'text-green-500 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-50'}`}
+                                                                title={(s as any).offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}
+                                                            >
+                                                                {(s as any).offlineAccess ? <FaWifi /> : <TbPlaneOff />}
+                                                            </button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -1844,7 +1920,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                         })}
                                         {students.length === 0 && (
                                             <tr>
-                                                <td colSpan={6} className="text-center py-10 text-gray-400 italic">Lớp chưa có học viên nào.</td>
+                                                <td colSpan={8} className="text-center py-10 text-gray-400 italic">Lớp chưa có học viên nào.</td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -1872,7 +1948,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                             className="bg-gray-500 text-white px-3 py-1.5 rounded-full hover:bg-gray-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
                                             title="Tắt Offline"
                                         >
-                                            <FaPlaneSlash />
+                                            <TbPlaneOff />
                                         </button>
 
                                         <div className="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1" />
@@ -1920,6 +1996,54 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                             <FaTimes />
                                         </button>
                                     </div>
+                                )}
+
+                                {/* Bulk Notification Modal */}
+                                {showBulkNotifModal && createPortal(
+                                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+                                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
+                                            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
+                                                <FaPaperPlane className="text-blue-500" />
+                                                Gửi thông báo cho {selectedForOffline.size} học viên
+                                            </h2>
+                                            <form onSubmit={handleBulkSendNotification} className="space-y-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium mb-1 dark:text-gray-300">Loại thông báo</label>
+                                                    <select
+                                                        className="w-full p-2 border rounded dark:bg-slate-700"
+                                                        value={bulkNotifType}
+                                                        onChange={e => setBulkNotifType(e.target.value as any)}
+                                                    >
+                                                        <option value="personal">Cá nhân</option>
+                                                        <option value="reminder">Nhắc nhở</option>
+                                                        <option value="special">Đặc biệt</option>
+                                                        <option value="attention">Chú ý</option>
+                                                    </select>
+                                                </div>
+                                                <input
+                                                    className="w-full p-2 border rounded dark:bg-slate-700"
+                                                    placeholder="Tiêu đề thông báo"
+                                                    value={bulkNotifTitle}
+                                                    onChange={e => setBulkNotifTitle(e.target.value)}
+                                                    required
+                                                />
+                                                <textarea
+                                                    className="w-full p-2 border rounded dark:bg-slate-700 min-h-[100px]"
+                                                    placeholder="Nội dung thông báo..."
+                                                    value={bulkNotifMessage}
+                                                    onChange={e => setBulkNotifMessage(e.target.value)}
+                                                    required
+                                                />
+                                                <div className="flex justify-end gap-2">
+                                                    <button type="button" onClick={() => setShowBulkNotifModal(false)} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Hủy</button>
+                                                    <button type="submit" disabled={isSendingBulkNotif} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2">
+                                                        {isSendingBulkNotif ? 'Đang gửi...' : <><FaPaperPlane /> Gửi</>}
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>,
+                                    document.body
                                 )}
                             </div>
 

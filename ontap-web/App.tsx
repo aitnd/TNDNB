@@ -37,6 +37,7 @@ import AnalyticsPage from './components/AnalyticsPage';
 import DownloadAppPage from './components/DownloadAppPage';
 import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
 import UsageConfigPanel from './components/UsageConfigPanel';
+import LoginHistoryScreen from './components/LoginHistoryScreen';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
@@ -269,6 +270,34 @@ const AppContent: React.FC = () => {
     };
   }, [licenses, navigate, location.pathname]);
 
+  // 💖 KIỂM TRA TRẠNG THÁI PHIÊN ĐĂNG NHẬP (MỚI) 💖
+  useEffect(() => {
+    if (!userProfile) return;
+
+    import('./services/authSessionService').then(({ checkCurrentSessionStatus, updateLastActive }) => {
+      // Cập nhật hoạt động cuối cùng
+      updateLastActive();
+
+      // Lắng nghe trạng thái session
+      const unsubSession = checkCurrentSessionStatus((isLoggedOut) => {
+        if (isLoggedOut) {
+          import('sweetalert2').then(({ default: Swal }) => {
+            Swal.fire({
+              title: 'Phiên đăng nhập hết hạn',
+              text: 'Tài khoản của bạn đã được đăng xuất từ thiết bị khác hoặc bởi quản trị viên.',
+              icon: 'warning',
+              confirmButtonText: 'Đồng ý'
+            }).then(() => {
+              handleLogout();
+            });
+          });
+        }
+      });
+
+      return () => unsubSession();
+    });
+  }, [userProfile]);
+
   const persistSession = useCallback((
     idx: number,
     time: number,
@@ -492,6 +521,7 @@ const AppContent: React.FC = () => {
       case 'thi_truc_tuyen': navigate('/ontap/thitructuyen'); break;
       case 'download_app': navigate('/ontap/download'); break;
       case 'analytics': navigate('/ontap/thongke'); break;
+      case 'login_history': navigate('/ontap/lichsudangnhap'); break;
       default: navigate('/ontap/dashboard');
     }
   };
@@ -650,6 +680,7 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/thitructuyen" element={<ThiTrucTuyenPage />} />
           <Route path="/ontap/download" element={<DownloadAppPage />} />
           <Route path="/ontap/thongke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/lichsudangnhap" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
 
           {/* Redirects từ URL cũ có dấu gạch ngang */}
           <Route path="/ontap/lam-bai" element={<Navigate to="/ontap/lambai" replace />} />

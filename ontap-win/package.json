@@ -1,7 +1,7 @@
 {
   "name": "dao-tao-thuyen-vien",
   "private": true,
-  "version": "3.8.7",
+  "version": "3.8.8",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -55,6 +55,7 @@
   "build": {
     "appId": "com.horizon.daotaothuyenvien",
     "productName": "Ôn thi đường thủy",
+    "artifactName": "Onthi-${version}-Setup.${ext}",
     "directories": {
       "output": "release"
     },
