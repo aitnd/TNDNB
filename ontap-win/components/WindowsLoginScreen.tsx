@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../services/firebaseClient';
+import { auth, db } from '../services/firebaseClient';
+import { getOfflineUser, saveUserOffline } from '../services/offlineService';
+import { doc, getDoc } from 'firebase/firestore';
+import { UserProfile } from '../types';
+import { useAppStore } from '../stores/useAppStore';
 
 const WindowsLoginScreen: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(true); // Ghi nhớ đăng nhập mặc định bật
+    const setUserProfile = useAppStore(state => state.setUserProfile);
+    const setUserName = useAppStore(state => state.setUserName);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -15,28 +22,86 @@ const WindowsLoginScreen: React.FC = () => {
 
         try {
             let email = username.trim();
-            // Tự động thêm domain nếu nhập SBD (không có @)
             if (!email.includes('@')) {
                 email = `${email}@daotaothuyenvien.com`;
             }
 
-            await signInWithEmailAndPassword(auth, email, password);
-            // App.tsx auth listener handles the rest
+            if (navigator.onLine) {
+                // Đăng nhập Online
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const firebaseUser = userCredential.user;
+
+                // Lấy profile từ Firestore và lưu offline
+                const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+                if (userDoc.exists()) {
+                    const profile = { id: userDoc.id, ...userDoc.data() } as UserProfile;
+                    if (profile.offlineAccess) {
+                        await saveUserOffline(profile, password, email);
+                    }
+                    // Lưu session nếu ghi nhớ đăng nhập
+                    if (rememberMe) {
+                        localStorage.setItem('rememberSession', JSON.stringify({
+                            uid: firebaseUser.uid,
+                            email: email,
+                            timestamp: Date.now()
+                        }));
+                    }
+                }
+            } else {
+                // Đăng nhập Offline
+                console.log("Attempting offline login for:", email);
+                const offlineUser = await getOfflineUser(email);
+
+                if (!offlineUser) {
+                    console.warn("No offline data found for this email.");
+                    throw { code: 'auth/offline-no-data' };
+                }
+
+                if (offlineUser.hashedPassword === btoa(password)) {
+                    console.log("Offline login successful");
+                    const profile: UserProfile = {
+                        id: offlineUser.id,
+                        full_name: offlineUser.full_name,
+                        email: offlineUser.email,
+                        role: offlineUser.role as any,
+                        offlineAccess: true
+                    };
+                    setUserProfile(profile);
+                    setUserName(profile.full_name);
+                    // Lưu session nếu ghi nhớ đăng nhập
+                    if (rememberMe) {
+                        localStorage.setItem('rememberSession', JSON.stringify({
+                            uid: offlineUser.id,
+                            email: email,
+                            timestamp: Date.now(),
+                            offline: true
+                        }));
+                    }
+                } else {
+                    console.warn("Offline password mismatch");
+                    throw { code: 'auth/offline-wrong-password' };
+                }
+            }
         } catch (err: any) {
             console.error("Login Error:", err);
             let msg = 'Đăng nhập thất bại.';
-            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' || err.code === 'auth/offline-wrong-password') {
                 msg = 'Sai tên đăng nhập hoặc mật khẩu.';
             } else if (err.code === 'auth/too-many-requests') {
                 msg = 'Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau.';
             } else if (err.code === 'auth/network-request-failed') {
                 msg = 'Lỗi kết nối mạng. Vui lòng kiểm tra Internet.';
+            } else if (err.code === 'auth/offline-no-data') {
+                msg = 'Tài khoản chưa từng đăng nhập Online trên máy này hoặc chưa được cấp quyền Offline.';
+            } else if (err.code === 'auth/offline-failed') {
+                msg = 'Lỗi đăng nhập Offline.';
             } else {
-                msg = `Lỗi: ${err.message}`;
+                msg = `Lỗi: ${err.message || err.code}`;
             }
             setError(msg);
-            alert(msg); // Force alert to ensure user sees it
-        } finally {
+            alert(msg);
+        }
+        finally {
             setLoading(false);
         }
     };
@@ -95,7 +160,19 @@ const WindowsLoginScreen: React.FC = () => {
                                     />
                                 </div>
                                 {error && <p className="text-red-500 text-xs text-center font-bold bg-red-50 p-2 rounded">{error}</p>}
-                                <div className="flex justify-end mt-6">
+                                <div className="flex items-center mt-2">
+                                    <input
+                                        type="checkbox"
+                                        id="rememberMe"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                    />
+                                    <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700">
+                                        Ghi nhớ đăng nhập
+                                    </label>
+                                </div>
+                                <div className="flex justify-end mt-4">
                                     <button
                                         type="submit"
                                         disabled={loading}

@@ -1,7 +1,24 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const { autoUpdater } = require('electron-updater');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const log = require('electron-log');
+
+// Cấu hình log
+log.transports.file.level = 'info';
+log.info('App starting...');
 const isDev = process.env.ELECTRON_MODE === 'true';
+
+// Chỉ load autoUpdater khi không phải dev mode
+let autoUpdater = null;
+if (!isDev) {
+    try {
+        autoUpdater = require('electron-updater').autoUpdater;
+        autoUpdater.logger = log;
+        autoUpdater.autoDownload = true;
+        autoUpdater.autoInstallOnAppQuit = true;
+    } catch (e) {
+        log.error('Failed to load autoUpdater:', e);
+    }
+}
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -28,7 +45,7 @@ function createWindow() {
         width: 1280,
         height: 800,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            preload: path.join(__dirname, 'preload.cjs'),
             nodeIntegration: true,
             contextIsolation: false, // For easier IPC in this specific legacy app structure
             webSecurity: false // Often needed for local file access in simple apps, though less secure
@@ -49,11 +66,17 @@ function createWindow() {
         };
         loadDevUrl();
     } else {
-        mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+        const indexPath = path.join(__dirname, '../dist/index.html');
+        log.info('Loading file:', indexPath);
+        mainWindow.loadFile(indexPath).catch(err => {
+            log.error('Failed to load index.html:', err);
+        });
     }
-    // mainWindow.webContents.openDevTools(); // Mở DevTools để kiểm tra lỗi
 
-    // Thêm phím tắt F12 để bật/tắt DevTools
+    // Mở DevTools mặc định để kiểm tra lỗi trắng màn hình - Đã tắt sau khi ổn định
+    // mainWindow.webContents.openDevTools(); 
+
+    // Thêm phím tắt F12 để bật/tắt DevTools - Đã vô hiệu hóa theo yêu cầu
     /*
     mainWindow.webContents.on('before-input-event', (event, input) => {
         if (input.key === 'F12' && input.type === 'keyDown') {
@@ -83,30 +106,55 @@ function createWindow() {
         return app.getVersion();
     });
 
+    ipcMain.handle('get-resources-path', () => {
+        return process.resourcesPath;
+    });
+
     // --- AUTO UPDATE HANDLERS ---
     ipcMain.on('download-update', (event, url) => {
         console.log('Download update requested from:', url);
         // If url is provided, we can try to set it, but electron-updater 
         // usually expects a directory with yml files.
         // For now, let's just trigger the check.
-        autoUpdater.checkForUpdatesAndDownload();
+        if (autoUpdater) autoUpdater.checkForUpdatesAndDownload();
     });
 
     ipcMain.on('install-update', () => {
-        autoUpdater.quitAndInstall();
+        if (autoUpdater) autoUpdater.quitAndInstall();
     });
 
-    autoUpdater.on('download-progress', (progressObj) => {
-        mainWindow.webContents.send('update-progress', progressObj.percent);
-    });
+    if (autoUpdater) {
+        autoUpdater.on('download-progress', (progressObj) => {
+            mainWindow.webContents.send('update-progress', progressObj.percent);
+            log.info(`Download progress: ${progressObj.percent}%`);
+        });
 
-    autoUpdater.on('update-downloaded', () => {
-        mainWindow.webContents.send('update-downloaded');
-    });
+        autoUpdater.on('update-downloaded', (info) => {
+            log.info('Update downloaded:', info.version);
+            mainWindow.webContents.send('update-downloaded');
+            // Hiện thông báo cho người dùng
+            dialog.showMessageBox(mainWindow, {
+                type: 'info',
+                title: 'Cập nhật sẵn sàng',
+                message: `Phiên bản ${info.version} đã được tải xuống. Nhấn "Khởi động lại" để cài đặt.`,
+                buttons: ['Khởi động lại', 'Để sau']
+            }).then((result) => {
+                if (result.response === 0) {
+                    autoUpdater.quitAndInstall();
+                }
+            });
+        });
 
-    autoUpdater.on('error', (err) => {
-        mainWindow.webContents.send('update-error', err.message);
-    });
+        autoUpdater.on('error', (err) => {
+            log.error('AutoUpdater error:', err);
+            mainWindow.webContents.send('update-error', err.message);
+        });
+
+        autoUpdater.on('update-available', (info) => {
+            log.info('Update available:', info.version);
+            mainWindow.webContents.send('update-available', info.version);
+        });
+    }
 
     // --- FIX FIREBASE REFERER ERROR ---
     // Electron (file:// or custom protocol) doesn't send Referer by default.
@@ -125,6 +173,16 @@ function createWindow() {
 app.whenReady().then(() => {
     setupAutoLaunch();
     createWindow();
+
+    // Tự động kiểm tra update sau 3 giây (để app load xong trước)
+    if (autoUpdater) {
+        setTimeout(() => {
+            log.info('Checking for updates...');
+            autoUpdater.checkForUpdates().catch(err => {
+                log.error('Check for updates failed:', err);
+            });
+        }, 3000);
+    }
 
     app.on('activate', function () {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();

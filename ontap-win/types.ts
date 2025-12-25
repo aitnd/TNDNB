@@ -98,4 +98,6 @@ export interface UserProfile {
   courseCode?: string; // Keeping for compatibility if needed, but primary is courseName
   defaultLicenseId?: string; // License ID assigned by class
   isVerified?: boolean;
+  offlineAccess?: boolean; // Quyền đăng nhập offline
+  updatedAt?: number; // Dấu thời gian cập nhật cuối cùng
 }

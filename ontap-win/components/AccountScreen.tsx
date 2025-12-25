@@ -2,7 +2,7 @@ import React, { useState, useEffect, FormEvent, useMemo } from 'react';
 import { UserProfile } from '../types';
 import { db } from '../services/firebaseClient';
 import { getDefaultAvatar, uploadAvatar } from '../services/userService';
-import { doc, updateDoc, collection, query, orderBy, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, updateDoc, collection, query, orderBy, getDocs, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes, FaKey, FaLock } from 'react-icons/fa';
 import { auth } from '../services/firebaseClient';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
@@ -181,7 +181,8 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                 cccd: clean(myInfo.cccd),
                 cccdDate: clean(myInfo.cccdDate),
                 cccdPlace: clean(myInfo.cccdPlace),
-                class: clean(myInfo.class) // Allow student to update their self-filled class
+                class: clean(myInfo.class), // Allow student to update their self-filled class
+                updatedAt: serverTimestamp()
             });
             alert('Cập nhật thông tin thành công!');
         } catch (error) {
@@ -218,7 +219,8 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                 cccd: clean(editingUser.cccd),
                 cccdDate: clean(editingUser.cccdDate),
                 cccdPlace: clean(editingUser.cccdPlace),
-                address: clean(editingUser.address)
+                address: clean(editingUser.address),
+                updatedAt: serverTimestamp()
             });
             alert('Đã cập nhật!');
             setShowEditModal(false);
@@ -339,7 +341,8 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
 
             // Update Firestore
             await updateDoc(doc(db, 'users', userProfile.id), {
-                photoURL: publicUrl
+                photoURL: publicUrl,
+                updatedAt: serverTimestamp()
             });
 
             // Update Local State

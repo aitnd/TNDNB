@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus } from 'react-icons/fa';
-import { db, auth } from '../services/firebaseClient'; // Ensure auth is imported
-
-
+import {
+    FaUsers, FaChalkboardTeacher, FaPlus, FaArrowLeft, FaSearch, FaTrash, FaUserTie, FaHistory, FaTimes, FaSchool, FaThLarge, FaList, FaPaperPlane, FaGraduationCap, FaEdit, FaSave, FaSort, FaSortUp, FaSortDown, FaCheckCircle, FaKey, FaFileExcel, FaUserPlus,
+    FaWifi, FaPlaneSlash
+} from 'react-icons/fa';
+import { db, auth } from '../services/firebaseClient';
 import { collection, query, where, getDocs, doc, getDoc, updateDoc, arrayUnion, addDoc, arrayRemove, serverTimestamp, onSnapshot, documentId } from 'firebase/firestore';
 import { UserProfile } from '../types';
 import { getExamHistory, ExamResult } from '../services/historyService';
@@ -686,7 +687,9 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 cccdPlace: cleanValue(editStudent.cccdPlace), // Updated
                 class: cleanValue(editStudent.class),       // Updated
                 courseCode: cleanValue(editStudent.courseCode),
-                role: cleanValue(editStudent.role)
+                role: cleanValue(editStudent.role),
+                offlineAccess: cleanValue((editStudent as any).offlineAccess),
+                updatedAt: serverTimestamp()
             });
             alert("Đã cập nhật thông tin học viên!");
             setShowEditStudentModal(false);
@@ -699,7 +702,212 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
     };
 
+    const toggleOfflineAccess = async (studentId: string, currentStatus: boolean) => {
+        try {
+            await updateDoc(doc(db, 'users', studentId), {
+                offlineAccess: !currentStatus,
+                updatedAt: serverTimestamp()
+            });
+        } catch (e) {
+            console.error("Error toggling offline access:", e);
+            alert("Lỗi khi cập nhật quyền Offline.");
+        }
+    };
 
+    // Bulk toggle offline cho nhiều học viên
+    const [selectedForOffline, setSelectedForOffline] = useState<Set<string>>(new Set());
+    const [isBulkOfflineToggling, setIsBulkOfflineToggling] = useState(false);
+
+    const toggleSelectForOffline = (uid: string) => {
+        const newSet = new Set(selectedForOffline);
+        if (newSet.has(uid)) newSet.delete(uid);
+        else newSet.add(uid);
+        setSelectedForOffline(newSet);
+    };
+
+    const toggleSelectAllForOffline = () => {
+        if (selectedForOffline.size === paginatedStudents.length && paginatedStudents.length > 0) {
+            setSelectedForOffline(new Set());
+        } else {
+            setSelectedForOffline(new Set(paginatedStudents.map(s => s.uid)));
+        }
+    };
+
+    const handleBulkToggleOffline = async (enableOffline: boolean) => {
+        if (selectedForOffline.size === 0) return;
+        if (!confirm(`Bạn có chắc muốn ${enableOffline ? 'BẬT' : 'TẮT'} quyền Offline cho ${selectedForOffline.size} học viên?`)) return;
+
+        setIsBulkOfflineToggling(true);
+        try {
+            const promises = Array.from(selectedForOffline).map(uid =>
+                updateDoc(doc(db, 'users', uid), {
+                    offlineAccess: enableOffline,
+                    updatedAt: serverTimestamp()
+                })
+            );
+            await Promise.all(promises);
+            alert(`Đã ${enableOffline ? 'bật' : 'tắt'} Offline cho ${selectedForOffline.size} học viên!`);
+            setSelectedForOffline(new Set());
+        } catch (e) {
+            console.error("Bulk offline toggle error:", e);
+            alert("Có lỗi xảy ra.");
+        } finally {
+            setIsBulkOfflineToggling(false);
+        }
+    };
+
+    // Bulk Reset Password
+    const [isBulkResetting, setIsBulkResetting] = useState(false);
+    const handleBulkResetPassword = async () => {
+        if (selectedForOffline.size === 0) return;
+        const defaultPassword = prompt(`Nhập mật khẩu mới cho ${selectedForOffline.size} học viên:`, '123456');
+        if (!defaultPassword || defaultPassword.length < 6) {
+            if (defaultPassword !== null) alert('Mật khẩu phải có ít nhất 6 ký tự.');
+            return;
+        }
+
+        setIsBulkResetting(true);
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            if (!token) { alert('Lỗi xác thực.'); return; }
+
+            let success = 0, failed = 0;
+            for (const uid of Array.from(selectedForOffline)) {
+                try {
+                    const response = await fetch('/api/admin/reset-password', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ targetUserId: uid, newPassword: defaultPassword })
+                    });
+                    if (response.ok) success++;
+                    else failed++;
+                } catch { failed++; }
+            }
+
+            alert(`Hoàn thành: ${success} thành công, ${failed} thất bại.`);
+            setSelectedForOffline(new Set());
+        } catch (e) {
+            console.error("Bulk reset password error:", e);
+            alert("Có lỗi xảy ra.");
+        } finally {
+            setIsBulkResetting(false);
+        }
+    };
+
+    // Bulk Send Notification
+    const [showBulkNotifModal, setShowBulkNotifModal] = useState(false);
+    const [bulkNotifTitle, setBulkNotifTitle] = useState('');
+    const [bulkNotifMessage, setBulkNotifMessage] = useState('');
+    const [bulkNotifType, setBulkNotifType] = useState<'class' | 'system' | 'personal' | 'reminder' | 'special' | 'attention'>('personal');
+    const [isSendingBulkNotif, setIsSendingBulkNotif] = useState(false);
+
+    const handleBulkSendNotification = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (selectedForOffline.size === 0 || !userProfile.id) return;
+
+        setIsSendingBulkNotif(true);
+        try {
+            // Gửi thông báo cho từng học viên được chọn
+            for (const uid of Array.from(selectedForOffline)) {
+                const student = students.find(s => s.uid === uid);
+                await sendNotification(
+                    bulkNotifTitle,
+                    bulkNotifMessage,
+                    bulkNotifType,
+                    'user',
+                    uid,
+                    userProfile.id,
+                    userProfile.full_name,
+                    null
+                );
+            }
+            alert(`Đã gửi thông báo cho ${selectedForOffline.size} học viên!`);
+            setShowBulkNotifModal(false);
+            setBulkNotifTitle('');
+            setBulkNotifMessage('');
+            setSelectedForOffline(new Set());
+        } catch (e) {
+            console.error("Bulk notification error:", e);
+            alert("Có lỗi xảy ra khi gửi thông báo.");
+        } finally {
+            setIsSendingBulkNotif(false);
+        }
+    };
+
+    // Bulk Delete (Remove from class)
+    const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+    const handleBulkRemoveFromClass = async () => {
+        if (selectedForOffline.size === 0) return;
+        if (!confirm(`Bạn có chắc muốn xóa ${selectedForOffline.size} học viên khỏi lớp?`)) return;
+
+        setIsBulkDeleting(true);
+        try {
+            const promises = Array.from(selectedForOffline).map(uid =>
+                updateDoc(doc(db, 'users', uid), {
+                    courseId: null,
+                    courseName: null,
+                    class: null,
+                    isVerified: false
+                })
+            );
+            await Promise.all(promises);
+            alert(`Đã xóa ${selectedForOffline.size} học viên khỏi lớp!`);
+            setSelectedForOffline(new Set());
+        } catch (e) {
+            console.error("Bulk delete error:", e);
+            alert("Có lỗi xảy ra.");
+        } finally {
+            setIsBulkDeleting(false);
+        }
+    };
+
+    // --- Modal JSX cho Bulk Notification ---
+    const BulkNotifModalJSX = showBulkNotifModal && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
+                <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
+                    <FaPaperPlane className="text-blue-500" />
+                    Gửi thông báo cho {selectedForOffline.size} học viên
+                </h2>
+                <form onSubmit={handleBulkSendNotification} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1 dark:text-gray-300">Loại thông báo</label>
+                        <select
+                            className="w-full p-2 border rounded dark:bg-slate-700"
+                            value={bulkNotifType}
+                            onChange={e => setBulkNotifType(e.target.value as any)}
+                        >
+                            <option value="personal">Cá nhân</option>
+                            <option value="reminder">Nhắc nhở</option>
+                            <option value="special">Đặc biệt</option>
+                            <option value="attention">Chú ý</option>
+                        </select>
+                    </div>
+                    <input
+                        className="w-full p-2 border rounded dark:bg-slate-700"
+                        placeholder="Tiêu đề thông báo"
+                        value={bulkNotifTitle}
+                        onChange={e => setBulkNotifTitle(e.target.value)}
+                        required
+                    />
+                    <textarea
+                        className="w-full p-2 border rounded dark:bg-slate-700 min-h-[100px]"
+                        placeholder="Nội dung thông báo..."
+                        value={bulkNotifMessage}
+                        onChange={e => setBulkNotifMessage(e.target.value)}
+                        required
+                    />
+                    <div className="flex justify-end gap-2">
+                        <button type="button" onClick={() => setShowBulkNotifModal(false)} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Hủy</button>
+                        <button type="submit" disabled={isSendingBulkNotif} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2">
+                            {isSendingBulkNotif ? 'Đang gửi...' : <><FaPaperPlane /> Gửi</>}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>,
+        document.body
+    );
 
 
 
@@ -1511,6 +1719,14 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                             </button>
                                                         )}
 
+                                                        <button
+                                                            onClick={() => toggleOfflineAccess(s.uid, !!(s as any).offlineAccess)}
+                                                            className={`p-1.5 rounded text-xs flex items-center gap-1 ${(s as any).offlineAccess ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-gray-400 bg-gray-50 hover:bg-gray-100'}`}
+                                                            title={(s as any).offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}
+                                                        >
+                                                            {(s as any).offlineAccess ? <FaWifi /> : <FaPlaneSlash />}
+                                                        </button>
+
                                                         <button onClick={() => { setHistoryStudent(s); setShowHistoryModal(true); }} className="text-purple-600 bg-purple-50 hover:bg-purple-100 p-1.5 rounded text-xs flex items-center gap-1" title="Xem lịch sử">
                                                             <FaHistory />
                                                         </button>
@@ -1532,7 +1748,16 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                 <table className="w-full text-left text-sm">
                                     <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-slate-700 dark:text-gray-300 select-none">
                                         <tr>
-                                            <th onClick={() => handleSort('fullName')} className="px-4 py-3 rounded-l-lg cursor-pointer hover:bg-gray-200 transition">
+                                            <th className="px-2 py-3 w-10">
+                                                <input
+                                                    type="checkbox"
+                                                    className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                                                    checked={selectedForOffline.size === paginatedStudents.length && paginatedStudents.length > 0}
+                                                    onChange={toggleSelectAllForOffline}
+                                                    title="Chọn tất cả"
+                                                />
+                                            </th>
+                                            <th onClick={() => handleSort('fullName')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
                                                 <div className="flex items-center">Học viên {getSortIcon('fullName')}</div>
                                             </th>
                                             <th onClick={() => handleSort('birthDate')} className="px-4 py-3 cursor-pointer hover:bg-gray-200 transition">
@@ -1555,6 +1780,14 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                             const result = studentLatestResults[s.uid] || { type: '--', time: '--', score: '--' };
                                             return (
                                                 <tr key={s.uid} className="group hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
+                                                    <td className="px-2 py-3 w-10">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+                                                            checked={selectedForOffline.has(s.uid)}
+                                                            onChange={() => toggleSelectForOffline(s.uid)}
+                                                        />
+                                                    </td>
                                                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                                         <img
                                                             src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`}
@@ -1591,6 +1824,14 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                                 <button onClick={() => handleResetPassword(s.uid, s.fullName)} className="text-yellow-500 hover:bg-yellow-50 p-2 rounded-lg transition" title="Reset Mật khẩu"><FaKey /></button>
                                                             )}
 
+                                                            <button
+                                                                onClick={() => toggleOfflineAccess(s.uid, !!(s as any).offlineAccess)}
+                                                                className={`p-2 rounded-lg transition ${(s as any).offlineAccess ? 'text-green-500 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-50'}`}
+                                                                title={(s as any).offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}
+                                                            >
+                                                                {(s as any).offlineAccess ? <FaWifi /> : <FaPlaneSlash />}
+                                                            </button>
+
                                                             <button onClick={() => { setHistoryStudent(s); setShowHistoryModal(true); }} className="text-purple-500 hover:bg-purple-50 p-2 rounded-lg transition" title="Xem lịch sử thi"><FaHistory /></button>
 
                                                             {canManageStudents && (
@@ -1608,6 +1849,78 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                         )}
                                     </tbody>
                                 </table>
+
+                                {/* Bulk Action Bar - Mở rộng */}
+                                {selectedForOffline.size > 0 && (
+                                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-2 border border-gray-200 dark:border-slate-700 flex-wrap justify-center max-w-[95vw]">
+                                        <span className="font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                                            Đã chọn <span className="text-blue-600 font-bold">{selectedForOffline.size}</span>
+                                        </span>
+
+                                        {/* Offline Toggle */}
+                                        <button
+                                            onClick={() => handleBulkToggleOffline(true)}
+                                            disabled={isBulkOfflineToggling}
+                                            className="bg-green-500 text-white px-3 py-1.5 rounded-full hover:bg-green-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
+                                            title="Bật Offline"
+                                        >
+                                            <FaWifi />
+                                        </button>
+                                        <button
+                                            onClick={() => handleBulkToggleOffline(false)}
+                                            disabled={isBulkOfflineToggling}
+                                            className="bg-gray-500 text-white px-3 py-1.5 rounded-full hover:bg-gray-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
+                                            title="Tắt Offline"
+                                        >
+                                            <FaPlaneSlash />
+                                        </button>
+
+                                        <div className="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1" />
+
+                                        {/* Reset Password */}
+                                        {canManageStudents && (
+                                            <button
+                                                onClick={handleBulkResetPassword}
+                                                disabled={isBulkResetting}
+                                                className="bg-yellow-500 text-white px-3 py-1.5 rounded-full hover:bg-yellow-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
+                                                title="Reset mật khẩu"
+                                            >
+                                                <FaKey /> Reset
+                                            </button>
+                                        )}
+
+                                        {/* Send Notification */}
+                                        <button
+                                            onClick={() => setShowBulkNotifModal(true)}
+                                            className="bg-blue-500 text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transition flex items-center gap-1 text-sm"
+                                            title="Gửi thông báo"
+                                        >
+                                            <FaPaperPlane /> Thông báo
+                                        </button>
+
+                                        {/* Remove from Class */}
+                                        {canManageStudents && (
+                                            <button
+                                                onClick={handleBulkRemoveFromClass}
+                                                disabled={isBulkDeleting}
+                                                className="bg-red-500 text-white px-3 py-1.5 rounded-full hover:bg-red-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
+                                                title="Xóa khỏi lớp"
+                                            >
+                                                <FaTrash /> Xóa
+                                            </button>
+                                        )}
+
+                                        <div className="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1" />
+
+                                        <button
+                                            onClick={() => setSelectedForOffline(new Set())}
+                                            className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700"
+                                            title="Bỏ chọn tất cả"
+                                        >
+                                            <FaTimes />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
 

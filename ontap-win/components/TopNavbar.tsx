@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download } from 'lucide-react';
+import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff } from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
 
@@ -141,6 +141,13 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
 
                 {/* RIGHT: User Info & Logout */}
                 <div className="flex items-center gap-3 md:gap-4 ml-4 flex-shrink-0">
+                    <div className="flex items-center gap-2 px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-xs font-medium">
+                        {navigator.onLine ? (
+                            <><Wifi size={14} className="text-green-500" /> <span className="text-green-600 dark:text-green-400 hidden sm:inline">Trực tuyến</span></>
+                        ) : (
+                            <><WifiOff size={14} className="text-red-500" /> <span className="text-red-600 dark:text-red-400 hidden sm:inline">Ngoại tuyến</span></>
+                        )}
+                    </div>
                     {userProfile ? (
                         <>
                             <div className="mr-2">

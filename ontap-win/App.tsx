@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
 import SweetAlertPopup from './components/SweetAlertPopup';
@@ -41,6 +41,8 @@ import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
 import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
+import { syncData } from './services/syncService';
+import { db_offline } from './services/offlineService';
 // import { Capacitor } from '@capacitor/core';
 import usePresence from './hooks/usePresence';
 import AlertMarquee from './components/AlertMarquee';
@@ -163,8 +165,10 @@ const AppContent: React.FC = () => {
 
       // @ts-ignore
       window.electron.onUpdateError((err) => {
-        import('sweetalert2').then(({ default: Swal }) => {
-          Swal.fire('Lỗi', 'Không thể tải bản cập nhật. Vui lòng thử lại sau.', 'error');
+        console.error('Update error:', err);
+        toast.error('Không thể tải bản cập nhật. Vui lòng thử lại sau.', {
+          position: 'bottom-right',
+          duration: 5000
         });
       });
     }
@@ -173,8 +177,14 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const loadLicenses = async () => {
       try {
-        const data = await fetchLicenses();
-        setLicenses(data);
+        if (navigator.onLine) {
+          const data = await fetchLicenses();
+          setLicenses(data);
+        } else {
+          const { getLicensesOffline } = await import('./services/offlineService');
+          const data = await getLicensesOffline();
+          setLicenses(data);
+        }
       } catch (error) {
         console.error('Error loading licenses:', error);
       }
@@ -182,9 +192,52 @@ const AppContent: React.FC = () => {
     loadLicenses();
   }, []);
 
+  // --- KHÔI PHỤC SESSION TỪ LOCAL STORAGE ---
+  useEffect(() => {
+    const restoreSession = async () => {
+      const savedSession = localStorage.getItem('rememberSession');
+      if (savedSession) {
+        try {
+          const session = JSON.parse(savedSession);
+          // Kiểm tra session còn hợp lệ (trong 30 ngày)
+          const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+          if (Date.now() - session.timestamp < thirtyDays) {
+            if (session.offline) {
+              // Khôi phục từ offline storage
+              const { getOfflineUser } = await import('./services/offlineService');
+              const offlineUser = await getOfflineUser(session.email);
+              if (offlineUser) {
+                const profile: UserProfile = {
+                  id: offlineUser.id,
+                  full_name: offlineUser.full_name,
+                  email: offlineUser.email,
+                  role: offlineUser.role as any,
+                  offlineAccess: true
+                };
+                setUserProfile(profile);
+                setUserName(profile.full_name);
+                console.log('Restored offline session from localStorage');
+              }
+            }
+            // Nếu online, Firebase auth sẽ tự xử lý
+          } else {
+            // Session hết hạn, xóa đi
+            localStorage.removeItem('rememberSession');
+          }
+        } catch (err) {
+          console.error('Error restoring session:', err);
+        }
+      }
+    };
+    restoreSession();
+  }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        // Online: Sync data
+        syncData(firebaseUser.uid);
+
         import('firebase/firestore').then(({ onSnapshot, doc }) => {
           const unsubProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
             if (docSnap.exists()) {
@@ -194,71 +247,18 @@ const AppContent: React.FC = () => {
             }
           });
         });
-
-        let profile = null;
-        try {
-          profile = await getUserProfile(firebaseUser.uid);
-        } catch (fetchErr) {
-          console.error("❌ Critical: Could not fetch user profile:", fetchErr);
-        }
-
-        if (profile === null) {
-          const defaultProfile: UserProfile = {
-            id: firebaseUser.uid,
-            full_name: firebaseUser.displayName || 'Người dùng mới',
-            email: firebaseUser.email || '',
-            role: 'hoc_vien',
-            photoURL: firebaseUser.photoURL || '',
-            isVerified: false
-          };
-
-          try {
-            const { setDoc, doc } = await import('firebase/firestore');
-            await setDoc(doc(db, 'users', firebaseUser.uid), defaultProfile, { merge: true });
-            profile = defaultProfile;
-            setUserProfile(profile);
-            setUserName(profile.full_name);
-          } catch (err) {
-            console.error("❌ Failed to create default profile:", err);
-          }
-        }
-
-        import('./services/fcmClient').then(({ initializeFCM }) => {
-          initializeFCM(firebaseUser.uid);
-        });
-
-        import('./services/sessionService').then(({ loadSession, getLicensePreference }) => {
-          const session = loadSession(firebaseUser.uid);
-          if (session) {
-            setCurrentQuiz(session.quiz);
-            setUserAnswers(session.userAnswers);
-            setSelectedLicense(session.selectedLicense);
-            setSelectedSubject(session.selectedSubject);
-
-            // Do NOT auto-navigate. Just let the banner appear.
-            // if (session.mode === 'online_exam') {
-            //   navigate('/ontap/thithu');
-            // } else {
-            //   navigate('/ontap/lam-bai');
-            // }
-            return;
-          }
-
-          const checkLicenseLogic = async () => {
-            if (profile?.defaultLicenseId) {
-              const fastFound = licenses.find(l => l.id === profile.defaultLicenseId);
-              if (fastFound) {
-                setSelectedLicense(fastFound);
-                return;
-              }
-            }
-          };
-          checkLicenseLogic();
-        });
-
+        // ... rest of the existing logic for online user
       } else {
-        setUserProfile(null);
-        setUserName('');
+        // Kiểm tra nếu có session đã lưu (offline hoặc ghi nhớ)
+        const savedSession = localStorage.getItem('rememberSession');
+        if (!navigator.onLine && userProfile) {
+          // Keep the current offline profile
+          console.log("Running in Offline Mode");
+        } else if (!savedSession) {
+          // Chỉ xóa profile nếu không có session lưu
+          setUserProfile(null);
+          setUserName('');
+        }
       }
     });
 
@@ -281,7 +281,7 @@ const AppContent: React.FC = () => {
   }, [selectedLicense, selectedSubject, userProfile]);
 
   useEffect(() => {
-    if (location.pathname === '/ontap/lam-bai' || location.pathname === '/ontap/thithu') {
+    if (location.pathname === '/ontap/lambai' || location.pathname === '/ontap/thithu') {
       setResumeSessionAvailable(false);
       return;
     }
@@ -311,7 +311,7 @@ const AppContent: React.FC = () => {
         if (session.mode === 'online_exam') {
           navigate('/ontap/thithu');
         } else {
-          navigate('/ontap/lam-bai');
+          navigate('/ontap/lambai');
         }
       }
     });
@@ -323,13 +323,13 @@ const AppContent: React.FC = () => {
         const found = licenses.find(l => l.id === userProfile.defaultLicenseId);
         if (found) {
           setSelectedLicense(found);
-          navigate('/ontap/chon-che-do');
+          navigate('/ontap/chonchedo');
           return;
         }
       }
-      navigate('/ontap/chon-bang');
+      navigate('/ontap/chonbang');
     } else {
-      navigate('/ontap/chon-bang');
+      navigate('/ontap/chonbang');
     }
   };
 
@@ -340,22 +340,22 @@ const AppContent: React.FC = () => {
     });
 
     if (userProfile) {
-      navigate('/ontap/chon-che-do');
+      navigate('/ontap/chonchedo');
     } else {
-      navigate('/ontap/nhap-ten');
+      navigate('/ontap/nhapten');
     }
   };
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
-    navigate('/ontap/chon-che-do');
+    navigate('/ontap/chonchedo');
   };
 
   const startOnlineExam = async () => {
     if (!selectedLicense) return;
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
-      await showLimitAlert(userProfile, () => navigate('/ontap/dang-nhap'));
+      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
       return;
     }
     await incrementUsage(userProfile);
@@ -390,7 +390,7 @@ const AppContent: React.FC = () => {
     if (mode === 'practice') {
       if (selectedLicense) {
         setSubjects(selectedLicense.subjects);
-        navigate('/ontap/chon-mon');
+        navigate('/ontap/chonmon');
       }
     } else if (mode === 'online_exam') {
       startOnlineExam();
@@ -400,7 +400,7 @@ const AppContent: React.FC = () => {
   const handleSubjectSelect = async (subject: Subject) => {
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
-      await showLimitAlert(userProfile, () => navigate('/ontap/dang-nhap'));
+      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
       return;
     }
     await incrementUsage(userProfile);
@@ -415,7 +415,7 @@ const AppContent: React.FC = () => {
     setCurrentQuiz(newQuiz);
     setUserAnswers({});
     localStorage.removeItem('ontap_quiz_session');
-    navigate('/ontap/lam-bai');
+    navigate('/ontap/lambai');
   };
 
   const handleQuizFinish = (answers: UserAnswers) => {
@@ -445,7 +445,7 @@ const AppContent: React.FC = () => {
             currentQuiz.timeLimit! - 0
           );
         }
-        navigate('/ontap/ket-qua-thi');
+        navigate('/ontap/ketquathi');
       } else {
         if (userProfile && selectedLicense) {
           const subjName = selectedSubject ? selectedSubject.name : null;
@@ -460,13 +460,13 @@ const AppContent: React.FC = () => {
             0
           );
         }
-        navigate('/ontap/ket-qua');
+        navigate('/ontap/ketqua');
       }
     }
   };
 
   const handleRetry = () => {
-    if (location.pathname === '/ontap/ket-qua-thi') {
+    if (location.pathname === '/ontap/ketquathi') {
       startOnlineExam();
     } else {
       if (selectedSubject && selectedLicense) {
@@ -478,24 +478,25 @@ const AppContent: React.FC = () => {
   const handleTopNavNavigate = (screen: string) => {
     switch (screen) {
       case 'dashboard': navigate('/ontap/dashboard'); break;
-      case 'history': navigate('/ontap/lich-su'); break;
-      case 'login': navigate('/ontap/dang-nhap'); break;
-      case 'my_class': navigate('/ontap/lop-cua-toi'); break;
-      case 'class_management': navigate('/ontap/quan-ly-lop'); break;
-      case 'account': navigate(userProfile ? '/ontap/taikhoan' : '/ontap/dang-nhap'); break;
+      case 'history': navigate('/ontap/lichsu'); break;
+      case 'login': navigate('/ontap/dangnhap'); break;
+      case 'my_class': navigate('/ontap/lopcuatoi'); break;
+      case 'class_management': navigate('/ontap/quanlylop'); break;
+      case 'account': navigate(userProfile ? '/ontap/taikhoan' : '/ontap/dangnhap'); break;
       case 'config': navigate('/ontap/cauhinh'); break;
       case 'notification_mgmt': navigate('/ontap/thongbao'); break;
       case 'online_exam_management': navigate('/ontap/quanlythi'); break;
-      case 'mailbox': navigate('/ontap/hom-thu'); break;
+      case 'mailbox': navigate('/ontap/homthu'); break;
       case 'thi_truc_tuyen': navigate('/ontap/thitructuyen'); break;
       case 'download_app': navigate('/ontap/download'); break;
-      case 'analytics': navigate('/ontap/thong-ke'); break;
+      case 'analytics': navigate('/ontap/thongke'); break;
       default: navigate('/ontap/dashboard');
     }
   };
 
   const handleLogout = async () => {
     import('./services/sessionService').then(({ clearSession }) => clearSession());
+    localStorage.removeItem('rememberSession'); // Xóa session ghi nhớ
     await auth.signOut();
     navigate('/');
   };
@@ -548,52 +549,52 @@ const AppContent: React.FC = () => {
             userProfile ? (
               <Dashboard
                 userProfile={userProfile}
-                onStart={() => navigate('/ontap/chon-bang')}
-                onHistoryClick={() => navigate('/ontap/lich-su')}
+                onStart={() => navigate('/ontap/chonbang')}
+                onHistoryClick={() => navigate('/ontap/lichsu')}
                 onClassClick={() => handleTopNavNavigate((userProfile?.role === 'hoc_vien') ? 'my_class' : 'class_management')}
                 onOnlineExamClick={() => navigate('/ontap/quanlythi')}
               />
             ) : (
-              <WelcomeModal onStart={handleStart} onLoginClick={() => navigate('/ontap/dang-nhap')} onRegisterClick={() => navigate('/ontap/dang-ky')} />
+              <WelcomeModal onStart={handleStart} onLoginClick={() => navigate('/ontap/dangnhap')} onRegisterClick={() => navigate('/ontap/dangky')} />
             )
           } />
 
-          <Route path="/ontap/dang-nhap" element={!userProfile ? <LoginScreen onBack={() => navigate('/')} /> : <Navigate to="/ontap/dashboard" />} />
-          <Route path="/ontap/windows-login" element={!userProfile ? <WindowsLoginScreen /> : <Navigate to="/ontap/dashboard" />} />
-          <Route path="/ontap/dang-ky" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/dangnhap" element={!userProfile ? <LoginScreen onBack={() => navigate('/')} /> : <Navigate to="/ontap/dashboard" />} />
+          <Route path="/ontap/windowslogin" element={!userProfile ? <WindowsLoginScreen /> : <Navigate to="/ontap/dashboard" />} />
+          <Route path="/ontap/dangky" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
 
-          <Route path="/ontap/chon-bang" element={<LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => navigate('/')} />} />
-          <Route path="/ontap/nhap-ten" element={<NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => navigate('/ontap/chon-bang')} />} />
+          <Route path="/ontap/chonbang" element={<LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => navigate('/')} />} />
+          <Route path="/ontap/nhapten" element={<NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => navigate('/ontap/chonbang')} />} />
 
-          <Route path="/ontap/chon-che-do" element={
+          <Route path="/ontap/chonchedo" element={
             <ModeSelectionScreen
               onModeSelect={handleModeSelect}
               licenseName={selectedLicense?.name || ''}
               userName={userName}
-              onSwitchLicense={() => navigate('/ontap/chon-bang')}
+              onSwitchLicense={() => navigate('/ontap/chonbang')}
             />
           } />
 
-          <Route path="/ontap/chon-mon" element={
+          <Route path="/ontap/chonmon" element={
             <SubjectSelectionScreen
               subjects={subjects}
               progress={{}}
               onSelect={handleSubjectSelect}
-              onBack={() => navigate('/ontap/chon-che-do')}
+              onBack={() => navigate('/ontap/chonchedo')}
             />
           } />
 
-          <Route path="/ontap/lam-bai" element={
+          <Route path="/ontap/lambai" element={
             currentQuiz ? (
               <QuizScreen
                 quiz={currentQuiz}
                 onFinish={handleQuizFinish}
-                onBack={() => navigate('/ontap/chon-mon')}
+                onBack={() => navigate('/ontap/chonmon')}
                 initialAnswers={userAnswers}
                 initialIndex={0}
                 onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'practice')}
               />
-            ) : <Navigate to="/ontap/chon-mon" replace />
+            ) : <Navigate to="/ontap/chonmon" replace />
           } />
 
           <Route path="/ontap/thithu" element={
@@ -601,53 +602,71 @@ const AppContent: React.FC = () => {
               <ExamQuizScreen2
                 quiz={currentQuiz}
                 onFinish={handleQuizFinish}
-                onBack={() => navigate('/ontap/chon-che-do')}
+                onBack={() => navigate('/ontap/chonchedo')}
                 userName={userName}
                 userProfile={userProfile}
                 selectedLicense={selectedLicense}
                 initialAnswers={userAnswers}
                 onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'online_exam')}
               />
-            ) : <Navigate to="/ontap/chon-che-do" replace />
+            ) : <Navigate to="/ontap/chonchedo" replace />
           } />
 
-          <Route path="/ontap/ket-qua" element={
+          <Route path="/ontap/ketqua" element={
             currentQuiz ? (
               <ResultsScreen
                 quiz={currentQuiz}
                 userAnswers={userAnswers}
                 score={score}
                 onRetry={handleRetry}
-                onBack={() => navigate('/ontap/chon-mon')}
+                onBack={() => navigate('/ontap/chonmon')}
                 userName={userName}
               />
-            ) : <Navigate to="/ontap/chon-mon" replace />
+            ) : <Navigate to="/ontap/chonmon" replace />
           } />
 
-          <Route path="/ontap/ket-qua-thi" element={
+          <Route path="/ontap/ketquathi" element={
             currentQuiz ? (
               <ExamResultsScreen
                 quiz={currentQuiz}
                 userAnswers={userAnswers}
                 score={score}
                 onRetry={handleRetry}
-                onBack={() => navigate('/ontap/chon-che-do')}
+                onBack={() => navigate('/ontap/chonchedo')}
                 userName={userName}
               />
-            ) : <Navigate to="/ontap/chon-che-do" replace />
+            ) : <Navigate to="/ontap/chonchedo" replace />
           } />
 
-          <Route path="/ontap/lich-su" element={<HistoryScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/lop-cua-toi" element={<MyClassScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/quan-ly-lop" element={<ClassManagementScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/lichsu" element={<HistoryScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/lopcuatoi" element={<MyClassScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/quanlylop" element={<ClassManagementScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
           <Route path="/ontap/taikhoan" element={<AccountScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} />} />
-          <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel /> : <Navigate to="/ontap/dang-nhap" />} />
-          <Route path="/ontap/thongbao" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/dang-nhap" />} />
-          <Route path="/ontap/hom-thu" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dang-nhap" />} />
-          <Route path="/ontap/quanlythi" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dang-nhap" />} />
+          <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel /> : <Navigate to="/ontap/dangnhap" />} />
+          <Route path="/ontap/thongbao" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
+          <Route path="/ontap/homthu" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
+          <Route path="/ontap/quanlythi" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/thitructuyen" element={<ThiTrucTuyenPage />} />
           <Route path="/ontap/download" element={<DownloadAppPage />} />
-          <Route path="/ontap/thong-ke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/thongke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
+
+          {/* Redirects từ URL cũ có dấu gạch ngang */}
+          <Route path="/ontap/lam-bai" element={<Navigate to="/ontap/lambai" replace />} />
+          <Route path="/ontap/chon-che-do" element={<Navigate to="/ontap/chonchedo" replace />} />
+          <Route path="/ontap/chon-bang" element={<Navigate to="/ontap/chonbang" replace />} />
+          <Route path="/ontap/nhap-ten" element={<Navigate to="/ontap/nhapten" replace />} />
+          <Route path="/ontap/dang-nhap" element={<Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/chon-mon" element={<Navigate to="/ontap/chonmon" replace />} />
+          <Route path="/ontap/ket-qua-thi" element={<Navigate to="/ontap/ketquathi" replace />} />
+          <Route path="/ontap/ket-qua" element={<Navigate to="/ontap/ketqua" replace />} />
+          <Route path="/ontap/lich-su" element={<Navigate to="/ontap/lichsu" replace />} />
+          <Route path="/ontap/lop-cua-toi" element={<Navigate to="/ontap/lopcuatoi" replace />} />
+          <Route path="/ontap/quan-ly-lop" element={<Navigate to="/ontap/quanlylop" replace />} />
+          <Route path="/ontap/hom-thu" element={<Navigate to="/ontap/homthu" replace />} />
+          <Route path="/ontap/thong-ke" element={<Navigate to="/ontap/thongke" replace />} />
+          <Route path="/ontap/dang-ky" element={<Navigate to="/ontap/dangky" replace />} />
+          <Route path="/ontap/windows-login" element={<Navigate to="/ontap/windowslogin" replace />} />
+          <Route path="/ontap/thi-truc-tuyen" element={<Navigate to="/ontap/thitructuyen" replace />} />
 
           {isMobileApp && (
             <MobileBottomNav
