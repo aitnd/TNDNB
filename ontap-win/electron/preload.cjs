@@ -10,6 +10,12 @@ ipcRenderer.invoke('get-app-version').then(v => {
     }
 });
 
+ipcRenderer.invoke('get-resources-path').then(p => {
+    if (window.electron) {
+        window.electron.resourcesPath = p;
+    }
+});
+
 window.electron = {
     isElectron: true,
     appVersion: appVersion,

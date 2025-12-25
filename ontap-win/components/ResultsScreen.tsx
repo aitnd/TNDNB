@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import type { Quiz, UserAnswers } from '../types';
 import { CheckIcon3D, XIcon3D, TrophyIcon3D } from './icons';
+import { getLocalImageSrc, handleImageError } from '../utils/imageHelper';
 
 interface ResultsScreenProps {
     quiz: Quiz;
@@ -80,7 +81,12 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ quiz, userAnswers, score,
                                 </p>
                                 {question.image && (
                                     <div className="mb-4 rounded-lg overflow-hidden">
-                                        <img src={question.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" />
+                                        <img
+                                            src={getLocalImageSrc(question) || question.image}
+                                            alt="Câu hỏi"
+                                            className="w-full h-auto object-cover max-h-80"
+                                            onError={(e) => handleImageError(e, question.image)}
+                                        />
                                     </div>
                                 )}
                                 <div className="space-y-2">

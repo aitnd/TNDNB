@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import type { Quiz, UserAnswers, License, UserProfile } from '../types';
+import { getLocalImageSrc, handleImageError } from '../utils/imageHelper';
 
 interface ExamQuizScreen2Props {
     quiz: Quiz;
@@ -172,9 +173,10 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                             {currentQuestion.image && (
                                 <div className="mb-4 flex justify-start">
                                     <img
-                                        src={currentQuestion.image}
+                                        src={getLocalImageSrc(currentQuestion) || currentQuestion.image}
                                         alt="Hình ảnh câu hỏi"
                                         className="max-w-full h-auto max-h-60 object-contain border border-gray-300 rounded-md"
+                                        onError={(e) => handleImageError(e, currentQuestion.image)}
                                     />
                                 </div>
                             )}

@@ -36,7 +36,7 @@ const WindowsLoginScreen: React.FC = () => {
                 if (userDoc.exists()) {
                     const profile = { id: userDoc.id, ...userDoc.data() } as UserProfile;
                     if (profile.offlineAccess) {
-                        await saveUserOffline(profile, password);
+                        await saveUserOffline(profile, password, email);
                     }
                     // Lưu session nếu ghi nhớ đăng nhập
                     if (rememberMe) {
@@ -49,8 +49,16 @@ const WindowsLoginScreen: React.FC = () => {
                 }
             } else {
                 // Đăng nhập Offline
+                console.log("Attempting offline login for:", email);
                 const offlineUser = await getOfflineUser(email);
-                if (offlineUser && offlineUser.hashedPassword === btoa(password)) {
+
+                if (!offlineUser) {
+                    console.warn("No offline data found for this email.");
+                    throw { code: 'auth/offline-no-data' };
+                }
+
+                if (offlineUser.hashedPassword === btoa(password)) {
+                    console.log("Offline login successful");
                     const profile: UserProfile = {
                         id: offlineUser.id,
                         full_name: offlineUser.full_name,
@@ -70,26 +78,30 @@ const WindowsLoginScreen: React.FC = () => {
                         }));
                     }
                 } else {
-                    throw { code: 'auth/offline-failed' };
+                    console.warn("Offline password mismatch");
+                    throw { code: 'auth/offline-wrong-password' };
                 }
             }
         } catch (err: any) {
             console.error("Login Error:", err);
             let msg = 'Đăng nhập thất bại.';
-            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' || err.code === 'auth/offline-wrong-password') {
                 msg = 'Sai tên đăng nhập hoặc mật khẩu.';
             } else if (err.code === 'auth/too-many-requests') {
                 msg = 'Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau.';
             } else if (err.code === 'auth/network-request-failed') {
                 msg = 'Lỗi kết nối mạng. Vui lòng kiểm tra Internet.';
+            } else if (err.code === 'auth/offline-no-data') {
+                msg = 'Tài khoản chưa từng đăng nhập Online trên máy này hoặc chưa được cấp quyền Offline.';
             } else if (err.code === 'auth/offline-failed') {
-                msg = 'Tài khoản chưa được cấp quyền Offline hoặc sai mật khẩu.';
+                msg = 'Lỗi đăng nhập Offline.';
             } else {
-                msg = `Lỗi: ${err.message}`;
+                msg = `Lỗi: ${err.message || err.code}`;
             }
             setError(msg);
             alert(msg);
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     };

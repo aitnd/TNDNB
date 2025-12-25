@@ -106,6 +106,10 @@ function createWindow() {
         return app.getVersion();
     });
 
+    ipcMain.handle('get-resources-path', () => {
+        return process.resourcesPath;
+    });
+
     // --- AUTO UPDATE HANDLERS ---
     ipcMain.on('download-update', (event, url) => {
         console.log('Download update requested from:', url);

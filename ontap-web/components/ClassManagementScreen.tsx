@@ -754,7 +754,108 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
     };
 
+    // Bulk Reset Password
+    const [isBulkResetting, setIsBulkResetting] = useState(false);
+    const handleBulkResetPassword = async () => {
+        if (selectedForOffline.size === 0) return;
+        const defaultPassword = prompt(`Nhập mật khẩu mới cho ${selectedForOffline.size} học viên:`, '123456');
+        if (!defaultPassword || defaultPassword.length < 6) {
+            if (defaultPassword !== null) alert('Mật khẩu phải có ít nhất 6 ký tự.');
+            return;
+        }
 
+        setIsBulkResetting(true);
+        try {
+            const token = await auth.currentUser?.getIdToken();
+            if (!token) { alert('Lỗi xác thực.'); return; }
+
+            let success = 0, failed = 0;
+            for (const uid of Array.from(selectedForOffline)) {
+                try {
+                    const response = await fetch('/api/admin/reset-password', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ targetUserId: uid, newPassword: defaultPassword })
+                    });
+                    if (response.ok) success++;
+                    else failed++;
+                } catch { failed++; }
+            }
+
+            alert(`Hoàn thành: ${success} thành công, ${failed} thất bại.`);
+            setSelectedForOffline(new Set());
+        } catch (e) {
+            console.error("Bulk reset password error:", e);
+            alert("Có lỗi xảy ra.");
+        } finally {
+            setIsBulkResetting(false);
+        }
+    };
+
+    // Bulk Send Notification
+    const [showBulkNotifModal, setShowBulkNotifModal] = useState(false);
+    const [bulkNotifTitle, setBulkNotifTitle] = useState('');
+    const [bulkNotifMessage, setBulkNotifMessage] = useState('');
+    const [bulkNotifType, setBulkNotifType] = useState<'class' | 'system' | 'personal' | 'reminder' | 'special' | 'attention'>('personal');
+    const [isSendingBulkNotif, setIsSendingBulkNotif] = useState(false);
+
+    const handleBulkSendNotification = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (selectedForOffline.size === 0 || !userProfile.id) return;
+
+        setIsSendingBulkNotif(true);
+        try {
+            for (const uid of Array.from(selectedForOffline)) {
+                await sendNotification(
+                    bulkNotifTitle,
+                    bulkNotifMessage,
+                    bulkNotifType,
+                    'user',
+                    uid,
+                    userProfile.id,
+                    userProfile.full_name,
+                    null
+                );
+            }
+            alert(`Đã gửi thông báo cho ${selectedForOffline.size} học viên!`);
+            setShowBulkNotifModal(false);
+            setBulkNotifTitle('');
+            setBulkNotifMessage('');
+            setSelectedForOffline(new Set());
+        } catch (e) {
+            console.error("Bulk notification error:", e);
+            alert("Có lỗi xảy ra.");
+        } finally {
+            setIsSendingBulkNotif(false);
+        }
+    };
+
+    // Bulk Delete (Remove from class)
+    const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+    const handleBulkRemoveFromClass = async () => {
+        if (selectedForOffline.size === 0) return;
+        if (!confirm(`Bạn có chắc muốn xóa ${selectedForOffline.size} học viên khỏi lớp?`)) return;
+
+        setIsBulkDeleting(true);
+        try {
+            const promises = Array.from(selectedForOffline).map(uid =>
+                updateDoc(doc(db, 'users', uid), {
+                    courseId: null,
+                    courseName: null,
+                    class: null,
+                    isVerified: false
+                })
+            );
+            await Promise.all(promises);
+            alert(`Đã xóa ${selectedForOffline.size} học viên khỏi lớp!`);
+            setSelectedForOffline(new Set());
+        } catch (e) {
+            console.error("Bulk delete error:", e);
+            alert("Có lỗi xảy ra.");
+        } finally {
+            setIsBulkDeleting(false);
+        }
+    };
 
 
 
@@ -1690,34 +1791,124 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     </tbody>
                                 </table>
 
-                                {/* Bulk Offline Action Bar */}
+                                {/* Bulk Action Bar - Mở rộng */}
                                 {selectedForOffline.size > 0 && (
-                                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white dark:bg-slate-800 rounded-full shadow-2xl px-6 py-3 flex items-center gap-4 border border-gray-200 dark:border-slate-700 animate-bounce-in">
-                                        <span className="font-medium text-gray-700 dark:text-gray-200">
-                                            Đã chọn {selectedForOffline.size} học viên
+                                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-2 border border-gray-200 dark:border-slate-700 flex-wrap justify-center max-w-[95vw]">
+                                        <span className="font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                                            Đã chọn <span className="text-blue-600 font-bold">{selectedForOffline.size}</span>
                                         </span>
+
+                                        {/* Offline Toggle */}
                                         <button
                                             onClick={() => handleBulkToggleOffline(true)}
                                             disabled={isBulkOfflineToggling}
-                                            className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition flex items-center gap-2 disabled:opacity-50"
+                                            className="bg-green-500 text-white px-3 py-1.5 rounded-full hover:bg-green-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
+                                            title="Bật Offline"
                                         >
-                                            <FaWifi /> Bật Offline
+                                            <FaWifi />
                                         </button>
                                         <button
                                             onClick={() => handleBulkToggleOffline(false)}
                                             disabled={isBulkOfflineToggling}
-                                            className="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition flex items-center gap-2 disabled:opacity-50"
+                                            className="bg-gray-500 text-white px-3 py-1.5 rounded-full hover:bg-gray-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
+                                            title="Tắt Offline"
                                         >
-                                            <TbPlaneOff /> Tắt Offline
+                                            <TbPlaneOff />
                                         </button>
+
+                                        <div className="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1" />
+
+                                        {/* Reset Password */}
+                                        {canManageStudents && (
+                                            <button
+                                                onClick={handleBulkResetPassword}
+                                                disabled={isBulkResetting}
+                                                className="bg-yellow-500 text-white px-3 py-1.5 rounded-full hover:bg-yellow-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
+                                                title="Reset mật khẩu"
+                                            >
+                                                <FaKey /> Reset
+                                            </button>
+                                        )}
+
+                                        {/* Send Notification */}
+                                        <button
+                                            onClick={() => setShowBulkNotifModal(true)}
+                                            className="bg-blue-500 text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transition flex items-center gap-1 text-sm"
+                                            title="Gửi thông báo"
+                                        >
+                                            <FaPaperPlane /> Thông báo
+                                        </button>
+
+                                        {/* Remove from Class */}
+                                        {canManageStudents && (
+                                            <button
+                                                onClick={handleBulkRemoveFromClass}
+                                                disabled={isBulkDeleting}
+                                                className="bg-red-500 text-white px-3 py-1.5 rounded-full hover:bg-red-600 transition flex items-center gap-1 text-sm disabled:opacity-50"
+                                                title="Xóa khỏi lớp"
+                                            >
+                                                <FaTrash /> Xóa
+                                            </button>
+                                        )}
+
+                                        <div className="w-px h-6 bg-gray-300 dark:bg-slate-600 mx-1" />
+
                                         <button
                                             onClick={() => setSelectedForOffline(new Set())}
-                                            className="text-gray-500 hover:text-gray-700 p-2"
-                                            title="Bỏ chọn"
+                                            className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700"
+                                            title="Bỏ chọn tất cả"
                                         >
                                             <FaTimes />
                                         </button>
                                     </div>
+                                )}
+
+                                {/* Bulk Notification Modal */}
+                                {showBulkNotifModal && createPortal(
+                                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+                                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
+                                            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
+                                                <FaPaperPlane className="text-blue-500" />
+                                                Gửi thông báo cho {selectedForOffline.size} học viên
+                                            </h2>
+                                            <form onSubmit={handleBulkSendNotification} className="space-y-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium mb-1 dark:text-gray-300">Loại thông báo</label>
+                                                    <select
+                                                        className="w-full p-2 border rounded dark:bg-slate-700"
+                                                        value={bulkNotifType}
+                                                        onChange={e => setBulkNotifType(e.target.value as any)}
+                                                    >
+                                                        <option value="personal">Cá nhân</option>
+                                                        <option value="reminder">Nhắc nhở</option>
+                                                        <option value="special">Đặc biệt</option>
+                                                        <option value="attention">Chú ý</option>
+                                                    </select>
+                                                </div>
+                                                <input
+                                                    className="w-full p-2 border rounded dark:bg-slate-700"
+                                                    placeholder="Tiêu đề thông báo"
+                                                    value={bulkNotifTitle}
+                                                    onChange={e => setBulkNotifTitle(e.target.value)}
+                                                    required
+                                                />
+                                                <textarea
+                                                    className="w-full p-2 border rounded dark:bg-slate-700 min-h-[100px]"
+                                                    placeholder="Nội dung thông báo..."
+                                                    value={bulkNotifMessage}
+                                                    onChange={e => setBulkNotifMessage(e.target.value)}
+                                                    required
+                                                />
+                                                <div className="flex justify-end gap-2">
+                                                    <button type="button" onClick={() => setShowBulkNotifModal(false)} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Hủy</button>
+                                                    <button type="submit" disabled={isSendingBulkNotif} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2">
+                                                        {isSendingBulkNotif ? 'Đang gửi...' : <><FaPaperPlane /> Gửi</>}
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>,
+                                    document.body
                                 )}
                             </div>
 

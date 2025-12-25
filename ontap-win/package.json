@@ -71,6 +71,13 @@
         "filter": [
           "**/*"
         ]
+      },
+      {
+        "from": "public/question_images",
+        "to": "question_images",
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "win": {

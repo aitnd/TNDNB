@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
 import SweetAlertPopup from './components/SweetAlertPopup';
@@ -165,8 +165,10 @@ const AppContent: React.FC = () => {
 
       // @ts-ignore
       window.electron.onUpdateError((err) => {
-        import('sweetalert2').then(({ default: Swal }) => {
-          Swal.fire('Lỗi', 'Không thể tải bản cập nhật. Vui lòng thử lại sau.', 'error');
+        console.error('Update error:', err);
+        toast.error('Không thể tải bản cập nhật. Vui lòng thử lại sau.', {
+          position: 'bottom-right',
+          duration: 5000
         });
       });
     }

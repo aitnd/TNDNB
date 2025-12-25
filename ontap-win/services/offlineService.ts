@@ -46,11 +46,11 @@ export const db_offline = new OnTapDatabase();
 
 // --- Offline Service Functions ---
 
-export const saveUserOffline = async (user: UserProfile, password?: string) => {
+export const saveUserOffline = async (user: UserProfile, password?: string, loginEmail?: string) => {
     const offlineUser: OfflineUser = {
         id: user.id,
         full_name: user.full_name,
-        email: user.email || '',
+        email: loginEmail || user.email || '',
         role: user.role,
         lastSynced: Date.now(),
         updatedAt: user.updatedAt || Date.now()
