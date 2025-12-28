@@ -1,405 +1,406 @@
 <!DOCTYPE html>
 <html lang="vi" data-theme="light">
 
-<script>console.log("[DEBUG] HTML Head: Starting...");</script>
-<meta charset="UTF-8" />
-<!-- <link rel="icon" type="image/png" href="https://i.postimg.cc/8PDn1wfM/favicon.png" /> -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ứng dụng Ôn tập, ôn thi chứng chỉ chuyên môn phương tiên thủy nội địa</title>
-
-<!-- <script src="https://cdn.tailwindcss.com"></script> -->
-<!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
-<!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
-<!-- <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet"> -->
-
-<style>
-  /* === LIGHT THEME === */
-  :root,
-  [data-theme='light'] {
-    --font-sans: 'Be Vietnam Pro', sans-serif;
-
-    --background: 210 40% 98%;
-    /* grayish white */
-    --foreground: 222 47% 11%;
-    /* dark gray */
-
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-
-    --primary: 221 83% 53%;
-    /* blue-600 */
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-
-    --success: 142 76% 36%;
-    --success-foreground: 142 100% 96%;
-
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 83% 53%;
-
-    --radius: 0.75rem;
-
-    --gradient-from: #f3f4f6;
-    --gradient-to: #e5e7eb;
-    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-  }
-
-  /* === DARK THEME === */
-  [data-theme='dark'] {
-    --font-sans: 'Be Vietnam Pro', sans-serif;
-
-    --background: 222 47% 11%;
-    /* slate-900 */
-    --foreground: 210 40% 98%;
-
-    --card: 217 33% 17%;
-    /* slate-800 */
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 217 91% 60%;
-    /* blue-500 */
-    --primary-foreground: 222 47% 11%;
-
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-
-    --success: 142 76% 36%;
-    --success-foreground: 142 100% 96%;
-
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 217 91% 60%;
-
-    --gradient-from: #111827;
-    --gradient-to: #1f2937;
-    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-  }
-
-  /* === MODERN THEME (Keep as variant) === */
-  [data-theme='modern'] {
-    --font-sans: 'Be Vietnam Pro', sans-serif;
-
-    --background: 222 84% 9.8%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 84% 12.0%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 84% 9.8%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 243 75% 58%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 213 31% 91%;
-
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-
-    --success: 142 76% 36%;
-    --success-foreground: 142 100% 96%;
-
-    --border: 217 33% 27%;
-    --input: 217 33% 27%;
-    --ring: 243 75% 58%;
-
-    --radius: 0.75rem;
-
-    /* Custom variables */
-    --gradient-from: #111827;
-    /* dark:from-slate-900 */
-    --gradient-to: #1f2937;
-    /* dark:to-slate-800 */
-    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-  }
-
-  [data-theme='classic'] {
-    --font-sans: 'Playfair Display', serif;
-
-    --background: 39 52% 95%;
-    /* beige-50 */
-    --foreground: 39 33% 20%;
-    /* dark brown */
-
-    --card: 40 71% 98%;
-    /* lighter beige */
-    --card-foreground: 39 33% 20%;
-
-    --popover: 39 52% 95%;
-    --popover-foreground: 39 33% 20%;
-
-    --primary: 221 39% 28%;
-    /* navy */
-    --primary-foreground: 39 52% 95%;
-
-    --secondary: 39 33% 85%;
-    --secondary-foreground: 39 33% 20%;
-
-    --muted: 39 33% 90%;
-    --muted-foreground: 39 33% 40%;
-
-    --accent: 39 33% 85%;
-    --accent-foreground: 39 33% 20%;
-
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
-
-    --border: 39 33% 80%;
-    --input: 39 33% 80%;
-    --ring: 221 39% 28%;
-
-    --gradient-from: #fdf6e3;
-    --gradient-to: #f0e6d2;
-    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-  }
-
-  [data-theme='sunrise'] {
-    --font-sans: 'Nunito', sans-serif;
-
-    --background: 220 13% 11%;
-    --foreground: 210 20% 98%;
-
-    --card: 215 19% 15%;
-    --card-foreground: 210 20% 98%;
-
-    --popover: 220 13% 11%;
-    --popover-foreground: 210 20% 98%;
-
-    --primary: 13 96% 56%;
-    /* orange */
-    --primary-foreground: 13 100% 96%;
-
-    --secondary: 215 19% 25%;
-    --secondary-foreground: 210 20% 98%;
-
-    --muted: 215 19% 25%;
-    --muted-foreground: 210 20% 70%;
-
-    --accent: 215 19% 25%;
-    --accent-foreground: 210 20% 98%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
-
-    --border: 215 19% 30%;
-    --input: 215 19% 30%;
-    --ring: 13 96% 56%;
-
-    --gradient-from: #0d1b2a;
-    --gradient-to: #1b263b;
-    --gradient-body: linear-gradient(160deg, #FF8C42 0%, #FF3C83 35%, #6C47FF 70%, #0396FF 100%);
-  }
-
-  [data-theme='tri-an'] {
-    --font-sans: 'Nunito', sans-serif;
-
-    --background: 160 34% 26%;
-    /* chalkboard green */
-    --foreground: 150 8% 95%;
-    /* chalk white */
-
-    --card: 160 34% 30%;
-    --card-foreground: 150 8% 95%;
-
-    --popover: 160 34% 22%;
-    --popover-foreground: 150 8% 95%;
-
-    --primary: 0 63% 67%;
-    /* chalk red */
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 160 34% 35%;
-    --secondary-foreground: 150 8% 95%;
-
-    --muted: 160 34% 35%;
-    --muted-foreground: 150 8% 80%;
-
-    --accent: 160 34% 40%;
-    --accent-foreground: 150 8% 98%;
-
-    --destructive: 0 50% 55%;
-    --destructive-foreground: 0 0% 98%;
-
-    --success: 130 50% 60%;
-    --success-foreground: 130 100% 96%;
-
-    --border: 150 8% 85%;
-    /* chalk border */
-    --input: 160 34% 28%;
-    --ring: 0 63% 67%;
-
-    --radius: 0.75rem;
-
-    --gradient-from: hsl(160 34% 22%);
-    --gradient-to: hsl(160 34% 26%);
-    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-  }
-
-  [data-theme='noel'] {
-    --font-sans: 'Nunito', sans-serif;
-
-    /* Deep Wine/Burgundy Background */
-    --background: 355 90% 10%;
-    --foreground: 0 0% 100%;
-    /* Snow White */
-
-    /* Dark Red Card */
-    --card: 355 85% 15%;
-    --card-foreground: 0 0% 100%;
-
-    --popover: 355 90% 12%;
-    --popover-foreground: 0 0% 100%;
-
-    /* Bright Red/Neon Red for Icons (Tone-sur-tone) */
-    --primary: 350 100% 65%;
-    --primary-foreground: 355 90% 10%;
-
-    /* Muted Red for secondary elements */
-    --secondary: 355 60% 25%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 355 50% 20%;
-    --muted-foreground: 355 20% 80%;
-
-    --accent: 350 100% 65%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 0 0% 100%;
-
-    --success: 142 76% 36%;
-    --success-foreground: 142 100% 96%;
-
-    --border: 355 60% 30%;
-    --input: 355 60% 30%;
-    --ring: 350 100% 65%;
-    /* Red Ring */
-
-    --radius: 0.75rem;
-
-    /* Rich Red Gradient Backup if Image Fails */
-    --gradient-from: #4a0404;
-    --gradient-to: #2b0202;
-    --gradient-body: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
-  }
-
-  body {
-    font-family: var(--font-sans);
-    background-color: hsl(var(--background));
-    background-image: var(--gradient-body);
-    color: hsl(var(--foreground));
-    background-attachment: fixed;
-    background-size: cover;
-  }
-
-  [data-theme='tri-an'] body {
-    background-image: url('https://hykypgxaegmufdothwbv.supabase.co/storage/v1/object/public/TND/Screenshot%202025-11-03%20050600.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
-
-  /* Noel Theme Background */
-  [data-theme='noel'] body {
-    background-image: url('/assets/img/noel-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
-
-  .font-quiz-default {
-    font-family: 'Be Vietnam Pro', sans-serif;
-  }
-
-  @keyframes slide-in-right {
-    from {
-      transform: translateX(20px);
-      opacity: 0;
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/8PDn1wfM/favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ứng dụng Ôn tập, ôn thi chứng chỉ chuyên môn phương tiên thủy nội địa</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    /* === LIGHT THEME === */
+    :root,
+    [data-theme='light'] {
+      --font-sans: 'Be Vietnam Pro', sans-serif;
+
+      --background: 210 40% 98%;
+      /* grayish white */
+      --foreground: 222 47% 11%;
+      /* dark gray */
+
+      --card: 0 0% 100%;
+      --card-foreground: 222 47% 11%;
+
+      --popover: 0 0% 100%;
+      --popover-foreground: 222 47% 11%;
+
+      --primary: 221 83% 53%;
+      /* blue-600 */
+      --primary-foreground: 210 40% 98%;
+
+      --secondary: 210 40% 96%;
+      --secondary-foreground: 222 47% 11%;
+
+      --muted: 210 40% 96%;
+      --muted-foreground: 215 16% 47%;
+
+      --accent: 210 40% 96%;
+      --accent-foreground: 222 47% 11%;
+
+      --destructive: 0 84% 60%;
+      --destructive-foreground: 210 40% 98%;
+
+      --success: 142 76% 36%;
+      --success-foreground: 142 100% 96%;
+
+      --border: 214 32% 91%;
+      --input: 214 32% 91%;
+      --ring: 221 83% 53%;
+
+      --radius: 0.75rem;
+
+      --gradient-from: #f3f4f6;
+      --gradient-to: #e5e7eb;
+      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
     }
 
-    to {
-      transform: translateX(0);
-      opacity: 1;
+    /* === DARK THEME === */
+    [data-theme='dark'] {
+      --font-sans: 'Be Vietnam Pro', sans-serif;
+
+      --background: 222 47% 11%;
+      /* slate-900 */
+      --foreground: 210 40% 98%;
+
+      --card: 217 33% 17%;
+      /* slate-800 */
+      --card-foreground: 210 40% 98%;
+
+      --popover: 222 47% 11%;
+      --popover-foreground: 210 40% 98%;
+
+      --primary: 217 91% 60%;
+      /* blue-500 */
+      --primary-foreground: 222 47% 11%;
+
+      --secondary: 217 33% 17%;
+      --secondary-foreground: 210 40% 98%;
+
+      --muted: 217 33% 17%;
+      --muted-foreground: 215 20% 65%;
+
+      --accent: 217 33% 17%;
+      --accent-foreground: 210 40% 98%;
+
+      --destructive: 0 63% 31%;
+      --destructive-foreground: 210 40% 98%;
+
+      --success: 142 76% 36%;
+      --success-foreground: 142 100% 96%;
+
+      --border: 217 33% 17%;
+      --input: 217 33% 17%;
+      --ring: 217 91% 60%;
+
+      --gradient-from: #111827;
+      --gradient-to: #1f2937;
+      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
     }
-  }
 
-  .animate-slide-in-right {
-    animation: slide-in-right 0.3s ease-out forwards;
-  }
+    /* === MODERN THEME (Keep as variant) === */
+    [data-theme='modern'] {
+      --font-sans: 'Be Vietnam Pro', sans-serif;
 
-  @keyframes spin-slow {
-    from {
-      transform: rotate(0deg);
+      --background: 222 84% 9.8%;
+      --foreground: 210 40% 98%;
+
+      --card: 222 84% 12.0%;
+      --card-foreground: 210 40% 98%;
+
+      --popover: 222 84% 9.8%;
+      --popover-foreground: 210 40% 98%;
+
+      --primary: 243 75% 58%;
+      --primary-foreground: 210 40% 98%;
+
+      --secondary: 217 33% 17%;
+      --secondary-foreground: 210 40% 98%;
+
+      --muted: 217 33% 17%;
+      --muted-foreground: 213 31% 91%;
+
+      --accent: 217 33% 17%;
+      --accent-foreground: 210 40% 98%;
+
+      --destructive: 0 63% 31%;
+      --destructive-foreground: 210 40% 98%;
+
+      --success: 142 76% 36%;
+      --success-foreground: 142 100% 96%;
+
+      --border: 217 33% 27%;
+      --input: 217 33% 27%;
+      --ring: 243 75% 58%;
+
+      --radius: 0.75rem;
+
+      /* Custom variables */
+      --gradient-from: #111827;
+      /* dark:from-slate-900 */
+      --gradient-to: #1f2937;
+      /* dark:to-slate-800 */
+      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
     }
 
-    to {
-      transform: rotate(360deg);
+    [data-theme='classic'] {
+      --font-sans: 'Playfair Display', serif;
+
+      --background: 39 52% 95%;
+      /* beige-50 */
+      --foreground: 39 33% 20%;
+      /* dark brown */
+
+      --card: 40 71% 98%;
+      /* lighter beige */
+      --card-foreground: 39 33% 20%;
+
+      --popover: 39 52% 95%;
+      --popover-foreground: 39 33% 20%;
+
+      --primary: 221 39% 28%;
+      /* navy */
+      --primary-foreground: 39 52% 95%;
+
+      --secondary: 39 33% 85%;
+      --secondary-foreground: 39 33% 20%;
+
+      --muted: 39 33% 90%;
+      --muted-foreground: 39 33% 40%;
+
+      --accent: 39 33% 85%;
+      --accent-foreground: 39 33% 20%;
+
+      --destructive: 0 72% 51%;
+      --destructive-foreground: 0 0% 100%;
+
+      --success: 142 71% 45%;
+      --success-foreground: 0 0% 100%;
+
+      --border: 39 33% 80%;
+      --input: 39 33% 80%;
+      --ring: 221 39% 28%;
+
+      --gradient-from: #fdf6e3;
+      --gradient-to: #f0e6d2;
+      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
     }
-  }
 
-  .animate-spin-slow {
-    animation: spin-slow 3s linear infinite;
-  }
+    [data-theme='sunrise'] {
+      --font-sans: 'Nunito', sans-serif;
 
-  @keyframes bounce-slow {
+      --background: 220 13% 11%;
+      --foreground: 210 20% 98%;
 
-    0%,
-    100% {
-      transform: translateY(0);
+      --card: 215 19% 15%;
+      --card-foreground: 210 20% 98%;
+
+      --popover: 220 13% 11%;
+      --popover-foreground: 210 20% 98%;
+
+      --primary: 13 96% 56%;
+      /* orange */
+      --primary-foreground: 13 100% 96%;
+
+      --secondary: 215 19% 25%;
+      --secondary-foreground: 210 20% 98%;
+
+      --muted: 215 19% 25%;
+      --muted-foreground: 210 20% 70%;
+
+      --accent: 215 19% 25%;
+      --accent-foreground: 210 20% 98%;
+
+      --destructive: 0 84% 60%;
+      --destructive-foreground: 0 0% 100%;
+
+      --success: 142 71% 45%;
+      --success-foreground: 0 0% 100%;
+
+      --border: 215 19% 30%;
+      --input: 215 19% 30%;
+      --ring: 13 96% 56%;
+
+      --gradient-from: #0d1b2a;
+      --gradient-to: #1b263b;
+      --gradient-body: linear-gradient(160deg, #FF8C42 0%, #FF3C83 35%, #6C47FF 70%, #0396FF 100%);
     }
 
-    50% {
-      transform: translateY(-5px);
-    }
-  }
+    [data-theme='tri-an'] {
+      --font-sans: 'Nunito', sans-serif;
 
-  .animate-bounce-slow {
-    animation: bounce-slow 2s infinite;
-  }
-</style>
-<script type="importmap">
+      --background: 160 34% 26%;
+      /* chalkboard green */
+      --foreground: 150 8% 95%;
+      /* chalk white */
+
+      --card: 160 34% 30%;
+      --card-foreground: 150 8% 95%;
+
+      --popover: 160 34% 22%;
+      --popover-foreground: 150 8% 95%;
+
+      --primary: 0 63% 67%;
+      /* chalk red */
+      --primary-foreground: 0 0% 98%;
+
+      --secondary: 160 34% 35%;
+      --secondary-foreground: 150 8% 95%;
+
+      --muted: 160 34% 35%;
+      --muted-foreground: 150 8% 80%;
+
+      --accent: 160 34% 40%;
+      --accent-foreground: 150 8% 98%;
+
+      --destructive: 0 50% 55%;
+      --destructive-foreground: 0 0% 98%;
+
+      --success: 130 50% 60%;
+      --success-foreground: 130 100% 96%;
+
+      --border: 150 8% 85%;
+      /* chalk border */
+      --input: 160 34% 28%;
+      --ring: 0 63% 67%;
+
+      --radius: 0.75rem;
+
+      --gradient-from: hsl(160 34% 22%);
+      --gradient-to: hsl(160 34% 26%);
+      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+    }
+
+    [data-theme='noel'] {
+      --font-sans: 'Nunito', sans-serif;
+
+      /* Deep Wine/Burgundy Background */
+      --background: 355 90% 10%;
+      --foreground: 0 0% 100%;
+      /* Snow White */
+
+      /* Dark Red Card */
+      --card: 355 85% 15%;
+      --card-foreground: 0 0% 100%;
+
+      --popover: 355 90% 12%;
+      --popover-foreground: 0 0% 100%;
+
+      /* Bright Red/Neon Red for Icons (Tone-sur-tone) */
+      --primary: 350 100% 65%;
+      --primary-foreground: 355 90% 10%;
+
+      /* Muted Red for secondary elements */
+      --secondary: 355 60% 25%;
+      --secondary-foreground: 0 0% 100%;
+
+      --muted: 355 50% 20%;
+      --muted-foreground: 355 20% 80%;
+
+      --accent: 350 100% 65%;
+      --accent-foreground: 0 0% 100%;
+
+      --destructive: 0 63% 31%;
+      --destructive-foreground: 0 0% 100%;
+
+      --success: 142 76% 36%;
+      --success-foreground: 142 100% 96%;
+
+      --border: 355 60% 30%;
+      --input: 355 60% 30%;
+      --ring: 350 100% 65%;
+      /* Red Ring */
+
+      --radius: 0.75rem;
+
+      /* Rich Red Gradient Backup if Image Fails */
+      --gradient-from: #4a0404;
+      --gradient-to: #2b0202;
+      --gradient-body: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: hsl(var(--background));
+      background-image: var(--gradient-body);
+      color: hsl(var(--foreground));
+      background-attachment: fixed;
+      background-size: cover;
+    }
+
+    [data-theme='tri-an'] body {
+      background-image: url('https://hykypgxaegmufdothwbv.supabase.co/storage/v1/object/public/TND/Screenshot%202025-11-03%20050600.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    /* Noel Theme Background */
+    [data-theme='noel'] body {
+      background-image: url('/assets/img/noel-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .font-quiz-default {
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+    @keyframes slide-in-right {
+      from {
+        transform: translateX(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-slide-in-right {
+      animation: slide-in-right 0.3s ease-out forwards;
+    }
+
+    @keyframes spin-slow {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .animate-spin-slow {
+      animation: spin-slow 3s linear infinite;
+    }
+
+    @keyframes bounce-slow {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    .animate-bounce-slow {
+      animation: bounce-slow 2s infinite;
+    }
+  </style>
+  <script type="importmap">
 {
   "imports": {
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
@@ -410,7 +411,76 @@
   }
 }
 </script>
-
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['var(--font-sans)', 'sans-serif'],
+          },
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: {
+              DEFAULT: 'hsl(var(--primary))',
+              foreground: 'hsl(var(--primary-foreground))',
+            },
+            secondary: {
+              DEFAULT: 'hsl(var(--secondary))',
+              foreground: 'hsl(var(--secondary-foreground))',
+            },
+            destructive: {
+              DEFAULT: 'hsl(var(--destructive))',
+              foreground: 'hsl(var(--destructive-foreground))',
+            },
+            success: {
+              DEFAULT: 'hsl(var(--success))',
+              foreground: 'hsl(var(--success-foreground))',
+            },
+            muted: {
+              DEFAULT: 'hsl(var(--muted))',
+              foreground: 'hsl(var(--muted-foreground))',
+            },
+            accent: {
+              DEFAULT: 'hsl(var(--accent))',
+              foreground: 'hsl(var(--accent-foreground))',
+            },
+            popover: {
+              DEFAULT: 'hsl(var(--popover))',
+              foreground: 'hsl(var(--popover-foreground))',
+            },
+            card: {
+              DEFAULT: 'hsl(var(--card))',
+              foreground: 'hsl(var(--card-foreground))',
+            },
+          },
+          borderRadius: {
+            lg: "var(--radius)",
+            md: "calc(var(--radius) - 2px)",
+            sm: "calc(var(--radius) - 4px)",
+          },
+          animation: {
+            'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+            'shine': 'shine 3s linear infinite',
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            shine: {
+              '0%': { transform: 'translateX(-100%) skewX(12deg)' },
+              '20%': { transform: 'translateX(100%) skewX(12deg)' },
+              '100%': { transform: 'translateX(100%) skewX(12deg)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
 
 <body class="font-sans">

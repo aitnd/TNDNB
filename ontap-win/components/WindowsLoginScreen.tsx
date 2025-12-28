@@ -31,6 +31,11 @@ const WindowsLoginScreen: React.FC = () => {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const firebaseUser = userCredential.user;
 
+                // 💖 GHI LẠI PHIÊN ĐĂNG NHẬP (MỚI) 💖
+                import('../services/authSessionService').then(({ recordLoginSession }) => {
+                    recordLoginSession(firebaseUser.uid);
+                });
+
                 // Lấy profile từ Firestore và lưu offline
                 const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
                 if (userDoc.exists()) {

@@ -2,8 +2,8 @@ import React, { useState, useEffect, FormEvent, useMemo } from 'react';
 import { UserProfile } from '../types';
 import { db } from '../services/firebaseClient';
 import { getDefaultAvatar, uploadAvatar } from '../services/userService';
-import { doc, updateDoc, collection, query, orderBy, getDocs, deleteDoc, serverTimestamp } from 'firebase/firestore';
-import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes, FaKey, FaLock } from 'react-icons/fa';
+import { doc, updateDoc, collection, query, orderBy, getDocs, deleteDoc } from 'firebase/firestore';
+import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes, FaKey, FaLock, FaHistory, FaLaptop, FaMobileAlt, FaSignOutAlt } from 'react-icons/fa';
 import { auth } from '../services/firebaseClient';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 
@@ -42,6 +42,62 @@ const allRoles = [
 ];
 
 const staffRoles = ['giao_vien', 'lanh_dao', 'quan_ly'];
+
+// 💖 COMPONENT PHỤ CHO ADMIN QUẢN LÝ SESSION (MỚI) 💖
+const AdminSessionList: React.FC<{ userId: string }> = ({ userId }) => {
+    const [sessions, setSessions] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchSessions = async () => {
+        setLoading(true);
+        try {
+            const { getActiveSessions } = await import('../services/authSessionService');
+            const data = await getActiveSessions(userId);
+            setSessions(data);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchSessions();
+    }, [userId]);
+
+    const handleLogout = async (sid: string) => {
+        if (!confirm('Đăng xuất thiết bị này?')) return;
+        try {
+            const { logoutRemoteSession } = await import('../services/authSessionService');
+            await logoutRemoteSession(sid);
+            fetchSessions();
+        } catch (e) {
+            alert('Lỗi khi đăng xuất.');
+        }
+    };
+
+    if (loading) return <div className="text-xs text-gray-400 animate-pulse">Đang tải phiên...</div>;
+    if (sessions.length === 0) return <div className="text-xs text-gray-400 italic">Không có phiên hoạt động.</div>;
+
+    return (
+        <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+            {sessions.map(s => (
+                <div key={s.id} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-slate-700/30 rounded border border-gray-100 dark:border-slate-600">
+                    <div className="flex items-center gap-2">
+                        {s.deviceName.toLowerCase().includes('windows') ? <FaLaptop className="text-blue-500 text-xs" /> : <FaMobileAlt className="text-green-500 text-xs" />}
+                        <div className="text-[11px]">
+                            <div className="font-bold truncate max-w-[120px]">{s.deviceName}</div>
+                            <div className="text-gray-400">{s.ip}</div>
+                        </div>
+                    </div>
+                    <button onClick={() => handleLogout(s.id)} className="text-red-500 hover:bg-red-50 p-1.5 rounded transition" title="Đăng xuất thiết bị này">
+                        <FaSignOutAlt size={12} />
+                    </button>
+                </div>
+            ))}
+        </div>
+    );
+};
 
 const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNavigate }) => {
     // --- PERSONAL INFO STATE ---
@@ -181,8 +237,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                 cccd: clean(myInfo.cccd),
                 cccdDate: clean(myInfo.cccdDate),
                 cccdPlace: clean(myInfo.cccdPlace),
-                class: clean(myInfo.class), // Allow student to update their self-filled class
-                updatedAt: serverTimestamp()
+                class: clean(myInfo.class) // Allow student to update their self-filled class
             });
             alert('Cập nhật thông tin thành công!');
         } catch (error) {
@@ -219,8 +274,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                 cccd: clean(editingUser.cccd),
                 cccdDate: clean(editingUser.cccdDate),
                 cccdPlace: clean(editingUser.cccdPlace),
-                address: clean(editingUser.address),
-                updatedAt: serverTimestamp()
+                address: clean(editingUser.address)
             });
             alert('Đã cập nhật!');
             setShowEditModal(false);
@@ -248,8 +302,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
             }
 
             // Call Server API
-            const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
-            const response = await fetch(`${baseUrl}/api/admin/reset-password`, {
+            const response = await fetch('/api/admin/reset-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -341,8 +394,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
 
             // Update Firestore
             await updateDoc(doc(db, 'users', userProfile.id), {
-                photoURL: publicUrl,
-                updatedAt: serverTimestamp()
+                photoURL: publicUrl
             });
 
             // Update Local State
@@ -448,6 +500,13 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                     </div>
 
                     <div className="md:col-span-2 flex justify-end mt-4 gap-3">
+                        <button
+                            type="button"
+                            onClick={() => onNavigate('login_history')}
+                            className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition shadow-md"
+                        >
+                            <FaHistory /> Lịch sử đăng nhập
+                        </button>
                         <button
                             type="button"
                             onClick={() => setShowChangePassModal(true)}
@@ -802,6 +861,14 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                         )}
                                     </div>
                                 )}
+
+                                {/* 💖 ADMIN: LOGIN SESSIONS TAB (MỚI) 💖 */}
+                                <div className="mt-6 border-t pt-4">
+                                    <h3 className="text-sm font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
+                                        <FaHistory className="text-blue-500" /> Phiên đăng nhập hoạt động
+                                    </h3>
+                                    <AdminSessionList userId={selectedUser.id} />
+                                </div>
                             </div>
                         </div>
                     </div>

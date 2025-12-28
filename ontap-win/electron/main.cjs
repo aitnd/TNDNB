@@ -112,12 +112,16 @@ function createWindow() {
 
     // --- AUTO UPDATE HANDLERS ---
     ipcMain.on('download-update', (event, url) => {
-        console.log('Download update requested from:', url);
-        // If url is provided, we can try to set it, but electron-updater 
-        // usually expects a directory with yml files.
-        // For now, let's just trigger the check.
-        if (autoUpdater) autoUpdater.checkForUpdatesAndDownload();
+        console.log('Download update requested');
+        // Sử dụng checkForUpdates (autoDownload đã được bật trong config)
+        if (autoUpdater) {
+            autoUpdater.checkForUpdates().catch(err => {
+                log.error('Check for updates failed:', err);
+                mainWindow.webContents.send('update-error', err.message || 'Không thể kiểm tra cập nhật');
+            });
+        }
     });
+
 
     ipcMain.on('install-update', () => {
         if (autoUpdater) autoUpdater.quitAndInstall();
