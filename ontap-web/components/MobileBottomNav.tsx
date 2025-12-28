@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaHome, FaBookOpen, FaUserCog, FaBars, FaHistory, FaSchool, FaUserGraduate, FaExclamationTriangle, FaSignOutAlt, FaTimes } from 'react-icons/fa';
+import { FaHome, FaBookOpen, FaUserCog, FaBars, FaHistory, FaSchool, FaUserGraduate, FaExclamationTriangle, FaSignOutAlt, FaTimes, FaDownload, FaEnvelope, FaCog } from 'react-icons/fa';
+
 import { UserProfile } from '../types';
 
 interface MobileBottomNavProps {
@@ -72,7 +73,15 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
             color: 'text-purple-600'
         });
 
-        // 2. Class Management (Role based)
+        // 2. Hộp thư
+        menuItems.push({
+            name: 'Hộp thư',
+            icon: FaEnvelope,
+            action: () => handleNavigate('mailbox'),
+            color: 'text-pink-600'
+        });
+
+        // 3. Class Management (Role based)
         if (['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile.role)) {
             menuItems.push({
                 name: 'Quản lý lớp',
@@ -87,6 +96,15 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                 action: () => handleNavigate('notification_mgmt'),
                 color: 'text-red-500'
             });
+            // Cấu hình (chỉ Admin)
+            if (userProfile.role === 'admin') {
+                menuItems.push({
+                    name: 'Cấu hình',
+                    icon: FaCog,
+                    action: () => handleNavigate('config'),
+                    color: 'text-purple-600'
+                });
+            }
         } else {
             menuItems.push({
                 name: 'Lớp của tôi',
@@ -95,7 +113,16 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                 color: 'text-green-600'
             });
         }
+
+        // 4. Tải App (cho tất cả)
+        menuItems.push({
+            name: 'Tải App',
+            icon: FaDownload,
+            action: () => handleNavigate('download_app'),
+            color: 'text-green-600'
+        });
     }
+
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
