@@ -10,5 +10,6 @@
     "files.watcherExclude": {
         "**/android/**": true,
         "**/ontap-code/**": true
-    }
+    },
+    "git.ignoreLimitWarning": true
 }
