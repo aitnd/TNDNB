@@ -1,5 +1,5 @@
 // App chính - Routing và Layout
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -70,8 +70,9 @@ function App() {
 
                 <main className="main-content">
                     <Routes>
+                        {/* Trang chính - Dashboard (danh sách quán) */}
                         <Route
-                            path="/"
+                            path="/dashboard"
                             element={
                                 <HomePage
                                     restaurants={restaurants}
@@ -81,6 +82,12 @@ function App() {
                                 />
                             }
                         />
+                        {/* Redirect / về /dashboard */}
+                        <Route
+                            path="/"
+                            element={<Navigate to="/dashboard" replace />}
+                        />
+                        {/* Chi tiết quán ăn */}
                         <Route
                             path="/quan/:id"
                             element={
@@ -91,8 +98,9 @@ function App() {
                                 />
                             }
                         />
+                        {/* Trang Admin - Quản lý */}
                         <Route
-                            path="/dashboard/*"
+                            path="/admin/*"
                             element={
                                 <AdminPage
                                     restaurants={restaurants}

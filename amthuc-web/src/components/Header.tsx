@@ -36,10 +36,10 @@ function Header({ searchQuery, onSearchChange }: HeaderProps) {
 
                     {/* Navigation */}
                     <nav className={`nav ${mobileMenuOpen ? 'nav-open' : ''}`}>
-                        <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+                        <Link to="/dashboard" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
                             🏠 Trang chủ
                         </Link>
-                        <Link to="/dashboard" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
+                        <Link to="/admin" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
                             ⚙️ Quản lý
                         </Link>
                         <a

@@ -69,6 +69,287 @@
     font-size: var(--font-size-xl);
 }
 
+/* Section Actions - nhóm các nút */
+.section-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+/* View Toggle - nút chuyển Grid/List */
+.view-toggle {
+    display: flex;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.view-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-card-hover);
+}
+
+.view-btn.active {
+    color: var(--accent-mint);
+    background: rgba(0, 245, 212, 0.15);
+}
+
+/* Size Control - điều chỉnh số cột */
+.size-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-xs) var(--space-sm);
+}
+
+.size-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.size-btn:hover:not(:disabled) {
+    color: var(--accent-mint);
+    background: rgba(0, 245, 212, 0.1);
+}
+
+.size-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.size-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    min-width: 35px;
+    text-align: center;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.search-bar svg {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.clear-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.clear-btn:hover {
+    background: rgba(255, 100, 100, 0.2);
+    color: var(--primary-pink);
+}
+
+/* Filter Row - kết hợp search và filter */
+.filter-row {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.filter-row .search-bar {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 0;
+}
+
+.filter-select {
+    min-width: 180px;
+}
+
+/* ===== GRID VIEW ===== */
+.admin-grid {
+    display: grid;
+    gap: var(--space-lg);
+}
+
+/* Card kiểu mới cho Grid */
+.admin-card {
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-normal);
+}
+
+.admin-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Ảnh card */
+.card-image {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-emoji {
+    font-size: 32px;
+    opacity: 0.7;
+}
+
+.card-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+}
+
+.card-badge.popular {
+    background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%);
+    color: #000;
+}
+
+.card-badge.unavailable {
+    background: rgba(255, 100, 100, 0.9);
+    color: white;
+}
+
+/* Info trong card */
+.admin-card .item-info {
+    padding: var(--space-lg);
+    flex: 1;
+}
+
+.admin-card .item-info h4 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.admin-card .item-phone,
+.admin-card .item-address,
+.admin-card .item-restaurant {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xs);
+}
+
+/* Actions trong card */
+.admin-card .item-actions {
+    padding: var(--space-md) var(--space-lg);
+    border-top: 1px solid var(--glass-border);
+    justify-content: flex-end;
+}
+
+/* ===== LIST/ROW VIEW ===== */
+.admin-rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.admin-row {
+    display: flex;
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+}
+
+.admin-row .item-info {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-lg);
+}
+
+.admin-row .item-info h4 {
+    margin: 0;
+    min-width: 200px;
+}
+
+.admin-row .item-phone,
+.admin-row .item-address,
+.admin-row .item-restaurant {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.admin-row .item-tags {
+    margin: 0;
+}
+
+/* Menu card đặc biệt */
+.menu-card .price {
+    font-size: var(--font-size-lg) !important;
+    color: var(--accent-mint) !important;
+    font-weight: 700 !important;
+}
+
 /* Filter bar */
 .filter-bar {
     display: flex;
@@ -160,7 +441,7 @@
     border-top: 1px solid var(--glass-border);
 }
 
-/* Admin List */
+/* Admin List mặc định */
 .admin-list {
     display: flex;
     flex-direction: column;
@@ -202,6 +483,7 @@
 
 .item-tags {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-xs);
     margin-top: var(--space-sm);
 }
@@ -247,6 +529,7 @@
     text-align: center;
     padding: var(--space-2xl);
     color: var(--text-muted);
+    grid-column: 1 / -1;
 }
 
 .empty-admin span {
@@ -332,7 +615,7 @@
     color: var(--text-muted);
 }
 
-/* Responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .admin-header {
         flex-direction: column;
@@ -341,6 +624,17 @@
 
     .admin-nav {
         flex-direction: column;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+    }
+
+    .section-actions {
+        width: 100%;
+        justify-content: center;
     }
 
     .form-grid {
@@ -352,10 +646,19 @@
         gap: var(--space-sm);
     }
 
-    .admin-item {
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-row {
         flex-direction: column;
         align-items: flex-start;
         gap: var(--space-md);
+    }
+
+    .admin-row .item-info {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .item-actions {

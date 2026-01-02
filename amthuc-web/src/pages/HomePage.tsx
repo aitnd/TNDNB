@@ -126,7 +126,7 @@ function HomePage({ restaurants, menuItems, loading, searchQuery }: HomePageProp
                             <span className="gradient-text">Đói Ăn Gì?</span> 🍜
                         </h1>
                         <p className="hero-subtitle">
-                            Khám phá ẩm thực Điện Biên - Tìm quán ngon, xem menu, đặt món dễ dàng!
+                            Khám phá ẩm thực Ninh Bình - Tìm quán ngon, xem menu, đặt món dễ dàng!
                         </p>
 
                         {/* Stats */}

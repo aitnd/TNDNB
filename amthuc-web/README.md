@@ -1,6 +1,6 @@
 # 🍜 Amthuc Web - Đói Ăn Gì?
 
-Web app tổng hợp menu quán ăn Điện Biên, phong cách Gen Z hiện đại.
+Web app tổng hợp menu quán ăn Ninh Bình, phong cách Gen Z hiện đại.
 
 ## 🚀 Cài đặt
 

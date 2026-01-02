@@ -17,7 +17,7 @@ function Footer() {
                             <span className="gradient-text">Đói Ăn Gì?</span>
                         </Link>
                         <p className="footer-desc">
-                            Khám phá ẩm thực Điện Biên - Tìm quán ăn ngon, xem menu và đặt món dễ dàng!
+                            Khám phá ẩm thực Ninh Bình - Tìm quán ăn ngon, xem menu và đặt món dễ dàng!
                         </p>
                     </div>
 
@@ -25,8 +25,8 @@ function Footer() {
                     <div className="footer-links">
                         <h4>Liên kết</h4>
                         <ul>
-                            <li><Link to="/">🏠 Trang chủ</Link></li>
-                            <li><Link to="/dashboard">⚙️ Quản lý quán</Link></li>
+                            <li><Link to="/dashboard">🏠 Trang chủ</Link></li>
+                            <li><Link to="/admin">⚙️ Quản lý quán</Link></li>
                             <li><a href="https://daotaothuyenvien.com">🌐 Trang chính</a></li>
                         </ul>
                     </div>
@@ -36,7 +36,7 @@ function Footer() {
                         <h4>Liên hệ</h4>
                         <div className="contact-item">
                             <MapPin size={16} />
-                            <span>TP. Điện Biên Phủ, Điện Biên</span>
+                            <span>TP.Hoa Lư, Ninh Bình</span>
                         </div>
                         <div className="contact-item">
                             <Phone size={16} />
