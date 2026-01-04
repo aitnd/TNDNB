@@ -1,188 +1,220 @@
-// Component tạm thời để seed 5 quán từ ảnh - xóa sau khi dùng xong
+// Component để seed data quán - data đã được thêm vào Firebase
+// Xóa data cũ, thêm quán mới vào đây
 import { useState } from 'react'
 import { db } from '../firebase'
-import { collection, addDoc, serverTimestamp, getDocs, query, where } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { Database, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
-// 5 quán từ ảnh
-const ALL_RESTAURANTS = [
-    // 1. Menu Nhà Em
-    {
-        info: {
-            name: 'Menu Nhà Em',
-            phone: '0982307002',
-            address: 'Không có địa chỉ cụ thể',
-            categories: ['Gà', 'Ếch', 'Mì xào', 'Xôi'],
-            description: 'Ship ngày & đêm - 0982307002 (ngày) / 0986376661 (đêm)'
+// Thêm quán mới vào đây - format:
+// { info: { name, phone, address, categories, description }, menu: [{ name, price, category, isPopular }] }
+const ALL_RESTAURANTS: Array<{
+    info: { name: string; phone: string; address: string; categories: string[]; description: string };
+    menu: Array<{ name: string; price: number; category: string; isPopular: boolean }>;
+}> = [
+        // 1. Thạch Dừa Nguyễn Công Trứ
+        {
+            info: {
+                name: 'Thạch Dừa Nguyễn Công Trứ',
+                phone: '0987887666',
+                address: '690 Nguyễn Công Trứ, TP. Ninh Bình',
+                categories: ['Thạch dừa', 'Kem dừa', 'Đồ uống'],
+                description: 'Mở 07:00 - 21:00. Nổi tiếng thạch dừa tươi ngon nhất Ninh Bình. Có ship.'
+            },
+            menu: [
+                { name: 'Thạch dừa tươi', price: 15000, category: 'Thạch dừa', isPopular: true },
+                { name: 'Thạch dừa đặc biệt', price: 25000, category: 'Thạch dừa', isPopular: true },
+                { name: 'Kem dừa', price: 20000, category: 'Kem', isPopular: false },
+                { name: 'Kem dừa đặc biệt', price: 30000, category: 'Kem', isPopular: false }
+            ]
         },
-        menu: [
-            { name: 'Gà hun khói, gà ủ muối', price: 125000, category: 'Gà', isPopular: true },
-            { name: 'Chân gà sả tắc, sốt thái', price: 50000, category: 'Gà', isPopular: false },
-            { name: 'Gân bò muối rau tiên vua', price: 100000, category: 'Đặc sản', isPopular: false },
-            { name: 'Đùi ếch chiên giòn', price: 100000, category: 'Ếch', isPopular: true },
-            { name: 'Đùi ếch rang muối', price: 110000, category: 'Ếch', isPopular: false },
-            { name: 'Nộm chân gà rút xương', price: 85000, category: 'Gà', isPopular: false },
-            { name: 'Nộm tai heo', price: 85000, category: 'Đặc sản', isPopular: false },
-            { name: 'Cá trứng chiên giòn', price: 100000, category: 'Cá', isPopular: false },
-            { name: 'Chân gà luộc', price: 90000, category: 'Gà', isPopular: false },
-            { name: 'Chân gà rang muối', price: 100000, category: 'Gà', isPopular: false },
-            { name: 'Cánh gà rang muối', price: 100000, category: 'Gà', isPopular: false },
-            { name: 'Gà rang muối', price: 110000, category: 'Gà', isPopular: false },
-            { name: 'Dồi sụn', price: 10000, category: 'Đặc sản', isPopular: false },
-            { name: 'Xôi chim chiên', price: 60000, category: 'Xôi', isPopular: false },
-            { name: 'Óc nhồi ống nứa hấp', price: 80000, category: 'Đặc sản', isPopular: false },
-            { name: 'Mì xào bò', price: 40000, category: 'Mì xào', isPopular: true },
-            { name: 'Mì xào xúc xích viên chiên', price: 35000, category: 'Mì xào', isPopular: false },
-            { name: 'Mì xào Hải sản', price: 40000, category: 'Mì xào', isPopular: false },
-            { name: 'Mì xào thập Cẩm', price: 45000, category: 'Mì xào', isPopular: false },
-            { name: 'Xôi ruốc, xôi trứng', price: 25000, category: 'Xôi', isPopular: false },
-            { name: 'Xôi trắng', price: 20000, category: 'Xôi', isPopular: false },
-            { name: 'Xôi lạp xưởng', price: 30000, category: 'Xôi', isPopular: false },
-            { name: 'Xôi xúc xích viên chiên', price: 30000, category: 'Xôi', isPopular: false },
-            { name: 'Xôi thập cẩm', price: 45000, category: 'Xôi', isPopular: false }
-        ]
-    },
 
-    // 2. Quán 824 Nguyễn Công Trứ
-    {
-        info: {
-            name: 'Quán 824 Nguyễn Công Trứ',
-            phone: '0912912082',
-            address: '824 Nguyễn Công Trứ, TP Hoa Lư, Ninh Bình',
-            categories: ['Gà', 'Xôi', 'Đặc sản'],
-            description: 'Không rõ giờ, có ship buổi chiều'
+        // 2. Kem Xôi Thanh Hằng
+        {
+            info: {
+                name: 'Kem Xôi Thanh Hằng',
+                phone: '',
+                address: 'Phố 8, Lương Văn Tụy, P. Tân Thành, TP. Ninh Bình',
+                categories: ['Kem xôi', 'Sữa chua', 'Chè'],
+                description: 'Mở 09:00 - 22:00. Kem xôi nổi tiếng nhất Ninh Bình.'
+            },
+            menu: [
+                { name: 'Kem xôi', price: 12000, category: 'Kem xôi', isPopular: true },
+                { name: 'Sữa chua cốc', price: 8000, category: 'Sữa chua', isPopular: false },
+                { name: 'Kem socola', price: 15000, category: 'Kem', isPopular: false },
+                { name: 'Kem đặc biệt Thanh Hằng', price: 15000, category: 'Kem', isPopular: true },
+                { name: 'Sinh tố yaourt', price: 20000, category: 'Sinh tố', isPopular: false },
+                { name: 'Chè bưởi', price: 15000, category: 'Chè', isPopular: false }
+            ]
         },
-        menu: [
-            { name: 'Gà Luộc', price: 230000, category: 'Gà', isPopular: true },
-            { name: 'Gà ủ muối', price: 140000, category: 'Gà', isPopular: true },
-            { name: 'Xôi chim chiên', price: 65000, category: 'Xôi', isPopular: false },
-            { name: 'Chân Gà Luộc', price: 90000, category: 'Gà', isPopular: false },
-            { name: 'Chân gà xả tắc / sốt thái', price: 80000, category: 'Gà', isPopular: false },
-            { name: 'Nhông ong xào lá chanh', price: 200000, category: 'Đặc sản', isPopular: true },
-            { name: 'Trứng Vịt lộn luộc', price: 80000, category: 'Trứng', isPopular: false },
-            { name: 'Dồi sụn chiên', price: 10000, category: 'Đặc sản', isPopular: false },
-            { name: 'Lạp xưởng chiên', price: 15000, category: 'Đặc sản', isPopular: false },
-            { name: 'Hoa Quả Tổng Hợp', price: 50000, category: 'Đồ uống', isPopular: false }
-        ]
-    },
 
-    // 3. Ship Đồ Ăn Đêm (Mì Cay, Lẩu Ly)
-    {
-        info: {
-            name: 'Ship Đồ Ăn Đêm (Mì Cay, Lẩu Ly)',
-            phone: '0986288397',
-            address: 'Không có địa chỉ cụ thể',
-            categories: ['Mì cay', 'Lẩu', 'Ăn vặt'],
-            description: 'Ship 15:00 - 03:00 sáng - Zalo: 0344851998'
+        // 3. Kem Băng Tuyết
+        {
+            info: {
+                name: 'Kem Băng Tuyết',
+                phone: '',
+                address: '91 Cù Chính Lan, P. Tân Thành, TP. Ninh Bình',
+                categories: ['Kem', 'Sữa chua', 'Sinh tố'],
+                description: 'Mở 08:00 - 22:00. Kem trang trí đẹp, không gian check-in.'
+            },
+            menu: [
+                { name: 'Kem đĩa (1 người)', price: 20000, category: 'Kem', isPopular: true },
+                { name: 'Kem đĩa trái cây', price: 40000, category: 'Kem', isPopular: true },
+                { name: 'Kem đặc biệt', price: 80000, category: 'Kem', isPopular: false },
+                { name: 'Sữa chua', price: 15000, category: 'Sữa chua', isPopular: false },
+                { name: 'Sinh tố', price: 25000, category: 'Sinh tố', isPopular: false }
+            ]
         },
-        menu: [
-            { name: 'Mì cay (bò, sụn, hải sản)', price: 47500, category: 'Mì cay', isPopular: true },
-            { name: 'Mì trộn (trứng ốp, sủi cảo)', price: 35000, category: 'Mì trộn', isPopular: false },
-            { name: 'Lẩu ly (bò, sụn, thập cẩm)', price: 40000, category: 'Lẩu', isPopular: true },
-            { name: 'Viên chiên', price: 25000, category: 'Ăn vặt', isPopular: false },
-            { name: 'Sủi cảo', price: 25000, category: 'Ăn vặt', isPopular: false },
-            { name: 'Gà xiên que', price: 25000, category: 'Ăn vặt', isPopular: false },
-            { name: 'Xúc xích', price: 25000, category: 'Ăn vặt', isPopular: false },
-            { name: 'Lạp xưởng', price: 25000, category: 'Ăn vặt', isPopular: false },
-            { name: 'Nem chua rán', price: 25000, category: 'Ăn vặt', isPopular: false }
-        ]
-    },
 
-    // 4. Quán Ăn Vặt Trần Phú
-    {
-        info: {
-            name: 'Quán Ăn Vặt Trần Phú',
-            phone: '0356943456',
-            address: 'Số 04 Ngõ 65 Trần Phú (gần Chợ Bóp)',
-            categories: ['Nem nướng', 'Bún', 'Mỳ', 'Tokboki', 'Kimbap'],
-            description: 'Giờ không rõ'
+        // 4. Chè Thanh Thảo
+        {
+            info: {
+                name: 'Chè Thanh Thảo',
+                phone: '0916622225',
+                address: '31 Cù Chính Lan, TP. Ninh Bình',
+                categories: ['Chè', 'Sữa chua', 'Ăn vặt'],
+                description: 'Mở 09:00 - 22:00. Không gian rộng rãi, trung tâm thành phố.'
+            },
+            menu: [
+                { name: 'Sữa chua mít', price: 18000, category: 'Sữa chua', isPopular: true },
+                { name: 'Sữa chua nếp cẩm', price: 18000, category: 'Sữa chua', isPopular: false },
+                { name: 'Sữa chua đánh đá dâu', price: 18000, category: 'Sữa chua', isPopular: false },
+                { name: 'Matcha', price: 20000, category: 'Đồ uống', isPopular: false },
+                { name: 'Bò khô', price: 25000, category: 'Ăn vặt', isPopular: true },
+                { name: 'Nem chua rán', price: 25000, category: 'Ăn vặt', isPopular: false },
+                { name: 'Hoa quả dầm sữa chua', price: 25000, category: 'Hoa quả', isPopular: false },
+                { name: 'Khoai tây chiên', price: 20000, category: 'Ăn vặt', isPopular: false }
+            ]
         },
-        menu: [
-            { name: 'Nem nướng Nha Trang', price: 35000, category: 'Nem nướng', isPopular: true },
-            { name: 'Bún Trộn Nem Nướng', price: 35000, category: 'Bún', isPopular: false },
-            { name: 'Bún trộn Bò', price: 39000, category: 'Bún', isPopular: false },
-            { name: 'Mỳ trộn', price: 40000, category: 'Mỳ', isPopular: false },
-            { name: 'Gà Ủ Muối', price: 149000, category: 'Gà', isPopular: true },
-            { name: 'Chân gà sốt thái', price: 50000, category: 'Gà', isPopular: false },
-            { name: 'Cơm gà', price: 49000, category: 'Cơm', isPopular: false },
-            { name: 'Cơm trộn Hàn Quốc', price: 39000, category: 'Cơm', isPopular: false },
-            { name: 'Mỳ Ý', price: 35000, category: 'Mỳ', isPopular: false },
-            { name: 'Mỳ cay kim chi (có viên, xúc xích, bò, hải sản)', price: 47000, category: 'Mỳ cay', isPopular: true },
-            { name: 'Tokbokki (Gốc phô mai, sốt truyền thống)', price: 37500, category: 'Tokboki', isPopular: false },
-            { name: 'Pizza chicago', price: 50000, category: 'Pizza', isPopular: false },
-            { name: 'Kimbap (Chiên, Thường, Bò)', price: 35000, category: 'Kimbap', isPopular: false },
-            { name: 'Đồ chiên (Nem chua, xúc xích, khoai tây, khoai lang)', price: 30000, category: 'Ăn vặt', isPopular: false }
-        ]
-    },
 
-    // 5. Quán Ăn Đêm Xuân Thành
-    {
-        info: {
-            name: 'Quán Ăn Đêm Xuân Thành',
-            phone: '0368730876',
-            address: '516 đường Xuân Thành, TP. Ninh Bình',
-            categories: ['Gà', 'Nướng', 'Đặc sản'],
-            description: 'Mở 17:00 - Sáng - SĐT: 0342299012'
+        // 5. Bánh Rán Mặn Ngọt Sài Gòn
+        {
+            info: {
+                name: 'Bánh Rán Mặn Ngọt Sài Gòn',
+                phone: '',
+                address: 'Gần trường mầm non Nam Thành, đường Trần Phú, P. Phúc Thành',
+                categories: ['Bánh rán', 'Ăn vặt'],
+                description: 'Mở 14:00 - 21:00. Bánh làm tại chỗ, vỏ giòn thơm bơ. Ship từ 100k.'
+            },
+            menu: [
+                { name: 'Bánh rán ngọt (nhân kem sữa)', price: 2000, category: 'Bánh rán', isPopular: true },
+                { name: 'Bánh rán mặn (trứng cút, mộc nhĩ)', price: 3000, category: 'Bánh rán', isPopular: true },
+                { name: 'Combo 5 bánh rán', price: 12000, category: 'Bánh rán', isPopular: false }
+            ]
         },
-        menu: [
-            { name: 'Chân gà nướng', price: 12000, category: 'Gà', isPopular: true },
-            { name: 'Chân gà luộc', price: 12000, category: 'Gà', isPopular: false },
-            { name: 'Hàu nướng', price: 6000, category: 'Hải sản', isPopular: false },
-            { name: 'Trứng vịt lộn', price: 8000, category: 'Trứng', isPopular: false },
-            { name: 'Trứng gà', price: 6000, category: 'Trứng', isPopular: false },
-            { name: 'Xiên nướng', price: 12000, category: 'Nướng', isPopular: true },
-            { name: 'Mỳ tôm xào (trứng, xúc xích)', price: 35000, category: 'Mì xào', isPopular: false },
-            { name: 'Cơm rang (trứng, xúc xích, thập cẩm)', price: 42500, category: 'Cơm', isPopular: false },
-            { name: 'Tiết canh', price: 40000, category: 'Đặc sản', isPopular: false }
-        ]
-    },
 
-    // 6. Bếp Quyết Tiger - Lẩu Ếch Măng Cay
-    {
-        info: {
-            name: 'Bếp Quyết Tiger - Lẩu Ếch Măng Cay',
-            phone: '0866969626',
-            address: '526 Ngô Gia Tự, P. Nam Bình, TP. Hoa Lư',
-            categories: ['Lẩu', 'Ếch', 'Nướng', 'Gà'],
-            description: 'Ship đến 24h - Zalo: 0866.969.626'
+        // 6. Chè 17 Phố Vịt
+        {
+            info: {
+                name: 'Chè 17 Phố Vịt',
+                phone: '',
+                address: '17 Đinh Tiên Hoàng, P. Đông Thành, TP. Ninh Bình',
+                categories: ['Chè', 'Ăn vặt'],
+                description: 'Mở 08:00 - 22:00. Khu Phố Vịt nổi tiếng. Ship 5k trong TP từ 2 cốc.'
+            },
+            menu: [
+                { name: 'Chè nếp cẩm mít', price: 15000, category: 'Chè', isPopular: true },
+                { name: 'Chè sương sa hạt lựu', price: 15000, category: 'Chè', isPopular: false },
+                { name: 'Chè caramen dâu', price: 20000, category: 'Chè', isPopular: true },
+                { name: 'Chè mít', price: 12000, category: 'Chè', isPopular: false },
+                { name: 'Chè bưởi', price: 12000, category: 'Chè', isPopular: false },
+                { name: 'Chè thập cẩm', price: 15000, category: 'Chè', isPopular: false },
+                { name: 'Chè khúc bạch', price: 20000, category: 'Chè', isPopular: false },
+                { name: 'Bánh mì xúc xích', price: 15000, category: 'Ăn vặt', isPopular: false }
+            ]
         },
-        menu: [
-            { name: 'Lẩu Ếch Măng Cay (nồi 2-3 người)', price: 300000, category: 'Lẩu', isPopular: true },
-            { name: 'Lẩu Ếch Măng Cay (nồi 3-4 người)', price: 400000, category: 'Lẩu', isPopular: false },
-            { name: 'Lẩu Ếch Măng Cay (nồi 4-5 người)', price: 500000, category: 'Lẩu', isPopular: false },
-            { name: 'Lẩu Ếch Măng Cay (nồi 5-6 người)', price: 600000, category: 'Lẩu', isPopular: false },
-            { name: 'Sườn Nướng Tảng BBQ (600g)', price: 250000, category: 'Nướng', isPopular: true },
-            { name: 'Cá Nướng Muối Ớt (1.3-1.5kg)', price: 250000, category: 'Nướng', isPopular: false },
-            { name: 'Gà Ủ Muối (1 con)', price: 290000, category: 'Gà', isPopular: true },
-            { name: 'Gà Ủ Muối (nửa con)', price: 150000, category: 'Gà', isPopular: false },
-            { name: 'Sụn Gà Rang Muối (1 suất)', price: 120000, category: 'Gà', isPopular: false },
-            { name: 'Ếch Chiên Mắm (1 suất)', price: 150000, category: 'Ếch', isPopular: false },
-            { name: 'Má Heo Nướng (1 suất)', price: 150000, category: 'Nướng', isPopular: false },
-            { name: 'Râu Mực Nướng Muối Ớt (1 suất)', price: 200000, category: 'Nướng', isPopular: false },
-            { name: 'Ếch Xào Măng Cay/Rang Muối (1 suất)', price: 150000, category: 'Ếch', isPopular: false }
-        ]
-    },
 
-    // 7. Ship Đặc Sản Các Vùng Miền
-    {
-        info: {
-            name: 'Ship Đặc Sản Các Vùng Miền',
-            phone: '0389363897',
-            address: 'Ship full map Ninh Bình',
-            categories: ['Đặc sản', 'Bánh'],
-            description: 'Zalo/iMessage: 0389363897 - Đặc sản các vùng miền'
+        // 7. Chè Bống
+        {
+            info: {
+                name: 'Chè Bống',
+                phone: '0945959679',
+                address: '79 Trương Định, P. Vân Gia, TP. Ninh Bình',
+                categories: ['Chè', 'Kem', 'Sữa chua', 'Ăn vặt'],
+                description: 'Mở 08:00 - 23:00. 2 tầng, có máy lạnh. Menu đa dạng mặn ngọt. Có combo sinh nhật.'
+            },
+            menu: [
+                { name: 'Sữa chua nếp cẩm caramel', price: 18000, category: 'Sữa chua', isPopular: true },
+                { name: 'Nem chua rán (5 chiếc)', price: 20000, category: 'Ăn vặt', isPopular: true },
+                { name: 'Chè các loại', price: 15000, category: 'Chè', isPopular: false },
+                { name: 'Kem các loại', price: 20000, category: 'Kem', isPopular: false },
+                { name: 'Gà chiên', price: 40000, category: 'Ăn vặt', isPopular: false },
+                { name: 'Mì xào', price: 35000, category: 'Mì', isPopular: false }
+            ]
         },
-        menu: [
-            { name: 'Bánh mì cay Hải Phòng', price: 45000, category: 'Bánh', isPopular: true },
-            { name: 'Bánh bột lọc Phan Thiết (hộp 500gr)', price: 100000, category: 'Bánh', isPopular: false },
-            { name: 'Bánh nậm Huế', price: 48000, category: 'Bánh', isPopular: false },
-            { name: 'Bánh ít Huế', price: 47000, category: 'Bánh', isPopular: false },
-            { name: 'Bánh tráng mắm ruốc Đà Lạt (bịch 5c)', price: 38000, category: 'Bánh', isPopular: false },
-            { name: 'Bánh tráng nướng sate bò (bịch 10c)', price: 40000, category: 'Bánh', isPopular: true },
-            { name: 'Khoai lang sấy mật Đà Lạt (gói 500gr)', price: 80000, category: 'Đặc sản', isPopular: false }
-        ]
-    }
-];
+
+        // 8. Bếp Nhà Hương Béo
+        {
+            info: {
+                name: 'Bếp Nhà Hương Béo',
+                phone: '0915803535',
+                address: '65 Nguyễn Thái Học, Nhật Tân, Tân Thành, TP. Ninh Bình',
+                categories: ['Bún đậu', 'Chè', 'Ăn vặt'],
+                description: 'Mở 09:00 - 21:00. Không gian mát có cây sấu, chỗ đỗ xe rộng.'
+            },
+            menu: [
+                { name: 'Bún đậu mắm tôm (đậu + chả cốm)', price: 20000, category: 'Bún đậu', isPopular: true },
+                { name: 'Bún đậu đầy đủ', price: 40000, category: 'Bún đậu', isPopular: true },
+                { name: 'Chân gà rút xương', price: 25000, category: 'Ăn vặt', isPopular: false },
+                { name: 'Nộm bò khô', price: 20000, category: 'Ăn vặt', isPopular: false },
+                { name: 'Chè hoa cau', price: 10000, category: 'Chè', isPopular: false },
+                { name: 'Chè bưởi', price: 10000, category: 'Chè', isPopular: false },
+                { name: 'Thạch dừa', price: 15000, category: 'Thạch', isPopular: false }
+            ]
+        },
+
+        // 9. Nem Nướng - Tiệm Hoa
+        {
+            info: {
+                name: 'Nem Nướng - Tiệm Hoa',
+                phone: '',
+                address: '3 Phúc Thành, Phúc Hưng, TP. Ninh Bình',
+                categories: ['Nem nướng', 'Thịt nướng'],
+                description: 'Mở 08:00 - 22:00. Nem nướng Nha Trang nổi tiếng. Buổi tối đông.'
+            },
+            menu: [
+                { name: 'Nem nướng Nha Trang (1 người)', price: 40000, category: 'Nem nướng', isPopular: true },
+                { name: 'Nem nướng đặc biệt', price: 55000, category: 'Nem nướng', isPopular: false },
+                { name: 'Thịt nướng đặc biệt', price: 50000, category: 'Thịt nướng', isPopular: true }
+            ]
+        },
+
+        // 10. Bánh Cuốn Chả Vân Giang
+        {
+            info: {
+                name: 'Bánh Cuốn Chả Vân Giang',
+                phone: '',
+                address: '15 Vân Giang, TP. Ninh Bình',
+                categories: ['Bánh cuốn', 'Ăn sáng'],
+                description: 'Mở 09:00 - 22:00. Quán lâu đời, đông khách, chả thơm ngon.'
+            },
+            menu: [
+                { name: 'Bánh cuốn không trứng', price: 15000, category: 'Bánh cuốn', isPopular: true },
+                { name: 'Bánh cuốn có trứng', price: 20000, category: 'Bánh cuốn', isPopular: true },
+                { name: 'Bánh cuốn đầy đủ (chả, giò, nem)', price: 30000, category: 'Bánh cuốn', isPopular: false },
+                { name: 'Suất đặc biệt (2-3 người)', price: 100000, category: 'Bánh cuốn', isPopular: false }
+            ]
+        },
+
+        // 11. T'Rang Tào Phớ Chè Hiện Đại
+        {
+            info: {
+                name: "T'Rang Tào Phớ Chè Hiện Đại",
+                phone: '',
+                address: '42 Lương Văn Tụy, P. Phúc Thành, TP. Ninh Bình',
+                categories: ['Tào phớ', 'Chè'],
+                description: 'Mở 08:00 - 22:00. 12 loại tào phớ. Không gian hiện đại, check-in đẹp.'
+            },
+            menu: [
+                { name: 'Tào phớ truyền thống', price: 14000, category: 'Tào phớ', isPopular: true },
+                { name: 'Tào phớ + topping', price: 25000, category: 'Tào phớ', isPopular: true },
+                { name: 'Tào phớ đặc biệt', price: 40000, category: 'Tào phớ', isPopular: false },
+                { name: 'Chè xoài', price: 25000, category: 'Chè', isPopular: false },
+                { name: 'Chè dừa non', price: 20000, category: 'Chè', isPopular: false },
+                { name: 'Chè sầu riêng', price: 30000, category: 'Chè', isPopular: false },
+                { name: 'Chè thốt nốt', price: 25000, category: 'Chè', isPopular: false }
+            ]
+        }
+    ];
 
 interface SeedButtonProps {
     onComplete: () => void
@@ -199,7 +231,7 @@ function SeedFiveQuanButton({ onComplete, existingRestaurants }: SeedButtonProps
         r => !existingRestaurants.includes(r.info.name)
     )
 
-    // Nếu tất cả đã tồn tại
+    // Nếu không có quán mới
     if (newRestaurants.length === 0) {
         return null
     }
@@ -258,7 +290,7 @@ function SeedFiveQuanButton({ onComplete, existingRestaurants }: SeedButtonProps
         }}>
             <h3 style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Database size={20} />
-                Thêm 5 Quán Từ Ảnh
+                Thêm Quán Mới
             </h3>
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', marginBottom: '8px' }}>
                 {newRestaurants.length} quán mới - {totalItems} món
