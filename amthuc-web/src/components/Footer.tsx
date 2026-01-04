@@ -49,11 +49,11 @@ function Footer() {
                 <div className="footer-bottom">
                     <p>
                         Made with <Heart size={14} className="heart-icon" /> by{' '}
-                        <a href="https://daotaothuyenvien.com" className="gradient-text">
-                            daotaothuyenvien.com
+                        <a className="gradient-text">
+                            <span>Horizon</span>
                         </a>
                     </p>
-                    <p className="copyright">© {currentYear} Đói Ăn Gì? - All rights reserved</p>
+                    <p className="copyright">© {currentYear} BlueHorizon Studio - All rights reserved</p>
                 </div>
             </div>
         </footer>

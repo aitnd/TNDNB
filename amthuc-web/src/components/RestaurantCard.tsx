@@ -8,6 +8,7 @@ import './RestaurantCard.css'
 interface RestaurantCardProps {
     restaurant: Restaurant
     menuCount: number
+    viewMode?: 'grid' | 'list' // Optional, mặc định là grid
 }
 
 // Màu gradient ngẫu nhiên cho card không có ảnh
@@ -20,7 +21,7 @@ const GRADIENTS = [
     'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
 ]
 
-function RestaurantCard({ restaurant, menuCount }: RestaurantCardProps) {
+function RestaurantCard({ restaurant, menuCount, viewMode = 'grid' }: RestaurantCardProps) {
     // Chọn gradient dựa trên id của quán
     const gradientIndex = restaurant.id.charCodeAt(0) % GRADIENTS.length
     const gradient = GRADIENTS[gradientIndex]
@@ -37,9 +38,9 @@ function RestaurantCard({ restaurant, menuCount }: RestaurantCardProps) {
 
     return (
         <motion.div
-            className="restaurant-card glass-card"
+            className={`restaurant-card glass-card ${viewMode === 'list' ? 'list-card' : ''}`}
             variants={cardVariants}
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: viewMode === 'list' ? 1.01 : 1.02 }}
             whileTap={{ scale: 0.98 }}
         >
             <Link to={`/quan/${restaurant.id}`} className="card-link">

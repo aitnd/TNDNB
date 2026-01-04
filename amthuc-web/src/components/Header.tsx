@@ -1,5 +1,5 @@
 // Header component với logo và thanh tìm kiếm
-import { Search, Menu, X } from 'lucide-react'
+import { Search, Menu, X, ChevronDown, Link2, Newspaper, BookOpen } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './Header.css'
@@ -11,6 +11,7 @@ interface HeaderProps {
 
 function Header({ searchQuery, onSearchChange }: HeaderProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [showLinksDropdown, setShowLinksDropdown] = useState(false)
 
     return (
         <header className="header">
@@ -42,13 +43,32 @@ function Header({ searchQuery, onSearchChange }: HeaderProps) {
                         <Link to="/admin" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
                             ⚙️ Quản lý
                         </Link>
-                        <a
-                            href="https://daotaothuyenvien.com"
-                            className="nav-link"
-                            onClick={() => setMobileMenuOpen(false)}
-                        >
-                            🌐 Về trang chính
-                        </a>
+
+                        {/* Dropdown Liên kết */}
+                        <div className="nav-dropdown">
+                            <button
+                                className="nav-link nav-dropdown-btn"
+                                onClick={() => setShowLinksDropdown(!showLinksDropdown)}
+                                onBlur={() => setTimeout(() => setShowLinksDropdown(false), 200)}
+                            >
+                                <Link2 size={16} />
+                                Liên kết
+                                <ChevronDown size={14} className={`dropdown-arrow ${showLinksDropdown ? 'rotate' : ''}`} />
+                            </button>
+
+                            {showLinksDropdown && (
+                                <div className="dropdown-menu">
+                                    <a href="/" className="dropdown-item" onClick={() => setMobileMenuOpen(false)}>
+                                        <Newspaper size={16} />
+                                        Tin tức
+                                    </a>
+                                    <a href="/ontap" className="dropdown-item" onClick={() => setMobileMenuOpen(false)}>
+                                        <BookOpen size={16} />
+                                        Ôn tập
+                                    </a>
+                                </div>
+                            )}
+                        </div>
                     </nav>
 
                     {/* Mobile menu button */}

@@ -1,0 +1,495 @@
+{
+  "name": "chatbot tele",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Retrieve Long Term Memories\nGoogle Docs",
+        "height": 380,
+        "width": 340,
+        "color": 4
+      },
+      "id": "39fcd427-dcac-41f5-8dae-cd317ffdbf00",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1264,
+        -192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Save To Current Chat Memory (Optional)",
+        "height": 380,
+        "width": 280
+      },
+      "id": "cc88da46-1656-47a2-b722-5d28f033ea1d",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -128,
+        384
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Save Long Term Memories\nGoogle Docs",
+        "height": 380,
+        "width": 280,
+        "color": 4
+      },
+      "id": "33783ca5-5965-4c09-afd8-ea613345b558",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        192,
+        384
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "3531cbb5-f3d1-484b-9983-ae425e46c359",
+      "name": "gpt-4o-mini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -352,
+        432
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d6f68b1c-a6a6-44d4-8686-dc4dcdde4767",
+              "name": "output",
+              "type": "string",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e40a6c8e-1b6e-47c6-9e45-e930b55199c9",
+      "name": "Chat Response",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        272,
+        144
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('When chat message received').item.json.sessionId }}",
+        "contextWindowLength": 50
+      },
+      "id": "7e37edf8-a77f-4ec2-b1b5-8440b64b1e81",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -32,
+        544
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Save Memory",
+        "operation": "update",
+        "documentURL": "[Google Doc ID]",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={ \n \"memory\": \"{{ $fromAI('memory') }}\",\n \"date\": \"{{ $now }}\"\n}"
+            }
+          ]
+        }
+      },
+      "id": "710831ab-e452-4dd8-bf8d-dba66d4e61f0",
+      "name": "Save Long Term Memories",
+      "type": "n8n-nodes-base.googleDocsTool",
+      "position": [
+        304,
+        544
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "get",
+        "documentURL": "[Google Doc ID]"
+      },
+      "id": "b06f8a75-f078-4c41-ad49-4db8aae4a437",
+      "name": "Retrieve Long Term Memories",
+      "type": "n8n-nodes-base.googleDocs",
+      "position": [
+        -1152,
+        -48
+      ],
+      "typeVersion": 2,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "8WPfVuPrMRnULeNa",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## LLM",
+        "height": 380,
+        "width": 280,
+        "color": 3
+      },
+      "id": "f8900d47-eee7-4d01-93b8-5b3e4f0239dc",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        384
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chatId": "=1234567891",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "3a1289c8-9dad-4b30-b553-e6a755d125b9",
+      "name": "Telegram Response",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        272,
+        -208
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "7c6dfbad-1268-4f6b-bc10-b22dbb5bc731"
+    },
+    {
+      "parameters": {
+        "content": "## Telegram \n(Optional)",
+        "height": 300,
+        "width": 260
+      },
+      "id": "199b3c9e-e8f1-48c2-ad4a-08ef6f3ceb67",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        192,
+        -304
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## AI AGENT with Long Term Memory & Note Storage",
+        "height": 780,
+        "width": 1320,
+        "color": 5
+      },
+      "id": "901b8a9d-71dd-43b2-8a12-4d9ba132a4c7",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -496,
+        32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "=deepseek-chat",
+        "options": {}
+      },
+      "id": "b6ac18f6-c604-4a7b-9f0b-6e628e02511d",
+      "name": "DeepSeek-V3 Chat",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -352,
+        592
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "=## ROLE \nYou are a friendly, attentive, and helpful AI assistant. Your primary goal is to assist the user while maintaining a personalized and engaging interaction. \n\n---\n\n## RULES \n\n1. **Memory Management**: \n - When the user sends a new message, evaluate whether it contains noteworthy or personal information (e.g., preferences, habits, goals, or important events). \n - If such information is identified, use the **Save Memory** tool to store this data in memory. \n - Always send a meaningful response back to the user, even if your primary action was saving information. This response should not reveal that information was stored but should acknowledge or engage with the user’s input naturally. \n\n2. **Note Management**: \n - If the user provides information that is intended to be stored as a note (e.g., specific instructions, reminders, or standalone pieces of information), use the **Save Note** tool. \n - Notes should not be stored in memory using the **Save Memory** tool. \n - Ensure that notes are clear, concise, and accurately reflect the user’s input. \n\n3. **Context Awareness**: \n - Use stored memories and notes to provide contextually relevant and personalized responses. \n - Always consider the **date and time** when a memory or note was collected to ensure your responses are up-to-date and accurate.\n\n4. **User-Centric Responses**: \n - Tailor your responses based on the user's preferences and past interactions. \n - Be proactive in recalling relevant details from memory or notes when appropriate but avoid overwhelming the user with unnecessary information.\n\n5. **Privacy and Sensitivity**: \n - Handle all user data with care and sensitivity. Avoid making assumptions or sharing stored information unless it directly enhances the conversation or task at hand.\n - Never store passwords or usernames.\n\n6. **Fallback Responses**: \n - **IMPORTANT** If no specific task or question arises from the user’s message (e.g., when only saving information), respond in a way that keeps the conversation flowing naturally. For example: \n - Acknowledge their input: “Thanks for sharing that!” \n - Provide a friendly follow-up: “Is there anything else I can help you with today?” \n - DO NOT tell jokes as a fallback response.\n\n---\n\n## TOOLS \n\n### Save Memory \n- Use this tool to store summarized, concise, and meaningful information about the user. \n- Extract key details from user messages that could enhance future interactions (e.g., likes/dislikes, important dates, hobbies). \n- Ensure that the summary is clear and devoid of unnecessary details.\n\n### Save Note \n- Use this tool to store specific instructions, reminders, or standalone pieces of information provided by the user. \n- Notes should not include general personal preferences or habits meant for long-term memory storage. \n- Ensure that notes are concise and accurately reflect what the user wants to store.\n\n---\n\n## MEMORIES \n\n### Recent Noteworthy Memories \nHere are the most recent memories collected from the user, including their date and time of collection: \n\n**{{ $json.data[0].content }}**\n\n### Guidelines for Using Memories: \n- Prioritize recent memories but do not disregard older ones if they remain relevant. \n- Cross-reference memories to maintain consistency in your responses. For example, if a user shares conflicting preferences over time, clarify or adapt accordingly.\n\n---\n\n## NOTES \n\n### Recent Notes Collected from User: \nHere are the most recent notes collected from the user: \n\n**{{ $json.data[1].content }}**\n\n### Guidelines for Using Notes: \n- Use notes for tasks requiring specific instructions or reminders.\n- Do not mix note content with general memory content; keep them distinct.\n\n---\n\n## ADDITIONAL INSTRUCTIONS \n\n- Think critically before responding to ensure your answers are thoughtful and accurate. \n- Strive to build trust with the user by being consistent, reliable, and personable in your interactions. \n- Avoid robotic or overly formal language; aim for a conversational tone that aligns with being \"friendly and helpful.\" \n"
+        }
+      },
+      "id": "58250b3d-31f7-4b3a-b7ca-6e132ae3ad2c",
+      "name": "AI Tools Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -112,
+        144
+      ],
+      "typeVersion": 1.7,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "content": "## Save Notes\nGoogle Docs",
+        "height": 380,
+        "width": 280,
+        "color": 4
+      },
+      "id": "b2d22190-2b8d-4340-9cc6-f9b9b22cb2a4",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        384
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Save Notes",
+        "operation": "update",
+        "documentURL": "[Google Doc ID]",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={ \n \"note\": \"{{ $fromAI('memory') }}\",\n \"date\": \"{{ $now }}\"\n}"
+            }
+          ]
+        }
+      },
+      "id": "389c3c8c-a746-4973-be83-c5f6fa3c3ffb",
+      "name": "Save Notes",
+      "type": "n8n-nodes-base.googleDocsTool",
+      "position": [
+        624,
+        544
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "content": "## Retrieve Notes\nGoogle Docs",
+        "height": 380,
+        "width": 340,
+        "color": 4
+      },
+      "id": "0c9a8223-79dd-42c7-9b07-08a0d9844622",
+      "name": "Sticky Note11",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1264,
+        224
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "[Google Doc ID]"
+      },
+      "id": "319b2f91-5b2f-4e0f-8f1a-f62f15aefffb",
+      "name": "Retrieve Notes",
+      "type": "n8n-nodes-base.googleDocs",
+      "position": [
+        -1152,
+        352
+      ],
+      "typeVersion": 2,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "0ec79386-018c-4125-a910-51280e00a3fb",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        -656,
+        144
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "b7d2af62-e99a-4b28-9dfe-bed355636440",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        -832,
+        144
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "updates": [
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1520,
+        160
+      ],
+      "id": "d9d0d37b-8323-4a91-a2c4-123f8d24e3a5",
+      "name": "Telegram Trigger",
+      "webhookId": "643e56cb-a7bf-40fb-a557-b41dbf0ca966",
+      "credentials": {
+        "telegramApi": {
+          "id": "OKBA4Jer59IsN2tw",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "AI Tools Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Notes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Tools Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gpt-4o-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Tools Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Tools Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram Response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Chat Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Notes": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Tools Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Long Term Memories": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Tools Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Long Term Memories": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a60c226d-c617-4d90-a6f2-7789688de801",
+  "meta": {
+    "instanceId": "dd172ad4f7736955c0a5e1ab5932e16107778fda6f4cdaa9ee5c2c66937528b0"
+  },
+  "id": "cWznWGZq6gBDkWG1",
+  "tags": []
+}

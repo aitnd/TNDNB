@@ -1,0 +1,759 @@
+{
+    "nodes": [
+        {
+            "parameters": {},
+            "type": "n8n-nodes-base.manualTrigger",
+            "typeVersion": 1,
+            "position": [
+                528,
+                384
+            ],
+            "id": "30805f1c-be5a-4ce5-ae63-94ef6288392a",
+            "name": "When clicking ‘Execute workflow’"
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "502b12c3-446f-470a-8dff-6b59bd223b6c",
+                            "name": "prompt_text",
+                            "value": "Old Money – Quiet Luxury Fashion Prompt (English):  A refined young Vietnamese woman appears in a timeless, heritage-inspired interior that reflects classic old-money elegance. The space feels private and understated, featuring warm natural light filtering through tall windows, wooden floors with a soft matte finish, cream-colored walls, and subtle architectural details. The environment evokes a sense of legacy, tradition, and quiet wealth—luxury that is inherited rather than displayed.  She carries herself with calm confidence and natural grace. Her beauty is effortless and restrained, never loud or attention-seeking. Her skin looks natural and luminous, her expression composed and thoughtful. Her hair is styled simply and neatly, either softly tied back or worn straight with minimal movement, reinforcing a sense of discipline and timeless taste. Her makeup is barely visible, enhancing rather than transforming her features.  At the opening of the scene, she holds a classic shirt, folded carefully as if it were a personal wardrobe essential passed down through generations. The shirt design is clean and timeless, with premium fabric, precise stitching, and subtle details that reflect superior craftsmanship. The camera moves slowly and deliberately, capturing close-up shots of the collar, cuffs, buttons, and fabric texture—never rushed, never dramatic.  She introduces the shirt with minimal gestures, allowing silence and pacing to communicate quality. The focus is on material, construction, and fit rather than trends. The atmosphere feels intimate and thoughtful, as if the viewer is observing a private moment in an old family estate rather than a commercial set.  The transition to wearing the shirt is discreet and elegant. The camera angle shifts gently, maintaining privacy and restraint. She puts on the shirt naturally, with slow, composed movements that suggest familiarity and comfort. This is not a statement piece—it is a timeless garment meant to be worn for years, not seasons.  Once dressed, she stands in soft natural light. The shirt fits her perfectly, creating a clean, balanced silhouette. The fabric falls naturally, emphasizing structure without stiffness. She turns slightly, offering subtle angles rather than exaggerated poses. The camera captures her from mid-shot to full-body, highlighting proportion, posture, and refinement.  In the final moments, she stands still, hands relaxed, gaze calm and assured. There is no overt smile—only quiet confidence and self-possession. The overall mood is subdued, elegant, and deeply sophisticated. This is old-money luxury: heritage, restraint, longevity, and timeless taste. Ultra-realistic visuals, cinematic softness, natural shadows, muted color palette, film-like texture, editorial fashion photography style, quiet pacing, no logos, no trends, no excess—only enduring elegance.",
+                            "type": "string"
+                        },
+                        {
+                            "id": "2425374f-7c2f-4edd-8c6c-bceef3fa623f",
+                            "name": "image_link",
+                            "value": "https://i.etsystatic.com/42377391/r/il/f4c4b5/5133648322/il_570xN.5133648322_3fx8.jpg",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                688,
+                976
+            ],
+            "id": "a9628f58-e817-4ca1-84f0-d9c01eca793a",
+            "name": "Edit Fields1"
+        },
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {}
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "typeVersion": 1.2,
+            "position": [
+                528,
+                976
+            ],
+            "id": "22d6aa1a-71d0-49ad-afa5-bb5dc8275edc",
+            "name": "Schedule Trigger"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://sora-tool-kienld89.loca.lt/sora/image-to-video",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Bypass-Tunnel-Reminder",
+                            "value": "true"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "accounts",
+                            "value": "={{[\"acc4\", \"acc5\"]}}"
+                        },
+                        {
+                            "name": "prompt",
+                            "value": "={{ $json.prompt_text }}"
+                        },
+                        {
+                            "name": "image_url",
+                            "value": "={{ $json.image_link }}"
+                        },
+                        {
+                            "name": "webhookUrl",
+                            "value": "={{ $execution.resumeUrl }}"
+                        }
+                    ]
+                },
+                "options": {
+                    "timeout": 600000
+                }
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.3,
+            "position": [
+                1072,
+                976
+            ],
+            "id": "489c59e9-6123-4e5e-8b8a-6a852f7f80be",
+            "name": "3. Generate Image To Video"
+        },
+        {
+            "parameters": {
+                "content": "## Remove Watermark (Bonus)",
+                "height": 592,
+                "width": 464,
+                "color": 2
+            },
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+                1616,
+                592
+            ],
+            "typeVersion": 1,
+            "id": "67fa5dd4-b728-429d-a8e7-c2781c78da0a",
+            "name": "Sticky Note"
+        },
+        {
+            "parameters": {
+                "content": "# Image To Video\n",
+                "height": 288,
+                "width": 1136,
+                "color": 3
+            },
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+                464,
+                896
+            ],
+            "typeVersion": 1,
+            "id": "2b4780f9-6342-46e6-b82e-c5663dbed88a",
+            "name": "Sticky Note1"
+        },
+        {
+            "parameters": {
+                "content": "# Text To Video",
+                "height": 288,
+                "width": 1136,
+                "color": 4
+            },
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+                464,
+                592
+            ],
+            "typeVersion": 1,
+            "id": "dd0859dd-205f-4654-b879-412d2da29c0b",
+            "name": "Sticky Note2"
+        },
+        {
+            "parameters": {
+                "content": "# Setup Acc",
+                "height": 272,
+                "width": 512,
+                "color": 4
+            },
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+                464,
+                304
+            ],
+            "typeVersion": 1,
+            "id": "c7fd81cf-f2d6-4ad4-aedc-80003781d0f9",
+            "name": "Sticky Note3"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://sora-tool-kienld89.loca.lt/sora/setup",
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "count",
+                            "value": "2"
+                        },
+                        {
+                            "name": "profileName",
+                            "value": "={{[\"acc1\", \"acc2\"]}}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                736,
+                384
+            ],
+            "id": "036fe415-a2ad-45a1-a2ef-c03e8a9cec80",
+            "name": "1. Setup Profiles"
+        },
+        {
+            "parameters": {
+                "url": "https://sora-tool-kienld89.loca.lt/debug/ping",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.3,
+            "position": [
+                1264,
+                384
+            ],
+            "id": "94c74c79-47e9-45e1-b235-a3d804077de7",
+            "name": "Check Sever"
+        },
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {}
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "typeVersion": 1.2,
+            "position": [
+                1072,
+                384
+            ],
+            "id": "f4c34241-8d01-4b2f-bedf-0d2aa4a11cf2",
+            "name": "Schedule Trigger2"
+        },
+        {
+            "parameters": {
+                "content": "# Check Server\n",
+                "height": 272,
+                "width": 608,
+                "color": 4
+            },
+            "type": "n8n-nodes-base.stickyNote",
+            "position": [
+                992,
+                304
+            ],
+            "typeVersion": 1,
+            "id": "b3ae7996-41dc-4e84-9af7-9ed1c8cee659",
+            "name": "Sticky Note4"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict",
+                        "version": 3
+                    },
+                    "conditions": [
+                        {
+                            "id": "6a476151-7c76-4a39-b8c8-9a6650e26040",
+                            "leftValue": "={{ $json.body.status }}",
+                            "rightValue": "failed",
+                            "operator": {
+                                "type": "string",
+                                "operation": "notEquals"
+                            }
+                        }
+                    ],
+                    "combinator": "and"
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2.3,
+            "position": [
+                1440,
+                976
+            ],
+            "id": "8a88143d-bab3-4658-8151-df1fe603c7e0",
+            "name": "If1"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.splitInBatches",
+            "typeVersion": 3,
+            "position": [
+                864,
+                976
+            ],
+            "id": "aeaf5d5e-663a-4118-83d5-622b83a0e775",
+            "name": "Loop Over Items1"
+        },
+        {
+            "parameters": {
+                "resume": "webhook",
+                "httpMethod": "POST",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.wait",
+            "typeVersion": 1.1,
+            "position": [
+                1264,
+                976
+            ],
+            "id": "cf104d77-8967-488c-b333-2883548bee2e",
+            "name": "Wait1",
+            "webhookId": "fc4edf8a-5722-4bee-b02f-5e5d6120ea8c"
+        },
+        {
+            "parameters": {
+                "url": "={{ $json.download_url }}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.3,
+            "position": [
+                1888,
+                688
+            ],
+            "id": "7183da4d-38a1-45f5-81a3-f5f6a4275928",
+            "name": "Get Video"
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "502b12c3-446f-470a-8dff-6b59bd223b6c",
+                            "name": "prompt_text",
+                            "value": "A young Asian woman with short black bob hair stands near a window in a quiet room, soft daylight touching her face. Smartphone handheld video, close-up framing, natural imperfections.  She looks slightly away from the camera, eyes heavy and unfocused. Her lips press together gently, breathing slow and shallow. The sadness is subtle—no tears, just silence, as if she is holding emotions inside. She blinks slowly and exhales, shoulders slightly lowered.  Southern Vietnamese female voice, low volume, calm, restrained emotion.  Dialogue (Vietnamese): “Có những lúc… mình chỉ muốn yên lặng thôi.”  Realistic stillness, internal emotion, natural human pause, Amateur Photography.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                688,
+                688
+            ],
+            "id": "54450a4c-cfaf-466f-bbdc-7586a9a2d516",
+            "name": "Edit Fields"
+        },
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {}
+                    ]
+                }
+            },
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "typeVersion": 1.2,
+            "position": [
+                528,
+                688
+            ],
+            "id": "84d33cc2-251d-40f3-bea3-95b01af1b284",
+            "name": "Schedule Trigger1"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://sora-tool-kienld89.loca.lt/sora/text-to-video",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Bypass-Tunnel-Reminder",
+                            "value": "true"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "accounts",
+                            "value": "={{[\"acc2\", \"acc5\"]}}"
+                        },
+                        {
+                            "name": "prompt",
+                            "value": "={{ $json.prompt_text }}"
+                        },
+                        {
+                            "name": "webhookUrl",
+                            "value": "={{ $execution.resumeUrl }}"
+                        }
+                    ]
+                },
+                "options": {
+                    "timeout": 600000
+                }
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.3,
+            "position": [
+                1072,
+                688
+            ],
+            "id": "01b8ed08-ffd0-4300-9d95-9769b2a17a2f",
+            "name": "3. Generate Image To Video1"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://sora-tool-kienld89.loca.lt/sora/remove_watermark",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Bypass-Tunnel-Reminder",
+                            "value": "true"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "url",
+                            "value": "={{ $json.body.video_url }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.3,
+            "position": [
+                1680,
+                688
+            ],
+            "id": "9dffd281-3cf0-41c6-bab3-d3838dee93fe",
+            "name": "Remove Watermark"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict",
+                        "version": 3
+                    },
+                    "conditions": [
+                        {
+                            "id": "6a476151-7c76-4a39-b8c8-9a6650e26040",
+                            "leftValue": "={{ $json.body.status }}",
+                            "rightValue": "failed",
+                            "operator": {
+                                "type": "string",
+                                "operation": "notEquals"
+                            }
+                        }
+                    ],
+                    "combinator": "and"
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2.3,
+            "position": [
+                1440,
+                688
+            ],
+            "id": "cb66d000-be95-4f58-989c-7adfb7600ba3",
+            "name": "If"
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "type": "n8n-nodes-base.splitInBatches",
+            "typeVersion": 3,
+            "position": [
+                864,
+                688
+            ],
+            "id": "7a252075-18ce-44db-8ff6-db5f860e9fca",
+            "name": "Loop Over Items"
+        },
+        {
+            "parameters": {
+                "resume": "webhook",
+                "httpMethod": "POST",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.wait",
+            "typeVersion": 1.1,
+            "position": [
+                1264,
+                688
+            ],
+            "id": "86356b07-0c07-4201-a5b1-5fd8310be7d3",
+            "name": "Wait",
+            "webhookId": "fc4edf8a-5722-4bee-b02f-5e5d6120ea8c"
+        },
+        {
+            "parameters": {
+                "url": "={{ $json.download_url }}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.3,
+            "position": [
+                1920,
+                976
+            ],
+            "id": "92cfc938-6d12-4ba8-b3fc-c268a7391294",
+            "name": "Get Video1"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://sora-tool-kienld89.loca.lt/sora/remove_watermark",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Bypass-Tunnel-Reminder",
+                            "value": "true"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "url",
+                            "value": "={{ $json.body.video_url }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.3,
+            "position": [
+                1712,
+                976
+            ],
+            "id": "91e87232-121c-41db-8d5e-b8e625a7e6db",
+            "name": "Remove Watermark1"
+        }
+    ],
+    "connections": {
+        "When clicking ‘Execute workflow’": {
+            "main": [
+                [
+                    {
+                        "node": "1. Setup Profiles",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Edit Fields1": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Schedule Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Edit Fields1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "3. Generate Image To Video": {
+            "main": [
+                [
+                    {
+                        "node": "Wait1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Schedule Trigger2": {
+            "main": [
+                [
+                    {
+                        "node": "Check Sever",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "If1": {
+            "main": [
+                [
+                    {
+                        "node": "Remove Watermark1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Loop Over Items1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loop Over Items1": {
+            "main": [
+                [],
+                [
+                    {
+                        "node": "3. Generate Image To Video",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait1": {
+            "main": [
+                [
+                    {
+                        "node": "If1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Edit Fields": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Schedule Trigger1": {
+            "main": [
+                [
+                    {
+                        "node": "Edit Fields",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "3. Generate Image To Video1": {
+            "main": [
+                [
+                    {
+                        "node": "Wait",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Remove Watermark": {
+            "main": [
+                [
+                    {
+                        "node": "Get Video",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "If": {
+            "main": [
+                [
+                    {
+                        "node": "Remove Watermark",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Loop Over Items",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loop Over Items": {
+            "main": [
+                [],
+                [
+                    {
+                        "node": "3. Generate Image To Video1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait": {
+            "main": [
+                [
+                    {
+                        "node": "If",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Remove Watermark1": {
+            "main": [
+                [
+                    {
+                        "node": "Get Video1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "pinData": {
+        "When clicking ‘Execute workflow’": [
+            {}
+        ]
+    },
+    "meta": {
+        "templateCredsSetupCompleted": true,
+        "instanceId": "df75f6d19da9532b87ea5a84541b4ccc1d0dd5baf896242962b0dfcbc492bcf4"
+    }
+}

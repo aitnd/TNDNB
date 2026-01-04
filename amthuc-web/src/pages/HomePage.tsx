@@ -1,7 +1,7 @@
 // Trang chủ - Hiển thị danh sách quán ăn và tìm kiếm
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Filter, Utensils, TrendingUp, Clock } from 'lucide-react'
+import { Filter, Utensils, TrendingUp, Clock, Grid3X3, List, Minus, PlusCircle } from 'lucide-react'
 import { Restaurant, MenuItem } from '../types'
 import RestaurantCard from '../components/RestaurantCard'
 import './HomePage.css'
@@ -36,6 +36,10 @@ function HomePage({ restaurants, menuItems, loading, searchQuery }: HomePageProp
     const [activeCategory, setActiveCategory] = useState('all')
     const [activePriceRange, setActivePriceRange] = useState('all')
     const [showFilters, setShowFilters] = useState(false)
+    // View mode: grid hoặc list
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+    // Card size: số cột (2-6)
+    const [cardSize, setCardSize] = useState(3)
 
     // Lọc và tìm kiếm quán ăn
     const filteredRestaurants = useMemo(() => {
@@ -212,7 +216,50 @@ function HomePage({ restaurants, menuItems, loading, searchQuery }: HomePageProp
                                 <>🔥 Quán ăn <span className="gradient-text">nổi bật</span></>
                             )}
                         </h2>
-                        <span className="result-count">{filteredRestaurants.length} quán</span>
+                        <div className="view-controls">
+                            {/* View toggle */}
+                            <div className="view-toggle">
+                                <button
+                                    className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                                    onClick={() => setViewMode('grid')}
+                                    title="Xem dạng lưới"
+                                >
+                                    <Grid3X3 size={18} />
+                                </button>
+                                <button
+                                    className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                                    onClick={() => setViewMode('list')}
+                                    title="Xem dạng danh sách"
+                                >
+                                    <List size={18} />
+                                </button>
+                            </div>
+
+                            {/* Size controls - chỉ hiện khi grid mode */}
+                            {viewMode === 'grid' && (
+                                <div className="size-control">
+                                    <button
+                                        className="size-btn"
+                                        onClick={() => setCardSize(prev => Math.max(2, prev - 1))}
+                                        disabled={cardSize <= 2}
+                                        title="Phóng to"
+                                    >
+                                        <Minus size={16} />
+                                    </button>
+                                    <span className="size-label">{cardSize} cột</span>
+                                    <button
+                                        className="size-btn"
+                                        onClick={() => setCardSize(prev => Math.min(6, prev + 1))}
+                                        disabled={cardSize >= 6}
+                                        title="Thu nhỏ"
+                                    >
+                                        <PlusCircle size={16} />
+                                    </button>
+                                </div>
+                            )}
+
+                            <span className="result-count">{filteredRestaurants.length} quán</span>
+                        </div>
                     </div>
 
                     {/* Loading state */}
@@ -231,7 +278,10 @@ function HomePage({ restaurants, menuItems, loading, searchQuery }: HomePageProp
                         </div>
                     ) : filteredRestaurants.length > 0 ? (
                         <motion.div
-                            className="restaurants-grid"
+                            className={`restaurants-grid ${viewMode === 'list' ? 'list-view' : ''}`}
+                            style={viewMode === 'grid' ? {
+                                gridTemplateColumns: `repeat(${cardSize}, 1fr)`
+                            } : undefined}
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
@@ -241,6 +291,7 @@ function HomePage({ restaurants, menuItems, loading, searchQuery }: HomePageProp
                                     key={restaurant.id}
                                     restaurant={restaurant}
                                     menuCount={getMenuCount(restaurant.id)}
+                                    viewMode={viewMode}
                                 />
                             ))}
                         </motion.div>

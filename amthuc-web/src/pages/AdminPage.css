@@ -214,8 +214,9 @@
 }
 
 /* ===== GRID VIEW ===== */
+/* grid-template-columns được control bằng inline style từ TSX */
 .admin-grid {
-    display: grid;
+    display: grid !important;
     gap: var(--space-lg);
 }
 
@@ -646,9 +647,7 @@
         gap: var(--space-sm);
     }
 
-    .admin-grid {
-        grid-template-columns: 1fr;
-    }
+    /* Grid columns được control bằng inline style */
 
     .admin-row {
         flex-direction: column;

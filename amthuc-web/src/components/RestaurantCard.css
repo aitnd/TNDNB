@@ -100,3 +100,59 @@
 .restaurant-card:hover .card-title {
     color: var(--accent-mint);
 }
+
+/* List Card Mode */
+.restaurant-card.list-card {
+    display: flex;
+    flex-direction: row;
+}
+
+.restaurant-card.list-card .card-link {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.restaurant-card.list-card .card-image {
+    width: 120px;
+    min-width: 120px;
+    height: auto;
+    min-height: 100px;
+}
+
+.restaurant-card.list-card .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-md);
+}
+
+.restaurant-card.list-card .card-title {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-xs);
+}
+
+.restaurant-card.list-card .card-info {
+    margin-bottom: var(--space-xs);
+    font-size: var(--font-size-xs);
+}
+
+.restaurant-card.list-card .card-cta {
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+}
+
+.restaurant-card.list-card .card-tags {
+    position: absolute;
+    top: var(--space-xs);
+    left: var(--space-xs);
+}
+
+.restaurant-card.list-card .menu-badge {
+    position: absolute;
+    top: var(--space-xs);
+    right: var(--space-xs);
+    font-size: 10px;
+    padding: 2px 6px;
+}

@@ -188,11 +188,97 @@
     border-radius: var(--radius-full);
 }
 
-/* Restaurant Grid */
+/* View Controls */
+.view-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.view-toggle {
+    display: flex;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.view-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-card-hover);
+}
+
+.view-btn.active {
+    color: var(--accent-mint);
+    background: rgba(0, 245, 212, 0.15);
+}
+
+/* Size Control */
+.size-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-xs) var(--space-sm);
+}
+
+.size-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.size-btn:hover:not(:disabled) {
+    color: var(--accent-mint);
+    background: rgba(0, 245, 212, 0.1);
+}
+
+.size-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.size-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    min-width: 35px;
+    text-align: center;
+}
+
+/* Restaurant Grid - columns được control bằng inline style */
 .restaurants-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-lg);
+}
+
+/* List View */
+.restaurants-grid.list-view {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
 }
 
 /* Loading skeleton */

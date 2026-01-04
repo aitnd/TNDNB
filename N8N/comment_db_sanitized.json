@@ -1,0 +1,452 @@
+{
+  "name": "Comment Data Base",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        752
+      ],
+      "id": "13a7fa41-dfe2-4d2b-82fc-9f7f1cec34d1",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "<REDACTED>",
+          "mode": "list",
+          "cachedResultName": "Comments",
+          "cachedResultUrl": "<REDACTED>"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Root",
+          "cachedResultUrl": "<REDACTED>"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -384,
+        752
+      ],
+      "id": "6438c822-890b-4b66-a911-7e0afdd209a8",
+      "name": "Get row(s) in sheet",
+      "credentials": "<REDACTED>"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Run Once for All Items\n\nconst inputItems = $input.all();\nconst outputItems = [];\n\nfor (const item of inputItems) {\n  const r = item.json;\n\n  // Lấy các field chính, tránh undefined\n  const rootMess     = (r.root_mess || '').toString().trim();\n  const customerMess = (r.customer_mess || '').toString().trim();\n  const feedback     = (r.feedback || '').toString().trim();\n  const reply        = (r.reply || '').toString().trim();\n  const replyFinal   = (r.reply_final || '').toString().trim();\n  const reasoning    = (r.reasoning || '').toString().trim();\n\n  // GHÉP CONTENT – chỉ 1 key duy nhất\n  const parts = [];\n\n  if (rootMess) {\n    parts.push('[ROOT_MESSAGE]');\n    parts.push(rootMess, '');\n  }\n\n  if (customerMess) {\n    parts.push('[CUSTOMER_MESSAGE]');\n    parts.push(customerMess, '');\n  }\n\n  if (feedback) {\n    parts.push('[HUMAN_FEEDBACK]');\n    parts.push(feedback, '');\n  }\n\n  if (reply) {\n    parts.push('[AI_REPLY]');\n    parts.push(reply, '');\n  }\n\n  if (replyFinal) {\n    parts.push('[HUMAN_FINAL_REPLY]');\n    parts.push(replyFinal, '');\n  }\n\n  if (reasoning) {\n    parts.push('[REASONING]');\n    parts.push(reasoning, '');\n  }\n\n  const content = parts.join('\\n').trim();\n\n  // Nếu không có gì đáng để lưu thì bỏ qua\n  if (!content) {\n    continue;\n  }\n\n  // Trả ra đúng 2 field:\n  // - content: text để embed\n  // - metadata: full row gốc từ Google Sheet\n  outputItems.push({\n    json: {\n      content,\n      metadata: r,\n    },\n  });\n}\n\nreturn outputItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        752
+      ],
+      "id": "8a0262fe-800d-41d3-a074-cadfd47a1953",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        80,
+        736
+      ],
+      "id": "8ddf2d59-4816-4599-bce4-d26972b924f3",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "comment",
+          "mode": "list",
+          "cachedResultName": "comment"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        784
+      ],
+      "id": "cd8a7be4-8580-4861-a05d-f21c2c3d6c61",
+      "name": "Supabase Vector Store",
+      "credentials": "<REDACTED>"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        384,
+        912
+      ],
+      "id": "f25bd43f-4e64-4c07-b94f-7c5ebb895045",
+      "name": "Embeddings OpenAI",
+      "credentials": "<REDACTED>"
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.content }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "=page_id",
+                "value": "={{ $('Loop Over Items').item.json.metadata.PAGE_ID }}"
+              },
+              {
+                "name": "root_mess",
+                "value": "={{ $('Loop Over Items').item.json.metadata.root_mess }}"
+              },
+              {
+                "name": "root_id",
+                "value": "={{ $('Loop Over Items').item.json.metadata.root_id }}"
+              },
+              {
+                "name": "category",
+                "value": "={{ $('Loop Over Items').item.json.metadata.category }}"
+              },
+              {
+                "name": "action",
+                "value": "={{ $('Loop Over Items').item.json.metadata.action }}"
+              },
+              {
+                "name": "reply",
+                "value": "={{ $('Loop Over Items').item.json.metadata.reply }}"
+              },
+              {
+                "name": "reply_final",
+                "value": "={{ $('Loop Over Items').item.json.metadata.reply_final }}"
+              },
+              {
+                "name": "=customer_comment",
+                "value": "={{ $('Loop Over Items').item.json.metadata.customer_comment_id }}"
+              },
+              {
+                "name": "human_feedback",
+                "value": "={{ $('Loop Over Items').item.json.metadata.feedback }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        928
+      ],
+      "id": "a76251a9-6ad0-4243-aa4a-25cb60969681",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -304,
+        -304
+      ],
+      "id": "8d542252-7133-4e84-935e-1bc26a6468ca",
+      "name": "When chat message received",
+      "webhookId": "<REDACTED>",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=Bạn là một trợ lý cá nhân hỗ trợ trả lời comment của khách hàng trên facebook\n#hướng dẫn:\nTool comment_data là tool để xem lại kịch bản phản hồi comment khách hàng như thế nào.\n#Rule:\nBạn bắt buộc phải sử dụng Tool \"comment_data\" để truy vấn lại các trường hợp khách hàng đã từng comment để đưa ra các câu comment tốt nhất.\nNếu không có dữ liệu trong tool thì có thể trả lời comment như bình thường.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        16,
+        -304
+      ],
+      "id": "5eb58301-0c48-4271-9ed9-aaf83da7ac97",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        -64
+      ],
+      "id": "93ba2eca-24e6-4ed7-a5e2-aca8b041aa59",
+      "name": "OpenAI Chat Model",
+      "credentials": "<REDACTED>"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        16,
+        -80
+      ],
+      "id": "277cc146-5810-4685-8159-b16ce509c0ff",
+      "name": "Postgres Chat Memory",
+      "credentials": "<REDACTED>"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        576
+      ],
+      "id": "d682fae6-acab-4de7-b775-a89537b6aeb8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "use this tool to retrieve comment data",
+        "tableName": {
+          "__rl": true,
+          "value": "comment",
+          "mode": "list",
+          "cachedResultName": "comment"
+        },
+        "topK": 5,
+        "includeDocumentMetadata": false,
+        "options": {
+          "queryName": "match_comment"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        -112
+      ],
+      "id": "66853bbc-c009-4fa4-b088-deb6146672d4",
+      "name": "Comment_data",
+      "credentials": "<REDACTED>"
+    },
+    {
+      "parameters": {
+        "content": "## BRAIN",
+        "height": 176,
+        "width": 176
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "a05a0393-44d8-4670-806f-f8209c719e13",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        384,
+        96
+      ],
+      "id": "34553444-cdde-48f7-9e42-db1e8ded003a",
+      "name": "Embeddings OpenAI1",
+      "credentials": "<REDACTED>"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comment_data": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Comment_data",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "<REDACTED>",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "<REDACTED>"
+  },
+  "id": "<REDACTED>",
+  "tags": []
+}
