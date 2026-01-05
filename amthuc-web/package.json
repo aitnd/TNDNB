@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "tsc && vite build",
-        "preview": "vite preview"
+        "dev": "npx vite",
+        "build": "npx tsc && npx vite build",
+        "preview": "npx vite preview"
     },
     "dependencies": {
         "firebase": "^12.5.0",
