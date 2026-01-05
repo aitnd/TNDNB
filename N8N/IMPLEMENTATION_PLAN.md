@@ -76,5 +76,42 @@ Người dùng tương tác với hệ thống hoàn toàn qua Telegram Bot bằ
    - Gửi link YouTube và yêu cầu Remake -> Chờ và kiểm tra video kết quả.
 
 ## Yêu cầu Người dùng Phê duyệt
-- [ ] Xác nhận lộ trình 4 giai đoạn trên.
+- [x] Xác nhận lộ trình 4 giai đoạn trên.
 - [ ] Cung cấp các API Key cần thiết (Telegram, Gemini, NanoAI, Fal.AI...) khi đến giai đoạn tương ứng.
+
+---
+
+## 🆕 Giai đoạn 0: Tích hợp n8n-MCP với Antigravity (ĐÃ HOÀN THÀNH - 05/01/2026)
+
+### Mục tiêu
+Cho phép AI Agent (Antigravity) quản lý và điều khiển n8n workflows trực tiếp, không cần thao tác thủ công trên giao diện n8n.
+
+### Đã hoàn thành
+- [x] Nghiên cứu n8n REST API và n8n-mcp project
+- [x] Cài đặt `npm install -g n8n-mcp`
+- [x] Cấu hình MCP server trong `mcp_config.json`
+- [x] Tạo file `AGENTS.md` với system instructions
+- [x] Tạo file template `N8N/mcp_config_template.json`
+
+### Các file đã tạo/cập nhật
+| File | Mô tả |
+|------|-------|
+| `mcp_config_template.json` | Template cấu hình MCP server |
+| `/AGENTS.md` | Hướng dẫn cho AI agent làm việc với n8n |
+
+### Cần làm trên máy mới
+1. Cài đặt: `npm install -g n8n-mcp`
+2. Copy `mcp_config_template.json` vào `C:\Users\<USER>\.gemini\antigravity\mcp_config.json`
+3. Cài n8n: `docker run -d --name n8n -p 5678:5678 n8nio/n8n`
+4. Tạo API Key: `localhost:5678` → Settings → n8n API → Create
+5. Cập nhật `N8N_API_KEY` trong `mcp_config.json`
+6. Refresh MCP Servers trong Antigravity
+
+### MCP Tools có sẵn (20 tools)
+- **Core (7)**: `search_nodes`, `get_node`, `validate_node`, `validate_workflow`, `search_templates`, `get_template`, `tools_documentation`
+- **N8N Management (13)**: `n8n_create_workflow`, `n8n_get_workflow`, `n8n_update_partial_workflow`, `n8n_delete_workflow`, `n8n_list_workflows`, `n8n_autofix_workflow`, `n8n_deploy_template`, `n8n_test_workflow`, `n8n_executions`, `n8n_health_check`...
+
+### Tham khảo
+- GitHub: https://github.com/czlonkowski/n8n-mcp
+- Docs Antigravity: https://github.com/czlonkowski/n8n-mcp/blob/main/docs/ANTIGRAVITY_SETUP.md
+

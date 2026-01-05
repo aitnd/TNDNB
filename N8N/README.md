@@ -11,6 +11,7 @@
 3. [Công cụ & Dịch vụ](#3-công-cụ--dịch-vụ)
 4. [Chức năng nâng cao](#4-chức-năng-nâng-cao)
 5. [Kiến trúc tổng thể](#5-kiến-trúc-tổng-thể)
+6. [🆕 n8n-MCP Antigravity Integration](#6-n8n-mcp-antigravity-integration)
 
 ---
 
@@ -23,11 +24,13 @@ Xây dựng **"Quản lý Kênh AI"** - một trợ lý thông minh qua Telegram
 - 🎬 Tự động sản xuất video/ảnh
 - 📊 Theo dõi và báo cáo tiến độ
 - 🤖 Tạo & vận hành Virtual KOL
+- 🔧 **Quản lý workflows qua AI Agent (Antigravity)**
 
 ### Nền tảng chính
 - **n8n** (self-hosted Docker) - Điều phối workflow
 - **Telegram Bot** - Giao tiếp với người dùng
 - **Google Gemini** - Bộ não AI (miễn phí)
+- **n8n-MCP** - Tích hợp AI Agent để quản lý n8n
 
 ---
 
@@ -130,3 +133,47 @@ Tạo video chất lượng cao từ text prompt, tự động bypass reCaptcha.
 ```
 
 > **Lưu ý:** Để xem chi tiết hướng dẫn cài đặt, vui lòng xem file `SETUP_GUIDE.md` (nếu có) hoặc tham khảo Implementation Plan.
+
+---
+
+## 6. 🆕 N8N-MCP ANTIGRAVITY INTEGRATION
+
+> **Cập nhật 05/01/2026**: Đã tích hợp n8n-MCP để AI Agent (Antigravity) có thể quản lý n8n workflows.
+
+### Tính năng mới
+- ✅ Tạo/Sửa/Xóa workflows từ AI Agent
+- ✅ Deploy templates từ 2700+ templates trên n8n.io
+- ✅ Validate & Auto-fix workflows
+- ✅ Test/Trigger workflows
+- ✅ Quản lý executions và debug lỗi
+
+### Các file liên quan
+| File | Mô tả |
+|------|-------|
+| `mcp_config_template.json` | Template cấu hình MCP server cho Antigravity |
+| `/AGENTS.md` | System instructions cho AI agent |
+| `IMPLEMENTATION_PLAN.md` | Chi tiết kế hoạch và hướng dẫn setup trên máy mới |
+| `task.md` | Checklist tiến độ dự án |
+
+### Quick Setup trên máy mới
+```bash
+# 1. Cài n8n-mcp
+npm install -g n8n-mcp
+
+# 2. Copy config
+# Copy mcp_config_template.json → C:\Users\<USER>\.gemini\antigravity\mcp_config.json
+
+# 3. Cài n8n (Docker)
+docker run -d --name n8n -p 5678:5678 n8nio/n8n
+
+# 4. Tạo API Key: localhost:5678 → Settings → n8n API → Create
+
+# 5. Cập nhật N8N_API_KEY trong mcp_config.json
+
+# 6. Refresh MCP Servers trong Antigravity
+```
+
+### Tham khảo
+- [n8n-mcp GitHub](https://github.com/czlonkowski/n8n-mcp)
+- [Antigravity Setup Guide](https://github.com/czlonkowski/n8n-mcp/blob/main/docs/ANTIGRAVITY_SETUP.md)
+

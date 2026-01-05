@@ -34,3 +34,23 @@
 - [ ] Xây dựng thư viện video mẫu cho KOL <!-- id: 41 -->
 - [ ] Tự động đăng bài lên các nền tảng (nếu có API) <!-- id: 42 -->
 - [ ] Hoàn thiện và bàn giao hệ thống <!-- id: 43 -->
+
+---
+
+## 🆕 Giai đoạn 0: n8n-MCP Antigravity Integration (05/01/2026)
+
+### Đã hoàn thành ✅
+- [x] Nghiên cứu n8n REST API và n8n-mcp <!-- id: 50 -->
+- [x] Cài đặt `npm install -g n8n-mcp` <!-- id: 51 -->
+- [x] Cấu hình MCP server (mcp_config.json) <!-- id: 52 -->
+- [x] Tạo AGENTS.md với system instructions <!-- id: 53 -->
+- [x] Tạo mcp_config_template.json <!-- id: 54 -->
+
+### Cần làm trên máy mới 🔄
+- [ ] `npm install -g n8n-mcp` <!-- id: 60 -->
+- [ ] Copy mcp_config_template.json → mcp_config.json của Antigravity <!-- id: 61 -->
+- [ ] Cài n8n (Docker) <!-- id: 62 -->
+- [ ] Tạo và cập nhật N8N_API_KEY <!-- id: 63 -->
+- [ ] Refresh MCP Servers trong Antigravity <!-- id: 64 -->
+- [ ] Test: `n8n_health_check` <!-- id: 65 -->
+
