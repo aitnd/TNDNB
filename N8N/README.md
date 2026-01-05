@@ -12,6 +12,7 @@
 4. [Chức năng nâng cao](#4-chức-năng-nâng-cao)
 5. [Kiến trúc tổng thể](#5-kiến-trúc-tổng-thể)
 6. [🆕 n8n-MCP Antigravity Integration](#6-n8n-mcp-antigravity-integration)
+7. [🖥️ Kế hoạch phần cứng](HARDWARE_PLAN.md)
 
 ---
 
