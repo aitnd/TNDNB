@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "cd ontap-web && npm install && npm run build && cd .. && next build",
+    "build": "cd ontap-web && npm install && npm run build && cd .. && cd amthuc-web && npm install && npm run build && cd .. && next build",
     "start": "next start",
     "lint": "next lint"
   },

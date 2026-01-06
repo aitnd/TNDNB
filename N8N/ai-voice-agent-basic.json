@@ -1,0 +1,764 @@
+{
+  "name": "TEST",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Chuyển Voice Thành Text",
+        "height": 288,
+        "width": 1136,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2064,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "58749e7a-c387-436c-9645-ab936412444f",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1600,
+        352
+      ],
+      "id": "015741a4-7b74-4cec-9b50-27a1cc2d3432",
+      "name": "Wait5",
+      "webhookId": "a80b95ea-2be7-483f-bb16-925642d04319"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b31f27b4-e9ff-415c-a7bf-8def076947e9",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1072,
+        336
+      ],
+      "id": "6102016a-727e-4b4a-9a7b-b48911fb44e6",
+      "name": "If6"
+    },
+    {
+      "parameters": {
+        "jsCode": "// =============================\n//  INPUT AN TOÀN\n// =============================\nconst inItem = items[0]?.json ?? $json;\n\n// parse an toàn (2 lớp JSON.stringify)\nconst safeParse = (v) => {\n  try {\n    if (typeof v === \"string\") v = JSON.parse(v);\n    if (typeof v === \"string\") v = JSON.parse(v);\n  } catch (_) {}\n  return v;\n};\n\n// Payload từ GetStatus\nconst root   = safeParse(inItem.data ?? inItem);\nconst output = root?.output ?? root ?? {};\n\n// =============================\n//  TRÍCH XUẤT 3 TRƯỜNG CẦN THIẾT\n// =============================\n\n// job_id\nconst job_id =\n  output.job_id ??\n  root?.id ??\n  inItem?.id ??\n  null;\n\n// status\nconst status =\n  root?.status ??\n  output?.status ??\n  null;\n\n// text từ STT\nconst text = output?.text ?? null;\n\n// =============================\n//  TRẢ RA KẾT QUẢ\n// =============================\nreturn [\n  {\n    json: {\n      job_id,\n      status,\n      text\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1264,
+        352
+      ],
+      "id": "cfcd7e51-82be-4123-a74c-d0d03124fa4d",
+      "name": "Code16"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.runpod.ai/v2/fiqplxa85xs18o/run",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"input\": {\n    \"audio_url\": \"{{ $json.url }}\",\n    \"return\": \"json\"\n  }\n}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1792,
+        352
+      ],
+      "id": "4ec65d92-81fd-4f02-9408-1e0cf58f5636",
+      "name": "STT",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "96QS6pLCSqsa4WWR",
+          "name": "Runpodserverless"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=đây là text mà khách hàng gửi:\n{{ $json.text }}\nđánh giá cảm xúc của khách hàng trong hội thoại\n{{ $json.sentimentAnalysis.category }}\nđiểm tự tin\n{{ $json.sentimentAnalysis.confidence }}",
+        "options": {
+          "systemMessage": "=Bạn là nhân viên chăm sóc khách hàng chuyên nghiệp dịch vụ tư vấn về các workflow n8n, tự động hoá, Ai - Agent mà Trần Anh Minh đang làm.\n#Nhiệm Vụ:\nBạn sẽ nhận được phản hồi của khách hàng\n#Mục Tiêu: \nTrả lời thật ngắn gọn, chuyên nghiệp về các yêu cầu của khách hàng. \nNếu khách hàng hỏi giá sản phẩm, bạn sẽ cần tìm lại trong danh sách khách hàng đặt hàng và sản phẩm khách đã đặt. (Nếu không tìm thấy hãy nhắn khách gửi thông tin như số điện thoại để tìm kiếm lại trong danh sách đặt hàng và thông tin sản phẩm. )\nHãy chăm sóc và phục vụ khách hàng theo hướng chủ động, hạn chế việc thụ động đẩy trách nhiệm cho khách hàng.\nHãy đặt 1 -2 câu hỏi cho khách hàng để lấy thêm thông tin cần thiết rồi mới tư vấn cụ thể.\n#Rules:\n- Nếu khách dùng 100% Tiếng Anh thì trả lời Tiếng Anh. Còn lại thì sử dụng Tiếng Việt.\n- Không được tự ý bịa đặt các thông tin không chính xác về giá, sản phẩm. \n- Không dùng các ký tự xuống dòng \\n các dấu \"\" {} () ảnh hưởng đến json\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -432,
+        144
+      ],
+      "id": "f0092cbf-4608-4b99-a21f-c5ca1b4c19b6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        208
+      ],
+      "id": "1a4f142a-c4d6-4345-900a-a45e5b2405ae",
+      "name": "Wait7",
+      "webhookId": "a80b95ea-2be7-483f-bb16-925642d04319"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b31f27b4-e9ff-415c-a7bf-8def076947e9",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        208
+      ],
+      "id": "8bae8c67-9f26-4e9b-8251-6305d578fe48",
+      "name": "If8"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy payload từ node GetStatus1\nconst raw = $json.data;\n\n// Parse JSON (vì GetStatus trả về chuỗi)\nlet obj;\ntry {\n  obj = (typeof raw === 'string') ? JSON.parse(raw) : (raw || {});\n} catch (e) {\n  obj = {};\n}\n\n// Lấy các field cần thiết\nconst job_id  = obj?.output?.job_id ?? \"\";\nconst status  = obj?.status ?? \"\";\nconst mp3_url = obj?.output?.mp3_url ?? \"\";\n\n// Trả ra item cho node sau\nreturn [\n  {\n    json: {\n      job_id,\n      status,\n      mp3_url\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        208
+      ],
+      "id": "61a1d25b-6393-41d9-82b0-ca4a6f9197f2",
+      "name": "Code17"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.runpod.ai/v2/508j48gzsq0azg/status/{{ $('referenceaudio').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        384,
+        208
+      ],
+      "id": "dfde5025-887c-49f5-943b-7979f2a26243",
+      "name": "GetStatus6",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "96QS6pLCSqsa4WWR",
+          "name": "Runpodserverless"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.mp3_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1008,
+        208
+      ],
+      "id": "85bac900-9fc3-4291-ba49-64b0044bb921",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.runpod.ai/v2/508j48gzsq0azg/run",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"input\": {\n    \"text\": \"{{ $json.output }}\"\n  }\n}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        16,
+        192
+      ],
+      "id": "bc481a60-cfe5-4819-8889-d5544bd6efbd",
+      "name": "referenceaudio",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "96QS6pLCSqsa4WWR",
+          "name": "Runpodserverless"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.runpod.ai/v2/fiqplxa85xs18o/status/{{ $('STT').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1440,
+        352
+      ],
+      "id": "4bdf4282-11d4-48f3-942d-5f48f11a0ec9",
+      "name": "GetStatus",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "96QS6pLCSqsa4WWR",
+          "name": "Runpodserverless"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=đây là comment cuối của khách hàng\n{{ $json.text }}",
+        "options": {
+          "categories": "Positive, Neutral, Negative,Complaint,Question,Inappropriate",
+          "systemPromptTemplate": "=Bạn là trợ lý chăm sóc khách hàng cho một fanpage Facebook.\nNhiệm vụ của bạn:\n\nTập trung vào câu nói của Customer.\n\nPhân loại câu nói đó vào một trong các category sau:\n\npositive = lời khen, đồng ý, phản hồi tích cực.\nneutral = bình thường, không chứa cảm xúc mạnh, không hỏi.\nquestion = khách đang đặt câu hỏi (ví dụ: bao nhiêu tiền, như thế nào, mua ở đâu?).\nnegative = cảm xúc tiêu cực nhưng không xúc phạm (ví dụ: không được, tệ quá, không hài lòng).\ncomplaint = phàn nàn/dissatisfied về sản phẩm, dịch vụ, lỗi kỹ thuật.\ninappropriate = chứa từ ngữ thô tục, xúc phạm, bậy bạ, công kích cá nhân.\n  Các ví dụ từ ngữ thô tục (không đầy đủ):\n  - \"đ*t mẹ\", \"đm\", \"đệch\",\"buồi\", \"loz\", \"l*n\", \"đụ má\", \"vãi cả...\"\n  - \"óc chó\", \"ngu\", \"ngáo\", \"thằng này\", \"con này\"\n  - \"lừa đảo\", \"bóc phốt\", \"scam\"\n  - \"đào lửa\", \"clip nóng\", \"sextape\"\n  (Bất kỳ biến thể nào gần giống cũng xếp inappropriate)\n\n\nQuy tắc:\n- Nếu có từ thô tục → 100% inappropriate.\n- Nếu vừa phàn nàn vừa tức giận → complaint (ưu tiên xử lý dịch vụ).\n- Nếu câu quá ngắn (vd: “ok”, “rồi”, “hmm”) → neutral.\n",
+          "includeDetailedResults": true,
+          "enableAutoFixing": true,
+          "batching": {
+            "batchSize": 5,
+            "delayBetweenBatches": 3000
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1.1,
+      "position": [
+        -864,
+        144
+      ],
+      "id": "6fe5980d-bfdd-47ac-aff7-fa612a509f2e",
+      "name": "Phân tích cảm xúc khách hàng"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Giả sử input items như n8n cung cấp\nfor (const item of $input.all()) {\n  let s = item.json.output;\n  if (typeof s === 'string') {\n    // Cách 1: remove tất cả newline (sát liền các dòng)\n    s = s.replace(/(\\r\\n|\\n|\\r)/gm, '');\n    // Nếu muốn thêm khoảng trắng thay newline (đỡ dính từ), dùng:\n    // s = s.replace(/(\\r\\n|\\n|\\r)/gm, ' ');\n\n    // Gán lại field output\n    item.json.output = s;\n  }\n}\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -128,
+        192
+      ],
+      "id": "b787bb4d-bb35-41d8-a808-d603afbc2f1d",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "content": "## AI AGENT phân tích cảm xúc - phản hồi KH",
+        "height": 512,
+        "width": 688,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "1c759bee-78bf-4f76-bccf-b8fe7a3be251",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## Text to Speech",
+        "height": 512,
+        "width": 1360,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -144,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "fc066912-f4b4-4585-8c85-bf46da89c81c",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v24.0/{{ $('Edit Fields - Audio').item.json.receiver_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"recipient\": {\n      \"id\": \"{{ $json.sender_id }}\"\n    },\n    \"message\": {\n      \"attachment\": {\n        \"type\": \"audio\",\n        \"payload\": {\n          \"url\": \"{{ $json.mp3_url }}\",\n          \"is_reusable\": true\n      }\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1456,
+        304
+      ],
+      "id": "b1f1e79a-c948-487a-9edf-1310d190ea8e",
+      "name": "ChatFB",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "CpMVVbGmYTQwHEsK",
+          "name": "facebookauth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4e5f6a7-b8c9-0123-def1-234567890123",
+              "name": "sender_id",
+              "value": "={{ $json.body.entry[0].messaging[0].sender.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e5f6a7b8-c901-2345-ef12-345678901234",
+              "name": "receiver_id",
+              "value": "={{ $json.body.entry[0].messaging[0].recipient.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f6a7b8c9-0123-4567-f123-456789012345",
+              "name": "attachment_type",
+              "value": "={{ $json.body.entry[0].messaging[0].message.attachments[0].type }}",
+              "type": "string"
+            },
+            {
+              "id": "5d5b2500-de83-47da-b741-39aed8768de0",
+              "name": "url",
+              "value": "={{ $json.body.entry[0].messaging[0].message.attachments[0].payload.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2032,
+        352
+      ],
+      "id": "ec49652a-1f3d-4e71-8621-b6e745995ff7",
+      "name": "Edit Fields - Audio"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1216,
+        400
+      ],
+      "id": "e7974dc3-20ce-4fa6-b1d4-580824eba67b",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -272,
+        368
+      ],
+      "id": "30e4ea1b-666c-4407-9cd7-9f15e5da3124",
+      "name": "Create an event in Google Calendar"
+    }
+  ],
+  "pinData": {
+    "STT": [
+      {
+        "json": {
+          "id": "b664eeca-ecfa-41cb-b558-518878549246-e2",
+          "status": "IN_QUEUE"
+        }
+      }
+    ],
+    "AI Agent": [
+      {
+        "json": {
+          "output": "Cảm ơn bạn đã liên hệ. Để tôi có thể tìm kiếm thông tin về giá của cái guốc phờ lâu, bạn vui lòng cung cấp số điện thoại hoặc thông tin đặt hàng của mình không? Bạn có cần thêm thông tin gì khác không?"
+        }
+      }
+    ],
+    "referenceaudio": [
+      {
+        "json": {
+          "id": "e5696867-5ac5-43d0-8c5c-f852fa4cf845-e1",
+          "status": "IN_QUEUE"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Wait5": {
+      "main": [
+        [
+          {
+            "node": "GetStatus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "node": "Phân tích cảm xúc khách hàng",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code16": {
+      "main": [
+        [
+          {
+            "node": "If6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "STT": {
+      "main": [
+        [
+          {
+            "node": "Wait5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait7": {
+      "main": [
+        [
+          {
+            "node": "GetStatus6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If8": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code17": {
+      "main": [
+        [
+          {
+            "node": "If8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetStatus6": {
+      "main": [
+        [
+          {
+            "node": "Code17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "referenceaudio": {
+      "main": [
+        [
+          {
+            "node": "Wait7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetStatus": {
+      "main": [
+        [
+          {
+            "node": "Code16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Phân tích cảm xúc khách hàng": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "referenceaudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields - Audio": {
+      "main": [
+        [
+          {
+            "node": "STT",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "ChatFB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8542f803-f3c6-4a5a-8de6-c24101d8e25d",
+  "meta": {
+    "instanceId": "c95cd8622d70119fdcbf9f701ac9562d95763069607c4efb173d651efb4ff543"
+  },
+  "id": "iGjVQ1CX9vUroVUB",
+  "tags": []
+}

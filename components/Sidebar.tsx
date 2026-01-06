@@ -142,6 +142,11 @@ export default async function Sidebar() {
               <i className="fas fa-search" style={{ color: '#004a99' }}></i> Tra cứu Văn bằng
             </Link>
           </li>
+          <li>
+            <Link href="/amthuc">
+              <i className="fas fa-utensils" style={{ color: '#ff6b6b' }}></i> Ẩm thực Ninh Bình
+            </Link>
+          </li>
         </ul>
       </div>
 

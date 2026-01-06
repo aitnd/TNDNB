@@ -85,8 +85,20 @@ const AppContent: React.FC = () => {
     } else {
       setIsMobileApp(false);
     }
+  }, []);
 
-    // --- CUSTOM AUTO UPDATE CHECK (Windows) ---
+  // Load tên khách đã lưu từ localStorage (chạy khi userProfile thay đổi hoặc lúc đầu)
+  useEffect(() => {
+    if (!userProfile) {
+      const savedGuestName = localStorage.getItem('ontap_guest_name');
+      if (savedGuestName && !userName) {
+        setUserName(savedGuestName);
+      }
+    }
+  }, [userProfile, userName]);
+
+  // --- CUSTOM AUTO UPDATE CHECK (Windows) ---
+  useEffect(() => {
     // @ts-ignore
     if (window.electron?.isElectron) {
       const checkUpdate = async () => {
@@ -305,9 +317,11 @@ const AppContent: React.FC = () => {
     quiz: Quiz | null,
     mode: 'practice' | 'online_exam'
   ) => {
-    if (!quiz || !userProfile) return;
+    if (!quiz) return;
+    // Dùng "guest" làm userId cho khách chưa đăng nhập
+    const sessionUserId = userProfile?.id || 'guest';
     import('./services/sessionService').then(({ saveSession }) => {
-      saveSession(userProfile.id, quiz, mode, answers, idx, time, selectedLicense, selectedSubject);
+      saveSession(sessionUserId, quiz, mode, answers, idx, time, selectedLicense, selectedSubject);
     });
   }, [selectedLicense, selectedSubject, userProfile]);
 
@@ -317,22 +331,23 @@ const AppContent: React.FC = () => {
       return;
     }
 
-    if (userProfile) {
-      import('./services/sessionService').then(({ loadSession }) => {
-        const session = loadSession(userProfile.id);
-        if (session) {
-          setResumeSessionAvailable(true);
-        } else {
-          setResumeSessionAvailable(false);
-        }
-      });
-    }
+    // Hỗ trợ cả khách (guest) và user đã đăng nhập
+    const sessionUserId = userProfile?.id || 'guest';
+    import('./services/sessionService').then(({ loadSession }) => {
+      const session = loadSession(sessionUserId);
+      if (session) {
+        setResumeSessionAvailable(true);
+      } else {
+        setResumeSessionAvailable(false);
+      }
+    });
   }, [location.pathname, userProfile]);
 
   const resumeSession = () => {
     import('./services/sessionService').then(({ loadSession }) => {
-      if (!userProfile) return;
-      const session = loadSession(userProfile.id);
+      // Hỗ trợ cả khách (guest) và user đã đăng nhập
+      const sessionUserId = userProfile?.id || 'guest';
+      const session = loadSession(sessionUserId);
       if (session) {
         setCurrentQuiz(session.quiz);
         setUserAnswers(session.userAnswers);
@@ -379,6 +394,8 @@ const AppContent: React.FC = () => {
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
+    // Lưu tên khách vào localStorage để persist
+    localStorage.setItem('ontap_guest_name', name);
     navigate('/ontap/chonchedo');
   };
 

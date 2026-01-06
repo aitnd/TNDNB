@@ -1,0 +1,403 @@
+{
+  "name": "Voice Chat",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "f311b3df-4652-4276-a476-a9b8b82901ea",
+      "name": "Get Chat",
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "position": [
+        -1920,
+        -16
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "user",
+              "message": "={{ $('OpenAI - Speech to Text').item.json[\"text\"] }}"
+            },
+            {
+              "type": "ai",
+              "message": "={{ $json.text }}"
+            }
+          ]
+        }
+      },
+      "id": "be375b51-9d35-4ca5-ba6f-30f9de7e764e",
+      "name": "Insert Chat",
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "position": [
+        -1072,
+        -16
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "## Get Context",
+        "height": 238.4911357933579,
+        "width": 486.4746124819703,
+        "color": 6
+      },
+      "id": "3cc0dce4-eea4-4b34-9e71-344a5cdb75c2",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1952,
+        -96
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Save Context",
+        "height": 231.05945912581728,
+        "width": 321.2536584847704,
+        "color": 6
+      },
+      "id": "075c5f8a-6864-4d1c-a779-1241825d215e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1104,
+        -96
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "context",
+        "options": {}
+      },
+      "id": "d426985e-dd24-4372-a5e5-7785ee48f6d2",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        -1600,
+        -16
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "test-0dacb3b5-4bcd-47dd-8456-dcfd8c258204"
+      },
+      "id": "57b41841-3cd1-42df-b10a-7b483c9349ed",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -1536,
+        304
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "id": "e8253f85-f75e-401d-bceb-533317a55976",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        -1296,
+        304
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {}
+      },
+      "id": "31e56950-77b6-476b-95cf-4b1b284b99a3",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        -64,
+        -16
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.elevenlabs.io/v1/text-to-speech/{{voice id}}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $('Basic LLM Chain').item.json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "606f14be-cf23-4ac8-bccc-f43e7cf47187",
+      "name": "ElevenLabs - Generate Audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -384,
+        -16
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "content": "* ### For the Text-to-Speech part, we'll use ElevenLabs.io, which is free and offers a variety of voices to choose from. However, you can also use the OpenAI `\"Generate audio\"` node instead.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n* ### Since there is no pre-built node for `\"ElevenLabs\"` in n8n, we'll connect to it through its API using the \"HTTP Request\" node.\n\n## Prerequisites:\n* ### `\"ElevenLabs API Key\"` (you can obtain it from their website).\n* ### `\"Voice ID\"` (you can also get it from ElevenLabs' \"Voice Library\").\n## Setup\n* ### In the URL parameter, replace \"{{voice id}}\" at the end of the URL with the Voice ID you obtained from ElevenLabs.io.\n* ### To set up your API Key, add custom authentication and include the following `JSON` with your acual ElevenLabs API Key:\n```json\n{\n \"headers\": {\n \"xi-api-key\": \"put-your-API-Key-here\"\n }\n}\n```",
+        "height": 843.7602354099661,
+        "width": 468.73250812192407
+      },
+      "id": "d86a32b4-4863-4196-9369-20d216275508",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -576,
+        -176
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### The \"Get Chat,\" \"Insert Chat,\" and \"Window Buffer Memory\" nodes will help the LLM model maintain context throughout the conversation.",
+        "height": 91.01435855269375,
+        "width": 487.4293487597613,
+        "color": 6
+      },
+      "id": "8e3216d0-463d-47bb-8aae-9f8670feb250",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1952,
+        -208
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "16ced698-6855-43c5-bc21-9a0ba201f19e",
+      "name": "Limit",
+      "type": "n8n-nodes-base.limit",
+      "position": [
+        -720,
+        -16
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('OpenAI - Speech to Text').item.json[\"text\"] }}",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "AIMessagePromptTemplate",
+              "message": "=To maintain context and fully understand the user's question, always review the previous conversation between you and him before providing an answer.\nThis is the previous conversation:\n{{ $('Aggregate').item.json[\"context\"].map(m => `\nHuman: ${m.human || 'undefined'}\nAI Assistant: ${m.ai || 'undefined'}\n`).join('') }}"
+            }
+          ]
+        }
+      },
+      "id": "7488d53c-e5c9-415d-a0f8-54a081cc7e91",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        -1424,
+        -16
+      ],
+      "typeVersion": 1.4
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "voice_message",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "909667b7-be4d-4b48-855a-a5b6586f59ab",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -2304,
+        -16
+      ],
+      "webhookId": "e9f611eb-a8dd-4520-8d24-9f36deaca528",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "voice_message",
+        "options": {}
+      },
+      "id": "0945eb24-2d75-445c-bdbb-66a39185008e",
+      "name": "OpenAI - Speech to Text",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        -2112,
+        -16
+      ],
+      "typeVersion": 1.3
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "ElevenLabs - Generate Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenAI - Speech to Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Chat": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Chat": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Insert Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Insert Chat",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Get Chat",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI - Speech to Text": {
+      "main": [
+        [
+          {
+            "node": "Get Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs - Generate Audio": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "917a5291-8d10-4ae0-8f04-eec54adac5f0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd172ad4f7736955c0a5e1ab5932e16107778fda6f4cdaa9ee5c2c66937528b0"
+  },
+  "id": "IwRpmAzvWbFmqWLX",
+  "tags": [
+    {
+      "updatedAt": "2025-08-15T14:43:24.033Z",
+      "createdAt": "2025-08-15T14:43:24.033Z",
+      "id": "twqPHSLg0pHKuvEK",
+      "name": "Workflows"
+    }
+  ]
+}

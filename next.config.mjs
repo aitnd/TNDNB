@@ -12,6 +12,10 @@ const nextConfig = {
                 source: '/ontap/:path*',
                 destination: '/ontap/index.html',
             },
+            {
+                source: '/amthuc/:path*',
+                destination: '/amthuc/index.html',
+            },
         ];
     },
 };

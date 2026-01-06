@@ -1,0 +1,252 @@
+{
+  "name": "Lấy authorization Flow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get-authorization",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "ab754f0b-3178-4d58-9472-413005be4070",
+      "name": "Webhook",
+      "webhookId": "8c94dddc-04e0-4594-9f12-93ef71678fdf"
+    },
+    {
+      "parameters": {
+        "content": "## Hướng dẫn lấy Authorization\n1, Mở Flow\n2, mở tab mới và Truy cập đường link: [Tại đây](https://labs.google/fx/api/auth/session)\n3, Cài extension:\n[Multi Webhook Sender](https://chromewebstore.google.com/detail/multi-webhook-sender-send/kbkfglmdbbkppnmojdmpndadegmlhhkb?hl=vi)\n\nMẫu bảng tính lưu thông tin Authorization [Tại đây](https://docs.google.com/spreadsheets/d/1_egUcHLDKNJdw0LFg4eoRetwCvvR3tG4SV8vZFvXQzQ/edit?gid=0#gid=0)",
+        "height": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "13d12f21-6b49-4c79-aa50-a305567420f1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "31a99035-8abd-4ac8-a604-0fe4a450d8a8",
+              "name": "name",
+              "value": "={{ $json.body.user.name }}",
+              "type": "string"
+            },
+            {
+              "id": "026b3d84-5b20-4043-8fb7-42349f69139b",
+              "name": "email",
+              "value": "={{ $json.body.user.email }}",
+              "type": "string"
+            },
+            {
+              "id": "fe01b891-2767-4117-b472-11cb97fd1173",
+              "name": "expires",
+              "value": "={{ new Date(new Date($json.body.expires).getTime() + 7 * 60 * 60 * 1000).toISOString() }}",
+              "type": "string"
+            },
+            {
+              "id": "2dd7c005-f336-49a6-967a-c26f435f60f6",
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.body.access_token }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        32,
+        0
+      ],
+      "id": "721775db-b862-40ec-abd9-1e0b15c878b9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1QzrUheTQslwDbbK9yqf47lpgyuQJsloghJS_-Xy-qKU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 524408018,
+          "mode": "list",
+          "cachedResultName": "Authorization",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QzrUheTQslwDbbK9yqf47lpgyuQJsloghJS_-Xy-qKU/edit#gid=524408018"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.name }}",
+            "email": "={{ $json.email }}",
+            "expires": "={{ $json.expires }}",
+            "Authorization": "={{ $json.Authorization }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "expires",
+              "displayName": "expires",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Authorization",
+              "displayName": "Authorization",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hiệu lực",
+              "displayName": "Hiệu lực",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Thời hạn",
+              "displayName": "Thời hạn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Thời gian hiện tại",
+              "displayName": "Thời gian hiện tại",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Còn lại (giờ)",
+              "displayName": "Còn lại (giờ)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        0
+      ],
+      "id": "856af33b-7d34-4590-a206-68bbcbe2d659",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YgBwspY880MDbiUP",
+          "name": "Google Sheets thanhngan22025"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Điển lại ID bảng tính lưu Authorization",
+        "height": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        176,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "ad9d3d0b-3690-464e-8d64-f3c64321e871",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "da147057-9719-4bc8-8812-ef3b66bd4fff",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8941ce8182001ee9645147676cf7616924f1ba5e20cfc08ad427186e3fd358a3"
+  },
+  "id": "P15AwA4HhJqf8L2g",
+  "tags": []
+}

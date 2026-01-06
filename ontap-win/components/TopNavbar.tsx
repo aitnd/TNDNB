@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff } from 'lucide-react';
+import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils } from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
 
@@ -14,6 +14,7 @@ interface TopNavbarProps {
 
 const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout }) => {
     const [showChangelog, setShowChangelog] = React.useState(false);
+    const [showLinksDropdown, setShowLinksDropdown] = React.useState(false); // Dropdown liên kết khác
 
     return (
         <>
@@ -48,15 +49,6 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                         <span className="font-semibold text-sm md:text-base">Thi trực tuyến</span>
                     </button>
 
-                    {/* 1.2 Tải App */}
-                    <button
-                        onClick={() => onNavigate('download_app')}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <Download size={18} className="text-green-600 dark:text-green-400" />
-                        <span className="font-semibold text-sm md:text-base">Tải App</span>
-                    </button>
-
                     {/* 2. Trang chủ (Link ngoài) */}
                     <a
                         href="/"
@@ -65,6 +57,45 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                         <Newspaper size={18} className="text-teal-600 dark:text-teal-400" />
                         <span className="font-medium text-sm md:text-base">Tin tức</span>
                     </a>
+
+                    {/* Liên kết khác - Dropdown (dùng fixed để tránh bị cắt) */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowLinksDropdown(!showLinksDropdown)}
+                            onBlur={() => setTimeout(() => setShowLinksDropdown(false), 200)}
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+                        >
+                            <Link2 size={18} className="text-pink-600 dark:text-pink-400" />
+                            <span className="font-medium text-sm md:text-base">Liên kết</span>
+                            <ChevronDown size={16} className={`transition-transform ${showLinksDropdown ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {/* Dropdown menu - dùng fixed position */}
+                        {showLinksDropdown && (
+                            <div className="fixed mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]"
+                                style={{ top: '56px' }}>
+                                {/* Tải App */}
+                                <button
+                                    onClick={() => { setShowLinksDropdown(false); onNavigate('download_app'); }}
+                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left"
+                                >
+                                    <Download size={18} className="text-green-500" />
+                                    <span className="font-medium text-sm">Tải App học offline</span>
+                                </button>
+                                {/* Ẩm thực */}
+                                <a
+                                    href="https://daotaothuyenvien.com/amthuc"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                                >
+                                    <Utensils size={18} className="text-orange-500" />
+                                    <span className="font-medium text-sm">Ẩm thực Ninh Bình</span>
+                                </a>
+                                {/* Có thể thêm link khác ở đây */}
+                            </div>
+                        )}
+                    </div>
 
                     {/* 3. Tài khoản */}
                     <button

@@ -1,0 +1,28 @@
+{
+    "mcpServers": {
+        "GitKraken": {
+            "args": [
+                "mcp",
+                "--host=antigravity",
+                "--source=gitlens",
+                "--scheme=antigravity"
+            ],
+            "command": "c:\\Users\\Admin\\AppData\\Roaming\\Antigravity\\User\\globalStorage\\eamodio.gitlens\\gk.exe",
+            "type": "stdio"
+        },
+        "n8n-mcp": {
+            "command": "node",
+            "args": [
+                "C:\\Users\\Admin\\AppData\\Roaming\\npm\\node_modules\\n8n-mcp\\dist\\mcp\\index.js"
+            ],
+            "env": {
+                "MCP_MODE": "stdio",
+                "LOG_LEVEL": "error",
+                "DISABLE_CONSOLE_OUTPUT": "true",
+                "N8N_API_URL": "http://localhost:5678",
+                "N8N_BASE_URL": "http://localhost:5678",
+                "N8N_API_KEY": ""
+            }
+        }
+    }
+}

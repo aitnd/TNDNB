@@ -8,9 +8,26 @@ interface ChangelogModalProps {
 // 💖 Dữ liệu changelog dạng cấu trúc
 const CHANGELOG_DATA = [
   {
+    version: '3.8.9',
+    date: '06/01/2026',
+    isLatest: true,
+    sections: [
+      {
+        icon: Zap,
+        title: 'Sửa lỗi',
+        color: 'text-yellow-500',
+        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
+        items: [
+          'Sửa lỗi màn hình nháy nháy khi ôn tập môn Pháp luật (hạng Thủy thủ)',
+          'Khắc phục hình ảnh câu hỏi không load được từ câu 49 trở đi',
+          'Thêm cơ chế chống vòng lặp retry khi load ảnh thất bại'
+        ]
+      }
+    ]
+  },
+  {
     version: '3.8.8',
     date: '25/12/2025',
-    isLatest: true,
     sections: [
       {
         icon: Shield,

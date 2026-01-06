@@ -1,0 +1,1958 @@
+{
+  "name": "My Chat Ai Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "multipleMethods": true,
+        "path": "WEBHOOK_ID_REDACTED",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -4992,
+        1568
+      ],
+      "id": "a0aef7b4-9573-44d9-b479-a40b4bffe901",
+      "name": "Webhook",
+      "webhookId": "WEBHOOK_ID_REDACTED"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6471a578-a574-4db2-90fa-6b1835c9b913",
+              "leftValue": "={{ $json.query['hub.mode'] }}",
+              "rightValue": "subscribe",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "fa62cd28-b39b-4ed2-b94a-243476283a1b",
+              "leftValue": "={{ $json.query['hub.verify_token'] }}",
+              "rightValue": "tokenminh",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -4432,
+        1408
+      ],
+      "id": "1fe7aa69-51cf-4867-b820-827e898eaf32",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -4752,
+        1840
+      ],
+      "id": "98bf8ea4-afba-4393-8f89-ea904cc6dd3f",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a4d40360-c3a2-40d0-85cb-ca7a8c7a98be",
+              "name": "sender_id",
+              "value": "={{ $json.body.entry[0].messaging[0].sender.id }}",
+              "type": "string"
+            },
+            {
+              "id": "30d7732a-c7ed-4a4e-9c0a-05a1feebc6e5",
+              "name": "receiver_id",
+              "value": "={{ $json.body.entry[0].messaging[0].recipient.id }}",
+              "type": "string"
+            },
+            {
+              "id": "c4ba6858-7c94-49a4-b50b-fecfd39ebc77",
+              "name": "message",
+              "value": "={{ $json.body.entry[0].messaging[0].message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        208
+      ],
+      "id": "1f1f4fda-019e-4dcb-b990-c19563e87183",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -2368,
+        1584
+      ],
+      "id": "69f6e253-e528-4a31-865e-c4a9018bd124",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "eBLTWrp7m25PmzuJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query['hub.challenge'] }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -4112,
+        1280
+      ],
+      "id": "bd4e9222-30f1-4218-b15b-b6d9cda2a27d",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5e134e49-6364-4ef7-82e9-597321877485",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -368,
+        224
+      ],
+      "id": "98b1eb15-96d7-46ba-850f-b4f3738a1f05",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ecfb1218-dbd3-4a18-b5e1-255a52b9b22f",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].message.attachments[0].type}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -592,
+        208
+      ],
+      "id": "826ae1ee-97cc-4608-940f-331c4f9711a2",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ecfb1218-dbd3-4a18-b5e1-255a52b9b22f",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].message.attachments[0].type}}",
+              "rightValue": "image",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -256,
+        48
+      ],
+      "id": "65b306b9-0f84-40f7-af53-4881aef2f2a2",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"imageUrl\": \"{{ $json['body']['entry'][0]['messaging'][0]['message']['attachments'][0]['payload']['url'] }}\"\n}\n",
+        "includeOtherFields": true,
+        "include": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "eb2b60ff-d4f6-4128-9b6b-9e93533b1a9b",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "url": "={{$json.imageUrl}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        176,
+        0
+      ],
+      "id": "63af7c1b-ca19-4f89-a2a6-3120701d7f20",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        384,
+        0
+      ],
+      "id": "39e5186c-bad2-4798-9bd0-f193a7eef481",
+      "name": "Call open Ai Vision",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9b6e915f-c4b5-4d81-98a8-30abe2867db2",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].message.mid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].read }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].delivery }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -4384,
+        1840
+      ],
+      "id": "37355f78-c8ef-4a8b-b491-acbc200b6bc4",
+      "name": "If1 - Check Valid Message"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4762a5d6-7637-4cd3-ac54-5d4e88abdbde",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].message.attachments[0].type}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3904,
+        1840
+      ],
+      "id": "0c5197e0-42dd-4a2a-8c57-0efead4820cf",
+      "name": "If2 - Has Attachment"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+              "leftValue": "={{ $json.body.entry[0].messaging[0].message.attachments[0].type }}",
+              "rightValue": "image",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3744,
+        1648
+      ],
+      "id": "28fd0a6e-300d-4827-817e-7f8289b36724",
+      "name": "If3 - Is Image"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5f6b95a5-7152-4b70-9db6-163410b78579",
+              "name": "sender_id",
+              "value": "={{ $json.body.entry[0].messaging[0].sender.id }}",
+              "type": "string"
+            },
+            {
+              "id": "2de0d29f-4df7-4d98-902b-dedf6d683acc",
+              "name": "receiver_id",
+              "value": "={{ $json.body.entry[0].messaging[0].recipient.id }}",
+              "type": "string"
+            },
+            {
+              "id": "53ddb29e-6492-4585-a841-c773da7b94e0",
+              "name": "message",
+              "value": "={{ $json.body.entry[0].messaging[0].message.text || 'Khách gửi file đính kèm' }}",
+              "type": "string"
+            },
+            {
+              "id": "18a8a06a-cd8b-4b47-a9d8-a51a686c7357",
+              "name": "timestamp",
+              "value": "={{$json.body.entry[0].messaging[0].timestamp}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3440,
+        1888
+      ],
+      "id": "b7b98c30-c84b-4a0e-822c-6841e5b46457",
+      "name": "Edit Fields - Text Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"imageUrl\": \"{{ $json.body.entry[0].messaging[0].message.attachments[0].payload.url }}\",\n  \"caption\": \"{{ $json.body.entry[0].messaging[0].message.text || '' }}\",\n  \"sender_id\": \"{{ $json.body.entry[0].messaging[0].sender.id }}\",\n  \"receiver_id\": \"{{ $json.body.entry[0].messaging[0].recipient.id }}\",\n  \"timestamp\":\"{{$json.body.entry[0].messaging[0].timestamp}}\",\n  \"message_type\":\"{{ $json.body.entry[0].messaging[0].message.attachments[0].type}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3456,
+        1424
+      ],
+      "id": "884d20be-eae7-4538-b027-0e17f76d7503",
+      "name": "Edit Fields - Image"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4e5f6a7-b8c9-0123-def1-234567890123",
+              "name": "sender_id",
+              "value": "={{ $json.body.entry[0].messaging[0].sender.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e5f6a7b8-c901-2345-ef12-345678901234",
+              "name": "receiver_id",
+              "value": "={{ $json.body.entry[0].messaging[0].recipient.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f6a7b8c9-0123-4567-f123-456789012345",
+              "name": "attachment_type",
+              "value": "={{ $json.body.entry[0].messaging[0].message.attachments[0].type }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3456,
+        944
+      ],
+      "id": "9a293ca0-b9ca-4a12-90e4-224cb5e00b0d",
+      "name": "Edit Fields - Other Attachment"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $json.receiver_id }}/messages?access_token=PAGE_ACCESS_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $json.sender_id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"Cảm ơn bạn đã gửi {{ $json.attachment_type }}! Bạn đang quan tâm điều gì về khoá học n8n và automation của Minh?\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3280,
+        944
+      ],
+      "id": "1d3b4a10-ee3d-4aea-95db-8298ff3000ab",
+      "name": "Send Reply - Other Attachment"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v24.0/{{ $('Edit Fields - Image').item.json.receiver_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Edit Fields - Image').item.json.sender_id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"{{ $json.clean_text }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1872,
+        1408
+      ],
+      "id": "161f228f-1349-471c-9813-6e2e5c074bcf",
+      "name": "ChatFB1",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "CpMVVbGmYTQwHEsK",
+          "name": "Query Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Edit Fields - Image').item.json.sender_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -2304,
+        1680
+      ],
+      "id": "ef8b58eb-c57a-4ca0-bc9a-0a055cd7f00f",
+      "name": "Postgres Chat Memory1",
+      "credentials": {
+        "postgres": {
+          "id": "BxaMnwkapEMj5TJC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Người dùng gửi nội dung và text đã được gửi như sau:\n\n{{ $json.full_context }}\n\n\nDựa trên thông tin phân tích và phần caption (nếu có), hãy trả lời như một trợ lý khoá học n8n/automation: giải thích ngắn gọn bạn hiểu gì từ hình ảnh này (ví dụ: ảnh của khoá n8n Trần Anh Minh, ảnh quảng cáo, ghi chú, ảnh bảng giá v.v.), và gợi ý bước tiếp theo cho khách (hỏi thêm, gợi ý bài học/buổi học phù hợp, hoặc hướng dẫn cách gửi thêm thông tin). Câu trả lời ngắn gọn, thân thiện, dễ hiểu.\n\n",
+        "options": {
+          "systemMessage": "=Bạn là trợ lý tư vấn khoá học n8n và tự động hoá mang tên \"Dùng AI Như Một Nhân Viên – Mindful Business Automation\" của Trần Anh Minh.\n\nMục tiêu: có được thông tin khách hàng nếu khách hàng là người mới (họ và tên, số điện thoại,email) giúp khách hàng hiểu video sẽ xem phù hợp với ai, họ sẽ được gì, và hướng dẫn họ cách đăng ký.\n\n#Tools\nBạn được dùng tool Scenarious để có thể lấy ra các tình huống trả lời người dùng.\n\nThông tin nền tảng về khoá học:\n— Chủ đề chính: n8n, workflow automation, AI Agent, tích hợp API và tự động hoá công việc hằng ngày.\n— Đối tượng: người đi làm, freelancer, chủ business nhỏ, creator muốn tiết kiệm thời gian, giảm việc lặp lại, xây hệ thống tạo thu nhập từ automation.\n— Yêu cầu đầu vào: không cần biết code, chỉ cần dùng máy tính cơ bản và chịu khó thực hành.\n\nKhi tư vấn:\n1) Hỏi ngắn gọn mục tiêu của khách (ví dụ: \"Bạn đang muốn tự động hoá việc gì?\" hoặc \"Bạn đang dùng công cụ nào rồi?\", Bạn đã tìm hiểu về n8n chưa? đánh giá kiến thức về n8n trên thang điểm 10 thì bạn đánh giá bao nhiêu điểm?).\n2) Gợi ý nội dung/buổi học phù hợp thay vì nói quá rộng.\n3) Giải thích đơn giản, hạn chế thuật ngữ quá kỹ thuật. Nếu phải dùng, hãy giải thích thêm 1 câu.\n4) Nếu khách hỏi ngoài phạm vi khoá học (ví dụ: lập trình nâng cao, tool khác), hãy trả lời ngắn gọn và kéo lại về  khoá học n8n/automation của Trần Anh Minh\n\nQuy tắc trả lời:\n— Nếu khách nhắn bằng tiếng Việt → trả lời tiếng Việt.\n— Nếu khách nhắn bằng tiếng Anh → trả lời tiếng Anh đơn giản.\n— Luôn ngắn gọn, rõ ràng, từng câu dễ đọc, ưu tiên câu ngắn.\n— Ưu tiên workflow mà khoá học đã có như: tự động gửi email, gom data từ Google Sheets, tự động post Facebook/YouTube, tạo AI Agent trả lời khách hàng, theo dõi doanh thu, nhắc việc hằng ngày...\n— Khi khách quan tâm hoặc hỏi cách học/đăng ký, hãy hướng dẫn: \"Anh/chị chỉ cần để lại Họ tên + Email + Số điện thoại, hoặc nhắn từ khoá ĐĂNG KÝ KHOÁ HỌC, đội ngũ sẽ liên hệ và gửi hướng dẫn chi tiết cho anh/chị.\".\n- Phải dùng dấu chấm (.) và dấu phẩy (,) để tạo nhịp đọc tự nhiên.\n- Loại bỏ và không sử dụng các ký tự trong nội dung như : ; ' - _ / \\ * : \" \\n \\n (\\r) [ ] \\\\n\\\\ \"\" --- liên tiếp.\n- Các đoạn hội thoại chỉ cần dấu : không cần để trong \"\"\n\nNếu bạn không chắc chắn về câu trả lời, hãy nói: \"Phần này cần xem chi tiết hơn workflow thực tế. Anh/chị có thể mô tả cụ thể hơn, hoặc để lại thông tin để được Minh hỗ trợ trực tiếp.\".\n\nLuôn giữ giọng điệu thân thiện, khích lệ và tôn trọng. Bạn đang nói chuyện với khách hàng tiềm năng của khoá học."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -2320,
+        1408
+      ],
+      "id": "c47a30e9-cf98-4fdb-b527-cc0b494f8eec",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Code node: Clean text to avoid JSON errors\n\nlet results = [];\n\nfor (let i = 0; i < items.length; i++) {\n  let raw = items[i].json.output || \"\";\n\n  // Chuyển sang string nếu lỡ bị là object\n  raw = String(raw);\n\n  // 1. Loại bỏ các ký tự JSON-dangerous\n  let clean = raw\n    .replace(/[\\u0000-\\u001F]+/g, \" \")      // control chars\n    .replace(/[\\r\\n\\t]+/g, \" \")             // xuống dòng, tab\n    .replace(/\\\\/g, \"\")                     // dấu \\\n    .replace(/\"/g, \"'\")                     // chuyển \" → '\n    .replace(/`+/g, \"\")                     // dấu backtick `\n    .replace(/“|”/g, \"'\")                   // dấu ngoặc kép cong\n    .replace(/‘|’/g, \"'\")                   // ngoặc đơn cong\n    .replace(/[\\u2028\\u2029]/g, \" \")        // unicode line separator\n    .replace(/<[^>]*>/g, \"\")                // loại bỏ HTML tag nếu có\n    .replace(/\\s{2,}/g, \" \")                // gom nhiều space thành 1\n    .trim();\n\n  // 2. Tránh ký tự gây sập cURL\n  clean = clean.replace(/&/g, \" và \");\n  \n  results.push({\n    json: {\n      clean_text: clean\n    }\n  });\n}\n\nreturn results;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2016,
+        1408
+      ],
+      "id": "345bc352-1aaf-4065-9dc4-cdf5fdc76ae1",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -4896,
+        512
+      ],
+      "id": "2b1e2d20-47ba-43bb-9e39-e07260e6bd3c",
+      "name": "When clicking ‘Execute workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=User Message: {{ $json.message }}\nHãy trả lời như một trợ lý tư vấn về các video n8n/automation của Trần Anh Minh. Giữ câu trả lời ngắn gọn, dễ hiểu, tập trung vào việc giải thích video, lợi ích, lộ trình xem vid hoặc cách dùng n8n/AI để giải quyết vấn đề của khách.",
+        "options": {
+          "systemMessage": "=Bạn là trợ lý tư vấn khoá học n8n và tự động hoá mang tên \"Dùng AI Như Một Nhân Viên – Mindful Business Automation\" của Trần Anh Minh.\n\nMục tiêu: giúp khách hàng hiểu n8n là gì, khoá học phù hợp với ai, họ sẽ học được gì, và hướng dẫn họ cách đăng ký.\n\n#Tools\nBạn được dùng tool Scenarious (Google Sheets) để có thể lấy ra cách trả lời các tình huống người dùng hỏi và thắc mắc.\nQuy tắc sử dụng Tool:\n1. Nếu user hỏi câu nằm trong dạng thắc mắc / tình huống quen thuộc → Hãy ưu tiên gọi tool 'scenarious' với tham số:\n   { \"query\": \"<Nội dung người dùng hỏi>\" }\n2. Nếu tool trả về gợi ý → hãy diễn đạt lại theo văn phong tư vấn của bạn.\n3. Nếu tool không có dữ liệu phù hợp → trả lời theo kiến thức của bạn.\n\nThông tin nền tảng về khoá học:\n— Chủ đề chính: n8n, workflow automation, AI Agent, tích hợp API và tự động hoá công việc hằng ngày.\n— Đối tượng: người đi làm, freelancer, chủ business nhỏ, creator muốn tiết kiệm thời gian, giảm việc lặp lại, xây hệ thống tạo thu nhập từ automation.\n— Yêu cầu đầu vào: không cần biết code sâu, chỉ cần dùng máy tính cơ bản và chịu khó thực hành.\n\nKhi tư vấn:\n1) Hỏi ngắn gọn mục tiêu của khách (ví dụ: \"Anh/chị đang muốn tự động hoá việc gì?\" hoặc \"Anh/chị đang dùng công cụ nào rồi?\").\n2) Gợi ý nội dung/buổi học phù hợp thay vì nói quá rộng.\n3) Giải thích đơn giản, hạn chế thuật ngữ quá kỹ thuật. Nếu phải dùng, hãy giải thích thêm 1 câu.\n4) Nếu khách hỏi ngoài phạm vi khoá học (ví dụ: lập trình nâng cao, tool khác), hãy trả lời ngắn gọn và kéo lại về n8n/automation.\n\nQuy tắc trả lời:\n— Nếu khách nhắn bằng tiếng Việt → trả lời tiếng Việt.\n— Nếu khách nhắn bằng tiếng Anh → trả lời tiếng Anh đơn giản.\n— Luôn ngắn gọn, rõ ràng, từng câu dễ đọc, ưu tiên câu ngắn.\n— Ưu tiên ví dụ thực tế: tự động gửi email, gom data từ Google Sheets, tự động post Facebook/YouTube, tạo AI Agent trả lời khách hàng, theo dõi doanh thu, nhắc việc hằng ngày...\n— Khi khách quan tâm hoặc hỏi cách học/đăng ký, hãy hướng dẫn: \"Anh/chị chỉ cần để lại Họ tên + Email + Số điện thoại, hoặc nhắn từ khoá ĐĂNG KÝ KHOÁ HỌC, đội ngũ sẽ liên hệ và gửi hướng dẫn chi tiết cho anh/chị.\".\n\nNếu bạn không chắc chắn về câu trả lời, hãy nói: \"Phần này cần xem chi tiết hơn workflow thực tế. Anh/chị có thể mô tả cụ thể hơn, hoặc để lại thông tin để được Minh hỗ trợ trực tiếp.\".\n\nLuôn giữ giọng điệu thân thiện, khích lệ và tôn trọng. Bạn đang nói chuyện với khách hàng tiềm năng của khoá học."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -2752,
+        1840
+      ],
+      "id": "d74363b2-80aa-4caf-afce-0362b5faf51a",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v24.0/{{ $('Edit Fields - Text Message').item.json.receiver_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Edit Fields - Text Message').item.json.sender_id }}\"\n  },\n  \"messaging_type\": \"RESPONSE\",\n  \"message\": {\n    \"text\": \"{{ $json.clean_text }}\"\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "outputPropertyName": "200"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -2336,
+        1840
+      ],
+      "id": "59cb66cd-dfcc-4ff6-a035-a2195d241c9c",
+      "name": "ChatFB2",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "CpMVVbGmYTQwHEsK",
+          "name": "Query Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "562e1087-9d5c-419a-8a04-1f412401e719",
+              "leftValue": "={{$json.description}}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3136,
+        1888
+      ],
+      "id": "5971546c-c6fa-4903-ba28-91b7ea25abf8",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2688,
+        2432
+      ],
+      "id": "452b50a6-d64e-4e41-8f23-cc8b2651a245",
+      "name": "Wait",
+      "webhookId": "WAIT_WEBHOOK_ID_REDACTED"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "\n\nSELECT\n  id,\n  sender_id,\n  message_type,\n  message_data,\n  fb_timestamp,\n  received_at,\n  processed\nFROM fb_message_buffer\nWHERE \n  -- Cùng sender\n  sender_id = '{{ $(\"Edit Fields - Image\").item.json.sender_id }}'\n  \n  -- Chỉ lấy text messages\n  AND message_type IN ('text', 'text_with_image_keyword')\n  \n  -- Chưa xử lý (QUAN TRỌNG!)\n  AND processed = FALSE\n  \n  -- Trong khoảng 3 phút\n  AND fb_timestamp <= {{ $(\"Edit Fields - Image\").item.json.timestamp || $json.body.entry[0].messaging[0].timestamp }}\n  AND fb_timestamp >= ({{ $(\"Edit Fields - Image\").item.json.timestamp || $json.body.entry[0].messaging[0].timestamp }} - 180000)\n  \n-- Lấy message gần nhất\nORDER BY fb_timestamp DESC\nLIMIT 10;\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2864,
+        1424
+      ],
+      "id": "0beadab4-b203-47fc-8999-c0a5509269b7",
+      "name": "Execute a SQL query2",
+      "credentials": {
+        "postgres": {
+          "id": "BxaMnwkapEMj5TJC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fb_message_buffer",
+          "mode": "list",
+          "cachedResultName": "fb_message_buffer"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sender_id": "={{ $json.sender_id}}",
+            "message_type": "=text_with_image_keyword",
+            "message_data": "={{ $json.message }}",
+            "fb_timestamp": "={{ $('Edit Fields - Text Message').item.json.timestamp }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_id",
+              "displayName": "sender_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message_data",
+              "displayName": "message_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message_type",
+              "displayName": "message_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "processed",
+              "displayName": "processed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fb_timestamp",
+              "displayName": "fb_timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2848,
+        2432
+      ],
+      "id": "c556903c-1581-4b30-9f49-7484cea7d01a",
+      "name": "Insert_DBMBT",
+      "credentials": {
+        "postgres": {
+          "id": "BxaMnwkapEMj5TJC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fb_message_buffer",
+          "mode": "list",
+          "cachedResultName": "fb_message_buffer"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sender_id": "={{ $json.sender_id }}",
+            "message_type": "={{ $json.message_type}}",
+            "fb_timestamp": "={{ $json.timestamp }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_id",
+              "displayName": "sender_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message_data",
+              "displayName": "message_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message_type",
+              "displayName": "message_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "processed",
+              "displayName": "processed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fb_timestamp",
+              "displayName": "fb_timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3312,
+        1424
+      ],
+      "id": "083e3e1f-d1e7-489f-972e-36fb08f5d064",
+      "name": "Insert_DBMBI",
+      "credentials": {
+        "postgres": {
+          "id": "BxaMnwkapEMj5TJC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Edit Fields - Image').item.json.imageUrl}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -3168,
+        1424
+      ],
+      "id": "13bc74f8-185f-4528-8bbf-1f5004c10f42",
+      "name": "GetImage"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.imgbb.com/1/upload",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "IMGBB_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3008,
+        1424
+      ],
+      "id": "9c7e0204-7a7b-4a7d-954a-e45c39a4d901",
+      "name": "Get_url"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4.1-mini\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"text\",\n          \"text\": \"You are an expert Image Analyzer. Analyze this image. Return ONLY valid JSON in this exact schema: {\\\"image_type\\\": \\\"n8n / automation / other\\\", \\\"menu_name\\\": \\\"short title or 'No Title'\\\", \\\"price\\\": \\\"any important number/value or 'N/A'\\\"}\"\n        },\n        {\n          \"type\": \"image_url\",\n          \"image_url\": {\n            \"url\":\"{{ $('Get_url').item.json.data.image.url }}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"max_tokens\": 300\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2704,
+        1024
+      ],
+      "id": "9875ae45-ee21-4724-ba19-cdd1559abaee",
+      "name": "AI_Vision",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "7NpBTi5OaAG2z7Cy",
+          "name": "OpenAIanalyze"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Node: Merge Text + Vision Analysis for AI Agent\n// Đặt SAU node \"Parse Vision Result\"\n// Mục đích: Gộp text message + vision analysis để gửi vào AI Agent\n\n// Lấy data từ các node\nconst visionResult = items[0].json; // Từ Parse Vision Result\nconst postgresResult = $('Execute a SQL query2').all(); // Text từ Postgres\nconst imageData = $('Edit Fields - Image').item.json;\n\n// Biến để lưu text message (nếu có)\nlet textMessage = null;\nlet hasRelatedText = false;\n\n// Check xem có text message không\nif (postgresResult && postgresResult.length > 0) {\n  const textRow = postgresResult[0].json;\n  \n  // Parse message_data\n  // Dựa vào Image 1, message_data là string \"ơm này là gì\"\n  let messageText = textRow.message_data;\n  \n  // Nếu message_data là JSON string, parse nó\n  if (typeof messageText === 'string' && messageText.startsWith('{')) {\n    try {\n      const parsed = JSON.parse(messageText);\n      messageText = parsed?.body?.entry?.[0]?.messaging?.[0]?.message?.text || messageText;\n    } catch (e) {\n      // Nếu parse lỗi, giữ nguyên string\n    }\n  }\n  \n  textMessage = messageText;\n  \n  if (textMessage && textMessage.trim().length > 0) {\n    hasRelatedText = true;\n    console.log('✅ Found related text:', textMessage);\n    console.log('📸 Vision analysis:', visionResult.image_type);\n  }\n}\n\n// Return merged data cho AI Agent\nreturn [{\n  json: {\n    // IDs\n    sender_id: visionResult.sender_id || imageData.sender_id,\n    receiver_id: visionResult.receiver_id || imageData.receiver_id,\n    \n    // Vision analysis results\n    image_type: visionResult.image_type,\n    menu_name: visionResult.menu_name,\n    price: visionResult.price,\n    caption: visionResult.caption || imageData.caption || '',\n    \n    // Related text message\n    related_text: textMessage,\n    has_related_text: hasRelatedText,\n    \n    // PROMPT cho AI Agent - QUAN TRỌNG!\n    user_message: hasRelatedText \n      ? `User hỏi: \"${textMessage}\" và gửi kèm ảnh.` \n      : 'User gửi ảnh.',\n    \n    image_analysis_context: `Phân tích ảnh: Loại=${visionResult.image_type}, Nội dung=${visionResult.menu_name}, Thông tin=${visionResult.price}`,\n    \n    // Full context for AI\n    full_context: hasRelatedText\n      ? `User vừa hỏi: \"${textMessage}\"\\n\\nSau đó gửi ảnh này.\\n\\nKết quả phân tích ảnh:\\n- Loại: ${visionResult.image_type}\\n- Nội dung: ${visionResult.menu_name}\\n- Thông tin: ${visionResult.price}\\n\\nHãy trả lời câu hỏi của user dựa trên ảnh này.`\n      : `User gửi ảnh.\\n\\nKết quả phân tích ảnh:\\n- Loại: ${visionResult.image_type}\\n- Nội dung: ${visionResult.menu_name}\\n- Thông tin: ${visionResult.price}\\n\\nHãy mô tả và tư vấn về ảnh này.`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2512,
+        1024
+      ],
+      "id": "c9bac2de-c00d-400e-bf8e-b9521ac52c9a",
+      "name": "Parse1"
+    },
+    {
+      "parameters": {
+        "content": "## Get Text + Image Data",
+        "height": 464,
+        "width": 1088,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3488,
+        1264
+      ],
+      "typeVersion": 1,
+      "id": "2642ec96-bfb5-4274-b6bc-e94b649448e6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT column_name, data_type\nFROM information_schema.columns\nWHERE table_name = 'fb_message_buffer'\nORDER BY ordinal_position;\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4496,
+        528
+      ],
+      "id": "87055300-1427-4191-b63f-9fd4b0fe5bfd",
+      "name": "Execute a SQL query3",
+      "credentials": {
+        "postgres": {
+          "id": "BxaMnwkapEMj5TJC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS fb_message_buffer (\n  id SERIAL PRIMARY KEY,\n  sender_id VARCHAR(50) NOT NULL,\n  message_data TEXT,\n  message_type TEXT,\n  received_at TIMESTAMP DEFAULT NOW(),\n  processed BOOLEAN DEFAULT FALSE,\n  fb_timestamp BIGINT\n);\n\n-- Index tối ưu cho cả text flow + image flow\nCREATE INDEX IF NOT EXISTS idx_sender_fb_timestamp\nON fb_message_buffer(sender_id, fb_timestamp);",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4464,
+        224
+      ],
+      "id": "41798ac2-a60b-4a67-bb27-e57ca69c710f",
+      "name": "Execute a SQL query4",
+      "credentials": {
+        "postgres": {
+          "id": "BxaMnwkapEMj5TJC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Create column",
+        "height": 256,
+        "width": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4592,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "ee048123-b42c-47e6-b170-679c1a66129a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Show All Column",
+        "height": 256,
+        "width": 384,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4592,
+        448
+      ],
+      "typeVersion": 1,
+      "id": "9b0e8915-059d-46c8-a9ec-b1b4bbdcc80d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Access FB Webhook",
+        "height": 496,
+        "width": 608,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4544,
+        1152
+      ],
+      "typeVersion": 1,
+      "id": "4eab0d59-42a4-4b7f-91a6-8dda70809540",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "fb_message_buffer",
+          "mode": "list",
+          "cachedResultName": "fb_message_buffer"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "processed": true,
+            "sender_id": "={{ $(\"Edit Fields - Image\").item.json.sender_id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_id",
+              "displayName": "sender_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message_data",
+              "displayName": "message_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message_type",
+              "displayName": "message_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "received_at",
+              "displayName": "received_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "processed",
+              "displayName": "processed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fb_timestamp",
+              "displayName": "fb_timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1696,
+        1408
+      ],
+      "id": "01dd5008-06b3-440c-8ef4-6a91a33fd3c1",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "BxaMnwkapEMj5TJC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "ALTER TABLE fb_message_buffer \nALTER COLUMN message_data DROP NOT NULL;\n\nALTER TABLE fb_message_buffer \nALTER COLUMN message_type DROP NOT NULL;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -4496,
+        832
+      ],
+      "id": "0ae2e3f1-7d30-496c-bb5f-d11f377f9589",
+      "name": "Execute a SQL query5",
+      "credentials": {
+        "postgres": {
+          "id": "BxaMnwkapEMj5TJC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Send Mess",
+        "height": 464,
+        "width": 864
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2368,
+        1264
+      ],
+      "typeVersion": 1,
+      "id": "33c49da7-ae3b-40f9-a15a-47bd8de11253",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Check Text In Mess",
+        "height": 304,
+        "width": 512,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3472,
+        1776
+      ],
+      "typeVersion": 1,
+      "id": "0be6d8b9-c5eb-4cb5-825d-9bcc5c613d1f",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Add Text to DB",
+        "height": 272,
+        "width": 512,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2880,
+        2304
+      ],
+      "typeVersion": 1,
+      "id": "81c3ef9d-8554-4635-88f1-c92987d49016",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Gác trường hợp gửi khác (Chưa Làm)\n",
+        "height": 288,
+        "width": 528,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3488,
+        816
+      ],
+      "typeVersion": 1,
+      "id": "49feca08-168e-4308-83e5-a7d6c012d6c9",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Send Mess",
+        "height": 320,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2784,
+        1760
+      ],
+      "typeVersion": 1,
+      "id": "19cd38e1-5a9b-4436-b527-0f021231dad6",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## ",
+        "height": 256,
+        "width": 384,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4592,
+        736
+      ],
+      "typeVersion": 1,
+      "id": "e19c6a77-05af-48e5-90a9-ea91d4c31005",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## 🎯 MỤC ĐÍCH CỦA NODE \"If1 – Check Valid Message\"\nNode này dùng để lọc ra những tin nhắn thật từ người dùng,\nvà bỏ qua các loại webhook spam, sự kiện không cần thiết của Facebook như:\nread (người dùng đã đọc)\ndelivery (tin nhắn đã được gửi thành công)\nstandby\npostback không có message\necho (Messenger gửi lại tin nhắn do bot gửi ra)\n\nMID = Message ID (ID của tin nhắn thật)\n\nFacebook Messenger khi gửi webhook về thì không chỉ gửi message, mà còn gửi rất nhiều sự kiện phụ như:\n– Read: người dùng đã đọc tin nhắn\n– Delivery: tin nhắn đã được giao tới\n– Echo: tin nhắn mà chính bot vừa gửi\n\nNếu không lọc, workflow sẽ bị chạy lung tung, dẫn tới tốn API và xử lý sai.\n\nỞ đây mình dùng 3 điều kiện:\n\nĐiều kiện 1: Phải có message.mid → nghĩa là đây là tin nhắn thật.\n\nĐiều kiện 2: Không được có read → loại sự kiện đọc tin nhắn.\n\nĐiều kiện 3: Không được có delivery → loại sự kiện báo giao tin nhắn.\n\nKết quả: chỉ tin nhắn thật từ người dùng mới đi qua nhánh ‘true’.\nCác sự kiện rác của Facebook đều bị chặn lại.”",
+        "height": 672,
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4560,
+        2032
+      ],
+      "typeVersion": 1,
+      "id": "9bd60d8d-d1d8-405a-b405-ebc70bfff0db",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "## 🎯 MỤC ĐÍCH CỦA NODE \"If2 – Has Attachment\"\nNhận biết tin nhắn có ảnh\n\nNhận biết tin nhắn có video\n\nNhận biết tin nhắn có file âm thanh\n\nNhận biết người dùng gửi bất kỳ loại file nào",
+        "height": 336,
+        "width": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4016,
+        2032
+      ],
+      "typeVersion": 1,
+      "id": "44afd247-cff1-4536-ae8b-41cae62650ce",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Node: Classify Image-Related Messages\n// Mục đích: Phân loại tin nhắn có đề cập đến ảnh/hình hay không\n\nconst message = ($json.message || '').toLowerCase().trim();\n\n// Danh sách từ khóa liên quan đến ảnh\nconst imageKeywords = [\n  'ảnh',\n  'hình',\n  'photo',\n  'picture',\n  'pic',\n  'image',\n  'ảnh này',\n  'trong ảnh',\n  'xem ảnh',\n  'ảnh trên',\n  'ảnh dưới',\n  'hình trên',\n  'hình dưới',\n  'phía trên',\n  'phía dưới',\n  'sản phẩm trong ảnh',\n  'trong hình',\n  'ở ảnh',\n  'ở hình',\n  'hình ảnh'\n];\n\n// Check xem message có chứa từ khóa không\nlet hasImageKeyword = false;\nlet matchedKeyword = null;\n\nfor (const keyword of imageKeywords) {\n  if (message.includes(keyword)) {\n    hasImageKeyword = true;\n    matchedKeyword = keyword;\n    break;\n  }\n}\n\n// Phân loại\nlet category;\nlet description;\n\nif (hasImageKeyword) {\n  // NHÁNH 1: Có đề cập đến ảnh\n  category = 'image_related';\n  description = 'Yes';\n} else {\n  // NHÁNH 2: Không đề cập đến ảnh\n  category = 'text_only';\n  description = 'No';\n}\n\nreturn [{\n  json: {\n    ...($json),\n    category: category,\n    description: description,\n    matched_keyword: matchedKeyword,\n    original_message: message,\n    is_image_related: hasImageKeyword\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3296,
+        1888
+      ],
+      "id": "b7ee8aeb-f74d-4b6f-af1a-0beb8150cb63",
+      "name": "Lọc từ khoá trong tin nhắn"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Code node: Clean text to avoid JSON errors\n\nlet results = [];\n\nfor (let i = 0; i < items.length; i++) {\n  let raw = items[i].json.output || \"\";\n\n  // Chuyển sang string nếu lỡ bị là object\n  raw = String(raw);\n\n  // 1. Loại bỏ các ký tự JSON-dangerous\n  let clean = raw\n    .replace(/[\\u0000-\\u001F]+/g, \" \")      // control chars\n    .replace(/[\\r\\n\\t]+/g, \" \")             // xuống dòng, tab\n    .replace(/\\\\/g, \"\")                     // dấu \\\n    .replace(/\"/g, \"'\")                     // chuyển \" → '\n    .replace(/`+/g, \"\")                     // dấu backtick `\n    .replace(/“|”/g, \"'\")                   // dấu ngoặc kép cong\n    .replace(/‘|’/g, \"'\")                   // ngoặc đơn cong\n    .replace(/[\\u2028\\u2029]/g, \" \")        // unicode line separator\n    .replace(/<[^>]*>/g, \"\")                // loại bỏ HTML tag nếu có\n    .replace(/\\s{2,}/g, \" \")                // gom nhiều space thành 1\n    .trim();\n\n  // 2. Tránh ký tự gây sập cURL\n  clean = clean.replace(/&/g, \" và \");\n  \n  results.push({\n    json: {\n      clean_text: clean\n    }\n  });\n}\n\nreturn results;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2480,
+        1840
+      ],
+      "id": "88ef7071-1da3-4db5-9d78-9adf680a80a2",
+      "name": "Lọc ký tự lỗi"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "messages": {
+          "values": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGeminiTool",
+      "typeVersion": 1,
+      "position": [
+        -2128,
+        1584
+      ],
+      "id": "16ee29ab-46df-47ec-82c1-148fa4594e21",
+      "name": "Message a model in Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DzsWcByrCBQg1hHf",
+          "name": "Gemini account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gpt-4.1-mini\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": [\n        {\n          \"type\": \"text\",\n          \"text\": \"You are an expert Image Analyzer. Analyze this image. Return ONLY valid JSON in this exact schema: {\\\"image_type\\\": \\\"n8n / automation / other\\\", \\\"menu_name\\\": \\\"short title or 'No Title'\\\", \\\"price\\\": \\\"any important number/value or 'N/A'\\\"}\"\n        },\n        {\n          \"type\": \"image_url\",\n          \"image_url\": {\n            \"url\":\"{{ $('Get_url').item.json.data.image.url }}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"max_tokens\": 300\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [
+        -2016,
+        1584
+      ],
+      "id": "59120e94-f22b-4f30-9897-56dba1cce7f2",
+      "name": "HTTP Request1"
+    }
+  ],
+  "pinData": {
+    "Respond to Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "your-n8n-domain.com",
+            "user-agent": "facebookexternalua",
+            "content-length": "312",
+            "accept": "*/*",
+            "accept-encoding": "deflate, gzip",
+            "content-type": "application/json",
+            "facebook-api-version": "v24.0",
+            "x-forwarded-for": "69.171.234.5",
+            "x-forwarded-host": "your-n8n-domain.com",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "REDACTED",
+            "x-hub-signature": "REDACTED",
+            "x-hub-signature-256": "REDACTED",
+            "x-real-ip": "69.171.234.5"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "object": "page",
+            "entry": [
+              {
+                "time": 1763630387495,
+                "id": "PAGE_ID_SAMPLE",
+                "messaging": [
+                  {
+                    "sender": {
+                      "id": "USER_ID_SAMPLE"
+                    },
+                    "recipient": {
+                      "id": "PAGE_ID_SAMPLE"
+                    },
+                    "timestamp": 1763629157037,
+                    "message": {
+                      "mid": "m_sGkcekI69np3Ysv7rDO1iIpqo01H3DB9GTeb-zOA_gqZ6fHtS5D6LOPZAIwmdxUiKfNtNaGHX-0ZmWONwEp_Nw",
+                      "text": "hello"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "webhookUrl": "https://your-n8n-domain.com/webhook-test/WEBHOOK_ID_REDACTED",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "If1 - Check Valid Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Call open Ai Vision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1 - Check Valid Message": {
+      "main": [
+        [
+          {
+            "node": "If2 - Has Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2 - Has Attachment": {
+      "main": [
+        [
+          {
+            "node": "If3 - Is Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If3 - Is Image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields - Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields - Other Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields - Text Message": {
+      "main": [
+        [
+          {
+            "node": "Lọc từ khoá trong tin nhắn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields - Image": {
+      "main": [
+        [
+          {
+            "node": "Insert_DBMBI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields - Other Attachment": {
+      "main": [
+        [
+          {
+            "node": "Send Reply - Other Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "AI Agent2",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "ChatFB1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute a SQL query4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute a SQL query3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Lọc ký tự lỗi",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Insert_DBMBT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert_DBMBT": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert_DBMBI": {
+      "main": [
+        [
+          {
+            "node": "GetImage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetImage": {
+      "main": [
+        [
+          {
+            "node": "Get_url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_url": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI_Vision": {
+      "main": [
+        []
+      ]
+    },
+    "Execute a SQL query2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse1": {
+      "main": [
+        []
+      ]
+    },
+    "ChatFB1": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lọc từ khoá trong tin nhắn": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lọc ký tự lỗi": {
+      "main": [
+        [
+          {
+            "node": "ChatFB2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model in Google Gemini": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bae2837a-d6c7-4921-aca2-0399e6a920d8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "REDACTED_INSTANCE_ID"
+  },
+  "id": "4RxL8TNnfs7eGKg2",
+  "tags": []
+}

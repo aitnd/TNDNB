@@ -48,6 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/giai-tri`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/ontap`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/tra-cuu-dia-chi`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/amthuc`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
 
     // 5. CHƯƠNG TRÌNH ĐÀO TẠO (Sub-pages)
     { url: `${baseUrl}/chuong-trinh-dao-tao/lai-phuong-tien`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
