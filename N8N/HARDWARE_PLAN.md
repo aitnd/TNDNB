@@ -137,6 +137,58 @@
 
 ---
 
+## 🔥 Option 2: Dual Xeon E5-2680 v4 (NÂNG CẤP)
+
+> Cấu hình mạnh hơn Option 1, phù hợp nếu tìm được deal tốt.
+
+### Thông Số Kỹ Thuật
+
+| Thành phần | Specs | Giá ước tính (VND) | Tình trạng |
+|------------|-------|--------------------|------------|
+| **CPU** | 2x Intel Xeon E5-2680 v4 (28 cores / 56 threads tổng) | 700k - 800k | Cũ |
+| **Mainboard** | X99 Dual OEM D4 (8 slot RAM) | 1.3tr - 1.5tr | Mới |
+| **RAM** | 2x 32GB DDR4 ECC = 64GB | 1.2tr - 1.6tr | Cũ |
+| **GPU** | GTX 1060 6GB | 2tr - 2.2tr | Cũ |
+| **SSD** | 500GB SATA | 400k - 500k | Cũ |
+| **PSU** | XIGMATEK X650 (650W) | 850k - 950k | Mới |
+| **Case** | Vỏ kính Dual + 3 Fan | 400k - 600k | Mới |
+| **Tản nhiệt** | 2x Tản khí 4 ống đồng | 400k - 600k | Mới |
+| **Tổng** | | **7.25tr - 8.75tr** | |
+
+### So Sánh Option 1 vs Option 2
+
+| Tiêu chí | Option 1 (Single Xeon) | Option 2 (Dual Xeon) | Kết luận |
+|----------|------------------------|----------------------|----------|
+| **CPU Cores** | 14 cores / 28 threads | 28 cores / 56 threads | ✅ Option 2 gấp đôi |
+| **RAM** | 64GB ECC | 64GB ECC | = Tương đương |
+| **GPU** | Không có | GTX 1060 6GB | ✅ Option 2 có GPU |
+| **SSD** | 500GB NVMe | 500GB SATA | ⚠️ Option 1 nhanh hơn |
+| **Giá** | ~6-8 triệu | ~7.25-8.75 triệu | ⚠️ Option 2 đắt hơn chút |
+| **Tiêu thụ điện** | ~80-150W | ~120-220W | ⚠️ Option 2 tốn điện hơn |
+
+### Ưu Điểm Option 2
+
+- ✅ CPU mạnh gấp đôi - render video, Docker, automation nhanh hơn nhiều
+- ✅ Có GPU - chạy được AI local nhẹ (Whisper, TTS)
+- ✅ Main mới - ổn định, bảo hành
+- ✅ Nguồn mới - an toàn, bảo hành
+
+### Nhược Điểm Option 2
+
+- ⚠️ Tốn điện hơn (~100-150k/tháng thêm)
+- ⚠️ SSD SATA chậm hơn NVMe (có thể nâng cấp sau)
+- ⚠️ Cần HDD riêng nếu lưu video render
+
+### Giá Hợp Lý Cho Option 2
+
+| | Mức giá |
+|---|---------|
+| 🔥 **Deal tốt** | Dưới 7.5 triệu |
+| ✅ **Giá hợp lý** | 7.5 - 8 triệu |
+| ⚠️ **Giá cao** | Trên 9 triệu |
+
+---
+
 ## ✅ Kết Luận
 
 > **Xeon E5-2680 v4 + 64GB ECC** với giá **~7 triệu** là lựa chọn **tiết kiệm và ổn định nhất** cho hệ thống N8N AI Super Assistant khi sử dụng AI API online.
