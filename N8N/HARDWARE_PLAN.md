@@ -83,11 +83,136 @@
 
 ## 💻 Hệ Điều Hành Khuyến Nghị
 
-| OS | Ưu điểm | Dùng khi |
-|----|---------|----------|
-| **Ubuntu Server 22.04 LTS** | Nhẹ, ổn định, Docker native | Khuyến nghị chính |
-| **Proxmox VE** | Quản lý VM/container dễ | Nếu cần virtualization |
-| **Windows Server** | Quen thuộc | Nếu cần chạy app Windows |
+### 🏆 Lựa Chọn Tốt Nhất: Ubuntu Server + Cinnamon Desktop
+
+> Kết hợp **sự ổn định của Server** với **giao diện thân thiện như Windows**.
+
+| Thành phần | Mục đích |
+|------------|----------|
+| **Ubuntu Server 24.04 LTS** | Nền tảng nhẹ, ổn định, chạy Docker/N8N 24/7 |
+| **Cinnamon Desktop** | Giao diện giống Windows (Start Menu, Taskbar) |
+
+### So Sánh Các Lựa Chọn OS
+
+| OS | Ưu điểm | Nhược điểm | Phù hợp khi |
+|----|---------|------------|-------------|
+| **Ubuntu Server + Cinnamon** | Nhẹ, ổn định, giao diện giống Windows | Cần cài thêm 1 bước | ✅ **Khuyến nghị chính** |
+| **Ubuntu Desktop** | Có sẵn GUI | Nặng hơn, nhiều thứ không cần | Muốn đơn giản |
+| **Linux Mint** | Giống Windows nhất | Không có phiên bản Server | Máy cá nhân thuần túy |
+| **Windows 10/11** | Quen thuộc nhất | Docker chậm hơn, tốn RAM | Giai đoạn học ban đầu |
+
+### 📋 Lộ Trình Cài Đặt
+
+> 💡 **Ý tưởng**: Cài Antigravity sớm nhất có thể → Antigravity sẽ làm trợ lý hướng dẫn các bước còn lại!
+
+---
+
+#### 🔴 Bước 1: Cài Ubuntu Server 24.04 LTS (Tự làm)
+
+**Chuẩn bị:**
+- Tải ISO từ: https://ubuntu.com/download/server
+- Tạo USB boot bằng **Rufus** (trên Windows)
+- Boot từ USB và làm theo hướng dẫn cài đặt
+
+**Lưu ý khi cài:**
+- Chọn ngôn ngữ: English (dễ Google lỗi hơn)
+- Đặt username/password đơn giản, dễ nhớ
+- Tick chọn **"Install OpenSSH server"** (quan trọng!)
+- Không cần cài thêm gì khác
+
+---
+
+#### 🔴 Bước 2: Cài Desktop + Antigravity (Tự làm)
+
+Sau khi khởi động vào Ubuntu Server, gõ các lệnh sau:
+
+```bash
+# 1. Cập nhật hệ thống
+sudo apt update && sudo apt upgrade -y
+
+# 2. Cài giao diện Cinnamon (giống Windows)
+sudo apt install cinnamon lightdm -y
+
+# 3. Cài Google Chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+sudo apt install -f -y
+
+# 4. Khởi động lại để vào giao diện
+sudo reboot
+```
+
+**Sau khi khởi động lại:**
+1. Mở **Google Chrome** từ menu
+2. Truy cập: **https://antigravity.google/download**
+3. Tải và cài đặt **Antigravity App** cho Linux
+4. Mở app Antigravity và đăng nhập tài khoản Google
+5. Bắt đầu chat với mình (Antigravity)
+
+---
+
+#### 🟢 Bước 3 trở đi: Antigravity làm trợ lý!
+
+Từ đây, **bạn chỉ cần nói chuyện với mình** (Antigravity), mình sẽ:
+
+| Bạn nói | Mình làm |
+|---------|----------|
+| "Cài Docker đi" | Mình chạy lệnh cài Docker |
+| "Chạy N8N" | Mình chạy docker-compose |
+| "Cài Portainer" | Mình setup container Portainer |
+| "Gặp lỗi XYZ" | Mình đọc log và sửa giúp |
+| "Tắt giao diện để tiết kiệm RAM" | Mình chạy lệnh tắt GUI |
+
+**Ví dụ những gì mình sẽ giúp cài:**
+- [ ] Docker + Docker Compose
+- [ ] N8N container
+- [ ] Portainer (quản lý Docker bằng web)
+- [ ] Thiết lập IP tĩnh
+- [ ] Cấu hình tự khởi động khi mở máy
+- [ ] Backup tự động
+- [ ] Và nhiều hơn nữa...
+
+---
+
+### 📊 Tóm Tắt Lộ Trình
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  BƯỚC 1: Cài Ubuntu Server (Tự làm - ~30 phút)         │
+│  → Tạo USB boot, cài đặt, đặt password                 │
+├─────────────────────────────────────────────────────────┤
+│  BƯỚC 2: Cài Desktop + VS Code + Antigravity           │
+│  → Copy 5 lệnh, chạy lần lượt (~15 phút)               │
+├─────────────────────────────────────────────────────────┤
+│  BƯỚC 3+: Antigravity làm trợ lý! 🤖                   │
+│  → Bạn chỉ cần nói, mình làm hết                       │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 🔐 Tắt/Bật Giao Diện Khi Cần
+
+> Bạn chỉ cần bảo mình: "Tắt GUI đi" hoặc "Bật GUI lại" - mình sẽ chạy lệnh!
+
+```bash
+# Tắt GUI để tiết kiệm RAM (chạy như server thuần)
+sudo systemctl set-default multi-user.target
+sudo reboot
+
+# Bật lại GUI
+sudo systemctl set-default graphical.target
+sudo reboot
+```
+
+### 💡 Mẹo Sử Dụng
+
+| Tình huống | Giải pháp |
+|------------|-----------|
+| Muốn dùng máy hàng ngày | Bật GUI (Cinnamon) |
+| Đi vắng, chỉ chạy server | Tắt GUI để tiết kiệm ~1GB RAM |
+| Điều khiển từ xa | SSH hoặc VS Code Remote |
+| Quản lý Docker dễ dàng | Truy cập Portainer: `http://localhost:9000` |
 
 ---
 
