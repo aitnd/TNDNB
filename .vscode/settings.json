@@ -11,5 +11,6 @@
         "**/android/**": true,
         "**/ontap-code/**": true
     },
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "markdown.validate.enabled": true
 }

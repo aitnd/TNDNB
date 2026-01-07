@@ -11,18 +11,8 @@
 export function getLocalImageSrc(question: { id: string; image?: string | null }): string | null {
     if (!question.image) return null;
 
-    // Lấy extension từ URL gốc
-    let ext = '.webp';
-    try {
-        const urlObj = new URL(question.image);
-        const pathname = urlObj.pathname;
-        const match = pathname.match(/\.(png|jpg|jpeg|webp|gif)$/i);
-        if (match) {
-            ext = match[0].toLowerCase();
-        }
-    } catch {
-        // URL không hợp lệ, giữ extension mặc định
-    }
+    // Luôn dùng .png vì file local được lưu dưới dạng .png
+    const ext = '.png';
 
     // Trả về đường dẫn local
     // Trong môi trường Dev: dùng đường dẫn tương đối /question_images/...
@@ -31,7 +21,7 @@ export function getLocalImageSrc(question: { id: string; image?: string | null }
     const resourcesPath = (window as any).electron?.resourcesPath;
 
     if (isElectron && resourcesPath && !import.meta.env.DEV) {
-        // Chuyển đổi đường dẫn Windows sang format URL (thay \ bằng /)
+        // Chuyển đổi đường dẫn Windows sang format URL (thay \\ bằng /)
         const normalizedPath = resourcesPath.replace(/\\/g, '/');
         return `file://${normalizedPath}/question_images/${question.id}${ext}`;
     }
@@ -41,13 +31,27 @@ export function getLocalImageSrc(question: { id: string; image?: string | null }
 
 /**
  * Fallback: Nếu ảnh local không load được, dùng ảnh online
+ * Có cơ chế chống retry loop bằng cách đánh dấu đã thử fallback
  */
 export function handleImageError(
     e: React.SyntheticEvent<HTMLImageElement, Event>,
     originalUrl?: string | null
 ) {
     const img = e.currentTarget;
+
+    // Đánh dấu đã thử fallback để tránh vòng lặp vô hạn
+    if (img.dataset.fallbackAttempted === 'true') {
+        // Đã thử fallback rồi, ẩn ảnh đi
+        img.style.display = 'none';
+        return;
+    }
+
+    img.dataset.fallbackAttempted = 'true';
+
     if (originalUrl && img.src !== originalUrl) {
         img.src = originalUrl;
+    } else {
+        // Không có URL fallback hoặc đã thử rồi, ẩn ảnh
+        img.style.display = 'none';
     }
 }

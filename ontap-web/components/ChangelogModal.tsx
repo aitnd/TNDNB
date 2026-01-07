@@ -8,9 +8,26 @@ interface ChangelogModalProps {
 // 💖 Dữ liệu changelog dạng cấu trúc (MỚI)
 const CHANGELOG_DATA = [
   {
+    version: '3.8.9',
+    date: '06/01/2026',
+    isLatest: true,
+    sections: [
+      {
+        icon: Zap,
+        title: 'Sửa lỗi',
+        color: 'text-yellow-500',
+        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
+        items: [
+          'Sửa lỗi màn hình nháy nháy khi ôn tập môn Pháp luật (hạng Thủy thủ)',
+          'Khắc phục hình ảnh câu hỏi không load được từ câu 49 trở đi',
+          'Thêm cơ chế chống vòng lặp retry khi load ảnh thất bại'
+        ]
+      }
+    ]
+  },
+  {
     version: '3.8.8',
     date: '25/12/2025',
-    isLatest: true,
     sections: [
       {
         icon: Shield,
@@ -147,8 +164,8 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
               {/* Version Header */}
               <div className="flex items-center gap-3 mb-4">
                 <div className={`px-3 py-1.5 rounded-full font-bold text-sm ${release.isLatest
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                    : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                  : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300'
                   }`}>
                   v{release.version}
                 </div>
