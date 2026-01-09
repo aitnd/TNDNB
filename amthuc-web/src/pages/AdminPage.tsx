@@ -7,20 +7,22 @@ import {
     UtensilsCrossed, ArrowLeft, AlertCircle, Grid3X3, List, Phone, MapPin,
     Search, Minus, PlusCircle
 } from 'lucide-react'
-import { Restaurant, MenuItem } from '../types'
+import { Restaurant, MenuItem, Attraction } from '../types'
 import { auth, db } from '../firebase'
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth'
 import { collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore'
 import SeedFiveQuanButton from '../components/SeedFiveQuanButton'
+import SeedAttractionsButton from '../components/SeedAttractionsButton'
 import './AdminPage.css'
 
 interface AdminPageProps {
     restaurants: Restaurant[]
     menuItems: MenuItem[]
+    attractions: Attraction[]
     onRefresh: () => void
 }
 
-function AdminPage({ restaurants, menuItems, onRefresh }: AdminPageProps) {
+function AdminPage({ restaurants, menuItems, attractions, onRefresh }: AdminPageProps) {
     const [user, setUser] = useState<User | null>(null)
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
@@ -55,7 +57,7 @@ function AdminPage({ restaurants, menuItems, onRefresh }: AdminPageProps) {
                 {/* Admin Header */}
                 <div className="admin-header">
                     <div className="admin-title">
-                        <h1>🔧 Quản lý <span className="gradient-text">Ẩm Thực</span></h1>
+                        <h1>🔧 Quản lý <span className="gradient-text">Khám Phá NB</span></h1>
                         <p>Xin chào, {user.email}</p>
                     </div>
                     <button
@@ -77,13 +79,18 @@ function AdminPage({ restaurants, menuItems, onRefresh }: AdminPageProps) {
                         <UtensilsCrossed size={20} />
                         Món ăn ({menuItems.length})
                     </Link>
+                    <Link to="/admin/dia-diem" className="admin-nav-item">
+                        🏔️ Địa điểm ({attractions.length})
+                    </Link>
                 </div>
 
-                {/* Seed 5 quán từ ảnh - tạm thời */}
                 {(() => {
                     const existingNames = restaurants.map(r => r.name)
                     return <SeedFiveQuanButton onComplete={onRefresh} existingRestaurants={existingNames} />
                 })()}
+
+                {/* Seed địa điểm du lịch */}
+                <SeedAttractionsButton onComplete={onRefresh} />
 
                 {/* Routes */}
                 <Routes>
