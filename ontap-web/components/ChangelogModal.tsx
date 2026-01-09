@@ -5,12 +5,29 @@ interface ChangelogModalProps {
   onClose: () => void;
 }
 
-// 💖 Dữ liệu changelog dạng cấu trúc (MỚI)
+// 💖 Dữ liệu changelog dạng cấu trúc
 const CHANGELOG_DATA = [
+  {
+    version: '3.8.10',
+    date: '09/01/2026',
+    isLatest: true,
+    sections: [
+      {
+        icon: Zap,
+        title: 'Tính năng mới',
+        color: 'text-yellow-500',
+        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
+        items: [
+          'Lưu tài khoản đăng nhập giống Facebook - đăng nhập nhanh chỉ 1 chạm',
+          'Hiển thị danh sách tài khoản đã lưu sau khi đăng xuất',
+          'Hỗ trợ xóa tài khoản khỏi danh sách lưu cục bộ'
+        ]
+      }
+    ]
+  },
   {
     version: '3.8.9',
     date: '06/01/2026',
-    isLatest: true,
     sections: [
       {
         icon: Zap,
@@ -204,7 +221,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                 })}
               </div>
 
-              {/* Divider (không phải phiên bản cuối) */}
+              {/* Divider */}
               {rIdx < CHANGELOG_DATA.length - 1 && (
                 <div className="border-t border-dashed border-gray-200 dark:border-slate-700 mt-6"></div>
               )}
