@@ -1,0 +1,611 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 48],
+      "id": "6fc1bb0d-49b3-46d3-992c-85f46a7cfaaa",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7f92d8b3-ef70-4998-a387-9e7c97f0f84f",
+              "name": "post_type",
+              "value": "feed",
+              "type": "string"
+            },
+            {
+              "id": "f780ed03-1d6e-4b84-9a6c-da1108362270",
+              "name": "page_id",
+              "value": "PAGE_ID_REDACTED",
+              "type": "string"
+            },
+            {
+              "id": "089b18c0-b657-40be-83eb-88d47561e2c1",
+              "name": "node_type",
+              "value": "http",
+              "type": "string"
+            },
+            {
+              "id": "6481a223-d2b4-4a23-94ff-3ef5ece0e391",
+              "name": "image_url",
+              "value": "https://images.unsplash.com/photo-1762912302731-508b4580735f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              "type": "string"
+            },
+            {
+              "id": "35ba51d9-832a-408d-b8e4-065561f39d70",
+              "name": "video_url",
+              "value": "https://www.pexels.com/download/video/34074187/",
+              "type": "string"
+            },
+            {
+              "id": "bd6b8bb8-94a8-43b0-9e55-2559c3bb58be",
+              "name": "reel_url",
+              "value": "https://videos.pexels.com/video-files/4830364/4830364-uhd_1440_2732_25fps.mp4",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [240, 48],
+      "id": "4db4bbf7-d1de-4406-b48c-8ce00dd77b47",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [
+                  { "leftValue": "={{ $json.post_type }}", "rightValue": "feed", "operator": { "type": "string", "operation": "equals" }, "id": "c62a1c71-75ce-4efa-a5a4-354a087146e2" }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Feed"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [
+                  { "id": "ef493f33-5fd0-44bf-bcc2-ac8e8de3b874", "leftValue": "={{ $json.post_type }}", "rightValue": "photos", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [
+                  { "id": "cfd1e016-c1f9-4519-bdd2-889d09e37b5d", "leftValue": "={{ $json.post_type }}", "rightValue": "videos", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Video"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [
+                  { "id": "4cb1c31e-30eb-457d-8149-96b51838a2c5", "leftValue": "={{ $json.post_type }}", "rightValue": "carousel", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Carousel"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+                "conditions": [
+                  { "id": "348514f1-9e0f-4a88-9341-28eb145f3c72", "leftValue": "={{ $json.post_type }}", "rightValue": "reel", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Reel"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [528, 0],
+      "id": "70d65e15-1798-491d-bb0d-059238b30f01",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [
+            { "id": "887ab6dd-bda9-478f-951a-a74604f9b9d9", "leftValue": "={{ $json.node_type }}", "rightValue": "http", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [864, -336],
+      "id": "e6d5d0c4-a866-4682-8f55-870806b495c1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $json.page_id }}/feed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\":\"Automate\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1136, -464],
+      "id": "5aeb3a01-2601-44fb-8eb8-0fed80073379",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [
+            { "id": "0392d38c-8e31-4467-9eb0-6162ce2c1a57", "leftValue": "={{ $json.node_type }}", "rightValue": "http", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [864, 32],
+      "id": "daf93ae0-8ea2-4526-9c68-c7e7277c7416",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $json.page_id }}/photos",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\":\"{{ $json.image_url }}\",\n  \"message\":\"test1\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1136, -32],
+      "id": "be2aaf48-ac41-439a-96d9-e03c136cbf82",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [
+            { "id": "2e2b049d-792e-41d7-980e-694eb9a07e2c", "leftValue": "={{ $json.node_type }}", "rightValue": "http", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [864, 368],
+      "id": "6b8e3d1d-5c31-4f1e-943b-871b4af08a80",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $json.page_id }}/videos",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"file_url\":\"{{ $json.video_url }}\",\n  \"description\":\"Automate\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1152, 400],
+      "id": "8ccd0c85-4814-4239-aa22-67026b82deb5",
+      "name": "HTTP Request2",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [
+            { "id": "2e2b049d-792e-41d7-980e-694eb9a07e2c", "leftValue": "={{ $json.node_type }}", "rightValue": "http", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [864, 832],
+      "id": "65911083-ed9d-464b-b13e-7b407b339546",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [
+            { "id": "9dc20e92-2e3c-4cde-a48f-99163206710c", "leftValue": "={{ $json.node_type }}", "rightValue": "http", "operator": { "type": "string", "operation": "equals", "name": "filter.operator.equals" } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [784, 1344],
+      "id": "354059ba-7a15-4d7d-8990-373c9b9d85b5",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.upload_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "offset", "value": "=0" },
+            { "name": "file_size" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1552, 2016],
+      "id": "5a44703e-3d15-42b5-862e-8785cb28d419",
+      "name": "HTTP Request10",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "FILE_ID_REDACTED",
+          "mode": "list",
+          "cachedResultName": "REPLACE_ME.mp4",
+          "cachedResultUrl": "REDACTED"
+        },
+        "permissionsUi": { "permissionsValues": { "role": "reader", "type": "anyone" } },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1024, 1616],
+      "id": "8a64639d-9e9d-47b0-bdf1-cdd3381b89cc",
+      "name": "Share file",
+      "credentials": {
+        "googleDriveOAuth2Api": { "id": "REDACTED", "name": "Google Drive account (your credential)" }
+      }
+    },
+    {
+      "parameters": { "content": "## FEED\n2 note đều không có sự khác nhau về việc upload lên facebook", "height": 384, "width": 384 },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1056, -560],
+      "typeVersion": 1,
+      "id": "3e2c9369-fa8d-45a5-854b-b37180648a50",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": { "content": "## PHOTOS\n2 note đều không có sự khác nhau về việc upload lên facebook", "height": 384, "width": 384, "color": 4 },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1056, -144],
+      "typeVersion": 1,
+      "id": "a20213d6-1ce2-4d81-bcc9-af253d7c6142",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": { "content": "## VIDEOS\n2 note đều không có sự khác nhau về việc upload lên facebook", "height": 384, "width": 384, "color": 3 },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1056, 304],
+      "typeVersion": 1,
+      "id": "160a1371-0b9a-473e-9b01-9a04ae37145e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": { "content": "## CAROUSEL\nHTTP REQUEST IS THE BEST", "height": 384, "width": 768, "color": 6 },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1040, 752],
+      "typeVersion": 1,
+      "id": "d77c47b1-3e9c-480f-95e5-f5d3e0cf8e59",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": { "content": "## REEL\nHTTP REQUEST IS THE BEST", "height": 384, "width": 768, "color": 6 },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1040, 1184],
+      "typeVersion": 1,
+      "id": "c0be964a-bdb0-45f3-88de-1cd04a810cad",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "me",
+        "edge": "videos",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              { "name": "file_url", "value": "={{ $json.video_url }}" },
+              { "name": "description", "value": "test abc" }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [1152, 576],
+      "id": "8fb2e334-dc95-448b-8202-e4ff04fb58a1",
+      "name": "FB Videos post",
+      "credentials": {
+        "facebookGraphApi": { "id": "REDACTED", "name": "Facebook Graph account (your credential)" }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "me",
+        "edge": "photos",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              { "name": "message", "value": "Test" },
+              { "name": "url", "value": "={{ $json.image_url }}" }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [1136, 112],
+      "id": "996a2819-7452-4684-89cc-43822f82d42b",
+      "name": "FB Photos Post",
+      "credentials": {
+        "facebookGraphApi": { "id": "REDACTED", "name": "Facebook Graph account (your credential)" }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v23.0",
+        "node": "me",
+        "edge": "feed",
+        "options": {
+          "queryParameters": { "parameter": [ { "name": "message", "value": "Test" } ] }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [1136, -304],
+      "id": "97b3d8ef-d3f9-4824-a756-d483d31e3ab3",
+      "name": "FB Feed Post",
+      "credentials": {
+        "facebookGraphApi": { "id": "REDACTED", "name": "Facebook Graph account 2 (your credential)" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $json.page_id }}/photos",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\":\"{{ $('Edit Fields').item.json.image_url }}\",\n  \"message\":\"Automate2\",\n  \"published\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1328, 848],
+      "id": "8537657b-3b91-4c80-b6f9-3958f972c7a1",
+      "name": "lấy slot ảnh 2",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $json.page_id }}/photos",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\":\"{{ $json.image_url }}\",\n  \"message\":\"automate1\",\n  \"published\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1120, 848],
+      "id": "2f8d483f-76b4-4fd8-b415-e651dc352326",
+      "name": "Lấy slot ảnh 1",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $('Edit Fields').item.json.page_id }}/feed",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\":\"Automate3\",\n  \"attached_media\": [\n      {\"media_fbid\":\"{{ $('Lấy slot ảnh 1').item.json.id }}\"},\n      {\"media_fbid\":\"{{ $('lấy slot ảnh 2').item.json.id }}\"}\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1568, 816],
+      "id": "13e0fc0f-7553-408b-be83-f99ee9e66223",
+      "name": "Đăng Nhiều ẢNh",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v24.0/{{ $json.page_id }}/video_reels",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"upload_phase\": \"start\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1072, 1360],
+      "id": "7e42e2a6-9a83-450c-9a4b-a0624293c4b0",
+      "name": "Lấy slot reel",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.upload_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "file_url", "value": "={{ $('Edit Fields').item.json.reel_url }}" } ] },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1232, 1360],
+      "id": "5ad6ee6d-1f10-4257-8d2e-5c79695ab575",
+      "name": "Upload",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.facebook.com/v23.0/{{ $('Lấy slot reel').item.json.video_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "fields", "value": "status" } ] },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1408, 1360],
+      "id": "0eae6c0c-9425-4285-8cad-a09311a2c8e9",
+      "name": "Check status",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/{{ $('Edit Fields').item.json.page_id }}/video_reels",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"video_id\":\"{{$('Lấy slot reel').item.json.video_id}}\",\n  \"upload_phase\": \"finish\",\n  \"video_state\": \"PUBLISHED\",\n  \"description\": \"test\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [1600, 1360],
+      "id": "a97c6a2c-1ec1-4e64-9dc8-4bcefc9dbb4c",
+      "name": "Publish",
+      "credentials": {
+        "httpHeaderAuth": { "id": "REDACTED", "name": "FB_HEADER_AUTH" }
+      }
+    }
+  ],
+  "pinData": {
+    "Upload": [
+      {
+        "json": {
+          "success": true,
+          "message": "Upload Successful. To check the status of the video, please follow the instructions listed at https://developers.facebook.com/docs/video-api/guides/reels-publishing#get-the-upload-status."
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Execute workflow’": { "main": [ [ { "node": "Edit Fields", "type": "main", "index": 0 } ] ] },
+    "Edit Fields": { "main": [ [ { "node": "Switch", "type": "main", "index": 0 } ] ] },
+    "Switch": {
+      "main": [
+        [ { "node": "If", "type": "main", "index": 0 } ],
+        [ { "node": "If1", "type": "main", "index": 0 } ],
+        [ { "node": "If2", "type": "main", "index": 0 } ],
+        [ { "node": "If3", "type": "main", "index": 0 } ],
+        [ { "node": "If4", "type": "main", "index": 0 } ]
+      ]
+    },
+    "If": { "main": [ [ { "node": "HTTP Request", "type": "main", "index": 0 } ], [ { "node": "FB Feed Post", "type": "main", "index": 0 } ] ] },
+    "If1": { "main": [ [ { "node": "HTTP Request1", "type": "main", "index": 0 } ], [ { "node": "FB Photos Post", "type": "main", "index": 0 } ] ] },
+    "If2": { "main": [ [ { "node": "HTTP Request2", "type": "main", "index": 0 } ], [ { "node": "FB Videos post", "type": "main", "index": 0 } ] ] },
+    "If3": { "main": [ [ { "node": "Lấy slot ảnh 1", "type": "main", "index": 0 } ] ] },
+    "If4": { "main": [ [ { "node": "Lấy slot reel", "type": "main", "index": 0 } ] ] },
+    "HTTP Request10": { "main": [ [] ] },
+    "Share file": { "main": [ [] ] },
+    "lấy slot ảnh 2": { "main": [ [ { "node": "Đăng Nhiều ẢNh", "type": "main", "index": 0 } ] ] },
+    "Lấy slot ảnh 1": { "main": [ [ { "node": "lấy slot ảnh 2", "type": "main", "index": 0 } ] ] },
+    "Lấy slot reel": { "main": [ [ { "node": "Upload", "type": "main", "index": 0 } ] ] },
+    "Upload": { "main": [ [ { "node": "Check status", "type": "main", "index": 0 } ] ] },
+    "Check status": { "main": [ [ { "node": "Publish", "type": "main", "index": 0 } ] ] }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "4cc96b35-cbcf-4769-890a-fb5febbff4e0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "REDACTED"
+  },
+  "id": "ScFNskTuZ1n51RYa",
+  "tags": []
+}

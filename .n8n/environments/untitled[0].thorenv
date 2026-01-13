@@ -1,0 +1,12 @@
+{
+  "variables": [
+    {
+      "id": "1118b39c-6f8d-4c2f-af3f-69d16a16721d",
+      "key": "API",
+      "disabled": false,
+      "type": "text",
+      "privacy": "PRIVATE",
+      "value": ""
+    }
+  ]
+}

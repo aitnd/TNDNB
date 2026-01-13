@@ -213,6 +213,30 @@ const ALL_RESTAURANTS: Array<{
                 { name: 'Chè sầu riêng', price: 30000, category: 'Chè', isPopular: false },
                 { name: 'Chè thốt nốt', price: 25000, category: 'Chè', isPopular: false }
             ]
+        },
+
+        // 12. Lẩu Ếch Thinh (QUYẾT TIGER CS2)
+        {
+            info: {
+                name: 'Lẩu Ếch Thinh - QUYẾT TIGER CS2',
+                phone: '0866969626',
+                address: 'Số 8 Phạm Bạch Hổ, P. Hoa Lư, TP. Ninh Bình (đằng sau Yody Nguyễn Công Trứ, đối diện chợ Thanh Bình)',
+                categories: ['Lẩu', 'Ếch', 'Nướng', 'Hải sản'],
+                description: 'Chuyên Lẩu Ếch Măng Cay. Ship tận nhà 24h. Zalo: 0866969626'
+            },
+            menu: [
+                { name: 'Lẩu Ếch Măng Cay', price: 200000, category: 'Lẩu', isPopular: true },
+                { name: 'Sườn Nướng Tảng BBQ', price: 150000, category: 'Nướng', isPopular: true },
+                { name: 'Gà Ủ Muối', price: 180000, category: 'Gà', isPopular: true },
+                { name: 'Cá Quả Nướng Muối Ớt', price: 200000, category: 'Cá', isPopular: false },
+                { name: 'Má Heo Nướng', price: 120000, category: 'Nướng', isPopular: false },
+                { name: 'Râu Mực Nướng Muối Ớt', price: 150000, category: 'Hải sản', isPopular: false },
+                { name: 'Ếch Chiên Mắm', price: 100000, category: 'Ếch', isPopular: false },
+                { name: 'Ếch Rang Muối', price: 100000, category: 'Ếch', isPopular: true },
+                { name: 'Chân Gà Rang Muối', price: 80000, category: 'Ăn vặt', isPopular: false },
+                { name: 'Ếch Chiên Bơ', price: 100000, category: 'Ếch', isPopular: false },
+                { name: 'Sụn Gà Rang Muối', price: 80000, category: 'Ăn vặt', isPopular: false }
+            ]
         }
     ];
 

@@ -64,3 +64,16 @@ LUÔN cấu hình TẤT CẢ parameters một cách rõ ràng.
 - `n8n_test_workflow` - Test workflow
 - `n8n_executions` - Quản lý executions
 - `n8n_health_check` - Kiểm tra kết nối
+
+---
+
+## Slash Commands Có Sẵn
+
+Gõ trong Antigravity chat để xem hướng dẫn chi tiết:
+
+| Command | Mô tả |
+|---------|-------|
+| `/n8n-setup` | Cài đặt n8n từ đầu với Docker & MCP |
+| `/n8n-workflow-management` | Tạo, sửa, xóa, kích hoạt workflows |
+| `/n8n-deploy-template` | Tìm và deploy templates từ n8n.io |
+| `/n8n-debug` | Debug và khắc phục lỗi workflows |
