@@ -48,10 +48,20 @@
 | `SYSTEM_DOCS/N8N_LOCAL_SETUP.md` | Hướng dẫn chạy n8n local với Cloudflare |
 
 ### Quy ước file workflow:
-- `.n8n` - Dùng cho n8n-atom extension trong VS Code
-- `.json` - Backup để import thủ công vào n8n
-- Đặt tên: `[số thứ tự].[Tên Module] - [Platform].n8n`
-- Ví dụ: `3.Auto Responder - Facebook.n8n`
+- `.json` - File chính để import vào n8n
+- `.n8n` - Dùng cho n8n-atom extension trong VS Code (tự đồng bộ)
+- **KHÔNG dùng Environment Variables** (bản free không hỗ trợ)
+- Dùng **Set node (Edit Fields)** để lưu biến cấu hình
+
+### Danh sách 6 file workflow chính:
+| File | Mô tả |
+|------|-------|
+| `1.Social Publisher.json` | WF1: Đăng bài đa nền tảng |
+| `2.Trend Hunter.json` | WF2: Tìm xu hướng + auto tạo content |
+| `3.Content Manager.json` | WF3: Telegram + Channel + Multi-Input |
+| `4.Auto Responder.json` | WF4: Trả lời comment FB |
+| `5.Affiliate Bot.json` | WF5: Quản lý link affiliate |
+| `6.Content Engine.json` | WF6: Tạo video/audio từ AI |
 
 ### Môi trường n8n hiện tại:
 | Mục | Giá trị |
@@ -79,6 +89,32 @@ docker run -d --name n8n-atom -p 5888:5888 `
 # 3. Cập nhật Google OAuth redirect URI (nếu cần)
 # https://console.cloud.google.com/apis/credentials
 ```
+
+### ⚠️ QUY TẮC BẮT BUỘC - TẠO LẠI INFOGRAPHIC:
+> **Mỗi khi tinh chỉnh hoặc thêm chức năng mới cho hệ thống n8n:**
+> 1. Cập nhật các file .md thích hợp (`task_n8n.md`, `WORKFLOW_REGISTRY.md`...)
+> 2. **BẮT BUỘC** tạo lại 2 file infographic để người dùng dễ hiểu:
+>    - `SYSTEM_DOCS/n8n_user_flow.png` - Sơ đồ luồng tương tác người dùng
+>    - `SYSTEM_DOCS/n8n_workflows_diagram.png` - Sơ đồ tổng quan hệ thống & workflows
+> 3. **Nếu thay đổi workflow cụ thể**, cập nhật sơ đồ chi tiết:
+>    - `SYSTEM_DOCS/n8n_all_workflows.png` - Sơ đồ các workflow 
+> 
+> **Lý do:** File .md chỉ để AI đọc, người dùng cần sơ đồ trực quan để hiểu nhanh!
+
+### ⚠️ QUY TẮC BẮT BUỘC - EXPORT JSON:
+> **Sau khi hoàn thành/chỉnh sửa mỗi Workflow:**
+> 1. Test đầy đủ các case
+> 2. Activate workflow trong n8n
+> 3. **Export JSON** vào thư mục `N8N/`:
+>    - `N8N/WF1_Social_Publisher.json`
+>    - `N8N/WF2_Trend_Hunter.json`
+>    - `N8N/WF3_Content_Manager.json`
+>    - `N8N/WF4_Auto_Responder.json`
+>    - `N8N/WF5_Affiliate_Bot.json`
+>    - `N8N/WF6_Content_Engine.json`
+> 4. Cập nhật checklist trong `task_n8n.md`
+>
+> **Lý do:** File JSON dùng để mang sang máy khác hoặc khôi phục khi cần!
 
 ---
 

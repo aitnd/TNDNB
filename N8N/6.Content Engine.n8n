@@ -1,0 +1,466 @@
+{
+    "name": "6.Content Engine",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "create-video",
+                "options": {}
+            },
+            "id": "webhook-create",
+            "name": "API Create Video",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                0,
+                300
+            ],
+            "webhookId": "content-engine-create"
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "cfg-1",
+                            "name": "SHEETS_ID",
+                            "value": "1yXFEpFX3gTIVeEoBkziUpIOD9hYskH9yNvgzuDBAY6o",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-2",
+                            "name": "VALTEC_API_KEY",
+                            "value": "YOUR_VALTEC_KEY",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-3",
+                            "name": "VEO3_API_KEY",
+                            "value": "YOUR_VEO3_KEY",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-4",
+                            "name": "TELEGRAM_CHAT_ID",
+                            "value": "7455388349",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "id": "config",
+            "name": "Config",
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                220,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.body.type }}",
+                                        "rightValue": "video_short",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "video"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.body.type }}",
+                                        "rightValue": "podcast",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "podcast"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.body.type }}",
+                                        "rightValue": "remake",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "remake"
+                        }
+                    ]
+                },
+                "fallbackOutput": "extra"
+            },
+            "id": "switch-type",
+            "name": "Loại Content",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3.2,
+            "position": [
+                440,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.valtec.vn/tts",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"text\": \"{{ $('API Create Video').item.json.body.script }}\", \"voice\": \"vi-VN-female\", \"speed\": 1.0 }",
+                "options": {}
+            },
+            "id": "tts-video",
+            "name": "TTS (Video)",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                660,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://nanoai.pics/api/veo3/generate",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"prompt\": \"{{ $('API Create Video').item.json.body.visual_prompt }}\", \"duration\": 30 }",
+                "options": {}
+            },
+            "id": "veo3-gen",
+            "name": "Veo 3 Generate",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                880,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "command": "=ffmpeg -i {{ $('TTS (Video)').item.json.audio_url }} -i {{ $json.video_url }} -c:v copy -c:a aac -shortest /tmp/output_{{ Date.now() }}.mp4"
+            },
+            "id": "ffmpeg-merge",
+            "name": "FFmpeg Ghép",
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                1100,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.valtec.vn/tts",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"text\": \"{{ $('API Create Video').item.json.body.script }}\", \"voice\": \"vi-VN-male\", \"speed\": 0.9 }",
+                "options": {}
+            },
+            "id": "tts-podcast",
+            "name": "TTS (Podcast)",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                660,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "command": "=ffmpeg -i {{ $json.audio_url }} -af 'volume=1.2' /tmp/podcast_{{ Date.now() }}.mp3"
+            },
+            "id": "ffmpeg-audio",
+            "name": "FFmpeg Audio",
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                880,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "command": "=yt-dlp -o /tmp/remake_source.mp4 {{ $('API Create Video').item.json.body.source_url }}"
+            },
+            "id": "ytdlp-download",
+            "name": "yt-dlp Download",
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                660,
+                500
+            ]
+        },
+        {
+            "parameters": {
+                "modelId": {
+                    "__rl": true,
+                    "value": "models/gemini-2.0-flash",
+                    "mode": "list"
+                },
+                "promptType": "define",
+                "text": "Viết lại script này thành bản tiếng Việt hấp dẫn hơn, giữ ý chính nhưng thêm phong cách riêng:\n\n{{ $('API Create Video').item.json.body.original_script }}"
+            },
+            "id": "ai-rewrite",
+            "name": "AI Viết lại Script",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                880,
+                500
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "YOUR_GEMINI_CREDENTIAL_ID",
+                    "name": "Google Gemini"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "update",
+                "documentId": {
+                    "__rl": true,
+                    "value": "={{ $('Config').item.json.SHEETS_ID }}",
+                    "mode": "id"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "value": "Content Queue",
+                    "mode": "name"
+                },
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "Media_URL": "={{ $json.output_url }}",
+                        "Status": "ready"
+                    },
+                    "matchingColumns": [
+                        "ID"
+                    ]
+                }
+            },
+            "id": "update-queue",
+            "name": "Cập nhật Queue",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                1320,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "YOUR_CREDENTIAL_ID",
+                    "name": "Google Sheets OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "chatId": "={{ $('Config').item.json.TELEGRAM_CHAT_ID }}",
+                "text": "=🎬 Content Engine hoàn thành!\n\n📹 Loại: {{ $('API Create Video').item.json.body.type }}\n🔗 File: {{ $json.output_url }}"
+            },
+            "id": "notify",
+            "name": "Notify Telegram",
+            "type": "n8n-nodes-base.telegram",
+            "typeVersion": 1.2,
+            "position": [
+                1540,
+                300
+            ],
+            "credentials": {
+                "telegramApi": {
+                    "id": "YOUR_TG_CREDENTIAL_ID",
+                    "name": "Telegram Bot"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={ \"status\": \"processing\", \"message\": \"Video đang được tạo\" }"
+            },
+            "id": "respond",
+            "name": "Respond",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                1540,
+                500
+            ]
+        }
+    ],
+    "connections": {
+        "API Create Video": {
+            "main": [
+                [
+                    {
+                        "node": "Config",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Config": {
+            "main": [
+                [
+                    {
+                        "node": "Loại Content",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loại Content": {
+            "main": [
+                [
+                    {
+                        "node": "TTS (Video)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "TTS (Podcast)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "yt-dlp Download",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Respond",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "TTS (Video)": {
+            "main": [
+                [
+                    {
+                        "node": "Veo 3 Generate",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Veo 3 Generate": {
+            "main": [
+                [
+                    {
+                        "node": "FFmpeg Ghép",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "FFmpeg Ghép": {
+            "main": [
+                [
+                    {
+                        "node": "Cập nhật Queue",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "TTS (Podcast)": {
+            "main": [
+                [
+                    {
+                        "node": "FFmpeg Audio",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "FFmpeg Audio": {
+            "main": [
+                [
+                    {
+                        "node": "Cập nhật Queue",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "yt-dlp Download": {
+            "main": [
+                [
+                    {
+                        "node": "AI Viết lại Script",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "AI Viết lại Script": {
+            "main": [
+                [
+                    {
+                        "node": "Cập nhật Queue",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Cập nhật Queue": {
+            "main": [
+                [
+                    {
+                        "node": "Notify Telegram",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "active": false,
+    "tags": []
+}

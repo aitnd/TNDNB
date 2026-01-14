@@ -1,0 +1,589 @@
+{
+    "name": "1.Social Publisher",
+    "nodes": [
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {
+                            "triggerAtHour": 8
+                        },
+                        {
+                            "triggerAtHour": 12
+                        },
+                        {
+                            "triggerAtHour": 18
+                        },
+                        {
+                            "triggerAtHour": 21
+                        }
+                    ]
+                }
+            },
+            "id": "schedule-trigger",
+            "name": "Schedule Trigger",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "typeVersion": 1.2,
+            "position": [
+                0,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "cfg-1",
+                            "name": "SHEETS_ID",
+                            "value": "1yXFEpFX3gTIVeEoBkziUpIOD9hYskH9yNvgzuDBAY6o",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-2",
+                            "name": "TELEGRAM_CHAT_ID",
+                            "value": "7455388349",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-3",
+                            "name": "TELEGRAM_BOT_TOKEN",
+                            "value": "8232622884:AAGo1yIk7TBjxMptYyrKGChIPZmJxoTyWAo",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "config",
+            "name": "Config",
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                220,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "read",
+                "documentId": {
+                    "__rl": true,
+                    "value": "={{ $json.SHEETS_ID }}",
+                    "mode": "id"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "value": "Content Queue",
+                    "mode": "name"
+                },
+                "filtersUI": {
+                    "values": [
+                        {
+                            "lookupColumn": "Status",
+                            "lookupValue": "ready"
+                        }
+                    ]
+                },
+                "options": {
+                    "returnFirstMatch": true
+                }
+            },
+            "id": "read-queue",
+            "name": "Đọc Content Queue",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                440,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "YOUR_CREDENTIAL_ID",
+                    "name": "Google Sheets OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "read",
+                "documentId": {
+                    "__rl": true,
+                    "value": "={{ $('Config').item.json.SHEETS_ID }}",
+                    "mode": "id"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "value": "Account Manager",
+                    "mode": "name"
+                },
+                "filtersUI": {
+                    "values": [
+                        {
+                            "lookupColumn": "platform",
+                            "lookupValue": "={{ $json.Platform }}"
+                        },
+                        {
+                            "lookupColumn": "status",
+                            "lookupValue": "active"
+                        }
+                    ]
+                },
+                "options": {
+                    "returnFirstMatch": true
+                }
+            },
+            "id": "read-accounts",
+            "name": "Đọc Account Manager",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                660,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "YOUR_CREDENTIAL_ID",
+                    "name": "Google Sheets OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Lấy content từ queue và account info\nconst content = $('Đọc Content Queue').first().json;\nconst account = $('Đọc Account Manager').first().json;\n\nreturn {\n  content_id: content.ID,\n  text: content.Text_Content,\n  hashtags: content.Hashtags || '',\n  media_url: content.Media_URL || '',\n  platform: content.Platform,\n  page_id: account.page_id,\n  access_token: account.access_token,\n  account_name: account.account_name\n};"
+            },
+            "id": "merge-data",
+            "name": "Gộp Data",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                880,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.platform }}",
+                                        "rightValue": "Facebook",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Facebook"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.platform }}",
+                                        "rightValue": "YouTube",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "YouTube"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.platform }}",
+                                        "rightValue": "TikTok",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "TikTok"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.platform }}",
+                                        "rightValue": "Instagram",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "Instagram"
+                        }
+                    ]
+                },
+                "fallbackOutput": "extra"
+            },
+            "id": "switch-platform",
+            "name": "Switch Platform",
+            "type": "n8n-nodes-base.switch",
+            "typeVersion": 3.2,
+            "position": [
+                1100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://graph.facebook.com/v21.0/{{ $json.page_id }}/feed",
+                "sendQuery": true,
+                "queryParameters": {
+                    "parameters": [
+                        {
+                            "name": "access_token",
+                            "value": "={{ $json.access_token }}"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"message\": \"{{ $json.text }}\\n\\n{{ $json.hashtags }}\" }",
+                "options": {}
+            },
+            "id": "post-fb",
+            "name": "Đăng Facebook",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1320,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://www.googleapis.com/upload/youtube/v3/videos?part=snippet,status",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "=Bearer {{ $json.access_token }}"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"snippet\": { \"title\": \"{{ $json.text.substring(0, 100) }}\", \"description\": \"{{ $json.text }}\\n\\n{{ $json.hashtags }}\" }, \"status\": { \"privacyStatus\": \"public\" } }",
+                "options": {}
+            },
+            "id": "post-yt",
+            "name": "Đăng YouTube",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1320,
+                250
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "=Bearer {{ $json.access_token }}"
+                        },
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"post_info\": { \"title\": \"{{ $json.text.substring(0, 150) }}\", \"privacy_level\": \"PUBLIC_TO_EVERYONE\" }, \"source_info\": { \"source\": \"PULL_FROM_URL\", \"video_url\": \"{{ $json.media_url }}\" } }",
+                "options": {}
+            },
+            "id": "post-tiktok",
+            "name": "Đăng TikTok",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1320,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://graph.facebook.com/v21.0/{{ $json.page_id }}/media",
+                "sendQuery": true,
+                "queryParameters": {
+                    "parameters": [
+                        {
+                            "name": "access_token",
+                            "value": "={{ $json.access_token }}"
+                        },
+                        {
+                            "name": "caption",
+                            "value": "={{ $json.text }}\\n\\n{{ $json.hashtags }}"
+                        },
+                        {
+                            "name": "image_url",
+                            "value": "={{ $json.media_url }}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "post-ig",
+            "name": "Đăng Instagram",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1320,
+                550
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "update",
+                "documentId": {
+                    "__rl": true,
+                    "value": "={{ $('Config').item.json.SHEETS_ID }}",
+                    "mode": "id"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "value": "Content Queue",
+                    "mode": "name"
+                },
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "Status": "published",
+                        "Published_At": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+                        "Post_ID": "={{ $json.id || $json.post_id || 'N/A' }}"
+                    },
+                    "matchingColumns": [
+                        "ID"
+                    ]
+                }
+            },
+            "id": "update-status",
+            "name": "Cập nhật Status",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                1540,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "YOUR_CREDENTIAL_ID",
+                    "name": "Google Sheets OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.telegram.org/bot{{ $('Config').item.json.TELEGRAM_BOT_TOKEN }}/sendMessage",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"chat_id\": \"{{ $('Config').item.json.TELEGRAM_CHAT_ID }}\", \"text\": \"✅ Đã đăng bài lên {{ $('Gộp Data').item.json.platform }}!\\n\\n📝 {{ $('Gộp Data').item.json.account_name }}\\n🔗 Post ID: {{ $json.id || $json.post_id || 'N/A' }}\", \"parse_mode\": \"HTML\" }",
+                "options": {}
+            },
+            "id": "notify-tg",
+            "name": "Thông báo Telegram",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1760,
+                300
+            ]
+        },
+        {
+            "parameters": {},
+            "id": "skip",
+            "name": "Skip (Unknown Platform)",
+            "type": "n8n-nodes-base.noOp",
+            "typeVersion": 1,
+            "position": [
+                1320,
+                700
+            ]
+        }
+    ],
+    "connections": {
+        "Schedule Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Config",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Config": {
+            "main": [
+                [
+                    {
+                        "node": "Đọc Content Queue",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Đọc Content Queue": {
+            "main": [
+                [
+                    {
+                        "node": "Đọc Account Manager",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Đọc Account Manager": {
+            "main": [
+                [
+                    {
+                        "node": "Gộp Data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Gộp Data": {
+            "main": [
+                [
+                    {
+                        "node": "Switch Platform",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Switch Platform": {
+            "main": [
+                [
+                    {
+                        "node": "Đăng Facebook",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Đăng YouTube",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Đăng TikTok",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Đăng Instagram",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Skip (Unknown Platform)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Đăng Facebook": {
+            "main": [
+                [
+                    {
+                        "node": "Cập nhật Status",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Đăng YouTube": {
+            "main": [
+                [
+                    {
+                        "node": "Cập nhật Status",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Đăng TikTok": {
+            "main": [
+                [
+                    {
+                        "node": "Cập nhật Status",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Đăng Instagram": {
+            "main": [
+                [
+                    {
+                        "node": "Cập nhật Status",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Cập nhật Status": {
+            "main": [
+                [
+                    {
+                        "node": "Thông báo Telegram",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "active": false,
+    "tags": []
+}

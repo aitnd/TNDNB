@@ -182,3 +182,38 @@ docker run -d \
 | Facebook Verify Token | `tokenminh` |
 | Webhook Path | `fb-autoresponder` |
 
+---
+
+## 8. Import Workflow từ File JSON
+
+### 📁 Danh sách 6 file workflow:
+| File | Mô tả |
+|------|-------|
+| `N8N/1.Social Publisher.json` | Đăng bài đa nền tảng |
+| `N8N/2.Trend Hunter.json` | Tìm xu hướng + auto tạo content |
+| `N8N/3.Content Manager.json` | Telegram + Channel + Multi-Input |
+| `N8N/4.Auto Responder.json` | Trả lời comment FB |
+| `N8N/5.Affiliate Bot.json` | Quản lý link affiliate |
+| `N8N/6.Content Engine.json` | Tạo video/audio từ AI |
+
+### 📋 Cách import:
+1. Mở n8n → **Workflows**
+2. Click **"+ New Workflow"**
+3. Click **⋮** → **"Import from File..."**
+4. Chọn lần lượt 6 file JSON trong thư mục `N8N/`
+5. Sửa các credential ID trong node **Config**
+
+### 🔧 Sau khi import cần cấu hình:
+Mỗi file có node **Config** với các biến cần thay thế:
+
+| Biến trong file | Thay bằng |
+|-----------------|-----------|
+| `YOUR_CREDENTIAL_ID` | ID credential Google Sheets OAuth2 |
+| `YOUR_TG_CREDENTIAL_ID` | ID credential Telegram Bot |
+| `YOUR_GEMINI_CREDENTIAL_ID` | ID credential Google Gemini |
+| `YOUR_FB_AUTH_ID` | ID credential Facebook Header Auth |
+| `YOUR_PAGE_TOKEN` | Facebook Page Token |
+| `YOUR_CHAT_ID` | Telegram Admin Chat ID |
+
+> 💡 **Tip**: Để lấy credential ID, vào **Settings** → **Credentials** → Click vào credential → Copy ID từ URL.
+

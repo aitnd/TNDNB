@@ -1,0 +1,428 @@
+{
+    "name": "2.Trend Hunter",
+    "nodes": [
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {
+                            "triggerAtHour": 6
+                        },
+                        {
+                            "triggerAtHour": 12
+                        },
+                        {
+                            "triggerAtHour": 18
+                        },
+                        {
+                            "triggerAtHour": 0
+                        }
+                    ]
+                }
+            },
+            "id": "schedule",
+            "name": "Schedule 6h",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "typeVersion": 1.2,
+            "position": [
+                0,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "cfg-1",
+                            "name": "SHEETS_ID",
+                            "value": "1yXFEpFX3gTIVeEoBkziUpIOD9hYskH9yNvgzuDBAY6o",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-2",
+                            "name": "GOOGLE_API_KEY",
+                            "value": "YOUR_GOOGLE_API_KEY",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-3",
+                            "name": "TELEGRAM_CHAT_ID",
+                            "value": "7455388349",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-4",
+                            "name": "TELEGRAM_BOT_TOKEN",
+                            "value": "8232622884:AAGo1yIk7TBjxMptYyrKGChIPZmJxoTyWAo",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "id": "config",
+            "name": "Config",
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                220,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "read",
+                "documentId": {
+                    "__rl": true,
+                    "value": "={{ $json.SHEETS_ID }}",
+                    "mode": "id"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "value": "Channel Config",
+                    "mode": "name"
+                },
+                "filtersUI": {
+                    "values": [
+                        {
+                            "lookupColumn": "status",
+                            "lookupValue": "active"
+                        }
+                    ]
+                }
+            },
+            "id": "read-config",
+            "name": "Đọc Channel Config",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                440,
+                300
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "YOUR_CREDENTIAL_ID",
+                    "name": "Google Sheets OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "conditions": [
+                        {
+                            "leftValue": "={{ $json }}",
+                            "rightValue": "",
+                            "operator": {
+                                "type": "object",
+                                "operation": "exists"
+                            }
+                        }
+                    ]
+                }
+            },
+            "id": "check-channels",
+            "name": "Có Channel?",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2.2,
+            "position": [
+                660,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "url": "=https://www.googleapis.com/youtube/v3/search?key={{ $('Config').item.json.GOOGLE_API_KEY }}&q={{ encodeURIComponent($json.niche) }}&type=video&order=viewCount&regionCode=VN&publishedAfter={{ new Date(Date.now() - 2*24*60*60*1000).toISOString() }}&maxResults=5&part=snippet",
+                "options": {}
+            },
+            "id": "youtube-search",
+            "name": "Tìm Trend YouTube",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                880,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "conditions": [
+                        {
+                            "leftValue": "={{ $json.items?.length }}",
+                            "rightValue": 0,
+                            "operator": {
+                                "type": "number",
+                                "operation": "gt"
+                            }
+                        }
+                    ]
+                }
+            },
+            "id": "check-videos",
+            "name": "Có Video?",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2.2,
+            "position": [
+                1100,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "url": "=https://www.googleapis.com/youtube/v3/videos?key={{ $('Config').item.json.GOOGLE_API_KEY }}&id={{ $json.items[0].id.videoId }}&part=snippet,statistics",
+                "options": {}
+            },
+            "id": "get-details",
+            "name": "Lấy chi tiết video",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1320,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "modelId": {
+                    "__rl": true,
+                    "value": "models/gemini-2.0-flash",
+                    "mode": "list"
+                },
+                "promptType": "define",
+                "text": "=Dựa vào video YouTube đang trend:\nTitle: {{ $json.items[0].snippet.title }}\nDescription: {{ $json.items[0].snippet.description.substring(0, 500) }}\nViews: {{ $json.items[0].statistics.viewCount }}\nChannel: {{ $json.items[0].snippet.channelTitle }}\n\nHãy viết một bài đăng Facebook hấp dẫn bằng tiếng Việt (200-300 từ) về chủ đề này.\n- Mở đầu hấp dẫn, gây tò mò\n- Nội dung có giá trị cho người đọc\n- Kết thúc với CTA (call to action)\n- Thêm 5-7 hashtag phù hợp cuối bài\n- KHÔNG nói về việc xem video YouTube"
+            },
+            "id": "gemini-create",
+            "name": "AI tạo content",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1540,
+                100
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "YOUR_GEMINI_CREDENTIAL_ID",
+                    "name": "Google Gemini"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "append",
+                "documentId": {
+                    "__rl": true,
+                    "value": "={{ $('Config').item.json.SHEETS_ID }}",
+                    "mode": "id"
+                },
+                "sheetName": {
+                    "__rl": true,
+                    "value": "Content Queue",
+                    "mode": "name"
+                },
+                "columns": {
+                    "mappingMode": "defineBelow",
+                    "value": {
+                        "ID": "=POST_{{ $now.format('yyyyMMdd_HHmmss') }}",
+                        "Timestamp": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+                        "Source": "=Trend_Hunter_{{ $('Đọc Channel Config').item.json.niche }}",
+                        "Content_Type": "text",
+                        "Text_Content": "={{ $json.text }}",
+                        "Platform": "Facebook",
+                        "Status": "ready",
+                        "Hashtags": "#trending #viral #vietnam",
+                        "Source_URL": "=https://youtube.com/watch?v={{ $('Lấy chi tiết video').item.json.items[0].id }}"
+                    }
+                }
+            },
+            "id": "save-queue",
+            "name": "Lưu Content Queue",
+            "type": "n8n-nodes-base.googleSheets",
+            "typeVersion": 4.5,
+            "position": [
+                1760,
+                100
+            ],
+            "credentials": {
+                "googleSheetsOAuth2Api": {
+                    "id": "YOUR_CREDENTIAL_ID",
+                    "name": "Google Sheets OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.telegram.org/bot{{ $('Config').item.json.TELEGRAM_BOT_TOKEN }}/sendMessage",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"chat_id\": \"{{ $('Config').item.json.TELEGRAM_CHAT_ID }}\", \"text\": \"🔥 Trend Hunter đã tìm thấy trend mới!\\n\\n📌 Nguồn: YouTube - {{ $('Lấy chi tiết video').item.json.items[0].snippet.title.substring(0,50) }}...\\n📝 Đã lưu vào Content Queue\\n⏰ Status: ready - sẵn sàng đăng\", \"parse_mode\": \"HTML\" }",
+                "options": {}
+            },
+            "id": "notify-success",
+            "name": "Notify Thành Công",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1980,
+                100
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.telegram.org/bot{{ $('Config').item.json.TELEGRAM_BOT_TOKEN }}/sendMessage",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"chat_id\": \"{{ $('Config').item.json.TELEGRAM_CHAT_ID }}\", \"text\": \"⚠️ Trend Hunter không tìm thấy video mới\\n\\nNiche: {{ $('Đọc Channel Config').item.json.niche }}\\nThử lại sau 6 tiếng\", \"parse_mode\": \"HTML\" }",
+                "options": {}
+            },
+            "id": "notify-no-video",
+            "name": "Notify Không có Video",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1320,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "=https://api.telegram.org/bot{{ $('Config').item.json.TELEGRAM_BOT_TOKEN }}/sendMessage",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"chat_id\": \"{{ $('Config').item.json.TELEGRAM_CHAT_ID }}\", \"text\": \"⚠️ Trend Hunter - Không có Channel nào active\\n\\nVui lòng kiểm tra Channel Config trong Google Sheets\", \"parse_mode\": \"HTML\" }",
+                "options": {}
+            },
+            "id": "notify-no-channel",
+            "name": "Notify Không có Channel",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                880,
+                400
+            ]
+        }
+    ],
+    "connections": {
+        "Schedule 6h": {
+            "main": [
+                [
+                    {
+                        "node": "Config",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Config": {
+            "main": [
+                [
+                    {
+                        "node": "Đọc Channel Config",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Đọc Channel Config": {
+            "main": [
+                [
+                    {
+                        "node": "Có Channel?",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Có Channel?": {
+            "main": [
+                [
+                    {
+                        "node": "Tìm Trend YouTube",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Notify Không có Channel",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Tìm Trend YouTube": {
+            "main": [
+                [
+                    {
+                        "node": "Có Video?",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Có Video?": {
+            "main": [
+                [
+                    {
+                        "node": "Lấy chi tiết video",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Notify Không có Video",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Lấy chi tiết video": {
+            "main": [
+                [
+                    {
+                        "node": "AI tạo content",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "AI tạo content": {
+            "main": [
+                [
+                    {
+                        "node": "Lưu Content Queue",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Lưu Content Queue": {
+            "main": [
+                [
+                    {
+                        "node": "Notify Thành Công",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "active": false,
+    "tags": []
+}
