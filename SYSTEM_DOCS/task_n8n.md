@@ -348,13 +348,49 @@ E:\TNDNB\N8N\
 
 ---
 
+## 🎬 HYBRID VIDEO PROCESSING (WF6)
+
+### Phương án: Client-Side + Serverless APIs
+
+```
+User Upload → ffmpeg.wasm → Extract Audio → Whisper API → Translation → Generate SRT → Burn Subtitles → Download
+```
+
+| Component | Service | Cost |
+|-----------|---------|------|
+| Audio Extraction | ffmpeg.wasm (client-side) | FREE |
+| Speech-to-Text | Replicate/Groq Whisper | ~$0.003/phút |
+| Translation | deep-translator (browser) | FREE |
+| Video Render | ffmpeg.wasm (client-side) | FREE |
+| Storage | Browser Memory | FREE |
+
+### Ưu điểm:
+- ✅ Phần lớn xử lý trên browser → ít chi phí
+- ✅ Không cần backend phức tạp
+- ✅ Privacy-friendly (video không upload lên server)
+- ✅ Dễ deploy Vercel (chỉ cần static site + 1 API route)
+
+### Nhược điểm:
+- ⚠️ Phụ thuộc vào máy client (RAM, CPU)
+- ⚠️ Chậm hơn trên thiết bị yếu
+- ⚠️ Cần API key cho Whisper (dùng Groq free hoặc Replicate)
+
+### Tích hợp n8n:
+- WF6 gọi API endpoint `/api/process-video`
+- Frontend xử lý video với ffmpeg.wasm
+- Kết quả upload lên Google Drive → lưu URL vào Content Queue
+
+---
+
 ## 🔮 CÔNG CỤ TRIỂN KHAI TRONG TƯƠNG LAI
 
 | Công cụ | Mô tả | Link |
 |---------|-------|------|
 | **ClawdBot** | AI Assistant cá nhân đa kênh (WhatsApp, Telegram, Slack, Discord, Signal, iMessage, Teams). Chạy local, có Voice Wake, Live Canvas. | [GitHub](https://github.com/clawdbot/clawdbot) |
+| **ffmpeg.wasm** | FFmpeg chạy trong browser để xử lý video client-side | [GitHub](https://github.com/ffmpegwasm/ffmpeg.wasm) |
+| **Groq Whisper** | Speech-to-Text API nhanh, miễn phí tier | [Groq](https://console.groq.com) |
 
 ---
 
 *Ghi chú: `[x]` hoàn thành, `[/]` đang làm, `[ ]` chưa làm*
-*Cập nhật: 2026-01-14 06:21*
+*Cập nhật: 2026-01-14 22:55*

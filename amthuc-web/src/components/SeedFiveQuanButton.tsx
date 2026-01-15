@@ -237,6 +237,59 @@ const ALL_RESTAURANTS: Array<{
                 { name: 'Ếch Chiên Bơ', price: 100000, category: 'Ếch', isPopular: false },
                 { name: 'Sụn Gà Rang Muối', price: 80000, category: 'Ăn vặt', isPopular: false }
             ]
+        },
+
+        // 13. Khánh Huyền Food
+        {
+            info: {
+                name: 'Khánh Huyền Food',
+                phone: '0817323222',
+                address: 'TP. Ninh Bình (Ship quanh Ninh Bình)',
+                categories: ['Mỳ cay', 'Bún phở', 'Cơm', 'Đồ uống'],
+                description: 'Mở 06:00 - 20:00. Ship tận nơi. Nhận giặt chăn ga quần áo lấy tại nhà.'
+            },
+            menu: [
+                // Mỳ cay
+                { name: 'Mỳ cay bò', price: 35000, category: 'Mỳ cay', isPopular: true },
+                { name: 'Mỳ cay hải sản', price: 40000, category: 'Mỳ cay', isPopular: true },
+                { name: 'Mỳ cay thập cẩm', price: 45000, category: 'Mỳ cay', isPopular: false },
+                // Bún, phở
+                { name: 'Bún đậu mắm tôm', price: 30000, category: 'Bún', isPopular: true },
+                { name: 'Bún riêu cá, ốc, chả lá lốt', price: 35000, category: 'Bún', isPopular: false },
+                { name: 'Bún riêu cua bắp bò', price: 40000, category: 'Bún', isPopular: false },
+                { name: 'Bún bò', price: 35000, category: 'Bún', isPopular: false },
+                { name: 'Phở bò', price: 35000, category: 'Phở', isPopular: true },
+                { name: 'Bún gà ta', price: 35000, category: 'Bún', isPopular: false },
+                { name: 'Phở gà ta', price: 35000, category: 'Phở', isPopular: false },
+                { name: 'Bún bò Huế', price: 40000, category: 'Bún', isPopular: false },
+                { name: 'Bánh đa cua', price: 35000, category: 'Bún', isPopular: false },
+                // Cơm
+                { name: 'Cơm tấm', price: 30000, category: 'Cơm', isPopular: true },
+                { name: 'Cơm gà xối mỡ', price: 35000, category: 'Cơm', isPopular: true },
+                { name: 'Cơm rang đùi gà', price: 40000, category: 'Cơm', isPopular: false },
+                { name: 'Cơm rang dưa bò', price: 35000, category: 'Cơm', isPopular: false },
+                { name: 'Cơm trộn xá xíu', price: 35000, category: 'Cơm', isPopular: false },
+                { name: 'Cơm trộn thịt băm', price: 30000, category: 'Cơm', isPopular: false },
+                // Các món khác
+                { name: 'Gà ủ muối hoa tiêu', price: 180000, category: 'Gà', isPopular: false },
+                { name: 'Bánh mì chảo', price: 30000, category: 'Ăn sáng', isPopular: false },
+                { name: 'Phở cuốn', price: 35000, category: 'Cuốn', isPopular: false },
+                { name: 'Xà lách cuốn tôm', price: 40000, category: 'Cuốn', isPopular: false },
+                { name: 'Cháo sườn', price: 25000, category: 'Cháo', isPopular: false },
+                { name: 'Nem nướng', price: 40000, category: 'Nướng', isPopular: false },
+                { name: 'Xúc xích chiên', price: 20000, category: 'Ăn vặt', isPopular: false },
+                { name: 'Bánh cuốn nóng', price: 25000, category: 'Bánh cuốn', isPopular: false },
+                // Đồ uống
+                { name: 'Trà tắc trân châu', price: 15000, category: 'Trà', isPopular: true },
+                { name: 'Trà tắc xí muội', price: 15000, category: 'Trà', isPopular: false },
+                { name: 'Trà tắc nha đam', price: 18000, category: 'Trà', isPopular: false },
+                { name: 'Trà đào cam sả', price: 20000, category: 'Trà', isPopular: true },
+                { name: 'Trà cam quế (nóng)', price: 18000, category: 'Trà', isPopular: false },
+                { name: 'Trà omai gừng (nóng)', price: 18000, category: 'Trà', isPopular: false },
+                { name: 'Nước ép cam', price: 25000, category: 'Nước ép', isPopular: false },
+                { name: 'Nước ép dưa hấu', price: 20000, category: 'Nước ép', isPopular: false },
+                { name: 'Nước ép dứa', price: 20000, category: 'Nước ép', isPopular: false }
+            ]
         }
     ];
 

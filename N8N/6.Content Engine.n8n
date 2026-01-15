@@ -41,8 +41,20 @@
                         },
                         {
                             "id": "cfg-4",
+                            "name": "GROQ_API_KEY",
+                            "value": "YOUR_GROQ_KEY",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-5",
                             "name": "TELEGRAM_CHAT_ID",
                             "value": "7455388349",
+                            "type": "string"
+                        },
+                        {
+                            "id": "cfg-6",
+                            "name": "TELEGRAM_BOT_TOKEN",
+                            "value": "8232622884:AAGo1yIk7TBjxMptYyrKGChIPZmJxoTyWAo",
                             "type": "string"
                         }
                     ]
@@ -108,6 +120,38 @@
                             },
                             "renameOutput": true,
                             "outputKey": "remake"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.body.type }}",
+                                        "rightValue": "subtitle",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "subtitle"
+                        },
+                        {
+                            "conditions": {
+                                "conditions": [
+                                    {
+                                        "leftValue": "={{ $json.body.type }}",
+                                        "rightValue": "transcript",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ]
+                            },
+                            "renameOutput": true,
+                            "outputKey": "transcript"
                         }
                     ]
                 },
@@ -137,7 +181,7 @@
             "typeVersion": 4.2,
             "position": [
                 660,
-                100
+                0
             ]
         },
         {
@@ -155,20 +199,20 @@
             "typeVersion": 4.2,
             "position": [
                 880,
-                100
+                0
             ]
         },
         {
             "parameters": {
-                "command": "=ffmpeg -i {{ $('TTS (Video)').item.json.audio_url }} -i {{ $json.video_url }} -c:v copy -c:a aac -shortest /tmp/output_{{ Date.now() }}.mp4"
+                "command": "=ffmpeg -i {{ $('TTS (Video)').item.json.audio_url }} -i {{ $json.video_url }} -c:v copy -c:a aac -shortest /tmp/output_{{ Date.now() }}.mp4 && echo '{\"output_url\": \"/tmp/output_{{ Date.now() }}.mp4\"}'"
             },
             "id": "ffmpeg-merge",
-            "name": "FFmpeg Ghép",
+            "name": "FFmpeg Ghép Video",
             "type": "n8n-nodes-base.executeCommand",
             "typeVersion": 1,
             "position": [
                 1100,
-                100
+                0
             ]
         },
         {
@@ -186,12 +230,12 @@
             "typeVersion": 4.2,
             "position": [
                 660,
-                300
+                150
             ]
         },
         {
             "parameters": {
-                "command": "=ffmpeg -i {{ $json.audio_url }} -af 'volume=1.2' /tmp/podcast_{{ Date.now() }}.mp3"
+                "command": "=ffmpeg -i {{ $json.audio_url }} -af 'volume=1.2' /tmp/podcast_{{ Date.now() }}.mp3 && echo '{\"output_url\": \"/tmp/podcast_{{ Date.now() }}.mp3\"}'"
             },
             "id": "ffmpeg-audio",
             "name": "FFmpeg Audio",
@@ -199,20 +243,20 @@
             "typeVersion": 1,
             "position": [
                 880,
-                300
+                150
             ]
         },
         {
             "parameters": {
-                "command": "=yt-dlp -o /tmp/remake_source.mp4 {{ $('API Create Video').item.json.body.source_url }}"
+                "command": "=yt-dlp -o /tmp/remake_{{ Date.now() }}.mp4 {{ $('API Create Video').item.json.body.source_url }}"
             },
-            "id": "ytdlp-download",
-            "name": "yt-dlp Download",
+            "id": "ytdlp-remake",
+            "name": "yt-dlp (Remake)",
             "type": "n8n-nodes-base.executeCommand",
             "typeVersion": 1,
             "position": [
                 660,
-                500
+                300
             ]
         },
         {
@@ -223,7 +267,7 @@
                     "mode": "list"
                 },
                 "promptType": "define",
-                "text": "Viết lại script này thành bản tiếng Việt hấp dẫn hơn, giữ ý chính nhưng thêm phong cách riêng:\n\n{{ $('API Create Video').item.json.body.original_script }}"
+                "text": "=Viết lại script này thành bản tiếng Việt hấp dẫn hơn, giữ ý chính nhưng thêm phong cách riêng:\n\n{{ $('API Create Video').item.json.body.original_script }}"
             },
             "id": "ai-rewrite",
             "name": "AI Viết lại Script",
@@ -231,7 +275,7 @@
             "typeVersion": 1,
             "position": [
                 880,
-                500
+                300
             ],
             "credentials": {
                 "googleGeminiApi": {
@@ -242,7 +286,189 @@
         },
         {
             "parameters": {
-                "operation": "update",
+                "command": "=yt-dlp -o /tmp/subtitle_{{ Date.now() }}.mp4 -x --audio-format mp3 {{ $('API Create Video').item.json.body.source_url }}"
+            },
+            "id": "ytdlp-subtitle",
+            "name": "yt-dlp (Subtitle)",
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                660,
+                450
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "=Bearer {{ $('Config').item.json.GROQ_API_KEY }}"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "contentType": "multipart-form-data",
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "file",
+                            "value": "={{ $json.stdout }}"
+                        },
+                        {
+                            "name": "model",
+                            "value": "whisper-large-v3"
+                        },
+                        {
+                            "name": "language",
+                            "value": "vi"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "groq-whisper",
+            "name": "Groq Whisper STT",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                880,
+                450
+            ]
+        },
+        {
+            "parameters": {
+                "modelId": {
+                    "__rl": true,
+                    "value": "models/gemini-2.0-flash",
+                    "mode": "list"
+                },
+                "promptType": "define",
+                "text": "=Dịch transcript sau sang tiếng Việt. Giữ nguyên format thời gian nếu có:\n\n{{ $json.text }}"
+            },
+            "id": "translate",
+            "name": "Gemini Dịch",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1100,
+                450
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "YOUR_GEMINI_CREDENTIAL_ID",
+                    "name": "Google Gemini"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Tạo file SRT từ transcript đã dịch\nconst text = $input.item.json.text;\nconst lines = text.split('\\n');\nlet srt = '';\nlet counter = 1;\n\n// Tạo SRT đơn giản (mỗi 5 giây 1 dòng)\nconst words = text.split(' ');\nconst wordsPerLine = 10;\nfor (let i = 0; i < words.length; i += wordsPerLine) {\n  const startSec = Math.floor(i / wordsPerLine) * 5;\n  const endSec = startSec + 5;\n  const startTime = `00:${String(Math.floor(startSec/60)).padStart(2,'0')}:${String(startSec%60).padStart(2,'0')},000`;\n  const endTime = `00:${String(Math.floor(endSec/60)).padStart(2,'0')}:${String(endSec%60).padStart(2,'0')},000`;\n  srt += `${counter}\\n${startTime} --> ${endTime}\\n${words.slice(i, i+wordsPerLine).join(' ')}\\n\\n`;\n  counter++;\n}\n\nreturn { srt_content: srt, srt_path: `/tmp/subtitle_${Date.now()}.srt` };"
+            },
+            "id": "generate-srt",
+            "name": "Generate SRT",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1320,
+                450
+            ]
+        },
+        {
+            "parameters": {
+                "command": "=echo '{{ $json.srt_content }}' > {{ $json.srt_path }} && ffmpeg -i /tmp/subtitle_*.mp4 -vf subtitles={{ $json.srt_path }} /tmp/subtitled_{{ Date.now() }}.mp4 && echo '{\"output_url\": \"/tmp/subtitled_{{ Date.now() }}.mp4\"}'"
+            },
+            "id": "ffmpeg-burn",
+            "name": "FFmpeg Burn Subtitles",
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                1540,
+                450
+            ]
+        },
+        {
+            "parameters": {
+                "command": "=yt-dlp -o /tmp/transcript_{{ Date.now() }}.mp4 -x --audio-format mp3 {{ $('API Create Video').item.json.body.source_url }}"
+            },
+            "id": "ytdlp-transcript",
+            "name": "yt-dlp (Transcript)",
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                660,
+                600
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Authorization",
+                            "value": "=Bearer {{ $('Config').item.json.GROQ_API_KEY }}"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "contentType": "multipart-form-data",
+                "bodyParameters": {
+                    "parameters": [
+                        {
+                            "name": "file",
+                            "value": "={{ $json.stdout }}"
+                        },
+                        {
+                            "name": "model",
+                            "value": "whisper-large-v3"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "groq-whisper-transcript",
+            "name": "Groq Whisper (Transcript)",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                880,
+                600
+            ]
+        },
+        {
+            "parameters": {
+                "modelId": {
+                    "__rl": true,
+                    "value": "models/gemini-2.0-flash",
+                    "mode": "list"
+                },
+                "promptType": "define",
+                "text": "=Tóm tắt và viết lại nội dung sau thành bài đăng Facebook hấp dẫn bằng tiếng Việt (200-300 từ). Thêm 5-7 hashtag:\n\n{{ $json.text }}"
+            },
+            "id": "ai-summarize",
+            "name": "AI Tóm tắt",
+            "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+            "typeVersion": 1,
+            "position": [
+                1100,
+                600
+            ],
+            "credentials": {
+                "googleGeminiApi": {
+                    "id": "YOUR_GEMINI_CREDENTIAL_ID",
+                    "name": "Google Gemini"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "append",
                 "documentId": {
                     "__rl": true,
                     "value": "={{ $('Config').item.json.SHEETS_ID }}",
@@ -256,20 +482,22 @@
                 "columns": {
                     "mappingMode": "defineBelow",
                     "value": {
-                        "Media_URL": "={{ $json.output_url }}",
+                        "ID": "=CONTENT_{{ $now.format('yyyyMMdd_HHmmss') }}",
+                        "Timestamp": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+                        "Source": "=Content_Engine_{{ $('API Create Video').item.json.body.type }}",
+                        "Text_Content": "={{ $json.text || '' }}",
+                        "Media_URL": "={{ $json.output_url || '' }}",
+                        "Platform": "Facebook",
                         "Status": "ready"
-                    },
-                    "matchingColumns": [
-                        "ID"
-                    ]
+                    }
                 }
             },
-            "id": "update-queue",
-            "name": "Cập nhật Queue",
+            "id": "save-queue",
+            "name": "Lưu Content Queue",
             "type": "n8n-nodes-base.googleSheets",
             "typeVersion": 4.5,
             "position": [
-                1320,
+                1760,
                 300
             ],
             "credentials": {
@@ -281,36 +509,34 @@
         },
         {
             "parameters": {
-                "chatId": "={{ $('Config').item.json.TELEGRAM_CHAT_ID }}",
-                "text": "=🎬 Content Engine hoàn thành!\n\n📹 Loại: {{ $('API Create Video').item.json.body.type }}\n🔗 File: {{ $json.output_url }}"
+                "method": "POST",
+                "url": "=https://api.telegram.org/bot{{ $('Config').item.json.TELEGRAM_BOT_TOKEN }}/sendMessage",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={ \"chat_id\": \"{{ $('Config').item.json.TELEGRAM_CHAT_ID }}\", \"text\": \"🎬 Content Engine hoàn thành!\\n\\n📹 Loại: {{ $('API Create Video').item.json.body.type }}\\n✅ Đã lưu vào Content Queue\", \"parse_mode\": \"HTML\" }",
+                "options": {}
             },
             "id": "notify",
             "name": "Notify Telegram",
-            "type": "n8n-nodes-base.telegram",
-            "typeVersion": 1.2,
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
             "position": [
-                1540,
+                1980,
                 300
-            ],
-            "credentials": {
-                "telegramApi": {
-                    "id": "YOUR_TG_CREDENTIAL_ID",
-                    "name": "Telegram Bot"
-                }
-            }
+            ]
         },
         {
             "parameters": {
                 "respondWith": "json",
-                "responseBody": "={ \"status\": \"processing\", \"message\": \"Video đang được tạo\" }"
+                "responseBody": "={ \"status\": \"processing\", \"type\": \"{{ $('API Create Video').item.json.body.type }}\", \"message\": \"Content đang được tạo\" }"
             },
             "id": "respond",
-            "name": "Respond",
+            "name": "Respond OK",
             "type": "n8n-nodes-base.respondToWebhook",
             "typeVersion": 1.1,
             "position": [
-                1540,
-                500
+                660,
+                750
             ]
         }
     ],
@@ -355,14 +581,28 @@
                 ],
                 [
                     {
-                        "node": "yt-dlp Download",
+                        "node": "yt-dlp (Remake)",
                         "type": "main",
                         "index": 0
                     }
                 ],
                 [
                     {
-                        "node": "Respond",
+                        "node": "yt-dlp (Subtitle)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "yt-dlp (Transcript)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Respond OK",
                         "type": "main",
                         "index": 0
                     }
@@ -384,18 +624,18 @@
             "main": [
                 [
                     {
-                        "node": "FFmpeg Ghép",
+                        "node": "FFmpeg Ghép Video",
                         "type": "main",
                         "index": 0
                     }
                 ]
             ]
         },
-        "FFmpeg Ghép": {
+        "FFmpeg Ghép Video": {
             "main": [
                 [
                     {
-                        "node": "Cập nhật Queue",
+                        "node": "Lưu Content Queue",
                         "type": "main",
                         "index": 0
                     }
@@ -417,14 +657,14 @@
             "main": [
                 [
                     {
-                        "node": "Cập nhật Queue",
+                        "node": "Lưu Content Queue",
                         "type": "main",
                         "index": 0
                     }
                 ]
             ]
         },
-        "yt-dlp Download": {
+        "yt-dlp (Remake)": {
             "main": [
                 [
                     {
@@ -439,14 +679,102 @@
             "main": [
                 [
                     {
-                        "node": "Cập nhật Queue",
+                        "node": "Lưu Content Queue",
                         "type": "main",
                         "index": 0
                     }
                 ]
             ]
         },
-        "Cập nhật Queue": {
+        "yt-dlp (Subtitle)": {
+            "main": [
+                [
+                    {
+                        "node": "Groq Whisper STT",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Groq Whisper STT": {
+            "main": [
+                [
+                    {
+                        "node": "Gemini Dịch",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Gemini Dịch": {
+            "main": [
+                [
+                    {
+                        "node": "Generate SRT",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Generate SRT": {
+            "main": [
+                [
+                    {
+                        "node": "FFmpeg Burn Subtitles",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "FFmpeg Burn Subtitles": {
+            "main": [
+                [
+                    {
+                        "node": "Lưu Content Queue",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "yt-dlp (Transcript)": {
+            "main": [
+                [
+                    {
+                        "node": "Groq Whisper (Transcript)",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Groq Whisper (Transcript)": {
+            "main": [
+                [
+                    {
+                        "node": "AI Tóm tắt",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "AI Tóm tắt": {
+            "main": [
+                [
+                    {
+                        "node": "Lưu Content Queue",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Lưu Content Queue": {
             "main": [
                 [
                     {
