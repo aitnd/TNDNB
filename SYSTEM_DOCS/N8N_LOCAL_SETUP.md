@@ -174,11 +174,39 @@ docker run -d \
 
 ## Thông Tin Quan Trọng
 
+### 🐧 Ubuntu/Linux (Máy mới - 01/2026)
+| Mục | Giá trị |
+|-----|---------|
+| n8n Port | 5678 |
+| n8n Data | `/media/horizon/HDD1/Antigravity/n8n-data/` |
+| n8n Version | v2.3.5 |
+| Tunnel Service | `cloudflared-n8n` (systemd autostart) |
+
+### 🔐 Đăng Nhập N8N
+| Field | Value |
+|-------|-------|
+| URL | http://localhost:5678 |
+| Email | `admin@tndnb.com` |
+| Password | `Admin@123456` |
+
+> ⚠️ **Khuyến nghị**: Đổi mật khẩu sau lần đăng nhập đầu!
+
+### 🔧 Lệnh Ubuntu
+```bash
+# Lấy URL tunnel hiện tại
+/media/horizon/HDD1/Antigravity/get-tunnel-url.sh
+
+# Restart services
+sudo systemctl restart cloudflared-n8n
+sudo docker restart n8n
+```
+
+### 🪟 Windows (Máy cũ - tham khảo)
 | Mục | Giá trị |
 |-----|---------|
 | n8n Port | 5888 (local) |
 | n8n Data | `C:/n8n_data` |
-| Tunnel Tool | Cloudflare Tunnel (cloudflared) |
+| Tunnel Tool | Cloudflare Tunnel (thủ công) |
 | Facebook Verify Token | `tokenminh` |
 | Webhook Path | `fb-autoresponder` |
 

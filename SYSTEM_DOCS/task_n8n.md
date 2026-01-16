@@ -157,6 +157,15 @@ docker run -d --name n8n-atom -p 5888:5888 `
 - [x] Thiết lập Google Sheets (Database)
 - [x] Tài liệu: `API_SETUP_GUIDE.md`, `N8N_CONTROL_METHODS.md`
 
+### 🐧 Ubuntu Machine (01/2026)
+- [x] Cài đặt Docker Engine + autostart
+- [x] Cài đặt n8n v2.3.5 container (port 5678) + autostart
+- [x] Cài đặt Cloudflared v2025.11.1 + systemd autostart
+- [x] Tạo user admin (admin@tndnb.com)
+- [x] Tạo API key cho MCP
+- [x] Import 6 workflows từ file JSON
+
+
 ---
 
 ## 🔄 PHASE 2: Content Queue (ĐANG LÀM)
