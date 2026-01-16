@@ -168,12 +168,40 @@ docker run -d --name n8n-atom -p 5888:5888 `
 
 ---
 
-## 🔄 PHASE 2: Content Queue (ĐANG LÀM)
+## ✅ PHASE 2: Content Queue (XONG)
 
 ### 2.1 Google Sheets "Content Queue"
 - [x] Tạo sheet với cấu trúc chuẩn
 - [x] URL: `https://docs.google.com/spreadsheets/d/1xesgKfwuPPhPIN6L9GA1qIitcyEPQPEGjziGX0Y47sE/edit`
-- [ ] Kết nối n8n với Sheets (OAuth credential)
+- [x] Kết nối n8n với Sheets (Service Account `googleApi`)
+
+### Cấu trúc cột:
+(Đã thiết lập chuẩn)
+...
+
+## 🔄 PHASE 3: Social Publisher (ĐANG LÀM)
+
+### Workflow `1.Social Publisher - Facebook` (v2)
+- [x] Thêm Schedule Trigger (4 lần/ngày)
+- [x] Thêm Google Sheets Read
+- [x] Thêm Filter (status=ready)
+- [x] Thêm Switch (text/image/video)
+- [x] Thêm Facebook Post API
+- [x] Thêm Error Handler
+- [x] Test và Activate (v2.3.5)
+
+### Credentials
+- [x] Facebook Page Token (permanent)
+- [x] Google Sheets Service Account (mới)
+
+...
+
+## 🔧 BƯỚC TIẾP THEO (THEO THỨ TỰ)
+
+### Bước 1: Hoàn thành Google Sheets Credential
+- [x] Tạo Service Account Credential (`2x3rUQqMAy1ZHQN9`)
+- [x] Update Workflows tự động
+- [x] Test đọc/ghi Sheets (đã active WF 1, 4)
 
 ### Cấu trúc cột:
 | Cột | Mô tả |
