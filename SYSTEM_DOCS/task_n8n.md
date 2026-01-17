@@ -264,11 +264,22 @@ docker run -d --name n8n-atom -p 5888:5888 `
 
 ---
 
-## ⏳ PHASE 6: Affiliate Bot (CHỜ)
+## ✅ PHASE 6: Affiliate Bot (XONG)
 
-- [ ] Đăng ký Shopee Affiliate
-- [ ] Tạo workflow auto gắn link affiliate
-- [ ] Ghi vào Content Queue
+### Workflow `5.Affiliate Bot`
+- [x] Import Workflow Clean & Map Credentials
+- [x] Cấu hình Sheet ID chuẩn (`1xesg...`)
+- [x] Activate Workflow ✅
+- Logic: Nhận webhook -> Tìm SP Sheets -> Trả về Link
+
+---
+
+## ⏳ PHASE 7: Content Engine (CHỜ)
+
+### Workflow `6.Content Engine` (Core AI)
+- [ ] Import & Config
+- [ ] Tích hợp Gemini Advanced
+- [ ] Xử lý Content Queue
 
 ---
 
