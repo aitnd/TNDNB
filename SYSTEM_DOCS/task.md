@@ -7,11 +7,11 @@
 - [x] Tối ưu hóa tài liệu dự án (Gộp file, dọn dẹp) <!-- id: 3 -->
 
 ## Giai đoạn 1: MVP - Khởi tạo Hệ thống (Tuần 1-2)
-- [/] Kiểm tra môi trường và cài đặt n8n (Docker/npm) <!-- id: 10 -->
+- [x] Kiểm tra môi trường và cài đặt n8n (Docker/npm) <!-- id: 10 -->
 - [x] Tạo Telegram Bot và lấy API Token (Xem SETUP_GUIDE.md) <!-- id: 11 -->
 - [x] Cấu hình Google Gemini API (Xem SETUP_GUIDE.md) <!-- id: 12 -->
 - [x] Thiết lập Google Sheets (Database) (Xem SETUP_GUIDE.md) <!-- id: 13 -->
-- [/] Import và cấu hình Workflow cơ bản (Chatbot Tele) <!-- id: 14 -->
+- [x] Import và cấu hình Workflow cơ bản (Chatbot Tele) <!-- id: 14 -->
 - [ ] Kiểm thử luồng chat cơ bản (Telegram <-> n8n <-> Gemini) <!-- id: 15 -->
 - [x] Thiết lập bảo mật API Key (Environment Variables) <!-- id: 16 -->
 
@@ -47,10 +47,10 @@
 - [x] Tạo mcp_config_template.json <!-- id: 54 -->
 
 ### Cần làm trên máy mới 🔄
-- [ ] `npm install -g n8n-mcp` <!-- id: 60 -->
-- [ ] Copy mcp_config_template.json → mcp_config.json của Antigravity <!-- id: 61 -->
-- [ ] Cài n8n (Docker) <!-- id: 62 -->
-- [ ] Tạo và cập nhật N8N_API_KEY <!-- id: 63 -->
-- [ ] Refresh MCP Servers trong Antigravity <!-- id: 64 -->
-- [ ] Test: `n8n_health_check` <!-- id: 65 -->
+- [x] `npm install -g n8n-mcp` <!-- id: 60 -->
+- [x] Copy mcp_config_template.json → mcp_config.json của Antigravity <!-- id: 61 -->
+- [x] Cài n8n (Docker) <!-- id: 62 -->
+- [x] Tạo và cập nhật N8N_API_KEY <!-- id: 63 -->
+- [x] Refresh MCP Servers trong Antigravity <!-- id: 64 -->
+- [x] Test: `n8n_health_check` <!-- id: 65 -->
 
