@@ -199,9 +199,19 @@ docker run -d --name n8n-atom -p 5888:5888 `
 ## 🔧 BƯỚC TIẾP THEO (THEO THỨ TỰ)
 
 ### Bước 1: Hoàn thành Google Sheets Credential
-- [x] Tạo Service Account Credential (`2x3rUQqMAy1ZHQN9`)
+- [x] Tạo Service Account Credential (`8g8RXr1RPEmFgLaf`)
 - [x] Update Workflows tự động
 - [x] Test đọc/ghi Sheets (đã active WF 1, 4)
+
+### Bước 2: Hoàn thiện WF1 - Social Publisher
+- [x] Thêm Schedule Trigger (8h, 12h, 18h, 21h)
+- [x] Thêm Google Sheets Read (filter status=ready)
+- [x] Thêm Switch node (phân loại platform)
+- [x] Thêm Facebook Post API
+- [x] Thêm Update Sheets (status=published)
+- [x] Thêm Telegram Notify
+- [x] Test và Activate (Done - Browser)
+- [x] **Export JSON**: `N8N/1.Social Publisher.json`
 
 ### Cấu trúc cột:
 | Cột | Mô tả |
@@ -218,16 +228,6 @@ docker run -d --name n8n-atom -p 5888:5888 `
 | Status | pending, ready, published, failed |
 | Published_At | Thời gian đăng thực tế |
 | Post_ID | ID bài đăng |
-
----
-
-## 🔄 PHASE 3: Social Publisher (ĐANG LÀM)
-
-### Workflow `1.Social Publisher - Facebook` (v2)
-- [ ] Thêm Schedule Trigger (4 lần/ngày)
-- [ ] Thêm Google Sheets Read
-- [ ] Thêm Filter (status=ready)
-- [ ] Thêm Switch (text/image/video)
 - [ ] Thêm Facebook Post API
 - [ ] Thêm Error Handler
 - [ ] Test và Activate
@@ -238,14 +238,14 @@ docker run -d --name n8n-atom -p 5888:5888 `
 
 ---
 
-## ✅ PHASE 4: Trend Hunter (90%)
+## ✅ PHASE 4: Trend Hunter (XONG)
 
 ### Workflow `2.Trend Hunter - YouTube`
-- [x] Import workflow + Sub-workflow
-- [x] Cấu hình YouTube OAuth2 + Gemini API
+- [x] Import workflow + Sub-workflow (Clean Import)
+- [x] Cấu hình YouTube OAuth2 + Gemini API (Updated)
 - [x] Test AI Agent gọi tool youtube_search
-- [ ] Thêm node ghi vào Content Queue
-- [ ] Cấu hình Schedule trigger (6h/lần)
+- [x] Thêm node ghi vào Content Queue (Checked)
+- [x] Cấu hình Schedule trigger (6h/lần) (Active)
 
 ---
 
