@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Ôn thi đường thủy</string>
-    <string name="title_activity_main">Ôn thi đường thủy</string>
-    <string name="package_name">com.horizon.tnd</string>
-    <string name="custom_url_scheme">com.horizon.tnd</string>
-</resources>
