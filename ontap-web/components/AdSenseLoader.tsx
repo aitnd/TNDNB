@@ -34,16 +34,16 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
 
     const loadAdSenseScript = () => {
         // Check if already exists
-        const existingScript = document.getElementById('google-adsense-script');
+        const existingScript = document.getElementById('adsterra-script');
         if (existingScript) return;
 
         const script = document.createElement('script');
-        script.id = 'google-adsense-script';
+        script.id = 'adsterra-script';
         script.async = true;
-        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6121118706628509';
+        script.src = 'https://pl28592472.effectivegatecpm.com/40/38/4c/40384cc1f853bc02181ba010564ff378.js';
         script.crossOrigin = 'anonymous';
         document.head.appendChild(script);
-        console.log("🟢 Google AdSense Script Loaded (Allowed for this role)");
+        console.log("🟢 Adsterra Script Loaded (Allowed for this role)");
     };
 
     const removeAdSenseScript = () => {
@@ -51,10 +51,10 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         // but prevents further loading if the user switches context implies a refresh often.
         // For Single Page Apps, fully unloading Adsense is tricky without refresh.
         // But preventing the *initial* load is the main goal.
-        const existingScript = document.getElementById('google-adsense-script');
+        const existingScript = document.getElementById('adsterra-script');
         if (existingScript) {
             existingScript.remove();
-            console.log("🔴 Google AdSense Script Removed (Blocked for this role)");
+            console.log("🔴 Adsterra Script Removed (Blocked for this role)");
         }
     };
 
