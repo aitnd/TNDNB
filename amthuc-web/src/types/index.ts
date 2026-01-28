@@ -45,3 +45,36 @@ export interface PriceRange {
     max: number
     label: string          // "Dưới 30k", "30k-50k", "Trên 50k"
 }
+
+// ============ PHẦN ĐỊA ĐIỂM DU LỊCH ============
+
+// Loại hình vé
+export interface TicketType {
+    name: string           // "Người lớn", "Trẻ em", "Sinh viên"
+    condition?: string     // "cao trên 1.3m", "1m - 1.3m"
+    price: number          // Giá tiền (VNĐ), 0 = miễn phí
+}
+
+// Loại hình địa điểm
+export type AttractionCategory = 'nature' | 'culture' | 'adventure' | 'relax'
+
+// Cách mua vé
+export type PurchaseMethod = 'online' | 'quay' | 'both'
+
+// Điểm tham quan
+export interface Attraction {
+    id: string
+    name: string               // Tên địa điểm
+    distance: number           // Khoảng cách từ TP (km)
+    description?: string       // Mô tả
+    imageUrl?: string          // Ảnh đại diện
+    ticketTypes: TicketType[]  // Các loại vé và giá
+    purchaseMethod: PurchaseMethod  // Cách mua vé
+    onlineUrl?: string         // Link mua vé online
+    phone?: string             // Số điện thoại liên hệ
+    openTime?: string          // Giờ mở cửa
+    closeTime?: string         // Giờ đóng cửa
+    category: AttractionCategory  // Loại hình: thiên nhiên, văn hóa...
+    createdAt: Date
+    updatedAt?: Date
+}

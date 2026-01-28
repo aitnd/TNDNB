@@ -19,8 +19,8 @@ function Header({ searchQuery, onSearchChange }: HeaderProps) {
                 <div className="header-content">
                     {/* Logo */}
                     <Link to="/" className="logo">
-                        <span className="logo-emoji">🍜</span>
-                        <span className="logo-text gradient-text">Đói Ăn Gì?</span>
+                        <span className="logo-emoji">🏔️</span>
+                        <span className="logo-text gradient-text">Khám Phá Ninh Bình</span>
                     </Link>
 
                     {/* Search bar - Desktop */}
@@ -29,7 +29,7 @@ function Header({ searchQuery, onSearchChange }: HeaderProps) {
                         <input
                             type="text"
                             className="search-input"
-                            placeholder="Tìm món ăn hoặc quán..."
+                            placeholder="Tìm quán ăn, địa điểm..."
                             value={searchQuery}
                             onChange={(e) => onSearchChange(e.target.value)}
                         />
@@ -87,7 +87,7 @@ function Header({ searchQuery, onSearchChange }: HeaderProps) {
                     <input
                         type="text"
                         className="search-input"
-                        placeholder="Tìm món ăn hoặc quán..."
+                        placeholder="Tìm quán ăn, địa điểm..."
                         value={searchQuery}
                         onChange={(e) => onSearchChange(e.target.value)}
                     />

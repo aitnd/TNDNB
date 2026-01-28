@@ -4,8 +4,18 @@ import { auth } from '../services/firebaseClient';
 import { ArrowLeftIcon3D, HelmIcon3D } from './icons';
 import { FaFingerprint, FaCheckSquare, FaSquare, FaKey } from 'react-icons/fa';
 import { saveCredentials, performBiometricLogin, hasSavedCredentials } from '../services/biometricService';
-
 import { resolveEmailFromUsername } from '../services/authService';
+
+// Import Saved Accounts
+import SavedAccountsList from './SavedAccountsList';
+import {
+  getSavedAccounts,
+  saveAccount,
+  getAccountPassword,
+  updateLastLogin,
+  hasSavedAccounts as checkHasSavedAccounts,
+  SavedAccount
+} from '../services/savedAccountsService';
 
 interface LoginScreenProps {
   onBack: () => void;
@@ -26,13 +36,59 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [canBioLogin, setCanBioLogin] = useState(false);
 
+  // Saved Accounts States
+  const [savedAccounts, setSavedAccounts] = useState<SavedAccount[]>([]);
+  const [showSavedAccounts, setShowSavedAccounts] = useState(false);
+  const [saveThisAccount, setSaveThisAccount] = useState(true); // Mặc định tick lưu tài khoản
+
   useEffect(() => {
     checkBiometricStatus();
+    loadSavedAccounts();
   }, []);
 
   const checkBiometricStatus = async () => {
     const hasCreds = await hasSavedCredentials();
     setCanBioLogin(hasCreds);
+  };
+
+  // Load danh sách tài khoản đã lưu
+  const loadSavedAccounts = () => {
+    const accounts = getSavedAccounts();
+    setSavedAccounts(accounts);
+    // Nếu có tài khoản đã lưu, hiển thị danh sách
+    if (accounts.length > 0) {
+      setShowSavedAccounts(true);
+    }
+  };
+
+  // Xử lý khi chọn tài khoản từ danh sách
+  const handleSelectSavedAccount = async (savedAcc: SavedAccount) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const savedPassword = getAccountPassword(savedAcc.email);
+
+      if (savedPassword) {
+        // Có mật khẩu đã lưu -> đăng nhập tự động
+        await setPersistence(auth, browserLocalPersistence);
+        await signInWithEmailAndPassword(auth, savedAcc.email, savedPassword);
+        updateLastLogin(savedAcc.email);
+        // Success handled by App.tsx
+      } else {
+        // Không có mật khẩu -> điền email và yêu cầu nhập password
+        setAccount(savedAcc.email);
+        setShowSavedAccounts(false);
+        setLoading(false);
+      }
+    } catch (err: any) {
+      console.error("Saved account login failed:", err);
+      // Nếu đăng nhập thất bại (mật khẩu cũ), yêu cầu nhập lại
+      setAccount(savedAcc.email);
+      setShowSavedAccounts(false);
+      setError('Mật khẩu đã lưu không còn hợp lệ. Vui lòng nhập lại.');
+      setLoading(false);
+    }
   };
 
   const handleBiometricAuth = async () => {
@@ -41,11 +97,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     const creds = await performBiometricLogin();
     if (creds) {
       try {
-        // Biometric implies persistence usually, but let's stick to default or user pref?
-        // Usually biometric is for quick access, so maybe SESSION is fine, but let's default to LOCAL for convenience if they used bio.
         await setPersistence(auth, browserLocalPersistence);
         await signInWithEmailAndPassword(auth, creds.email, creds.pass);
-        // Success handled by App.tsx
       } catch (err: any) {
         setLoading(false);
         console.error("Bio login failed:", err);
@@ -74,15 +127,26 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
 
       await signInWithEmailAndPassword(auth, loginEmail, password);
 
-      // Save credentials for Biometric if "Remember Me" is checked (and supported)
+      // Save credentials for Biometric if "Remember Me" is checked
       if (rememberMe) {
         await saveCredentials(loginEmail, password);
+      }
+
+      // Lưu tài khoản nếu được chọn
+      if (saveThisAccount) {
+        // Lấy thông tin user từ auth (sẽ có sau khi đăng nhập thành công)
+        const user = auth.currentUser;
+        saveAccount(
+          loginEmail,
+          user?.displayName || account,
+          password, // Lưu password đã mã hóa
+          user?.photoURL || undefined
+        );
       }
 
       // Success is handled by onAuthStateChanged in App.tsx
     } catch (err: any) {
       console.error("Login failed:", err);
-      // Custom friendly error
       if (err.code === 'auth/invalid-email') {
         setError('Tên đăng nhập hoặc email không hợp lệ.');
       } else if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
@@ -171,12 +235,51 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     );
   }
 
+  // --- RENDER: SAVED ACCOUNTS LIST ---
+  if (showSavedAccounts && savedAccounts.length > 0) {
+    return (
+      <div className="w-full max-w-md mx-auto p-4 animate-slide-in-right">
+        <div className="relative text-center mb-10">
+          <button
+            onClick={onBack}
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-card/50 p-3 rounded-full shadow-md hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-300 transform hover:scale-110"
+            aria-label="Quay lại"
+          >
+            <ArrowLeftIcon3D className="h-10 w-10 text-primary" />
+          </button>
+          <HelmIcon3D className="h-20 w-20 mx-auto text-primary mb-4" />
+          <h1 className="text-4xl font-bold text-foreground">Chào mừng trở lại</h1>
+          <p className="text-lg text-muted-foreground mt-2">
+            Chọn tài khoản để đăng nhập
+          </p>
+        </div>
+
+        <div className="bg-card p-6 rounded-2xl shadow-lg">
+          <SavedAccountsList
+            accounts={savedAccounts}
+            onSelectAccount={handleSelectSavedAccount}
+            onUseOtherAccount={() => setShowSavedAccounts(false)}
+            onAccountRemoved={loadSavedAccounts}
+          />
+        </div>
+      </div>
+    );
+  }
+
   // --- RENDER: LOGIN SCREEN ---
   return (
     <div className="w-full max-w-md mx-auto p-4 animate-slide-in-right">
       <div className="relative text-center mb-10">
         <button
-          onClick={onBack}
+          onClick={() => {
+            // Nếu có tài khoản đã lưu, quay lại danh sách. Nếu không, quay lại trang trước
+            if (savedAccounts.length > 0) {
+              setShowSavedAccounts(true);
+              setError(null);
+            } else {
+              onBack();
+            }
+          }}
           className="absolute left-0 top-1/2 -translate-y-1/2 bg-card/50 p-3 rounded-full shadow-md hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-300 transform hover:scale-110"
           aria-label="Quay lại"
         >
@@ -232,6 +335,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
             >
               Quên mật khẩu?
             </button>
+          </div>
+
+          {/* LƯU TÀI KHOẢN CHECKBOX */}
+          <div className="mb-4 flex items-center gap-2 cursor-pointer" onClick={() => setSaveThisAccount(!saveThisAccount)}>
+            {saveThisAccount ? (
+              <FaCheckSquare className="text-primary text-xl" />
+            ) : (
+              <FaSquare className="text-gray-400 text-xl" />
+            )}
+            <span className="text-sm text-muted-foreground select-none">Lưu tài khoản này</span>
           </div>
 
           {/* REMEMBER ME CHECKBOX */}

@@ -12,5 +12,6 @@
         "**/ontap-code/**": true
     },
     "git.ignoreLimitWarning": true,
-    "markdown.validate.enabled": true
+    "markdown.validate.enabled": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

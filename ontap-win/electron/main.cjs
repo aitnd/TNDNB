@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const log = require('electron-log');
+// TODO: Thêm require Honeygain SDK sau khi được duyệt
 
 // Cấu hình log
 log.transports.file.level = 'info';
@@ -175,6 +176,9 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    // TODO: Khởi tạo Honeygain SDK tại đây sau khi đăng ký xong
+    // Liên hệ: sdkhelp@honeygain.com để nhận SDK
+
     setupAutoLaunch();
     createWindow();
 
