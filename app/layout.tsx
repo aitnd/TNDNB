@@ -27,7 +27,7 @@ const rubik = Rubik({
 // Các mã Tracking
 const GA_TRACKING_ID = 'G-8NETMXL60S';
 const AW_TRACKING_ID = 'AW-16621935811';
-const ADSENSE_CLIENT_ID = 'ca-pub-6121118706628509';
+
 
 export const metadata: Metadata = {
   // 1. Sửa link gốc website theo yêu cầu của anh
@@ -100,9 +100,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <Script
+          src="https://pl28592472.effectivegatecpm.com/40/38/4c/40384cc1f853bc02181ba010564ff378.js"
           strategy="afterInteractive"
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
-          crossOrigin="anonymous"
         />
         <SpeedInsights />
       </body>
