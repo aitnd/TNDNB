@@ -116,22 +116,25 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
             try {
                 const email = student.account.includes('@') ? student.account : `${student.account}@daotaothuyenvien.com`;
 
-                // 1. Create User in Auth
+                // 1. Create User in Auth (hoặc khôi phục user đã bị xóa khỏi Firestore)
                 let uid = '';
                 try {
                     const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, student.password || '123456');
                     uid = userCredential.user.uid;
                 } catch (authError: any) {
                     if (authError.code === 'auth/email-already-in-use') {
-                        // If user exists, we might want to find their UID or skip.
-                        // Since we can't get UID by email easily without Admin SDK, we might have to skip or assume SBD is unique enough to query Firestore?
-                        // For now, let's mark as error or "Already Exists"
-                        // Actually, if we use Admin SDK on backend it's easier. On client, we are limited.
-                        // Let's try to see if we can just update the Firestore doc if we know the ID? 
-                        // But we don't know the UID if we can't login.
-                        // WORKAROUND: We can't easily get UID of existing user on client without logging in.
-                        // We will mark as "Email đã tồn tại".
-                        throw new Error('Tài khoản (SBD) đã tồn tại.');
+                        // Tài khoản Auth đã tồn tại (có thể bị xóa khỏi Firestore trước đó)
+                        // → Thử đăng nhập lại để lấy UID
+                        try {
+                            const { signInWithEmailAndPassword } = await import('firebase/auth');
+                            const existingUser = await signInWithEmailAndPassword(secondaryAuth, email, student.password || '123456');
+                            uid = existingUser.user.uid;
+                        } catch (loginErr: any) {
+                            if (loginErr.code === 'auth/wrong-password' || loginErr.code === 'auth/invalid-credential') {
+                                throw new Error('Tài khoản đã tồn tại nhưng mật khẩu không khớp. Vui lòng kiểm tra lại mật khẩu trong Excel.');
+                            }
+                            throw loginErr;
+                        }
                     } else {
                         throw authError;
                     }
