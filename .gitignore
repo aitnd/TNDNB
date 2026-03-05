@@ -72,3 +72,6 @@ public/ontap/
 # Misc
 *.pdf
 .agent/
+.brain/
+ontap-web/scripts/
+ontap-win/scripts/

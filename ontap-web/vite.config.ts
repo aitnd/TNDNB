@@ -24,9 +24,6 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: '../public/ontap',
       emptyOutDir: true,
-      rollupOptions: {
-        external: [/^@capacitor\//, 'capacitor-native-biometric'],
-      },
     },
   };
 });
