@@ -355,6 +355,33 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 valB = (b.isVerified || b.courseId) ? 1 : 0;
             }
 
+            // Sắp xếp tên theo kiểu Việt Nam: "Tên" trước → "Đệm" → "Họ"
+            if (sortField === 'fullName') {
+                const getVietnameseNameKey = (name: string) => {
+                    if (!name) return '';
+                    const parts = name.trim().split(/\s+/);
+                    // Đảo ngược: Tên cuối → Đệm → Họ
+                    return parts.reverse().join(' ').toLowerCase();
+                };
+                valA = getVietnameseNameKey(valA || '');
+                valB = getVietnameseNameKey(valB || '');
+            }
+
+            // Sắp xếp ngày sinh DD/MM/YYYY theo thứ tự YYYY → MM → DD
+            if (sortField === 'birthDate') {
+                const parseDateForSort = (dateStr: string) => {
+                    if (!dateStr) return '0000-00-00';
+                    const parts = dateStr.split('/');
+                    if (parts.length === 3) {
+                        // DD/MM/YYYY → YYYY-MM-DD
+                        return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                    }
+                    return dateStr; // Nếu đã là YYYY-MM-DD thì giữ nguyên
+                };
+                valA = parseDateForSort(valA || '');
+                valB = parseDateForSort(valB || '');
+            }
+
             if (!valA) valA = '';
             if (!valB) valB = '';
 
