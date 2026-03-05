@@ -207,6 +207,9 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
             } catch (err) {
                 console.warn('[Session] Failed to verify existing session, will create new one:', err);
             }
+            // ⚠️ Session cũ KHÔNG active hoặc không tồn tại
+            // → XÓA NGAY khỏi localStorage để checkCurrentSessionStatus không đọc phải ID rác
+            localStorage.removeItem(CURRENT_SESSION_ID_KEY);
         }
 
         // 1. Lấy thông tin thiết bị hiện tại
