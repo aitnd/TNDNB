@@ -242,6 +242,11 @@ const AppContent: React.FC = () => {
           initializeFCM(firebaseUser.uid);
         });
 
+        // 💖 Enforce single-device login cho Thành viên tự do & Học viên lớp
+        import('./services/authSessionService').then(({ enforceAndRecordSession }) => {
+          enforceAndRecordSession(firebaseUser.uid);
+        });
+
         import('./services/sessionService').then(({ loadSession, getLicensePreference }) => {
           const session = loadSession(firebaseUser.uid);
           if (session) {

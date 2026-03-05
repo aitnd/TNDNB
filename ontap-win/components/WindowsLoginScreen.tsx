@@ -77,9 +77,9 @@ const WindowsLoginScreen: React.FC = () => {
             const userCredential = await signInWithEmailAndPassword(auth, email, pwd);
             const firebaseUser = userCredential.user;
 
-            // Ghi lại phiên đăng nhập
-            import('../services/authSessionService').then(({ recordLoginSession }) => {
-                recordLoginSession(firebaseUser.uid);
+            // Ghi lại phiên đăng nhập (với enforce single-device)
+            import('../services/authSessionService').then(({ enforceAndRecordSession }) => {
+                enforceAndRecordSession(firebaseUser.uid);
             });
 
             // Lấy profile từ Firestore và lưu offline

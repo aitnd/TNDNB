@@ -11,7 +11,8 @@ import {
     orderBy,
     onSnapshot,
     getDoc,
-    setDoc
+    setDoc,
+    writeBatch
 } from 'firebase/firestore';
 import { getDeviceInfo } from './deviceService';
 
@@ -166,5 +167,197 @@ export const getDeviceCount = async (userId: string): Promise<number> => {
     } catch (error) {
         console.error('Error getting device count:', error);
         return 0;
+    }
+};
+
+// --- Các role bị giới hạn chỉ đăng nhập 1 thiết bị ---
+const SINGLE_SESSION_ROLES = ['hoc_vien'];
+
+// Ngưỡng số thiết bị khác nhau trong 24h để cảnh báo
+const SUSPICIOUS_DEVICE_THRESHOLD = 3;
+
+/**
+ * Enforce single-device login for restricted roles, then record the new session.
+ */
+export const enforceAndRecordSession = async (userId: string): Promise<string | null> => {
+    try {
+        const userDocRef = doc(db, 'users', userId);
+        const userSnap = await getDoc(userDocRef);
+
+        let needEnforce = true;
+        let userProfile: any = null;
+
+        if (userSnap.exists()) {
+            userProfile = userSnap.data();
+            const role = userProfile.role || 'hoc_vien';
+
+            const exemptRoles = ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'];
+            if (exemptRoles.includes(role)) {
+                needEnforce = false;
+            }
+
+            if (userProfile.isVip) {
+                needEnforce = false;
+            }
+        }
+
+        let hadOldSessions = false;
+        if (needEnforce) {
+            const q = query(
+                collection(db, SESSION_COLLECTION),
+                where('userId', '==', userId),
+                where('status', '==', 'active')
+            );
+
+            const snapshot = await getDocs(q);
+
+            if (snapshot.size > 0) {
+                hadOldSessions = true;
+                const batch = writeBatch(db);
+                snapshot.forEach((docSnap) => {
+                    batch.update(docSnap.ref, {
+                        status: 'logged_out',
+                        loggedOutAt: serverTimestamp(),
+                        loggedOutReason: 'new_device_login'
+                    });
+                });
+                await batch.commit();
+                console.log(`[Session] Logged out ${snapshot.size} old session(s) for user ${userId}`);
+            }
+        }
+
+        const sessionId = await recordLoginSession(userId);
+
+        if (hadOldSessions) {
+            showSingleDeviceWarning();
+        }
+
+        if (needEnforce) {
+            checkSuspiciousDeviceSwitching(userId, userProfile).catch(err => {
+                console.warn('[Session] Suspicious check failed:', err);
+            });
+        }
+
+        return sessionId;
+    } catch (error) {
+        console.error('Failed to enforce session:', error);
+        return await recordLoginSession(userId);
+    }
+};
+
+const showSingleDeviceWarning = async () => {
+    try {
+        const { default: Swal } = await import('sweetalert2');
+        Swal.fire({
+            title: '⚠️ Cảnh báo đăng nhập',
+            html: `
+                <div style="text-align: left; font-size: 14px; line-height: 1.6;">
+                    <p>Tài khoản của bạn vừa được đăng nhập trên thiết bị này.</p>
+                    <p><strong>Thiết bị cũ đã bị đăng xuất tự động.</strong></p>
+                    <hr style="margin: 10px 0; border-color: #444;" />
+                    <p>📌 <strong>Lưu ý quan trọng:</strong></p>
+                    <ul style="margin-left: 16px;">
+                        <li>Mỗi tài khoản chỉ được sử dụng trên <strong>1 thiết bị</strong> tại một thời điểm.</li>
+                        <li><strong>Không chia sẻ</strong> tài khoản cho người khác.</li>
+                        <li>Việc đổi máy liên tục sẽ bị hệ thống ghi nhận và <strong>thông báo cho giáo viên</strong>.</li>
+                    </ul>
+                </div>
+            `,
+            icon: 'warning',
+            confirmButtonText: 'Tôi đã hiểu',
+            confirmButtonColor: '#3085d6',
+        });
+    } catch (err) {
+        console.warn('Failed to show warning:', err);
+    }
+};
+
+const checkSuspiciousDeviceSwitching = async (userId: string, userProfile: any) => {
+    const twentyFourHoursAgo = new Date();
+    twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+
+    const q = query(
+        collection(db, SESSION_COLLECTION),
+        where('userId', '==', userId),
+        where('loginAt', '>=', twentyFourHoursAgo),
+        orderBy('loginAt', 'desc')
+    );
+
+    const snapshot = await getDocs(q);
+
+    const uniqueDevices = new Set<string>();
+    snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const deviceKey = `${data.deviceName || 'unknown'}_${data.browser || 'unknown'}`;
+        uniqueDevices.add(deviceKey);
+    });
+
+    console.log(`[Session] User ${userId} used ${uniqueDevices.size} device(s) in last 24h`);
+
+    if (uniqueDevices.size >= SUSPICIOUS_DEVICE_THRESHOLD) {
+        console.warn(`[Session] ⚠️ Suspicious: User ${userId} switched ${uniqueDevices.size} devices in 24h!`);
+        await notifyAdminsAndTeachers(userId, userProfile, uniqueDevices.size);
+    }
+};
+
+const notifyAdminsAndTeachers = async (userId: string, userProfile: any, deviceCount: number) => {
+    try {
+        const userName = userProfile?.full_name || userProfile?.fullName || userProfile?.email || userId;
+        const userEmail = userProfile?.email || '';
+        const courseId = userProfile?.courseId || '';
+
+        const notifMessage = `⚠️ Phát hiện tài khoản "${userName}" (${userEmail}) đã đăng nhập từ ${deviceCount} thiết bị khác nhau trong 24 giờ qua. Có thể tài khoản đang bị chia sẻ cho nhiều người.`;
+
+        const notifData = {
+            title: '🔴 Cảnh báo: Chia sẻ tài khoản',
+            message: notifMessage,
+            type: 'system',
+            senderId: 'system',
+            senderName: 'Hệ thống bảo mật',
+            createdAt: serverTimestamp(),
+            read: false,
+            readBy: [],
+            deletedBy: []
+        };
+
+        const adminQuery = query(
+            collection(db, 'users'),
+            where('role', '==', 'admin')
+        );
+        const adminSnap = await getDocs(adminQuery);
+        const recipientIds: string[] = [];
+
+        adminSnap.forEach((docSnap) => {
+            recipientIds.push(docSnap.id);
+        });
+
+        if (courseId) {
+            const courseRef = doc(db, 'courses', courseId);
+            const courseSnap = await getDoc(courseRef);
+            if (courseSnap.exists()) {
+                const courseData = courseSnap.data();
+                const teacherIds: string[] = courseData.teacherIds || [];
+                teacherIds.forEach(tid => {
+                    if (!recipientIds.includes(tid)) {
+                        recipientIds.push(tid);
+                    }
+                });
+            }
+        }
+
+        const batch = writeBatch(db);
+        for (const recipientId of recipientIds) {
+            const notifRef = doc(collection(db, 'users', recipientId, 'notifications'));
+            batch.set(notifRef, {
+                ...notifData,
+                targetType: 'user',
+                targetId: recipientId,
+            });
+        }
+
+        await batch.commit();
+        console.log(`[Session] Sent suspicious activity alert to ${recipientIds.length} recipient(s)`);
+    } catch (error) {
+        console.error('[Session] Failed to send suspicious activity notification:', error);
     }
 };
