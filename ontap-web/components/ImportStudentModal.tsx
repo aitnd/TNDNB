@@ -15,10 +15,13 @@ interface ImportStudentModalProps {
 }
 
 interface ParsedStudent {
-    sbd: string;
+    stt: string;
     fullName: string;
     birthDate: string;
-    password?: string;
+    address: string;
+    cccd: string;
+    account: string;
+    password: string;
     status: 'pending' | 'success' | 'error';
     message?: string;
 }
@@ -47,9 +50,7 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
             const worksheet = workbook.Sheets[sheetName];
             const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            // Assuming Header is Row 1 (Index 0)
-            // Data starts from Row 2 (Index 1)
-            // Columns: A=SBD, B=FullName, C=BirthDate, D=Password (Optional)
+            // Columns: A=STT, B=Họ và tên, C=Ngày sinh, D=Địa chỉ, E=CCCD, F=Tài khoản, G=Mật khẩu
 
             const students: ParsedStudent[] = [];
 
@@ -58,26 +59,30 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
                 const row = jsonData[i];
                 if (!row || row.length === 0) continue;
 
-                const sbd = row[0]?.toString().trim();
+                const stt = row[0]?.toString().trim();
                 const fullName = row[1]?.toString().trim();
 
-                if (sbd && fullName) {
+                if (stt && fullName) {
                     let birthDate = row[2];
-                    // Handle Excel Date format if necessary, or assume string
                     if (typeof birthDate === 'number') {
-                        // Excel date serial to JS Date
                         const date = new Date(Math.round((birthDate - 25569) * 86400 * 1000));
-                        birthDate = date.toLocaleDateString('vi-VN'); // DD/MM/YYYY
+                        birthDate = date.toLocaleDateString('vi-VN');
                     } else {
                         birthDate = birthDate?.toString().trim() || '';
                     }
 
-                    const password = row[3]?.toString().trim() || '123456';
+                    const address = row[3]?.toString().trim() || '';
+                    const cccd = row[4]?.toString().trim() || '';
+                    const account = row[5]?.toString().trim() || '';
+                    const password = row[6]?.toString().trim() || '123456';
 
                     students.push({
-                        sbd,
+                        stt,
                         fullName,
                         birthDate,
+                        address,
+                        cccd,
+                        account,
                         password,
                         status: 'pending'
                     });
@@ -109,7 +114,7 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
         for (let i = 0; i < results.length; i++) {
             const student = results[i];
             try {
-                const email = `${student.sbd}@daotaothuyenvien.com`;
+                const email = student.account.includes('@') ? student.account : `${student.account}@daotaothuyenvien.com`;
 
                 // 1. Create User in Auth
                 let uid = '';
@@ -135,10 +140,12 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
                 if (uid) {
                     // 2. Create/Update Firestore Doc
                     await setDoc(doc(db, 'users', uid), {
-                        fullName: student.fullName,
+                        full_name: student.fullName,
                         email: email,
                         role: 'hoc_vien',
                         birthDate: student.birthDate,
+                        address: student.address,
+                        cccd: student.cccd,
                         courseId: courseId,
                         courseName: courseName,
                         class: courseName,
@@ -159,7 +166,7 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
                 }
 
             } catch (error: any) {
-                console.error(`Error importing ${student.sbd}:`, error);
+                console.error(`Error importing ${student.account}:`, error);
                 results[i].status = 'error';
                 results[i].message = error.message;
             }
@@ -184,12 +191,21 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
     };
 
     const downloadTemplate = () => {
-        // Create a dummy workbook
         const ws = XLSX.utils.aoa_to_sheet([
-            ['SBD', 'Họ và tên', 'Ngày sinh', 'Mật khẩu (Tùy chọn)'],
-            ['TS001', 'Nguyễn Văn A', '01/01/1990', '123456'],
-            ['TS002', 'Trần Thị B', '15/05/1995', '']
+            ['STT', 'Họ và tên', 'Ngày sinh', 'Địa chỉ', 'CCCD', 'Tài khoản', 'Mật khẩu'],
+            [1, 'Nguyễn Văn A', '01/01/1990', 'TP. Hồ Chí Minh', '079123456789', 'nguyenvana', '123456'],
+            [2, 'Trần Thị B', '15/05/1995', 'Hà Nội', '012345678901', 'tranthib', '123456']
         ]);
+        // Set column widths cho đẹp
+        ws['!cols'] = [
+            { wch: 5 },   // STT
+            { wch: 25 },  // Họ và tên
+            { wch: 14 },  // Ngày sinh
+            { wch: 25 },  // Địa chỉ
+            { wch: 16 },  // CCCD
+            { wch: 18 },  // Tài khoản
+            { wch: 12 },  // Mật khẩu
+        ];
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Mau_Import");
         XLSX.writeFile(wb, "Mau_Danh_Sach_Hoc_Vien.xlsx");
@@ -233,18 +249,24 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
                     <table className="w-full text-left text-sm">
                         <thead className="bg-gray-50 dark:bg-slate-700 sticky top-0">
                             <tr>
-                                <th className="p-3 font-semibold">SBD</th>
-                                <th className="p-3 font-semibold">Họ tên</th>
+                                <th className="p-3 font-semibold">STT</th>
+                                <th className="p-3 font-semibold">Họ và tên</th>
                                 <th className="p-3 font-semibold">Ngày sinh</th>
+                                <th className="p-3 font-semibold">Địa chỉ</th>
+                                <th className="p-3 font-semibold">CCCD</th>
+                                <th className="p-3 font-semibold">Tài khoản</th>
                                 <th className="p-3 font-semibold">Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
                             {parsedData.map((row, idx) => (
                                 <tr key={idx} className={row.status === 'error' ? 'bg-red-50 dark:bg-red-900/20' : row.status === 'success' ? 'bg-green-50 dark:bg-green-900/20' : ''}>
-                                    <td className="p-3">{row.sbd}</td>
+                                    <td className="p-3">{row.stt}</td>
                                     <td className="p-3">{row.fullName}</td>
                                     <td className="p-3">{row.birthDate}</td>
+                                    <td className="p-3">{row.address}</td>
+                                    <td className="p-3">{row.cccd}</td>
+                                    <td className="p-3">{row.account}</td>
                                     <td className="p-3">
                                         {row.status === 'pending' && <span className="text-gray-500">Chờ xử lý</span>}
                                         {row.status === 'success' && <span className="text-green-600 flex items-center gap-1"><FaCheckCircle /> Thành công</span>}
@@ -254,7 +276,7 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
                             ))}
                             {parsedData.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="p-10 text-center text-gray-500 italic">
+                                    <td colSpan={7} className="p-10 text-center text-gray-500 italic">
                                         Chưa có dữ liệu. Vui lòng tải file Excel lên.
                                     </td>
                                 </tr>
