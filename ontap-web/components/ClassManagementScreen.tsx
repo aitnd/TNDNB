@@ -152,10 +152,10 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [studentSessions, setStudentSessions] = useState<any[]>([]);
     const [loadingSessions, setLoadingSessions] = useState(false);
 
-    const canCreateClass = getRoleRank(userProfile.role) >= 2;
-    const canManageStudents = ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role);
-    const canAddTeachers = getRoleRank(userProfile.role) >= 2;
-    const canRemoveTeachers = getRoleRank(userProfile.role) >= 2;
+    const canCreateClass = getRoleRank(userProfile?.role || 'hoc_vien') >= 2;
+    const canManageStudents = ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || 'hoc_vien');
+    const canAddTeachers = getRoleRank(userProfile?.role || 'hoc_vien') >= 2;
+    const canRemoveTeachers = getRoleRank(userProfile?.role || 'hoc_vien') >= 2;
     const getExamType = (item: ExamResult) => {
         if (item.roomId) return 'Thi Trực Tuyến';
         // Improved logic to match HistoryScreen
@@ -1010,8 +1010,9 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                             )}
                             {courses.map(course => {
                                 // Permission Check
-                                const canEditThis = ['admin', 'quan_ly', 'lanh_dao'].includes(userProfile.role) || (userProfile.role === 'giao_vien' && (course.headTeacherId === userProfile.id || (course.teacherIds || []).includes(userProfile.id)));
-                                const canDeleteThis = ['admin', 'quan_ly', 'lanh_dao'].includes(userProfile.role);
+                                const currentRole = userProfile?.role || 'hoc_vien';
+                                const canEditThis = ['admin', 'quan_ly', 'lanh_dao'].includes(currentRole) || (currentRole === 'giao_vien' && (course.headTeacherId === userProfile?.id || (course.teacherIds || []).includes(userProfile?.id)));
+                                const canDeleteThis = ['admin', 'quan_ly', 'lanh_dao'].includes(currentRole);
 
                                 return (
                                     <div
@@ -1586,7 +1587,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     >
                                         <option value="system">Bình thường</option>
                                         {/* Permission Check for Special Types */}
-                                        {['admin', 'lanh_dao', 'quan_ly'].includes(userProfile.role) && (
+                                        {['admin', 'lanh_dao', 'quan_ly'].includes(userProfile?.role || 'hoc_vien') && (
                                             <>
                                                 <option value="attention">⚠️ Chú ý (Chạy chữ vàng)</option>
                                                 <option value="special">🚨 ĐẶC BIỆT (Chạy chữ đỏ)</option>

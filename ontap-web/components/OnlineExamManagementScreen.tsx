@@ -63,7 +63,7 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
         setLoading(true);
         try {
             let q;
-            if (['admin', 'quan_ly', 'lanh_dao'].includes(userProfile.role)) {
+            if (['admin', 'quan_ly', 'lanh_dao'].includes(userProfile?.role || '')) {
                 q = query(collection(db, 'exam_rooms'), orderBy('created_at', 'desc'));
             } else {
                 q = query(collection(db, 'exam_rooms'), where('teacher_id', '==', userProfile.id), orderBy('created_at', 'desc'));

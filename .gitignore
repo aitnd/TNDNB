@@ -41,4 +41,34 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /ontap
-.agent
+
+# ========================
+# 🧹 AWF REFACTOR CLEANUP
+# ========================
+
+# Credentials & Secrets (NEVER commit)
+google-credentials.json
+*firebase-adminsdk*.json
+private_key*.txt
+**/Github Release Token*
+
+# Build & temp logs
+*_log*.txt
+cloudflared_log.txt
+fix_key.py
+
+# Large assets (use CDN instead)
+logo-app.png
+*.backup.tsx
+
+# Sub-project dependencies
+ontap-web/node_modules/
+ontap-win/node_modules/
+**/node_modules/
+
+# Build output
+public/ontap/
+
+# Misc
+*.pdf
+.agent/

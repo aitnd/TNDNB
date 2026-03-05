@@ -28,6 +28,7 @@ export interface LoginSession {
     lastActive: any;
     status: 'active' | 'logged_out';
     isCurrent?: boolean;
+    resolution?: string; // 💖 Độ phân giải màn hình (MỚI)
 }
 
 const SESSION_COLLECTION = 'login_sessions';
@@ -179,16 +180,37 @@ const SUSPICIOUS_DEVICE_THRESHOLD = 3;
 /**
  * Enforce single-device login for restricted roles, then record the new session.
  * - Nếu role nằm trong SINGLE_SESSION_ROLES hoặc là verified_user (có lớp nhưng role vẫn là hoc_vien)
- *   → Logout tất cả session cũ trước khi tạo session mới
+ *   → Logout tất cả thiết bị KHÁC trước khi tạo session mới
  * - Các role khác (VIP, giáo viên, quản lý, admin) → chỉ tạo session mới, không đuổi session cũ
  * 
- * Features:
- * 1. Hiện cảnh báo cho user khi đuổi session cũ (mỗi TK chỉ dùng 1 máy)
- * 2. Nếu đổi máy từ 3 thiết bị trở lên trong 24h → thông báo cho admin + giáo viên lớp
+ * 💖 CẢI TIẾN: Nhận diện trình duyệt khác nhau trên CÙNG 1 MÁY (Zalo vs Chrome)
+ * dựa trên IP hoặc Độ phân giải màn hình.
  */
 export const enforceAndRecordSession = async (userId: string): Promise<string | null> => {
     try {
-        // 1. Lấy profile để kiểm tra role
+        // 0. Kiểm tra nếu đã có session active trên trình duyệt này thì dùng luôn, không tạo mới
+        const currentSessionId = localStorage.getItem(CURRENT_SESSION_ID_KEY);
+        if (currentSessionId) {
+            try {
+                const sessionRef = doc(db, SESSION_COLLECTION, currentSessionId);
+                const sessionSnap = await getDoc(sessionRef);
+                if (sessionSnap.exists()) {
+                    const sessionData = sessionSnap.data();
+                    if (sessionData.status === 'active' && sessionData.userId === userId) {
+                        // Vẫn đang active -> Cập nhật lastActive và return luôn (không ghi log, không báo toast)
+                        await updateDoc(sessionRef, { lastActive: serverTimestamp() }).catch(() => { });
+                        return currentSessionId;
+                    }
+                }
+            } catch (err) {
+                console.warn('[Session] Failed to verify existing session, will create new one:', err);
+            }
+        }
+
+        // 1. Lấy thông tin thiết bị hiện tại
+        const currentInfo = await getDeviceInfo();
+
+        // 2. Lấy profile để kiểm tra role
         const userDocRef = doc(db, 'users', userId);
         const userSnap = await getDoc(userDocRef);
 
@@ -211,7 +233,7 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
             }
         }
 
-        // 2. Nếu cần enforce → logout tất cả session cũ
+        // 3. Nếu cần enforce → tìm các session cũ KHÔNG giống thiết bị hiện tại
         let hadOldSessions = false;
         if (needEnforce) {
             const q = query(
@@ -223,29 +245,46 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
             const snapshot = await getDocs(q);
 
             if (snapshot.size > 0) {
-                hadOldSessions = true;
                 const batch = writeBatch(db);
+                let kickCount = 0;
+
                 snapshot.forEach((docSnap) => {
-                    batch.update(docSnap.ref, {
-                        status: 'logged_out',
-                        loggedOutAt: serverTimestamp(),
-                        loggedOutReason: 'new_device_login'
-                    });
+                    const session = docSnap.data();
+
+                    // --- SMART MATCHING LOGIC ---
+                    // Nếu cùng IP HOẶC (Cùng độ phân giải AND Cùng DeviceName) 
+                    // -> Coi như là cùng 1 máy (Xử lý vụ Zalo vs Chrome trên cùng phone)
+                    const isSamePhysicalDevice =
+                        (session.ip === currentInfo.ip) ||
+                        (session.resolution === currentInfo.resolution && session.deviceName === currentInfo.deviceName);
+
+                    if (!isSamePhysicalDevice) {
+                        batch.update(docSnap.ref, {
+                            status: 'logged_out',
+                            loggedOutAt: serverTimestamp(),
+                            loggedOutReason: 'new_device_login'
+                        });
+                        kickCount++;
+                    }
                 });
-                await batch.commit();
-                console.log(`[Session] Logged out ${snapshot.size} old session(s) for user ${userId}`);
+
+                if (kickCount > 0) {
+                    hadOldSessions = true;
+                    await batch.commit();
+                    console.log(`[Session] Logged out ${kickCount} different device(s) for user ${userId}`);
+                }
             }
         }
 
-        // 3. Tạo session mới
+        // 4. Tạo session mới
         const sessionId = await recordLoginSession(userId);
 
-        // 4. Hiện cảnh báo nếu đã đuổi session cũ
+        // 5. Hiện cảnh báo nếu đã đuổi session cũ
         if (hadOldSessions) {
             showSingleDeviceWarning();
         }
 
-        // 5. Kiểm tra đổi máy đáng ngờ (chạy nền, không block)
+        // 6. Kiểm tra đổi máy đáng ngờ (chạy nền, không block)
         if (needEnforce) {
             checkSuspiciousDeviceSwitching(userId, userProfile).catch(err => {
                 console.warn('[Session] Suspicious check failed:', err);

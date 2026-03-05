@@ -105,7 +105,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
     const [isSavingMyInfo, setIsSavingMyInfo] = useState(false);
 
     // --- MANAGER STATE ---
-    const isManager = userProfile.role !== 'hoc_vien';
+    const isManager = userProfile?.role !== 'hoc_vien';
     const [users, setUsers] = useState<UserAccount[]>([]);
     const [loadingUsers, setLoadingUsers] = useState(false);
 
@@ -678,7 +678,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                             </td>
                                             <td className="p-3 flex justify-center gap-2">
                                                 <button onClick={() => { setEditingUser(u); setShowEditModal(true); }} className="p-2 text-blue-600 hover:bg-blue-50 rounded" title="Sửa thông tin"><FaEdit /></button>
-                                                {userProfile.role === 'admin' && (
+                                                {userProfile?.role === 'admin' && (
                                                     <>
                                                         <button
                                                             onClick={() => handleResetPassword(u.id, u.fullName)}
