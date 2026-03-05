@@ -135,10 +135,12 @@ export const checkCurrentSessionStatus = (callback: (isLoggedOut: boolean) => vo
             if (data.status === 'logged_out') {
                 callback(true);
             }
-        } else {
-            // Session document deleted
-            callback(true);
         }
+        // Nếu document không tồn tại → KHÔNG coi như bị đăng xuất
+        // (Có thể do session chưa tạo xong hoặc bị lỗi permission)
+    }, (error) => {
+        // Firestore permission error → bỏ qua, không đá user ra
+        console.warn('[Session] onSnapshot error (permissions?):', error.message);
     });
 };
 
