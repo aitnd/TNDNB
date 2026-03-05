@@ -7,6 +7,7 @@ export interface DeviceInfo {
     location: string; // 💖 Thêm field địa chỉ (MỚI)
     userAgent: string;
     platform: string;
+    resolution: string; // 💖 Thêm resolution để nhận diện thiết bị (MỚI)
 }
 
 export const getDeviceInfo = async (): Promise<DeviceInfo> => {
@@ -78,6 +79,7 @@ export const getDeviceInfo = async (): Promise<DeviceInfo> => {
         ip,
         location, // 💖 Trả về địa chỉ (MỚI)
         userAgent: ua,
-        platform
+        platform,
+        resolution: `${window.screen.width}x${window.screen.height}` // 💖 Lấy độ phân giải màn hình
     };
 };

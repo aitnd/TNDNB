@@ -28,6 +28,7 @@ export interface LoginSession {
     lastActive: any;
     status: 'active' | 'logged_out';
     isCurrent?: boolean;
+    resolution?: string; // 💖 Độ phân giải màn hình (MỚI)
 }
 
 const SESSION_COLLECTION = 'login_sessions';
@@ -181,6 +182,26 @@ const SUSPICIOUS_DEVICE_THRESHOLD = 3;
  */
 export const enforceAndRecordSession = async (userId: string): Promise<string | null> => {
     try {
+        // 0. Kiểm tra nếu đã có session active trên trình duyệt/app này thì dùng luôn, không tạo mới
+        const currentSessionId = localStorage.getItem(CURRENT_SESSION_ID_KEY);
+        if (currentSessionId) {
+            try {
+                const sessionRef = doc(db, SESSION_COLLECTION, currentSessionId);
+                const sessionSnap = await getDoc(sessionRef);
+                if (sessionSnap.exists()) {
+                    const sessionData = sessionSnap.data();
+                    if (sessionData.status === 'active' && sessionData.userId === userId) {
+                        // Vẫn đang active -> Cập nhật lastActive và return luôn (không ghi log, không báo toast)
+                        await updateDoc(sessionRef, { lastActive: serverTimestamp() }).catch(() => { });
+                        return currentSessionId;
+                    }
+                }
+            } catch (err) {
+                console.warn('[Session] Failed to verify existing session, will create new one:', err);
+            }
+        }
+
+        const currentInfo = await getDeviceInfo();
         const userDocRef = doc(db, 'users', userId);
         const userSnap = await getDoc(userDocRef);
 
@@ -212,17 +233,31 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
             const snapshot = await getDocs(q);
 
             if (snapshot.size > 0) {
-                hadOldSessions = true;
                 const batch = writeBatch(db);
+                let kickCount = 0;
+
                 snapshot.forEach((docSnap) => {
-                    batch.update(docSnap.ref, {
-                        status: 'logged_out',
-                        loggedOutAt: serverTimestamp(),
-                        loggedOutReason: 'new_device_login'
-                    });
+                    const session = docSnap.data();
+
+                    const isSamePhysicalDevice =
+                        (session.ip === currentInfo.ip) ||
+                        (session.resolution === currentInfo.resolution && session.deviceName === currentInfo.deviceName);
+
+                    if (!isSamePhysicalDevice) {
+                        batch.update(docSnap.ref, {
+                            status: 'logged_out',
+                            loggedOutAt: serverTimestamp(),
+                            loggedOutReason: 'new_device_login'
+                        });
+                        kickCount++;
+                    }
                 });
-                await batch.commit();
-                console.log(`[Session] Logged out ${snapshot.size} old session(s) for user ${userId}`);
+
+                if (kickCount > 0) {
+                    hadOldSessions = true;
+                    await batch.commit();
+                    console.log(`[Session] Logged out ${kickCount} different device(s) for user ${userId}`);
+                }
             }
         }
 

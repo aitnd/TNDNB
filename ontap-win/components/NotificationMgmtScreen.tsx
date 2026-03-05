@@ -26,7 +26,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
 
     const canDelete = (n: Notification) => {
         // Teacher cannot delete Special/Attention
-        if (userProfile.role === 'giao_vien') {
+        if (userProfile?.role === 'giao_vien') {
             if (n.type === 'special' || n.type === 'attention') return false;
         }
         return true;
@@ -204,7 +204,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                             <FaExclamationTriangle /> Quản Lý Thông Báo Hệ Thống
                         </h1>
                         <p className="text-teal-100 mt-1 opacity-90">
-                            {userProfile.role === 'giao_vien'
+                            {userProfile?.role === 'giao_vien'
                                 ? 'Bạn có thể xem tất cả và quản lý thông báo thường.'
                                 : 'Bạn có toàn quyền quản lý thông báo.'}
                         </p>

@@ -82,7 +82,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
         });
 
         // 3. Class Management (Role based)
-        if (['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile.role)) {
+        if (['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile?.role || '')) {
             menuItems.push({
                 name: 'Quản lý lớp',
                 icon: FaSchool,
@@ -97,7 +97,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                 color: 'text-red-500'
             });
             // Cấu hình (chỉ Admin)
-            if (userProfile.role === 'admin') {
+            if (userProfile?.role === 'admin') {
                 menuItems.push({
                     name: 'Cấu hình',
                     icon: FaCog,

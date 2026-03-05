@@ -30,9 +30,15 @@ interface Participant {
     joined_at?: number;
 }
 
-const ExamRoomDetailScreen: React.FC = () => {
-    const { roomId } = useParams<{ roomId: string }>();
+interface ExamRoomDetailScreenProps {
+    roomId?: string;
+    onBack?: () => void;
+}
+
+const ExamRoomDetailScreen: React.FC<ExamRoomDetailScreenProps> = ({ roomId: propRoomId, onBack }) => {
+    const params = useParams<{ roomId: string }>();
     const navigate = useNavigate();
+    const roomId = propRoomId || params.roomId;
     const [room, setRoom] = useState<ExamRoom | null>(null);
     const [loading, setLoading] = useState(true);
     const [participants, setParticipants] = useState<Participant[]>([]);
@@ -47,7 +53,7 @@ const ExamRoomDetailScreen: React.FC = () => {
                 setRoom({ id: docSnap.id, ...docSnap.data() } as ExamRoom);
             } else {
                 toast.error("Phòng thi không tồn tại!");
-                navigate('/admin/exam-manager');
+                onBack ? onBack() : navigate('/admin/exam-manager');
             }
             setLoading(false);
         }, (error) => {
@@ -91,7 +97,7 @@ const ExamRoomDetailScreen: React.FC = () => {
         try {
             await deleteDoc(doc(db, 'exam_rooms', room.id));
             toast.success("Đã xóa phòng thi");
-            navigate('/admin/exam-manager');
+            onBack ? onBack() : navigate('/admin/exam-manager');
         } catch (error) {
             toast.error("Lỗi xóa phòng thi");
         }
@@ -138,8 +144,8 @@ const ExamRoomDetailScreen: React.FC = () => {
                                 {room.duration} phút
                             </span>
                             <span className={`px-3 py-1 rounded-full ${room.status === 'in_progress' ? 'bg-green-100 text-green-700' :
-                                    room.status === 'finished' ? 'bg-red-100 text-red-700' :
-                                        'bg-yellow-100 text-yellow-700'
+                                room.status === 'finished' ? 'bg-red-100 text-red-700' :
+                                    'bg-yellow-100 text-yellow-700'
                                 }`}>
                                 {room.status === 'waiting' ? 'Đang chờ' :
                                     room.status === 'in_progress' ? 'Đang diễn ra' : 'Đã kết thúc'}
@@ -212,9 +218,9 @@ const ExamRoomDetailScreen: React.FC = () => {
                                         <td className="px-6 py-4 text-gray-600">{p.user_sbd}</td>
                                         <td className="px-6 py-4">
                                             <span className={`px-2 py-1 rounded text-xs font-medium ${p.status === 'doing' ? 'bg-blue-100 text-blue-700' :
-                                                    p.status === 'submitted' ? 'bg-green-100 text-green-700' :
-                                                        p.status === 'offline' ? 'bg-gray-100 text-gray-500' :
-                                                            'bg-yellow-100 text-yellow-700'
+                                                p.status === 'submitted' ? 'bg-green-100 text-green-700' :
+                                                    p.status === 'offline' ? 'bg-gray-100 text-gray-500' :
+                                                        'bg-yellow-100 text-yellow-700'
                                                 }`}>
                                                 {p.status === 'doing' ? 'Đang làm bài' :
                                                     p.status === 'submitted' ? 'Đã nộp' :

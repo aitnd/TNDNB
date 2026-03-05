@@ -40,7 +40,7 @@ const NotificationBell: React.FC = () => {
     // Load initial notifications
     useEffect(() => {
         if (user && userProfile) {
-            fetchNotifications(user.uid, undefined, userProfile.role).then(data => {
+            fetchNotifications(user.uid, undefined, userProfile?.role).then(data => {
                 const mapped: NotificationItem[] = data.map(n => ({
                     id: n.id,
                     title: n.title,
@@ -74,7 +74,7 @@ const NotificationBell: React.FC = () => {
                     const data = change.doc.data();
                     // Filter by Role
                     if (data.targetRoles && Array.isArray(data.targetRoles) && data.targetRoles.length > 0) {
-                        if (!userProfile.role || !data.targetRoles.includes(userProfile.role)) return;
+                        if (!userProfile?.role || !data.targetRoles.includes(userProfile?.role)) return;
                     }
 
                     // Check if already exists (dedup)

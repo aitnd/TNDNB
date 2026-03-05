@@ -23,10 +23,10 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-slide-in-right">
             {/* Custom Analytics Widget */}
-            <CustomAnalyticsWidget userRole={userProfile.role} />
+            <CustomAnalyticsWidget userRole={userProfile?.role || 'hoc_vien'} />
 
             {/* Realtime Stats for Admin */}
-            <OnlineStatsWidget userRole={userProfile.role} />
+            <OnlineStatsWidget userRole={userProfile?.role || 'hoc_vien'} />
 
             <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
 
@@ -54,7 +54,7 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
                         </button>
 
                         {/* Admin/Teacher Actions */}
-                        {['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role) && (
+                        {['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || 'hoc_vien') && (
                             <button
                                 onClick={onOnlineExamClick}
                                 className="w-full bg-blue-600 text-white font-bold text-lg py-4 px-6 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3 shadow-lg"

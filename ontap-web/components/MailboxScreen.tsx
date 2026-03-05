@@ -79,8 +79,8 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        setIsAdmin(['admin', 'quan_ly', 'giao_vien'].includes(userProfile.role));
-    }, [userProfile.role]);
+        setIsAdmin(['admin', 'quan_ly', 'giao_vien'].includes(userProfile?.role || ''));
+    }, [userProfile?.role]);
 
     // 1. Fetch Users / Setup Sidebar
     useEffect(() => {

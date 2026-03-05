@@ -561,7 +561,7 @@ const AppContent: React.FC = () => {
   if (isElectron && !userProfile) {
     return (
       <div className={`min-h-screen bg-background text-foreground font-sans ${isMobileApp ? 'pb-16' : 'pt-0'}`}>
-        <Toaster position="top-right" richColors expand={true} />
+        <Toaster position="top-right" richColors expand={true} closeButton />
         <WindowsLoginScreen />
       </div>
     );
@@ -570,7 +570,7 @@ const AppContent: React.FC = () => {
   return (
     <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-16' : 'pt-16'}`}>
       <SweetAlertPopup />
-      <Toaster position="top-right" richColors expand={true} />
+      <Toaster position="top-right" richColors expand={true} closeButton />
 
       {resumeSessionAvailable && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black px-6 py-3 rounded-full shadow-xl z-50 animate-bounce cursor-pointer hover:bg-yellow-500 font-bold flex items-center gap-2"
