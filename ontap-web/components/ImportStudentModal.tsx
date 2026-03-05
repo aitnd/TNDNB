@@ -143,7 +143,7 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
                 if (uid) {
                     // 2. Create/Update Firestore Doc
                     await setDoc(doc(db, 'users', uid), {
-                        full_name: student.fullName,
+                        fullName: student.fullName,
                         email: email,
                         role: 'hoc_vien',
                         birthDate: student.birthDate,
