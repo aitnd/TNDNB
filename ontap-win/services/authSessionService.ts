@@ -241,7 +241,9 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
 
                     const isSamePhysicalDevice =
                         (session.ip === currentInfo.ip) ||
-                        (session.resolution === currentInfo.resolution && session.deviceName === currentInfo.deviceName);
+                        (session.deviceName === currentInfo.deviceName) ||
+                        (session.userAgent?.includes('iPhone') && currentInfo.userAgent?.includes('iPhone')) ||
+                        (session.userAgent?.includes('Android') && currentInfo.userAgent?.includes('Android'));
 
                     if (!isSamePhysicalDevice) {
                         batch.update(docSnap.ref, {

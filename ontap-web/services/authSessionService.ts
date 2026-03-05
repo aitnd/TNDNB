@@ -252,11 +252,16 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
                     const session = docSnap.data();
 
                     // --- SMART MATCHING LOGIC ---
-                    // Nếu cùng IP HOẶC (Cùng độ phân giải AND Cùng DeviceName) 
-                    // -> Coi như là cùng 1 máy (Xử lý vụ Zalo vs Chrome trên cùng phone)
+                    // Nới lỏng điều kiện cho Mobile:
+                    // 1. Cùng IP
+                    // 2. Cùng tên thiết bị (VD: "iPhone")
+                    // 3. (MỚI) Cùng hệ điều hành cơ bản lấy từ User Agent (VD: Android, iOS) 
+                    //    -> Để chống vụ Zalo in-app browser bị nhận diện thành máy khác
                     const isSamePhysicalDevice =
                         (session.ip === currentInfo.ip) ||
-                        (session.resolution === currentInfo.resolution && session.deviceName === currentInfo.deviceName);
+                        (session.deviceName === currentInfo.deviceName) ||
+                        (session.userAgent?.includes('iPhone') && currentInfo.userAgent?.includes('iPhone')) ||
+                        (session.userAgent?.includes('Android') && currentInfo.userAgent?.includes('Android'));
 
                     if (!isSamePhysicalDevice) {
                         batch.update(docSnap.ref, {
