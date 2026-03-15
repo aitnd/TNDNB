@@ -19,7 +19,7 @@ declare global {
 }
 
 
-export type Theme = 'light' | 'dark' | 'modern' | 'classic' | 'sunrise' | 'tri-an' | 'noel';
+export type Theme = 'light' | 'dark' | 'modern' | 'classic' | 'sunrise' | 'tri-an' | 'noel' | 'premium';
 
 export interface Answer {
   id: string;

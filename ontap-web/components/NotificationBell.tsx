@@ -104,6 +104,8 @@ const NotificationBell: React.FC = () => {
                     });
                 }
             });
+        }, (error) => {
+            console.error("Global notification listener error:", error);
         });
 
         // 2. Personal Notifications Listener
@@ -143,6 +145,8 @@ const NotificationBell: React.FC = () => {
                     });
                 }
             });
+        }, (error) => {
+            console.error("Personal notification listener error:", error);
         });
 
         return () => {

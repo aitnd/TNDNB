@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import type { Quiz, UserAnswers } from '../types';
 import { CheckIcon3D, XIcon3D, ArrowLeftIcon3D } from './icons';
+import { triggerHaptic } from '../utils/nativeUX';
 
 interface QuizScreenProps {
   quiz: Quiz;
@@ -59,11 +60,13 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
 
 
   const handleFinishQuiz = () => {
+    triggerHaptic('medium');
     onFinish(userAnswers);
   };
 
   const handleAnswerSelect = (answerId: string) => {
     if (isAnswered) return;
+    triggerHaptic('light');
     setUserAnswers(prev => ({ ...prev, [currentQuestion.id]: answerId }));
   };
 
@@ -73,6 +76,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
     if (isLastQuestion) {
       handleFinishQuiz();
     } else {
+      triggerHaptic('light');
       setCurrentQuestionIndex(prev => prev + 1);
     }
   };

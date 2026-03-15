@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebaseClient';
 import { collection, query, where, onSnapshot, getDoc, doc, documentId } from 'firebase/firestore';
+import { toast } from 'sonner';
 import { UserProfile } from '../types';
 import { FaUserTie, FaUsers, FaArrowLeft, FaSchool, FaGraduationCap, FaThLarge, FaList, FaHistory } from 'react-icons/fa';
 import { getExamHistory } from '../services/historyService';
@@ -109,6 +110,9 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                                         const data = d.data();
                                         return { uid: d.id, ...data, photoURL: data.photoURL || getDefaultAvatar(data.role) } as UserData;
                                     }));
+                                }, (error) => {
+                                    console.error("Teacher listener error:", error);
+                                    toast.error("Không thể cập nhật danh sách giáo viên.");
                                 });
                             } else {
                                 setTeachers([]);
@@ -157,6 +161,10 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                             }));
                             setStudentLatestResults(resultsMap);
                             setLoading(false);
+                        }, (error) => {
+                            console.error("Classmates listener error:", error);
+                            toast.error("Không thể tải danh sách bạn học.");
+                            setLoading(false);
                         });
                     } else {
                         // Already subscribed to students for this courseId
@@ -166,6 +174,10 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                     setCourse(null);
                     setLoading(false);
                 }
+            }, (error) => {
+                console.error("Course listener error:", error);
+                toast.error("Lỗi khi tải thông tin lớp học.");
+                setLoading(false);
             });
         };
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, ChevronDown, Link2, Utensils } from 'lucide-react';
+import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, ChevronDown, Link2, Utensils, Gamepad2 } from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
 
@@ -18,7 +18,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
 
     return (
         <>
-            <div className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-800 z-40 px-4 shadow-sm flex items-center justify-between transition-colors duration-300">
+            <div className="fixed top-0 left-0 right-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-50 px-4 flex items-center justify-between h-16 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300">
 
                 {/* LEFT: Navigation Links */}
                 <div className="flex items-center gap-1 md:gap-4 overflow-x-auto no-scrollbar">
@@ -164,6 +164,19 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 <History size={18} className="text-purple-600 dark:text-purple-400" />
                                 <span className="font-medium text-sm md:text-base">Lịch sử</span>
                             </button>
+
+                            {/* 💖 Giải trí (VIP Button) */}
+                            <button
+                                onClick={() => onNavigate('giaitri')}
+                                className="relative flex items-center gap-2 px-4 py-2 rounded-xl group transition-all duration-300 ml-2"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300" />
+                                <div className="absolute inset-[1px] bg-white dark:bg-slate-900 rounded-[10px] z-10" />
+                                <div className="relative z-20 flex items-center gap-2">
+                                    <Gamepad2 size={18} className="text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
+                                    <span className="font-bold text-sm md:text-base bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">Giải trí</span>
+                                </div>
+                            </button>
                         </>
                     )}
                 </div>
@@ -217,11 +230,11 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
 
                             <button
                                 onClick={onLogout}
-                                className="group flex items-center gap-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-full transition-colors"
+                                className="group flex items-center gap-2 text-red-500 dark:text-red-400 bg-red-500/5 hover:bg-red-500/10 px-4 py-2 rounded-xl transition-all border border-red-500/10"
                                 title="Đăng xuất"
                             >
                                 <LogOut size={18} className="group-hover:translate-x-1 transition-transform" />
-                                <span className="hidden md:inline font-medium text-sm">Thoát</span>
+                                <span className="hidden md:inline font-bold text-sm">Thoát</span>
                             </button>
                         </>
                     ) : (

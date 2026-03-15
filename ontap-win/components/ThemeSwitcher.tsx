@@ -11,6 +11,7 @@ const themes: { name: Theme; label: string; color: string }[] = [
   { name: 'classic', label: 'Cổ Điển', color: 'bg-[#6F6049]' },
   { name: 'sunrise', label: 'Bình Minh', color: 'bg-orange-500' },
   { name: 'tri-an', label: 'Tri Ân', color: 'bg-red-400' },
+  { name: 'premium', label: '✨ Premium v2', color: 'bg-cyan-600' },
 ];
 
 const ThemeSwitcher: React.FC = () => {
