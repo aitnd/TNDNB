@@ -119,6 +119,46 @@ app.post('/api/admin/reset-password', authenticateAPI, async (req, res) => {
 
     const PROPERTY_ID = process.env.GOOGLE_ANALYTICS_PROPERTY_ID || '471809055'; // Default from user context if missing
 
+    // 4. Gemini AI Proxy (Bảo vệ API Key)
+    app.post('/api/ai/gemini', authenticateAPI, async (req, res) => {
+        try {
+            const { prompt, model = 'gemini-1.5-flash' } = req.body;
+            
+            if (!prompt) {
+                return res.status(400).json({ error: 'Missing prompt' });
+            }
+
+            const apiKey = process.env.GEMINI_API_KEY;
+            if (!apiKey) {
+                return res.status(500).json({ error: 'Server AI Key is not configured' });
+            }
+
+            // Gọi Google Gemini API bằng fetch (Node 18+)
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Gemini API Error:", errorData);
+                return res.status(response.status).json(errorData);
+            }
+
+            const data = await response.json();
+            res.json(data);
+
+        } catch (error) {
+            console.error("Internal AI Proxy Error:", error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+
     app.post('/api/analytics', authenticateAPI, async (req, res) => {
         try {
             const { dateRange = '7d' } = req.body;

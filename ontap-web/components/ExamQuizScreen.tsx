@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import type { Quiz, UserAnswers } from '../types';
 import { ClockIcon3D, ArrowLeftIcon3D } from './icons';
+import { triggerHaptic } from '../utils/nativeUX';
 
 interface ExamQuizScreenProps {
   quiz: Quiz;
@@ -36,6 +37,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
       : 'Anh/chị đã hoàn thành tất cả các câu hỏi. Anh/chị có muốn nộp bài không?';
 
     if (window.confirm(confirmationMessage)) {
+      triggerHaptic('medium');
       onFinish(finalAnswers);
     }
   }, [quiz.questions.length, onFinish]);
@@ -67,6 +69,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
 
 
   const handleAnswerSelect = (answerId: string) => {
+    triggerHaptic('light');
     setUserAnswers(prev => ({ ...prev, [currentQuestion.id]: answerId }));
   };
 
@@ -121,7 +124,10 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
                 btnClass += 'bg-secondary text-secondary-foreground hover:bg-muted';
               }
               return (
-                <button key={q.id} className={btnClass} onClick={() => setCurrentQuestionIndex(index)}>
+                <button key={q.id} className={btnClass} onClick={() => {
+                  triggerHaptic('light');
+                  setCurrentQuestionIndex(index);
+                }}>
                   {index + 1}
                 </button>
               );
@@ -167,7 +173,10 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
           <div className="mt-8">
             <div className="flex justify-between items-center">
               <button
-                onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
+                onClick={() => {
+                  triggerHaptic('light');
+                  setCurrentQuestionIndex(prev => prev - 1);
+                }}
                 disabled={currentQuestionIndex === 0}
                 className="bg-secondary text-secondary-foreground font-bold py-3 px-8 rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
               >
@@ -182,7 +191,10 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
                 </button>
               ) : (
                 <button
-                  onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+                  onClick={() => {
+                    triggerHaptic('light');
+                    setCurrentQuestionIndex(prev => prev + 1);
+                  }}
                   className="bg-primary text-primary-foreground font-bold py-3 px-8 rounded-lg hover:bg-primary/90 transition-all duration-300"
                 >
                   Câu tiếp

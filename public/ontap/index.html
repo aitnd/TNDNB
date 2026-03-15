@@ -19,113 +19,115 @@
     [data-theme='light'] {
       --font-sans: 'Be Vietnam Pro', sans-serif;
 
-      --background: 210 40% 98%;
-      /* grayish white */
-      --foreground: 222 47% 11%;
-      /* dark gray */
+      --background: 220 14% 96%;
+      --foreground: 224 71% 10%;
 
       --card: 0 0% 100%;
-      --card-foreground: 222 47% 11%;
+      --card-foreground: 224 71% 10%;
 
       --popover: 0 0% 100%;
-      --popover-foreground: 222 47% 11%;
+      --popover-foreground: 224 71% 10%;
 
       --primary: 221 83% 53%;
-      /* blue-600 */
-      --primary-foreground: 210 40% 98%;
+      --primary-foreground: 0 0% 100%;
 
-      --secondary: 210 40% 96%;
-      --secondary-foreground: 222 47% 11%;
+      --secondary: 220 14% 93%;
+      --secondary-foreground: 224 71% 10%;
 
-      --muted: 210 40% 96%;
-      --muted-foreground: 215 16% 47%;
+      --muted: 220 14% 93%;
+      --muted-foreground: 220 9% 46%;
 
-      --accent: 210 40% 96%;
-      --accent-foreground: 222 47% 11%;
+      --accent: 220 14% 93%;
+      --accent-foreground: 224 71% 10%;
 
       --destructive: 0 84% 60%;
-      --destructive-foreground: 210 40% 98%;
+      --destructive-foreground: 0 0% 100%;
 
       --success: 142 76% 36%;
       --success-foreground: 142 100% 96%;
 
-      --border: 214 32% 91%;
-      --input: 214 32% 91%;
+      --border: 220 13% 89%;
+      --input: 220 13% 89%;
       --ring: 221 83% 53%;
 
       --radius: 0.75rem;
 
-      --gradient-from: #f3f4f6;
-      --gradient-to: #e5e7eb;
-      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+      --gradient-from: #f0f2f5;
+      --gradient-to: #e4e8ee;
+      --gradient-body: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+
+      /* Hiệu ứng riêng Light */
+      --theme-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+      --card-hover-glow: 0 4px 20px rgba(59, 130, 246, 0.08);
     }
 
     /* === DARK THEME === */
     [data-theme='dark'] {
       --font-sans: 'Be Vietnam Pro', sans-serif;
 
-      --background: 222 47% 11%;
-      /* slate-900 */
-      --foreground: 210 40% 98%;
+      --background: 224 71% 8%;
+      --foreground: 213 31% 94%;
 
-      --card: 217 33% 17%;
-      /* slate-800 */
-      --card-foreground: 210 40% 98%;
+      --card: 220 26% 14%;
+      --card-foreground: 213 31% 94%;
 
-      --popover: 222 47% 11%;
-      --popover-foreground: 210 40% 98%;
+      --popover: 224 71% 8%;
+      --popover-foreground: 213 31% 94%;
 
-      --primary: 217 91% 60%;
-      /* blue-500 */
-      --primary-foreground: 222 47% 11%;
+      --primary: 213 94% 60%;
+      --primary-foreground: 224 71% 8%;
 
-      --secondary: 217 33% 17%;
-      --secondary-foreground: 210 40% 98%;
+      --secondary: 220 26% 18%;
+      --secondary-foreground: 213 31% 94%;
 
-      --muted: 217 33% 17%;
-      --muted-foreground: 215 20% 65%;
+      --muted: 220 26% 18%;
+      --muted-foreground: 215 20% 62%;
 
-      --accent: 217 33% 17%;
-      --accent-foreground: 210 40% 98%;
+      --accent: 220 26% 18%;
+      --accent-foreground: 213 31% 94%;
 
       --destructive: 0 63% 31%;
-      --destructive-foreground: 210 40% 98%;
+      --destructive-foreground: 0 0% 100%;
 
       --success: 142 76% 36%;
       --success-foreground: 142 100% 96%;
 
-      --border: 217 33% 17%;
-      --input: 217 33% 17%;
-      --ring: 217 91% 60%;
+      --border: 220 26% 22%;
+      --input: 220 26% 22%;
+      --ring: 213 94% 60%;
 
-      --gradient-from: #111827;
-      --gradient-to: #1f2937;
-      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+      --gradient-from: #0c1222;
+      --gradient-to: #162032;
+      --gradient-body: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+
+      /* Hiệu ứng riêng Dark */
+      --theme-shadow: 0 2px 8px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2);
+      --card-hover-glow: 0 0 20px rgba(96, 165, 250, 0.12);
     }
 
-    /* === MODERN THEME (Keep as variant) === */
+    /* === MODERN THEME === */
     [data-theme='modern'] {
       --font-sans: 'Be Vietnam Pro', sans-serif;
 
-      --background: 222 84% 9.8%;
+      --background: 228 84% 6%;
       --foreground: 210 40% 98%;
 
-      --card: 222 84% 12.0%;
+      --card: 228 60% 14%;
       --card-foreground: 210 40% 98%;
 
-      --popover: 222 84% 9.8%;
+      --popover: 228 84% 6%;
       --popover-foreground: 210 40% 98%;
 
       --primary: 243 75% 58%;
       --primary-foreground: 210 40% 98%;
 
-      --secondary: 217 33% 17%;
+      --secondary: 228 40% 20%;
       --secondary-foreground: 210 40% 98%;
 
-      --muted: 217 33% 17%;
-      --muted-foreground: 213 31% 91%;
+      --muted: 228 40% 20%;
+      --muted-foreground: 213 31% 78%;
 
-      --accent: 217 33% 17%;
+      --accent: 280 60% 55%;
       --accent-foreground: 210 40% 98%;
 
       --destructive: 0 63% 31%;
@@ -134,47 +136,45 @@
       --success: 142 76% 36%;
       --success-foreground: 142 100% 96%;
 
-      --border: 217 33% 27%;
-      --input: 217 33% 27%;
+      --border: 228 40% 24%;
+      --input: 228 40% 24%;
       --ring: 243 75% 58%;
 
       --radius: 0.75rem;
 
-      /* Custom variables */
-      --gradient-from: #111827;
-      /* dark:from-slate-900 */
-      --gradient-to: #1f2937;
-      /* dark:to-slate-800 */
-      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+      --gradient-from: #080f24;
+      --gradient-to: #121a38;
+      --gradient-body: linear-gradient(160deg, var(--gradient-from) 0%, #10163a 50%, var(--gradient-to) 100%);
+
+      /* Hiệu ứng riêng Modern */
+      --theme-shadow: 0 2px 12px rgba(99, 102, 241, 0.08), 0 8px 24px rgba(0,0,0,0.3);
+      --card-hover-glow: 0 0 24px rgba(99, 102, 241, 0.2), 0 0 48px rgba(139, 92, 246, 0.08);
     }
 
+    /* === CLASSIC THEME === */
     [data-theme='classic'] {
       --font-sans: 'Playfair Display', serif;
 
-      --background: 39 52% 95%;
-      /* beige-50 */
-      --foreground: 39 33% 20%;
-      /* dark brown */
+      --background: 40 40% 94%;
+      --foreground: 30 30% 18%;
 
-      --card: 40 71% 98%;
-      /* lighter beige */
-      --card-foreground: 39 33% 20%;
+      --card: 42 60% 97%;
+      --card-foreground: 30 30% 18%;
 
-      --popover: 39 52% 95%;
-      --popover-foreground: 39 33% 20%;
+      --popover: 40 40% 94%;
+      --popover-foreground: 30 30% 18%;
 
-      --primary: 221 39% 28%;
-      /* navy */
-      --primary-foreground: 39 52% 95%;
+      --primary: 30 55% 35%;
+      --primary-foreground: 42 60% 97%;
 
-      --secondary: 39 33% 85%;
-      --secondary-foreground: 39 33% 20%;
+      --secondary: 36 28% 86%;
+      --secondary-foreground: 30 30% 18%;
 
-      --muted: 39 33% 90%;
-      --muted-foreground: 39 33% 40%;
+      --muted: 36 28% 88%;
+      --muted-foreground: 30 20% 42%;
 
-      --accent: 39 33% 85%;
-      --accent-foreground: 39 33% 20%;
+      --accent: 36 28% 86%;
+      --accent-foreground: 30 30% 18%;
 
       --destructive: 0 72% 51%;
       --destructive-foreground: 0 0% 100%;
@@ -182,39 +182,43 @@
       --success: 142 71% 45%;
       --success-foreground: 0 0% 100%;
 
-      --border: 39 33% 80%;
-      --input: 39 33% 80%;
-      --ring: 221 39% 28%;
+      --border: 36 28% 78%;
+      --input: 36 28% 78%;
+      --ring: 30 55% 35%;
 
-      --gradient-from: #fdf6e3;
-      --gradient-to: #f0e6d2;
-      --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+      --gradient-from: #f8f0e3;
+      --gradient-to: #ede3d0;
+      --gradient-body: linear-gradient(135deg, var(--gradient-from) 0%, #f4ead8 50%, var(--gradient-to) 100%);
+
+      /* Hiệu ứng riêng Classic */
+      --theme-shadow: 0 2px 8px rgba(120, 90, 40, 0.08), 0 4px 16px rgba(120, 90, 40, 0.04);
+      --card-hover-glow: 0 4px 20px rgba(160, 120, 60, 0.12);
     }
 
+    /* === SUNRISE THEME === */
     [data-theme='sunrise'] {
       --font-sans: 'Nunito', sans-serif;
 
-      --background: 220 13% 11%;
+      --background: 222 20% 10%;
       --foreground: 210 20% 98%;
 
-      --card: 215 19% 15%;
+      --card: 218 22% 16%;
       --card-foreground: 210 20% 98%;
 
-      --popover: 220 13% 11%;
+      --popover: 222 20% 10%;
       --popover-foreground: 210 20% 98%;
 
-      --primary: 13 96% 56%;
-      /* orange */
-      --primary-foreground: 13 100% 96%;
+      --primary: 16 90% 55%;
+      --primary-foreground: 0 0% 100%;
 
-      --secondary: 215 19% 25%;
+      --secondary: 218 22% 24%;
       --secondary-foreground: 210 20% 98%;
 
-      --muted: 215 19% 25%;
-      --muted-foreground: 210 20% 70%;
+      --muted: 218 22% 24%;
+      --muted-foreground: 210 20% 68%;
 
-      --accent: 215 19% 25%;
-      --accent-foreground: 210 20% 98%;
+      --accent: 330 80% 55%;
+      --accent-foreground: 0 0% 100%;
 
       --destructive: 0 84% 60%;
       --destructive-foreground: 0 0% 100%;
@@ -222,41 +226,43 @@
       --success: 142 71% 45%;
       --success-foreground: 0 0% 100%;
 
-      --border: 215 19% 30%;
-      --input: 215 19% 30%;
-      --ring: 13 96% 56%;
+      --border: 218 22% 26%;
+      --input: 218 22% 26%;
+      --ring: 16 90% 55%;
 
       --gradient-from: #0d1b2a;
       --gradient-to: #1b263b;
       --gradient-body: linear-gradient(160deg, #FF8C42 0%, #FF3C83 35%, #6C47FF 70%, #0396FF 100%);
+
+      /* Hiệu ứng riêng Sunrise */
+      --theme-shadow: 0 2px 12px rgba(255, 140, 66, 0.1), 0 8px 24px rgba(0,0,0,0.25);
+      --card-hover-glow: 0 0 20px rgba(255, 60, 131, 0.15), 0 0 40px rgba(108, 71, 255, 0.08);
     }
 
+    /* === TRI ÂN THEME === */
     [data-theme='tri-an'] {
       --font-sans: 'Nunito', sans-serif;
 
       --background: 160 34% 26%;
-      /* chalkboard green */
       --foreground: 150 8% 95%;
-      /* chalk white */
 
-      --card: 160 34% 30%;
+      --card: 160 32% 31%;
       --card-foreground: 150 8% 95%;
 
       --popover: 160 34% 22%;
       --popover-foreground: 150 8% 95%;
 
-      --primary: 0 63% 67%;
-      /* chalk red */
+      --primary: 0 60% 65%;
       --primary-foreground: 0 0% 98%;
 
-      --secondary: 160 34% 35%;
+      --secondary: 160 30% 36%;
       --secondary-foreground: 150 8% 95%;
 
-      --muted: 160 34% 35%;
-      --muted-foreground: 150 8% 80%;
+      --muted: 160 30% 36%;
+      --muted-foreground: 150 10% 78%;
 
-      --accent: 160 34% 40%;
-      --accent-foreground: 150 8% 98%;
+      --accent: 45 80% 60%;
+      --accent-foreground: 30 30% 18%;
 
       --destructive: 0 50% 55%;
       --destructive-foreground: 0 0% 98%;
@@ -264,46 +270,45 @@
       --success: 130 50% 60%;
       --success-foreground: 130 100% 96%;
 
-      --border: 150 8% 85%;
-      /* chalk border */
+      --border: 160 20% 55%;
       --input: 160 34% 28%;
-      --ring: 0 63% 67%;
+      --ring: 0 60% 65%;
 
       --radius: 0.75rem;
 
       --gradient-from: hsl(160 34% 22%);
       --gradient-to: hsl(160 34% 26%);
       --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
+
+      /* Hiệu ứng riêng Tri Ân */
+      --theme-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 1px 2px rgba(255,255,255,0.05) inset;
+      --card-hover-glow: 0 4px 16px rgba(0,0,0,0.3);
     }
 
+    /* === NOEL THEME === */
     [data-theme='noel'] {
       --font-sans: 'Nunito', sans-serif;
 
-      /* Deep Wine/Burgundy Background */
-      --background: 355 90% 10%;
+      --background: 355 85% 10%;
       --foreground: 0 0% 100%;
-      /* Snow White */
 
-      /* Dark Red Card */
-      --card: 355 85% 15%;
+      --card: 355 75% 16%;
       --card-foreground: 0 0% 100%;
 
-      --popover: 355 90% 12%;
+      --popover: 355 85% 12%;
       --popover-foreground: 0 0% 100%;
 
-      /* Bright Red/Neon Red for Icons (Tone-sur-tone) */
-      --primary: 350 100% 65%;
-      --primary-foreground: 355 90% 10%;
+      --primary: 350 90% 58%;
+      --primary-foreground: 0 0% 100%;
 
-      /* Muted Red for secondary elements */
-      --secondary: 355 60% 25%;
+      --secondary: 355 55% 25%;
       --secondary-foreground: 0 0% 100%;
 
       --muted: 355 50% 20%;
       --muted-foreground: 355 20% 80%;
 
-      --accent: 350 100% 65%;
-      --accent-foreground: 0 0% 100%;
+      --accent: 43 96% 56%;
+      --accent-foreground: 30 30% 12%;
 
       --destructive: 0 63% 31%;
       --destructive-foreground: 0 0% 100%;
@@ -311,17 +316,19 @@
       --success: 142 76% 36%;
       --success-foreground: 142 100% 96%;
 
-      --border: 355 60% 30%;
-      --input: 355 60% 30%;
-      --ring: 350 100% 65%;
-      /* Red Ring */
+      --border: 355 50% 28%;
+      --input: 355 50% 28%;
+      --ring: 350 90% 58%;
 
       --radius: 0.75rem;
 
-      /* Rich Red Gradient Backup if Image Fails */
       --gradient-from: #4a0404;
       --gradient-to: #2b0202;
-      --gradient-body: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+      --gradient-body: linear-gradient(135deg, #6b1010 0%, #3d0808 50%, #450a0a 100%);
+
+      /* Hiệu ứng riêng Noel */
+      --theme-shadow: 0 2px 12px rgba(180, 30, 30, 0.2), 0 8px 24px rgba(0,0,0,0.3);
+      --card-hover-glow: 0 0 20px rgba(255, 80, 80, 0.15), 0 0 40px rgba(255, 200, 50, 0.06);
     }
 
     /* === PREMIUM v2 THEME === */
@@ -329,18 +336,15 @@
       --font-sans: 'Inter', sans-serif;
 
       --background: 222 59% 5%;
-      /* near-black navy */
       --foreground: 210 20% 95%;
 
       --card: 215 28% 10%;
-      /* dark card */
       --card-foreground: 210 20% 95%;
 
       --popover: 222 59% 7%;
       --popover-foreground: 210 20% 95%;
 
       --primary: 187 96% 42%;
-      /* cyan-500 */
       --primary-foreground: 222 59% 5%;
 
       --secondary: 215 28% 16%;
@@ -350,14 +354,12 @@
       --muted-foreground: 215 20% 60%;
 
       --accent: 262 83% 58%;
-      /* violet accent */
       --accent-foreground: 210 20% 98%;
 
       --destructive: 0 72% 51%;
       --destructive-foreground: 0 0% 100%;
 
       --success: 158 64% 52%;
-      /* emerald */
       --success-foreground: 158 100% 10%;
 
       --border: 215 28% 18%;
@@ -374,6 +376,10 @@
       --glass-bg: rgba(15, 23, 42, 0.6);
       --glass-border: rgba(56, 189, 248, 0.15);
       --glow-color: rgba(6, 182, 212, 0.3);
+
+      /* Hiệu ứng riêng Premium */
+      --theme-shadow: 0 2px 16px rgba(6, 182, 212, 0.08), 0 8px 32px rgba(0,0,0,0.4);
+      --card-hover-glow: 0 0 24px rgba(6, 182, 212, 0.2), 0 0 48px rgba(139, 92, 246, 0.1);
     }
 
     body {
@@ -476,6 +482,7 @@
     .text-gradient-vibrant {
       background: linear-gradient(135deg, #0cebeb 0%, #20e3b2 50%, #29ffc6 100%);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
@@ -507,6 +514,16 @@
       transform: translateY(-12px) scale(1.03);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
       filter: brightness(1.1);
+    }
+
+    /* === THEME CARD EFFECTS === */
+    .theme-card-effect {
+      box-shadow: var(--theme-shadow, 0 1px 3px rgba(0,0,0,0.1));
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .theme-card-effect:hover {
+      box-shadow: var(--card-hover-glow, 0 4px 12px rgba(0,0,0,0.15));
     }
   </style>
 
@@ -591,7 +608,7 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/ontap/assets/index-CQ7rV1hL.js"></script>
+  <script type="module" crossorigin src="/ontap/assets/index-DUVk2YeP.js"></script>
   <link rel="stylesheet" crossorigin href="/ontap/assets/index-DdbvjOK3.css">
 </head>
 

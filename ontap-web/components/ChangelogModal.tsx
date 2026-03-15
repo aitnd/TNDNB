@@ -8,9 +8,39 @@ interface ChangelogModalProps {
 // 💖 Dữ liệu changelog dạng cấu trúc
 const CHANGELOG_DATA = [
   {
+    version: '3.9.0',
+    date: '15/03/2026',
+    isLatest: true,
+    sections: [
+      {
+        icon: Rocket,
+        title: 'Đại tu Giao diện (Premium v2)',
+        color: 'text-cyan-500',
+        bgColor: 'bg-cyan-100 dark:bg-cyan-900/30',
+        items: [
+          'Ra mắt Premium Theme v2.2: Phối màu Cyan-Navy nghệ thuật, hiệu ứng Glassmorphism đỉnh cao',
+          'Tinh chỉnh bảng màu cho toàn bộ 8 Themes: Tăng contrast, bố cục card chuyên nghiệp',
+          'Nâng cấp hiệu ứng Visual riêng biệt: Mỗi theme có đổ bóng (Shadow) và hiệu ứng Glow Card riêng',
+          'Đồng bộ hóa 100% màu sắc và tính năng giữa bản Web, Windows và Android'
+        ]
+      },
+      {
+        icon: Zap,
+        title: 'Cải tiến Kỹ thuật',
+        color: 'text-yellow-500',
+        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
+        items: [
+          'Sử dụng font Inter hiện đại cho Premium theme',
+          'Tối ưu CSS Utility classes cho hiệu ứng kính mờ (Glass premium)',
+          'Khắc phục lỗi hiển thị nền gradient trên các phiên bản trình duyệt cũ'
+        ]
+      }
+    ]
+  },
+  {
     version: '3.8.12',
     date: '18/01/2026',
-    isLatest: true,
+    isLatest: false,
     sections: [
       {
         icon: Zap,

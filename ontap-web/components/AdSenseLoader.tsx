@@ -10,6 +10,8 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
     const [shouldLoadAds, setShouldLoadAds] = useState(false);
 
     useEffect(() => {
+        let observer: IntersectionObserver | null = null;
+
         const checkConfig = async () => {
             try {
                 const config: UsageConfig = await getUsageConfig();
@@ -20,8 +22,25 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
 
                 if (showAdSense || showAdsterra) {
                     removeHideAdsStyle(); // Allow ads
-                    if (showAdSense) loadAdSenseScript();
-                    if (showAdsterra) loadAdsterraScript();
+                    
+                    // Lazy load trigger: Phanh phui script khi cuộn đến vùng quảng cáo
+                    // Chúng ta quan sát body hoặc một thẻ cắm mốc
+                    observer = new IntersectionObserver((entries) => {
+                        if (entries[0].isIntersecting) {
+                            if (showAdSense) loadAdSenseScript();
+                            if (showAdsterra) loadAdsterraScript();
+                            observer?.disconnect();
+                        }
+                    }, { rootMargin: '200px' }); // Load trước khi chạm 200px
+
+                    // Thử tìm các placeholder quảng cáo để quan sát
+                    const adPlaceholders = document.querySelectorAll('.adsbygoogle, #adsterra-placeholder');
+                    if (adPlaceholders.length > 0) {
+                        adPlaceholders.forEach(el => observer?.observe(el));
+                    } else {
+                        // Nếu không thấy placeholder cụ thể, quan sát body để load sau khi user cuộn một chút
+                        observer.observe(document.body);
+                    }
                 } else {
                     removeScripts();
                     injectHideAdsStyle(); // Force hide
@@ -32,6 +51,10 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         };
 
         checkConfig();
+
+        return () => {
+            observer?.disconnect();
+        };
     }, [userProfile]); // Re-check when user changes (e.g. login/logout)
 
     const loadAdSenseScript = () => {

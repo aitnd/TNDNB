@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FaHome, FaBookOpen, FaUserCog, FaBars, FaHistory, FaSchool, FaUserGraduate, FaExclamationTriangle, FaSignOutAlt, FaTimes, FaDownload, FaEnvelope, FaCog } from 'react-icons/fa';
 
 import { UserProfile } from '../types';
+import { triggerHaptic } from '../utils/nativeUX';
 
 interface MobileBottomNavProps {
     userProfile: UserProfile | null;
@@ -32,6 +33,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
     };
 
     const handleNavigate = (screen: string) => {
+        triggerHaptic('light');
         onNavigate(screen);
         setIsMenuOpen(false);
     };
@@ -41,7 +43,10 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
         {
             name: 'Tin tức',
             icon: FaHome,
-            action: () => window.location.href = '/',
+            action: () => {
+                triggerHaptic('light');
+                window.location.href = '/';
+            },
             active: false,
             key: 'news'
         },
@@ -124,7 +129,10 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
     }
 
 
-    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const toggleMenu = () => {
+        triggerHaptic('light');
+        setIsMenuOpen(!isMenuOpen);
+    };
 
     return (
         <>
@@ -163,6 +171,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
 
                             <button
                                 onClick={() => {
+                                    triggerHaptic('light');
                                     onLogout();
                                     setIsMenuOpen(false);
                                 }}

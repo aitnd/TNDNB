@@ -23,32 +23,86 @@ export interface SavedAccount {
 }
 
 /**
- * Mã hóa mật khẩu đơn giản bằng XOR + Base64
- * Lưu ý: Đây không phải mã hóa mạnh, chỉ để tránh hiển thị plaintext
- * Trong production nên dùng Web Crypto API hoặc thư viện mã hóa chuyên dụng
+ * Helper để tạo key từ chuỗi key định sẵn (ENCRYPTION_KEY)
+ * Sử dụng PBKDF2 để tạo key mạnh từ chuỗi
  */
-const encryptPassword = (password: string): string => {
-    let encrypted = '';
-    for (let i = 0; i < password.length; i++) {
-        const charCode = password.charCodeAt(i) ^ ENCRYPTION_KEY.charCodeAt(i % ENCRYPTION_KEY.length);
-        encrypted += String.fromCharCode(charCode);
-    }
-    return btoa(encrypted);
+const getCryptoKey = async (salt: Uint8Array): Promise<CryptoKey> => {
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(ENCRYPTION_KEY);
+    const baseKey = await window.crypto.subtle.importKey(
+        'raw',
+        keyData,
+        'PBKDF2',
+        false,
+        ['deriveKey']
+    );
+
+    return window.crypto.subtle.deriveKey(
+        {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: 100000,
+            hash: 'SHA-256'
+        },
+        baseKey,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+    );
 };
 
 /**
- * Giải mã mật khẩu
+ * Mã hóa mật khẩu bằng AES-GCM (Web Crypto API)
+ * Trả về chuỗi kết hợp: salt (16 bytes) + iv (12 bytes) + encryptedData (Base64)
  */
-const decryptPassword = (encrypted: string): string => {
+const encryptPassword = async (password: string): Promise<string> => {
     try {
-        const decoded = atob(encrypted);
-        let decrypted = '';
-        for (let i = 0; i < decoded.length; i++) {
-            const charCode = decoded.charCodeAt(i) ^ ENCRYPTION_KEY.charCodeAt(i % ENCRYPTION_KEY.length);
-            decrypted += String.fromCharCode(charCode);
-        }
-        return decrypted;
-    } catch {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const salt = window.crypto.getRandomValues(new Uint8Array(16));
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+        const key = await getCryptoKey(salt);
+
+        const encryptedContent = await window.crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            data
+        );
+
+        // Kết hợp và convert sang Base64 để lưu trữ
+        const combined = new Uint8Array(salt.length + iv.length + encryptedContent.byteLength);
+        combined.set(salt, 0);
+        combined.set(iv, salt.length);
+        combined.set(new Uint8Array(encryptedContent), salt.length + iv.length);
+
+        return btoa(String.fromCharCode(...combined));
+    } catch (e) {
+        console.error("Encryption failed:", e);
+        return '';
+    }
+};
+
+/**
+ * Giải mã mật khẩu bằng AES-GCM
+ */
+const decryptPassword = async (encryptedBase64: string): Promise<string> => {
+    try {
+        const combined = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+        
+        const salt = combined.slice(0, 16);
+        const iv = combined.slice(16, 28);
+        const data = combined.slice(28);
+        
+        const key = await getCryptoKey(salt);
+        const decryptedContent = await window.crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv },
+            key,
+            data
+        );
+
+        return new TextDecoder().decode(decryptedContent);
+    } catch (e) {
+        console.error("Decryption failed:", e);
         return '';
     }
 };
@@ -73,23 +127,25 @@ export const getSavedAccounts = (): SavedAccount[] => {
  * Lưu hoặc cập nhật tài khoản
  * Nếu email đã tồn tại, sẽ cập nhật thông tin
  */
-export const saveAccount = (
+export const saveAccount = async (
     email: string,
     displayName: string,
     password?: string,
     photoURL?: string
-): void => {
+): Promise<void> => {
     const accounts = getSavedAccounts();
 
     // Tìm tài khoản đã tồn tại
     const existingIndex = accounts.findIndex(acc => acc.email.toLowerCase() === email.toLowerCase());
+
+    const encryptedPwd = password ? await encryptPassword(password) : undefined;
 
     const newAccount: SavedAccount = {
         email,
         displayName,
         photoURL,
         hasPassword: !!password,
-        encryptedPassword: password ? encryptPassword(password) : undefined,
+        encryptedPassword: encryptedPwd,
         lastLogin: Date.now()
     };
 
@@ -123,12 +179,12 @@ export const removeAccount = (email: string): void => {
  * Lấy mật khẩu đã giải mã của tài khoản
  * Trả về null nếu không có mật khẩu đã lưu
  */
-export const getAccountPassword = (email: string): string | null => {
+export const getAccountPassword = async (email: string): Promise<string | null> => {
     const accounts = getSavedAccounts();
     const account = accounts.find(acc => acc.email.toLowerCase() === email.toLowerCase());
 
     if (account?.hasPassword && account.encryptedPassword) {
-        return decryptPassword(account.encryptedPassword);
+        return await decryptPassword(account.encryptedPassword);
     }
 
     return null;

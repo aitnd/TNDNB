@@ -1,7 +1,7 @@
 {
   "name": "dao-tao-thuyen-vien",
   "private": true,
-  "version": "3.8.7",
+  "version": "3.9.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/app": "^8.0.1",
     "@capacitor/core": "^8.1.0",
+    "@capacitor/haptics": "^8.0.1",
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/push-notifications": "^8.0.1",
     "@supabase/supabase-js": "2",
