@@ -9,18 +9,23 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');
+
 :root {
-    /* --- 1. Giao diện Sáng (Light) --- */
-    --bg-body: #f3f4f6;
+    /* --- 1. Giao diện Sáng (Light) - Blue & Gold Premium --- */
+    --bg-body: #f8fafc;
     --bg-header: #ffffff;
-    --text-header: #004a99;
-    --text-main: #333333;
-    --text-link: #004a99;
-    --bg-footer: #111827;
-    --text-footer: #ffffff;
-    --mau-chinh: #004a99;
-    --mau-nen-phu: #e6f0ff;
-    --border-color: #e5e7eb;
+    --text-header: #0a1e3b;      /* Navy đậm */
+    --text-main: #334155;
+    --text-link: #1e3a8a;
+    --bg-footer: #0a1e3b;
+    --text-footer: #f1f5f9;
+    --mau-chinh: #1e3a8a;        /* Royal Blue */
+    --mau-phu: #d4af37;          /* Gold */
+    --mau-nen-phu: #f1f5f9;
+    --border-color: #e2e8f0;
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --radius-premium: 16px;
 }
 
 [data-theme='dark'] {
@@ -61,18 +66,21 @@
 
 /* === PHẦN 3: STYLE CƠ BẢN === */
 body {
-    /* Dùng biến --bg-body làm nền */
     background: var(--bg-body);
-    /* Đảm bảo ảnh luôn phủ kín màn hình */
     background-size: cover; 
-    
     color: var(--text-main);
-    font-family: 'Rubik', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     margin: 0; padding: 0;
-    line-height: 1.6;
+    line-height: 1.7;
     overflow-x: hidden;
     min-height: 100vh;
-    transition: all 0.3s ease; /* Chuyển đổi mượt mà */
+    transition: all 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+    color: var(--text-header);
 }
 
 /* ... (Các phần dưới giữ nguyên) ... */

@@ -77,12 +77,23 @@ export default async function HomePage() {
         {/* === CỘT 1: NỘI DUNG CHÍNH === */}
         <div className={styles.mainContent}>
 
-          <section className={styles.latestNews}>
-            <h2 className={styles.sectionTitle}>Tin tức mới nhất</h2>
+          {/* 💖 CTA NỔI BẬT: Hệ thống Ôn tập 💖 */}
+          <section className={styles.ctaBanner}>
+            <div className={styles.ctaContent}>
+              <h3>Hệ thống Ôn tập & Thi trực tuyến</h3>
+              <p>Nền tảng hỗ trợ học sinh ôn luyện kiến thức hiệu quả, mọi lúc mọi nơi.</p>
+            </div>
+            <Link href="/ontap" className={styles.ctaButton}>
+               Vào ôn tập ngay <i className="fas fa-rocket"></i>
+            </Link>
+          </section>
 
-            <div className={styles.newsList}>
+          <section className={styles.latestNews}>
+            <h2 className={styles.sectionTitle}>Tin tức & Sự kiện</h2>
+
+            <div className={styles.newsGrid}>
               {posts.map((post) => (
-                <div key={post.id} className={styles.newsItemLarge}>
+                <div key={post.id} className={styles.newsCard}>
                   <div className={styles.imageWrapper}>
                     {/* 💖 DÙNG COMPONENT MỚI THAY VÌ IMG THƯỜNG 💖 */}
                     <PostImage

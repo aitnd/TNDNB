@@ -1,13 +1,12 @@
 /* ╔══════════════════════════════════════════════════════╗
  * ║  TRANG CHỦ — Maritime Premium Content Area          ║
- * ║  Cards hiện đại, gradient accents, hover effects     ║
+ * ║  Cards hiện đại, gold accents, premium typography   ║
  * ╚══════════════════════════════════════════════════════╝ */
 
-/* === 1. CẤU TRÚC CHUNG === */
 .container {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1.25rem;
+  padding: 3rem 2rem;
   overflow-x: hidden;
 }
 
@@ -15,6 +14,78 @@
   margin-bottom: 2.5rem;
 }
 
+/* === 3. CTA BANNER (HỆ THỐNG ÔN TẬP) === */
+.ctaBanner {
+  background: linear-gradient(135deg, var(--mau-chinh) 0%, #3b82f6 100%);
+  border-radius: var(--radius-premium);
+  padding: 2.5rem;
+  margin-bottom: 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  box-shadow: 0 20px 40px rgba(30, 58, 138, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaBanner::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.ctaContent h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: white;
+  font-family: 'Merriweather', serif;
+}
+
+.ctaContent p {
+  font-size: 1.05rem;
+  opacity: 0.9;
+}
+
+.ctaButton {
+  background: var(--mau-phu);
+  color: var(--text-header);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 800;
+  text-decoration: none !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  white-space: nowrap;
+}
+
+.ctaButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+  filter: brightness(1.1);
+}
+
+@media (max-width: 768px) {
+  .ctaBanner {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
+  }
+  .ctaContent h3 {
+    font-size: 1.4rem;
+  }
+}
+
+/* === 4. TIN TỨC === */
 /* === 2. BỐ CỤC GRID (PC) === */
 .layoutGrid {
   display: grid;
@@ -46,71 +117,44 @@
   border-radius: 2px;
 }
 
-/* === 3. TIN TỨC === */
-.newsList {
+/* === 4. TIN TỨC (GRID) === */
+.newsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.newsCard {
+  background: var(--bg-header);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-premium);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  transition: all 0.4s ease;
+  box-shadow: var(--shadow-soft);
 }
 
-.newsItemLarge {
-  display: flex;
-  gap: 1.25rem;
-  background: var(--bg-header, #ffffff);
-  border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 12px;
-  padding: 1.25rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  position: relative;
+.newsCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border-color: var(--mau-phu);
 }
 
-.newsItemLarge::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 0;
-  background: linear-gradient(180deg, #1e40af, #0d9488);
-  border-radius: 0 2px 2px 0;
-  transition: height 0.3s ease;
-}
-
-.newsItemLarge:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-  border-color: rgba(30, 64, 175, 0.15);
-}
-
-.newsItemLarge:hover::before {
-  height: 100%;
-}
-
-/* Ảnh tin tức */
+/* Ảnh của Card */
 .imageWrapper {
-  flex-shrink: 0;
-  width: 260px;
-  height: 170px;
+  width: 100%;
+  height: 220px;
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 8px 8px 0 0; /* Added for consistency with new card design */
 }
 
-.imageWrapper::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 60%, rgba(10, 22, 40, 0.2) 100%);
-  border-radius: 8px;
-  opacity: 0;
-  transition: opacity 0.3s;
+.newsCard:hover .postThumb {
+  transform: scale(1.1);
 }
 
-.newsItemLarge:hover .imageWrapper::after {
-  opacity: 1;
-}
-
+/* Phần chữ */
 .postThumb {
   width: 100%;
   height: 100%;
@@ -118,39 +162,44 @@
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.newsItemLarge:hover .postThumb {
-  transform: scale(1.05);
-}
-
-/* Phần chữ */
+/* Nội dung của Card */
 .postContent {
+  padding: 1.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-width: 0;
+}
+
+.postDate {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .postTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-main, #1e293b);
-  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-header);
+  text-decoration: none !important;
+  margin-bottom: 1rem;
   line-height: 1.4;
-  margin-bottom: 0.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  word-break: break-word;
+  height: 3.36rem; /* Cố định chiều cao để grid đều */
   transition: color 0.2s;
-  letter-spacing: -0.01em;
 }
 
 .postTitle:hover {
-  color: #1e40af;
-  text-decoration: none;
+  color: var(--mau-chinh); /* Updated hover color for new design */
 }
 
 :global([data-theme='dark']) .postTitle:hover,
@@ -160,41 +209,38 @@
   color: #d4af37;
 }
 
-.postDate {
-  font-size: 0.82rem;
-  color: #94a3b8;
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  line-height: 1;
-  font-weight: 500;
-}
-
 .postExcerpt {
-  font-size: 0.92rem;
-  color: var(--text-main, #64748b);
+  font-size: 0.95rem;
+  color: var(--text-main);
   line-height: 1.6;
-  margin-bottom: 0.75rem;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  word-break: break-word;
-  opacity: 0.85;
 }
 
 .readMore {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #1e40af;
-  text-decoration: none;
   margin-top: auto;
+  font-weight: 700;
+  color: var(--mau-chinh);
+  font-size: 0.9rem;
+  text-decoration: none !important;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   transition: all 0.2s;
+}
+
+.readMore::after {
+  content: '→';
+  transition: transform 0.3s;
+}
+
+.readMore:hover::after {
+  transform: translateX(5px);
 }
 
 :global([data-theme='dark']) .readMore,
@@ -205,9 +251,8 @@
 }
 
 .readMore:hover {
-  color: #0d9488;
+  color: var(--mau-chinh); /* Keep original color or adjust as needed */
   text-decoration: none;
-  gap: 8px;
 }
 
 /* === 4. RESPONSIVE (TABLET) === */
@@ -225,19 +270,18 @@
   .sidebarWrapper {
     order: 2;
     width: 100%;
-    margin-top: 2.5rem;
+    margin-top: 3rem;
   }
 
   .imageWrapper {
-    width: 200px;
-    height: 140px;
+    height: 200px; /* Adjusted for tablet view of new card */
   }
 }
 
 /* === 5. RESPONSIVE (MOBILE) === */
 @media (max-width: 768px) {
   .container {
-    padding: 0.75rem;
+    padding: 1.5rem 1rem;
   }
 
   .sectionTitle {
