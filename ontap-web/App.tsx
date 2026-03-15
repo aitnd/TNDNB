@@ -38,7 +38,7 @@ import DownloadAppPage from './components/DownloadAppPage';
 import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
 import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
-import EntertainmentScreen from './components/EntertainmentScreen';
+import EntertainmentScreen from './components/EntertainmentScreen.tsx';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
