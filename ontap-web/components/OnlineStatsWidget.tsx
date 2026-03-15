@@ -46,6 +46,8 @@ const OnlineStatsWidget = ({ userRole }: { userRole: string }) => {
 
             setStats({ total, admins, teachers, students });
             setRealtimeUsers(guests); // Reusing realtimeUsers state for guests count
+        }, (error) => {
+            console.error("RTDB status listener error:", error);
         });
 
         return () => unsubscribe();

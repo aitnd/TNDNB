@@ -8,9 +8,45 @@ interface ChangelogModalProps {
 // 💖 Dữ liệu changelog dạng cấu trúc
 const CHANGELOG_DATA = [
   {
+    version: '3.8.12',
+    date: '18/01/2026',
+    isLatest: true,
+    sections: [
+      {
+        icon: Zap,
+        title: 'Nâng cấp giao diện Thẻ',
+        color: 'text-yellow-500',
+        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
+        items: [
+          'Thiết kế lại Thẻ Học viên/Giáo viên phong cách Premium Hologram v2.2',
+          'Sửa lỗi chính tả "THÈ" thành "THẺ" trên toàn hệ thống',
+          'Hiệu ứng tia sáng Hologram và Chip nhựa điện tử như thật'
+        ]
+      }
+    ]
+  },
+  {
+    version: '3.8.11',
+    date: '18/01/2026',
+    isLatest: false,
+    sections: [
+      {
+        icon: Zap,
+        title: 'Tính năng mới',
+        color: 'text-yellow-500',
+        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
+        items: [
+          'Thêm "Góc Giải Trí" với kho trò chơi HTML5 & Retro huyền thoại (Contra, Đào Vàng, Subway Surfers...)',
+          'Hỗ trợ chế độ chơi game toàn màn hình để trải nghiệm tốt nhất',
+          'Giao diện Góc giải trí hiệu ứng Glassmorphism siêu đẹp và mượt mà'
+        ]
+      }
+    ]
+  },
+  {
     version: '3.8.10',
     date: '09/01/2026',
-    isLatest: true,
+    isLatest: false,
     sections: [
       {
         icon: Zap,

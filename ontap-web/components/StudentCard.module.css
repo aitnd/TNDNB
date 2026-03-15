@@ -1,79 +1,150 @@
-/* Thẻ nhựa ID Card Style */
+/* Thẻ nhựa ID Card Style - Premium Hologram v2.2 */
 .card {
     width: 100%;
     max-width: 450px;
-    /* Kích thước tối đa giống thẻ thật */
     aspect-ratio: 1.586;
-    /* Tỷ lệ chuẩn thẻ tín dụng/ID (85.6mm x 53.98mm) */
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    font-family: 'Arial', sans-serif;
-    /* Font chân phương */
-    border: 1px solid #d9d9d9;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.4);
     position: relative;
-    margin: 0 auto 24px auto;
-    /* Căn giữa */
+    margin: 0 auto 20px auto;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Hiệu ứng tia sáng Hologram */
+.card::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) 45%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0) 55%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transition: all 0.6s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.card:hover::after {
+    top: -50%;
+    left: -50%;
 }
 
 /* === HEADER === */
 .header {
-    background: #2b6cb0;
-    /* Màu xanh dương đậm */
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
     color: white;
-    padding: 10px 15px;
+    padding: 12px 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    height: 18%;
-    /* Chiếm khoảng 18% chiều cao thẻ */
+    gap: 12px;
+    height: 65px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Teacher Header Gradient */
+.headerTeacher {
+    background: linear-gradient(135deg, #4c1d95 0%, #8b5cf6 100%);
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    top: -100px;
+    right: -50px;
 }
 
 .logoPlaceholder {
     width: 40px;
     height: 40px;
-    background: white;
-    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2b6cb0;
-    font-weight: bold;
-    font-size: 1rem;
+    color: #1e40af;
     flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.headerTeacher .logoPlaceholder {
+    color: #4c1d95;
 }
 
 .schoolName {
-    font-size: 0.9rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 800;
     text-transform: uppercase;
-    line-height: 1.2;
+    line-height: 1.3;
+    letter-spacing: 0.5px;
 }
 
 /* === BODY === */
 .body {
     flex: 1;
-    padding: 15px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
+    background: linear-gradient(to bottom, #ffffff, #f8fafc);
     position: relative;
-    background-image: radial-gradient(#f0f0f0 1px, transparent 1px);
-    /* Họa tiết chấm bi mờ nền */
-    background-size: 10px 10px;
+}
+
+/* Chip điện tử giả lập */
+.chip {
+    position: absolute;
+    top: 55px;
+    right: 25px;
+    width: 38px;
+    height: 30px;
+    background: linear-gradient(135deg, #d4af37 0%, #f9d71c 50%, #d4af37 100%);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 1px 3px rgba(255,255,255,0.5);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    padding: 2px;
+    gap: 1px;
+}
+
+.chipLine {
+    border: 0.5px solid rgba(0, 0, 0, 0.15);
 }
 
 .cardTitle {
     text-align: center;
-    color: #2b6cb0;
-    /* Changed from Red to Blue */
-    font-size: 1.6rem;
-    font-weight: 700;
+    color: #1e3a8a;
+    font-size: 1.3rem;
+    font-weight: 900;
     text-transform: uppercase;
-    margin: 5px 0 15px 0;
-    letter-spacing: 1px;
+    margin: 0 0 15px 0;
+    letter-spacing: 2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.cardTitleTeacher {
+    color: #4c1d95;
 }
 
 .contentRow {
@@ -90,9 +161,11 @@
 .photoWrapper {
     width: 100%;
     aspect-ratio: 3/4;
-    background: #e2e8f0;
-    border: 1px solid #cbd5e0;
+    background: #f1f5f9;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .avatar {
@@ -106,73 +179,109 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 0.9rem;
-    color: #2d3748;
 }
 
 .infoRow {
     display: flex;
-    align-items: baseline;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
 }
 
 .label {
-    width: 75px;
-    /* Độ rộng cố định cho nhãn */
-    color: #4a5568;
     font-weight: 600;
+    color: #64748b;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 75px;
     flex-shrink: 0;
 }
 
 .value {
-    font-weight: 750;
-    color: #1a202c;
+    font-weight: 600;
+    color: #1e293b;
 }
 
 .valueHighlight {
-    color: #2b6cb0;
-    /* Changed from Red to Blue */
-    text-transform: uppercase;
-    font-size: 1rem;
+    color: #1e3a8a;
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.cardTitleTeacher + .contentRow .valueHighlight {
+    color: #4c1d95;
 }
 
 /* === FOOTER (BARCODE) === */
 .footer {
-    height: 40px;
-    background: white;
+    height: 45px;
+    background: #f1f5f9;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding-bottom: 10px;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.barcodeSection {
+    display: flex;
+    flex-direction: column;
 }
 
 .barcode {
-    height: 25px;
-    width: 80%;
-    /* Giả lập mã vạch bằng gradient */
+    height: 18px;
+    width: 140px;
     background: repeating-linear-gradient(90deg,
             #000,
-            #000 2px,
-            #fff 2px,
-            #fff 4px);
+            #000 1px,
+            #fff 1px,
+            #fff 3px,
+            #000 3px,
+            #000 5px,
+            #fff 5px,
+            #fff 6px);
+}
+
+.idText {
+    font-size: 0.65rem;
+    color: #64748b;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+}
+
+.verifiedBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #dcfce7;
+    color: #166534;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    margin-left: 6px;
+    text-transform: uppercase;
 }
 
 /* Responsive cho mobile */
 @media (max-width: 480px) {
     .card {
         max-width: 100%;
-        aspect-ratio: auto;
-        /* Bỏ tỷ lệ cứng trên mobile nhỏ */
-        height: auto;
+        border-radius: 12px;
     }
-
-    .header {
-        height: auto;
-        padding: 15px;
+    
+    .cardTitle {
+        font-size: 1.1rem;
     }
-
-    .body {
-        padding: 20px;
+    
+    .infoSection {
+        font-size: 0.8rem;
+    }
+    
+    .photoSection {
+        width: 80px;
     }
 }

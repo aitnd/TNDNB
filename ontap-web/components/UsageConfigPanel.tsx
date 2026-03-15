@@ -437,21 +437,39 @@ const UsageConfigPanel: React.FC = () => {
                                         </div>
                                     )}
 
-                                    {/* AdSense Toggle */}
-                                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600 flex items-center justify-between">
-                                        <div>
-                                            <h4 className="font-bold text-orange-700 dark:text-orange-400">Hiển thị Quảng Cáo (Google Adsense)</h4>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">Bật để hiện quảng cáo cho nhóm này (Không phụ thuộc giới hạn).</p>
+                                    {/* Quảng cáo Toggles */}
+                                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600 space-y-6">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-orange-700 dark:text-orange-400">Google AdSense</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Quảng cáo banner / tự động từ Google.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.showAdSense}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'showAdSense', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500"></div>
+                                            </label>
                                         </div>
-                                        <label className="relative inline-flex items-center cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                checked={currentRoleConfig.showAds}
-                                                onChange={(e) => updateRoleConfig(activeRole, 'showAds', e.target.checked)}
-                                                className="sr-only peer"
-                                            />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500"></div>
-                                        </label>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-blue-700 dark:text-blue-400">Adsterra Ads</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Quảng cáo Social Bar / Native từ Adsterra.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.showAdsterra}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'showAdsterra', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500"></div>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
   <style>
     /* === LIGHT THEME === */
@@ -324,6 +324,58 @@
       --gradient-body: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
     }
 
+    /* === PREMIUM v2 THEME === */
+    [data-theme='premium'] {
+      --font-sans: 'Inter', sans-serif;
+
+      --background: 222 59% 5%;
+      /* near-black navy */
+      --foreground: 210 20% 95%;
+
+      --card: 215 28% 10%;
+      /* dark card */
+      --card-foreground: 210 20% 95%;
+
+      --popover: 222 59% 7%;
+      --popover-foreground: 210 20% 95%;
+
+      --primary: 187 96% 42%;
+      /* cyan-500 */
+      --primary-foreground: 222 59% 5%;
+
+      --secondary: 215 28% 16%;
+      --secondary-foreground: 210 20% 90%;
+
+      --muted: 215 28% 14%;
+      --muted-foreground: 215 20% 60%;
+
+      --accent: 262 83% 58%;
+      /* violet accent */
+      --accent-foreground: 210 20% 98%;
+
+      --destructive: 0 72% 51%;
+      --destructive-foreground: 0 0% 100%;
+
+      --success: 158 64% 52%;
+      /* emerald */
+      --success-foreground: 158 100% 10%;
+
+      --border: 215 28% 18%;
+      --input: 215 28% 18%;
+      --ring: 187 96% 42%;
+
+      --radius: 1rem;
+
+      --gradient-from: #020617;
+      --gradient-to: #0f172a;
+      --gradient-body: linear-gradient(135deg, #020617 0%, #0c1929 40%, #0f172a 100%);
+
+      /* Premium-specific custom properties */
+      --glass-bg: rgba(15, 23, 42, 0.6);
+      --glass-border: rgba(56, 189, 248, 0.15);
+      --glow-color: rgba(6, 182, 212, 0.3);
+    }
+
     body {
       font-family: var(--font-sans);
       background-color: hsl(var(--background));
@@ -398,6 +450,63 @@
 
     .animate-bounce-slow {
       animation: bounce-slow 2s infinite;
+    }
+
+    /* === PREMIUM v2.1 UTILITIES === */
+    .glass-premium {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    [data-theme='light'] .glass-premium {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .glow-emerald {
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .glow-blue {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    }
+
+    .text-gradient-vibrant {
+      background: linear-gradient(135deg, #0cebeb 0%, #20e3b2 50%, #29ffc6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes gradient-bg {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animate-gradient-slow {
+      background-size: 200% 200%;
+      animation: gradient-bg 15s ease infinite;
+    }
+
+    .floating-pill {
+      border-radius: 9999px;
+      margin-top: 1rem;
+      width: -moz-fit-content;
+      width: fit-content;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .game-card-hover {
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .game-card-hover:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      filter: brightness(1.1);
     }
   </style>
 
@@ -482,8 +591,8 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/ontap/assets/index-D9-HvgOT.js"></script>
-  <link rel="stylesheet" crossorigin href="/ontap/assets/index-C-LP_xHr.css">
+  <script type="module" crossorigin src="/ontap/assets/index-znCYNy0x.js"></script>
+  <link rel="stylesheet" crossorigin href="/ontap/assets/index-BLUExZUQ.css">
 </head>
 
 <body class="font-sans">

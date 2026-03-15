@@ -20,6 +20,107 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryClick, onClassClick, onOnlineExamClick }) => {
     const { theme } = useTheme();
 
+    // === PREMIUM v2 THEME ===
+    if (theme === 'premium') {
+        return (
+            <div className="relative min-h-screen flex flex-col items-center justify-center p-4 animate-slide-in-right overflow-hidden transition-colors duration-500">
+                {/* Background Decorations */}
+                <div className="absolute inset-0 z-0 pointer-events-none">
+                    <div className="absolute top-[20%] left-[-5%] w-[30%] h-[30%] bg-cyan-500/10 blur-[100px] rounded-full animate-pulse-slow" />
+                    <div className="absolute bottom-[20%] right-[-5%] w-[35%] h-[35%] bg-violet-500/10 blur-[120px] rounded-full animate-bounce-slow" />
+                </div>
+
+                <div className="relative z-10 w-full max-w-6xl">
+                    {/* Top Widgets */}
+                    <div className="mb-8 flex flex-col md:flex-row gap-4 justify-center items-center">
+                        <CustomAnalyticsWidget userRole={userProfile?.role || 'hoc_vien'} />
+                        <OnlineStatsWidget userRole={userProfile?.role || 'hoc_vien'} />
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        {/* LEFT: Student Card */}
+                        <div className="lg:col-span-4 flex flex-col items-center">
+                            <div className="relative w-full group">
+                                <div className="absolute -inset-2 bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-600 rounded-[32px] opacity-20 blur-2xl group-hover:opacity-40 transition-opacity duration-500" />
+                                <div className="relative">
+                                    <StudentCard user={userProfile} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* RIGHT: Main Actions */}
+                        <div className="lg:col-span-8">
+                            <div className="glass-premium rounded-[40px] p-8 md:p-12 border-white/10 shadow-3xl">
+                                <h1 className="text-4xl md:text-5xl font-black mb-4">
+                                    <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                                        Xin chào, {userProfile.full_name || 'Học viên'}!
+                                    </span>
+                                </h1>
+                                <p className="text-xl font-medium mb-10 text-slate-500 dark:text-slate-400">
+                                    Chúc bạn có một buổi ôn tập hiệu quả và đạt kết quả cao! 🚀
+                                </p>
+
+                                <div className="grid grid-cols-1 gap-6">
+                                    <button
+                                        onClick={onStart}
+                                        className="w-full relative group overflow-hidden py-6 px-10 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] shadow-2xl hover:shadow-cyan-500/40"
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 group-hover:scale-110 transition-transform duration-500" />
+                                        <div className="relative z-10 flex items-center justify-center gap-4 text-white">
+                                            <BookOpenIcon3D className="w-10 h-10 drop-shadow-lg" />
+                                            <span className="text-2xl font-black uppercase tracking-tight">Vào Ôn Tập / Thi Thử</span>
+                                        </div>
+                                    </button>
+
+                                    {/* Admin/Teacher Actions */}
+                                    {['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || 'hoc_vien') && (
+                                        <button
+                                            onClick={onOnlineExamClick}
+                                            className="w-full relative group overflow-hidden py-5 px-8 rounded-2xl glass-premium border-white/20 hover:bg-white/10 transition-all duration-300 transform hover:scale-[1.02]"
+                                        >
+                                            <div className="relative z-10 flex items-center justify-center gap-4 text-slate-800 dark:text-white">
+                                                <ClipboardListIcon3D className="w-8 h-8 opacity-80 group-hover:opacity-100" />
+                                                <span className="text-xl font-bold">Quản lý Thi Trực Tuyến</span>
+                                            </div>
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* Secondary Actions Grid */}
+                                <div className="mt-10 grid grid-cols-2 gap-6">
+                                    <button 
+                                        onClick={onHistoryClick} 
+                                        className="group rounded-[32px] p-6 glass-premium border-white/5 hover:bg-white/10 transition-all hover:-translate-y-1 text-left relative overflow-hidden"
+                                    >
+                                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                            <ClipboardListIcon3D className="w-16 h-16" />
+                                        </div>
+                                        <p className="text-sm font-black uppercase tracking-widest text-cyan-500 mb-2">📊 Lịch sử</p>
+                                        <p className="text-lg font-bold text-slate-800 dark:text-slate-100">Xem kết quả</p>
+                                    </button>
+                                    
+                                    <button 
+                                        onClick={onClassClick} 
+                                        className="group rounded-[32px] p-6 glass-premium border-white/5 hover:bg-white/10 transition-all hover:-translate-y-1 text-left relative overflow-hidden"
+                                    >
+                                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                            <HelmIcon3D className="w-16 h-16" />
+                                        </div>
+                                        <p className="text-sm font-black uppercase tracking-widest text-violet-500 mb-2">👥 Lớp học</p>
+                                        <p className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                                            {['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || 'hoc_vien') ? 'Quản lý lớp' : 'Lớp của tôi'}
+                                        </p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // === THEME CŨ (giữ nguyên) ===
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-slide-in-right">
             {/* Custom Analytics Widget */}

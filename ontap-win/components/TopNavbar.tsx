@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils } from 'lucide-react';
+import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils, Gamepad2 } from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
 
@@ -49,7 +49,6 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                         <span className="font-semibold text-sm md:text-base">Thi trực tuyến</span>
                     </button>
 
-                    {/* 2. Trang chủ (Link ngoài) */}
                     <a
                         href="/"
                         className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap decoration-0"
@@ -57,6 +56,15 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                         <Newspaper size={18} className="text-teal-600 dark:text-teal-400" />
                         <span className="font-medium text-sm md:text-base">Tin tức</span>
                     </a>
+
+                    {/* 2.1 Giải trí */}
+                    <button
+                        onClick={() => onNavigate('giaitri')}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+                    >
+                        <Gamepad2 size={18} className="text-indigo-600 dark:text-indigo-400" />
+                        <span className="font-semibold text-sm md:text-base">Giải trí</span>
+                    </button>
 
                     {/* Liên kết khác - Dropdown (dùng fixed để tránh bị cắt) */}
                     <div className="relative">

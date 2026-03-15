@@ -38,6 +38,7 @@ import DownloadAppPage from './components/DownloadAppPage';
 import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
 import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
+import EntertainmentScreen from './components/EntertainmentScreen';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
@@ -695,8 +696,9 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/quanlythi" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/thitructuyen" element={<ThiTrucTuyenPage />} />
           <Route path="/ontap/download" element={<DownloadAppPage />} />
-          <Route path="/ontap/thongke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
+           <Route path="/ontap/thongke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
           <Route path="/ontap/lichsudangnhap" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/giaitri" element={<EntertainmentScreen onBack={() => navigate('/ontap/dashboard')} />} />
 
           {/* Redirects từ URL cũ có dấu gạch ngang */}
           <Route path="/ontap/lam-bai" element={<Navigate to="/ontap/lambai" replace />} />

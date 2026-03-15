@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'sonner';
@@ -38,6 +38,7 @@ import DownloadAppPage from './components/DownloadAppPage';
 import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
 import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
+import EntertainmentScreen from './components/EntertainmentScreen';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
@@ -51,6 +52,8 @@ const AppContent: React.FC = () => {
   usePresence();
   const navigate = useNavigate();
   const location = useLocation();
+  const unsubProfileRef = useRef<(() => void) | null>(null);
+
 
   const licenses = useAppStore(state => state.licenses);
   const setLicenses = useAppStore(state => state.setLicenses);
@@ -200,13 +203,21 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        // Dọn dẹp listener cũ nếu đang tồn tại
+        if (unsubProfileRef.current) {
+          unsubProfileRef.current();
+          unsubProfileRef.current = null;
+        }
+
         import('firebase/firestore').then(({ onSnapshot, doc }) => {
-          const unsubProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
+          unsubProfileRef.current = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
             if (docSnap.exists()) {
               const profile = { id: docSnap.id, ...docSnap.data() } as UserProfile;
               setUserProfile(profile);
               setUserName(profile.full_name || firebaseUser.displayName || '');
             }
+          }, (error) => {
+            console.warn('⚠️ [App] Profile onSnapshot error:', error.message);
           });
         });
 
@@ -277,6 +288,11 @@ const AppContent: React.FC = () => {
         });
 
       } else {
+        // Dọn dẹp listener khi logout
+        if (unsubProfileRef.current) {
+          unsubProfileRef.current();
+          unsubProfileRef.current = null;
+        }
         setUserProfile(null);
         setUserName('');
       }
@@ -284,6 +300,10 @@ const AppContent: React.FC = () => {
 
     return () => {
       unsubscribe();
+      if (unsubProfileRef.current) {
+        unsubProfileRef.current();
+        unsubProfileRef.current = null;
+      }
     };
   }, [licenses, navigate, location.pathname]);
 
@@ -544,6 +564,7 @@ const AppContent: React.FC = () => {
       case 'download_app': navigate('/ontap/download'); break;
       case 'analytics': navigate('/ontap/thongke'); break;
       case 'login_history': navigate('/ontap/lichsudangnhap'); break;
+      case 'giaitri': navigate('/ontap/giaitri'); break;
       default: navigate('/ontap/dashboard');
     }
   };
@@ -703,6 +724,7 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/download" element={<DownloadAppPage />} />
           <Route path="/ontap/thongke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
           <Route path="/ontap/lichsudangnhap" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/giaitri" element={<EntertainmentScreen onBack={() => navigate('/ontap/dashboard')} />} />
 
           {/* Redirects từ URL cũ có dấu gạch ngang */}
           <Route path="/ontap/lam-bai" element={<Navigate to="/ontap/lambai" replace />} />
