@@ -614,6 +614,9 @@ const AppContent: React.FC = () => {
         </>
       )}
 
+      {/* Spacer cho fixed navbar */}
+      {!isMobileApp && <div className="pt-16" />}
+
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Navigate to="/ontap/dashboard" replace />} />

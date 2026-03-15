@@ -18,7 +18,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
 
     return (
         <>
-            <div className="sticky top-0 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-50 px-4 flex items-center justify-between h-16 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300">
+            <div className="fixed top-0 left-0 right-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-50 px-4 flex items-center justify-between h-16 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300">
 
                 {/* LEFT: Navigation Links */}
                 <div className="flex items-center gap-1 md:gap-4 overflow-x-auto no-scrollbar">
