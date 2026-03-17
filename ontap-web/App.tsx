@@ -39,6 +39,7 @@ import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
 import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
 import EntertainmentScreen from './components/EntertainmentScreen.tsx';
+import GiamKhaoSelectionScreen from './components/GiamKhaoSelectionScreen';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
@@ -561,7 +562,9 @@ const AppContent: React.FC = () => {
       setScore(correctCount);
       setUserAnswers(answers);
 
-      if (location.pathname === '/ontap/thithu') {
+      const isGK = location.pathname.startsWith('/ontap/giamkhao');
+
+      if (location.pathname === '/ontap/thithu' || location.pathname === '/ontap/giamkhao/thithu') {
         if (userProfile) {
           saveExamResult(
             userProfile.id,
@@ -574,7 +577,7 @@ const AppContent: React.FC = () => {
             currentQuiz.timeLimit! - 0
           );
         }
-        navigate('/ontap/ketquathi');
+        navigate(isGK ? '/ontap/giamkhao/ketquathi' : '/ontap/ketquathi');
       } else {
         if (userProfile && selectedLicense) {
           const subjName = selectedSubject ? selectedSubject.name : null;
@@ -589,7 +592,7 @@ const AppContent: React.FC = () => {
             0
           );
         }
-        navigate('/ontap/ketqua');
+        navigate(isGK ? '/ontap/giamkhao/ketqua' : '/ontap/ketqua');
       }
     }
   };
@@ -621,6 +624,7 @@ const AppContent: React.FC = () => {
       case 'analytics': navigate('/ontap/thongke'); break;
       case 'login_history': navigate('/ontap/lichsudangnhap'); break;
       case 'giaitri': navigate('/ontap/giaitri'); break;
+      case 'giam_khao': navigate('/ontap/giamkhao'); break;
       default: navigate('/ontap/dashboard');
     }
   };
@@ -695,6 +699,118 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/dangnhap" element={!userProfile ? <LoginScreen onBack={() => navigate('/')} /> : <Navigate to="/ontap/dashboard" />} />
           <Route path="/ontap/windowslogin" element={!userProfile ? <WindowsLoginScreen /> : <Navigate to="/ontap/dashboard" />} />
           <Route path="/ontap/dangky" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
+
+          {/* ===== GIÁM KHẢO ROUTES ===== */}
+          <Route path="/ontap/giamkhao" element={
+            userProfile && ['admin', 'giao_vien', 'quan_ly', 'lanh_dao'].includes(userProfile.role)
+              ? <GiamKhaoSelectionScreen
+                  licenses={licenses}
+                  onSelectLicense={(license) => {
+                    setSelectedLicense(license);
+                    setSubjects(license.subjects);
+                    navigate('/ontap/giamkhao/chonmon');
+                  }}
+                  onBack={() => navigate('/ontap/dashboard')}
+                />
+              : <Navigate to="/ontap/dashboard" replace />
+          } />
+
+          <Route path="/ontap/giamkhao/chonmon" element={
+            userProfile && ['admin', 'giao_vien', 'quan_ly', 'lanh_dao'].includes(userProfile.role) && selectedLicense
+              ? <SubjectSelectionScreen
+                  subjects={subjects}
+                  progress={{}}
+                  onSelect={async (subject) => {
+                    const allowed = await checkUsage(userProfile);
+                    if (allowed !== 'ALLOWED') {
+                      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
+                      return;
+                    }
+                    await incrementUsage(userProfile);
+                    setSelectedSubject(subject);
+                    const newQuiz: Quiz = {
+                      id: subject.id,
+                      title: subject.name,
+                      questions: subject.questions,
+                      timeLimit: 0
+                    };
+                    setCurrentQuiz(newQuiz);
+                    setUserAnswers({});
+                    localStorage.removeItem('ontap_quiz_session');
+                    navigate('/ontap/giamkhao/lambai');
+                  }}
+                  onBack={() => navigate('/ontap/giamkhao')}
+                />
+              : <Navigate to="/ontap/giamkhao" replace />
+          } />
+
+          <Route path="/ontap/giamkhao/lambai" element={
+            currentQuiz ? (
+              <QuizScreen
+                quiz={currentQuiz}
+                onFinish={handleQuizFinish}
+                onBack={() => navigate('/ontap/giamkhao/chonmon')}
+                initialAnswers={userAnswers}
+                initialIndex={0}
+                onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'practice')}
+              />
+            ) : <Navigate to="/ontap/giamkhao/chonmon" replace />
+          } />
+
+          <Route path="/ontap/giamkhao/thithu" element={
+            currentQuiz ? (
+              <ExamQuizScreen2
+                quiz={currentQuiz}
+                onFinish={handleQuizFinish}
+                onBack={() => navigate('/ontap/giamkhao')}
+                userName={userName}
+                userProfile={userProfile}
+                selectedLicense={selectedLicense}
+                initialAnswers={userAnswers}
+                onProgressUpdate={(idx, time, ans) => persistSession(idx, time, ans, currentQuiz, 'online_exam')}
+              />
+            ) : <Navigate to="/ontap/giamkhao" replace />
+          } />
+
+          <Route path="/ontap/giamkhao/ketqua" element={
+            currentQuiz ? (
+              <ResultsScreen
+                quiz={currentQuiz}
+                userAnswers={userAnswers}
+                score={score}
+                onRetry={() => {
+                  if (selectedSubject && selectedLicense) {
+                    const newQuiz: Quiz = {
+                      id: selectedSubject.id,
+                      title: selectedSubject.name,
+                      questions: selectedSubject.questions,
+                      timeLimit: 0
+                    };
+                    setCurrentQuiz(newQuiz);
+                    setUserAnswers({});
+                    localStorage.removeItem('ontap_quiz_session');
+                    navigate('/ontap/giamkhao/lambai');
+                  }
+                }}
+                onBack={() => navigate('/ontap/giamkhao/chonmon')}
+                userName={userName}
+              />
+            ) : <Navigate to="/ontap/giamkhao/chonmon" replace />
+          } />
+
+          <Route path="/ontap/giamkhao/ketquathi" element={
+            currentQuiz ? (
+              <ExamResultsScreen
+                quiz={currentQuiz}
+                userAnswers={userAnswers}
+                score={score}
+                onRetry={() => navigate('/ontap/giamkhao')}
+                onBack={() => navigate('/ontap/giamkhao')}
+                userName={userName}
+              />
+            ) : <Navigate to="/ontap/giamkhao" replace />
+          } />
+          {/* ===== END GIÁM KHẢO ROUTES ===== */}
 
           <Route path="/ontap/chonbang" element={<LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => navigate('/')} />} />
           <Route path="/ontap/nhapten" element={<NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => navigate('/ontap/chonbang')} />} />
