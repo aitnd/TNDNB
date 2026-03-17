@@ -50,16 +50,13 @@ const MarqueeNotifier: React.FC = () => {
 
                 return (
                     <div key={n.id} className={`${bgClass} shadow-lg py-3 relative`}>
-                        {/* 
-                            // @ts-ignore - marquee tag is deprecated but explicitly requested by user 
-                        */}
-                        <marquee behavior="scroll" direction="left" scrollamount="5" width="100%">
+                        <Marquee speed={50} gradient={false}>
                             <div className="inline-flex items-center gap-4 mx-8 font-bold text-sm md:text-base uppercase tracking-wider">
                                 {isSpecial ? <FaExclamationTriangle className="animate-pulse" /> : <FaBell className="animate-bounce" />}
                                 <span>{n.title}:</span>
                                 <span className="font-medium normal-case">{n.message}</span>
                             </div>
-                        </marquee>
+                        </Marquee>
                     </div>
                 );
             })}

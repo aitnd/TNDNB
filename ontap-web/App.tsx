@@ -38,6 +38,8 @@ import DownloadAppPage from './components/DownloadAppPage';
 import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
 import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
+import GiamKhaoSelectionScreen from './components/GiamKhaoSelectionScreen';
+
 import EntertainmentScreen from './components/EntertainmentScreen.tsx';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
@@ -697,7 +699,50 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/dangky" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
 
           <Route path="/ontap/chonbang" element={<LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => navigate('/')} />} />
+          <Route path="/ontap/giamkhao" element={
+            <GiamKhaoSelectionScreen 
+              licenses={licenses} 
+              onSelectSubject={async (subject, mode) => {
+                // Tự động tìm license Giám khảo để gán context
+                const gkLic = licenses.find(l => l.id.includes('giam-khao') || l.name.toLowerCase().includes('giám khảo'));
+                if (gkLic) {
+                  setSelectedLicense(gkLic);
+                  if (mode === 'practice') {
+                    handleSubjectSelect(subject);
+                  } else {
+                    // Custom Thi thử cho Giám khảo
+                    const allowed = await checkUsage(userProfile);
+                    if (allowed !== 'ALLOWED') {
+                      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
+                      return;
+                    }
+                    await incrementUsage(userProfile);
+                    
+                    // Shuffle ALL questions from this subject for GK exam
+                    const shuffled = [...subject.questions].sort(() => 0.5 - Math.random());
+                    const selected = shuffled.slice(0, 30);
+                    
+                    const examQuiz: Quiz = {
+                      id: `exam_gk_${Date.now()}`,
+                      title: `Thi Thử Giám Khảo - ${subject.name}`,
+                      questions: selected,
+                      timeLimit: 2700
+                    };
+                    
+                    setCurrentQuiz(examQuiz);
+                    setUserAnswers({});
+                    setScore(0);
+                    setSelectedSubject(subject);
+                    localStorage.removeItem('ontap_quiz_session');
+                    navigate('/ontap/thithu');
+                  }
+                }
+              }} 
+              onBack={() => navigate('/ontap/dashboard')} 
+            />
+          } />
           <Route path="/ontap/nhapten" element={<NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => navigate('/ontap/chonbang')} />} />
+
 
           <Route path="/ontap/chonchedo" element={
             <ModeSelectionScreen
@@ -767,6 +812,7 @@ const AppContent: React.FC = () => {
                 onRetry={handleRetry}
                 onBack={() => navigate('/ontap/chonchedo')}
                 userName={userName}
+                passPoint={currentQuiz.id.includes('gk_exam') ? 27 : 25}
               />
             ) : <Navigate to="/ontap/chonchedo" replace />
           } />

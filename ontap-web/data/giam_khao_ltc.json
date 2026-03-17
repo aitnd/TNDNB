@@ -1,0 +1,2808 @@
+[
+  {
+    "id": "gk_ltc_1",
+    "text": "Người hoàn thành lớp tập huấn nghiệp vụ đạt yêu cầu để thực hiện nhiệm vụ coi thi, chấm thi. coi kiểm tra, chấm kiểm tra thì:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được Chi Cục Hàng hải và Đường thủy Phía Nam cấp thẻ giám khảo"
+      },
+      {
+        "id": "B",
+        "text": "Được Cục Hàng hải và Đường thủy Việt Nam cấp thẻ giám khảo."
+      },
+      {
+        "id": "C",
+        "text": "Được công bố trên cồng thông tin điện tử của Cục Hàng hải và Đường thủy Việt Nam."
+      },
+      {
+        "id": "D",
+        "text": "Được Sở GTVT địa phương cấp thẻ giám khảo."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_2",
+    "text": "Người hoàn thành lớp tập huấn nghiệp vụ đạt yêu cầu để thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra được công bố trên Cổng thông tin điện tử của Cục Đường thủy nội địa Việt Nam với Ngành, loại, hạng là T.TH1",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra đến máy trưởng hạng nhất;"
+      },
+      {
+        "id": "B",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra thực hành đến thuyền trưởng hạng nhất;"
+      },
+      {
+        "id": "C",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra thực hành đến thuyền trưởng hạng nhì;"
+      },
+      {
+        "id": "D",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra đến máy trưởng hạng nhì;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_3",
+    "text": "Người có bằng tốt nghiệp cao đẳng trở lên được đào tạo nghề máy tàu biển, có GCNKNCM máy trưởng tàu biển từ 750 kW trở lên, có thời gian đảm nhiệm theo chức danh máy trưởng tàu biển tương ứng đủ 06 tháng trở lên được chuyển đổi sang:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "GCNKNCM máy trưởng hạng ba phương tiện thủy nội địa;"
+      },
+      {
+        "id": "B",
+        "text": "GCNKNCM máy trưởng hạng nhì phương tiện thủy nội địa;"
+      },
+      {
+        "id": "C",
+        "text": "Chứng chỉ thợ mày phương tiện thủy nội địa;"
+      },
+      {
+        "id": "D",
+        "text": "GCNKNCM máy trưởng hạng nhất phương tiện thủy nội địa;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_4",
+    "text": "Ngoài các điều kiện chung theo quy định tại, người dự thi để được cấp GCNKNCM máy trưởng hạng ba phải bảo đảm điều kiện cụ thể sau:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Đủ 18 tuổi trở lên, có chứng chỉ sơ cấp nghề được đào tạo theo nghề máy tàu thủy hoặc máy tàu biển hoặc nghề thợ máy"
+      },
+      {
+        "id": "B",
+        "text": "Đủ 20 tuổi trở lên, có chứng chỉ sơ cấp nghề được đào tạo theo nghề máy tàu thủy hoặc máy tàu biển hoặc nghề thợ máy,"
+      },
+      {
+        "id": "C",
+        "text": "Đủ 18 tuổi trở lên, có chứng chỉ thợ máy, có thời gian đảm nhiệm chức danh thợ máy đủ 12 tháng trở lên;"
+      },
+      {
+        "id": "D",
+        "text": "Đủ 20 tuổi trở lên, có chứng chỉ thợ máy, có thời gian đảm nhiệm chức danh thợ máy đủ 12 tháng trở lên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_5",
+    "text": "Ngoài các điều kiện chung theo quy định tại, người dự thi để được cấp GCNKNCM thuyền trưởng hạng nhất phải bảo đảm điều kiện cụ thể sau:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Có bằng tốt nghiệp trung cấp được đào tạo nghề điều khiển tàu thủy hoặc điều khiển tàu biển hoàn thành thời gian tập sự theo chức danh thuyền trưởng hạng ba đủ 12 tháng trở lên;"
+      },
+      {
+        "id": "B",
+        "text": "Có bằng tốt nghiệp trung học phổ thông hoặc tương đương trở lên, có GCNKNCM thuyền trưởng hạng nhì, có thời gian đảm nhiệm chức danh thuyền trưởng hạng nhì hoặc đảm nhiệm chức danh thuyền phó của loại phương tiện được quy định cho chức danh thuyền trưởng hạng nhất đủ 24 tháng trở lên;"
+      },
+      {
+        "id": "C",
+        "text": "Có bằng tốt nghiệp trung cấp được đào tạo nghề điều khiển tàu thủy hoặc điều khiển tàu biển hoàn thành thời gian tập sự theo chức danh thuyền trưởng hạng ba đủ 18 tháng trở lên."
+      },
+      {
+        "id": "D",
+        "text": "Đủ 22 tuổi trở lên, có GCNKNCM thuyền trưởng hạng nhì, có thời gian đảm nhiệm chức danh thuyền trưởng hạng nhì hoặc đảm nhiệm chức danh thuyền phó của loại phương tiện được quy định cho chức danh thuyền trưởng hạng nhất đủ 24 tháng trở lên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_6",
+    "text": "Ai có thẩm quyền xử lý vi phạm đối với thành viên Ban coi thi, chấm thi, coi kiểm tra, chấmkiểm tra:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Bộ GTVT"
+      },
+      {
+        "id": "B",
+        "text": "Cơ sở đào tạo"
+      },
+      {
+        "id": "C",
+        "text": "Cục Hàng hải và Đường thủy Việt Nam"
+      },
+      {
+        "id": "D",
+        "text": "Chủ tịch Hội đồng thi, kiểm tra"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_7",
+    "text": "Thời gian thi môn lý thuyết tổng hợp (trắc nghiệm ) tối đa:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "90 phút"
+      },
+      {
+        "id": "B",
+        "text": "30 phút"
+      },
+      {
+        "id": "C",
+        "text": "60 phút"
+      },
+      {
+        "id": "D",
+        "text": "45 phút"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_8",
+    "text": "Thời gian thi môn thực hành thuyền trưởng hạng nhất tối đa:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "45 phút"
+      },
+      {
+        "id": "B",
+        "text": "60 phút"
+      },
+      {
+        "id": "C",
+        "text": "120 phút"
+      },
+      {
+        "id": "D",
+        "text": "90 phút"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_9",
+    "text": "Giám khảo giám thị không được thực hiện coi thi, chấm thi, coi kiểm tra, chấm kiểm tra trong thời hạn 06 tháng khi vi phạm quy định nào dưới đây:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Để xảy ra xô xát, va chạm, tai nạn trong khi coi thi, chấm thi, coi kiểm tra, chấm kiểm tra do nguyên nhân chủ quan;"
+      },
+      {
+        "id": "B",
+        "text": "Bao che cho những hành vi sai phạm, tiêu cực;"
+      },
+      {
+        "id": "C",
+        "text": "Không kiểm tra kỹ bài thi, kiểm tra dẫn đến thiếu sót các nội dung liên quan bài thi, kiểm tra khi bàn giao bài thi, kiểm tra cho thư ký Hội đồng thi, kiểm tra."
+      },
+      {
+        "id": "D",
+        "text": "Làm việc riêng, uống rượu, bia hoặc sử dụng các chất kích thích khác mà pháp luật cấm sử dụng trong khi tham gia công tác coi thi, chấm thi, coi kiểm tra, chấm kiểm tra;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_10",
+    "text": "Tiêu chuẩn tham dự tập huấn nghiệp vụ để được thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết tổng hợp là:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tốt nghiệp trung cấp trở lên thuộc một trong các chuyên ngành điều khiển tàu thủy hoặc điều khiển tàu biển, ngành máy tàu thủy hoặc máy tàu biển, đã tham gia giảng dạy hoặc làm việc trong lĩnh vực đường thủy nội địa từ 12 tháng trở lên."
+      },
+      {
+        "id": "B",
+        "text": "Tốt nghiệp trung cấp trở lên thuộc một trong các chuyên ngành điều khiển tàu thủy hoặc điều khiển tàu biển, ngành máy tàu thủy hoặc máy tàu biển"
+      },
+      {
+        "id": "C",
+        "text": "Có chứng chỉ A tin học và Tốt nghiệp trung cấp trở lên."
+      },
+      {
+        "id": "D",
+        "text": "Tốt nghiệp trung cấp trở lên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_11",
+    "text": "Giám khảo, giám thị hoạt động dưới sự điều hành của:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cơ sở đào tạo"
+      },
+      {
+        "id": "B",
+        "text": "Hội đồng thi"
+      },
+      {
+        "id": "C",
+        "text": "Chi cục Hàng hải và Đường thủy Việt Nam"
+      },
+      {
+        "id": "D",
+        "text": "Cục Hàng hải và Đường thủy Việt Nam"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_12",
+    "text": "Tiêu chuẩn tham dự tập huấn nghiệp vụ để được thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra Môn lý thuyết chuyên môn là:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tốt nghiệp trung cấp trở lên thuộc một trong các chuyên ngành điều khiển tàu thủy hoặc điều khiển tàu biển, ngành máy tàu thủy hoặc máy tàu biển, đã tham gia giảng dạy hoặc làm việc trong lĩnh vực đường thủy nội địa từ 12 tháng trở lên."
+      },
+      {
+        "id": "B",
+        "text": "Có chứng chỉ B tin học và Tốt nghiệp trung cấp trở lên."
+      },
+      {
+        "id": "C",
+        "text": "Tốt nghiệp trung cấp trở lên"
+      },
+      {
+        "id": "D",
+        "text": "Tốt nghiệp trung cấp trở lên thuộc một trong các chuyên ngành điều khiển tàu thủy hoặc điều khiển tàu biển, ngành máy tàu thủy hoặc máy tàu biển, đã tham gia giảng dạy hoặc làm việc trong lĩnh vực đường thủy nội địa từ 24 tháng trở lên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_13",
+    "text": "Theo quy định hiện hành thời gian lưu trữ bài thi, kiểm tra:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tối thiểu 02 năm;"
+      },
+      {
+        "id": "B",
+        "text": "Tối thiểu 03 năm;"
+      },
+      {
+        "id": "C",
+        "text": "Tối thiểu 01 năm;"
+      },
+      {
+        "id": "D",
+        "text": "Tối thiểu 04 năm."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_14",
+    "text": "Tiêu chuẩn tham dự tập huấn nghiệp vụ để được thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn thực hành thuyền trưởng hạng 2 (T2) là:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tốt nghiệp trung học phổ thông hoặc tương đương trở lên và có GCNKNCM thuyền trưởng hạng 1 (T1);"
+      },
+      {
+        "id": "B",
+        "text": "Có GCNKNCM thuyền trưởng hạng 1 (T1) và có thời gian đảm nhiệm chức danh thuyền trưởng hạng 1 (T1) từ 24 tháng trở lên;"
+      },
+      {
+        "id": "C",
+        "text": "Có GCNKNCM thuyền trưởng hạng 1 (T1) và có thời gian đảm nhiệm chức danh thuyền trưởng hạng 1 (T1) từ 12 tháng trở lên;"
+      },
+      {
+        "id": "D",
+        "text": "Tốt nghiệp trung học phổ thông hoặc tương đương trở lên hoặc Có GCNKNCM thuyền trưởng hạng 1 (T1) và có thời gian đảm nhiệm chức danh thuyền trưởng hạng 1 (T1) từ 12tháng trở lên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_15",
+    "text": "Ngoài các điều kiện chung theo quy định tại, người dự thi để được cấp GCNKNCM máy trưởng hạng nhất phải bảo đảm điều kiện cụ thể sau:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Có bằng tốt nghiệp trung cấp được đào tạo nghề máy tàu thủy hoặc máy tàu biển, hoàn thành thời gian tập sự theo chức danh máy trưởng hạng ba đủ 06 tháng trở lên;"
+      },
+      {
+        "id": "B",
+        "text": "Đủ 22 tuổi trở lên, có GCNKNCM máy trưởng hạng nhì, có thời gian đảm nhiệm chức danh máy trưởng hạng nhì hoặc đảm nhiệm chức danh máy phó của loại phương tiện được quy định cho chức danh máy trưởng hạng nhất đủ 18 tháng trở lên;"
+      },
+      {
+        "id": "C",
+        "text": "Có bằng tốt nghiệp trung học phổ thông hoặc tương đương trở lên, có GCNKNCM máy trưởng hạng nhì, có thời gian đảm nhiệm chức danh máy trưởng hạng nhì hoặc đảm nhiệm chức danh máy phó của loại phương tiện được quy định cho chức danh máy trưởng hạng nhất đủ 18 tháng trở lên;"
+      },
+      {
+        "id": "D",
+        "text": "Có bằng tốt nghiệp trung cấp được đào tạo nghề điều khiển tàu thủy hoặc điều khiển tàu biển hoàn thành thời gian tập sự theo chức danh thuyền trưởng hạng ba đủ 12 tháng trở lên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_16",
+    "text": "Ngoài các điều kiện chung theo quy định tại, người dự thi để được cấp GCNKNCM máy trưởng hạng nhì phải bảo đảm điều kiện cụ thể sau:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Đủ 20 tuổi trở lên, có GCNKNCM máy trưởng hạng ba, có thời gian đảm nhiệm chức danh máy trưởng hạng ba hoặc đảm nhiệm chức danh máy phó của loại phương tiện được quy định cho chức danh máy trưởng hạng nhì đủ 06 tháng trở lên;"
+      },
+      {
+        "id": "B",
+        "text": "Có GCNKNCM máy trưởng hạng ba, có thời gian đảm nhiệm chức danh máy trưởng hạng ba hoặc đảm nhiệm chức danh máy phó của loại phương tiện được quy định cho chức danh máy trưởng hạng nhì đủ 12 tháng trở lên hoặc có chứng chỉ sơ cấp nghề máy trưởng hạng ba, có thời gian tập sự đủ 06 tháng trở lên;"
+      },
+      {
+        "id": "C",
+        "text": "Có chứng chỉ sơ cấp nghề được đào tạo theo nghề máy tàu thủy hoặc máy tàu biển hoặc nghề thợ máy, hoàn thành thời gian tập sự đủ 12 tháng trở lên."
+      },
+      {
+        "id": "D",
+        "text": "Có chứng chỉ sơ cấp nghề được đào tạo theo nghề máy tàu thủy hoặc máy tàu biển hoặc nghề thợ máy, hoàn thành thời gian tập sự đủ 06 tháng trở lên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_17",
+    "text": "Người hoàn thành lớp tập huấn nghiệp vụ đạt yêu cầu để thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra được công bố trên Cổng thông tin điện tử của Cục Đường thủy nội địa Việt Nam với Ngành, loại, hạng là M.LTCM",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết chuyên môn ngành máy phương tiện và môn lý thuyết tổng hợp;"
+      },
+      {
+        "id": "B",
+        "text": "Chỉ được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết tổng hợp;"
+      },
+      {
+        "id": "C",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết chuyên môn ngành điều khiển phương tiện và môn lý thuyết tổng hợp;"
+      },
+      {
+        "id": "D",
+        "text": "Chỉ được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết chuyên môn;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_18",
+    "text": "Ngoài các điều kiện chung theo quy định tại, người dự thi để được cấp GCNKNCM thuyền trưởng hạng nhì phải bảo đảm điều kiện cụ thể sau:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Có GCNKNCM thuyền trưởng hạng ba, có thời gian đảm nhiệm chức danh thuyền trưởng hạng ba hoặc đảm nhiệm chức danh thuyền phó của loại phương tiện được quy định cho chức danh thuyền trưởng hạng nhì đủ 18 tháng trở lên hoặc có chứng chỉ sơ cấp nghề thuyền trưởng hạng ba, có thời gian tập sự đủ 12 tháng trở lên;"
+      },
+      {
+        "id": "B",
+        "text": "Đủ 20 tuổi trở lên, có GCNKNCM thuyền trưởng hạng ba, có thời gian đảm nhiệm chức danh thuyền trưởng hạng ba hoặc đảm nhiệm chức danh thuyền phó của loại phương tiện được quy định cho chức danh thuyền trưởng hạng nhì đủ 12 tháng trở lên;"
+      },
+      {
+        "id": "C",
+        "text": "Có chứng chỉ sơ cấp nghề được đào tạo nghề điều khiển tàu thủy hoặc điều khiển tàu biển hoặc nghề thủy thủ, hoàn thành thời gian tập sự đủ 12 tháng trở lên."
+      },
+      {
+        "id": "D",
+        "text": "Có chứng chỉ sơ cấp nghề được đào tạo nghề điều khiển tàu thủy hoặc điều khiển tàu biển hoặc nghề thủy thủ, hoàn thành thời gian tập sự đủ 18 tháng trở lên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_19",
+    "text": "Theo quy định hiện hành cơ quan nào ra quyết định công nhận kết quả thi, cấp, cấp lại, chuyển đổi GCNKNCM thuyền trưởng, máy trưởng:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cục Hàng hải và Đường thủy Việt Nam;"
+      },
+      {
+        "id": "B",
+        "text": "Cơ sở đào tạo."
+      },
+      {
+        "id": "C",
+        "text": "Bộ Xây dựng;"
+      },
+      {
+        "id": "D",
+        "text": "Sở Xây dựng;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_20",
+    "text": "Giám khảo, giám thị không được thực hiện coi thi, chấm thi, coi kiểm tra, chấm kiểm tra trong thời hạn 03 tháng khi vi phạm quy định nào dưới đây:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Không báo cáo Trưởng ban coi thi, chấm thi, coi kiểm tra, chấm kiểm tra đề nghị Hội đồng thi, kiểm tra điều chỉnh kịp thời khi phát hiện sai sót trong đề thi, kiểm tra;"
+      },
+      {
+        "id": "B",
+        "text": "Trợ giúp thí sinh dưới mọi hình thức;"
+      },
+      {
+        "id": "C",
+        "text": "Tự ý làm những công việc không được phân công;"
+      },
+      {
+        "id": "D",
+        "text": "Tất cả các trường hợp trên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_21",
+    "text": "Ngoài các điều kiện chung theo quy định tại, người dự thi để được cấp GCNKNCM thuyền trưởng hạng ba phải bảo đảm điều kiện cụ thể sau:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Đủ 18 tuổi trở lên, có chứng chỉ thủy thủ hoặc chứng chỉ lái phương tiện, có thời gian đảm nhiệm chức danh đủ 12 tháng trở lên hoặc có GCNKNCM thuyền trưởng hạng tư, có thời gian đảm nhiệm chức danh thủy thủ hoặc người lái phương tiện đủ 06 tháng trở lên;"
+      },
+      {
+        "id": "B",
+        "text": "Có chứng chỉ sơ cấp nghề được đào tạo nghề điều khiển tàu thủy hoặc điều khiển tàu biển hoặc nghề thủy thủ, hoàn thành thời gian tập sự đủ 12 tháng trở lên;"
+      },
+      {
+        "id": "C",
+        "text": "Có chứng chỉ sơ cấp nghề được đào tạo nghề điều khiển tàu thủy hoặc điều khiển tàu biển"
+      },
+      {
+        "id": "D",
+        "text": "Đủ 20 tuổi trở lên, có chứng chỉ thủy thủ hoặc chứng chỉ lái phương tiện, có thời gian đảm nhiệm chức danh đủ 06 tháng trở lên hoặc có GCNKNCM thuyền trưởng hạng tư, có thời gian đảm nhiệm chức danh thủy thủ hoặc người lái phương tiện đủ 06 tháng trở lên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_22",
+    "text": "Người có văn bằng, chứng chỉ thuyền trưởng, máy trưởng tàu cá hạng II, có thời gian đảm nhiệm theo chức danh thuyền trưởng, máy trưởng tàu cá hạng II đủ 18 tháng trở lên được chuyển đổi sang GCNKNCM thuyền trưởng, máy trưởng loại nào:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "GCNKNCM thuyền trưởng, máy trưởng hạng ba chỉ dự thi các môn thi tương ứng với thuyền trưởng, máy trưởng hạng ba và phải đạt yêu cầu theo quy định"
+      },
+      {
+        "id": "B",
+        "text": "GCNKNCM thuyền trưởng, máy trưởng hạng nhì, chỉ dự thi các môn thi tương ứng với thuyền trưởng, máy trưởng hạng ba và phải đạt yêu cầu theo quy định"
+      },
+      {
+        "id": "C",
+        "text": "GCNKNCM thuyền trưởng, máy trưởng hạng ba nhưng phải hoàn thành chương trình bồi dưỡng nghề tương ứng với thuyền trưởng, máy trưởng hạng ba, dự thi các môn thi tương ứng với thuyền trưởng, máy trưởng hạng ba và phải đạt yêu cầu theo quy định"
+      },
+      {
+        "id": "D",
+        "text": "GCNKNCM thuyền trưởng, máy trưởng hạng nhất nhưng phải hoàn thành chương trình bồi dưỡng nghề tương ứng với thuyền trưởng, máy trưởng hạng ba, dự thi các môn thi tương ứng với thuyền trưởng, máy trưởng hạng ba và phải đạt yêu cầu theo quy định"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_23",
+    "text": "Quyền hạn của người giám sát kỳ thi, kiểm tra:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Khi phát hiện sai phạm phải lập biên bản;"
+      },
+      {
+        "id": "B",
+        "text": "Đề nghị Hội đồng thi, kiểm tra xử lý kịp thời, đúng quy định;"
+      },
+      {
+        "id": "C",
+        "text": "Báo cáo Sở Xây dựng để xem xét, xử lý"
+      },
+      {
+        "id": "D",
+        "text": "Tất cả các ý trên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_24",
+    "text": "Người hoàn thành lớp tập huấn nghiệp vụ đạt yêu cầu để thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra được công bố trên Cổng thông tin điện tử của Cục Đường thủy nội địa Việt Nam với Ngành, loại, hạng là T.LTCM",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Chỉ được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết chuyên môn;"
+      },
+      {
+        "id": "B",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết chuyên môn ngành máy phương tiện và môn lý thuyết tổng hợp;"
+      },
+      {
+        "id": "C",
+        "text": "Chỉ được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết tổng hợp;"
+      },
+      {
+        "id": "D",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết chuyên môn ngành điều khiển phương tiện và môn lý thuyết tổng hợp;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_25",
+    "text": "Thời gian thi môn thực hành thuyền trưởng hạng ba tối đa:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "60 phút"
+      },
+      {
+        "id": "B",
+        "text": "45 phút"
+      },
+      {
+        "id": "C",
+        "text": "120 phút"
+      },
+      {
+        "id": "D",
+        "text": "90 phút"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_26",
+    "text": "Theo quy định hiện hành cơ quan nào ra Quyết định công nhận kết quả kiểm tra, cấp, cấp lại, chuyển đổi CCCM đặc biệt:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cơ sở đào tạo."
+      },
+      {
+        "id": "B",
+        "text": "Cục Hàng hải và Đường thủy Việt Nam;"
+      },
+      {
+        "id": "C",
+        "text": "Sở Xây dựng;"
+      },
+      {
+        "id": "D",
+        "text": "Bộ Xây dựng;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_27",
+    "text": "Giám khảo, giám thị không được thực hiện coi thi, chấm thi, coi kiểm tra, chấm kiểm tra trong thời hạn 03 tháng khi vi phạm quy định nào dưới đây:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Để xảy ra xô xát, va chạm, tai nạn trong khi coi thi, chấm thi, coi kiểm tra, chấm kiểm tra do nguyên nhân chủ quan;"
+      },
+      {
+        "id": "B",
+        "text": "Không tập hợp kết quả chấm thi, kiểm tra và bàn giao cho thư ký Hội đồng thi, kiểm tra;"
+      },
+      {
+        "id": "C",
+        "text": "Không kiểm tra việc chấp hành nội quy thi, kiểm tra; danh sách thí sinh dự thi, kiểm tra; điều kiện an toàn phòng thi, kiểm tra; điều kiện an toàn của phương tiện, thiết bị phục vụ kỳ thi, kiểm tra;"
+      },
+      {
+        "id": "D",
+        "text": "Tất cả các trường hợp trên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_28",
+    "text": "Tiêu chuẩn tham dự tập huấn nghiệp vụ để được thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn thực hành tuyền trưởng hạng 1 (T1) là:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tốt nghiệp trung học phổ thông hoặc tương đương trở lên và có GCNKNCM thuyền trưởng hạng 1 (T1);"
+      },
+      {
+        "id": "B",
+        "text": "Có GCNKNCM thuyền trưởng hạng 1 (T1) và có thời gian đảm nhiệm chức danh thuyền trưởng hạng 1 (T1) từ 24 tháng trở lên;"
+      },
+      {
+        "id": "C",
+        "text": "Tốt nghiệp trung học phổ thông hoặc tương đương trở lên, Có GCNKNCM thuyền trưởng hạng 1 (T1) và có thời gian đảm nhiệm chức danh thuyền trưởng hạng 1 (T1) từ 24 thángtrở lên;"
+      },
+      {
+        "id": "D",
+        "text": "Tốt nghiệp trung học phổ thông hoặc tương đương trở lên, Có GCNKNCM thuyền trưởng hạng 1 (T1) và có thời gian đảm nhiệm chức danh thuyền trưởng hạng 1 (T1) từ 12 thángtrở lên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_29",
+    "text": "Người hoàn thành lớp tập huấn nghiệp vụ đạt yêu cầu để thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra được công bố trên Cổng thông tin điện tử của Cục Đường thủy nội địa Việt Nam với Ngành, loại, hạng là T.TH2",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra đến máy trưởng hạng nhì;"
+      },
+      {
+        "id": "B",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra thực hành đến thuyền trưởng hạng ba;"
+      },
+      {
+        "id": "C",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra đến máy trưởng hạng ba;"
+      },
+      {
+        "id": "D",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra thực hành đến thuyền trưởng hạng nhì;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_30",
+    "text": "Những ai sau đây khi thực hiện công tác coi thi, chấm thi, coi kiểm tra, chấm kiểm tra phải hoàn thành lớp tập huấn nghiệp vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra đạt yêu cầu do Cục Hàng hải và Đường thủy Việt Nam tổ chức :",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Thành viên ban coi thi, chấm thi, coi kiểm tra, chấm kiểm tra"
+      },
+      {
+        "id": "B",
+        "text": "Thư ký đồng thi, kiểm tra"
+      },
+      {
+        "id": "C",
+        "text": "Tất cả các trường hợp trên"
+      },
+      {
+        "id": "D",
+        "text": "Hội đồng thi,kiểm tra"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_31",
+    "text": "Ai có thẩm quyền đình chỉ thực hiện nhiệm vụ, coi thi, chấm thi, coi kiểm tra, chấm kiểm tra đối với thành viên Ban coi thi, chấm thi, coi kiểm tra, chấm kiểm tra:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cục Hàng hải và Đường thủy Việt Nam"
+      },
+      {
+        "id": "B",
+        "text": "Cơ sở đào tạo"
+      },
+      {
+        "id": "C",
+        "text": "Bộ GTVT"
+      },
+      {
+        "id": "D",
+        "text": "Chủ tịch Hội đồng thi, kiểm tra"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_32",
+    "text": "Theo quy định hiện hành trong thời hạn bao lâu, kể từ ngày khai giảng, cơ sở đào tạo báo cáo Sở Xây dựng Danh sách học viên đủ điều kiện dự học:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "01 (một) ngày làm việc;"
+      },
+      {
+        "id": "B",
+        "text": "05 (năm) ngày làm việc;"
+      },
+      {
+        "id": "C",
+        "text": "07 (bảy) ngày làm việc."
+      },
+      {
+        "id": "D",
+        "text": "03 (ba) ngày làm việc;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_33",
+    "text": "Giám khảo giám thị không được thực hiện coi thi, chấm thi, coi kiểm tra, chấm kiểm tra trong thời hạn 06 tháng khi vi phạm một trong các quy định dưới đây:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Làm việc riêng, uống rượu, bia hoặc sử dụng các chất kích thích khác mà pháp luật cấm sử dụng trong khi tham gia công tác coi thi, chấm thi, coi kiểm tra, chấm kiểm tra;"
+      },
+      {
+        "id": "B",
+        "text": "Không kiểm tra kỹ bài thi, kiểm tra dẫn đến thiếu sót các nội dung liên quan bài thi, kiểm tra khi bàn giao bài thi, kiểm tra cho thư ký Hội đồng thi, kiểm tra."
+      },
+      {
+        "id": "C",
+        "text": "Không tập hợp kết quả chấm thi, kiểm tra và bàn giao cho thư ký Hội đồng thi, kiểm tra;"
+      },
+      {
+        "id": "D",
+        "text": "Bao che cho những hành vi sai phạm, tiêu cực;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_34",
+    "text": "Đối với môn thi lý thuyết tổng hợp (trắc nghiệm) mỗi đề có:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "30 câu hỏi"
+      },
+      {
+        "id": "B",
+        "text": "20 câu hỏi"
+      },
+      {
+        "id": "C",
+        "text": "60 câu hỏi"
+      },
+      {
+        "id": "D",
+        "text": "15 câu hỏi"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_35",
+    "text": "Thời gian thi môn thực hành thuyền trưởng hạng nhì tối đa:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "120 phút"
+      },
+      {
+        "id": "B",
+        "text": "45 phút"
+      },
+      {
+        "id": "C",
+        "text": "60 phút"
+      },
+      {
+        "id": "D",
+        "text": "90 phút"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_36",
+    "text": "Theo quy định hiện hành trong thời hạn bao lâu, trước khi tổ chức kiểm tra cấp CCCM, cơ sở đào tạo báo cáo bằng văn bản về Sở Xây dựng để giám sát các kỳ kiểm tra:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "07 (bảy) ngày làm việc;"
+      },
+      {
+        "id": "B",
+        "text": "10 (mười) ngày làm việc."
+      },
+      {
+        "id": "C",
+        "text": "08 (tám) ngày làm việc;"
+      },
+      {
+        "id": "D",
+        "text": "09 (chín) ngày làm việc;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_37",
+    "text": "Theo quy định hiện hành cơ quan nào ra quyết định công nhận kết quả kiểm tra, cấp, cấp lại, chuyển đổi chứng chỉ nghiệp vụ:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cục Hàng hải và Đường thủy Việt Nam;"
+      },
+      {
+        "id": "B",
+        "text": "Sở Xây dựng;"
+      },
+      {
+        "id": "C",
+        "text": "Cơ sở đào tạo."
+      },
+      {
+        "id": "D",
+        "text": "Bộ Xây dựng;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_38",
+    "text": "Giám khảo giám thị bị hủy kết quả công nhận thực hiện coi thi, chấm thi, coi kiểm tra, chấm kiểm tra khi:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Có biểu hiện tiêu cực làm sai lệch kết quả thi, kiểm tra;"
+      },
+      {
+        "id": "B",
+        "text": "Bao che cho những hành vi sai phạm, tiêu cực;"
+      },
+      {
+        "id": "C",
+        "text": "Hai lần vi phạm không thực hiện đúng nội dung, quy trình và thủ tục của kỳ thi, kiểm tra theo quy định hiện hành;"
+      },
+      {
+        "id": "D",
+        "text": "Hai lần vi phạm trợ giúp thí sinh dưới mọi hình thức;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_39",
+    "text": "Người có bằng tố nghiệp cao đẳng trở lên được đào tạo nghề điều khiển tàu biển, có GCNKNCM thuyền trưởng tàu biển từ 500 GT trở lên, có thời gian đảm nhiệm theo chức danh thuyền trưởng tàu biển tương ứng đủ 06 tháng trở lên được chuyển đổi sang:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "GCNKNCM thuyền trưởng hạng nhất phương tiện thủy nội địa;"
+      },
+      {
+        "id": "B",
+        "text": "GCNKNCM thuyền trưởng hạng nhì phương tiện thủy nội địa;"
+      },
+      {
+        "id": "C",
+        "text": "GCNKNCM thuyền trưởng hạng tư phương tiện thủy nội địa;"
+      },
+      {
+        "id": "D",
+        "text": "GCNKNCM thuyền trưởng hạng ba phương tiện thủy nội địa;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_40",
+    "text": "Người có chứng chỉ thủy thủ, thợ máy tàu biển được chuyển đổi tương ứng sang:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Chứng chỉ thủy thủ, chứng chỉ lái phương tiện, chứng chỉ thợ máy phương tiện thủy nội địa nhưng phải hoàn thành chương trình bồi dưỡng nghề tương ứng."
+      },
+      {
+        "id": "B",
+        "text": "Chứng chỉ thủy thủ, thợ máy phương tiện thủy nội địa nhưng phải hoàn thành chương trình bồi dưỡng nghề tương ứng;"
+      },
+      {
+        "id": "C",
+        "text": "Chứng chỉ thủy thủ, thợ máy phương tiện thủy nội địa và được cấp chứng chỉ an toàn làm việc trên phương tiện đi ven biển;"
+      },
+      {
+        "id": "D",
+        "text": "Chứng chỉ thủy thủ, chứng chỉ lái phương tiện, chứng chỉ thợ máy phương tiện thủy nội địa;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_41",
+    "text": "Giám khảo, giám thị không được thực hiện coi thi, chấm thi, coi kiểm tra, chấm kiểm tratrong thời hạn 03 tháng khi vi phạm quy định nào dưới đây:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Có thái độ, hành vi ứng xử không đúng mực khi tham gia công tác coi thi, chấm thi, coi kiểm tra, chấm kiểm tra;"
+      },
+      {
+        "id": "B",
+        "text": "Không báo cáo Trưởng ban coi thi, chấm thi, coi kiểm tra, chấm kiểm tra đề nghị Hội đồng thi, kiểm tra điều chỉnh kịp thời khi phát hiện sai sót trong đề thi, kiểm tra;"
+      },
+      {
+        "id": "C",
+        "text": "Trợ giúp thí sinh dưới mọi hình thức;"
+      },
+      {
+        "id": "D",
+        "text": "Tất cả các trường hợp trên;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_42",
+    "text": "Nhiệm vụ của Ban coi thi, chấm thi, coi kiểm tra, chấm kiểm tra:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Coi thi, chấm thi, coi kiểm tra, chấm kiểm tra theo đúng quy định; Tập hợp kết quả chấm thi, kiểm tra và bàn giao cho Thư ký Hội đồng thi, kiểm tra;"
+      },
+      {
+        "id": "B",
+        "text": "Đề nghị Hội đồng thi, kiểm tra điều chỉnh kịp thời nếu phát hiện sai sót trong đề thi, kiểm tra;"
+      },
+      {
+        "id": "C",
+        "text": "Tổ chức, bố trí, sắp xếp thành viên Ban coi thi, chấm thi, coi kiểm tra, chấm kiểm tra bảo đảm nguyên tắc mỗi môn thi, kiểm tra phải có tối thiểu 02 (hai) thành viên;"
+      },
+      {
+        "id": "D",
+        "text": "Tất cả các ý trên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_43",
+    "text": "Người hoàn thành lớp tập huấn nghiệp vụ đạt yêu cầu để thực hiện nhiệm vụ coi thi, chấm thi, coi kiểm tra, chấm kiểm tra được công bố trên Cổng thông tin điện tử của Cục Đường thủy nội địa Việt Nam với Ngành, loại, hạng là LTTH",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết chuyên môn;"
+      },
+      {
+        "id": "B",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra thực hành;"
+      },
+      {
+        "id": "C",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra môn lý thuyết tổng hợp;"
+      },
+      {
+        "id": "D",
+        "text": "Được coi thi, chấm thi, coi kiểm tra, chấm kiểm tra tất cả các loại hạng;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_44",
+    "text": "Chứng chỉ nghiệp vụ, bao gồm:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Chứng chỉ thủy thủ (TT); Chứng chỉ thợ máy (TM); Chứng chỉ lái phương tiện (LPT)."
+      },
+      {
+        "id": "B",
+        "text": "Chứng chỉ thủy thủ hạng nhất (TT1); Chứng chỉ thủy thủ hạng nhì (TT2; Chứng chỉ thợ máy hạng nhất (TM1); Chứng chỉ thợ máy hạng nhì (TM2); Chứng chỉ lái phương tiện hạng nhất (LPT1). Chứng chỉ lái phương tiện hạng nhì (LPT2)."
+      },
+      {
+        "id": "C",
+        "text": "Chứng chỉ thủy thủ (TT); Chứng chỉ thợ máy (TM); Chứng chỉ lái phương tiện hạng nhất (LPT1)."
+      },
+      {
+        "id": "D",
+        "text": "Chứng chỉ thủy thủ (TT); Chứng chỉ thợ máy (TM); Chứng chỉ lái phương tiện (LPT). Chứng chỉ an toàn cơ bản (ATCB)"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_45",
+    "text": "Đối với môn thi lý thuyết tổng hợp (trắc nghiệm) làm đúng bao nhiêu câu trở lên thì đạt yêucầu:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "15 câu hỏi"
+      },
+      {
+        "id": "B",
+        "text": "27 câu hỏi"
+      },
+      {
+        "id": "C",
+        "text": "20 câu hỏi"
+      },
+      {
+        "id": "D",
+        "text": "25 câu hỏi"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_46",
+    "text": "Cơ sở đào tạo bị thu hồi Giấy chứng nhận trong các trường hợp sau :",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Không tổ chức hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa trong thời gian 12 tháng liên tục hoặc không triển khai hoạt động sau thời hạn 18 tháng, kể từ ngày được cấp Giấy chứng nhận;"
+      },
+      {
+        "id": "B",
+        "text": "Đã bị xử phạt vi phạm hành chính đình chỉ hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa 02 lần trở lên trong 12 tháng và theo các quy định khác có liên quan của pháp luật.;"
+      },
+      {
+        "id": "C",
+        "text": "Đã bị xử phạt vi phạm hành chính đình chỉ hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa 02 lần trở lên trong 18 tháng và theo các quy định khác có liên quan của pháp luật;"
+      },
+      {
+        "id": "D",
+        "text": "Không có trường hợp nào cả"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_47",
+    "text": "Theo quy định hiện hành, cơ sở đào tạo loại 3:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn từ hạng ba trở xuống, chứng chỉ chuyên môn."
+      },
+      {
+        "id": "B",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn thuyền trưởng hạng tư, chứng chỉ nghiệp vụ."
+      },
+      {
+        "id": "C",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp các loại giấy chứng nhận khả năng chuyên môn, chứng chỉ chuyên môn theo quy định của Luật giao thông đường thủy nội địa."
+      },
+      {
+        "id": "D",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn từ hạng nhì trở xuống, chứng chỉ chuyên môn."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_48",
+    "text": "Theo quy định hiện hành, cơ sở đào tạo loại 4:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn thuyền trưởng hạng tư, chứng chỉ nghiệp vụ."
+      },
+      {
+        "id": "B",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn từ hạng ba trở xuống, chứng chỉ chuyên môn."
+      },
+      {
+        "id": "C",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp các loại giấy chứng nhận khả năng chuyên môn, chứng chỉ chuyên môn theo quy định của Luật giao thông đường thủy nội địa."
+      },
+      {
+        "id": "D",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn từ hạng nhì trở xuống, chứng chỉ chuyên môn."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_49",
+    "text": "Cơ sở đào tạo bị thu hồi Giấy chứng nhận trong các trường hợp sau :",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Không tổ chức hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa trong thời gian 12 tháng liên tục hoặc không triển khai hoạt động sau thời hạn 18 tháng, kể từ ngày được cấp Giấy chứng nhận;"
+      },
+      {
+        "id": "B",
+        "text": "Không tổ chức hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa trong thời gian 18 tháng liên tục hoặc không triển khai hoạt động sau thời hạn 18 tháng, kể từ ngày được cấp Giấy chứng nhận;"
+      },
+      {
+        "id": "C",
+        "text": "Không có trường hợp nào cả"
+      },
+      {
+        "id": "D",
+        "text": "Đã bị xử phạt vi phạm hành chính đình chỉ hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa 02 lần trở lên trong 18 tháng và theo các quy định khác có liên quan của pháp luật;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_50",
+    "text": "Cơ sở kinh doanh dịch vụ đào tạo thuyền viên, người lái phương tiện thủy nội địa được chiathành mấy loại:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "2 loại;"
+      },
+      {
+        "id": "B",
+        "text": "4 loại;"
+      },
+      {
+        "id": "C",
+        "text": "5 loại;"
+      },
+      {
+        "id": "D",
+        "text": "3 loại;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_51",
+    "text": "Theo quy định hiện hành, cơ sở đào tạo loại 1:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn từ hạng nhì trở xuống, chứng chỉ chuyên môn."
+      },
+      {
+        "id": "B",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn thuyền trưởng hạng tư, chứng chỉ nghiệp vụ."
+      },
+      {
+        "id": "C",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn từ hạng ba trở xuống, chứng chỉ chuyên môn."
+      },
+      {
+        "id": "D",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp các loại giấy chứng nhận khả năng chuyên môn, chứng chỉ chuyên môn theo quy định của Luật giao thông đường thủy nội địa."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_52",
+    "text": "Giáo viên dạy thực hành thuyền trưởng hạng ba phải:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Có giấy chứng nhận khả năng chuyên môn thuyền trưởng hạng nào cũng được"
+      },
+      {
+        "id": "B",
+        "text": "Có giấy chứng nhận khả năng chuyên môn máytrưởng hạng nhì trở lên."
+      },
+      {
+        "id": "C",
+        "text": "Có giấy chứng nhận khả năng chuyên môn thuyền trưởng hạng ba trở lên"
+      },
+      {
+        "id": "D",
+        "text": "Có giấy chứng nhận khả năng chuyên môn thuyền trưởng hạng nhì trở lên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_53",
+    "text": "Cơ sở đào tạo bị thu hồi Giấy chứng nhận trong các trường hợp sau :",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Khi đã hết thời hạn bị đình chỉ hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa mà không khắc phục được các vi phạm là nguyên nhân dẫn đến việc bị đình chỉ;"
+      },
+      {
+        "id": "B",
+        "text": "Đã bị xử phạt vi phạm hành chính đình chỉ hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa 02 lần trở lên trong 18 tháng và theo các quy định khác có liên quan của pháp luật;"
+      },
+      {
+        "id": "C",
+        "text": "Không có trường hợp nào cả"
+      },
+      {
+        "id": "D",
+        "text": "Không tổ chức hoạt động đào tạo thuyền viên, người lái phương tiện thủy nội địa trong thời gian 12 tháng liên tục hoặc không triển khai hoạt động sau thời hạn 18 tháng, kể từ ngày được cấp Giấy chứng nhận;"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_54",
+    "text": "Sở Xây dựng có trách nhiệm tổ chức cấp, cấp lại, thu hồi Giấy chứng nhận cơ sở đủ điều kiện kinh doanh dịch vụ đào tạo thuyền viên, người lái phương tiện thủy nội địa đối với:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cơ sở loại 4 trong phạm vi địa phương"
+      },
+      {
+        "id": "B",
+        "text": "Cơ sở loại 3 trong phạm vi địa phương"
+      },
+      {
+        "id": "C",
+        "text": "Cơ sở loại 2 trong phạm vi địa phương"
+      },
+      {
+        "id": "D",
+        "text": "Cơ sở loại 1 trong phạm vi địa phương"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_55",
+    "text": "Ủy ban nhân dân cấp tỉnh có trách nhiệm tổ chức cấp, cấp lại, thu hồi Giấy chứng nhận cơ sở đủ điều kiện kinh doanh dịch vụ đào tạo thuyền viên, người lái phương tiện thủy nội địa đối với:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cơ sở loại 1 trong phạm vi địa bàn quản lý"
+      },
+      {
+        "id": "B",
+        "text": "Cơ sở loại 2 trở lên trong phạm vi địa bàn quản lý"
+      },
+      {
+        "id": "C",
+        "text": "Cơ sở loại 3 trở lên trong phạm vi địa bàn quản lý"
+      },
+      {
+        "id": "D",
+        "text": "Cơ sở loại 4 trở lên trong phạm vi địa bàn quản lý"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_56",
+    "text": "Theo quy định hiện hành, cơ sở đào tạo loại 2:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn từ hạng ba trở xuống, chứng chỉ chuyên môn."
+      },
+      {
+        "id": "B",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn thuyền trưởng hạng tư, chứng chỉ nghiệp vụ."
+      },
+      {
+        "id": "C",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp giấy chứng nhận khả năng chuyên môn từ hạng nhì trở xuống, chứng chỉ chuyên môn."
+      },
+      {
+        "id": "D",
+        "text": "Được phép đào tạo, bổ túc, bồi dưỡng để cấp các loại giấy chứng nhận khả năng chuyên môn, chứng chỉ chuyên môn theo quy định của Luật giao thông đường thủy nội địa."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_57",
+    "text": "Thời gian thực học thực hành nghề tối thiểu chiếm bao nhiêu phần trăm tổng thời gian khóa học trong chương trình đào tạo thường xuyên:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "50%"
+      },
+      {
+        "id": "B",
+        "text": "60%"
+      },
+      {
+        "id": "C",
+        "text": "80%"
+      },
+      {
+        "id": "D",
+        "text": "70%"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_58",
+    "text": "Theo quy định hiện hành về đào tạo thường xuyên, số lượng học viên tối đa đối với lớp học kiến thức nghề là:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "25 học viên"
+      },
+      {
+        "id": "B",
+        "text": "40 học viên"
+      },
+      {
+        "id": "C",
+        "text": "35 học viên"
+      },
+      {
+        "id": "D",
+        "text": "30 học viên"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_59",
+    "text": "Học viên không đạt yêu cầu khi kiểm tra kết thúc mô - đun, môn học trong đào tạo thường xuyên, thì được kiểm tra lại tối đa là:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Không được kiểm tra lại"
+      },
+      {
+        "id": "B",
+        "text": "03 lần"
+      },
+      {
+        "id": "C",
+        "text": "02 lần"
+      },
+      {
+        "id": "D",
+        "text": "01 lần"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_60",
+    "text": "Thời gian học mỗi buổi tối đa là:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "6 giờ"
+      },
+      {
+        "id": "B",
+        "text": "5 giờ"
+      },
+      {
+        "id": "C",
+        "text": "4 giờ"
+      },
+      {
+        "id": "D",
+        "text": "3 giờ"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_61",
+    "text": "Kiểm tra đầu khóa học đối với học viên trong đào tạo thường xuyên để:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Xét tuyển đầu vào"
+      },
+      {
+        "id": "B",
+        "text": "Lấy điểm điều kiện dự thi cuối khóa"
+      },
+      {
+        "id": "C",
+        "text": "Cả a và b"
+      },
+      {
+        "id": "D",
+        "text": "Chuẩn bị nội dung, phương pháp giảng dạy phù hợp"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_62",
+    "text": "Nội dung, hình thức và điều kiện kiểm tra khi kết thúc mô - đun, môn học trong đào tạo thường xuyên:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Do người đứng đầu cơ sở đào tạo quyết định"
+      },
+      {
+        "id": "B",
+        "text": "Do giáo viên trực tiếp giảng dạy quyết định"
+      },
+      {
+        "id": "C",
+        "text": "Do người phụ trách đào tạo của cơ sở đào tạo quyết định"
+      },
+      {
+        "id": "D",
+        "text": "Cả b và c"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_63",
+    "text": "Thời gian đào tạo đối với các chương trình đào tạo thường xuyên là:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Thời gian thực học kiến thức nghề, kỹ năng mềm"
+      },
+      {
+        "id": "B",
+        "text": "Thời gian thực học thực hành nghề"
+      },
+      {
+        "id": "C",
+        "text": "Thời gian kiểm tra trước, trong quá trình đào tạo, kiểm tra kết thúc khóa học"
+      },
+      {
+        "id": "D",
+        "text": "Cả ba ý trên"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_64",
+    "text": "Nội dung, phương pháp kiểm tra đầu khóa học đối với học viên trong đào tạo thường xuyên:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Do giáo viên trực tiếp giảng dạy lựa chọn, quyết định"
+      },
+      {
+        "id": "B",
+        "text": "Do người đứng đầu cơ sở đào tạo lựa chọn, quyết định"
+      },
+      {
+        "id": "C",
+        "text": "Do người phụ trách đào tạo của cơ sở đào tạo lựa chọn, quyết định"
+      },
+      {
+        "id": "D",
+        "text": "Cả b và c"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_65",
+    "text": "Theo quy định hiện hành về đào tạo thường xuyên, số lượng học viên tối đa đối với lớp học thực hành nghề là:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "28 học viên"
+      },
+      {
+        "id": "B",
+        "text": "18 học viên"
+      },
+      {
+        "id": "C",
+        "text": "25 học viên"
+      },
+      {
+        "id": "D",
+        "text": "15 học viên"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_66",
+    "text": "Kết quả kiểm tra khi kết thúc mô - đun, môn học trong đào tạo thường xuyên được đánh giá theo:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Một trong hai mức: Đạt yêu cầu và Không đạt yêu cầu"
+      },
+      {
+        "id": "B",
+        "text": "Thang điểm 10"
+      },
+      {
+        "id": "C",
+        "text": "Thang điểm 100"
+      },
+      {
+        "id": "D",
+        "text": "Cả ba đáp án trên"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_67",
+    "text": "Theo quy định hiện hành về đào tạo thường xuyên, số lượng học viên tối đa đối với lớp học tích hợp là:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "25 học viên"
+      },
+      {
+        "id": "B",
+        "text": "28 học viên"
+      },
+      {
+        "id": "C",
+        "text": "18 học viên"
+      },
+      {
+        "id": "D",
+        "text": "15 học viên"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_68",
+    "text": "Thời gian học trong một ngày tối đa là:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "7 giờ"
+      },
+      {
+        "id": "B",
+        "text": "5 giờ"
+      },
+      {
+        "id": "C",
+        "text": "8 giờ"
+      },
+      {
+        "id": "D",
+        "text": "6 giờ"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_69",
+    "text": "Chiều dài cầu, bến tàu để dạy thực hành tại cơ sở đào tạo thuyền viên, người lái phương tiện loại 4 là:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "10 m ÷ 20 m"
+      },
+      {
+        "id": "B",
+        "text": "20 m ÷ 30 m"
+      },
+      {
+        "id": "C",
+        "text": "5 m ÷ 10 m"
+      },
+      {
+        "id": "D",
+        "text": "≤10 m"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_70",
+    "text": "Chiều dài vùng nước để dạy thực hành tại cơ sở đào tạo thuyền viên, người lái phương tiện loại 4 là:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "≤2 KM"
+      },
+      {
+        "id": "B",
+        "text": "≤1 KM"
+      },
+      {
+        "id": "C",
+        "text": "≥2 KM"
+      },
+      {
+        "id": "D",
+        "text": "≥1 KM"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_71",
+    "text": "Việc lắp đặt camera giám sát trong phòng thi, phòng kiểm tra là:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Bắt buộc theo quy định."
+      },
+      {
+        "id": "B",
+        "text": "Theo yêu cầu của học viên."
+      },
+      {
+        "id": "C",
+        "text": "Theo điều kiện của cơ sở đào tạo."
+      },
+      {
+        "id": "D",
+        "text": "Theo yêu cầu của Hội đồng thi, kiểm tra."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_72",
+    "text": "Theo quy định hiện hành, xưởng thực hành tại cơ sở đào tạo thuyền viên, người lái phương tiện thủy nội địa có diện tích tối thiểu là:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "40 m²"
+      },
+      {
+        "id": "B",
+        "text": "50 m²"
+      },
+      {
+        "id": "C",
+        "text": "30 m²"
+      },
+      {
+        "id": "D",
+        "text": "60 m²"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_73",
+    "text": "Chiều dài cầu, bến tàu để dạy thực hành tại cơ sở đào tạo thuyền viên, người lái phương tiện loại 3 là:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "10 m ÷ 20 m"
+      },
+      {
+        "id": "B",
+        "text": "20 m ÷ 30 m"
+      },
+      {
+        "id": "C",
+        "text": "5 m ÷ 10 m"
+      },
+      {
+        "id": "D",
+        "text": "≤ 10 m"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_74",
+    "text": "Khu vực dạy thực hành lái tại cơ sở đào tạo thuyền viên, người lái phương tiện phải có cầu tàu để dạy nghề thuyền trưởng từ",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Hạng nhì trở lên."
+      },
+      {
+        "id": "B",
+        "text": "Hạng ba trở lên."
+      },
+      {
+        "id": "C",
+        "text": "Hạng tư trở lên."
+      },
+      {
+        "id": "D",
+        "text": "Hạng nhất."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_75",
+    "text": "Chiều dài vùng nước để dạy thực hành tại cơ sở đào tạo thuyền viên, người lái phươngtiện loại 2 là:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "≥2KM"
+      },
+      {
+        "id": "B",
+        "text": "≤2KM"
+      },
+      {
+        "id": "C",
+        "text": "≥1KM"
+      },
+      {
+        "id": "D",
+        "text": "≤1KM"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_76",
+    "text": "Chiều dài cầu, bến tàu để dạy thực hành tại cơ sở đào tạo thuyền viên, người lái phương tiện loại 2 là:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "10 m ÷ 20 m"
+      },
+      {
+        "id": "B",
+        "text": "≤10 m"
+      },
+      {
+        "id": "C",
+        "text": "20 m ÷ 30 m"
+      },
+      {
+        "id": "D",
+        "text": "5 m ÷ 10 m"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_77",
+    "text": "Chiều dài vùng nước để dạy thực hành tại cơ sở đào tạo thuyền viên, người lái phương tiện loại 1 là:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "≥1KM"
+      },
+      {
+        "id": "B",
+        "text": "≤2KM"
+      },
+      {
+        "id": "C",
+        "text": "≤1KM"
+      },
+      {
+        "id": "D",
+        "text": "≥2KM"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_78",
+    "text": "Chiều dài cầu, bến tàu để dạy thực hành tại cơ sở đào tạo thuyền viên, người lái phương tiện loại 1 là:",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "5 m ÷ 10 m"
+      },
+      {
+        "id": "B",
+        "text": "10 m ÷ 20 m"
+      },
+      {
+        "id": "C",
+        "text": "≤10 m"
+      },
+      {
+        "id": "D",
+        "text": "20 m ÷ 30 m"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_79",
+    "text": "Màn hình theo dõi của hệ thống camera giám sát",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Chỉ có Chủ tịch Hội đồng thi, kiểm tra được xem."
+      },
+      {
+        "id": "B",
+        "text": "Là bí mật, chỉ được xem khi nghi ngờ có vi phạm trong thi, kiểm tra."
+      },
+      {
+        "id": "C",
+        "text": "Chỉ có Cục Đường thủy nội địa Việt Nam được xem."
+      },
+      {
+        "id": "D",
+        "text": "Là công khai."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_80",
+    "text": "Theo quy định hiện hành, phòng học chuyên môn tại cơ sở đào tạo thuyền viên, người lái phương tiện thủy nội địa có diện tích tối thiểu là:",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "38 m²"
+      },
+      {
+        "id": "B",
+        "text": "58 m²"
+      },
+      {
+        "id": "C",
+        "text": "48 m2"
+      },
+      {
+        "id": "D",
+        "text": "28 m²"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_81",
+    "text": "Chiều dài vùng nước để dạy thực hành tại cơ sở đào tạo thuyền viên, người lái phương tiện loại 3 là:",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "≥2KM"
+      },
+      {
+        "id": "B",
+        "text": "≤2KM"
+      },
+      {
+        "id": "C",
+        "text": "≤1KM"
+      },
+      {
+        "id": "D",
+        "text": "≥1KM"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_82",
+    "text": "Phương tiện thi thực hành có phải lắp đặt thiết bị giám sát hay không ?",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Phụ thuộc vào từng loại phương tiện theo quy định của đăng kiểm."
+      },
+      {
+        "id": "B",
+        "text": "Khi nào có yêu cầu thì lắp đặt."
+      },
+      {
+        "id": "C",
+        "text": "Không cần lắp đặt."
+      },
+      {
+        "id": "D",
+        "text": "Phương tiện thi phải được lắp đặt thiết bị giám sát."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_83",
+    "text": "Trường hợp nào thì học viên được phép bù giờ?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Học viên không điều khiển được chuột vi tính."
+      },
+      {
+        "id": "B",
+        "text": "Học viên vào thi trễ."
+      },
+      {
+        "id": "C",
+        "text": "Máy tính học viên đang thi bị lỗi phải đổi máy."
+      },
+      {
+        "id": "D",
+        "text": "Học viên không biết sử dụng máy tính."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_84",
+    "text": "Trong ngày thi trực tuyến, sau khi Hội đồng thi login và kích hoạt tài khoản đăng nhập, thí sinh thực hiện hành động nào theo quy trình?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Nhận đề thi từ cán bộ coi thi"
+      },
+      {
+        "id": "B",
+        "text": "Đăng nhập theo SBD và mật khẩu Giám thị cung cấp"
+      },
+      {
+        "id": "C",
+        "text": "Ký tên vào phiếu làm bài"
+      },
+      {
+        "id": "D",
+        "text": "Nộp bài"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_85",
+    "text": "Tên khóa học Quy ước đặt tên khóa học \"CCCM NGHIỆP VỤ LÁI PHƯƠNG TIỆN K03/2025-DT2\" được sử dụng cho khóa nào trong ví dụ được cung cấp?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Khóa Máy trưởng hạng nhất khóa 19 năm 2025 tại Trường CĐ Hàng hải & Đường thủy II"
+      },
+      {
+        "id": "B",
+        "text": "Khóa chứng chỉ nghiệp vụ lái phương tiện khóa 03 năm 2025 tại trường Cao đẳng Hàng hải & Đường thủy II"
+      },
+      {
+        "id": "C",
+        "text": "Khóa GCNKNCM Thuyền trưởng hạng nhất khóa 19 năm 2025 của Cục ĐTNĐ VN"
+      },
+      {
+        "id": "D",
+        "text": "Lớp chứng chỉ Thợ máy khóa 1 năm 2025 tại Trường CĐ Hàng hải & Đường thủy II"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_86",
+    "text": "Để tránh tình trạng trùng số báo danh giữa các Kỳ thi Hội đồng thi, kiểm tra cần đánh SBD của học viên trên phần mềm theo nguyên tắc.",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "CSDT. Hạng"
+      },
+      {
+        "id": "B",
+        "text": "Hạng.CSDT.STT"
+      },
+      {
+        "id": "C",
+        "text": "STT. Hạng.CSDT"
+      },
+      {
+        "id": "D",
+        "text": "Hạng.STT"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_87",
+    "text": "Giám thị sử dụng nút “Tạm dừng” khi nào?",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Khi cần nhắc nhở học viên trong ca thi."
+      },
+      {
+        "id": "B",
+        "text": "Khi phát hiện học viên đăng nhập không đúng số báo danh."
+      },
+      {
+        "id": "C",
+        "text": "Khi máy tính học viên bị lỗi chờ xử lý."
+      },
+      {
+        "id": "D",
+        "text": "Tất cả các ý trên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_88",
+    "text": "Sau khi thí sinh hoàn thành và nộp bài thi, Hội đồng thi có nhiệm vụ gì liên quan đến kết quả môn thi không trực tuyến?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "In văn bằng chứng chỉ"
+      },
+      {
+        "id": "B",
+        "text": "Nhập điểm thi cho môn Lý thuyết chuyên môn và Thực hành"
+      },
+      {
+        "id": "C",
+        "text": "Kích hoạt tài khoản đăng nhập cho thí sinh"
+      },
+      {
+        "id": "D",
+        "text": "Tổng hợp kết quả thi, xét kết quả thi, lập báo cáo số 3"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_89",
+    "text": "Tên gọi kỳ thi và mô tả của kỳ thi được thống nhất đặt theo quy ước nào?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Đặt tên riêng biệt cho từng kỳ thi"
+      },
+      {
+        "id": "B",
+        "text": "Đặt như tên khóa học và mã khoá ở trên"
+      },
+      {
+        "id": "C",
+        "text": "Đặt theo tên của cơ sở đào tạo"
+      },
+      {
+        "id": "D",
+        "text": "Đặt tên theo số thứ tự của kỳ thi"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_90",
+    "text": "Theo \"Quy trình Quản lý thi tuyển trực tuyến\", trước ngày thi thực tế, Hội đồng thi có nhiệm vụ chính nào?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Thí sinh ngồi vào máy tính, đăng nhập theo thẻ dự thi"
+      },
+      {
+        "id": "B",
+        "text": "Hội đồng thi login, kích hoạt tài khoản đăng nhập"
+      },
+      {
+        "id": "C",
+        "text": "Kiểm tra loại trừ hồ sơ không hợp lệ, lập danh sách dự thi, đánh số báo danh"
+      },
+      {
+        "id": "D",
+        "text": "Cán bộ coi thi phát đề thi"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_91",
+    "text": "Quy trình thao tác trên phần mềm của cơ sở đào tạo trước khi tổ chức đào tạo?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tạo năm học, khóa, lớp, nhập danh sách học viên, khóa báo cáo 1, xét điều kiện dự học."
+      },
+      {
+        "id": "B",
+        "text": "Tạo khóa, lớp, nhập danh sách học viên, xét điều kiện dự học, khóa báo cáo 1"
+      },
+      {
+        "id": "C",
+        "text": "Nhập danh sách học viên, tạo khóa, lớp, xét điều kiện dự học, khóa báo cáo 1."
+      },
+      {
+        "id": "D",
+        "text": "Nhập danh sách học viên, khóa báo cáo 1, tạo lớp, khóa, năm học."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_92",
+    "text": "Trên máy học viên hiển thị thông báo “Thông tin đăng nhập chưa chính xác!” là do?",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Nhập sai “Tên đăng nhập” hoặc “Mật khẩu” của học viên"
+      },
+      {
+        "id": "B",
+        "text": "Nhập sai “Tên đăng nhập” của học viên"
+      },
+      {
+        "id": "C",
+        "text": "Nhập sai “Mật khẩu” của học viên"
+      },
+      {
+        "id": "D",
+        "text": "Sai thông tin cá nhân của học viên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_93",
+    "text": "Mã khóa học Theo quy tắc đặt tên trên Phần mềm Quản lý đào tạo thuyền viên, người lái phương tiện thủy nội địa, mã khóa học được quy ước gồm các thành phần nào?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tên hạng viết tắt. Khóa/năm-CSĐT.SỐ"
+      },
+      {
+        "id": "B",
+        "text": "Loại hạng Nghề khóa/năm-CSĐT"
+      },
+      {
+        "id": "C",
+        "text": "Khóa/năm-CSĐT.Hạng"
+      },
+      {
+        "id": "D",
+        "text": "Tên hạng khóa/năm-CSĐT"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_94",
+    "text": "Trường hợp thấy trang thái “Đã tạo” trên máy giám thị mà in danh sách đăng nhập không có mật khẩu giám thị phải xử lý như thế nào?",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Bấm nút “Tìm kiếm” để lọc lại danh sách và thao tác in lại danh sách đăng nhập."
+      },
+      {
+        "id": "B",
+        "text": "Bấm nút “Xóa” để lọc lại danh sách và thao tác in lại danh sách đăng nhập."
+      },
+      {
+        "id": "C",
+        "text": "Bấm nút “Tìm kiếm” hiển thị mật khẩu."
+      },
+      {
+        "id": "D",
+        "text": "Bấm nút “Đóng” để đóng lại danh sách và thao tác in lại danh sách đăng nhập."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_95",
+    "text": "Trình tự thao tác trên phần mềm để Hội đồng tổ chức một kỳ thi, kiểm tra sau khi đã “Kiểm tra hồ sơ loại trừ”.",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Quản lý đào tạo, Tổ chức thi, Thêm, Chọn thông tin, Chuột trái Thêm phòng ở ô “Ca thi\", Chuyển học viên vào ca thi và bấm cập nhật"
+      },
+      {
+        "id": "B",
+        "text": "Tổ chức thi, Quản lý đào tạo, Thêm, Chuột phải Thêm phòng ở ô “Ca thi”, Chọn thông tin, Chuyển học viên vào ca thi và bấm cập nhật"
+      },
+      {
+        "id": "C",
+        "text": "Quản lý đào tạo, Tổ chức thi, Thêm, Chuột trái Thêm phòng ở ô “Ca thi”, Chọn thông tin, Chuyển học viên vào ca thi và bấm cập nhật"
+      },
+      {
+        "id": "D",
+        "text": "Quản lý đào tạo, Tổ chức thi, Thêm, Chọn thông tin, Chuột phải Thêm phòng ở ô “Ca thi”, Chuyển học viên vào ca thi và bấm cập nhật"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_96",
+    "text": "Nút “Cho thi tiếp” có tác dụng gì?",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cho học viên thi tiếp khi tạm dừng."
+      },
+      {
+        "id": "B",
+        "text": "Cho học viên thi tiếp khi buộc thu bài."
+      },
+      {
+        "id": "C",
+        "text": "Cho học viên thi tiếp khi đã hết thời gian làm bài."
+      },
+      {
+        "id": "D",
+        "text": "Cho học viên thi tiếp khi thu bài."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_97",
+    "text": "Tên lớp học cho \"Lớp chứng chỉ Thợ máy khóa 1 năm 2025 tại cơ sở đào tạo Trường CĐ Hàng hải & Đường thủy II\" được đặt là gì theo quy ước?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "CCCM THỢ MÁY K01/2025-DT2"
+      },
+      {
+        "id": "B",
+        "text": "TM.K01/2025-DT2.001"
+      },
+      {
+        "id": "C",
+        "text": "THỢ MÁY THỦY NỘI ĐỊA K01/2025-DT2"
+      },
+      {
+        "id": "D",
+        "text": "K01/2025-DT2.TM"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_98",
+    "text": "Trạng thái “Đã tạo” trên Form Quản lý thi trực tuyến thể hiện điều gì?",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Học viên đã đăng nhập vào trang thi."
+      },
+      {
+        "id": "B",
+        "text": "Đã tạo thành công mã học viên."
+      },
+      {
+        "id": "C",
+        "text": "Học viên đã hoàn thành phần thi."
+      },
+      {
+        "id": "D",
+        "text": "Đề thi đã được tạo."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_99",
+    "text": "Để tạo thêm tài khoản trong phần mềm ta thực hiện theo các bước nào?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Hệ thống, Người dùng, Thêm, Nhập thông tin nhân sự, Chọn mã vai trò, Tích chọn kích hoạt và bấm cập nhật."
+      },
+      {
+        "id": "B",
+        "text": "Hệ thống, Người dùng, Thêm, Nhập thông tin nhân sự, nhập thông tin Tài khoản đăng nhập, Chọn mã vai trò, Tích chọn kích hoạt."
+      },
+      {
+        "id": "C",
+        "text": "Hệ thống, Người dùng, Thêm, Nhập thông tin nhân sự, nhập thông tin Tài khoản đăng nhập, Chọn mã vai trò, Tích chọn kích hoạt và bấm cập nhật."
+      },
+      {
+        "id": "D",
+        "text": "Hệ thống, Người dùng, Nhập thông tin nhân sự, nhập thông tin Tài khoản đăng nhập, Chọn mã vai trò, Tích chọn kích hoạt và bấm cập nhật."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_100",
+    "text": "Theo quy trình, cơ quan nào có thẩm quyền kiểm tra Báo cáo số 3, quyết định công nhận kết quả thi và in văn bằng chứng chỉ?",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Cơ sở đào tạo"
+      },
+      {
+        "id": "B",
+        "text": "Hội đồng thi"
+      },
+      {
+        "id": "C",
+        "text": "Cán bộ coi thi"
+      },
+      {
+        "id": "D",
+        "text": "Sở xây dựng"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_101",
+    "text": "Để chỉnh sửa báo cáo, biểu mẫu chúng ta cần thao tác như sau:",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Chọn Edit, tùy chỉnh báo cáo như ý Mở báo cáo ở chế độ xem in rồi bấm Save"
+      },
+      {
+        "id": "B",
+        "text": "Mở báo cáo ở chế độ xem in, Chọn Edit, tùy chỉnh báo cáo như ý rồi bấm Save"
+      },
+      {
+        "id": "C",
+        "text": "Chọn Edit, tùy chỉnh báo cáo như ý rồi bấm Save"
+      },
+      {
+        "id": "D",
+        "text": "Mở báo cáo ở chế độ xem in, tùy chỉnh báo cáo như ý rồi bấm Save"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_102",
+    "text": "Check box (ô) “Tự động thu” có chức năng gì?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Khi hết thời gian làm bài máy giám thị sẽ tự động thu bài của học viên."
+      },
+      {
+        "id": "B",
+        "text": "Hết thời gian làm bài hoặc khi học viên nộp bài, máy giám thị sẽ thu bài và in bài làm của học viên ra máy in."
+      },
+      {
+        "id": "C",
+        "text": "Không có chức năng gì cả."
+      },
+      {
+        "id": "D",
+        "text": "Khi học viên nộp bài, máy giám thị sẽ tự động thu bài của học viên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_103",
+    "text": "Giám thị nhấn “Phát đề” khi nào?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Khi đã cho hết học viên trong ca vào phòng thi."
+      },
+      {
+        "id": "B",
+        "text": "Khi có trạng thái “Đã đăng nhập” trên màn hình của máy giám thị."
+      },
+      {
+        "id": "C",
+        "text": "Khi học viên đã đăng nhập thành công vào ca thi."
+      },
+      {
+        "id": "D",
+        "text": "Khi có trạng thái “Đã tạo” trên màn hình của máy giám thị."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_104",
+    "text": "Các bước thao tác trên phần mềm của cơ sở đào tạo sau khi tổ chức đào tạo và trước khi tổ chức thi, kiểm tra?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tổng kết điểm, xét điều kiện dự thi, nhập điểm kết thúc các môn học, khóa báo cáo 2."
+      },
+      {
+        "id": "B",
+        "text": "Khóa báo cáo 2, nhập điểm kết thúc các môn học, tổng kết điểm, xét điều kiện dự thi."
+      },
+      {
+        "id": "C",
+        "text": "Nhập điểm kết thúc các môn học, tổng kết điểm, xét điều kiện dự thi, khóa báo cáo 2."
+      },
+      {
+        "id": "D",
+        "text": "Xét điều kiện dự thi, tổng kết điểm, nhập điểm kết thúc các môn học, khóa báo cáo 2."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_105",
+    "text": "Những thông tin nào sau đây trong báo cáo có thể chỉnh sửa?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Tất cả thông tin trong báo cáo"
+      },
+      {
+        "id": "B",
+        "text": "Tất cả các trường dữ liệu Tiếng việt"
+      },
+      {
+        "id": "C",
+        "text": "Tất cả các trường dữ liệu Tiếng anh"
+      },
+      {
+        "id": "D",
+        "text": "Thông tin học viên"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_106",
+    "text": "Mã lớp học được quy ước theo cách nào so với các mã khác?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Giống mã số học viên"
+      },
+      {
+        "id": "B",
+        "text": "Tên hạng khóa/năm-CSĐT"
+      },
+      {
+        "id": "C",
+        "text": "Giống mã khóa"
+      },
+      {
+        "id": "D",
+        "text": "Tên hạng viết tắt. Khóa/năm-CSĐT.SỐ"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_107",
+    "text": "Theo \"Quy trình Quản lý thi tuyển trực tuyến\", môn Lý thuyết tổng hợp được tổ chức thi dưới hình thức nào?",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Thi trắc nghiệm trực tuyến"
+      },
+      {
+        "id": "B",
+        "text": "Thi viết tự luận"
+      },
+      {
+        "id": "C",
+        "text": "Thi vấn đáp"
+      },
+      {
+        "id": "D",
+        "text": "Thi thực hành"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_108",
+    "text": "Trường hợp “Nhập HS học viên từ excel” bị lỗi là do?",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Các trường dữ liệu trong file excel sai kiểu số liệu"
+      },
+      {
+        "id": "B",
+        "text": "Máy tính chưa cài đặt phần mềm Excel của Microsoft."
+      },
+      {
+        "id": "C",
+        "text": "Chưa thực hiện thao tác tạo khóa, lớp."
+      },
+      {
+        "id": "D",
+        "text": "Tất cả các ý trên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_109",
+    "text": "Trường hợp không chọn “Check box” ô “ Tự động thu” khi xuất hiện trạng thái “Nộp bài” thì giám thi phải thao tác như thế nào?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Thao tác chọn học viên có trạng thái “Nộp bài” rồi bấm “Buộc thu bài” và in bài làm của học viên."
+      },
+      {
+        "id": "B",
+        "text": "Bấm tổ hợp phím Ctr + A rồi bấm “Thu bài” và in bài làm của học viên."
+      },
+      {
+        "id": "C",
+        "text": "Thao tác chọn học viên có trạng thái “Nộp bài” rồi bấm “Thu bài” và in bài làm của học viên."
+      },
+      {
+        "id": "D",
+        "text": "Bấm tổ hợp phím Ctr + A chuột phải chọn rồi bấm “Thu bài” và in bài làm của học viên."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_110",
+    "text": "Để bù giờ cho học viên phải thao tác?",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Nhập số phút bù giờ ở cột bù giờ và bấm “Cập nhật”"
+      },
+      {
+        "id": "B",
+        "text": "Nhập số phút bù giờ ở cột bù giờ và bấm “Phát đề”"
+      },
+      {
+        "id": "C",
+        "text": "Nhập số phút bù giờ ở cột bù giờ và bấm “Cho thi tiếp”"
+      },
+      {
+        "id": "D",
+        "text": "Nhập số phút bù giờ ở cột bù giờ và bấm “Đóng”"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_111",
+    "text": "Mã số học viên của học viên đầu tiên \"Lớp Thợ máy khóa 1 năm 2025 tại cơ sở đào tạo Trường CĐ Hàng hải & Đường Thủy II\" được tạo theo định dạng nào?",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "TM.K01/2025-DT2.001"
+      },
+      {
+        "id": "B",
+        "text": "K01/2025-DT2.TM.001"
+      },
+      {
+        "id": "C",
+        "text": "001.TM.K01/2025-DT2"
+      },
+      {
+        "id": "D",
+        "text": "DT2.TM.K01/2025.001"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_112",
+    "text": "Trước khi khóa Báo cáo 3, Hội đồng thi kiểm tra cần thực hiện thao tác nào?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Hệ thống, xét kết quả thi, Chọn thông tin kỳ thi sau đó bấm cập nhật."
+      },
+      {
+        "id": "B",
+        "text": "Báo cáo, xét kết quả thi, Chọn thông tin kỳ thi sau đó bấm cập nhật."
+      },
+      {
+        "id": "C",
+        "text": "Quản lý đào tạo, xét kết quả thi, Chọn thông tin kỳ thi sau đó bấm cập nhật."
+      },
+      {
+        "id": "D",
+        "text": "Quản lý học viên, xét kết quả thi, Chọn thông tin kỳ thi sau đó bấm cập nhật."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_113",
+    "text": "Trường hợp tích chọn ô “Tự động thu” mà máy giám thị không in bài thi của học viên thì phải làm thế nào?",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Thao tác chọn học viên chưa in bài thi bấm chuột phải chọn “Nạp lại”."
+      },
+      {
+        "id": "B",
+        "text": "Thao tác chọn học viên chưa in bài thi bấm “Buộc thu bài”"
+      },
+      {
+        "id": "C",
+        "text": "Thao tác chọn học viên chưa in bài thi bấm chuột phải chọn “Xuất đề thi và đáp án\"."
+      },
+      {
+        "id": "D",
+        "text": "Thao tác chọn học viên chưa in bài thi bấm chuột phải In/Bài thi."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_114",
+    "text": "Để dễ quan sát các trạng thái của ca thi giám thị có thể thao tác như thế nào?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Bấm vào tiêu đề “Số báo danh” của thí sinh để sắp xếp."
+      },
+      {
+        "id": "B",
+        "text": "Bấm vào tiêu đề “Tên” của thí sinh để sắp xếp."
+      },
+      {
+        "id": "C",
+        "text": "Bấm vào tiêu đề “Trang thái” của bài thi để sắp xếp"
+      },
+      {
+        "id": "D",
+        "text": "Bấm vào tiêu đề “Giờ bắt đầu” của bài thi để sắp xếp."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_115",
+    "text": "Hội đồng thi, kiểm tra thao tác như thế nào để lấy được điểm của bài thi trực tuyến vào Điểm thi theo kỳ?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Trắc nghiệm, Chọn thông tin kỳ thi, Tổng hợp bài thi trực tuyến sau đó bấm cập nhật điểm"
+      },
+      {
+        "id": "B",
+        "text": "Quản lý đào tạo, Nhập điểm thi theo kỳ, Tổng hợp bài thi trực tuyến sau đó bấm cập nhật."
+      },
+      {
+        "id": "C",
+        "text": "Trắc nghiệm, Tổng hợp bài thi trực tuyến, Chọn thông tin kỳ thi sau đó bấm cập nhật điểm"
+      },
+      {
+        "id": "D",
+        "text": "Quản lý đào tạo, Nhập điểm thi theo kỳ, Nhập điểm của học viên sau đó bấm cập nhật."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_116",
+    "text": "Trường hợp nào phải bấm “Buộc thu bài” của học viên?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Học viên vi phạm quy chế thi."
+      },
+      {
+        "id": "B",
+        "text": "Hết giờ mà lỗi mạng không thu bài."
+      },
+      {
+        "id": "C",
+        "text": "Học viên vi phạm quy chế thi hoặc hết giờ mà lỗi mạng không thu bài."
+      },
+      {
+        "id": "D",
+        "text": "Khi hết giờ thi."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_117",
+    "text": "Để in được danh sách học viên có Tên đăng nhập và mật khẩu của ca thi phải thao tác như thế nào?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Nhấn chuột phải chọn In/Danh sách đăng nhập"
+      },
+      {
+        "id": "B",
+        "text": "Bấm tổ hợp phím Ctr + A vào danh sách học viên, nhấn chuột phải chọn In/Danh sách đăng nhập."
+      },
+      {
+        "id": "C",
+        "text": "Bấm tổ hợp phím Ctr + A vào danh sách học viên, nhấn chuột phải chọn “Xuất đề thi và đáp án”."
+      },
+      {
+        "id": "D",
+        "text": "Bấm tổ hợp phím Ctr + A vào danh sách học viên, nhấn chuột phải chọn In/Bài thi."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_118",
+    "text": "Ví dụ về Mã khóa học Mã khóa học cho \"Khóa thuyền trưởng hạng nhất khóa 7 năm 2025 tại cơ sở đào tạo Trường CĐ Hàng hải và Đường thủy II\" sẽ được định dạng như thế nào theo quy ước?",
+    "correctAnswerId": "A",
+    "answers": [
+      {
+        "id": "A",
+        "text": "K07/2025-DT2.T1"
+      },
+      {
+        "id": "B",
+        "text": "K07/2025"
+      },
+      {
+        "id": "C",
+        "text": "CCCM THUYỀN TRƯỞNG HẠNG NHẤT K07/2025-DT2"
+      },
+      {
+        "id": "D",
+        "text": "T1.K07/2025-DT2.001"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_119",
+    "text": "Không đăng ký được học viên thi lại ở các khóa trước vào khóa hiện tại là do?",
+    "correctAnswerId": "B",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Chưa khóa báo cáo 1 của khóa hiện tại"
+      },
+      {
+        "id": "B",
+        "text": "Chưa xét kết quả thi và khóa báo cáo 3 của các khóa trước."
+      },
+      {
+        "id": "C",
+        "text": "Chưa khóa báo cáo 2 của khóa hiện tại"
+      },
+      {
+        "id": "D",
+        "text": "Chưa xét kết quả thi của các khóa trước."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_120",
+    "text": "Tên khóa học 2 Nếu một Cơ sở đào tạo có các hạng LPT, TT thi chung khóa 01 năm 2025, tên khóa học 2 sẽ được đặt chung là gì?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "CCCM CHUNG K01/2025-CSĐT"
+      },
+      {
+        "id": "B",
+        "text": "LPT.TT.K01/2025"
+      },
+      {
+        "id": "C",
+        "text": "K01/2025"
+      },
+      {
+        "id": "D",
+        "text": "K01/2025-LPT.TT"
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_121",
+    "text": "Khi gặp sự cố về Hạ tầng thi (Máy tính, mạng) làm ảnh hưởng đến kết quả của học viên, để đảm bảo lợi ích của học viên Hội đồng thi, kiểm tra cần xử lý thế nào?",
+    "correctAnswerId": "D",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Lập biên bản ghi nhận sự việc, cho học viên thi lại vào đợt sau."
+      },
+      {
+        "id": "B",
+        "text": "Lập biên bản ghi nhận sự việc, Hội đồng xử lý trực tiếp trên phần mềm theo biên bản."
+      },
+      {
+        "id": "C",
+        "text": "Lập biên bản ghi nhận sự việc, cán bộ coi thi, kiểm tra thao tác trên phần mềm theo biên bản."
+      },
+      {
+        "id": "D",
+        "text": "Lập biên bản ghi nhận sự việc, báo cho bộ phận Quản trị phần mềm xử lý như đề xuất của hội đồng trong biên bản."
+      }
+    ]
+  },
+  {
+    "id": "gk_ltc_122",
+    "text": "Trên máy học viên hiển thị thông báo \"Học viên đã được đăng nhập trên máy tính khác” xử lý thế nào?",
+    "correctAnswerId": "C",
+    "answers": [
+      {
+        "id": "A",
+        "text": "Chuột phải tích chọn đúng học viên đó và bấm nút “Tạm dừng”."
+      },
+      {
+        "id": "B",
+        "text": "Chuột phải tích chọn đúng học viên đó và bấm nút “Buộc thu bài”."
+      },
+      {
+        "id": "C",
+        "text": "Chuột phải tích chọn đúng học viên đó và bấm nút “Buộc login lại”."
+      },
+      {
+        "id": "D",
+        "text": "Bấm tổ hợp phím Ctr + A vào danh sách học viên chuột phải tích chọn và bấm nút “Buộc login lại”."
+      }
+    ]
+  }
+]

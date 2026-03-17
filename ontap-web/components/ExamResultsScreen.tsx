@@ -9,14 +9,15 @@ interface ExamResultsScreenProps {
     onRetry: () => void;
     onBack: () => void;
     userName: string;
+    passPoint?: number;
 }
 
-const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers, score, onRetry, onBack, userName }) => {
+const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers, score, onRetry, onBack, userName, passPoint = 25 }) => {
     const [filter, setFilter] = useState<'all' | 'incorrect'>('all');
     const [completionDate] = useState(() => new Date());
 
     const totalQuestions = quiz.questions.length;
-    const isPass = score >= 25; // Exam mode pass threshold
+    const isPass = score >= passPoint; // Exam mode pass threshold
 
     const formattedDate = useMemo(() => {
         return new Intl.DateTimeFormat('vi-VN', {

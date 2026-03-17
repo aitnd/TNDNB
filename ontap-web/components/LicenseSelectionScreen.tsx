@@ -112,8 +112,11 @@ const LicenseSelectionScreen: React.FC<LicenseSelectionScreenProps> = ({ license
 
       <div className="bg-card p-6 rounded-2xl shadow-lg">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {licenses.map(license => {
+          {licenses
+            .filter(l => !l.id.includes('giam-khao') && !l.name.toLowerCase().includes('giám khảo'))
+            .map(license => {
             const totalQuestions = license.subjects.reduce((sum, subject) => sum + subject.questions.length, 0);
+
             return (
               <button
                 key={license.id}

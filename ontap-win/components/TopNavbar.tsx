@@ -1,10 +1,28 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils, Gamepad2 } from 'lucide-react';
+import { 
+  BookOpen, 
+  Newspaper, 
+  History, 
+  UserCog, 
+  LogOut, 
+  GraduationCap, 
+  School, 
+  AlertTriangle, 
+  Settings, 
+  CheckCircle, 
+  Mail, 
+  Download, 
+  Wifi, 
+  WifiOff, 
+  ChevronDown, 
+  Link2, 
+  Utensils, 
+  Gamepad2 
+} from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
-
-// declare const __APP_VERSION__: string; // Removed in favor of dynamic version
+import { AnchorIcon3D } from './icons';
 
 interface TopNavbarProps {
     userProfile: UserProfile | null;
@@ -14,241 +32,157 @@ interface TopNavbarProps {
 
 const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout }) => {
     const [showChangelog, setShowChangelog] = React.useState(false);
-    const [showLinksDropdown, setShowLinksDropdown] = React.useState(false); // Dropdown liên kết khác
+    const [showLinksDropdown, setShowLinksDropdown] = React.useState(false);
+    const [isScrolled, setIsScrolled] = React.useState(false);
+
+    React.useEffect(() => {
+        const handleScroll = () => setIsScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const navItemClass = "relative flex items-center gap-2 px-4 py-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-[#0051BF] dark:hover:text-[#3B82F6] hover:bg-white/50 dark:hover:bg-white/5 transition-all duration-300 group whitespace-nowrap font-medium";
+    const activeIndicator = "absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-1 bg-[#0051BF] rounded-full group-hover:w-4 transition-all duration-300";
 
     return (
         <>
-            <div className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-800 z-40 px-4 shadow-sm flex items-center justify-between transition-colors duration-300">
-
-                {/* LEFT: Navigation Links */}
-                <div className="flex items-center gap-1 md:gap-4 overflow-x-auto no-scrollbar">
-
-                    {/* 1. Ôn tập (Về Dashboard) */}
-                    <button
-                        onClick={() => onNavigate('dashboard')}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <BookOpen size={18} className="text-blue-600 dark:text-blue-400" />
-                        <span className="font-semibold text-sm md:text-base">Ôn tập</span>
-                    </button>
-
-                    {/* 1.1 Thi Trực Tuyến */}
-                    <button
-                        onClick={() => {
-                            if (!userProfile) {
-                                onNavigate('thi_truc_tuyen');
-                            } else if (['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || '')) {
-                                onNavigate('online_exam_management');
-                            } else {
-                                onNavigate('thi_truc_tuyen');
-                            }
-                        }}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <Newspaper size={18} className="text-red-600 dark:text-red-400" />
-                        <span className="font-semibold text-sm md:text-base">Thi trực tuyến</span>
-                    </button>
-
-                    <a
-                        href="/"
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap decoration-0"
-                    >
-                        <Newspaper size={18} className="text-teal-600 dark:text-teal-400" />
-                        <span className="font-medium text-sm md:text-base">Tin tức</span>
-                    </a>
-
-                    {/* 2.1 Giải trí */}
-                    <button
-                        onClick={() => onNavigate('giaitri')}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <Gamepad2 size={18} className="text-indigo-600 dark:text-indigo-400" />
-                        <span className="font-semibold text-sm md:text-base">Giải trí</span>
-                    </button>
-
-                    {/* Liên kết khác - Dropdown (dùng fixed để tránh bị cắt) */}
-                    <div className="relative">
-                        <button
-                            onClick={() => setShowLinksDropdown(!showLinksDropdown)}
-                            onBlur={() => setTimeout(() => setShowLinksDropdown(false), 200)}
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+            <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-4 md:px-8 py-3 ${
+                isScrolled ? 'top-2' : 'top-0'
+            }`}>
+                <div className={`mx-auto max-w-7xl h-16 rounded-[2rem] flex items-center justify-between px-6 transition-all duration-500 ${
+                    isScrolled 
+                    ? 'bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.1)]' 
+                    : 'bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-white/10 dark:border-white/5'
+                }`}>
+                    
+                    {/* LEFT: Logo & Main Nav */}
+                    <div className="flex items-center gap-2 md:gap-6 overflow-x-auto no-scrollbar py-2">
+                        {/* Logo / Home */}
+                        <button 
+                            onClick={() => onNavigate('dashboard')}
+                            className="flex items-center gap-3 mr-4 group"
                         >
-                            <Link2 size={18} className="text-pink-600 dark:text-pink-400" />
-                            <span className="font-medium text-sm md:text-base">Liên kết</span>
-                            <ChevronDown size={16} className={`transition-transform ${showLinksDropdown ? 'rotate-180' : ''}`} />
+                            <div className="p-2 rounded-2xl bg-gradient-to-br from-[#0051BF] to-[#003A8C] shadow-lg group-hover:rotate-12 transition-transform duration-500">
+                                <AnchorIcon3D size={24} color="white" />
+                            </div>
+                            <span className="hidden lg:block font-black text-xl tracking-tighter text-slate-900 dark:text-white uppercase italic">
+                                TND<span className="text-[#0051BF]">NB</span>
+                            </span>
                         </button>
 
-                        {/* Dropdown menu - dùng fixed position */}
-                        {showLinksDropdown && (
-                            <div className="fixed mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]"
-                                style={{ top: '56px' }}>
-                                {/* Tải App */}
-                                <button
-                                    onClick={() => { setShowLinksDropdown(false); onNavigate('download_app'); }}
-                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left"
-                                >
-                                    <Download size={18} className="text-green-500" />
-                                    <span className="font-medium text-sm">Tải App học offline</span>
-                                </button>
-                                {/* Ẩm thực */}
-                                <a
-                                    href="https://daotaothuyenvien.com/amthuc"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-                                >
-                                    <Utensils size={18} className="text-orange-500" />
-                                    <span className="font-medium text-sm">Ẩm thực Ninh Bình</span>
-                                </a>
-                                {/* Có thể thêm link khác ở đây */}
+                        <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-2 hidden md:block" />
+
+                        {/* Navigation Items */}
+                        <button onClick={() => onNavigate('dashboard')} className={navItemClass}>
+                            <BookOpen size={18} className="text-blue-500" />
+                            <span>Ôn tập</span>
+                            <div className={activeIndicator} />
+                        </button>
+
+                        <button onClick={() => onNavigate('thi_truc_tuyen')} className={navItemClass}>
+                            <Newspaper size={18} className="text-red-500" />
+                            <span>Thi trực tuyến</span>
+                            <div className={activeIndicator} />
+                        </button>
+
+                        {/* Giám khảo (VIP/Role-based) */}
+                        <button 
+                            onClick={() => onNavigate('giam_khao')}
+                            className="relative flex items-center gap-2 px-5 py-2.5 rounded-xl group transition-all duration-500 transform hover:-translate-y-0.5 overflow-hidden"
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 opacity-90 group-hover:scale-110 transition-transform duration-500" />
+                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.4),transparent_60%)]" />
+                            <div className="relative z-10 flex items-center gap-2 text-slate-900">
+                                <School size={18} className="group-hover:rotate-12 transition-transform" />
+                                <span className="font-black text-sm uppercase tracking-wider">Giám khảo</span>
                             </div>
+                            <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 group-hover:left-full transition-all duration-1000" />
+                        </button>
+
+                        <div className="relative group">
+                            <button 
+                                onClick={() => setShowLinksDropdown(!showLinksDropdown)}
+                                onBlur={() => setTimeout(() => setShowLinksDropdown(false), 200)}
+                                className={navItemClass}
+                            >
+                                <Link2 size={18} className="text-pink-500" />
+                                <span>Tiện ích</span>
+                                <ChevronDown size={14} className={`transition-transform duration-300 ${showLinksDropdown ? 'rotate-180' : ''}`} />
+                            </button>
+                            
+                            {showLinksDropdown && (
+                                <div className="absolute left-0 mt-4 w-60 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl py-3 z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <button onClick={() => onNavigate('download_app')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#0051BF10] transition-colors text-left text-slate-700 dark:text-slate-300">
+                                        <Download size={18} className="text-green-500" />
+                                        <span className="font-medium text-sm">Tải ứng dụng Offline</span>
+                                    </button>
+                                    <a href="https://daotaothuyenvien.com/amthuc" target="_blank" rel="noopener noreferrer" className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#0051BF10] transition-colors text-slate-700 dark:text-slate-300">
+                                        <Utensils size={18} className="text-orange-500" />
+                                        <span className="font-medium text-sm">Ẩm thực Ninh Bình</span>
+                                    </a>
+                                </div>
+                            )}
+                        </div>
+
+                        {userProfile && (
+                            <button onClick={() => onNavigate('giaitri')} className={`${navItemClass} text-emerald-600 dark:text-emerald-400 font-bold`}>
+                                <Gamepad2 size={18} className="animate-bounce" />
+                                <span>Giải trí</span>
+                            </button>
                         )}
                     </div>
 
-                    {/* 3. Tài khoản */}
-                    <button
-                        onClick={() => onNavigate('account')}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <UserCog size={18} className="text-orange-600 dark:text-orange-400" />
-                        <span className="font-medium text-sm md:text-base">Tài khoản</span>
-                    </button>
-
-                    {/* 3.1 Hộp thư */}
-                    <button
-                        onClick={() => onNavigate('mailbox')}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <Mail size={18} className="text-pink-600 dark:text-pink-400" />
-                        <span className="font-medium text-sm md:text-base">Hộp thư</span>
-                    </button>
-
-                    {/* 4. Lịch sử / Lớp học (Chỉ hiện khi đã đăng nhập) */}
-                    {userProfile && (
-                        <>
-                            {/* Class Navigation based on Role */}
-                            {['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile?.role || '') ? (
-                                <button
-                                    onClick={() => onNavigate('class_management')}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                                >
-                                    <School size={18} className="text-indigo-600 dark:text-indigo-400" />
-                                    <span className="font-medium text-sm md:text-base">Quản lý lớp</span>
-                                </button>
+                    {/* RIGHT: User Actions */}
+                    <div className="flex items-center gap-3 md:gap-5 ml-4 flex-shrink-0">
+                        {/* Windows Specific: Connection Status */}
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold border border-slate-200 dark:border-slate-700">
+                            {navigator.onLine ? (
+                                <><Wifi size={14} className="text-green-500" /> <span className="text-green-600 dark:text-green-400 hidden lg:inline uppercase tracking-tighter">Trực tuyến</span></>
                             ) : (
-                                <button
-                                    onClick={() => onNavigate('my_class')}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                                >
-                                    <GraduationCap size={18} className="text-green-600 dark:text-green-400" />
-                                    <span className="font-medium text-sm md:text-base">Lớp của tôi</span>
-                                </button>
+                                <><WifiOff size={14} className="text-red-500" /> <span className="text-red-600 dark:text-red-400 hidden lg:inline uppercase tracking-tighter">Ngoại tuyến</span></>
                             )}
+                        </div>
 
-                            {/* Notification Management (Admin/Leader/Manager/Teacher) */}
-                            {['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile?.role || '') && (
+                        {userProfile ? (
+                            <>
+                                <NotificationBell />
+                                
+                                <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 mx-1 hidden md:block" />
+
+                                <div className="hidden sm:flex flex-col items-end">
+                                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none mb-1">Thành viên</span>
+                                    <div className="flex items-center gap-2 group cursor-pointer" onClick={() => onNavigate('account')}>
+                                        <span className={`text-sm font-black transition-colors ${
+                                            userProfile.role === 'admin' ? 'text-purple-500' :
+                                            ['lanh_dao', 'quan_ly'].includes(userProfile.role || '') ? 'text-red-500' :
+                                            userProfile.role === 'giao_vien' ? 'text-amber-500' : 'text-[#0051BF]'
+                                        }`}>
+                                            {userProfile.full_name || userProfile.fullName}
+                                        </span>
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center border border-white/10 shadow-sm overflow-hidden transform group-hover:scale-110 transition-transform">
+                                            <UserCog size={16} className="text-slate-600 dark:text-slate-400" />
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <button
-                                    onClick={() => onNavigate('notification_mgmt')}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap border-l border-gray-200 dark:border-gray-700 ml-2 pl-4"
+                                    onClick={onLogout}
+                                    className="p-2.5 rounded-2xl text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 border border-red-500/20 shadow-sm group"
+                                    title="Đăng xuất"
                                 >
-                                    <AlertTriangle size={18} className="text-red-500 animate-pulse-slow" />
-                                    <span className="font-bold text-sm md:text-base text-red-600 dark:text-red-400">Quản lý TB</span>
+                                    <LogOut size={18} className="group-hover:translate-x-0.5 transition-transform" />
                                 </button>
-                            )}
-
-                            {/* Admin Config Button (ONLY ADMIN) */}
-                            {userProfile?.role === 'admin' && (
-                                <button
-                                    onClick={() => onNavigate('config')}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap border-l border-gray-200 dark:border-gray-700 ml-2 pl-4"
-                                >
-                                    <Settings size={18} className="text-purple-600 animate-spin-slow" />
-                                    <span className="font-bold text-sm md:text-base text-purple-600 dark:text-purple-400">Cấu hình</span>
-                                </button>
-                            )}
-
-                            <button
-                                onClick={() => onNavigate('history')}
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                            >
-                                <History size={18} className="text-purple-600 dark:text-purple-400" />
-                                <span className="font-medium text-sm md:text-base">Lịch sử</span>
-                            </button>
-                        </>
-                    )}
-                </div>
-
-                {/* RIGHT: User Info & Logout */}
-                <div className="flex items-center gap-3 md:gap-4 ml-4 flex-shrink-0">
-                    <div className="flex items-center gap-2 px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-xs font-medium">
-                        {navigator.onLine ? (
-                            <><Wifi size={14} className="text-green-500" /> <span className="text-green-600 dark:text-green-400 hidden sm:inline">Trực tuyến</span></>
+                            </>
                         ) : (
-                            <><WifiOff size={14} className="text-red-500" /> <span className="text-red-600 dark:text-red-400 hidden sm:inline">Ngoại tuyến</span></>
+                            <button
+                                onClick={() => onNavigate('login')}
+                                className="relative px-6 py-2.5 rounded-2xl bg-[#0051BF] text-white font-bold text-sm hover:bg-[#003A8C] transition-all shadow-lg hover:shadow-[#0051BF]/20 active:scale-95 overflow-hidden group"
+                            >
+                                <div className="relative z-10">Đăng nhập</div>
+                                <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                            </button>
                         )}
                     </div>
-                    {userProfile ? (
-                        <>
-                            <div className="mr-2">
-                                <NotificationBell />
-                            </div>
-                            <div className="hidden md:flex flex-col items-end mr-4">
-                                <button
-                                    onClick={() => setShowChangelog(true)}
-                                    className="text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors"
-                                >
-                                    v{getLatestVersion()}
-                                </button>
-                            </div>
-
-                            <div className="hidden md:flex flex-col items-end">
-                                <span className="text-xs text-gray-500 dark:text-gray-400">Xin chào,</span>
-                                <span className="text-sm font-bold text-gray-800 dark:text-white max-w-[150px] truncate">
-                                    {userProfile.isVerified || userProfile.courseId ? (
-                                        <span className={`flex items-center gap-1 font-bold ${userProfile?.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
-                                            userProfile?.role === 'quan_ly' || userProfile?.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
-                                                userProfile?.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
-                                                    'text-blue-600'
-                                            }`}>
-                                            {userProfile.full_name || userProfile.fullName || '---'}
-                                            {userProfile?.role === 'hoc_vien' && <CheckCircle size={14} className="text-green-500" />}
-                                        </span>
-                                    ) : (
-                                        <span className={`font-bold ${userProfile?.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
-                                            userProfile?.role === 'quan_ly' || userProfile?.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
-                                                userProfile?.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
-                                                    'text-gray-800 dark:text-white'
-                                            }`}>
-                                            {userProfile.full_name || userProfile.fullName || '---'}
-                                        </span>
-                                    )}
-                                </span>
-                            </div>
-
-                            {/* Mobile Icon for User */}
-                            <div className="md:hidden text-gray-700 dark:text-gray-200">
-                                <GraduationCap size={20} />
-                            </div>
-
-                            <div className="h-8 w-[1px] bg-gray-300 dark:bg-gray-700 mx-1"></div>
-
-                            <button
-                                onClick={onLogout}
-                                className="group flex items-center gap-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-full transition-colors"
-                                title="Đăng xuất"
-                            >
-                                <LogOut size={18} className="group-hover:translate-x-1 transition-transform" />
-                                <span className="hidden md:inline font-medium text-sm">Thoát</span>
-                            </button>
-                        </>
-                    ) : (
-                        <button
-                            onClick={() => onNavigate('login')}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors shadow-md"
-                        >
-                            Đăng nhập
-                        </button>
-                    )}
                 </div>
             </div>
             {showChangelog && <ChangelogModal onClose={() => setShowChangelog(false)} />}

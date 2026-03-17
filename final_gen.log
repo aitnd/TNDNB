@@ -1,0 +1,19 @@
+nohup: ignoring input
+Traceback (most recent call last):
+  File "<string>", line 6, in <module>
+  File "/tmp/venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 481, in read_excel
+    io = ExcelFile(
+         ^^^^^^^^^^
+  File "/tmp/venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 1621, in __init__
+    self._reader = self._engines[engine](
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/venv/lib/python3.12/site-packages/pandas/io/excel/_openpyxl.py", line 560, in __init__
+    super().__init__(
+  File "/tmp/venv/lib/python3.12/site-packages/pandas/io/excel/_base.py", line 544, in __init__
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "/tmp/venv/lib/python3.12/site-packages/pandas/io/common.py", line 935, in get_handle
+    handle = open(handle, ioargs.mode)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/horizon/source.xlsx'
+Loading...

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Toaster, toast } from 'sonner';
+import { Toaster } from 'sonner';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
 import SweetAlertPopup from './components/SweetAlertPopup';
@@ -38,14 +38,16 @@ import DownloadAppPage from './components/DownloadAppPage';
 import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
 import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
-import EntertainmentScreen from './components/EntertainmentScreen';
+import GiamKhaoSelectionScreen from './components/GiamKhaoSelectionScreen';
+
+import EntertainmentScreen from './components/EntertainmentScreen.tsx';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
 import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
-import { syncData } from './services/syncService';
-import { db_offline } from './services/offlineService';
-// import { Capacitor } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core';
+import { App as CapacitorApp } from '@capacitor/app';
+import { SplashScreen } from '@capacitor/splash-screen';
 import usePresence from './hooks/usePresence';
 import AlertMarquee from './components/AlertMarquee';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
@@ -54,6 +56,8 @@ const AppContent: React.FC = () => {
   usePresence();
   const navigate = useNavigate();
   const location = useLocation();
+  const unsubProfileRef = useRef<(() => void) | null>(null);
+
 
   const licenses = useAppStore(state => state.licenses);
   const setLicenses = useAppStore(state => state.setLicenses);
@@ -81,13 +85,67 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const isTestMode = params.get('mode') === 'app';
-    // const isNative = Capacitor.isNativePlatform();
+    const isNative = Capacitor.isNativePlatform();
 
-    if (isTestMode) { // Removed isNative check for Windows App
+    if (isNative || isTestMode) {
       setIsMobileApp(true);
     } else {
       setIsMobileApp(false);
     }
+
+    // Ẩn SplashScreen khi App load xong trên Native
+    if (isNative) {
+      setTimeout(() => {
+        SplashScreen.hide();
+      }, 500);
+    }
+  }, []);
+
+  // --- HARDWARE BACK BUTTON (ANDROID) ---
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    let lastTimeBackPress = 0;
+    const timePeriodToExit = 2000;
+
+    const backButtonListener = CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+      const currentPath = window.location.pathname;
+
+      if (currentPath === '/ontap/dashboard' || currentPath === '/' || currentPath === '/ontap') {
+        const timeNow = new Date().getTime();
+        if (timeNow - lastTimeBackPress < timePeriodToExit) {
+          CapacitorApp.exitApp();
+        } else {
+          lastTimeBackPress = timeNow;
+          import('sonner').then(({ toast }) => toast('Nhấn Back lần nữa để thoát ứng dụng.'));
+        }
+      } else if (currentPath === '/ontap/lambai' || currentPath === '/ontap/thithu') {
+        import('sweetalert2').then(({ default: Swal }) => {
+          Swal.fire({
+            title: 'Hủy bài kiểm tra?',
+            text: 'Bạn có chắc chắn muốn thoát và hủy kết quả bài đang làm?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Có, Thoát',
+            cancelButtonText: 'Tiếp tục làm bài',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.history.back();
+            }
+          });
+        });
+      } else {
+        if (canGoBack) {
+          window.history.back();
+        } else {
+          CapacitorApp.exitApp();
+        }
+      }
+    });
+
+    return () => {
+      backButtonListener.then(listener => listener.remove());
+    };
   }, []);
 
   // Load tên khách đã lưu từ localStorage (chạy khi userProfile thay đổi hoặc lúc đầu)
@@ -102,11 +160,13 @@ const AppContent: React.FC = () => {
 
   // --- CUSTOM AUTO UPDATE CHECK (Windows) ---
   useEffect(() => {
+    // @ts-ignore
     if (window.electron?.isElectron) {
       const checkUpdate = async () => {
         try {
           const { getUsageConfig } = await import('./services/adminConfigService');
           const config = await getUsageConfig();
+          // @ts-ignore
           const currentVersion = window.electron.appVersion;
           const remoteVersion = config.app_links?.version;
           const downloadUrl = config.app_links?.windows;
@@ -179,10 +239,8 @@ const AppContent: React.FC = () => {
 
       // @ts-ignore
       window.electron.onUpdateError((err) => {
-        console.error('Update error:', err);
-        toast.error('Không thể tải bản cập nhật. Vui lòng thử lại sau.', {
-          position: 'bottom-right',
-          duration: 5000
+        import('sweetalert2').then(({ default: Swal }) => {
+          Swal.fire('Lỗi', 'Không thể tải bản cập nhật. Vui lòng thử lại sau.', 'error');
         });
       });
     }
@@ -191,14 +249,8 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const loadLicenses = async () => {
       try {
-        if (navigator.onLine) {
-          const data = await fetchLicenses();
-          setLicenses(data);
-        } else {
-          const { getLicensesOffline } = await import('./services/offlineService');
-          const data = await getLicensesOffline();
-          setLicenses(data);
-        }
+        const data = await fetchLicenses();
+        setLicenses(data);
       } catch (error) {
         console.error('Error loading licenses:', error);
       }
@@ -206,78 +258,110 @@ const AppContent: React.FC = () => {
     loadLicenses();
   }, []);
 
-  // --- KHÔI PHỤC SESSION TỪ LOCAL STORAGE ---
-  useEffect(() => {
-    const restoreSession = async () => {
-      const savedSession = localStorage.getItem('rememberSession');
-      if (savedSession) {
-        try {
-          const session = JSON.parse(savedSession);
-          // Kiểm tra session còn hợp lệ (trong 30 ngày)
-          const thirtyDays = 30 * 24 * 60 * 60 * 1000;
-          if (Date.now() - session.timestamp < thirtyDays) {
-            if (session.offline) {
-              // Khôi phục từ offline storage
-              const { getOfflineUser } = await import('./services/offlineService');
-              const offlineUser = await getOfflineUser(session.email);
-              if (offlineUser) {
-                const profile: UserProfile = {
-                  id: offlineUser.id,
-                  full_name: offlineUser.full_name,
-                  email: offlineUser.email,
-                  role: offlineUser.role as any,
-                  offlineAccess: true
-                };
-                setUserProfile(profile);
-                setUserName(profile.full_name);
-                console.log('Restored offline session from localStorage');
-              }
-            }
-            // Nếu online, Firebase auth sẽ tự xử lý
-          } else {
-            // Session hết hạn, xóa đi
-            localStorage.removeItem('rememberSession');
-          }
-        } catch (err) {
-          console.error('Error restoring session:', err);
-        }
-      }
-    };
-    restoreSession();
-  }, []);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Online: Sync data
-        syncData(firebaseUser.uid);
+        // Dọn dẹp listener cũ nếu đang tồn tại
+        if (unsubProfileRef.current) {
+          unsubProfileRef.current();
+          unsubProfileRef.current = null;
+        }
 
         import('firebase/firestore').then(({ onSnapshot, doc }) => {
-          const unsubProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
+          unsubProfileRef.current = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
             if (docSnap.exists()) {
               const profile = { id: docSnap.id, ...docSnap.data() } as UserProfile;
               setUserProfile(profile);
               setUserName(profile.full_name || firebaseUser.displayName || '');
             }
+          }, (error) => {
+            console.warn('⚠️ [App] Profile onSnapshot error:', error.message);
           });
         });
-        // ... rest of the existing logic for online user
-      } else {
-        // Kiểm tra nếu có session đã lưu (offline hoặc ghi nhớ)
-        const savedSession = localStorage.getItem('rememberSession');
-        if (!navigator.onLine && userProfile) {
-          // Keep the current offline profile
-          console.log("Running in Offline Mode");
-        } else if (!savedSession) {
-          // Chỉ xóa profile nếu không có session lưu
-          setUserProfile(null);
-          setUserName('');
+
+        let profile = null;
+        try {
+          profile = await getUserProfile(firebaseUser.uid);
+        } catch (fetchErr) {
+          console.error("❌ Critical: Could not fetch user profile:", fetchErr);
         }
+
+        if (profile === null) {
+          const defaultProfile: UserProfile = {
+            id: firebaseUser.uid,
+            full_name: firebaseUser.displayName || 'Người dùng mới',
+            email: firebaseUser.email || '',
+            role: 'hoc_vien',
+            photoURL: firebaseUser.photoURL || '',
+            isVerified: false
+          };
+
+          try {
+            const { setDoc, doc } = await import('firebase/firestore');
+            await setDoc(doc(db, 'users', firebaseUser.uid), defaultProfile, { merge: true });
+            profile = defaultProfile;
+            setUserProfile(profile);
+            setUserName(profile.full_name);
+          } catch (err) {
+            console.error("❌ Failed to create default profile:", err);
+          }
+        }
+
+        import('./services/fcmClient').then(({ initializeFCM }) => {
+          initializeFCM(firebaseUser.uid);
+        });
+
+        // 💖 Enforce single-device login cho Thành viên tự do & Học viên lớp
+        import('./services/authSessionService').then(({ enforceAndRecordSession }) => {
+          enforceAndRecordSession(firebaseUser.uid);
+        });
+
+        import('./services/sessionService').then(({ loadSession, getLicensePreference }) => {
+          const session = loadSession(firebaseUser.uid);
+          if (session) {
+            setCurrentQuiz(session.quiz);
+            setUserAnswers(session.userAnswers);
+            setSelectedLicense(session.selectedLicense);
+            setSelectedSubject(session.selectedSubject);
+
+            // Do NOT auto-navigate. Just let the banner appear.
+            // if (session.mode === 'online_exam') {
+            //   navigate('/ontap/thithu');
+            // } else {
+            //   navigate('/ontap/lambai');
+            // }
+            return;
+          }
+
+          const checkLicenseLogic = async () => {
+            if (profile?.defaultLicenseId) {
+              const fastFound = licenses.find(l => l.id === profile.defaultLicenseId);
+              if (fastFound) {
+                setSelectedLicense(fastFound);
+                return;
+              }
+            }
+          };
+          checkLicenseLogic();
+        });
+
+      } else {
+        // Dọn dẹp listener khi logout
+        if (unsubProfileRef.current) {
+          unsubProfileRef.current();
+          unsubProfileRef.current = null;
+        }
+        setUserProfile(null);
+        setUserName('');
       }
     });
 
     return () => {
       unsubscribe();
+      if (unsubProfileRef.current) {
+        unsubProfileRef.current();
+        unsubProfileRef.current = null;
+      }
     };
   }, [licenses, navigate, location.pathname]);
 
@@ -538,13 +622,13 @@ const AppContent: React.FC = () => {
       case 'download_app': navigate('/ontap/download'); break;
       case 'analytics': navigate('/ontap/thongke'); break;
       case 'login_history': navigate('/ontap/lichsudangnhap'); break;
+      case 'giaitri': navigate('/ontap/giaitri'); break;
       default: navigate('/ontap/dashboard');
     }
   };
 
   const handleLogout = async () => {
     import('./services/sessionService').then(({ clearSession }) => clearSession());
-    localStorage.removeItem('rememberSession'); // Xóa session ghi nhớ
     await auth.signOut();
     navigate('/');
   };
@@ -588,6 +672,9 @@ const AppContent: React.FC = () => {
         </>
       )}
 
+      {/* Spacer cho fixed navbar */}
+      {!isMobileApp && <div className="pt-16" />}
+
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Navigate to="/ontap/dashboard" replace />} />
@@ -612,7 +699,50 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/dangky" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
 
           <Route path="/ontap/chonbang" element={<LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => navigate('/')} />} />
+          <Route path="/ontap/giamkhao" element={
+            <GiamKhaoSelectionScreen 
+              licenses={licenses} 
+              onSelectSubject={async (subject, mode) => {
+                // Tự động tìm license Giám khảo để gán context
+                const gkLic = licenses.find(l => l.id.includes('giam-khao') || l.name.toLowerCase().includes('giám khảo'));
+                if (gkLic) {
+                  setSelectedLicense(gkLic);
+                  if (mode === 'practice') {
+                    handleSubjectSelect(subject);
+                  } else {
+                    // Custom Thi thử cho Giám khảo
+                    const allowed = await checkUsage(userProfile);
+                    if (allowed !== 'ALLOWED') {
+                      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
+                      return;
+                    }
+                    await incrementUsage(userProfile);
+                    
+                    // Shuffle ALL questions from this subject for GK exam
+                    const shuffled = [...subject.questions].sort(() => 0.5 - Math.random());
+                    const selected = shuffled.slice(0, 30);
+                    
+                    const examQuiz: Quiz = {
+                      id: `exam_gk_${Date.now()}`,
+                      title: `Thi Thử Giám Khảo - ${subject.name}`,
+                      questions: selected,
+                      timeLimit: 2700
+                    };
+                    
+                    setCurrentQuiz(examQuiz);
+                    setUserAnswers({});
+                    setScore(0);
+                    setSelectedSubject(subject);
+                    localStorage.removeItem('ontap_quiz_session');
+                    navigate('/ontap/thithu');
+                  }
+                }
+              }} 
+              onBack={() => navigate('/ontap/dashboard')} 
+            />
+          } />
           <Route path="/ontap/nhapten" element={<NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => navigate('/ontap/chonbang')} />} />
+
 
           <Route path="/ontap/chonchedo" element={
             <ModeSelectionScreen
@@ -682,6 +812,7 @@ const AppContent: React.FC = () => {
                 onRetry={handleRetry}
                 onBack={() => navigate('/ontap/chonchedo')}
                 userName={userName}
+                passPoint={currentQuiz.id.includes('gk_exam') ? 27 : 25}
               />
             ) : <Navigate to="/ontap/chonchedo" replace />
           } />
@@ -696,7 +827,7 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/quanlythi" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/thitructuyen" element={<ThiTrucTuyenPage />} />
           <Route path="/ontap/download" element={<DownloadAppPage />} />
-           <Route path="/ontap/thongke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/thongke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
           <Route path="/ontap/lichsudangnhap" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
           <Route path="/ontap/giaitri" element={<EntertainmentScreen onBack={() => navigate('/ontap/dashboard')} />} />
 
@@ -737,25 +868,7 @@ const App: React.FC = () => {
     <ThemeProvider>
       <SnowEffect />
       <AppContent />
-      <div className="fixed bottom-4 right-4 z-50 flex gap-2">
-        {/* @ts-ignore */}
-        {window.electron?.isElectron || navigator.userAgent.toLowerCase().includes('electron') ? (
-          <button
-            onClick={() => {
-              try {
-                // @ts-ignore
-                const { ipcRenderer } = window.require('electron');
-                ipcRenderer.send('toggle-devtools');
-              } catch (e) {
-                console.error("DevTools toggle failed", e);
-              }
-            }}
-            className="bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 transition"
-            title="Bật/Tắt DevTools"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
-          </button>
-        ) : null}
+      <div className="fixed bottom-4 right-4 z-50">
         <ThemeSwitcher />
       </div>
     </ThemeProvider>

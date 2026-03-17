@@ -1,0 +1,6684 @@
+{
+  "ktvt": [
+    {
+      "id": "ktvt_36",
+      "text": "Yếu tố ảnh hưởng đến chuyến đi là:",
+      "answers": [
+        {
+          "id": "ktvt_36_1",
+          "text": "Hàng hóa."
+        },
+        {
+          "id": "ktvt_36_2",
+          "text": "Bến cảng"
+        },
+        {
+          "id": "ktvt_36_3",
+          "text": "Khí hậu, luồng lạch."
+        },
+        {
+          "id": "ktvt_36_4",
+          "text": "Tất cả đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_36_4"
+    },
+    {
+      "id": "ktvt_37",
+      "text": "Thời gian tàu chạy là:",
+      "answers": [
+        {
+          "id": "ktvt_37_1",
+          "text": "Thời gian cần thiết để tàu chạy hết quãng đường vận tải không kể phần thời gian tàu đỗ."
+        },
+        {
+          "id": "ktvt_37_2",
+          "text": "Thời gian tàu chạy từ cảng xuất đến cảng nhập kể cả thời gian tàu đỗ nghỉ trên đường."
+        },
+        {
+          "id": "ktvt_37_3",
+          "text": "Khoảng thời gian tính từ khi tàu chạy đến khi dỡ hàng xong."
+        },
+        {
+          "id": "ktvt_37_4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_37_1"
+    },
+    {
+      "id": "ktvt_38",
+      "text": "Tốc độ thực tế của tàu là",
+      "answers": [
+        {
+          "id": "ktvt_38_1",
+          "text": "Tốc độ của tàu so với bờ, đã tính đến các ảnh hưởng của sóng, gió và chiều của dòng nước."
+        },
+        {
+          "id": "ktvt_38_2",
+          "text": "Tốc độ bình quân trong cả chuyến đi."
+        },
+        {
+          "id": "ktvt_38_3",
+          "text": "Tốc độ vận hành của con tàu đối với nước."
+        },
+        {
+          "id": "ktvt_38_4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_38_1"
+    },
+    {
+      "id": "ktvt_39",
+      "text": "Sức tải khởi hành của tàu P' > 1 khi tàu",
+      "answers": [
+        {
+          "id": "ktvt_39_1",
+          "text": "Chở quá tải."
+        },
+        {
+          "id": "ktvt_39_2",
+          "text": "Chở đủ tải."
+        },
+        {
+          "id": "ktvt_39_3",
+          "text": "Chở không đủ tải."
+        },
+        {
+          "id": "ktvt_39_4",
+          "text": "Chạy không hàng."
+        }
+      ],
+      "correctAnswerId": "ktvt_39_1"
+    },
+    {
+      "id": "ktvt_40",
+      "text": "Thời gian tàu đỗ là:.",
+      "answers": [
+        {
+          "id": "ktvt_40_1",
+          "text": "Tổng thời gian tàu neo nghỉ dọc đường, lấy dầu"
+        },
+        {
+          "id": "ktvt_40_2",
+          "text": "Tổng thời gian tàu cập cầu nhận hàng, trả hàng."
+        },
+        {
+          "id": "ktvt_40_3",
+          "text": "Tổng các thời gian tàu đỗ cần thiết trong một chuyến đi hay một quay vòng để làm các thao tác kỹ thuật ở các bến và dọc đường."
+        },
+        {
+          "id": "ktvt_40_4",
+          "text": "Tổng thời gian tàu chờ làm các thủ tục xuất nhập bến, cảng."
+        }
+      ],
+      "correctAnswerId": "ktvt_40_3"
+    },
+    {
+      "id": "ktvt_41",
+      "text": "Lý do làm cho sức tải khởi hành P' < 1",
+      "answers": [
+        {
+          "id": "ktvt_41_1",
+          "text": "Hàng không đủ chở, hàng cồng kềnh nên xếp không hết trọng tải."
+        },
+        {
+          "id": "ktvt_41_2",
+          "text": "Đi vào khu vực luồng có mớn nước nông."
+        },
+        {
+          "id": "ktvt_41_3",
+          "text": "Đi trong mùa lũ phải giảm tải."
+        },
+        {
+          "id": "ktvt_41_4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_41_4"
+    },
+    {
+      "id": "ktvt_42",
+      "text": "Trong kinh tế vận tải, “năng suất đầu máy” được hiểu là:",
+      "answers": [
+        {
+          "id": "ktvt_42_1",
+          "text": "Tổng lượng nhiên liệu mà động cơ tiêu thụ trong một hành trình"
+        },
+        {
+          "id": "ktvt_42_2",
+          "text": "Sức kéo tối đa của đầu máy khi tàu đầy tải"
+        },
+        {
+          "id": "ktvt_42_3",
+          "text": "Lượng công suất hữu ích mà đầu máy tạo ra trong một đơn vị thời gian"
+        },
+        {
+          "id": "ktvt_42_4",
+          "text": "Thời gian đầu máy làm việc liên tục mà không cần bảo dưỡng"
+        }
+      ],
+      "correctAnswerId": "ktvt_42_3"
+    },
+    {
+      "id": "ktvt_43",
+      "text": "Sức tải khởi hành của tàu khách Pk’> 1 khi số khách thực tế xuống tàu",
+      "answers": [
+        {
+          "id": "ktvt_43_1",
+          "text": "Lớn hơn số chỗ ngồi của tàu khách do cơ quan đăng kiểm cho phép."
+        },
+        {
+          "id": "ktvt_43_2",
+          "text": "Nhỏ hơn số chỗ ngồi của tàu khách do cơ quan đăng kiểm cho phép."
+        },
+        {
+          "id": "ktvt_43_3",
+          "text": "Bằng số chỗ ngồi của tàu khách do cơ quan đăng kiểm cho phép."
+        },
+        {
+          "id": "ktvt_43_4",
+          "text": "Lớn hơn số chỗ ngồi của tàu khách."
+        }
+      ],
+      "correctAnswerId": "ktvt_43_1"
+    },
+    {
+      "id": "ktvt_44",
+      "text": "Năng suất của tàu là:",
+      "answers": [
+        {
+          "id": "ktvt_44_1",
+          "text": "Số tấn hàng hay hành khách tàu nhận theo hợp đồng."
+        },
+        {
+          "id": "ktvt_44_2",
+          "text": "Số tấn mà tàu có thể chở được."
+        },
+        {
+          "id": "ktvt_44_3",
+          "text": "Số lượng sản phẩm vận chuyển được tính bằng Tkm do 1 phương tiện làm ra trong một đơn vị thời gian."
+        },
+        {
+          "id": "ktvt_44_4",
+          "text": "Số tấn hàng mà tàu nhận được tại cảng."
+        }
+      ],
+      "correctAnswerId": "ktvt_44_3"
+    },
+    {
+      "id": "ktvt_45",
+      "text": "Chi phí nhiên liệu phụ thuộc vào những yếu tố",
+      "answers": [
+        {
+          "id": "ktvt_45_1",
+          "text": "Thời gian hoạt động của đầu máy (t)."
+        },
+        {
+          "id": "ktvt_45_2",
+          "text": "Tình trạng kỹ thuật của máy (suất tiêu hao nhiên liệu e)."
+        },
+        {
+          "id": "ktvt_45_3",
+          "text": "Công suất máy (Nak), giá nhiên liệu (a)"
+        },
+        {
+          "id": "ktvt_45_4",
+          "text": "Tất cả các đáp án trên đều đúng"
+        }
+      ],
+      "correctAnswerId": "ktvt_45_4"
+    },
+    {
+      "id": "ktvt_46",
+      "text": "Phương thức giao nhận hàng hóa trong vận tải thủy là giao, nhận theo",
+      "answers": [
+        {
+          "id": "ktvt_46_1",
+          "text": "Số lượng bao, kiện, container."
+        },
+        {
+          "id": "ktvt_46_2",
+          "text": "Nguyên hầm, cặp chì."
+        },
+        {
+          "id": "ktvt_46_3",
+          "text": "Trọng lượng (cân toàn bộ hoặc cân giám định theo tỷ lệ), theo khối lượng (đo mét khối hoặc đong, đếm bằng lít)."
+        },
+        {
+          "id": "ktvt_46_4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_46_4"
+    },
+    {
+      "id": "ktvt_47",
+      "text": "Biện pháp để hạ giá thành sản phẩm trong vận tải thủy",
+      "answers": [
+        {
+          "id": "ktvt_47_1",
+          "text": "Giảm các chi phí không cần thiết như: chi phí vật liệu mau hỏng, chi phí sửa chữa đột xuất, chi phí bồi thường va chạm..."
+        },
+        {
+          "id": "ktvt_47_2",
+          "text": "Tăng lượng hàng hóa luân chuyển."
+        },
+        {
+          "id": "ktvt_47_3",
+          "text": "Cải tạo luồng lạch."
+        },
+        {
+          "id": "ktvt_47_4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_47_4"
+    },
+    {
+      "id": "ktvt_48",
+      "text": "Giá thành vận chuyển đường thủy nội địa là",
+      "answers": [
+        {
+          "id": "ktvt_48_1",
+          "text": "Tổng các khoản chi phí cần thiết và hợp lý để làm ra một số lượng sản phẩm là 1Tpt."
+        },
+        {
+          "id": "ktvt_48_2",
+          "text": "Tổng các khoản chi phí cần thiết và hợp lý để làm ra một số lượng sản phẩm là 1Tkm."
+        },
+        {
+          "id": "ktvt_48_3",
+          "text": "Tổng lợi nhuận để làm ra một số lượng sản phẩm là 1 tấn hàng."
+        },
+        {
+          "id": "ktvt_48_4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_48_2"
+    },
+    {
+      "id": "ktvt_49",
+      "text": "Khi giao nhận hàng hóa theo số lượng bao, kiện, container nếu bao, kiện còn nguyên vẹn hoặc container còn nguyên kẹp chì thì người kinh doanh vận tải",
+      "answers": [
+        {
+          "id": "ktvt_49_1",
+          "text": "Phải chịu trách nhiệm về hàng hóa."
+        },
+        {
+          "id": "ktvt_49_2",
+          "text": "Tùy từng trường hợp mà phải chịu trách nhiệm về hàng hóa."
+        },
+        {
+          "id": "ktvt_49_3",
+          "text": "Không phải chịu trách nhiệm về hàng hóa ở bên trong."
+        },
+        {
+          "id": "ktvt_49_4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_49_3"
+    },
+    {
+      "id": "ktvt_50",
+      "text": "Hao phí nhiên liệu phụ thuộc vào những yếu tố",
+      "answers": [
+        {
+          "id": "ktvt_50_1",
+          "text": "Thời gian hoạt động của đầu máy (t), tình trạng kỹ thuật của máy (suất tiêu hao nhiên liệu (e), công suất máy (Nak) và giá nhiên liệu (a)."
+        },
+        {
+          "id": "ktvt_50_2",
+          "text": "Công suất máy (Nak), giá nhiên liệu (a)."
+        },
+        {
+          "id": "ktvt_50_3",
+          "text": "Thời gian hoạt động của đầu máy, tình trạng kỹ thuật của máy (suất tiêu hao nhiên liệu và công suất máy)."
+        },
+        {
+          "id": "ktvt_50_4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "ktvt_50_3"
+    },
+    {
+      "id": "m2_ktvt_q81",
+      "text": "Tốc độ thực tế của tàu là:",
+      "answers": [
+        {
+          "id": "m2_ktvt_q81_a1",
+          "text": "Tốc độ của tàu so với bờ, đã tính đến các ảnh hưởng của sóng, gió và chiều của dòng nước."
+        },
+        {
+          "id": "m2_ktvt_q81_a2",
+          "text": "Tốc độ bình quân trong cả chuyến đi."
+        },
+        {
+          "id": "m2_ktvt_q81_a3",
+          "text": "Tốc độ vận hành của con tàu đối với nước."
+        },
+        {
+          "id": "m2_ktvt_q81_a4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q81_a1"
+    },
+    {
+      "id": "m2_ktvt_q82",
+      "text": "Sức tải khởi hành của tàu P' = 1 khi tàu",
+      "answers": [
+        {
+          "id": "m2_ktvt_q82_a1",
+          "text": "Chở quá tải."
+        },
+        {
+          "id": "m2_ktvt_q82_a2",
+          "text": "Chở đủ tải."
+        },
+        {
+          "id": "m2_ktvt_q82_a3",
+          "text": "Chở không đủ tải."
+        },
+        {
+          "id": "m2_ktvt_q82_a4",
+          "text": "Chạy không hàng."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q82_a2"
+    },
+    {
+      "id": "m2_ktvt_q83",
+      "text": "Sức tải khởi hành của tàu P' > 1 khi tàu",
+      "answers": [
+        {
+          "id": "m2_ktvt_q83_a1",
+          "text": "Chở quá tải."
+        },
+        {
+          "id": "m2_ktvt_q83_a2",
+          "text": "Chở đủ tải."
+        },
+        {
+          "id": "m2_ktvt_q83_a3",
+          "text": "Chở không đủ tải."
+        },
+        {
+          "id": "m2_ktvt_q83_a4",
+          "text": "Chạy không hàng."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q83_a1"
+    },
+    {
+      "id": "m2_ktvt_q84",
+      "text": "Thời gian tàu đỗ là:",
+      "answers": [
+        {
+          "id": "m2_ktvt_q84_a1",
+          "text": "Tổng thời gian tàu neo nghỉ dọc đường, lấy dầu."
+        },
+        {
+          "id": "m2_ktvt_q84_a2",
+          "text": "Tổng thời gian tàu cập cầu nhận hàng, trả hàng."
+        },
+        {
+          "id": "m2_ktvt_q84_a3",
+          "text": "Tổng các thời gian tàu đỗ cần thiết trong một chuyến đi hay một quay vòng để làm các thao tác kỹ thuật ở các bến và dọc đường."
+        },
+        {
+          "id": "m2_ktvt_q84_a4",
+          "text": "Tổng thời gian tàu chờ làm các thủ tục xuất nhập bến, cảng."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q84_a3"
+    },
+    {
+      "id": "m2_ktvt_q85",
+      "text": "Lý do làm cho sức tải khởi hành P' < 1",
+      "answers": [
+        {
+          "id": "m2_ktvt_q85_a1",
+          "text": "Hàng không đủ chở, hàng cồng kềnh nên xếp không hết trọng tải."
+        },
+        {
+          "id": "m2_ktvt_q85_a2",
+          "text": "Đi vào khu vực luồng có mớn nước nông."
+        },
+        {
+          "id": "m2_ktvt_q85_a3",
+          "text": "Đi trong mùa lũ phải giảm tải."
+        },
+        {
+          "id": "m2_ktvt_q85_a4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q85_a4"
+    },
+    {
+      "id": "m2_ktvt_q86",
+      "text": "Trong kinh tế vận tải, “năng suất đầu máy” được hiểu là:",
+      "answers": [
+        {
+          "id": "m2_ktvt_q86_a1",
+          "text": "Tổng lượng nhiên liệu mà động cơ tiêu thụ trong một hành trình"
+        },
+        {
+          "id": "m2_ktvt_q86_a2",
+          "text": "Sức kéo tối đa của đầu máy khi tàu đầy tải"
+        },
+        {
+          "id": "m2_ktvt_q86_a3",
+          "text": "Lượng công suất hữu ích mà đầu máy tạo ra trong một đơn vị thời gian"
+        },
+        {
+          "id": "m2_ktvt_q86_a4",
+          "text": "Thời gian đầu máy làm việc liên tục mà không cần bảo dưỡng"
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q86_a3"
+    },
+    {
+      "id": "m2_ktvt_q87",
+      "text": "Tính bay bụi, hút ẩm, bay hơi, toả mùi của hàng hóa thuộc đặc tính",
+      "answers": [
+        {
+          "id": "m2_ktvt_q87_a1",
+          "text": "Tính vật lý."
+        },
+        {
+          "id": "m2_ktvt_q87_a2",
+          "text": "Tính hóa học."
+        },
+        {
+          "id": "m2_ktvt_q87_a3",
+          "text": "Tính cơ học."
+        },
+        {
+          "id": "m2_ktvt_q87_a4",
+          "text": "Tính sinh vật."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q87_a1"
+    },
+    {
+      "id": "m2_ktvt_q88",
+      "text": "Năng suất của tàu là:",
+      "answers": [
+        {
+          "id": "m2_ktvt_q88_a1",
+          "text": "Số tấn hàng hay hành khách tàu nhận theo hợp đồng."
+        },
+        {
+          "id": "m2_ktvt_q88_a2",
+          "text": "Số tấn mà tàu có thể chở được."
+        },
+        {
+          "id": "m2_ktvt_q88_a3",
+          "text": "Số lượng sản phẩm vận chuyển được tính bằng Tkm do 1 phương tiện làm ra trong một đơn vị thời gian."
+        },
+        {
+          "id": "m2_ktvt_q88_a4",
+          "text": "Số tấn hàng mà tàu nhận được tại cảng."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q88_a3"
+    },
+    {
+      "id": "m2_ktvt_q89",
+      "text": "Chi phí nhiên liệu phụ thuộc vào những yếu tố",
+      "answers": [
+        {
+          "id": "m2_ktvt_q89_a1",
+          "text": "Thời gian hoạt động của đầu máy (t)."
+        },
+        {
+          "id": "m2_ktvt_q89_a2",
+          "text": "Tình trạng kỹ thuật của máy (suất tiêu hao nhiên liệu e)."
+        },
+        {
+          "id": "m2_ktvt_q89_a3",
+          "text": "Công suất máy (Nak), giá nhiên liệu (a)."
+        },
+        {
+          "id": "m2_ktvt_q89_a4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q89_a4"
+    },
+    {
+      "id": "m2_ktvt_q90",
+      "text": "Biện pháp để hạ giá thành sản phẩm trong vận tải thủy",
+      "answers": [
+        {
+          "id": "m2_ktvt_q90_a1",
+          "text": "Giảm các chi phí không cần thiết như: chi phí vật liệu mau hỏng, chi phí sửa chữa đột xuất, chi phí bồi thường va chạm..."
+        },
+        {
+          "id": "m2_ktvt_q90_a2",
+          "text": "Tăng lượng hàng hóa luân chuyển."
+        },
+        {
+          "id": "m2_ktvt_q90_a3",
+          "text": "Cải tạo luồng lạch."
+        },
+        {
+          "id": "m2_ktvt_q90_a4",
+          "text": "Tất cả các đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "m2_ktvt_q90_a4"
+    },
+    {
+      "id": "m3_ktvt_q36",
+      "text": "Vận tải thủy nội địa là:",
+      "answers": [
+        {
+          "id": "m3_ktvt_q36_a1",
+          "text": "Chuyên chở hàng hóa bằng tàu thủy trên sông."
+        },
+        {
+          "id": "m3_ktvt_q36_a2",
+          "text": "Chuyên chở hàng hóa bằng ô tô trên đường bộ."
+        },
+        {
+          "id": "m3_ktvt_q36_a3",
+          "text": "Thực hiện vận chuyển các hàng hóa từ nơi này đến nơi khác trong vùng nước mà điểm đầu và điểm cuối của quá trình chuyên chở không đi ra ngoài lãnh thổ của một quốc gia."
+        },
+        {
+          "id": "m3_ktvt_q36_a4",
+          "text": "Cả a và b."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q36_a3"
+    },
+    {
+      "id": "m3_ktvt_q37",
+      "text": "Ngành vận tải đường thủy nội địa có đặc điểm",
+      "answers": [
+        {
+          "id": "m3_ktvt_q37_a1",
+          "text": "Tốc độ vận tải cao và giá thành thấp."
+        },
+        {
+          "id": "m3_ktvt_q37_a2",
+          "text": "Tốc độ vận tải thấp và giá thành cao."
+        },
+        {
+          "id": "m3_ktvt_q37_a3",
+          "text": "Tốc độ vận tải thấp và giá thành thấp."
+        },
+        {
+          "id": "m3_ktvt_q37_a4",
+          "text": "Tốc độ vận tải cao và giá thành cao."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q37_a3"
+    },
+    {
+      "id": "m3_ktvt_q38",
+      "text": "Chuyến đi của tàu",
+      "answers": [
+        {
+          "id": "m3_ktvt_q38_a1",
+          "text": "Là sự tổng hợp của các quá trình làm việc gắn liền sự di chuyển của con tàu từ trạm khởi hành tới trạm đến."
+        },
+        {
+          "id": "m3_ktvt_q38_a2",
+          "text": "Là sự di chuyển của tàu từ lúc nhận hàng ở trạm khởi hành đến trạm bất kỳ."
+        },
+        {
+          "id": "m3_ktvt_q38_a3",
+          "text": "Là sự di chuyển của tàu từ cảng nhận hàng đến cảng trả hàng."
+        },
+        {
+          "id": "m3_ktvt_q38_a4",
+          "text": "Là sự tổng hợp của các quá trình làm việc gắn liền sự di chuyển của con tàu từ trạm khởi hành tới trạm bất kỳ."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q38_a1"
+    },
+    {
+      "id": "m3_ktvt_q39",
+      "text": "Chuyến đi vòng tròn",
+      "answers": [
+        {
+          "id": "m3_ktvt_q39_a1",
+          "text": "Là tổng hợp của nhiều chuyến đi kể từ lúc khởi hành ở trạm đầu đến khi hoàn thành nhiệm vụ trở về bến đầu khởi hành."
+        },
+        {
+          "id": "m3_ktvt_q39_a2",
+          "text": "Là quá trình vận chuyển của tàu tính từ lúc nhận hàng đến khi trả xong hàng."
+        },
+        {
+          "id": "m3_ktvt_q39_a3",
+          "text": "Là quá trình vận chuyển của tàu tính từ lúc nhận thêm hàng ở cảng dọc đường đến khi quay lại bến ban đầu."
+        },
+        {
+          "id": "m3_ktvt_q39_a4",
+          "text": "Tất cả đáp án trên."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q39_a1"
+    },
+    {
+      "id": "m3_ktvt_q40",
+      "text": "Yếu tố ảnh hưởng đến chuyến đi là:",
+      "answers": [
+        {
+          "id": "m3_ktvt_q40_a1",
+          "text": "Hàng hóa."
+        },
+        {
+          "id": "m3_ktvt_q40_a2",
+          "text": "Bến cảng"
+        },
+        {
+          "id": "m3_ktvt_q40_a3",
+          "text": "Khí hậu, luồng lạch."
+        },
+        {
+          "id": "m3_ktvt_q40_a4",
+          "text": "Tất cả đáp án trên đều đúng."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q40_a4"
+    },
+    {
+      "id": "m3_ktvt_q41",
+      "text": "Tốc độ thực tế của tàu",
+      "answers": [
+        {
+          "id": "m3_ktvt_q41_a1",
+          "text": "Là tốc độ của tàu so với bờ, đã tính đến các ảnh hưởng của sóng, gió và chiều của dòng nước."
+        },
+        {
+          "id": "m3_ktvt_q41_a2",
+          "text": "Là tốc độ bình quân trong cả chuyến đi."
+        },
+        {
+          "id": "m3_ktvt_q41_a3",
+          "text": "Là tốc độ vận hành của con tàu đối với nước."
+        },
+        {
+          "id": "m3_ktvt_q41_a4",
+          "text": "Tất cả đáp án trên."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q41_a1"
+    },
+    {
+      "id": "m3_ktvt_q42",
+      "text": "Thời gian tàu chạy",
+      "answers": [
+        {
+          "id": "m3_ktvt_q42_a1",
+          "text": "Là thời gian cần thiết để tàu chạy hết quãng đường vận tải không kể phần thời gian tàu đỗ."
+        },
+        {
+          "id": "m3_ktvt_q42_a2",
+          "text": "Là thời gian tàu chạy từ cảng xuất đến cảng nhập kể cả thời gian tàu đỗ nghỉ trên đường."
+        },
+        {
+          "id": "m3_ktvt_q42_a3",
+          "text": "Là khoảng thời gian tính từ khi tàu chạy đến khi dỡ hàng xong."
+        },
+        {
+          "id": "m3_ktvt_q42_a4",
+          "text": "Tất cả các đáp án trên."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q42_a1"
+    },
+    {
+      "id": "m3_ktvt_q43",
+      "text": "Thời gian tàu đỗ là:",
+      "answers": [
+        {
+          "id": "m3_ktvt_q43_a1",
+          "text": "Là tổng thời gian tàu neo nghỉ dọc đường, lấy dầu."
+        },
+        {
+          "id": "m3_ktvt_q43_a2",
+          "text": "Là tổng thời gian tàu cập cầu nhận hàng, trả hàng."
+        },
+        {
+          "id": "m3_ktvt_q43_a3",
+          "text": "Là tổng các thời gian tàu đỗ cần thiết trong một chuyến đi hay một quay vòng để làm các thao tác kỹ thuật ở các bến và dọc đường."
+        },
+        {
+          "id": "m3_ktvt_q43_a4",
+          "text": "Là tổng thời gian tàu chờ làm các thủ tục xuất nhập bến, cảng."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q43_a3"
+    },
+    {
+      "id": "m3_ktvt_q44",
+      "text": "Tốc độ bình quân của tàu",
+      "answers": [
+        {
+          "id": "m3_ktvt_q44_a1",
+          "text": "Là tốc độ tính bình quân trong cả chuyến đi."
+        },
+        {
+          "id": "m3_ktvt_q44_a2",
+          "text": "Là tốc độ tính bình quân khi tàu chạy."
+        },
+        {
+          "id": "m3_ktvt_q44_a3",
+          "text": "Là tốc độ tức thời tại 1 thời điểm nhất định."
+        },
+        {
+          "id": "m3_ktvt_q44_a4",
+          "text": "Tất cả đáp án trên."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q44_a2"
+    },
+    {
+      "id": "m3_ktvt_q45",
+      "text": "Lý do làm cho sức tải khởi hành P' < 1",
+      "answers": [
+        {
+          "id": "m3_ktvt_q45_a1",
+          "text": "Hàng không đủ chở, hàng cồng kềnh nên xếp không hết trọng tải."
+        },
+        {
+          "id": "m3_ktvt_q45_a2",
+          "text": "Đi vào khu vực luồng có mớn nước nông."
+        },
+        {
+          "id": "m3_ktvt_q45_a3",
+          "text": "Đi trong mùa lũ phải giảm tải."
+        },
+        {
+          "id": "m3_ktvt_q45_a4",
+          "text": "Tất cả đáp án trên."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q45_a4"
+    },
+    {
+      "id": "m3_ktvt_q46",
+      "text": "Sức tải khởi hành của tàu P' = 1 khi tàu",
+      "answers": [
+        {
+          "id": "m3_ktvt_q46_a1",
+          "text": "Chở quá tải."
+        },
+        {
+          "id": "m3_ktvt_q46_a2",
+          "text": "Chở đủ tải."
+        },
+        {
+          "id": "m3_ktvt_q46_a3",
+          "text": "Chở không đủ tải."
+        },
+        {
+          "id": "m3_ktvt_q46_a4",
+          "text": "Chạy không hàng."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q46_a2"
+    },
+    {
+      "id": "m3_ktvt_q47",
+      "text": "Sức tải khởi hành của tàu P' > 1 khi tàu",
+      "answers": [
+        {
+          "id": "m3_ktvt_q47_a1",
+          "text": "Chở quá tải."
+        },
+        {
+          "id": "m3_ktvt_q47_a2",
+          "text": "Chở đủ tải."
+        },
+        {
+          "id": "m3_ktvt_q47_a3",
+          "text": "Chở không đủ tải."
+        },
+        {
+          "id": "m3_ktvt_q47_a4",
+          "text": "Chạy không hàng."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q47_a1"
+    },
+    {
+      "id": "m3_ktvt_q48",
+      "text": "Sức tải khởi hành của tàu khách Pk’> 1 khi số khách thực tế xuống tàu",
+      "answers": [
+        {
+          "id": "m3_ktvt_q48_a1",
+          "text": "Lớn hơn số chỗ ngồi của tàu khách do cơ qua đăng kiểm cho phép."
+        },
+        {
+          "id": "m3_ktvt_q48_a2",
+          "text": "Nhỏ hơn số chỗ ngồi của tàu khách do cơ qua đăng kiểm cho phép."
+        },
+        {
+          "id": "m3_ktvt_q48_a3",
+          "text": "Bằng số chỗ ngồi của tàu khách do cơ qua đăng kiểm cho phép."
+        },
+        {
+          "id": "m3_ktvt_q48_a4",
+          "text": "Lớn hơn số chỗ ngồi của tàu khách ."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q48_a1"
+    },
+    {
+      "id": "m3_ktvt_q49",
+      "text": "Mức tiêu hao nhiên liệu của máy là 0,17 kg/cv.h có nghĩa:",
+      "answers": [
+        {
+          "id": "m3_ktvt_q49_a1",
+          "text": "Trong 1 giờ, 1 mã lực tiêu thụ hết 0,17 kg nhiên liệu."
+        },
+        {
+          "id": "m3_ktvt_q49_a2",
+          "text": "Trong 1 giờ, máy đó tiêu thụ hết 0,17kg nhiên liệu."
+        },
+        {
+          "id": "m3_ktvt_q49_a3",
+          "text": "Trong 10 giờ, máy đó tiêu thu hết 0,17 kg nhiên liệu."
+        },
+        {
+          "id": "m3_ktvt_q49_a4",
+          "text": "Trong 10 giờ, 1 mã lực tiêu thụ hết 0,17 kg nhiên liệu."
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q49_a1"
+    },
+    {
+      "id": "m3_ktvt_q50",
+      "text": "Trong kinh tế vận tải, “năng suất đầu máy” được hiểu là:",
+      "answers": [
+        {
+          "id": "m3_ktvt_q50_a1",
+          "text": "Tổng lượng nhiên liệu mà động cơ tiêu thụ trong một hành trình"
+        },
+        {
+          "id": "m3_ktvt_q50_a2",
+          "text": "Sức kéo tối đa của đầu máy khi tàu đầy tải"
+        },
+        {
+          "id": "m3_ktvt_q50_a3",
+          "text": "Lượng công suất hữu ích mà đầu máy tạo ra trong một đơn vị thời gian"
+        },
+        {
+          "id": "m3_ktvt_q50_a4",
+          "text": "Thời gian đầu máy làm việc liên tục mà không cần bảo dưỡng"
+        }
+      ],
+      "correctAnswerId": "m3_ktvt_q50_a3"
+    },
+    {
+      "id": "t1_ktvt_q151",
+      "text": "Chi phí nhiên liệu tính theo TKm của ngành vận tải thủy nội địa so với các ngành vận tải đường sắt, đường bộ và đường hàng không:",
+      "answers": [
+        {
+          "id": "t1_ktvt_q151_a1",
+          "text": "Cao hơn"
+        },
+        {
+          "id": "t1_ktvt_q151_a2",
+          "text": "Cao hơn đường sắt, thấp hơn đường bộ"
+        },
+        {
+          "id": "t1_ktvt_q151_a3",
+          "text": "Thấp hơn"
+        },
+        {
+          "id": "t1_ktvt_q151_a4",
+          "text": "Bằng nhau"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q151_a3"
+    },
+    {
+      "id": "t1_ktvt_q152",
+      "text": "Năng suất lao động của vận tải thủy nội địa:",
+      "answers": [
+        {
+          "id": "t1_ktvt_q152_a1",
+          "text": "Bằng vận tải đường sắt"
+        },
+        {
+          "id": "t1_ktvt_q152_a2",
+          "text": "Cao hơn vận tải đường bộ"
+        },
+        {
+          "id": "t1_ktvt_q152_a3",
+          "text": "Thấp hơn vận tải hàng không"
+        },
+        {
+          "id": "t1_ktvt_q152_a4",
+          "text": "Bằng vận tải đường sắt và đường bộ."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q152_a3"
+    },
+    {
+      "id": "t1_ktvt_q153",
+      "text": "Ngành vận tải thủy nội địa có những đặc điểm:",
+      "answers": [
+        {
+          "id": "t1_ktvt_q153_a1",
+          "text": "Tốc độ vận tải thấp và giá thành vận tải thấp."
+        },
+        {
+          "id": "t1_ktvt_q153_a2",
+          "text": "Tốc độ vận tải cao và giá thành vận tải thấp."
+        },
+        {
+          "id": "t1_ktvt_q153_a3",
+          "text": "Tốc độ vận tải thấp và giá thành vận tải cao."
+        },
+        {
+          "id": "t1_ktvt_q153_a4",
+          "text": "Tốc độ vận tải cao và giá thành vận tải cao."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q153_a1"
+    },
+    {
+      "id": "t1_ktvt_q154",
+      "text": "Trường hợp phát hiện hàng hóa có hiện tượng tự bốc cháy, rò rỉ, đổ vỡ thì người kinh doanh vận tải phải thực hiện",
+      "answers": [
+        {
+          "id": "t1_ktvt_q154_a1",
+          "text": "Các biện pháp ngăn chặn để bảo vệ người, hàng hóa và phương tiện."
+        },
+        {
+          "id": "t1_ktvt_q154_a2",
+          "text": "Lập biên bản có xác nhận của người thuê vận tải."
+        },
+        {
+          "id": "t1_ktvt_q154_a3",
+          "text": "Báo cho cơ quan Cảng vụ biết."
+        },
+        {
+          "id": "t1_ktvt_q154_a4",
+          "text": "Báo cho Cảnh sát giao thông đường thủy biết."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q154_a1"
+    },
+    {
+      "id": "t1_ktvt_q155",
+      "text": "Trước khi vận tải nếu phát hiện hàng hóa thuộc loại nguy hiểm, hàng hóa cấm lưu thông thì người kinh doanh vận tải",
+      "answers": [
+        {
+          "id": "t1_ktvt_q155_a1",
+          "text": "Không báo cho người thuê vận tải biết và tiếp tục vận tải đến nơi trả hàng"
+        },
+        {
+          "id": "t1_ktvt_q155_a2",
+          "text": "Báo cho người thuê vận tải biết và cho tàu dừng lại"
+        },
+        {
+          "id": "t1_ktvt_q155_a3",
+          "text": "Báo cho người thuê vận tải biết và vận tải quay về nơi nhận hàng"
+        },
+        {
+          "id": "t1_ktvt_q155_a4",
+          "text": "Phải đưa lên bờ và thông báo cho Cảng vụ hoặc hoặc cơ quan có thẩm quyền biết để xử lý theo quy định của pháp luật."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q155_a4"
+    },
+    {
+      "id": "t1_ktvt_q156",
+      "text": "Trên đường vận tải nếu phát hiện hàng hóa thông thường không đúng với kê khai của người thuê vận tải thì người kinh doanh vận tải",
+      "answers": [
+        {
+          "id": "t1_ktvt_q156_a1",
+          "text": "Báo cho người thuê vận tải biết và tiếp tục vận tải đến nơi trả hàng"
+        },
+        {
+          "id": "t1_ktvt_q156_a2",
+          "text": "Báo cho người thuê vận tải biết và cho tàu dừng lại"
+        },
+        {
+          "id": "t1_ktvt_q156_a3",
+          "text": "Báo cho người thuê vận tải biết và vận tải quay về nơi nhận hàng"
+        },
+        {
+          "id": "t1_ktvt_q156_a4",
+          "text": "Không báo cho người thuê vận tải biết và tiếp tục vận tải đến nơi trả hàng"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q156_a1"
+    },
+    {
+      "id": "t1_ktvt_q157",
+      "text": "Trên đường vận tải nếu phát hiện hàng hóa thuộc loại nguy hiểm, hàng hóa cấm lưu thông thì người thuê vận tải",
+      "answers": [
+        {
+          "id": "t1_ktvt_q157_a1",
+          "text": "Phải thanh toán các chi phí cho cơ quan Cảng vụ."
+        },
+        {
+          "id": "t1_ktvt_q157_a2",
+          "text": "Phải thanh toán các chi phí cho cơ quan Công an."
+        },
+        {
+          "id": "t1_ktvt_q157_a3",
+          "text": "Phải thanh toán các chi phí cho cơ quan bảo hiểm theo quy định."
+        },
+        {
+          "id": "t1_ktvt_q157_a4",
+          "text": "Phải thanh toán các chi phí và tổn thất phát sinh cho người kinh doanh vận tải."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q157_a4"
+    },
+    {
+      "id": "t1_ktvt_q158",
+      "text": "Trường hợp phương tiện không xuất bến đúng thời gian quy định, hành khách phải chờ đợi qua đêm thì người kinh doanh vận tải",
+      "answers": [
+        {
+          "id": "t1_ktvt_q158_a1",
+          "text": "Phải bố trí nơi ăn, nghỉ cho hành khách và không chịu chi phí"
+        },
+        {
+          "id": "t1_ktvt_q158_a2",
+          "text": "Phải bố trí nơi ăn, nghỉ cho hành khách và chịu 100% các chi phí"
+        },
+        {
+          "id": "t1_ktvt_q158_a3",
+          "text": "Phải bố trí nơi ăn, nghỉ cho hành khách và chịu 75% các chi phí"
+        },
+        {
+          "id": "t1_ktvt_q158_a4",
+          "text": "Phải bố trí nơi ăn, nghỉ cho hành khách và chịu 50% chi phí một phần theo quy định"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q158_a2"
+    },
+    {
+      "id": "t1_ktvt_q159",
+      "text": "Trường hợp hành lý ký gửi, bao gửi hư hỏng, thiếu hụt hoặc mất mát do lỗi của người kinh doanh vận tải thì phải bồi thường",
+      "answers": [
+        {
+          "id": "t1_ktvt_q159_a1",
+          "text": "Theo yêu cầu của bên vận tải."
+        },
+        {
+          "id": "t1_ktvt_q159_a2",
+          "text": "Theo 50% giá trị trên hóa đơn mua hàng và các chi phí hợp lý khác."
+        },
+        {
+          "id": "t1_ktvt_q159_a3",
+          "text": "Theo giá trị đã kê khai đối với hành lý ký gửi, bao gửi có kê khai giá trị."
+        },
+        {
+          "id": "t1_ktvt_q159_a4",
+          "text": "Theo khả năng tài chính của bên kinh doanh vận tải."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q159_a3"
+    },
+    {
+      "id": "t1_ktvt_q160",
+      "text": "Kiểm định hàng hóa gồm phương pháp nào?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q160_a1",
+          "text": "Phương pháp cảm quan"
+        },
+        {
+          "id": "t1_ktvt_q160_a2",
+          "text": "Phương pháp phân tích trong phòng thí nghiệm"
+        },
+        {
+          "id": "t1_ktvt_q160_a3",
+          "text": "Phương pháp kiểm tra ngẫu nhiên"
+        },
+        {
+          "id": "t1_ktvt_q160_a4",
+          "text": "Phương pháp cảm quan và phương pháp phân tích trong phòng thí nghiệm"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q160_a4"
+    },
+    {
+      "id": "t1_ktvt_q161",
+      "text": "Kiểm định hàng hóa bằng phương pháp cảm quan có ưu điểm gì?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q161_a1",
+          "text": "Chậm nhưng không phải mua sắm các thiết bị phức tạp"
+        },
+        {
+          "id": "t1_ktvt_q161_a2",
+          "text": "Không phải mua sắm các thiết bị phức tạp"
+        },
+        {
+          "id": "t1_ktvt_q161_a3",
+          "text": "Nhanh, đơn giản, không phải mua sắm các thiết bị phức tạp"
+        },
+        {
+          "id": "t1_ktvt_q161_a4",
+          "text": "Độ chính xác cao"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q161_a3"
+    },
+    {
+      "id": "t1_ktvt_q162",
+      "text": "Năng suất lao động của thuyền viên là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q162_a1",
+          "text": "Số sản phẩm làm ra của một thuyền viên trong một đơn vị thời gian."
+        },
+        {
+          "id": "t1_ktvt_q162_a2",
+          "text": "Số sản phẩm làm ra của tất cả thuyền viên trên tàu trong một đơn vị thời gian."
+        },
+        {
+          "id": "t1_ktvt_q162_a3",
+          "text": "Số sản phẩm làm ra của một sức ngựa trong một đơn vị thời gian."
+        },
+        {
+          "id": "t1_ktvt_q162_a4",
+          "text": "Số sản phẩm làm ra của một tấn phương tiện trong một đơn vị thời gian."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q162_a1"
+    },
+    {
+      "id": "t1_ktvt_q163",
+      "text": "Năng suất lao động của đầu máy là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q163_a1",
+          "text": "Số sản phẩm làm ra của một sức ngựa trong một đơn vị thời gian."
+        },
+        {
+          "id": "t1_ktvt_q163_a2",
+          "text": "Số sản phẩm làm ra của mười (10) sức ngựa trong một đơn vị thời gian."
+        },
+        {
+          "id": "t1_ktvt_q163_a3",
+          "text": "Số sản phẩm làm ra của một trăm (100) sức ngựa trong một đơn vị thời gian."
+        },
+        {
+          "id": "t1_ktvt_q163_a4",
+          "text": "Số sản phẩm làm ra của công suất máy trong một đơn vị thời gian."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q163_a1"
+    },
+    {
+      "id": "t1_ktvt_q164",
+      "text": "Đơn vị tính năng suất lao động đối với tàu (đoàn tàu) là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q164_a1",
+          "text": "Tkm/người/Nvd"
+        },
+        {
+          "id": "t1_ktvt_q164_a2",
+          "text": "Tm/Hp/ Nvd"
+        },
+        {
+          "id": "t1_ktvt_q164_a3",
+          "text": "Tkm/Tpt/Nvd"
+        },
+        {
+          "id": "t1_ktvt_q164_a4",
+          "text": "Tkm/Tpt"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q164_a3"
+    },
+    {
+      "id": "t1_ktvt_q165",
+      "text": "Năng suất lao động của vận tải càng cao thì",
+      "answers": [
+        {
+          "id": "t1_ktvt_q165_a1",
+          "text": "Giá thành vận tải hạ"
+        },
+        {
+          "id": "t1_ktvt_q165_a2",
+          "text": "Giá thành vận tải tăng"
+        },
+        {
+          "id": "t1_ktvt_q165_a3",
+          "text": "Giá thành vận tải không thay đổi"
+        },
+        {
+          "id": "t1_ktvt_q165_a4",
+          "text": "Khi tăng khi giảm"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q165_a1"
+    },
+    {
+      "id": "t1_ktvt_q166",
+      "text": "Biện pháp nào để nâng cao năng suất lao động và năng suất phương tiện?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q166_a1",
+          "text": "Tận dụng hết trọng tải của phương tiện"
+        },
+        {
+          "id": "t1_ktvt_q166_a2",
+          "text": "Tận dụng hết trọng tải và dung tích của phương tiện"
+        },
+        {
+          "id": "t1_ktvt_q166_a3",
+          "text": "Cố gắng khai thác hàng chuyên tuyến, chạy hàng một chiều"
+        },
+        {
+          "id": "t1_ktvt_q166_a4",
+          "text": "Hạn chế sử dụng các phương tiện có công suất lớn"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q166_a2"
+    },
+    {
+      "id": "t1_ktvt_q167",
+      "text": "Giá thành vận chuyển là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q167_a1",
+          "text": "Tổng chi phí cần thiết trong quá trình sản xuất vận tải thủy nội địa để làm ra 1 tấn hàng"
+        },
+        {
+          "id": "t1_ktvt_q167_a2",
+          "text": "Tổng các khoản chi phí cần thiết và hợp lý để làm ra một số lượng sản phẩm là 1 tấn phương tiện"
+        },
+        {
+          "id": "t1_ktvt_q167_a3",
+          "text": "Tổng chi phí cần thiết trong quá trình sản xuất vận tải thủy nội địa"
+        },
+        {
+          "id": "t1_ktvt_q167_a4",
+          "text": "Tổng chi phí cần thiết trong quá trình sản xuất vận tải thủy nội địa để làm ra 1Tkm hay 1000Tkm."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q167_a4"
+    },
+    {
+      "id": "t1_ktvt_q168",
+      "text": "Giá cước được xây dựng dựa vào yếu tố nào?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q168_a1",
+          "text": "Tổng chi phí lương và các khoản phụ cấp"
+        },
+        {
+          "id": "t1_ktvt_q168_a2",
+          "text": "Tổng chi phí nhiên liệu"
+        },
+        {
+          "id": "t1_ktvt_q168_a3",
+          "text": "Cơ sở giá thành"
+        },
+        {
+          "id": "t1_ktvt_q168_a4",
+          "text": "Tổng chi phí xếp dỡ ở 2 đầu bến"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q168_a3"
+    },
+    {
+      "id": "t1_ktvt_q169",
+      "text": "Biện pháp nào để hạ giá thành vận chuyển?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q169_a1",
+          "text": "Tăng lượng hàng hóa luân chuyển"
+        },
+        {
+          "id": "t1_ktvt_q169_a2",
+          "text": "Tăng lượng hàng hóa vận chuyển"
+        },
+        {
+          "id": "t1_ktvt_q169_a3",
+          "text": "Tăng cường các hợp đồng chạy hàng 2 chiều"
+        },
+        {
+          "id": "t1_ktvt_q169_a4",
+          "text": "Tăng các khoản chi phí vật rẻ mau hỏng"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q169_a1"
+    },
+    {
+      "id": "t1_ktvt_q170",
+      "text": "Nguyên nhân nào gây ra sự cố thương vụ ?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q170_a1",
+          "text": "Xếp dỡ hàng đúng kỹ thuật, hạn chế rách vỡ rơi vãi hàng."
+        },
+        {
+          "id": "t1_ktvt_q170_a2",
+          "text": "Phương tiện vận chuyển không chuyên dùng, không phù hợp với loại hàng."
+        },
+        {
+          "id": "t1_ktvt_q170_a3",
+          "text": "Bao gói đúng kỹ thuật, nên hàng ít bị hư hỏng."
+        },
+        {
+          "id": "t1_ktvt_q170_a4",
+          "text": "Giao nhận hàng tại bến, giữa giấy tờ và hàng thực tế khớp nhau."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q170_a2"
+    },
+    {
+      "id": "t1_ktvt_q171",
+      "text": "Hợp đồng vận chuyển là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q171_a1",
+          "text": "Sự thỏa thuận giữa bên vận chuyển và bên thuê vận chuyển"
+        },
+        {
+          "id": "t1_ktvt_q171_a2",
+          "text": "Sự thỏa thuận giữa bên vận chuyển và bên kinh doanh vận tải"
+        },
+        {
+          "id": "t1_ktvt_q171_a3",
+          "text": "Sự thỏa thuận giữa bên vận chuyển và chủ tàu"
+        },
+        {
+          "id": "t1_ktvt_q171_a4",
+          "text": "Sự thỏa thuận giữa bên thuê vận chuyển và chủ hàng"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q171_a1"
+    },
+    {
+      "id": "t1_ktvt_q172",
+      "text": "Quyền và nghĩa vụ của bên vận chuyển là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q172_a1",
+          "text": "Phương tiện vận chuyển phải đáp ứng yêu cầu tiếp nhận."
+        },
+        {
+          "id": "t1_ktvt_q172_a2",
+          "text": "Phương tiện phải vận chuyển và bảo quản hàng hoá phù hợp với tính chất hàng hoá."
+        },
+        {
+          "id": "t1_ktvt_q172_a3",
+          "text": "Có thể thay đổi phương tiện vận chuyển dựa theo tình hình thực tế của doanh nghiệp vận tải."
+        },
+        {
+          "id": "t1_ktvt_q172_a4",
+          "text": "Phương tiện vận chuyển phải đáp ứng yêu cầu tiếp nhận, vận chuyển và bảo quản hàng hoá phù hợp với tính chất hàng hoá."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q172_a4"
+    },
+    {
+      "id": "t1_ktvt_q173",
+      "text": "Quyền và nghĩa vụ của bên vận chuyển là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q173_a1",
+          "text": "Được quyền từ chối vận chuyển tài sản không đúng với loại tài sản đã thoả thuận trong hợp đồng"
+        },
+        {
+          "id": "t1_ktvt_q173_a2",
+          "text": "Được quyền từ chối nhận những hàng hoá không đảm bảo các tiêu chuẩn đóng gói cần thiết theo thoả thuận của các bên"
+        },
+        {
+          "id": "t1_ktvt_q173_a3",
+          "text": "Được quyền từ chối vận chuyển hàng hoá cấm lưu thông, hàng hoá có tính chất nguy hiểm, độc hại."
+        },
+        {
+          "id": "t1_ktvt_q173_a4",
+          "text": "Yêu cầu bên thuê vận chuyển phải sắp xếp hàng hóa theo đúng hướng dẫn."
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q173_a1"
+    },
+    {
+      "id": "t1_ktvt_q174",
+      "text": "Phương pháp xác định trọng lượng hàng hóa bằng vạch mớn nước trên vỏ tàu có tác dụng nào?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q174_a1",
+          "text": "Nhanh chóng"
+        },
+        {
+          "id": "t1_ktvt_q174_a2",
+          "text": "Chính xác"
+        },
+        {
+          "id": "t1_ktvt_q174_a3",
+          "text": "Chỉ dùng xác định các loại hàng có khối lượng nhỏ"
+        },
+        {
+          "id": "t1_ktvt_q174_a4",
+          "text": "Dùng để xác định hàng hóa có giá trị cao"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q174_a1"
+    },
+    {
+      "id": "t1_ktvt_q175",
+      "text": "Mục đích đo lường và kiểm định là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q175_a1",
+          "text": "Biết trọng lượng của hàng để điều phương tiện vận chuyển cho phù hợp."
+        },
+        {
+          "id": "t1_ktvt_q175_a2",
+          "text": "Biết thể tích chiếm chỗ của hàng để điều phương tiện vận chuyển cho phù hợp."
+        },
+        {
+          "id": "t1_ktvt_q175_a3",
+          "text": "Biết trọng lượng và thể tích chiếm chỗ của hàng hóa để điều phương tiện vận chuyển cho phù hợp."
+        },
+        {
+          "id": "t1_ktvt_q175_a4",
+          "text": "Không phải tính toán các biện pháp bảo quản hàng trong thời gian vận chuyển"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q175_a3"
+    },
+    {
+      "id": "t1_ktvt_q176",
+      "text": "Đơn vị tính năng suất lao động đối với thuyền viên là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q176_a1",
+          "text": "Tkm/người/Nvd"
+        },
+        {
+          "id": "t1_ktvt_q176_a2",
+          "text": "Tm/Hp/ Nvd"
+        },
+        {
+          "id": "t1_ktvt_q176_a3",
+          "text": "Tkm/Tpt/Nvd"
+        },
+        {
+          "id": "t1_ktvt_q176_a4",
+          "text": "Tkm/Tpt"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q176_a1"
+    },
+    {
+      "id": "t1_ktvt_q177",
+      "text": "Giá thành vận tải thủy nội địa càng hạ thể hiện khả năng nào của doanh nghiệp vận tải?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q177_a1",
+          "text": "Quá trình sản xuất vận tải của doanh nghiệp hợp lý"
+        },
+        {
+          "id": "t1_ktvt_q177_a2",
+          "text": "Quá trình sản xuất vận tải của doanh nghiệp không hợp lý"
+        },
+        {
+          "id": "t1_ktvt_q177_a3",
+          "text": "Sự đi xuống của doanh nghiệp"
+        },
+        {
+          "id": "t1_ktvt_q177_a4",
+          "text": "Tích lũy vốn cho doanh nghiệp ít"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q177_a1"
+    },
+    {
+      "id": "t1_ktvt_q178",
+      "text": "Khoản mục chi phí nào của lương để tính giá thành?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q178_a1",
+          "text": "Khoản chi trả cho cán bộ công nhân viên đã trực tiếp tham gia vào quá trình sản xuất vận tải"
+        },
+        {
+          "id": "t1_ktvt_q178_a2",
+          "text": "Khoản chi trả cho cán bộ công nhân viên đã gián tiếp tham gia vào quá trình sản xuất vận tải"
+        },
+        {
+          "id": "t1_ktvt_q178_a3",
+          "text": "Khoản chi trả cho cán bộ công nhân viên đã trực tiếp và gián tiếp tham gia vào quá trình sản xuất vận tải"
+        },
+        {
+          "id": "t1_ktvt_q178_a4",
+          "text": "Khoản chi trả cho cán bộ công nhân viên trong toàn doanh nghiệp vận tải"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q178_a3"
+    },
+    {
+      "id": "t1_ktvt_q179",
+      "text": "Để nâng cao năng suất lao động vận tải, thuyền trưởng phải làm gì?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q179_a1",
+          "text": "Trên đường đi, đỗ đúng cung, đúng chặng và bám bờ, bám bãi, lợi dụng con nước"
+        },
+        {
+          "id": "t1_ktvt_q179_a2",
+          "text": "Tận dụng hết trọng tải và dung tích của phương tiện"
+        },
+        {
+          "id": "t1_ktvt_q179_a3",
+          "text": "Áp dụng các kinh nghiệm chạy tàu tiên tiến"
+        },
+        {
+          "id": "t1_ktvt_q179_a4",
+          "text": "Tất cả các ý trên"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q179_a4"
+    },
+    {
+      "id": "t1_ktvt_q180",
+      "text": "Sự cố thương vụ là",
+      "answers": [
+        {
+          "id": "t1_ktvt_q180_a1",
+          "text": "Hàng hóa trong các quá trình vận chuyển bị hư hỏng, biến chất"
+        },
+        {
+          "id": "t1_ktvt_q180_a2",
+          "text": "Hàng hóa trong các quá trình vận chuyển hao hụt trong giới hạn cho phép"
+        },
+        {
+          "id": "t1_ktvt_q180_a3",
+          "text": "Hàng hóa trong các quá trình vận chuyển được an toàn trọn vẹn"
+        },
+        {
+          "id": "t1_ktvt_q180_a4",
+          "text": "Hàng hóa trong các quá trình vận chuyển không bị hư hỏng, biến chất"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q180_a1"
+    },
+    {
+      "id": "t1_ktvt_q181",
+      "text": "Phương tiện vận tải bị trưng dụng do lệnh của cơ quan có thẩm quyền thì thuyền trưởng, người lái phương tiện phải thông báo cho ai?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q181_a1",
+          "text": "Cho người kinh doanh vận tải biết"
+        },
+        {
+          "id": "t1_ktvt_q181_a2",
+          "text": "Cho người thuê vận tải biết"
+        },
+        {
+          "id": "t1_ktvt_q181_a3",
+          "text": "Cho người kinh doanh vận tải biết và người thuê vận tải biết để phối hợp thực hiện"
+        },
+        {
+          "id": "t1_ktvt_q181_a4",
+          "text": "Cho các phương tiện của doanh nghiệp biết để hỗ trợ khắc phục"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q181_a3"
+    },
+    {
+      "id": "t1_ktvt_q182",
+      "text": "Chi phí khấu hao bao gồm",
+      "answers": [
+        {
+          "id": "t1_ktvt_q182_a1",
+          "text": "Khấu hao cơ bản"
+        },
+        {
+          "id": "t1_ktvt_q182_a2",
+          "text": "Khấu hao sửa chữa lớn"
+        },
+        {
+          "id": "t1_ktvt_q182_a3",
+          "text": "Khấu hao sửa chữa vừa và nhỏ"
+        },
+        {
+          "id": "t1_ktvt_q182_a4",
+          "text": "Khấu hao cơ bản và khấu hao sửa chữa lớn"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q182_a4"
+    },
+    {
+      "id": "t1_ktvt_q183",
+      "text": "Giá thành phụ thuộc vào mấy yếu tố cơ bản?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q183_a1",
+          "text": "2 yếu tố"
+        },
+        {
+          "id": "t1_ktvt_q183_a2",
+          "text": "3 yếu tố"
+        },
+        {
+          "id": "t1_ktvt_q183_a3",
+          "text": "4 yếu tố"
+        },
+        {
+          "id": "t1_ktvt_q183_a4",
+          "text": "5 yếu tố"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q183_a1"
+    },
+    {
+      "id": "t1_ktvt_q184",
+      "text": "Giá thành phụ thuộc vào yếu tố cơ bản nào?",
+      "answers": [
+        {
+          "id": "t1_ktvt_q184_a1",
+          "text": "Tổng chi phí và tổng lượng hàng hóa vận chuyển"
+        },
+        {
+          "id": "t1_ktvt_q184_a2",
+          "text": "Tổng lượng hàng hóa vận chuyển"
+        },
+        {
+          "id": "t1_ktvt_q184_a3",
+          "text": "Tổng lượng hàng hóa luân chuyển"
+        },
+        {
+          "id": "t1_ktvt_q184_a4",
+          "text": "Tổng chi phí và tổng lượng hàng hóa luân chuyển"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q184_a4"
+    },
+    {
+      "id": "t1_ktvt_q185",
+      "text": "Nội dung của hợp đồng vận chuyển là thể hiện",
+      "answers": [
+        {
+          "id": "t1_ktvt_q185_a1",
+          "text": "Quyền và nghĩa vụ của bên vận chuyển"
+        },
+        {
+          "id": "t1_ktvt_q185_a2",
+          "text": "Quyền và nghĩa vụ của bên thuê vận chuyển"
+        },
+        {
+          "id": "t1_ktvt_q185_a3",
+          "text": "Quyền và nghĩa vụ của bên vận chuyển và bên thuê vận chuyển"
+        },
+        {
+          "id": "t1_ktvt_q185_a4",
+          "text": "Quyền và nghĩa vụ của bên vận chuyển, bên thuê vận chuyển và bộ phận trung gian"
+        }
+      ],
+      "correctAnswerId": "t1_ktvt_q185_a3"
+    },
+    {
+      "id": "t2_ktvt_q131",
+      "text": "Ngành vận tải thủy nội địa có những đặc điểm là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q131_a1",
+          "text": "Tốc độ thấp, có khả năng vận chuyển được hàng siêu trường, siêu trọng"
+        },
+        {
+          "id": "t2_ktvt_q131_a2",
+          "text": "Tốc độ thấp, vốn đầu tư của ngành vận tải thủy nội địa nhiều hơn so với các ngành vận tải khác"
+        },
+        {
+          "id": "t2_ktvt_q131_a3",
+          "text": "Tốc độ cao, vốn đầu tư của ngành vận tải thủy nội địa ít hơn so với các ngành vận tải khác"
+        },
+        {
+          "id": "t2_ktvt_q131_a4",
+          "text": "Tốc độ cao, có khả năng vận chuyển được hàng siêu trường, siêu trọng"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q131_a1"
+    },
+    {
+      "id": "t2_ktvt_q132",
+      "text": "Quá trình sản xuất vận tải thủy nội địa bao gồm những thành phần",
+      "answers": [
+        {
+          "id": "t2_ktvt_q132_a1",
+          "text": "Người kinh doanh vận tải và cảng bến phục vụ xếp dỡ hàng hóa"
+        },
+        {
+          "id": "t2_ktvt_q132_a2",
+          "text": "Người thuê vận tải và người kinh doanh vận tải"
+        },
+        {
+          "id": "t2_ktvt_q132_a3",
+          "text": "Người thuê vận tải và cảng bến phục vụ xếp dỡ hàng hóa"
+        },
+        {
+          "id": "t2_ktvt_q132_a4",
+          "text": "Người thuê vận tải, người kinh doanh vận tải và cảng bến phục vụ xếp dỡ hàng hóa"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q132_a4"
+    },
+    {
+      "id": "t2_ktvt_q133",
+      "text": "Nguyên nhân gây ra lượng giảm tự nhiên là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q133_a1",
+          "text": "Bản chất hàng hóa"
+        },
+        {
+          "id": "t2_ktvt_q133_a2",
+          "text": "Hàng hóa bị thấm nước hoặc bị ẩm ướt"
+        },
+        {
+          "id": "t2_ktvt_q133_a3",
+          "text": "Hàng hóa bị nén, ép, xô đẩy gây hư hỏng"
+        },
+        {
+          "id": "t2_ktvt_q133_a4",
+          "text": "Sâu bọ hoặc côn trùng gây nên"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q133_a1"
+    },
+    {
+      "id": "t2_ktvt_q134",
+      "text": "Yếu tố bên trong của hàng hóa là yếu tố",
+      "answers": [
+        {
+          "id": "t2_ktvt_q134_a1",
+          "text": "Ảnh hưởng từ quá trình xếp dỡ"
+        },
+        {
+          "id": "t2_ktvt_q134_a2",
+          "text": "Ảnh hưởng từ quá trình vận chuyển"
+        },
+        {
+          "id": "t2_ktvt_q134_a3",
+          "text": "Ảnh hưởng từ nguyên vật liệu sản xuất, từ quá trình sản xuất và đóng gói"
+        },
+        {
+          "id": "t2_ktvt_q134_a4",
+          "text": "Ảnh hưởng từ quá trình giao nhận"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q134_a3"
+    },
+    {
+      "id": "t2_ktvt_q135",
+      "text": "Hàng siêu trường, siêu trọng có kích thước, trọng lượng thực tế là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q135_a1",
+          "text": "Chiều rộng trên 10 mét hoặc chiều dài trên 30 mét hoặc chiều cao trên 4,5 mét, trọng lượng trên 50 tấn"
+        },
+        {
+          "id": "t2_ktvt_q135_a2",
+          "text": "Chiều rộng trên 10 mét hoặc chiều dài trên 40 mét hoặc chiều cao trên 3,5 mét, trọng lượng trên 50 tấn"
+        },
+        {
+          "id": "t2_ktvt_q135_a3",
+          "text": "Chiều rộng trên 10 mét hoặc chiều dài trên 30 mét hoặc chiều cao trên 4,5 mét, trọng lượng trên 70 tấn"
+        },
+        {
+          "id": "t2_ktvt_q135_a4",
+          "text": "Chiều rộng trên 10 mét hoặc chiều dài trên 40 mét hoặc chiều cao trên 4,5 mét, trọng lượng trên 100 tấn"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q135_a4"
+    },
+    {
+      "id": "t2_ktvt_q136",
+      "text": "Khi người kinh doanh vận tải phải chịu trách nhiệm bồi thường đối với hàng hóa mất mát, hư hỏng toàn bộ hoặc một phần thì mức bồi thường được tính theo giá trị hàng hóa",
+      "answers": [
+        {
+          "id": "t2_ktvt_q136_a1",
+          "text": "Tại thời điểm mà hàng hóa được giao cho người nhận hàng"
+        },
+        {
+          "id": "t2_ktvt_q136_a2",
+          "text": "Tại thời điểm ghi trên hóa đơn mua hàng"
+        },
+        {
+          "id": "t2_ktvt_q136_a3",
+          "text": "Tại thời điểm mà hàng hóa được giao cho người kinh doanh vận tải"
+        },
+        {
+          "id": "t2_ktvt_q136_a4",
+          "text": "Tại thời điểm mà hàng hóa bị mất mát, hư hỏng"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q136_a1"
+    },
+    {
+      "id": "t2_ktvt_q137",
+      "text": "Trên đường vận tải nếu phát hiện hàng hóa thông thường không đúng với kê khai của người thuê vận tải thì người kinh doanh vận tải xử lý",
+      "answers": [
+        {
+          "id": "t2_ktvt_q137_a1",
+          "text": "Báo cho người thuê vận tải biết và tiếp tục vận tải đến nơi trả hàng"
+        },
+        {
+          "id": "t2_ktvt_q137_a2",
+          "text": "Báo cho người thuê vận tải biết và cho tàu dừng lại"
+        },
+        {
+          "id": "t2_ktvt_q137_a3",
+          "text": "Báo cho người thuê vận tải biết và vận tải quay về nơi nhận hàng"
+        },
+        {
+          "id": "t2_ktvt_q137_a4",
+          "text": "Không báo cho người thuê vận tải biết và tiếp tục vận tải đến nơi trả hàng"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q137_a1"
+    },
+    {
+      "id": "t2_ktvt_q138",
+      "text": "Trường hợp phải chuyển tải hàng hóa qua nơi luồng bị ách tắc thì người thuê vận tải",
+      "answers": [
+        {
+          "id": "t2_ktvt_q138_a1",
+          "text": "Không phải thanh toán các chi phí phát sinh trong quá trình chuyển tải"
+        },
+        {
+          "id": "t2_ktvt_q138_a2",
+          "text": "Thanh toán 50% các chi phí phát sinh trong quá trình chuyển tải"
+        },
+        {
+          "id": "t2_ktvt_q138_a3",
+          "text": "Thanh toán 75% các chi phí phát sinh trong quá trình chuyển tải"
+        },
+        {
+          "id": "t2_ktvt_q138_a4",
+          "text": "Thanh toán 100% các chi phí phát sinh trong quá trình chuyển tải"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q138_a4"
+    },
+    {
+      "id": "t2_ktvt_q139",
+      "text": "Trường hợp phải chuyển tải hàng hóa qua nỗi luồng bị ách tắc thì người kinh doanh vận tải phải",
+      "answers": [
+        {
+          "id": "t2_ktvt_q139_a1",
+          "text": "Đảm nhận việc chuyển tải"
+        },
+        {
+          "id": "t2_ktvt_q139_a2",
+          "text": "Không đảm nhận việc chuyển tải"
+        },
+        {
+          "id": "t2_ktvt_q139_a3",
+          "text": "Giao cho một bên thứ ba"
+        },
+        {
+          "id": "t2_ktvt_q139_a4",
+          "text": "Đảm nhận vận chuyển 50% hàng hóa"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q139_a1"
+    },
+    {
+      "id": "t2_ktvt_q140",
+      "text": "Phương tiện vận tải bị trưng dụng do lệnh của cõ quan có thẩm quyền thì thuyền trưởng phải",
+      "answers": [
+        {
+          "id": "t2_ktvt_q140_a1",
+          "text": "Thông báo cho người kinh doanh vận tải biết"
+        },
+        {
+          "id": "t2_ktvt_q140_a2",
+          "text": "Thông báo cho người thuê vận tải biết"
+        },
+        {
+          "id": "t2_ktvt_q140_a3",
+          "text": "Không cần phải thông báo cho người kinh doanh vận tải và người thuê vận tải biết"
+        },
+        {
+          "id": "t2_ktvt_q140_a4",
+          "text": "Thông báo cho người kinh doanh vận tải và người thuê vận tải biết để phối hợp thực hiện"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q140_a4"
+    },
+    {
+      "id": "t2_ktvt_q141",
+      "text": "Trên đường đi phát hiện hàng hóa có triệu chứng đe dọa an toàn chung, thuyền trưởng phải",
+      "answers": [
+        {
+          "id": "t2_ktvt_q141_a1",
+          "text": "Xếp dỡ hàng hóa lên bờ, đồng thời liên hệ với chính quyền địa phương để giải quyết số hàng này"
+        },
+        {
+          "id": "t2_ktvt_q141_a2",
+          "text": "Tiếp tục vận chuyển hàng hóa đến cảng, bến đích đến và thông báo cho cảng, bến đích đến để giải quyết số hàng này"
+        },
+        {
+          "id": "t2_ktvt_q141_a3",
+          "text": "Tiếp tục vận chuyển hàng hóa đến cảng, bến đích đến và thông báo cho người thuê vận tải để giải quyết số hàng này"
+        },
+        {
+          "id": "t2_ktvt_q141_a4",
+          "text": "Tiếp tục vận chuyển hàng hóa đến cảng, bến đích đến và thông báo cho người kinh doanh vận tải để giải quyết số hàng này rên"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q141_a1"
+    },
+    {
+      "id": "t2_ktvt_q142",
+      "text": "Khi giao hàng hóa theo nguyên hầm kẹp chì hoặc Container kẹp chì nếu niêm phong, kẹp chì còn nguyên vẹn thì người kinh doanh vận tải phải chịu trách nhiệm gì?",
+      "answers": [
+        {
+          "id": "t2_ktvt_q142_a1",
+          "text": "Phải chịu trách nhiệm về hàng hóa"
+        },
+        {
+          "id": "t2_ktvt_q142_a2",
+          "text": "Tùy từng trường hợp mà phải chịu trách nhiệm về hàng hóa"
+        },
+        {
+          "id": "t2_ktvt_q142_a3",
+          "text": "Phải chịu trách nhiệm 50% về hàng hóa"
+        },
+        {
+          "id": "t2_ktvt_q142_a4",
+          "text": "Không phải chịu trách nhiệm về hàng hóa"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q142_a4"
+    },
+    {
+      "id": "t2_ktvt_q143",
+      "text": "Cách xác định trọng lượng hàng bằng vạch mớn nước trên vỏ tàu có đặc điểm là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q143_a1",
+          "text": "Nhanh chóng"
+        },
+        {
+          "id": "t2_ktvt_q143_a2",
+          "text": "Chính xác"
+        },
+        {
+          "id": "t2_ktvt_q143_a3",
+          "text": "Chỉ dùng xác định các loại hàng có khối lượng nhỏ"
+        },
+        {
+          "id": "t2_ktvt_q143_a4",
+          "text": "Dùng để xác định hàng hóa có giá trị cao"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q143_a1"
+    },
+    {
+      "id": "t2_ktvt_q144",
+      "text": "Năng suất lao động của vận tải càng cao, thì giá thành vận tải sẽ xảy ra khả năng như thế nào?",
+      "answers": [
+        {
+          "id": "t2_ktvt_q144_a1",
+          "text": "Giá thành vận tải hạ"
+        },
+        {
+          "id": "t2_ktvt_q144_a2",
+          "text": "Giá thành vận tải tăng"
+        },
+        {
+          "id": "t2_ktvt_q144_a3",
+          "text": "Giá thành vận tải không thay đổi"
+        },
+        {
+          "id": "t2_ktvt_q144_a4",
+          "text": "Khi tăng khi giảm"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q144_a1"
+    },
+    {
+      "id": "t2_ktvt_q145",
+      "text": "Chuyến đi",
+      "answers": [
+        {
+          "id": "t2_ktvt_q145_a1",
+          "text": "Là sự tổng hợp của các quá trình làm việc gắn liền sự di chuyển của con tàu từ trạm khởi hành tới trạm đến"
+        },
+        {
+          "id": "t2_ktvt_q145_a2",
+          "text": "Là sự di chuyển của tàu từ lúc nhận hàng ở trạm khởi hành đến trạm bất kỳ"
+        },
+        {
+          "id": "t2_ktvt_q145_a3",
+          "text": "Là sự di chuyển của tàu từ cảng nhận hàng đến cảng trả hàng"
+        },
+        {
+          "id": "t2_ktvt_q145_a4",
+          "text": "Là sự tổng hợp của các quá trình làm việc gắn liền sự di chuyển của con tàu từ trạm khởi hành tới trạm bất kỳ"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q145_a1"
+    },
+    {
+      "id": "t2_ktvt_q146",
+      "text": "Tốc độ thực tế của tàu là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q146_a1",
+          "text": "Tốc độ của tàu so với bờ, đã tính đến các ảnh hưởng của sóng, gió và chiều của dòng nước"
+        },
+        {
+          "id": "t2_ktvt_q146_a2",
+          "text": "Tốc độ bình quân trong cả chuyến đi"
+        },
+        {
+          "id": "t2_ktvt_q146_a3",
+          "text": "Tốc độ vận hành của con tàu đối với nước"
+        },
+        {
+          "id": "t2_ktvt_q146_a4",
+          "text": "Tốc độ của tàu so với bờ"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q146_a1"
+    },
+    {
+      "id": "t2_ktvt_q147",
+      "text": "Thời gian tàu đỗ là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q147_a1",
+          "text": "Tổng thời gian tàu neo nghỉ dọc đường, lấy dầu"
+        },
+        {
+          "id": "t2_ktvt_q147_a2",
+          "text": "Tổng thời gian tàu cập cầu nhận hàng, trả hàng"
+        },
+        {
+          "id": "t2_ktvt_q147_a3",
+          "text": "Tổng các thời gian tàu đỗ cần thiết trong một chuyến đi hay một quay vòng để làm các thao tác kỹ thuật ở các bến và dọc đường"
+        },
+        {
+          "id": "t2_ktvt_q147_a4",
+          "text": "Tổng thời gian tàu chờ làm các thủ tục xuất nhập bến, cảng"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q147_a3"
+    },
+    {
+      "id": "t2_ktvt_q148",
+      "text": "Tốc độ bình quân của tàu là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q148_a1",
+          "text": "Tốc độ tính bình quân trong cả chuyến đi"
+        },
+        {
+          "id": "t2_ktvt_q148_a2",
+          "text": "Tốc độ tính bình quân khi tàu chạy"
+        },
+        {
+          "id": "t2_ktvt_q148_a3",
+          "text": "Tốc độ tức thời tại một thời điểm nhất định"
+        },
+        {
+          "id": "t2_ktvt_q148_a4",
+          "text": "Tất cả các ý trên"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q148_a2"
+    },
+    {
+      "id": "t2_ktvt_q149",
+      "text": "Năng suất của tàu là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q149_a1",
+          "text": "Số tấn hàng hay hành khách tàu nhận theo hợp đồng"
+        },
+        {
+          "id": "t2_ktvt_q149_a2",
+          "text": "Số tấn mà tàu có thể chở được"
+        },
+        {
+          "id": "t2_ktvt_q149_a3",
+          "text": "Số lượng sản phẩm vận tải sông được tính bằng T.km do 1 phương tiện làm ra trong một đơn vị thời gian"
+        },
+        {
+          "id": "t2_ktvt_q149_a4",
+          "text": "Số tấn hàng mà tàu nhận được tại cảng"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q149_a3"
+    },
+    {
+      "id": "t2_ktvt_q150",
+      "text": "Sức tải khởi hành là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q150_a1",
+          "text": "Chỉ tiêu biểu thị số tấn hàng thực tế xếp xuống mét khối dung tích tại bến khởi hành"
+        },
+        {
+          "id": "t2_ktvt_q150_a2",
+          "text": "Chỉ tiêu biểu thị số tấn hàng thực tế xếp xuống một tấn trọng tải đăng kiểm tại bến khởi hành"
+        },
+        {
+          "id": "t2_ktvt_q150_a3",
+          "text": "Chỉ tiêu biểu thị số Tkm hàng thực tế xếp xuống một tấn trọng tải đăng kiểm tại bến khởi hành"
+        },
+        {
+          "id": "t2_ktvt_q150_a4",
+          "text": "Chỉ tiêu biểu thị số tấn hàng thực tế xếp xuống một tấn trọng tải đăng kiểm tại bến cuối cùng"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q150_a2"
+    },
+    {
+      "id": "t2_ktvt_q151",
+      "text": "Khi sức tải khởi hành với P' = 1 thể hiện",
+      "answers": [
+        {
+          "id": "t2_ktvt_q151_a1",
+          "text": "Hàng không đủ chở, hàng cồng kềnh nên xếp không hết trọng tải"
+        },
+        {
+          "id": "t2_ktvt_q151_a2",
+          "text": "Đi vào khu vực luồng có mớn nước nông"
+        },
+        {
+          "id": "t2_ktvt_q151_a3",
+          "text": "Đi trong mùa lũ phải giảm tải"
+        },
+        {
+          "id": "t2_ktvt_q151_a4",
+          "text": "Tàu chở đủ tải"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q151_a4"
+    },
+    {
+      "id": "t2_ktvt_q152",
+      "text": "Khi sức tải khởi hành với P' > 1 thể hiện",
+      "answers": [
+        {
+          "id": "t2_ktvt_q152_a1",
+          "text": "Tàu chở quá tải"
+        },
+        {
+          "id": "t2_ktvt_q152_a2",
+          "text": "Tàu chở hàng đủ tải"
+        },
+        {
+          "id": "t2_ktvt_q152_a3",
+          "text": "Tàu chở hàng thiếu tải"
+        },
+        {
+          "id": "t2_ktvt_q152_a4",
+          "text": "Tàu chở hàng theo đúng ghi trên giấy vận chuyển"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q152_a1"
+    },
+    {
+      "id": "t2_ktvt_q153",
+      "text": "Lượng vận chuyển hành khách là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q153_a1",
+          "text": "Lượng hành khách thực tế chở được của một đơn vị vận tải tàu khách trong một khoảng thời gian nhất định"
+        },
+        {
+          "id": "t2_ktvt_q153_a2",
+          "text": "Số khách kilomet của một tàu khách vận chuyển được trên những quãng đường nào đó trong một khoảng thời gian nhất định"
+        },
+        {
+          "id": "t2_ktvt_q153_a3",
+          "text": "Số Tkm của một tàu hàng vận chuyển được trên những quãng đường nào đó trong một khoảng thời gian nhất định"
+        },
+        {
+          "id": "t2_ktvt_q153_a4",
+          "text": "Lượng hành khách thực tế chở được của một đơn vị vận tải tàu khách"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q153_a1"
+    },
+    {
+      "id": "t2_ktvt_q154",
+      "text": "Lượng luân chuyển hành khách là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q154_a1",
+          "text": "Số Tkm của một tàu hàng vận chuyển được trên những quãng đường nào đó trong một khoảng thời gian nhất định"
+        },
+        {
+          "id": "t2_ktvt_q154_a2",
+          "text": "Làượng hành khách thực tế chở được của một đơn vị vận tải tàu khách trong một khoảng thời gian nhất định"
+        },
+        {
+          "id": "t2_ktvt_q154_a3",
+          "text": "Số khách kilomet của một tàu khách vận chuyển được trên những quãng đường nào đó trong một khoảng thời gian nhất định"
+        },
+        {
+          "id": "t2_ktvt_q154_a4",
+          "text": "Số khách kilomet của một tàu khách vận chuyển được trên những quãng đường nào đó"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q154_a3"
+    },
+    {
+      "id": "t2_ktvt_q155",
+      "text": "Sức tải khởi hành của hành khách Pk' là",
+      "answers": [
+        {
+          "id": "t2_ktvt_q155_a1",
+          "text": "Tỷ số giữa số khách thực tế xuống tàu so với số chỗ ngồi theo đăng kiểm"
+        },
+        {
+          "id": "t2_ktvt_q155_a2",
+          "text": "Tỷ số giữa số khách mua vé so với số chỗ ngồi theo đăng kiểm"
+        },
+        {
+          "id": "t2_ktvt_q155_a3",
+          "text": "Tỷ số giữa số khách thực tế xuống tàu so với số chỗ ngồi thực tế"
+        },
+        {
+          "id": "t2_ktvt_q155_a4",
+          "text": "Tỷ số giữa số khách thực tế xuống tàu"
+        }
+      ],
+      "correctAnswerId": "t2_ktvt_q155_a1"
+    },
+    {
+      "id": "t3_ktvt_q131",
+      "text": "Phân loại dựa vào tính chất của hàng gồm những loại hàng nào?",
+      "answers": [
+        {
+          "id": "t3_ktvt_q131_a1",
+          "text": "Loại hàng xếp ở dưới đáy hầm phương tiện"
+        },
+        {
+          "id": "t3_ktvt_q131_a2",
+          "text": "Loại hàng xếp ở giữa hầm phương tiện"
+        },
+        {
+          "id": "t3_ktvt_q131_a3",
+          "text": "Loại hàng xếp trên boong phương tiện"
+        },
+        {
+          "id": "t3_ktvt_q131_a4",
+          "text": "Loại hàng hút, tỏa mùi vị"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q131_a4"
+    },
+    {
+      "id": "t3_ktvt_q132",
+      "text": "Yếu tố bên trong của hàng hóa là yếu tố",
+      "answers": [
+        {
+          "id": "t3_ktvt_q132_a1",
+          "text": "Ảnh hưởng từ quá trình xếp dỡ"
+        },
+        {
+          "id": "t3_ktvt_q132_a2",
+          "text": "Ảnh hưởng từ quá trình vận chuyển"
+        },
+        {
+          "id": "t3_ktvt_q132_a3",
+          "text": "Ảnh hưởng từ nguyên vật liệu sản xuất, từ quá trình sản xuất và đóng gói"
+        },
+        {
+          "id": "t3_ktvt_q132_a4",
+          "text": "Ảnh hưởng từ quá trình giao nhận"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q132_a3"
+    },
+    {
+      "id": "t3_ktvt_q133",
+      "text": "Tính chất vật lý của hàng hóa thể hiện",
+      "answers": [
+        {
+          "id": "t3_ktvt_q133_a1",
+          "text": "Tính bay bụi, hút ẩm, bay hơi, hút, tỏa mùi vị"
+        },
+        {
+          "id": "t3_ktvt_q133_a2",
+          "text": "Tính ôxy hóa, tính ăn mòn, dễ cháy, dễ nổ"
+        },
+        {
+          "id": "t3_ktvt_q133_a3",
+          "text": "Khả năng chịu lực bên ngoài tác dụng vào hàng hóa"
+        },
+        {
+          "id": "t3_ktvt_q133_a4",
+          "text": "Quá trình phá hủy hàng hóa do vi sinh vật gây nên"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q133_a1"
+    },
+    {
+      "id": "t3_ktvt_q134",
+      "text": "Hàng hóa được đóng gói bên ngoài có tác dụng gì?",
+      "answers": [
+        {
+          "id": "t3_ktvt_q134_a1",
+          "text": "Nhằm ngăn ngừa, chống lại các loại mùi vị bên ngoài xâm nhập vào hàng hóa"
+        },
+        {
+          "id": "t3_ktvt_q134_a2",
+          "text": "Không bị hư hỏng, rơi vãi, va chạm, ngăn ngừa tạp chất bên ngoài lẫn vào hàng hóa"
+        },
+        {
+          "id": "t3_ktvt_q134_a3",
+          "text": "Giữ cho hương vị của hàng hóa khỏi bị bay ra ngoài"
+        },
+        {
+          "id": "t3_ktvt_q134_a4",
+          "text": "Được trực tiếp đặt hàng và đặt bên trong bao gói ngoài"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q134_a2"
+    },
+    {
+      "id": "t3_ktvt_q135",
+      "text": "Khi xếp dỡ hàng hóa",
+      "answers": [
+        {
+          "id": "t3_ktvt_q135_a1",
+          "text": "Phải có sơ đồ xếp hàng"
+        },
+        {
+          "id": "t3_ktvt_q135_a2",
+          "text": "Kiểm tra sự chằng buộc hàng hóa"
+        },
+        {
+          "id": "t3_ktvt_q135_a3",
+          "text": "Tiến hành thông gió vào thời điểm thích hợp"
+        },
+        {
+          "id": "t3_ktvt_q135_a4",
+          "text": "Các lô hàng được xếp liền với nhau"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q135_a1"
+    },
+    {
+      "id": "t3_ktvt_q136",
+      "text": "Nghĩa vụ của tổ chức, cá nhân kinh doanh vận tải hành khách hành lý, bao gửi trên đường thủy nội địa phải có",
+      "answers": [
+        {
+          "id": "t3_ktvt_q136_a1",
+          "text": "Các thiết bị chữa cháy, dụng cụ cứu sinh được bố trí theo yêu cầu của thuyền trưởng"
+        },
+        {
+          "id": "t3_ktvt_q136_a2",
+          "text": "Các thiết bị chữa cháy, dụng cụ cứu sinh theo yêu cầu của chủ hàng"
+        },
+        {
+          "id": "t3_ktvt_q136_a3",
+          "text": "Các thiết bị chữa cháy, dụng cụ cứu sinh theo yêu cầu của chủ tàu"
+        },
+        {
+          "id": "t3_ktvt_q136_a4",
+          "text": "Các thiết bị chữa cháy, dụng cụ cứu sinh theo đúng thiết kế của phương tiện"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q136_a4"
+    },
+    {
+      "id": "t3_ktvt_q137",
+      "text": "Người nhận hành lý ký gửi, bao gửi phải",
+      "answers": [
+        {
+          "id": "t3_ktvt_q137_a1",
+          "text": "Kiểm tra lại hành lý ký gửi, bao gửi trong quá trình vận chuyển"
+        },
+        {
+          "id": "t3_ktvt_q137_a2",
+          "text": "Kiểm tra lại hành lý ký gửi, bao gửi tại nơi nhận"
+        },
+        {
+          "id": "t3_ktvt_q137_a3",
+          "text": "Kiểm tra lại hành lý ký gửi, bao gửi tại nơi giao"
+        },
+        {
+          "id": "t3_ktvt_q137_a4",
+          "text": "Kiểm tra lại hành lý ký gửi, bao gửi tại khi có tình huống bất khả kháng."
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q137_a2"
+    },
+    {
+      "id": "t3_ktvt_q138",
+      "text": "Chuyến đi là",
+      "answers": [
+        {
+          "id": "t3_ktvt_q138_a1",
+          "text": "Sự tổng hợp của các quá trình làm việc gắn liền sự di chuyển của con tàu từ trạm khởi hành tới trạm đến"
+        },
+        {
+          "id": "t3_ktvt_q138_a2",
+          "text": "Sự di chuyển của tàu từ lúc nhận hàng ở trạm khởi hành đến trạm bất kỳ"
+        },
+        {
+          "id": "t3_ktvt_q138_a3",
+          "text": "Sự di chuyển của tàu từ cảng nhận hàng đến cảng trả hàng"
+        },
+        {
+          "id": "t3_ktvt_q138_a4",
+          "text": "Sự tổng hợp của các quá trình làm việc gắn liền sự di chuyển của con tàu từ trạm khởi hành tới trạm bất kỳ"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q138_a1"
+    },
+    {
+      "id": "t3_ktvt_q139",
+      "text": "Năng suất của tàu là",
+      "answers": [
+        {
+          "id": "t3_ktvt_q139_a1",
+          "text": "Số tấn hàng hay hành khách tàu nhận theo hợp đồng"
+        },
+        {
+          "id": "t3_ktvt_q139_a2",
+          "text": "Số tấn mà tàu có thể chở được"
+        },
+        {
+          "id": "t3_ktvt_q139_a3",
+          "text": "Số lượng sản phẩm vận tải sông được tính bằng T.km do 1 phương tiện làm ra trong một đơn vị thời gian"
+        },
+        {
+          "id": "t3_ktvt_q139_a4",
+          "text": "Số tấn hàng mà tàu nhận được tại cảng"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q139_a3"
+    },
+    {
+      "id": "t3_ktvt_q140",
+      "text": "Tốc độ chuyến đi của tàu là",
+      "answers": [
+        {
+          "id": "t3_ktvt_q140_a1",
+          "text": "Tốc độ của tàu so với bờ"
+        },
+        {
+          "id": "t3_ktvt_q140_a2",
+          "text": "Tốc độ tính bình quân trong cả chuyến đi"
+        },
+        {
+          "id": "t3_ktvt_q140_a3",
+          "text": "Tốc độ tính bình quân khi tàu chạy"
+        },
+        {
+          "id": "t3_ktvt_q140_a4",
+          "text": "Tốc độ tức thời tại một thời điểm nhất định"
+        }
+      ],
+      "correctAnswerId": "t3_ktvt_q140_a2"
+    }
+  ],
+  "hanghai": [
+    {
+      "id": "t1_hh_q186",
+      "text": "Trái đất tự quay quanh mình nó theo chiều",
+      "answers": [
+        {
+          "id": "t1_hh_q186_a1",
+          "text": "Từ Tây sang Đông"
+        },
+        {
+          "id": "t1_hh_q186_a2",
+          "text": "Từ Đông sang Tây"
+        },
+        {
+          "id": "t1_hh_q186_a3",
+          "text": "Từ Bắc xuống Nam"
+        },
+        {
+          "id": "t1_hh_q186_a4",
+          "text": "Từ Nam lên Bắc"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q186_a1"
+    },
+    {
+      "id": "t1_hh_q187",
+      "text": "Mặt phẳng chân trời thật là",
+      "answers": [
+        {
+          "id": "t1_hh_q187_a1",
+          "text": "Mặt phẳng đi qua mắt người quan sát và vuông góc với đường thẳng đứng"
+        },
+        {
+          "id": "t1_hh_q187_a2",
+          "text": "Mặt phẳng thẳng đứng chứa trục của trái đất"
+        },
+        {
+          "id": "t1_hh_q187_a3",
+          "text": "Mặt phẳng thẳng đứng vuông góc với mặt phẳng Bắc Nam"
+        },
+        {
+          "id": "t1_hh_q187_a4",
+          "text": "Là mặt phẳng bất kỳ"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q187_a1"
+    },
+    {
+      "id": "t1_hh_q188",
+      "text": "Vòng tròn lớn nằm trong mặt phẳng vuông góc với trục trái đất, đi qua tâm trái đất là",
+      "answers": [
+        {
+          "id": "t1_hh_q188_a1",
+          "text": "Vòng tròn kinh tuyến"
+        },
+        {
+          "id": "t1_hh_q188_a2",
+          "text": "Vòng tròn xích đạo"
+        },
+        {
+          "id": "t1_hh_q188_a3",
+          "text": "Vòng tròn vĩ tuyến"
+        },
+        {
+          "id": "t1_hh_q188_a4",
+          "text": "Vòng tròn kinh tuyến gốc"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q188_a2"
+    },
+    {
+      "id": "t1_hh_q189",
+      "text": "Vĩ độ của một điểm trên bề mặt trái đất được xác định bởi",
+      "answers": [
+        {
+          "id": "t1_hh_q189_a1",
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 30° và vĩ tuyến đi qua điểm ấy"
+        },
+        {
+          "id": "t1_hh_q189_a2",
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 20° và vĩ tuyến đi qua điểm ấy"
+        },
+        {
+          "id": "t1_hh_q189_a3",
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 10° và vĩ tuyến đi qua điểm ấy"
+        },
+        {
+          "id": "t1_hh_q189_a4",
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 0° (xích đạo) và vĩ tuyến đi qua điểm ấy"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q189_a4"
+    },
+    {
+      "id": "t1_hh_q190",
+      "text": "Kinh độ của một điểm trên bề mặt trái đất được xác định bỏi",
+      "answers": [
+        {
+          "id": "t1_hh_q190_a1",
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 00° (kinh tuyến gốc) và kinh tuyến đi qua điểm ấy"
+        },
+        {
+          "id": "t1_hh_q190_a2",
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 60° và kinh tuyến đi qua điểm ấy"
+        },
+        {
+          "id": "t1_hh_q190_a3",
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 120°và kinh tuyến đi qua điểm ấy"
+        },
+        {
+          "id": "t1_hh_q190_a4",
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 180° và kinh tuyến đi qua điểm ấy"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q190_a1"
+    },
+    {
+      "id": "t1_hh_q191",
+      "text": "Phương vị thật của mục tiêu là",
+      "answers": [
+        {
+          "id": "t1_hh_q191_a1",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q191_a2",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q191_a3",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q191_a4",
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q191_a2"
+    },
+    {
+      "id": "t1_hh_q192",
+      "text": "Hướng đi thật của tàu là",
+      "answers": [
+        {
+          "id": "t1_hh_q192_a1",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q192_a2",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q192_a3",
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q192_a4",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường hướng đi của tàu, tỉnh thuận chiều kim đồng hồ từ 00 đến 360°"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q192_a4"
+    },
+    {
+      "id": "t1_hh_q193",
+      "text": "Hướng đi la bàn của tàu là",
+      "answers": [
+        {
+          "id": "t1_hh_q193_a1",
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q193_a2",
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q193_a3",
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q193_a4",
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q193_a2"
+    },
+    {
+      "id": "t1_hh_q194",
+      "text": "Hướng đi địa từ của tàu là",
+      "answers": [
+        {
+          "id": "t1_hh_q194_a1",
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q194_a2",
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q194_a3",
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q194_a4",
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q194_a2"
+    },
+    {
+      "id": "t1_hh_q195",
+      "text": "Góc mạn là",
+      "answers": [
+        {
+          "id": "t1_hh_q195_a1",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 00° đến 180°"
+        },
+        {
+          "id": "t1_hh_q195_a2",
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính từ mũi tàu sang phải hoặc sang trái từ 00° đến 180°"
+        },
+        {
+          "id": "t1_hh_q195_a3",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 00° đến 180°"
+        },
+        {
+          "id": "t1_hh_q195_a4",
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 180°"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q195_a2"
+    },
+    {
+      "id": "t1_hh_q196",
+      "text": "Phương vị la bàn của mục tiêu là",
+      "answers": [
+        {
+          "id": "t1_hh_q196_a1",
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường phương vị mục tiêu, tỉnh thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q196_a2",
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q196_a3",
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        },
+        {
+          "id": "t1_hh_q196_a4",
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 00° đến 360°"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q196_a1"
+    },
+    {
+      "id": "t1_hh_q197",
+      "text": "Độ lệch địa từ là",
+      "answers": [
+        {
+          "id": "t1_hh_q197_a1",
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường bắc kinh tuyến từ tại một điểm"
+        },
+        {
+          "id": "t1_hh_q197_a2",
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường hướng đi của tàu tại một điểm"
+        },
+        {
+          "id": "t1_hh_q197_a3",
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường phương vị mục tiêu tại một điểm"
+        },
+        {
+          "id": "t1_hh_q197_a4",
+          "text": "Góc hợp bởi đường kinh tuyến trái đất đường phương vị mục tiêu ngược tại một điểm"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q197_a1"
+    },
+    {
+      "id": "t1_hh_q198",
+      "text": "Sai số riêng la bàn từ là",
+      "answers": [
+        {
+          "id": "t1_hh_q198_a1",
+          "text": "Góc hợp bởi bắc kinh tuyến từ với đường bắc kinh tuyến la bàn tại một điểm"
+        },
+        {
+          "id": "t1_hh_q198_a2",
+          "text": "Góc hợp bởi bắc kinh tuyến từ với đường hướng đi của tàu tại một điểm"
+        },
+        {
+          "id": "t1_hh_q198_a3",
+          "text": "Góc hợp bởi bắc kinh tuyến từ với đường phương vị mục tiêu tại một điểm"
+        },
+        {
+          "id": "t1_hh_q198_a4",
+          "text": "Góc hợp bởi đường kinh từ đất đường phương vị mục tiêu ngược tại một điểm"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q198_a1"
+    },
+    {
+      "id": "t1_hh_q199",
+      "text": "Các mặt máy sử dụng trên tàu thường dùng",
+      "answers": [
+        {
+          "id": "t1_hh_q199_a1",
+          "text": "Cách chia điểm ca"
+        },
+        {
+          "id": "t1_hh_q199_a2",
+          "text": "Cách chia ¼ vòng"
+        },
+        {
+          "id": "t1_hh_q199_a3",
+          "text": "Cách chia bán vòng"
+        },
+        {
+          "id": "t1_hh_q199_a4",
+          "text": "Cách chia nguyên vòng"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q199_a4"
+    },
+    {
+      "id": "t1_hh_q200",
+      "text": "Trên radar CPA trong đồ giải radar có ý nghĩa là",
+      "answers": [
+        {
+          "id": "t1_hh_q200_a1",
+          "text": "Khoảng thời gian tiếp cận gần nhất giữa 2 tàu"
+        },
+        {
+          "id": "t1_hh_q200_a2",
+          "text": "Phương vị từ tàu ta tới tàu mục tiêu"
+        },
+        {
+          "id": "t1_hh_q200_a3",
+          "text": "Điểm tiếp cận gần nhất giữa 2 tàu"
+        },
+        {
+          "id": "t1_hh_q200_a4",
+          "text": "Khoảng cách từ tàu ta tới tàu mục tiêu"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q200_a3"
+    },
+    {
+      "id": "t1_hh_q201",
+      "text": "Độ cao của an ten radar càng lớn thì",
+      "answers": [
+        {
+          "id": "t1_hh_q201_a1",
+          "text": "Tầm xa cực đại càng lớn"
+        },
+        {
+          "id": "t1_hh_q201_a2",
+          "text": "Tầm xa cực đại càng nhỏ"
+        },
+        {
+          "id": "t1_hh_q201_a3",
+          "text": "Không ảnh hưởng gì tới tầm xa"
+        },
+        {
+          "id": "t1_hh_q201_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q201_a1"
+    },
+    {
+      "id": "t1_hh_q202",
+      "text": "Trên radar TCPA trong đồ giải radar nghĩa có ý nghĩa là",
+      "answers": [
+        {
+          "id": "t1_hh_q202_a1",
+          "text": "Khoảng cách tiếp cận gần nhất giữa 2 tàu"
+        },
+        {
+          "id": "t1_hh_q202_a2",
+          "text": "Khoảng thời gian tiếp cận gần nhất giữa 2 tàu"
+        },
+        {
+          "id": "t1_hh_q202_a3",
+          "text": "Phương vị từ tàu ta tới tàu mục tiêu"
+        },
+        {
+          "id": "t1_hh_q202_a4",
+          "text": "Khoảng cách từ tàu ta tới tàu mục tiêu"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q202_a2"
+    },
+    {
+      "id": "t1_hh_q203",
+      "text": "Trong một vùng có nhiều radar hoạt động trên một giải tần có thể xuất hiện",
+      "answers": [
+        {
+          "id": "t1_hh_q203_a1",
+          "text": "Nhiễu mưa"
+        },
+        {
+          "id": "t1_hh_q203_a2",
+          "text": "Nhiễu biển"
+        },
+        {
+          "id": "t1_hh_q203_a3",
+          "text": "Nhiễu giao thoa radar"
+        },
+        {
+          "id": "t1_hh_q203_a4",
+          "text": "Tất cả các ý trên"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q203_a3"
+    },
+    {
+      "id": "t1_hh_q204",
+      "text": "Để đo được phương vị đến mục tiêu thì phải bố trí anten và tia quét sao cho",
+      "answers": [
+        {
+          "id": "t1_hh_q204_a1",
+          "text": "Anten và tia quét đồng bộ với nhau"
+        },
+        {
+          "id": "t1_hh_q204_a2",
+          "text": "Anten và tia quét lệch nhau 90°"
+        },
+        {
+          "id": "t1_hh_q204_a3",
+          "text": "Anten và tia quét lệch nhau 180°"
+        },
+        {
+          "id": "t1_hh_q204_a4",
+          "text": "Anten và tia quét lệch nhau 270°"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q204_a1"
+    },
+    {
+      "id": "t1_hh_q205",
+      "text": "Trên radar núm chức năng đo khoảng cách tới mục tiêu có ký hiệu là",
+      "answers": [
+        {
+          "id": "t1_hh_q205_a1",
+          "text": "SELECT/CANCL"
+        },
+        {
+          "id": "t1_hh_q205_a2",
+          "text": "VRM1/VRM2"
+        },
+        {
+          "id": "t1_hh_q205_a3",
+          "text": "EBL1/EBL2"
+        },
+        {
+          "id": "t1_hh_q205_a4",
+          "text": "POWER"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q205_a2"
+    },
+    {
+      "id": "t1_hh_q206",
+      "text": "Trên radar núm chức năng đo phương vị điện tử tới mục tiêu có ký hiệu là",
+      "answers": [
+        {
+          "id": "t1_hh_q206_a1",
+          "text": "EBL1/EBL2"
+        },
+        {
+          "id": "t1_hh_q206_a2",
+          "text": "SELECT/CANCL"
+        },
+        {
+          "id": "t1_hh_q206_a3",
+          "text": "VRM1/VRM2"
+        },
+        {
+          "id": "t1_hh_q206_a4",
+          "text": "POWER"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q206_a1"
+    },
+    {
+      "id": "t1_hh_q207",
+      "text": "Thiết bị phản xạ sóng Radar phục vụ cho tìm kiếm và cứu nạn là",
+      "answers": [
+        {
+          "id": "t1_hh_q207_a1",
+          "text": "NAVTEX"
+        },
+        {
+          "id": "t1_hh_q207_a2",
+          "text": "SART"
+        },
+        {
+          "id": "t1_hh_q207_a3",
+          "text": "EPIRB"
+        },
+        {
+          "id": "t1_hh_q207_a4",
+          "text": "VHF"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q207_a2"
+    },
+    {
+      "id": "t1_hh_q208",
+      "text": "Núm chức năng A/C RAIN trên máy radar dùng để",
+      "answers": [
+        {
+          "id": "t1_hh_q208_a1",
+          "text": "Khử nhiễu mưa"
+        },
+        {
+          "id": "t1_hh_q208_a2",
+          "text": "Khử nhiễu biển"
+        },
+        {
+          "id": "t1_hh_q208_a3",
+          "text": "Khử nhiễu giao thoa"
+        },
+        {
+          "id": "t1_hh_q208_a4",
+          "text": "Điều chỉnh độ sáng màn hình"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q208_a1"
+    },
+    {
+      "id": "t1_hh_q209",
+      "text": "Núm chức năng của A/C SEA trên máy radar dùng để",
+      "answers": [
+        {
+          "id": "t1_hh_q209_a1",
+          "text": "Khử nhiễu mưa"
+        },
+        {
+          "id": "t1_hh_q209_a2",
+          "text": "Khử nhiễu biển"
+        },
+        {
+          "id": "t1_hh_q209_a3",
+          "text": "Khử nhiễu giao thoa"
+        },
+        {
+          "id": "t1_hh_q209_a4",
+          "text": "Điều chỉnh độ sang màn hình"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q209_a2"
+    },
+    {
+      "id": "t1_hh_q210",
+      "text": "Số 0 hải đồ được tính từ",
+      "answers": [
+        {
+          "id": "t1_hh_q210_a1",
+          "text": "Mực nước thuỷ triều cao nhất"
+        },
+        {
+          "id": "t1_hh_q210_a2",
+          "text": "Mực nước thuỷ triều thấp nhất"
+        },
+        {
+          "id": "t1_hh_q210_a3",
+          "text": "Mực nước thuỷ triều trung bình"
+        },
+        {
+          "id": "t1_hh_q210_a4",
+          "text": "Mực nước tại thời điểm tàu đang hành trình"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q210_a2"
+    },
+    {
+      "id": "t1_hh_q211",
+      "text": "Trên hải đồ Việt Nam, có chỗ ghi 1₅ có ý nghĩa là",
+      "answers": [
+        {
+          "id": "t1_hh_q211_a1",
+          "text": "Số 0 hải đồ tại vị trí đó = 15 m"
+        },
+        {
+          "id": "t1_hh_q211_a2",
+          "text": "Số 0 hải đồ tại vị trí đó = 1,5m"
+        },
+        {
+          "id": "t1_hh_q211_a3",
+          "text": "Độ sâu mực nước tại thời điểm tàu đang hành trình = 1,5m"
+        },
+        {
+          "id": "t1_hh_q211_a4",
+          "text": "Độ sâu mực nước khi thuỷ triều lên cao nhất = 15m"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q211_a2"
+    },
+    {
+      "id": "t1_hh_q212",
+      "text": "Trên hải đồ Việt Nam ký hiệu ............... chỉ đường đẳng sâu nào?",
+      "answers": [
+        {
+          "id": "t1_hh_q212_a1",
+          "text": "Đường đẳng sâu 2 mét"
+        },
+        {
+          "id": "t1_hh_q212_a2",
+          "text": "Đường đẳng sâu 5 mét"
+        },
+        {
+          "id": "t1_hh_q212_a3",
+          "text": "Đường đẳng sâu 10 mét"
+        },
+        {
+          "id": "t1_hh_q212_a4",
+          "text": "Đường đẳng sâu 20 mét"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q212_a1"
+    },
+    {
+      "id": "t1_hh_q213",
+      "text": "Trên hải đồ Việt Nam ký hiệu ------ chỉ đường đẳng sâu nào?",
+      "answers": [
+        {
+          "id": "t1_hh_q213_a1",
+          "text": "Đường đẳng sâu 2 mét"
+        },
+        {
+          "id": "t1_hh_q213_a2",
+          "text": "Đường đẳng sâu 5 mét"
+        },
+        {
+          "id": "t1_hh_q213_a3",
+          "text": "Đường đẳng sâu 10 mét"
+        },
+        {
+          "id": "t1_hh_q213_a4",
+          "text": "Đường đẳng sâu 20 mét"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q213_a2"
+    },
+    {
+      "id": "t1_hh_q214",
+      "text": "Trên hải đồ Việt Nam ký hiệu -... -... -... -... -... chỉ đường đẳng sâu nào?",
+      "answers": [
+        {
+          "id": "t1_hh_q214_a1",
+          "text": "Đường đẳng sâu 30 mét"
+        },
+        {
+          "id": "t1_hh_q214_a2",
+          "text": "Đường đẳng sâu 10 mét"
+        },
+        {
+          "id": "t1_hh_q214_a3",
+          "text": "Đường đẳng sâu 20 mét"
+        },
+        {
+          "id": "t1_hh_q214_a4",
+          "text": "Đường đẳng sâu 2 mét"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q214_a1"
+    },
+    {
+      "id": "t1_hh_q215",
+      "text": "Tốc độ kế thủy lực xác định",
+      "answers": [
+        {
+          "id": "t1_hh_q215_a1",
+          "text": "Vận tốc của tàu so với nước"
+        },
+        {
+          "id": "t1_hh_q215_a2",
+          "text": "Vận tốc của tàu so với đáy biển"
+        },
+        {
+          "id": "t1_hh_q215_a3",
+          "text": "Vận tốc của tàu so với tàu mục tiêu"
+        },
+        {
+          "id": "t1_hh_q215_a4",
+          "text": "Vận tốc của tàu so với bờ"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q215_a1"
+    },
+    {
+      "id": "t1_hh_q216",
+      "text": "Máy đo sâu thông thường hiển thị",
+      "answers": [
+        {
+          "id": "t1_hh_q216_a1",
+          "text": "Độ sâu từ máy đo tới đáy biển"
+        },
+        {
+          "id": "t1_hh_q216_a2",
+          "text": "Độ sâu từ ky tàu tới đáy biển"
+        },
+        {
+          "id": "t1_hh_q216_a3",
+          "text": "Độ sâu từ mặt boong tới đáy biển"
+        },
+        {
+          "id": "t1_hh_q216_a4",
+          "text": "Từ mặt nước tới đáy biển"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q216_a2"
+    },
+    {
+      "id": "t1_hh_q217",
+      "text": "Khâu vệ tinh của hệ thống GPS gồm",
+      "answers": [
+        {
+          "id": "t1_hh_q217_a1",
+          "text": "24 vệ tinh (21 vệ tinh hoạt động và 3 vệ tinh dự trữ)"
+        },
+        {
+          "id": "t1_hh_q217_a2",
+          "text": "29 vệ tinh (20 vệ tinh hoạt động và 9 vệ tinh dự trữ)"
+        },
+        {
+          "id": "t1_hh_q217_a3",
+          "text": "35 vệ tinh (21 vệ tinh hoạt động và 14 vệ tinh dự trữ)"
+        },
+        {
+          "id": "t1_hh_q217_a4",
+          "text": "27 vệ tinh (22 vệ tinh hoạt động và 5 vệ tinh dự trữ)"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q217_a1"
+    },
+    {
+      "id": "t1_hh_q218",
+      "text": "GPS có mấy chế độ màn hình?",
+      "answers": [
+        {
+          "id": "t1_hh_q218_a1",
+          "text": "4"
+        },
+        {
+          "id": "t1_hh_q218_a2",
+          "text": "6"
+        },
+        {
+          "id": "t1_hh_q218_a3",
+          "text": "7"
+        },
+        {
+          "id": "t1_hh_q218_a4",
+          "text": "9"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q218_a1"
+    },
+    {
+      "id": "t1_hh_q219",
+      "text": "Nút ENT trên máy GPS có tác dụng",
+      "answers": [
+        {
+          "id": "t1_hh_q219_a1",
+          "text": "Chọn thao tác"
+        },
+        {
+          "id": "t1_hh_q219_a2",
+          "text": "Lưu vị trí hiện tại"
+        },
+        {
+          "id": "t1_hh_q219_a3",
+          "text": "Tắt máy"
+        },
+        {
+          "id": "t1_hh_q219_a4",
+          "text": "Bật máy"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q219_a1"
+    },
+    {
+      "id": "t1_hh_q220",
+      "text": "EPIRB là",
+      "answers": [
+        {
+          "id": "t1_hh_q220_a1",
+          "text": "Hệ thống định vị toàn cầu"
+        },
+        {
+          "id": "t1_hh_q220_a2",
+          "text": "Hệ thống dẫn đường"
+        },
+        {
+          "id": "t1_hh_q220_a3",
+          "text": "Phao vô tuyến chỉ báo vị trí khẩn cấp"
+        },
+        {
+          "id": "t1_hh_q220_a4",
+          "text": "Hệ thống tránh va"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q220_a3"
+    },
+    {
+      "id": "t1_hh_q221",
+      "text": "Phương thức kích hoạt EPIRB gồm",
+      "answers": [
+        {
+          "id": "t1_hh_q221_a1",
+          "text": "Kích hoạt bằng điện"
+        },
+        {
+          "id": "t1_hh_q221_a2",
+          "text": "Kích hoạt tự động"
+        },
+        {
+          "id": "t1_hh_q221_a3",
+          "text": "Kích hoạt bằng tay"
+        },
+        {
+          "id": "t1_hh_q221_a4",
+          "text": "Kích hoạt tự động và kích hoạt bằng tay"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q221_a4"
+    },
+    {
+      "id": "t1_hh_q222",
+      "text": "Phương thức thông tin của EPIRB là",
+      "answers": [
+        {
+          "id": "t1_hh_q222_a1",
+          "text": "Tín hiệu vô tuyến truyền lên vệ tinh rồi mới về bờ"
+        },
+        {
+          "id": "t1_hh_q222_a2",
+          "text": "Thông tin từ tàu đến tàu"
+        },
+        {
+          "id": "t1_hh_q222_a3",
+          "text": "Thông tin từ bờ đến tàu"
+        },
+        {
+          "id": "t1_hh_q222_a4",
+          "text": "Tất cả các đáp án trên"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q222_a1"
+    },
+    {
+      "id": "t1_hh_q223",
+      "text": "Đơn vị đo vận tốc Hải lý/giờ (Nơ) thường dùng để chỉ",
+      "answers": [
+        {
+          "id": "t1_hh_q223_a1",
+          "text": "Tốc độ ô tô"
+        },
+        {
+          "id": "t1_hh_q223_a2",
+          "text": "Tốc độ máy bay"
+        },
+        {
+          "id": "t1_hh_q223_a3",
+          "text": "Tốc độ tàu hỏa"
+        },
+        {
+          "id": "t1_hh_q223_a4",
+          "text": "Tốc độ tàu thủy"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q223_a4"
+    },
+    {
+      "id": "t1_hh_q224",
+      "text": "Một hải lý ở vĩ độ 45° có chiều dài bao nhiêu?",
+      "answers": [
+        {
+          "id": "t1_hh_q224_a1",
+          "text": "1862.3 mét"
+        },
+        {
+          "id": "t1_hh_q224_a2",
+          "text": "1852,3 mét"
+        },
+        {
+          "id": "t1_hh_q224_a3",
+          "text": "1842,3 mét"
+        },
+        {
+          "id": "t1_hh_q224_a4",
+          "text": "1832,3 mét"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q224_a2"
+    },
+    {
+      "id": "t1_hh_q225",
+      "text": "Một hải lý có chiều dài là bằng bao nhiêu liên?",
+      "answers": [
+        {
+          "id": "t1_hh_q225_a1",
+          "text": "6 liên"
+        },
+        {
+          "id": "t1_hh_q225_a2",
+          "text": "8 liên"
+        },
+        {
+          "id": "t1_hh_q225_a3",
+          "text": "10 liên"
+        },
+        {
+          "id": "t1_hh_q225_a4",
+          "text": "12 liên"
+        }
+      ],
+      "correctAnswerId": "t1_hh_q225_a3"
+    }
+  ],
+  "nvtt": [
+    {
+      "id": "t1_nvtt_q226",
+      "text": "Khi hai thuyền trưởng bàn giao xong việc thì",
+      "answers": [
+        {
+          "id": "t1_nvtt_q226_a1",
+          "text": "Cả 2 ghi và ký tên vào số tay"
+        },
+        {
+          "id": "t1_nvtt_q226_a2",
+          "text": "Cả 2 ghi và ký tên vào hợp đồng"
+        },
+        {
+          "id": "t1_nvtt_q226_a3",
+          "text": "Cả 2 ghi và ký tên vào nhật ký"
+        },
+        {
+          "id": "t1_nvtt_q226_a4",
+          "text": "Một bên ký vào sổ nhật ký"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q226_a3"
+    },
+    {
+      "id": "t1_nvtt_q227",
+      "text": "Quản lý sổ nhật ký hành trình, danh bạ thuyền viên và các sổ sách giấy tờ cần thiết khác của phương tiện là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t1_nvtt_q227_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q227_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t1_nvtt_q227_a3",
+          "text": "Thủy thủ"
+        },
+        {
+          "id": "t1_nvtt_q227_a4",
+          "text": "Ai cũng được"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q227_a1"
+    },
+    {
+      "id": "t1_nvtt_q228",
+      "text": "Người chịu trách nhiệm chính về nội dung ghi trong nhật ký là",
+      "answers": [
+        {
+          "id": "t1_nvtt_q228_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q228_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t1_nvtt_q228_a3",
+          "text": "Thủy thủ"
+        },
+        {
+          "id": "t1_nvtt_q228_a4",
+          "text": "Ai cũng được"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q228_a1"
+    },
+    {
+      "id": "t1_nvtt_q229",
+      "text": "Quản lý, bảo đảm an toàn về người, phương tiện và tài sản trên phương tiện là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t1_nvtt_q229_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q229_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t1_nvtt_q229_a3",
+          "text": "Thủy thủ"
+        },
+        {
+          "id": "t1_nvtt_q229_a4",
+          "text": "Ai cũng được"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q229_a1"
+    },
+    {
+      "id": "t1_nvtt_q230",
+      "text": "Trực tiếp điều khiển phương tiện khi được phân công là trách nhiệm và quyền hạn của",
+      "answers": [
+        {
+          "id": "t1_nvtt_q230_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q230_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t1_nvtt_q230_a3",
+          "text": "Thủy thủ"
+        },
+        {
+          "id": "t1_nvtt_q230_a4",
+          "text": "Ai cũng được"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q230_a2"
+    },
+    {
+      "id": "t1_nvtt_q231",
+      "text": "Trường hợp nhật ký ghi bị sai thì thuyền trưởng có thể",
+      "answers": [
+        {
+          "id": "t1_nvtt_q231_a1",
+          "text": "Xé bỏ các trang ghi sai"
+        },
+        {
+          "id": "t1_nvtt_q231_a2",
+          "text": "Xóa trang ghi sai và có chữ ký xác nhận của sỹ quan đi ca"
+        },
+        {
+          "id": "t1_nvtt_q231_a3",
+          "text": "Gạch một đường mảnh trên hàng chữ cần xóa"
+        },
+        {
+          "id": "t1_nvtt_q231_a4",
+          "text": "Gạch đường mảnh trên hàng chỗ viết sai, sỹ quan đi ca và thuyền trưởng ký xác nhận"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q231_a4"
+    },
+    {
+      "id": "t1_nvtt_q232",
+      "text": "Trực tiếp phụ trách các công việc thuộc bộ phận boong là trách nhiệm và quyền hạn của",
+      "answers": [
+        {
+          "id": "t1_nvtt_q232_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q232_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t1_nvtt_q232_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t1_nvtt_q232_a4",
+          "text": "Chủ tàu"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q232_a2"
+    },
+    {
+      "id": "t1_nvtt_q233",
+      "text": "Ngoài giờ đi ca, nếu thuyền phó hoặc máy trưởng đề nghị, thuyền trưởng phải",
+      "answers": [
+        {
+          "id": "t1_nvtt_q233_a1",
+          "text": "Có mặt kịp thời giải quyết công việc"
+        },
+        {
+          "id": "t1_nvtt_q233_a2",
+          "text": "Có mặt ở vị trí chỉ huy để kịp thời giải quyết công việc"
+        },
+        {
+          "id": "t1_nvtt_q233_a3",
+          "text": "Có mặt ở trên tàu để kịp thời giải quyết công việc"
+        },
+        {
+          "id": "t1_nvtt_q233_a4",
+          "text": "Tùy theo từng tình huống cụ thể"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q233_a2"
+    },
+    {
+      "id": "t1_nvtt_q234",
+      "text": "Thuyền trưởng phải kiểm tra đèn hiệu vào lúc",
+      "answers": [
+        {
+          "id": "t1_nvtt_q234_a1",
+          "text": "Ban đêm"
+        },
+        {
+          "id": "t1_nvtt_q234_a2",
+          "text": "Ban ngày"
+        },
+        {
+          "id": "t1_nvtt_q234_a3",
+          "text": "Khoảng 16 giờ hàng ngày"
+        },
+        {
+          "id": "t1_nvtt_q234_a4",
+          "text": "Khi gặp tàu lớn hơn"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q234_a3"
+    },
+    {
+      "id": "t1_nvtt_q235",
+      "text": "Trường hợp phương tiện bị đắm, sau khi đã thi hành các biện pháp cứu người, tài sản, hàng hoá và các giấy tờ cần thiết của phương tiện thì",
+      "answers": [
+        {
+          "id": "t1_nvtt_q235_a1",
+          "text": "Thuyền trưởng là người cuối cùng rời phương tiện"
+        },
+        {
+          "id": "t1_nvtt_q235_a2",
+          "text": "Thuyền phó là người cuối cùng rời phương tiện"
+        },
+        {
+          "id": "t1_nvtt_q235_a3",
+          "text": "Máy trưởng là người cuối cùng rời phương tiện"
+        },
+        {
+          "id": "t1_nvtt_q235_a4",
+          "text": "Thủy thủ là người cuối cùng rời phương tiện"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q235_a1"
+    },
+    {
+      "id": "t1_nvtt_q236",
+      "text": "Lập kế hoạch chuyến đi, phân công trực ca là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t1_nvtt_q236_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q236_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t1_nvtt_q236_a3",
+          "text": "Thủy thủ"
+        },
+        {
+          "id": "t1_nvtt_q236_a4",
+          "text": "Ai cũng được"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q236_a2"
+    },
+    {
+      "id": "t1_nvtt_q237",
+      "text": "Tổ chức thực hiện việc sơ cứu, đưa đi bệnh viện đối với người bị ốm đau, tai nạn là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t1_nvtt_q237_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q237_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t1_nvtt_q237_a3",
+          "text": "Máy phó"
+        },
+        {
+          "id": "t1_nvtt_q237_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q237_a1"
+    },
+    {
+      "id": "t1_nvtt_q238",
+      "text": "Giấy chứng nhận an toàn kỹ thuật và bảo vệ môi trường do cơ quan nào cấp?",
+      "answers": [
+        {
+          "id": "t1_nvtt_q238_a1",
+          "text": "Sở Xây dựng"
+        },
+        {
+          "id": "t1_nvtt_q238_a2",
+          "text": "Đăng kiểm"
+        },
+        {
+          "id": "t1_nvtt_q238_a3",
+          "text": "Chính quyền địa phương"
+        },
+        {
+          "id": "t1_nvtt_q238_a4",
+          "text": "Cục Hàng hải và Đường thủy"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q238_a2"
+    },
+    {
+      "id": "t1_nvtt_q239",
+      "text": "Giấy chứng nhận đăng ký tàu do cơ quan nào cấp ?",
+      "answers": [
+        {
+          "id": "t1_nvtt_q239_a1",
+          "text": "Đăng kiểm"
+        },
+        {
+          "id": "t1_nvtt_q239_a2",
+          "text": "Sở Xây dựng"
+        },
+        {
+          "id": "t1_nvtt_q239_a3",
+          "text": "Chính quyền địa phương"
+        },
+        {
+          "id": "t1_nvtt_q239_a4",
+          "text": "Cục Hàng hải và Đường thủy"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q239_a2"
+    },
+    {
+      "id": "t1_nvtt_q240",
+      "text": "Giấy chứng nhận bảo hiểm cơ quan nào cấp ?",
+      "answers": [
+        {
+          "id": "t1_nvtt_q240_a1",
+          "text": "Đăng kiểm"
+        },
+        {
+          "id": "t1_nvtt_q240_a2",
+          "text": "Đơn vị có chức năng bảo hiểm tàu thuyền nơi chủ tàu mua bảo hiểm cấp"
+        },
+        {
+          "id": "t1_nvtt_q240_a3",
+          "text": "Sở Xây dựng"
+        },
+        {
+          "id": "t1_nvtt_q240_a4",
+          "text": "Cục Hàng hải và Đường thủy"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q240_a2"
+    },
+    {
+      "id": "t1_nvtt_q241",
+      "text": "Danh bạ thuyền viên mới do",
+      "answers": [
+        {
+          "id": "t1_nvtt_q241_a1",
+          "text": "Cơ quan công an xác nhận"
+        },
+        {
+          "id": "t1_nvtt_q241_a2",
+          "text": "Chủ tàu xác nhận"
+        },
+        {
+          "id": "t1_nvtt_q241_a3",
+          "text": "Sở Xây dựng xác nhận"
+        },
+        {
+          "id": "t1_nvtt_q241_a4",
+          "text": "Cục Hàng hải và Đường thủy"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q241_a2"
+    },
+    {
+      "id": "t1_nvtt_q242",
+      "text": "Nhật ký tàu phải được ghi chép rõ ràng bằng",
+      "answers": [
+        {
+          "id": "t1_nvtt_q242_a1",
+          "text": "Bút chì"
+        },
+        {
+          "id": "t1_nvtt_q242_a2",
+          "text": "Bút mực"
+        },
+        {
+          "id": "t1_nvtt_q242_a3",
+          "text": "Bút mực màu đen hoặc xanh"
+        },
+        {
+          "id": "t1_nvtt_q242_a4",
+          "text": "Bút dạ quang"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q242_a3"
+    },
+    {
+      "id": "t1_nvtt_q243",
+      "text": "Nhật ký hành trình khi bị mất, hư hỏng phải được báo ngay cho",
+      "answers": [
+        {
+          "id": "t1_nvtt_q243_a1",
+          "text": "Công an nơi gần nhất"
+        },
+        {
+          "id": "t1_nvtt_q243_a2",
+          "text": "Chủ tàu"
+        },
+        {
+          "id": "t1_nvtt_q243_a3",
+          "text": "Đăng kiểm"
+        },
+        {
+          "id": "t1_nvtt_q243_a4",
+          "text": "Đại diện cảng vụ nơi gần nhất"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q243_a4"
+    },
+    {
+      "id": "t1_nvtt_q244",
+      "text": "Nhiệm vụ của bộ phận boong là",
+      "answers": [
+        {
+          "id": "t1_nvtt_q244_a1",
+          "text": "Bảo quản bảo dưỡng boong, vỏ tàu, hầm hàng và các cấu trúc khác từ mớn nước không tải trở lên"
+        },
+        {
+          "id": "t1_nvtt_q244_a2",
+          "text": "Vận hành máy đèn các công tắc và bảng phân phối điện"
+        },
+        {
+          "id": "t1_nvtt_q244_a3",
+          "text": "Lập kế hoạch làm việc, nghỉ ngơi cho thuyền viên bộ phận phục vụ"
+        },
+        {
+          "id": "t1_nvtt_q244_a4",
+          "text": "Tổ chức quản lý và điều hành hoạt động của bộ phận phục vụ trên tàu"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q244_a1"
+    },
+    {
+      "id": "t1_nvtt_q245",
+      "text": "Bộ phận boong có nhiệm vụ",
+      "answers": [
+        {
+          "id": "t1_nvtt_q245_a1",
+          "text": "Vận hành thiết bị lạnh, tất cả các máy móc khác có liên quan"
+        },
+        {
+          "id": "t1_nvtt_q245_a2",
+          "text": "Thực hiện nhiệm vụ đi ca theo phân công của thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q245_a3",
+          "text": "Giúp thuyền trưởng trong việc giao dịch, tổ chức các buổi tiếp khách, chiêu đãi trên tàu"
+        },
+        {
+          "id": "t1_nvtt_q245_a4",
+          "text": "Theo dõi chế độ lao động, nhận và phát lương cho thuyền viên"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q245_a2"
+    },
+    {
+      "id": "t1_nvtt_q246",
+      "text": "Khi có báo động trên tàu thì thuyền viên phải",
+      "answers": [
+        {
+          "id": "t1_nvtt_q246_a1",
+          "text": "Đứng đúng vị trí và vận hành các thiết bị theo sự phân công của thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q246_a2",
+          "text": "Đứng đúng vị trí và vận hành các thiết bị theo sự phân công của thuyền phó"
+        },
+        {
+          "id": "t1_nvtt_q246_a3",
+          "text": "Đứng đúng vị trí và vận hành các thiết bị theo sự phân công của Máy trưởng"
+        },
+        {
+          "id": "t1_nvtt_q246_a4",
+          "text": "Đứng đúng vị trí và vận hành các thiết bị theo sự phân công của chủ tàu"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q246_a1"
+    },
+    {
+      "id": "t1_nvtt_q247",
+      "text": "Khi phương tiện chở vượt số hành khách, vượt quá số lượng hàng hóa, chở quá vạch dấu mớn nước an toàn của phương tiện thì biện pháp khắc phục sau khi xử phạt hành chính là",
+      "answers": [
+        {
+          "id": "t1_nvtt_q247_a1",
+          "text": "Buộc đưa lên khỏi phương tiện số hành khách, số lượng hàng hóa vượt quá đó"
+        },
+        {
+          "id": "t1_nvtt_q247_a2",
+          "text": "Tạm giữ giấy tờ tàu"
+        },
+        {
+          "id": "t1_nvtt_q247_a3",
+          "text": "Tạm giữ bằng thuyền trưởng"
+        },
+        {
+          "id": "t1_nvtt_q247_a4",
+          "text": "Buộc dừng tàu"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q247_a1"
+    },
+    {
+      "id": "t1_nvtt_q248",
+      "text": "Khi phương tiện neo đậu hay ở những vùng xét thấy không an toàn, danh sách thuyền viên phải có mặt trên phương tiện là",
+      "answers": [
+        {
+          "id": "t1_nvtt_q248_a1",
+          "text": "1/2 tổng số thuyền viên"
+        },
+        {
+          "id": "t1_nvtt_q248_a2",
+          "text": "1/3 tổng số thuyền viên"
+        },
+        {
+          "id": "t1_nvtt_q248_a3",
+          "text": "1/4 tổng số thuyền viên"
+        },
+        {
+          "id": "t1_nvtt_q248_a4",
+          "text": "2/3 tổng số thuyền viên"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q248_a4"
+    },
+    {
+      "id": "t1_nvtt_q249",
+      "text": "Khi đỗ tại cảng, bắt buộc danh sách thuyền viên phải có mặt trên phương tiện là",
+      "answers": [
+        {
+          "id": "t1_nvtt_q249_a1",
+          "text": "1/2 tổng số thuyền viên"
+        },
+        {
+          "id": "t1_nvtt_q249_a2",
+          "text": "1/3 tổng số thuyền viên"
+        },
+        {
+          "id": "t1_nvtt_q249_a3",
+          "text": "1/4 tổng số thuyền viên"
+        },
+        {
+          "id": "t1_nvtt_q249_a4",
+          "text": "2/3 tổng số thuyền viên"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q249_a2"
+    },
+    {
+      "id": "t1_nvtt_q250",
+      "text": "Quy định phân nhóm phương tiện để định biên thuyền viên thì phương tiện chở hàng có trọng tải toàn phần trên 1000 tấn hoặc đoàn lai có trọng tải toàn phần trên 1500 tấn thuộc nhóm",
+      "answers": [
+        {
+          "id": "t1_nvtt_q250_a1",
+          "text": "I"
+        },
+        {
+          "id": "t1_nvtt_q250_a2",
+          "text": "II"
+        },
+        {
+          "id": "t1_nvtt_q250_a3",
+          "text": "III"
+        },
+        {
+          "id": "t1_nvtt_q250_a4",
+          "text": "IV"
+        }
+      ],
+      "correctAnswerId": "t1_nvtt_q250_a1"
+    },
+    {
+      "id": "t2_nvtt_q181",
+      "text": "Khi hai thuyền trưởng bàn giao xong việc thì",
+      "answers": [
+        {
+          "id": "t2_nvtt_q181_a1",
+          "text": "Cả 2 ghi và ký tên vào số tay"
+        },
+        {
+          "id": "t2_nvtt_q181_a2",
+          "text": "Cả 2 ghi và ký tên vào hợp đồng"
+        },
+        {
+          "id": "t2_nvtt_q181_a3",
+          "text": "Cả 2 ghi và ký tên vào nhật ký"
+        },
+        {
+          "id": "t2_nvtt_q181_a4",
+          "text": "Một bên ký vào sổ nhật ký"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q181_a3"
+    },
+    {
+      "id": "t2_nvtt_q182",
+      "text": "Quản lý sổ nhật ký hành trình, danh bạ thuyền viên và các sổ sách giấy tờ cần thiết khác của phương tiện là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t2_nvtt_q182_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t2_nvtt_q182_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t2_nvtt_q182_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t2_nvtt_q182_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q182_a1"
+    },
+    {
+      "id": "t2_nvtt_q183",
+      "text": "Người chịu trách nhiệm chính về nội dung ghi trong nhật ký là",
+      "answers": [
+        {
+          "id": "t2_nvtt_q183_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t2_nvtt_q183_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t2_nvtt_q183_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t2_nvtt_q183_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q183_a1"
+    },
+    {
+      "id": "t2_nvtt_q184",
+      "text": "Quản lý, bảo đảm an toàn về người, phương tiện và tài sản trên phương tiện là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t2_nvtt_q184_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t2_nvtt_q184_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t2_nvtt_q184_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t2_nvtt_q184_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q184_a1"
+    },
+    {
+      "id": "t2_nvtt_q185",
+      "text": "Trường hợp nhật ký ghi bị sai thì thuyền trưởng có thể",
+      "answers": [
+        {
+          "id": "t2_nvtt_q185_a1",
+          "text": "Xé bỏ các trang ghi sai"
+        },
+        {
+          "id": "t2_nvtt_q185_a2",
+          "text": "Xóa trang ghi sai và có chữ ký xác nhận của sỹ quan đi ca"
+        },
+        {
+          "id": "t2_nvtt_q185_a3",
+          "text": "Gạch một đường mảnh trên hàng chữ cần xóa"
+        },
+        {
+          "id": "t2_nvtt_q185_a4",
+          "text": "Gạch đường mảnh trên hàng chỗ viết sai, sỹ quan đi ca và thuyền trưởng ký xác nhận"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q185_a4"
+    },
+    {
+      "id": "t2_nvtt_q186",
+      "text": "Thuyền trưởng phải kiểm tra đèn hiệu vào lúc",
+      "answers": [
+        {
+          "id": "t2_nvtt_q186_a1",
+          "text": "Ban đêm"
+        },
+        {
+          "id": "t2_nvtt_q186_a2",
+          "text": "Ban ngày"
+        },
+        {
+          "id": "t2_nvtt_q186_a3",
+          "text": "Khoảng 16 giờ hàng ngày"
+        },
+        {
+          "id": "t2_nvtt_q186_a4",
+          "text": "Khi gặp tàu lớn hơn"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q186_a3"
+    },
+    {
+      "id": "t2_nvtt_q187",
+      "text": "Giấy chứng nhận an toàn kỹ thuật và bảo vệ môi trường do cơ quan nào cấp?",
+      "answers": [
+        {
+          "id": "t2_nvtt_q187_a1",
+          "text": "Sở Xây dựng"
+        },
+        {
+          "id": "t2_nvtt_q187_a2",
+          "text": "Đăng kiểm"
+        },
+        {
+          "id": "t2_nvtt_q187_a3",
+          "text": "Chính quyền địa phương"
+        },
+        {
+          "id": "t2_nvtt_q187_a4",
+          "text": "Cơ quan cảng vụ"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q187_a2"
+    },
+    {
+      "id": "t2_nvtt_q188",
+      "text": "Giấy chứng nhận đăng ký tàu do cơ quan nào cấp?",
+      "answers": [
+        {
+          "id": "t2_nvtt_q188_a1",
+          "text": "Đăng kiểm"
+        },
+        {
+          "id": "t2_nvtt_q188_a2",
+          "text": "Sở Xây dựng"
+        },
+        {
+          "id": "t2_nvtt_q188_a3",
+          "text": "Chính quyền địa phương"
+        },
+        {
+          "id": "t2_nvtt_q188_a4",
+          "text": "Cơ quan công an"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q188_a2"
+    },
+    {
+      "id": "t2_nvtt_q189",
+      "text": "Giấy chứng nhận bảo hiểm cơ quan nào cấp?",
+      "answers": [
+        {
+          "id": "t2_nvtt_q189_a1",
+          "text": "Đăng kiểm"
+        },
+        {
+          "id": "t2_nvtt_q189_a2",
+          "text": "Đơn vị có chức năng bảo hiểm tàu thuyền nơi chủ tàu mua bảo hiểm cấp"
+        },
+        {
+          "id": "t2_nvtt_q189_a3",
+          "text": "Sở Xây dựng"
+        },
+        {
+          "id": "t2_nvtt_q189_a4",
+          "text": "Cục Hàng hải và Đường thủy"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q189_a2"
+    },
+    {
+      "id": "t2_nvtt_q190",
+      "text": "Danh bạ thuyền viên mới do",
+      "answers": [
+        {
+          "id": "t2_nvtt_q190_a1",
+          "text": "Cơ quan công an xác nhận"
+        },
+        {
+          "id": "t2_nvtt_q190_a2",
+          "text": "Chủ tàu xác nhận"
+        },
+        {
+          "id": "t2_nvtt_q190_a3",
+          "text": "Sở Xây dựng xác nhận"
+        },
+        {
+          "id": "t2_nvtt_q190_a4",
+          "text": "Cục Hàng hải và Đường thủy xác nhận"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q190_a2"
+    },
+    {
+      "id": "t2_nvtt_q191",
+      "text": "Nhật ký tàu phải được ghi chép rõ ràng bằng",
+      "answers": [
+        {
+          "id": "t2_nvtt_q191_a1",
+          "text": "Bút chì"
+        },
+        {
+          "id": "t2_nvtt_q191_a2",
+          "text": "Bút mực màu đen hoặc xanh"
+        },
+        {
+          "id": "t2_nvtt_q191_a3",
+          "text": "Bút dạ quang"
+        },
+        {
+          "id": "t2_nvtt_q191_a4",
+          "text": "Bút mực"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q191_a2"
+    },
+    {
+      "id": "t2_nvtt_q192",
+      "text": "Nhiệm vụ của bộ phận boong là",
+      "answers": [
+        {
+          "id": "t2_nvtt_q192_a1",
+          "text": "Bảo quản bảo dưỡng boong, vỏ tàu, hầm hàng và các cấu trúc khác từ mớn nước không tải trở lên"
+        },
+        {
+          "id": "t2_nvtt_q192_a2",
+          "text": "Vận hành máy đèn các công tắc và bảng phân phối điện"
+        },
+        {
+          "id": "t2_nvtt_q192_a3",
+          "text": "Lập kế hoạch làm việc, nghỉ ngơi cho thuyền viên bộ phận phục vụ"
+        },
+        {
+          "id": "t2_nvtt_q192_a4",
+          "text": "Tổ chức quản lý và điều hành hoạt động của bộ phận phục vụ trên tàu"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q192_a1"
+    },
+    {
+      "id": "t2_nvtt_q193",
+      "text": "Bộ phận boong có nhiệm vụ gì?",
+      "answers": [
+        {
+          "id": "t2_nvtt_q193_a1",
+          "text": "Vận hành thiết bị lạnh, tất cả các máy móc khác có liên quan"
+        },
+        {
+          "id": "t2_nvtt_q193_a2",
+          "text": "Thực hiện nhiệm vụ đi ca theo phân công của thuyền trưởng"
+        },
+        {
+          "id": "t2_nvtt_q193_a3",
+          "text": "Giúp thuyền trưởng trong việc giao dịch, tổ chức các buổi tiếp khách, chiêu đãi trên tàu"
+        },
+        {
+          "id": "t2_nvtt_q193_a4",
+          "text": "Theo dõi chế độ lao động, nhận và phát lương cho thuyền viên"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q193_a2"
+    },
+    {
+      "id": "t2_nvtt_q194",
+      "text": "Thuyền viên trên tàu phải làm gì?",
+      "answers": [
+        {
+          "id": "t2_nvtt_q194_a1",
+          "text": "Trong công việc phải đặt an toàn và bảo vệ môi trường lên hàng đầu"
+        },
+        {
+          "id": "t2_nvtt_q194_a2",
+          "text": "Thực hiện đúng chức trách thuyền viên"
+        },
+        {
+          "id": "t2_nvtt_q194_a3",
+          "text": "Thực hiện nghiêm túc các công việc theo sự phân công của thuyền trưởng"
+        },
+        {
+          "id": "t2_nvtt_q194_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q194_a4"
+    },
+    {
+      "id": "t2_nvtt_q195",
+      "text": "Khi có báo động trên tàu thì thuyền viên phải",
+      "answers": [
+        {
+          "id": "t2_nvtt_q195_a1",
+          "text": "Đứng đúng vị trí và vận hành các thiết bị theo sự phân công của thuyền trưởng"
+        },
+        {
+          "id": "t2_nvtt_q195_a2",
+          "text": "Đứng đúng vị trí và vận hành các thiết bị theo sự phân công của thuyền phó"
+        },
+        {
+          "id": "t2_nvtt_q195_a3",
+          "text": "Đứng đúng vị trí và vận hành các thiết bị theo sự phân công của máy trưởng"
+        },
+        {
+          "id": "t2_nvtt_q195_a4",
+          "text": "Đứng đúng vị trí và vận hành các thiết bị theo sự phân công của chủ tàu"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q195_a1"
+    },
+    {
+      "id": "t2_nvtt_q196",
+      "text": "Công việc của Thuỷ thủ khi tàu lên, xuống hàng là",
+      "answers": [
+        {
+          "id": "t2_nvtt_q196_a1",
+          "text": "Lập và trình thuyền phó nhất bản dự trù mua lương thực, thực phẩm phục vụ đời sống của tàu và tổ chức mua, bảo quản, sử dụng hợp lý lương thực, thực phẩm đó."
+        },
+        {
+          "id": "t2_nvtt_q196_a2",
+          "text": "Lập kế hoạch làm việc, nghỉ ngơi cho thuyền viên bộ phận phục vụ."
+        },
+        {
+          "id": "t2_nvtt_q196_a3",
+          "text": "Vận hành tất cả máy phụ, nồi hơi và các mô tơ trong buồng máy."
+        },
+        {
+          "id": "t2_nvtt_q196_a4",
+          "text": "Thực hiện theo dõi việc sắp xếp hàng xuống tàu và dỡ hàng lên khỏi tàu"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q196_a4"
+    },
+    {
+      "id": "t2_nvtt_q197",
+      "text": "Khi chưa được phép của thuyền trưởng những người không có nhiệm vụ liên quan trực tiếp đến việc điều khiển an toàn của con tàu không được",
+      "answers": [
+        {
+          "id": "t2_nvtt_q197_a1",
+          "text": "Lên buồng lái"
+        },
+        {
+          "id": "t2_nvtt_q197_a2",
+          "text": "Đi lại trên boong"
+        },
+        {
+          "id": "t2_nvtt_q197_a3",
+          "text": "Xuống hầm hàng"
+        },
+        {
+          "id": "t2_nvtt_q197_a4",
+          "text": "Xuống buồng máy"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q197_a1"
+    },
+    {
+      "id": "t2_nvtt_q198",
+      "text": "Khi phương tiện chở vượt số hành khách, vượt quá số lượng hàng hóa, chở quá vạch dấu mớn nước an toàn của phương tiện thì biện pháp khắc phục sau khi xử phạt hành chính là",
+      "answers": [
+        {
+          "id": "t2_nvtt_q198_a1",
+          "text": "Buộc đưa lên khỏi phương tiện số hành khách, số lượng hàng hóa vượt quá đó"
+        },
+        {
+          "id": "t2_nvtt_q198_a2",
+          "text": "Tạm giữ giấy tờ tàu"
+        },
+        {
+          "id": "t2_nvtt_q198_a3",
+          "text": "Tạm giữ bằng thuyền trưởng"
+        },
+        {
+          "id": "t2_nvtt_q198_a4",
+          "text": "Buộc dừng tàu"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q198_a1"
+    },
+    {
+      "id": "t2_nvtt_q199",
+      "text": "Sĩ quan nhận ca khi tàu đang hành trình phải chú ý các điểm nào?",
+      "answers": [
+        {
+          "id": "t2_nvtt_q199_a1",
+          "text": "Tình hình chung và tầm nhìn hiện tại"
+        },
+        {
+          "id": "t2_nvtt_q199_a2",
+          "text": "Vị trí, tốc độ và hướng đi của tàu"
+        },
+        {
+          "id": "t2_nvtt_q199_a3",
+          "text": "Những nguy hiểm và nguy cơ tiềm ẩn"
+        },
+        {
+          "id": "t2_nvtt_q199_a4",
+          "text": "Tất cả các ý trên"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q199_a4"
+    },
+    {
+      "id": "t2_nvtt_q200",
+      "text": "Quy định phân nhóm phương tiện để định biên thuyền viên thì đoàn lai có trọng tải toàn phần trên 800 tấn đến 1500 tấn thuộc nhóm mấy?",
+      "answers": [
+        {
+          "id": "t2_nvtt_q200_a1",
+          "text": "I"
+        },
+        {
+          "id": "t2_nvtt_q200_a2",
+          "text": "II"
+        },
+        {
+          "id": "t2_nvtt_q200_a3",
+          "text": "III"
+        },
+        {
+          "id": "t2_nvtt_q200_a4",
+          "text": "IV"
+        }
+      ],
+      "correctAnswerId": "t2_nvtt_q200_a2"
+    },
+    {
+      "id": "t3_nvtt_q116",
+      "text": "Quản lý sổ nhật ký hành trình, danh bạ thuyền viên và các sổ sách giấy tờ cần thiết khác của phương tiện là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t3_nvtt_q116_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q116_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t3_nvtt_q116_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t3_nvtt_q116_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q116_a1"
+    },
+    {
+      "id": "t3_nvtt_q117",
+      "text": "Người chịu trách nhiệm chính về nội dung ghi trong nhật ký là",
+      "answers": [
+        {
+          "id": "t3_nvtt_q117_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q117_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t3_nvtt_q117_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t3_nvtt_q117_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q117_a1"
+    },
+    {
+      "id": "t3_nvtt_q118",
+      "text": "Quản lý, bảo đảm an toàn về người, phương tiện và tài sản trên phương tiện là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t3_nvtt_q118_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q118_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t3_nvtt_q118_a3",
+          "text": "Chủ tàu"
+        },
+        {
+          "id": "t3_nvtt_q118_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q118_a1"
+    },
+    {
+      "id": "t3_nvtt_q119",
+      "text": "Tổ chức giao nhận hàng hóa, phục vụ hành khách theo lệnh điều động là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t3_nvtt_q119_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q119_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t3_nvtt_q119_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t3_nvtt_q119_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q119_a1"
+    },
+    {
+      "id": "t3_nvtt_q120",
+      "text": "Trường hợp nhật ký ghi bị sai thì thuyền trưởng có thể",
+      "answers": [
+        {
+          "id": "t3_nvtt_q120_a1",
+          "text": "Xé bỏ các trang ghi sai"
+        },
+        {
+          "id": "t3_nvtt_q120_a2",
+          "text": "Xóa trang ghi sai và có chữ ký xác nhận của sỹ quan đi ca"
+        },
+        {
+          "id": "t3_nvtt_q120_a3",
+          "text": "Gạch một đường mảnh trên hàng chữ cần xóa"
+        },
+        {
+          "id": "t3_nvtt_q120_a4",
+          "text": "Gạch đường mảnh trên hàng chỗ viết sai, sỹ quan đi ca và thuyền trưởng ký xác nhận"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q120_a4"
+    },
+    {
+      "id": "t3_nvtt_q121",
+      "text": "Theo tính pháp lý thuyền trưởng là người có quyền hạng cao nhất ở đâu?",
+      "answers": [
+        {
+          "id": "t3_nvtt_q121_a1",
+          "text": "Trên tàu"
+        },
+        {
+          "id": "t3_nvtt_q121_a2",
+          "text": "Tại công ty"
+        },
+        {
+          "id": "t3_nvtt_q121_a3",
+          "text": "Trên ngành lái"
+        },
+        {
+          "id": "t3_nvtt_q121_a4",
+          "text": "Trên ngành máy"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q121_a1"
+    },
+    {
+      "id": "t3_nvtt_q122",
+      "text": "Ai có quyền hủy bỏ hoặc thay đổi ca trực của sỹ quan trực ca boong?",
+      "answers": [
+        {
+          "id": "t3_nvtt_q122_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q122_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t3_nvtt_q122_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t3_nvtt_q122_a4",
+          "text": "Chủ tàu"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q122_a1"
+    },
+    {
+      "id": "t3_nvtt_q123",
+      "text": "Thuyền trưởng phải kiểm tra đèn hiệu vào lúc",
+      "answers": [
+        {
+          "id": "t3_nvtt_q123_a1",
+          "text": "Ban đêm"
+        },
+        {
+          "id": "t3_nvtt_q123_a2",
+          "text": "Ban ngày"
+        },
+        {
+          "id": "t3_nvtt_q123_a3",
+          "text": "Khoảng 16 giờ hàng ngày"
+        },
+        {
+          "id": "t3_nvtt_q123_a4",
+          "text": "Khi gặp tàu lớn hơn"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q123_a3"
+    },
+    {
+      "id": "t3_nvtt_q124",
+      "text": "Trường hợp phương tiện bị đắm, sau khi đã thi hành các biện pháp cứu người, tài sản, hàng hoá và các giấy tờ cần thiết của phương tiện thì",
+      "answers": [
+        {
+          "id": "t3_nvtt_q124_a1",
+          "text": "Thuyền trưởng là người cuối cùng rời phương tiện"
+        },
+        {
+          "id": "t3_nvtt_q124_a2",
+          "text": "Thuyền phó là người cuối cùng rời phương tiện"
+        },
+        {
+          "id": "t3_nvtt_q124_a3",
+          "text": "Máy trưởng là người cuối cùng rời phương tiện"
+        },
+        {
+          "id": "t3_nvtt_q124_a4",
+          "text": "Thủy thủ là người cuối cùng rời phương tiện"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q124_a1"
+    },
+    {
+      "id": "t3_nvtt_q125",
+      "text": "Lập kế hoạch chuyến đi, phân công trực ca là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t3_nvtt_q125_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q125_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t3_nvtt_q125_a3",
+          "text": "Chủ tàu"
+        },
+        {
+          "id": "t3_nvtt_q125_a4",
+          "text": "Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q125_a2"
+    },
+    {
+      "id": "t3_nvtt_q126",
+      "text": "Tổ chức thực hiện việc sơ cứu, đưa đi bệnh viện đối với người bị ốm đau, tai nạn là trách nhiệm của",
+      "answers": [
+        {
+          "id": "t3_nvtt_q126_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q126_a2",
+          "text": "Thuyền phó"
+        },
+        {
+          "id": "t3_nvtt_q126_a3",
+          "text": "Máy trưởng"
+        },
+        {
+          "id": "t3_nvtt_q126_a4",
+          "text": "d. Thủy thủ"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q126_a1"
+    },
+    {
+      "id": "t3_nvtt_q127",
+      "text": "Danh bạ thuyền viên mới do",
+      "answers": [
+        {
+          "id": "t3_nvtt_q127_a1",
+          "text": "Cơ quan công an xác nhận"
+        },
+        {
+          "id": "t3_nvtt_q127_a2",
+          "text": "Chủ tàu xác nhận"
+        },
+        {
+          "id": "t3_nvtt_q127_a3",
+          "text": "Sở Xây dựng xác nhận"
+        },
+        {
+          "id": "t3_nvtt_q127_a4",
+          "text": "Cục Hàng hải và Đường thủy xác nhận"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q127_a2"
+    },
+    {
+      "id": "t3_nvtt_q128",
+      "text": "Nhiệm vụ của bộ phận boong là",
+      "answers": [
+        {
+          "id": "t3_nvtt_q128_a1",
+          "text": "Bảo quản bảo dưỡng boong, vỏ tàu, hầm hàng và các cấu trúc khác từ mớn nước không tải trở lên"
+        },
+        {
+          "id": "t3_nvtt_q128_a2",
+          "text": "Vận hành máy đèn các công tắc và bảng phân phối điện"
+        },
+        {
+          "id": "t3_nvtt_q128_a3",
+          "text": "Lập kế hoạch làm việc, nghỉ ngơi cho thuyền viên bộ phận phục vụ"
+        },
+        {
+          "id": "t3_nvtt_q128_a4",
+          "text": "Tổ chức quản lý và điều hành hoạt động của bộ phận phục vụ trên tàu"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q128_a1"
+    },
+    {
+      "id": "t3_nvtt_q129",
+      "text": "Bộ phận boong có nhiệm vụ",
+      "answers": [
+        {
+          "id": "t3_nvtt_q129_a1",
+          "text": "Vận hành thiết bị lạnh, tất cả các máy móc khác có liên quan"
+        },
+        {
+          "id": "t3_nvtt_q129_a2",
+          "text": "Thực hiện nhiệm vụ đi ca theo phân công của thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q129_a3",
+          "text": "Giúp thuyền trưởng trong việc giao dịch, tổ chức các buổi tiếp khách, chiêu đãi trên tàu"
+        },
+        {
+          "id": "t3_nvtt_q129_a4",
+          "text": "Theo dõi chế độ lao động, nhận và phát lương cho thuyền viên"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q129_a2"
+    },
+    {
+      "id": "t3_nvtt_q130",
+      "text": "Khi phương tiện chở vượt số hành khách, vượt quá số lượng hàng hóa, chở quá vạch dấu mớn nước an toàn của phương tiện thì biện pháp khắc phục sau khi xử phạt hành chính là",
+      "answers": [
+        {
+          "id": "t3_nvtt_q130_a1",
+          "text": "Buộc đưa lên khỏi phương tiện số hành khách, số lượng hàng hóa vượt quá đó"
+        },
+        {
+          "id": "t3_nvtt_q130_a2",
+          "text": "Tạm giữ giấy tờ tàu"
+        },
+        {
+          "id": "t3_nvtt_q130_a3",
+          "text": "Tạm giữ bằng thuyền trưởng"
+        },
+        {
+          "id": "t3_nvtt_q130_a4",
+          "text": "Buộc dừng tàu"
+        }
+      ],
+      "correctAnswerId": "t3_nvtt_q130_a1"
+    }
+  ],
+  "vothuyen": [
+    {
+      "id": "t2_hh_q156",
+      "text": "Báo động cấp cứu giữa các tàu bằng máy VHF được trực liên lạc trên kênh",
+      "answers": [
+        {
+          "id": "t2_hh_q156_a1",
+          "text": "14"
+        },
+        {
+          "id": "t2_hh_q156_a2",
+          "text": "70"
+        },
+        {
+          "id": "t2_hh_q156_a3",
+          "text": "20"
+        },
+        {
+          "id": "t2_hh_q156_a4",
+          "text": "16"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q156_a2"
+    },
+    {
+      "id": "t2_hh_q157",
+      "text": "Thông tin liên lạc trên VHF thường sử dụng kênh",
+      "answers": [
+        {
+          "id": "t2_hh_q157_a1",
+          "text": "14"
+        },
+        {
+          "id": "t2_hh_q157_a2",
+          "text": "16"
+        },
+        {
+          "id": "t2_hh_q157_a3",
+          "text": "20"
+        },
+        {
+          "id": "t2_hh_q157_a4",
+          "text": "69"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q157_a2"
+    },
+    {
+      "id": "t2_hh_q158",
+      "text": "Khi 1 đài được gọi trên kênh 16 VHF thì nó sẽ trả lời trên kênh",
+      "answers": [
+        {
+          "id": "t2_hh_q158_a1",
+          "text": "06"
+        },
+        {
+          "id": "t2_hh_q158_a2",
+          "text": "13"
+        },
+        {
+          "id": "t2_hh_q158_a3",
+          "text": "16"
+        },
+        {
+          "id": "t2_hh_q158_a4",
+          "text": "68"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q158_a3"
+    },
+    {
+      "id": "t2_hh_q159",
+      "text": "Tất cả các tàu cho tới ngày 31/01/1999 khi được trang bị máy VHF đều phải nghe trực canh ở buồng lái trên kênh",
+      "answers": [
+        {
+          "id": "t2_hh_q159_a1",
+          "text": "06"
+        },
+        {
+          "id": "t2_hh_q159_a2",
+          "text": "13"
+        },
+        {
+          "id": "t2_hh_q159_a3",
+          "text": "16"
+        },
+        {
+          "id": "t2_hh_q159_a4",
+          "text": "69"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q159_a3"
+    },
+    {
+      "id": "t2_hh_q160",
+      "text": "Thiết bị VHF-DSC hoạt động trên kênh",
+      "answers": [
+        {
+          "id": "t2_hh_q160_a1",
+          "text": "06"
+        },
+        {
+          "id": "t2_hh_q160_a2",
+          "text": "13"
+        },
+        {
+          "id": "t2_hh_q160_a3",
+          "text": "14"
+        },
+        {
+          "id": "t2_hh_q160_a4",
+          "text": "70"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q160_a4"
+    },
+    {
+      "id": "t2_hh_q161",
+      "text": "Kênh được dùng để liên lạc giữa tàu với tàu liên quan đến an toàn hàng hải trên kênh",
+      "answers": [
+        {
+          "id": "t2_hh_q161_a1",
+          "text": "06"
+        },
+        {
+          "id": "t2_hh_q161_a2",
+          "text": "13"
+        },
+        {
+          "id": "t2_hh_q161_a3",
+          "text": "68"
+        },
+        {
+          "id": "t2_hh_q161_a4",
+          "text": "69"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q161_a2"
+    },
+    {
+      "id": "t2_hh_q162",
+      "text": "Kênh được dùng làm kênh liên lạc gọi báo nạn và an toàn DSC trong hàng hải trên kênh",
+      "answers": [
+        {
+          "id": "t2_hh_q162_a1",
+          "text": "06"
+        },
+        {
+          "id": "t2_hh_q162_a2",
+          "text": "13"
+        },
+        {
+          "id": "t2_hh_q162_a3",
+          "text": "16"
+        },
+        {
+          "id": "t2_hh_q162_a4",
+          "text": "70"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q162_a4"
+    },
+    {
+      "id": "t2_hh_q163",
+      "text": "Tàu báo động cấp cứu là",
+      "answers": [
+        {
+          "id": "t2_hh_q163_a1",
+          "text": "Tàu báo đi báo động cấp cứu trực tiếp thông qua các đài duyên hải"
+        },
+        {
+          "id": "t2_hh_q163_a2",
+          "text": "Tàu báo đi báo động cấp cứu gián tiếp thông qua các đài duyên hải"
+        },
+        {
+          "id": "t2_hh_q163_a3",
+          "text": "Tàu báo đi báo động cấp cứu trực tiếp hoặc gián tiếp thông qua các đài duyên hải"
+        },
+        {
+          "id": "t2_hh_q163_a4",
+          "text": "Tàu báo đi báo động cấp cứu tới tàu xung quanh"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q163_a3"
+    },
+    {
+      "id": "t2_hh_q164",
+      "text": "Tín hiệu cấp cứu được phát theo lệnh của",
+      "answers": [
+        {
+          "id": "t2_hh_q164_a1",
+          "text": "Thuyền trưởng"
+        },
+        {
+          "id": "t2_hh_q164_a2",
+          "text": "Thuyền Phó"
+        },
+        {
+          "id": "t2_hh_q164_a3",
+          "text": "Thủy thủ"
+        },
+        {
+          "id": "t2_hh_q164_a4",
+          "text": "Tất cả thuyền viên trên tàu"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q164_a1"
+    },
+    {
+      "id": "t2_hh_q165",
+      "text": "Thông tin cứu nạn là thông tin nào dưới đây?",
+      "answers": [
+        {
+          "id": "t2_hh_q165_a1",
+          "text": "Thông tin được thực hiện giữa tàu bị nạn với trung tâm phối hợp cứu nạn"
+        },
+        {
+          "id": "t2_hh_q165_a2",
+          "text": "Thông tin được thực hiện giữa tàu bị nạn với các đơn vị cứu nạn"
+        },
+        {
+          "id": "t2_hh_q165_a3",
+          "text": "Thông tin được thực hiện giữa tàu bị nạn với các tàu xung quanh"
+        },
+        {
+          "id": "t2_hh_q165_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q165_a4"
+    },
+    {
+      "id": "t2_hh_q166",
+      "text": "Thông tin an toàn hàng hải sử dụng liên lạc bằng phương thức thoại được bắt đầu bằng việc gọi",
+      "answers": [
+        {
+          "id": "t2_hh_q166_a1",
+          "text": "MAYDAY (3 lần)"
+        },
+        {
+          "id": "t2_hh_q166_a2",
+          "text": "SECURITY (3 lần)"
+        },
+        {
+          "id": "t2_hh_q166_a3",
+          "text": "PANPAN (3 lần)"
+        },
+        {
+          "id": "t2_hh_q166_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q166_a2"
+    },
+    {
+      "id": "t2_hh_q167",
+      "text": "Thông tin khẩn cấp sử dụng bằng phương thức thoại bắt đầu bằng việc gọi",
+      "answers": [
+        {
+          "id": "t2_hh_q167_a1",
+          "text": "MAYDAY (3 lần)"
+        },
+        {
+          "id": "t2_hh_q167_a2",
+          "text": "PANPAN (3 lần)"
+        },
+        {
+          "id": "t2_hh_q167_a3",
+          "text": "SECURITY (3 lần)"
+        },
+        {
+          "id": "t2_hh_q167_a4",
+          "text": "Tất cả các đáp án trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q167_a2"
+    },
+    {
+      "id": "t2_hh_q168",
+      "text": "Thông tin cấp cứu bằng phương thức thoại được bắt đầu bằng việc gọi",
+      "answers": [
+        {
+          "id": "t2_hh_q168_a1",
+          "text": "PANPAN (3 lần)"
+        },
+        {
+          "id": "t2_hh_q168_a2",
+          "text": "MAYDAY (3 lần)"
+        },
+        {
+          "id": "t2_hh_q168_a3",
+          "text": "SECURITY (3 lần)"
+        },
+        {
+          "id": "t2_hh_q168_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q168_a2"
+    },
+    {
+      "id": "t2_hh_q169",
+      "text": "Một cuộc thông tin thông thường phải thoả mãn các yêu cầu nào?",
+      "answers": [
+        {
+          "id": "t2_hh_q169_a1",
+          "text": "Thông tin nhanh, chắc chắn"
+        },
+        {
+          "id": "t2_hh_q169_a2",
+          "text": "Không gây cản nhiễu"
+        },
+        {
+          "id": "t2_hh_q169_a3",
+          "text": "Tính kinh tế cao"
+        },
+        {
+          "id": "t2_hh_q169_a4",
+          "text": "Tất cả các ý trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q169_a4"
+    },
+    {
+      "id": "t2_hh_q170",
+      "text": "Liên lạc gọi chọn số DSC được dùng để làm gì?",
+      "answers": [
+        {
+          "id": "t2_hh_q170_a1",
+          "text": "Cho tàu bị nạn phát đi các bức điện cấp cứu"
+        },
+        {
+          "id": "t2_hh_q170_a2",
+          "text": "Trạm bờ xác nhận tín hiệu cấp cứu"
+        },
+        {
+          "id": "t2_hh_q170_a3",
+          "text": "Trạm bờ phát đi các thông tin khẩn cấp và thông tin an toàn hàng hải"
+        },
+        {
+          "id": "t2_hh_q170_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q170_a4"
+    },
+    {
+      "id": "t2_hh_q171",
+      "text": "Khi tàu hoạt động trong vùng biển A1 cách bờ từ 30 đến 50 hải lý thì tàu phải nằm trong vùng phủ sóng của",
+      "answers": [
+        {
+          "id": "t2_hh_q171_a1",
+          "text": "Ít nhất 1 trạm VHF"
+        },
+        {
+          "id": "t2_hh_q171_a2",
+          "text": "Ít nhất 1 trạm MF có dịch vụ gọi số DSC"
+        },
+        {
+          "id": "t2_hh_q171_a3",
+          "text": "Các vệ tinh địa tĩnh INMARSAT"
+        },
+        {
+          "id": "t2_hh_q171_a4",
+          "text": "Tất cả các ý trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q171_a1"
+    },
+    {
+      "id": "t2_hh_q172",
+      "text": "SART năm cách Radar tàu trên 6 hải lý thì tín hiệu của nó trên màn hình Radar là",
+      "answers": [
+        {
+          "id": "t2_hh_q172_a1",
+          "text": "10 vạch"
+        },
+        {
+          "id": "t2_hh_q172_a2",
+          "text": "11 vạch"
+        },
+        {
+          "id": "t2_hh_q172_a3",
+          "text": "12 vạch"
+        },
+        {
+          "id": "t2_hh_q172_a4",
+          "text": "13 vạch"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q172_a3"
+    },
+    {
+      "id": "t2_hh_q173",
+      "text": "Khi liên lạc bằng VHF giữa trạm tàu và trạm bờ thì",
+      "answers": [
+        {
+          "id": "t2_hh_q173_a1",
+          "text": "Trạm phát trước điều khiển liên lạc"
+        },
+        {
+          "id": "t2_hh_q173_a2",
+          "text": "Trạm tàu điều khiển liên lạc"
+        },
+        {
+          "id": "t2_hh_q173_a3",
+          "text": "Trạm bờ điều khiển liên lạc"
+        },
+        {
+          "id": "t2_hh_q173_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q173_a3"
+    },
+    {
+      "id": "t2_hh_q174",
+      "text": "NAVTEX có chức năng chính là",
+      "answers": [
+        {
+          "id": "t2_hh_q174_a1",
+          "text": "Thu các bản tin thời tiết và các cảnh báo hàng hải"
+        },
+        {
+          "id": "t2_hh_q174_a2",
+          "text": "Cung cấp mối liên hệ thông tin giữa các tàu với mạng lưới thông tin đất liền, vệ tinh hoặc phối hợp thông tin giữa các tàu với nhau"
+        },
+        {
+          "id": "t2_hh_q174_a3",
+          "text": "Xác định vị trí tàu bị nạn hoặc xuồng cứu sinh"
+        },
+        {
+          "id": "t2_hh_q174_a4",
+          "text": "Dùng để liên lạc giữa tàu với tàu và giữa bờ với tàu"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q174_a1"
+    },
+    {
+      "id": "t2_hh_q175",
+      "text": "Hệ thống NAVTEX Hàng hải quốc tế làm việc trên tần số",
+      "answers": [
+        {
+          "id": "t2_hh_q175_a1",
+          "text": "2187.5 KHz"
+        },
+        {
+          "id": "t2_hh_q175_a2",
+          "text": "518 KHz"
+        },
+        {
+          "id": "t2_hh_q175_a3",
+          "text": "2174.5 KHz"
+        },
+        {
+          "id": "t2_hh_q175_a4",
+          "text": "2182 KHz"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q175_a2"
+    },
+    {
+      "id": "t2_hh_q176",
+      "text": "GMDSS (Global Maritime Distress and Safety System) là hệ thống",
+      "answers": [
+        {
+          "id": "t2_hh_q176_a1",
+          "text": "An toàn và báo nạn hàng hải toàn cầu"
+        },
+        {
+          "id": "t2_hh_q176_a2",
+          "text": "Định vị toàn cầu"
+        },
+        {
+          "id": "t2_hh_q176_a3",
+          "text": "Đo sâu"
+        },
+        {
+          "id": "t2_hh_q176_a4",
+          "text": "Đo tốc độ"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q176_a1"
+    },
+    {
+      "id": "t2_hh_q177",
+      "text": "Hệ thống thông tin vệ tinh GPS gồm mấy khâu?",
+      "answers": [
+        {
+          "id": "t2_hh_q177_a1",
+          "text": "01"
+        },
+        {
+          "id": "t2_hh_q177_a2",
+          "text": "02"
+        },
+        {
+          "id": "t2_hh_q177_a3",
+          "text": "03"
+        },
+        {
+          "id": "t2_hh_q177_a4",
+          "text": "04"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q177_a3"
+    },
+    {
+      "id": "t2_hh_q178",
+      "text": "Thời gian phát xung của thiết bị phát đáp radar SART là mấy giờ?",
+      "answers": [
+        {
+          "id": "t2_hh_q178_a1",
+          "text": "5 giờ"
+        },
+        {
+          "id": "t2_hh_q178_a2",
+          "text": "6 giờ"
+        },
+        {
+          "id": "t2_hh_q178_a3",
+          "text": "7 giờ"
+        },
+        {
+          "id": "t2_hh_q178_a4",
+          "text": "8 giờ"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q178_a4"
+    },
+    {
+      "id": "t2_hh_q179",
+      "text": "Chu kỳ T của sóng vô tuyến là",
+      "answers": [
+        {
+          "id": "t2_hh_q179_a1",
+          "text": "Khoảng cách của một dao động hình sin tính từ đỉnh sóng này đến đỉnh sóng kế tiếp"
+        },
+        {
+          "id": "t2_hh_q179_a2",
+          "text": "Khoảng thời gian để thực hiện một dao động hình sin tính từ đỉnh sóng này đến đỉnh sóng kế tiếp"
+        },
+        {
+          "id": "t2_hh_q179_a3",
+          "text": "Vận tốc sóng truyền tính từ đỉnh sóng này đến đỉnh sóng kế tiếp"
+        },
+        {
+          "id": "t2_hh_q179_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q179_a2"
+    },
+    {
+      "id": "t2_hh_q180",
+      "text": "Tần số của sóng vô tuyến là",
+      "answers": [
+        {
+          "id": "t2_hh_q180_a1",
+          "text": "Vận tốc sóng truyền tính từ đỉnh sóng này đến đỉnh sóng kế tiếp"
+        },
+        {
+          "id": "t2_hh_q180_a2",
+          "text": "Quãng đường mà sóng vô tuyến truyền đi tính từ đỉnh sóng này đến đỉnh sóng kế tiếp"
+        },
+        {
+          "id": "t2_hh_q180_a3",
+          "text": "Số chu kỳ lặp lại trong một đơn vị thời gian"
+        },
+        {
+          "id": "t2_hh_q180_a4",
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correctAnswerId": "t2_hh_q180_a3"
+    }
+  ],
+  "luong": [
+    {
+      "id": "lpt_luong_q41",
+      "text": "Sông ngòi ở khu vực thượng lưu thường có đặc điểm:",
+      "answers": [
+        {
+          "id": "lpt_luong_q41_a1",
+          "text": "Đông Bắc - Tây Nam"
+        },
+        {
+          "id": "lpt_luong_q41_a2",
+          "text": "Tây Bắc - Đông Nam"
+        },
+        {
+          "id": "lpt_luong_q41_a3",
+          "text": "Bắc - Nam"
+        },
+        {
+          "id": "lpt_luong_q41_a4",
+          "text": "Đông - Tây"
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q41_a3"
+    },
+    {
+      "id": "lpt_luong_q42",
+      "text": "Dạng đoạn sông cong thường có đặc điểm:",
+      "answers": [
+        {
+          "id": "lpt_luong_q42_a1",
+          "text": "Độ dốc lớn, lưu tốc lớn và có nhiều bãi cạn"
+        },
+        {
+          "id": "lpt_luong_q42_a2",
+          "text": "Độ dốc lớn, lưu tốc nhỏ và có nhiều ghềnh đá nguy hiểm"
+        },
+        {
+          "id": "lpt_luong_q42_a3",
+          "text": "Độ dốc lớn, lưu tốc lớn, nhiều ghềnh đá nguy hiểm và có ít bãi cạn"
+        },
+        {
+          "id": "lpt_luong_q42_a4",
+          "text": "Độ dốc lớn, lưu tốc nhỏ và có ít bãi cạn"
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q42_a2"
+    },
+    {
+      "id": "lpt_luong_q43",
+      "text": "Dòng chảy phân luồng thường xuất hiện khi:",
+      "answers": [
+        {
+          "id": "lpt_luong_q43_a1",
+          "text": "Có cồn ở giữa sông"
+        },
+        {
+          "id": "lpt_luong_q43_a2",
+          "text": "Có cồn ở bờ phải"
+        },
+        {
+          "id": "lpt_luong_q43_a3",
+          "text": "Có cồn ở bờ trái"
+        },
+        {
+          "id": "lpt_luong_q43_a4",
+          "text": "Có cồn ở cả hai bên bờ"
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q43_a1"
+    },
+    {
+      "id": "lpt_luong_q44",
+      "text": "Dòng chảy vặn thường xuất hiện khi dòng chảy gặp phải:",
+      "answers": [
+        {
+          "id": "lpt_luong_q44_a1",
+          "text": "Đoạn sông cong"
+        },
+        {
+          "id": "lpt_luong_q44_a2",
+          "text": "Đoạn sông có dòng chảy phân luồng"
+        },
+        {
+          "id": "lpt_luong_q44_a3",
+          "text": "Đoạn sông có dòng chảy phủ luồng"
+        },
+        {
+          "id": "lpt_luong_q44_a4",
+          "text": "Đoạn sông thẳng"
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q44_a1"
+    },
+    {
+      "id": "lpt_luong_q45",
+      "text": "Khi có dòng nước chảy từ thượng lưu, qua cầu xuống hạ lưu thì lưu tốc dòng nước chảy nhanh ở:",
+      "answers": [
+        {
+          "id": "lpt_luong_q45_a1",
+          "text": "Thượng lưu cầu"
+        },
+        {
+          "id": "lpt_luong_q45_a2",
+          "text": "Giữa hai trụ cầu"
+        },
+        {
+          "id": "lpt_luong_q45_a3",
+          "text": "Hạ lưu cầu"
+        },
+        {
+          "id": "lpt_luong_q45_a4",
+          "text": "Phía hai bờ"
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q45_a2"
+    },
+    {
+      "id": "lpt_luong_q46",
+      "text": "Sông, kênh ở Việt Nam thường chảy theo hướng:",
+      "answers": [
+        {
+          "id": "lpt_luong_q46_a1",
+          "text": "Tây Bắc – Đông Nam."
+        },
+        {
+          "id": "lpt_luong_q46_a2",
+          "text": "Đông - Tây."
+        },
+        {
+          "id": "lpt_luong_q46_a3",
+          "text": "Tây Nam – Đông Bắc."
+        },
+        {
+          "id": "lpt_luong_q46_a4",
+          "text": "Bắc - Nam."
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q46_a1"
+    },
+    {
+      "id": "lpt_luong_q47",
+      "text": "Khu vực nào ở Việt Nam có mật độ sông, kênh lớn nhất?",
+      "answers": [
+        {
+          "id": "lpt_luong_q47_a1",
+          "text": "Miền Bắc."
+        },
+        {
+          "id": "lpt_luong_q47_a2",
+          "text": "Miền Trung."
+        },
+        {
+          "id": "lpt_luong_q47_a3",
+          "text": "Tây Nguyên."
+        },
+        {
+          "id": "lpt_luong_q47_a4",
+          "text": "Miền Nam."
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q47_a4"
+    },
+    {
+      "id": "lpt_luong_q48",
+      "text": "Sông nào chảy trong địa phận Việt Nam là dài nhất?",
+      "answers": [
+        {
+          "id": "lpt_luong_q48_a1",
+          "text": "Sông Thái Bình."
+        },
+        {
+          "id": "lpt_luong_q48_a2",
+          "text": "Sông Hồng."
+        },
+        {
+          "id": "lpt_luong_q48_a3",
+          "text": "Sông Đồng Nai."
+        },
+        {
+          "id": "lpt_luong_q48_a4",
+          "text": "Sông Tiền."
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q48_a3"
+    },
+    {
+      "id": "lpt_luong_q49",
+      "text": "Hệ thống sông nào có lưu lượng nước nhiều nhất Việt Nam?",
+      "answers": [
+        {
+          "id": "lpt_luong_q49_a1",
+          "text": "Hệ thống sông Thái Bình."
+        },
+        {
+          "id": "lpt_luong_q49_a2",
+          "text": "Hệ thống sông Hồng."
+        },
+        {
+          "id": "lpt_luong_q49_a3",
+          "text": "Hệ thống sông Đồng Nai."
+        },
+        {
+          "id": "lpt_luong_q49_a4",
+          "text": "Hệ thống sông Cửu Long."
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q49_a4"
+    },
+    {
+      "id": "lpt_luong_q50",
+      "text": "Hệ thống sông nào có lưu vực rộng lớn nhất Việt Nam?",
+      "answers": [
+        {
+          "id": "lpt_luong_q50_a1",
+          "text": "Hệ thống sông Thái Bình."
+        },
+        {
+          "id": "lpt_luong_q50_a2",
+          "text": "Hệ thống sông Hồng."
+        },
+        {
+          "id": "lpt_luong_q50_a3",
+          "text": "Hệ thống sông Đồng Nai."
+        },
+        {
+          "id": "lpt_luong_q50_a4",
+          "text": "Hệ thống sông Cửu Long."
+        }
+      ],
+      "correctAnswerId": "lpt_luong_q50_a2"
+    }
+  ],
+  "dieudong": [
+    {
+      "id": "lpt_dieudong_q126",
+      "text": "Các đại lượng đặc trưng cho quán tính là:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q126_a1",
+          "text": "Quãng đường và thời gian."
+        },
+        {
+          "id": "lpt_dieudong_q126_a2",
+          "text": "Quãng đường và vận tốc."
+        },
+        {
+          "id": "lpt_dieudong_q126_a3",
+          "text": "Quãng đường và khối lượng."
+        },
+        {
+          "id": "lpt_dieudong_q126_a4",
+          "text": "Vận tốc và khối lượng."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q126_a1"
+    },
+    {
+      "id": "lpt_dieudong_q127",
+      "text": "Tại khu vực bờ đứng nước sâu, hiện tượng hút nước giữa phương tiện thuỷ và bờ xảy ra khi:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q127_a1",
+          "text": "phương tiện chạy chậm gần bờ."
+        },
+        {
+          "id": "lpt_dieudong_q127_a2",
+          "text": "phương tiện chạy nhanh xa bờ."
+        },
+        {
+          "id": "lpt_dieudong_q127_a3",
+          "text": "Phương tiện chạy nhanh gần bờ."
+        },
+        {
+          "id": "lpt_dieudong_q127_a4",
+          "text": "phương tiện chạy nhanh giữa sông."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q127_a3"
+    },
+    {
+      "id": "lpt_dieudong_q128",
+      "text": "Khi điều động phương tiện thuỷ cập cầu, cập phao, thả neo thì thường lựa chọn:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q128_a1",
+          "text": "Nước ngược nhẹ."
+        },
+        {
+          "id": "lpt_dieudong_q128_a2",
+          "text": "Nước xuôi."
+        },
+        {
+          "id": "lpt_dieudong_q128_a3",
+          "text": "Nước ngược mạnh."
+        },
+        {
+          "id": "lpt_dieudong_q128_a4",
+          "text": "Nước nào cũng được."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q128_a1"
+    },
+    {
+      "id": "lpt_dieudong_q129",
+      "text": "Khi có người ngã xuống nước, người điều khiển phương tiện thuỷ phải:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q129_a1",
+          "text": "Phải lập tức dừng máy, bẻ lái về phía người ngã, ném phao cho người ngã, theo dõi người."
+        },
+        {
+          "id": "lpt_dieudong_q129_a2",
+          "text": "Phải lập tức bẻ lái về phía người ngã, ném phao cho người ngã."
+        },
+        {
+          "id": "lpt_dieudong_q129_a3",
+          "text": "Nhanh chóng lái tàu về phía người ngã, ném nhiều phao cho người ngã."
+        },
+        {
+          "id": "lpt_dieudong_q129_a4",
+          "text": "Dừng ngay tàu, cử người bơi giỏi xuống cứu người bị nạn."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q129_a1"
+    },
+    {
+      "id": "lpt_dieudong_q130",
+      "text": "Phương tiện đang chạy xuôi nước mà có người ngã xuống nước thì:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q130_a1",
+          "text": "Điều động phương tiện quay trở 270° (chữ C) để cứu người."
+        },
+        {
+          "id": "lpt_dieudong_q130_a2",
+          "text": "Điều động phương tiện quay trở 180° (số 8) để cứu người."
+        },
+        {
+          "id": "lpt_dieudong_q130_a3",
+          "text": "Điều động phương tiện quay trở ngay lập tức để cứu người."
+        },
+        {
+          "id": "lpt_dieudong_q130_a4",
+          "text": "Cả 3 cách trên đều được."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q130_a2"
+    },
+    {
+      "id": "lpt_dieudong_q131",
+      "text": "Phương tiện đang chạy ngược nước mà có người ngã xuống nước thì:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q131_a1",
+          "text": "Điều động phương tiện tàu quay trở 270° (chữ C) để cứu người."
+        },
+        {
+          "id": "lpt_dieudong_q131_a2",
+          "text": "Điều động phương tiện quay trở 180° (số 8) để cứu người."
+        },
+        {
+          "id": "lpt_dieudong_q131_a3",
+          "text": "Điều động phương tiện quay trở ngay lập tức để cứu người."
+        },
+        {
+          "id": "lpt_dieudong_q131_a4",
+          "text": "Cả 3 cách trên đều được."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q131_a1"
+    },
+    {
+      "id": "lpt_dieudong_q132",
+      "text": "Khi phương tiện thuỷ đang chạy tới, bánh lái để 0º, nếu chỉ xét tác dụng của bánh lái thì hướng mũi phương tiện sẽ:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q132_a1",
+          "text": "Ngã sang phải."
+        },
+        {
+          "id": "lpt_dieudong_q132_a2",
+          "text": "Ngã sang trái."
+        },
+        {
+          "id": "lpt_dieudong_q132_a3",
+          "text": "Không ngã sang bên nào."
+        },
+        {
+          "id": "lpt_dieudong_q132_a4",
+          "text": "Khi ngã phải, khi ngã trái."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q132_a3"
+    },
+    {
+      "id": "lpt_dieudong_q133",
+      "text": "Khi phương tiện thuỷ đang chạy tới, nếu bẻ bánh lái sang trái thì hướng mũi phương tiện sẽ:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q133_a1",
+          "text": "Ngã sang phải."
+        },
+        {
+          "id": "lpt_dieudong_q133_a2",
+          "text": "Ngã sang trái."
+        },
+        {
+          "id": "lpt_dieudong_q133_a3",
+          "text": "Không thay đổi."
+        },
+        {
+          "id": "lpt_dieudong_q133_a4",
+          "text": "Khi ngã phải, khi ngã trái."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q133_a2"
+    },
+    {
+      "id": "lpt_dieudong_q134",
+      "text": "Khi phương tiện thuỷ đang chạy lùi, nếu bẻ bánh lái sang trái thì hướng mũi phương tiện sẽ:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q134_a1",
+          "text": "Ngã sang phải."
+        },
+        {
+          "id": "lpt_dieudong_q134_a2",
+          "text": "Ngã sang trái."
+        },
+        {
+          "id": "lpt_dieudong_q134_a3",
+          "text": "Không thay đổi."
+        },
+        {
+          "id": "lpt_dieudong_q134_a4",
+          "text": "Khi ngã phải, khi ngã trái."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q134_a1"
+    },
+    {
+      "id": "lpt_dieudong_q135",
+      "text": "Khi phương tiện thuỷ đang chạy lùi, bánh lái để 0°, nếu chỉ xét tác dụng của bánh lái thì hướng mũi phương tiện sẽ:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q135_a1",
+          "text": "Ngã sang phải."
+        },
+        {
+          "id": "lpt_dieudong_q135_a2",
+          "text": "Ngã sang trái."
+        },
+        {
+          "id": "lpt_dieudong_q135_a3",
+          "text": "Không ngã sang bên nào."
+        },
+        {
+          "id": "lpt_dieudong_q135_a4",
+          "text": "Khi ngã phải, khi ngã trái."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q135_a3"
+    },
+    {
+      "id": "lpt_dieudong_q136",
+      "text": "Điều khiển phương tiện thuỷ đi đường có ảnh hưởng của gió, nước ngang, để trừ hao độ dạt người điều khiển cần:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q136_a1",
+          "text": "Tăng tốc độ."
+        },
+        {
+          "id": "lpt_dieudong_q136_a2",
+          "text": "Giảm tốc độ."
+        },
+        {
+          "id": "lpt_dieudong_q136_a3",
+          "text": "Giữ nguyên tốc đô."
+        },
+        {
+          "id": "lpt_dieudong_q136_a4",
+          "text": "Bẻ lái về phía đầu gió, đầu nước."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q136_a4"
+    },
+    {
+      "id": "lpt_dieudong_q137",
+      "text": "Điều khiển phương tiện thuỷ đi đường có ảnh hưởng của sóng, để giảm được ảnh hưởng của sóng hướng đi người điều khiển cần chọn là:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q137_a1",
+          "text": "Ngược với hướng sóng."
+        },
+        {
+          "id": "lpt_dieudong_q137_a2",
+          "text": "Ngang với hướng sóng."
+        },
+        {
+          "id": "lpt_dieudong_q137_a3",
+          "text": "Vát, chếch với hướng sóng."
+        },
+        {
+          "id": "lpt_dieudong_q137_a4",
+          "text": "Chạy Xuôi với hướng sóng."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q137_a3"
+    },
+    {
+      "id": "lpt_dieudong_q138",
+      "text": "Phương tiện thuỷ đang chạy mà có người ngã xuống nước thì khi điều động tàu cứu người phải để người ngã phía:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q138_a1",
+          "text": "Mạn dưới sóng."
+        },
+        {
+          "id": "lpt_dieudong_q138_a2",
+          "text": "Mạn trên sóng."
+        },
+        {
+          "id": "lpt_dieudong_q138_a3",
+          "text": "Mạn nào cũng được."
+        },
+        {
+          "id": "lpt_dieudong_q138_a4",
+          "text": "Ngay trước mũi tàu."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q138_a1"
+    },
+    {
+      "id": "lpt_dieudong_q139",
+      "text": "Muốn chạy phương tiện thuỷ an toàn khi gặp dòng chảy vặn, thuyền trưởng, người lái phương tiện phải:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q139_a1",
+          "text": "Chạy tàu sát bờ vịnh."
+        },
+        {
+          "id": "lpt_dieudong_q139_a2",
+          "text": "Chạy tàu sát bờ doi."
+        },
+        {
+          "id": "lpt_dieudong_q139_a3",
+          "text": "Chạy tàu theo đường ngấn nước (lợi nước) hay dải bọt nước."
+        },
+        {
+          "id": "lpt_dieudong_q139_a4",
+          "text": "Chạy tàu giữa luồng."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q139_a3"
+    },
+    {
+      "id": "lpt_dieudong_q140",
+      "text": "Trường hợp gặp xoáy mạnh thì thuyền trưởng, người lái phương tiện nên:",
+      "answers": [
+        {
+          "id": "lpt_dieudong_q140_a1",
+          "text": "Chạy ngược dòng chảy xoáy."
+        },
+        {
+          "id": "lpt_dieudong_q140_a2",
+          "text": "Chạy xuôi chiều dòng xoáy, càng xa tâm xoáy càng tốt."
+        },
+        {
+          "id": "lpt_dieudong_q140_a3",
+          "text": "Cố tránh hoặc chỉ bám phía trong dòng chảy xoáy."
+        },
+        {
+          "id": "lpt_dieudong_q140_a4",
+          "text": "Chạy qua tâm dòng chảy xoáy."
+        }
+      ],
+      "correctAnswerId": "lpt_dieudong_q140_a2"
+    },
+    {
+      "id": "ct_dieudong_q11",
+      "text": "Các đại lượng đặc trưng cho quán tính là",
+      "answers": [
+        {
+          "id": "ct_dieudong_q11_a1",
+          "text": "Quãng đường và thời gian."
+        },
+        {
+          "id": "ct_dieudong_q11_a2",
+          "text": "Quãng đường và vận tốc."
+        },
+        {
+          "id": "ct_dieudong_q11_a3",
+          "text": "Quãng đường và khối lượng."
+        },
+        {
+          "id": "ct_dieudong_q11_a4",
+          "text": "Vận tốc và khối lượng."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q11_a1"
+    },
+    {
+      "id": "ct_dieudong_q12",
+      "text": "Khi điều động tàu cập bến, cập phao, thả neo thì thường lựa chọn",
+      "answers": [
+        {
+          "id": "ct_dieudong_q12_a1",
+          "text": "Nước ngược nhẹ."
+        },
+        {
+          "id": "ct_dieudong_q12_a2",
+          "text": "Nước xuôi."
+        },
+        {
+          "id": "ct_dieudong_q12_a3",
+          "text": "Nước ngược mạnh."
+        },
+        {
+          "id": "ct_dieudong_q12_a4",
+          "text": "Nước nào cũng được."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q12_a1"
+    },
+    {
+      "id": "ct_dieudong_q13",
+      "text": "Tàu chạy ngược nước thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q13_a1",
+          "text": "Tốc độ giảm, ăn lái tốt."
+        },
+        {
+          "id": "ct_dieudong_q13_a2",
+          "text": "Tốc độ giảm, ăn lái giảm."
+        },
+        {
+          "id": "ct_dieudong_q13_a3",
+          "text": "Tốc độ không đổi, ăn lái tốt."
+        },
+        {
+          "id": "ct_dieudong_q13_a4",
+          "text": "Tốc độ không đổi, ăn lái giảm."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q13_a1"
+    },
+    {
+      "id": "ct_dieudong_q14",
+      "text": "Tàu chạy xuôi nước thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q14_a1",
+          "text": "Tốc độ tăng, ăn lái tốt."
+        },
+        {
+          "id": "ct_dieudong_q14_a2",
+          "text": "Tốc độ tăng, ăn lái giảm."
+        },
+        {
+          "id": "ct_dieudong_q14_a3",
+          "text": "Tốc độ không đổi, ăn lái tốt."
+        },
+        {
+          "id": "ct_dieudong_q14_a4",
+          "text": "Tốc độ không đổi, ăn lái giảm."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q14_a2"
+    },
+    {
+      "id": "ct_dieudong_q15",
+      "text": "Khi tàu chạy trong sông hẹp và tầm nhìn hạn chế thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q15_a1",
+          "text": "Không cần thay đổi tốc độ."
+        },
+        {
+          "id": "ct_dieudong_q15_a2",
+          "text": "Phải giảm tốc độ."
+        },
+        {
+          "id": "ct_dieudong_q15_a3",
+          "text": "Phải tăng tốc độ."
+        },
+        {
+          "id": "ct_dieudong_q15_a4",
+          "text": "Chạy thế nào cũng được."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q15_a2"
+    },
+    {
+      "id": "ct_dieudong_q16",
+      "text": "Điều động tàu rời bến đi theo hướng đậu, có nước chảy từ lái về mũi, muốn ra lái trước phải",
+      "answers": [
+        {
+          "id": "ct_dieudong_q16_a1",
+          "text": "Để lại dây dọc lái, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q16_a2",
+          "text": "Để lại dây chéo mũi, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q16_a3",
+          "text": "Để lại dây ngang mũi, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q16_a4",
+          "text": "Để lại dây chéo, bẻ lái vào trong."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q16_a2"
+    },
+    {
+      "id": "ct_dieudong_q17",
+      "text": "Điều động tàu cập bến ngược nước, khi mũi tàu vào sát bến phải",
+      "answers": [
+        {
+          "id": "ct_dieudong_q17_a1",
+          "text": "Bắt dây ngang mũi, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q17_a2",
+          "text": "Bắt dây dọc mũi, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q17_a3",
+          "text": "Bắt dây dọc mũi, bẻ lái vào trong."
+        },
+        {
+          "id": "ct_dieudong_q17_a4",
+          "text": "Bắt dây chéo mũi, bẻ lái ra ngoài."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q17_a2"
+    },
+    {
+      "id": "ct_dieudong_q18",
+      "text": "Khi có người ngã xuống nước, người điều khiển tàu phải",
+      "answers": [
+        {
+          "id": "ct_dieudong_q18_a1",
+          "text": "Phải lập tức dừng máy, bẻ lái về phía người ngã, ném phao cho người ngã, theo dõi người."
+        },
+        {
+          "id": "ct_dieudong_q18_a2",
+          "text": "Phải lập tức bẻ lái về phía người ngã, ném phao cho người ngã."
+        },
+        {
+          "id": "ct_dieudong_q18_a3",
+          "text": "Nhanh chóng lái tàu về phía người ngã, ném nhiều phao cho người ngã."
+        },
+        {
+          "id": "ct_dieudong_q18_a4",
+          "text": "Dừng ngay tàu, cử người bơi giỏi xuống cứu người bị nạn."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q18_a1"
+    },
+    {
+      "id": "ct_dieudong_q19",
+      "text": "Tàu đang chạy xuôi nước mà có người ngã xuống nước thì điều động theo phương pháp nào?",
+      "answers": [
+        {
+          "id": "ct_dieudong_q19_a1",
+          "text": "Điều động tàu quay trở 270⁰ (chữ C) để cứu người."
+        },
+        {
+          "id": "ct_dieudong_q19_a2",
+          "text": "Điều động tàu quay trở 180⁰ (số 8) để cứu người."
+        },
+        {
+          "id": "ct_dieudong_q19_a3",
+          "text": "Điều động tàu quay trở ngay lập tức để cứu người."
+        },
+        {
+          "id": "ct_dieudong_q19_a4",
+          "text": "Cả 3 cách trên đều được."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q19_a2"
+    },
+    {
+      "id": "ct_dieudong_q20",
+      "text": "Tàu đang chạy ngược nước mà có người ngã xuống nước thì điều động theo phương pháp nào?",
+      "answers": [
+        {
+          "id": "ct_dieudong_q20_a1",
+          "text": "Điều động tàu quay trở 270⁰ (chữ C) để cứu người."
+        },
+        {
+          "id": "ct_dieudong_q20_a2",
+          "text": "Điều động tàu quay trở 180⁰ (số 8) để cứu người."
+        },
+        {
+          "id": "ct_dieudong_q20_a3",
+          "text": "Điều động tàu quay trở ngay lập tức để cứu người."
+        },
+        {
+          "id": "ct_dieudong_q20_a4",
+          "text": "Cả 3 cách trên đều được."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q20_a1"
+    },
+    {
+      "id": "ct_dieudong_q21",
+      "text": "Khi tàu đang chạy tới, nếu bẻ bánh lái sang phải thì hướng mũi tàu sẽ",
+      "answers": [
+        {
+          "id": "ct_dieudong_q21_a1",
+          "text": "Ngả sang phải."
+        },
+        {
+          "id": "ct_dieudong_q21_a2",
+          "text": "Ngả sang trái."
+        },
+        {
+          "id": "ct_dieudong_q21_a3",
+          "text": "Không thay đổi."
+        },
+        {
+          "id": "ct_dieudong_q21_a4",
+          "text": "Khi ngả phải, khi ngả trái."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q21_a1"
+    },
+    {
+      "id": "ct_dieudong_q22",
+      "text": "Khi tàu đang chạy tới, nếu bẻ bánh lái sang trái thì hướng mũi tàu sẽ",
+      "answers": [
+        {
+          "id": "ct_dieudong_q22_a1",
+          "text": "Ngả sang phải."
+        },
+        {
+          "id": "ct_dieudong_q22_a2",
+          "text": "Ngả sang trái."
+        },
+        {
+          "id": "ct_dieudong_q22_a3",
+          "text": "Không thay đổi."
+        },
+        {
+          "id": "ct_dieudong_q22_a4",
+          "text": "Khi ngả phải, khi ngả trái."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q22_a2"
+    },
+    {
+      "id": "ct_dieudong_q23",
+      "text": "Khi tàu đang chạy lùi, nếu bẻ bánh lái sang trái thì hướng mũi tàu sẽ",
+      "answers": [
+        {
+          "id": "ct_dieudong_q23_a1",
+          "text": "Ngả sang phải."
+        },
+        {
+          "id": "ct_dieudong_q23_a2",
+          "text": "Ngả sang trái."
+        },
+        {
+          "id": "ct_dieudong_q23_a3",
+          "text": "Không thay đổi."
+        },
+        {
+          "id": "ct_dieudong_q23_a4",
+          "text": "Khi ngả phải, khi ngả trái."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q23_a1"
+    },
+    {
+      "id": "ct_dieudong_q24",
+      "text": "Khi tàu đang chạy lùi, nếu bẻ bánh lái sang phải thì hướng mũi tàu sẽ",
+      "answers": [
+        {
+          "id": "ct_dieudong_q24_a1",
+          "text": "Ngả sang phải."
+        },
+        {
+          "id": "ct_dieudong_q24_a2",
+          "text": "Ngả sang trái."
+        },
+        {
+          "id": "ct_dieudong_q24_a3",
+          "text": "Không thay đổi."
+        },
+        {
+          "id": "ct_dieudong_q24_a4",
+          "text": "Khi ngả phải, khi ngả trái."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q24_a2"
+    },
+    {
+      "id": "ct_dieudong_q25",
+      "text": "Điều động tàu rời bến đi theo hướng đậu, có nước chảy từ lái về mũi, muốn ra lái trước phải",
+      "answers": [
+        {
+          "id": "ct_dieudong_q25_a1",
+          "text": "Để lại dây dọc lái, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q25_a2",
+          "text": "Để lại dây chéo mũi, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q25_a3",
+          "text": "Để lại dây ngang mũi, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q25_a4",
+          "text": "Để lại dây chéo, bẻ lái vào trong."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q25_a2"
+    },
+    {
+      "id": "ct_dieudong_q26",
+      "text": "Điều động tàu rời bến đi theo hướng đậu, có nước chảy từ lái về mũi, khi lái tàu ngả được góc khoảng 30⁰ thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q26_a1",
+          "text": "Bẻ lái ra ngoài bến, cho máy lùi nhẹ, tàu có trớn lùi, dây chùng, mở dây"
+        },
+        {
+          "id": "ct_dieudong_q26_a2",
+          "text": "Bẻ lái vào trong bến, cho máy lùi nhẹ, tàu có trớn lùi, dây chùng, mở dây."
+        },
+        {
+          "id": "ct_dieudong_q26_a3",
+          "text": "Bánh lái để 0⁰, cho máy lùi nhẹ, tàu có trớn lùi, dây chùng, mở dây."
+        },
+        {
+          "id": "ct_dieudong_q26_a4",
+          "text": "Bẻ lái ra ngoài bến, mở dây"
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q26_a2"
+    },
+    {
+      "id": "ct_dieudong_q27",
+      "text": "Điều động tàu rời bến đi theo hướng đậu, có gió ngoài bến thổi vào muốn ra lái trước thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q27_a1",
+          "text": "Để lại dây chéo mũi, bẻ lái ra ngoài, cho máy tới."
+        },
+        {
+          "id": "ct_dieudong_q27_a2",
+          "text": "Để lại dây chéo mũi, bẻ lái vào trong, cho máy tới."
+        },
+        {
+          "id": "ct_dieudong_q27_a3",
+          "text": "Để lại dây dọc mũi, bẻ lái ra ngoài, cho máy lùi."
+        },
+        {
+          "id": "ct_dieudong_q27_a4",
+          "text": "Để lại dây ngang mũi, bẻ lái ra ngoài, cho máy tới."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q27_a2"
+    },
+    {
+      "id": "ct_dieudong_q28",
+      "text": "Điều động tàu cập bến nước đứng, sóng gió yên, mũi tàu đã vào sát bến, sau khi bắt được dây chéo mũi, để đưa lái tàu vào sát bến thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q28_a1",
+          "text": "Bẻ lái ra ngoài, cho máy tới."
+        },
+        {
+          "id": "ct_dieudong_q28_a2",
+          "text": "Bẻ lái vào trong, cho máy tới."
+        },
+        {
+          "id": "ct_dieudong_q28_a3",
+          "text": "Để lái 0⁰, cho máy tới."
+        },
+        {
+          "id": "ct_dieudong_q28_a4",
+          "text": "Bẻ lái ra ngoài, cho máy lùi."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q28_a1"
+    },
+    {
+      "id": "ct_dieudong_q29",
+      "text": "Điều động tàu cập bến ngược nước, khi mũi tàu vào sát bến phải",
+      "answers": [
+        {
+          "id": "ct_dieudong_q29_a1",
+          "text": "Bắt dây ngang mũi, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q29_a2",
+          "text": "Bắt dây dọc mũi, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q29_a3",
+          "text": "Bắt dây dọc mũi, bẻ lái vào trong."
+        },
+        {
+          "id": "ct_dieudong_q29_a4",
+          "text": "Bắt dây chéo mũi, bẻ lái ra ngoài."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q29_a2"
+    },
+    {
+      "id": "ct_dieudong_q30",
+      "text": "Điều động tàu cập bến xuôi nước, khi lái tàu vào sát bến phải",
+      "answers": [
+        {
+          "id": "ct_dieudong_q30_a1",
+          "text": "Bắt dây ngang lái, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q30_a2",
+          "text": "Bắt dây dọc lái, bẻ lái ra ngoài."
+        },
+        {
+          "id": "ct_dieudong_q30_a3",
+          "text": "Bắt dây dọc lái, bẻ lái vào trong."
+        },
+        {
+          "id": "ct_dieudong_q30_a4",
+          "text": "Bắt dây ngang lái, bẻ lái vào trong."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q30_a2"
+    },
+    {
+      "id": "ct_dieudong_q31",
+      "text": "Điều động tàu cập bến, gió trong bến thổi ra, khi bắt được dây chéo mũi thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q31_a1",
+          "text": "Để lái thẳng, cho máy tới để đưa lái tàu vào"
+        },
+        {
+          "id": "ct_dieudong_q31_a2",
+          "text": "Bẻ lái vào trong, cho máy tới để đưa lái tàu vào"
+        },
+        {
+          "id": "ct_dieudong_q31_a3",
+          "text": "Bẻ lái ra ngoài, cho máy tới để đưa lái tàu vào"
+        },
+        {
+          "id": "ct_dieudong_q31_a4",
+          "text": "Bẻ lái vào trong, cho máy lùi để đưa lái tàu vào"
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q31_a3"
+    },
+    {
+      "id": "ct_dieudong_q32",
+      "text": "Khi có gió lớn từ ngoài bến thổi vào thì sử dụng phương pháp điều động cập an toàn nhất là",
+      "answers": [
+        {
+          "id": "ct_dieudong_q32_a1",
+          "text": "Cập kết hợp sào hỗ trợ."
+        },
+        {
+          "id": "ct_dieudong_q32_a2",
+          "text": "Cập với góc lớn."
+        },
+        {
+          "id": "ct_dieudong_q32_a3",
+          "text": "Cập bằng neo."
+        },
+        {
+          "id": "ct_dieudong_q32_a4",
+          "text": "Cập với góc nhỏ."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q32_a3"
+    },
+    {
+      "id": "ct_dieudong_q33",
+      "text": "Phương tiện cao tốc chạy trong luồng hẹp phải",
+      "answers": [
+        {
+          "id": "ct_dieudong_q33_a1",
+          "text": "Tăng tốc độ, tăng cường quan sát."
+        },
+        {
+          "id": "ct_dieudong_q33_a2",
+          "text": "Giảm tốc độ, tăng cường quan sát."
+        },
+        {
+          "id": "ct_dieudong_q33_a3",
+          "text": "Tăng tốc độ, chạy về bên phải."
+        },
+        {
+          "id": "ct_dieudong_q33_a4",
+          "text": "Tăng tốc độ, chạy về bên trái."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q33_a2"
+    },
+    {
+      "id": "ct_dieudong_q34",
+      "text": "Điều khiển tàu đi đường có ảnh hưởng của gió, nước ngang, để trừ hao độ dạt người điều khiển cần",
+      "answers": [
+        {
+          "id": "ct_dieudong_q34_a1",
+          "text": "Tăng tốc độ."
+        },
+        {
+          "id": "ct_dieudong_q34_a2",
+          "text": "Giảm tốc độ."
+        },
+        {
+          "id": "ct_dieudong_q34_a3",
+          "text": "Giữ nguyên tốc đô."
+        },
+        {
+          "id": "ct_dieudong_q34_a4",
+          "text": "Bẻ lái về phía đầu gió, đầu nước."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q34_a4"
+    },
+    {
+      "id": "ct_dieudong_q35",
+      "text": "Điều khiển tàu đi đường có ảnh hưởng của sóng, để giảm được ảnh hưởng của sóng hướng đi người điều khiển cần chọn là",
+      "answers": [
+        {
+          "id": "ct_dieudong_q35_a1",
+          "text": "Ngược với hướng sóng."
+        },
+        {
+          "id": "ct_dieudong_q35_a2",
+          "text": "Ngang với hướng sóng."
+        },
+        {
+          "id": "ct_dieudong_q35_a3",
+          "text": "Vát, chếch với hướng sóng."
+        },
+        {
+          "id": "ct_dieudong_q35_a4",
+          "text": "Chạy Xuôi với hướng sóng."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q35_a3"
+    },
+    {
+      "id": "ct_dieudong_q36",
+      "text": "Nguyên tắc điều động tàu cập bến?",
+      "answers": [
+        {
+          "id": "ct_dieudong_q36_a1",
+          "text": "Nước ngược nhẹ."
+        },
+        {
+          "id": "ct_dieudong_q36_a2",
+          "text": "Nước xuôi."
+        },
+        {
+          "id": "ct_dieudong_q36_a3",
+          "text": "Nước ngược mạnh."
+        },
+        {
+          "id": "ct_dieudong_q36_a4",
+          "text": "Nước nào cũng được."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q36_a1"
+    },
+    {
+      "id": "ct_dieudong_q37",
+      "text": "Điều động tàu chạy trên đoạn sông dài thì thường lựa chọn",
+      "answers": [
+        {
+          "id": "ct_dieudong_q37_a1",
+          "text": "Nước ngược."
+        },
+        {
+          "id": "ct_dieudong_q37_a2",
+          "text": "Nước xuôi."
+        },
+        {
+          "id": "ct_dieudong_q37_a3",
+          "text": "Nước ngược mạnh."
+        },
+        {
+          "id": "ct_dieudong_q37_a4",
+          "text": "Nước nào cũng được."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q37_a2"
+    },
+    {
+      "id": "ct_dieudong_q38",
+      "text": "Tàu chạy ngược nước, gió ngược thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q38_a1",
+          "text": "Tốc độ giảm, ăn lái tốt."
+        },
+        {
+          "id": "ct_dieudong_q38_a2",
+          "text": "Tốc độ giảm, ăn lái giảm."
+        },
+        {
+          "id": "ct_dieudong_q38_a3",
+          "text": "Tốc độ không đổi, ăn lái tốt."
+        },
+        {
+          "id": "ct_dieudong_q38_a4",
+          "text": "Tốc độ không đổi, ăn lái giảm."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q38_a1"
+    },
+    {
+      "id": "ct_dieudong_q39",
+      "text": "Tàu chạy xuôi nước, xuôi gió thì",
+      "answers": [
+        {
+          "id": "ct_dieudong_q39_a1",
+          "text": "Tốc độ tăng, ăn lái tốt."
+        },
+        {
+          "id": "ct_dieudong_q39_a2",
+          "text": "Tốc độ tăng, ăn lái giảm."
+        },
+        {
+          "id": "ct_dieudong_q39_a3",
+          "text": "Tốc độ không đổi, ăn lái tốt."
+        },
+        {
+          "id": "ct_dieudong_q39_a4",
+          "text": "Tốc độ không đổi, ăn lái giảm."
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q39_a2"
+    },
+    {
+      "id": "ct_dieudong_q40",
+      "text": "Điều động tàu rời bến đi theo hướng đậu khi có nước chảy từ mũi về lái, muốn ra mũi trước phải",
+      "answers": [
+        {
+          "id": "ct_dieudong_q40_a1",
+          "text": "Để lại dây dọc mũi, bẻ lái ra ngoài"
+        },
+        {
+          "id": "ct_dieudong_q40_a2",
+          "text": "Để lại dây chéo lái, bẻ lái ra ngoài"
+        },
+        {
+          "id": "ct_dieudong_q40_a3",
+          "text": "Để lại dây ngang lái, bẻ lái ra ngoài"
+        },
+        {
+          "id": "ct_dieudong_q40_a4",
+          "text": "Để lại dây chéo lái, bẻ lái vào trong"
+        }
+      ],
+      "correctAnswerId": "ct_dieudong_q40_a2"
+    }
+  ]
+}
