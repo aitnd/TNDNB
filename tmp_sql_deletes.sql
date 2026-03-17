@@ -1,0 +1,2 @@
+DELETE FROM answers WHERE question_id IN (SELECT id FROM questions WHERE subject_id IN ('gk2_dieudong', 'gk2_hanghai', 'gk2_kttv', 'gk2_ktvt', 'gk2_luong', 'gk2_nvtt', 'gk2_ttvt'));
+DELETE FROM questions WHERE subject_id IN ('gk2_dieudong', 'gk2_hanghai', 'gk2_kttv', 'gk2_ktvt', 'gk2_luong', 'gk2_nvtt', 'gk2_ttvt');

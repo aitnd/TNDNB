@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, ChevronDown, Link2, Utensils, Gamepad2 } from 'lucide-react';
+import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, ChevronDown, Link2, Utensils, Gamepad2, Award } from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
 
@@ -48,6 +48,17 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                         <Newspaper size={18} className="text-red-600 dark:text-red-400" />
                         <span className="font-semibold text-sm md:text-base">Thi trực tuyến</span>
                     </button>
+
+                    {/* Giám khảo - Chỉ hiện cho Admin/Giáo viên/Quản lý/Lãnh đạo */}
+                    {userProfile && ['admin', 'giao_vien', 'quan_ly', 'lanh_dao'].includes(userProfile.role) && (
+                        <button
+                            onClick={() => onNavigate('giam_khao')}
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-colors whitespace-nowrap border border-amber-200 dark:border-amber-500/20"
+                        >
+                            <Award size={18} className="text-amber-600 dark:text-amber-400" />
+                            <span className="font-bold text-sm md:text-base">Giám khảo</span>
+                        </button>
+                    )}
 
                     {/* 2. Trang chủ (Link ngoài) */}
                     <a

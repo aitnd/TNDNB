@@ -1,0 +1,185 @@
+{
+  "subject_id": "gk2_ttvt",
+  "questions": [
+    {
+      "text": "Báo động cấp cứu giữa các tàu bằng máy VHF được trực liên lạc trên kênh:",
+      "answers": [
+        {
+          "text": "14."
+        },
+        {
+          "text": "16."
+        },
+        {
+          "text": "20."
+        },
+        {
+          "text": "70."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Thông tin liên lạc trên VHF thường sử dụng kênh:",
+      "answers": [
+        {
+          "text": "14."
+        },
+        {
+          "text": "16."
+        },
+        {
+          "text": "20."
+        },
+        {
+          "text": "69."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Bức điện gọi chọn số DSC có thông tin:",
+      "answers": [
+        {
+          "text": "Tên hay số hiệu ID của đài phát"
+        },
+        {
+          "text": "Mức độ ưu tiên của cuộc gọi"
+        },
+        {
+          "text": "Đài trạm được gọi"
+        },
+        {
+          "text": "Tất cả các đáp án trên"
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Báo động cấp cứu là:",
+      "answers": [
+        {
+          "text": "Tàu báo đi báo động cấp cứu trực tiếp thông qua các đài duyên hải."
+        },
+        {
+          "text": "Tàu báo đi báo động cấp cứu gián tiếp thông qua các đài duyên hải."
+        },
+        {
+          "text": "Tàu báo đi báo động cấp cứu trực tiếp hoặc gián tiếp thông qua các đài duyên hải."
+        },
+        {
+          "text": "Tàu báo đi báo động cấp cứu tới tàu xung quanh."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Thông tin an toàn hàng hải là:",
+      "answers": [
+        {
+          "text": "Thông báo khí tượng thủy văn."
+        },
+        {
+          "text": "Thông báo hàng hải."
+        },
+        {
+          "text": "Thông tin quan trọng khác cho hàng hải."
+        },
+        {
+          "text": "Tất cả các trường hợp trên."
+        }
+      ],
+      "correct_answer_index": -1
+    },
+    {
+      "text": "Thông tin an toàn hàng hải sử dụng liên lạc bằng phương thức thoại được bắt đầu bằng việc gọi:",
+      "answers": [
+        {
+          "text": "MAYDAY (3 lần)."
+        },
+        {
+          "text": "SECURITY (3 lần)."
+        },
+        {
+          "text": "PANPAN (3 lần)."
+        },
+        {
+          "text": "Tất cả các trường hợp trên."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Thông tin khẩn cấp sử dụng bằng phương thức thoại bắt đầu bằng việc gọi:",
+      "answers": [
+        {
+          "text": "MAYDAY (3 lần)."
+        },
+        {
+          "text": "PANPAN (3 lần)."
+        },
+        {
+          "text": "SECURITY (3 lần)."
+        },
+        {
+          "text": "Tất cả các đáp án trên."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Thông tin cấp cứu bằng phương thức thoại được bắt đầu bằng việc gọi:",
+      "answers": [
+        {
+          "text": "PANPAN (3 lần)."
+        },
+        {
+          "text": "MAYDAY (3 lần)."
+        },
+        {
+          "text": "SECURITY (3 lần)."
+        },
+        {
+          "text": "Tất cả các trường hợp trên."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Khi 1 đài được gọi trên kênh 16 VHF thì nó sẽ trả lời trên kênh:",
+      "answers": [
+        {
+          "text": "06."
+        },
+        {
+          "text": "13."
+        },
+        {
+          "text": "16."
+        },
+        {
+          "text": "68."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Liên lạc gọi chọn số DSC được dùng để:",
+      "answers": [
+        {
+          "text": "Cho tàu bị nạn phát đi các bức điện cấp cứu."
+        },
+        {
+          "text": "Trạm bờ xác nhận tín hiệu cấp cứu."
+        },
+        {
+          "text": "Trạm bờ phát đi các thông tin khẩn cấp và thông tin an toàn hàng hải."
+        },
+        {
+          "text": "Tất cả các trường hợp trên."
+        }
+      ],
+      "correct_answer_index": 3
+    }
+  ]
+}

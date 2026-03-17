@@ -1,0 +1,365 @@
+{
+  "subject_id": "gk2_nvtt",
+  "questions": [
+    {
+      "text": "Khi hai thuyền trưởng bàn giao xong việc thì:",
+      "answers": [
+        {
+          "text": "Cả 2 ghi và ký tên vào sổ tay."
+        },
+        {
+          "text": "Cả 2 ghi và ký tên vào hợp đồng."
+        },
+        {
+          "text": "Cả 2 ghi và ký tên vào nhật ký phương tiện."
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Bàn giao giấy tờ pháp lý của tàu bao gồm:",
+      "answers": [
+        {
+          "text": "Giấy chứng nhận đăng ký phương tiện thủy nội địa."
+        },
+        {
+          "text": "Giấy chứng nhận an toàn kỹ thuật và bảo vệ môi trường."
+        },
+        {
+          "text": "Giấy chứng nhận bảo hiểm"
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Thuyền trưởng có phải trực tiếp phụ trách một ca làm việc trên phương tiện:",
+      "answers": [
+        {
+          "text": "Có."
+        },
+        {
+          "text": "Không."
+        },
+        {
+          "text": "Nhiệm vụ của thủy thủ."
+        },
+        {
+          "text": "Nhiệm vụ của thợ máy."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Thuyền trưởng mới nhận bàn giao tàu phải:",
+      "answers": [
+        {
+          "text": "Kiểm tra buồng lái và các thiết bị buồng lái."
+        },
+        {
+          "text": "Biết tình hình hoạt động của hệ thống máy và lái."
+        },
+        {
+          "text": "Biết được nhân sự trên tàu."
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Quản lý sổ nhật ký hành trình, danh bạ thuyền viên và các sổ sách giấy tờ cần thiết khác của phương tiện là trách nhiệm của:",
+      "answers": [
+        {
+          "text": "Thuyền trưởng."
+        },
+        {
+          "text": "Thuyền phó 1."
+        },
+        {
+          "text": "Thuyền phó 2."
+        },
+        {
+          "text": "Thủy thủ."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Quản lý, bảo đảm an toàn về người, phương tiện và tài sản trên phương tiện là trách nhiệm của:",
+      "answers": [
+        {
+          "text": "Thuyền trưởng."
+        },
+        {
+          "text": "Thuyền phó 1."
+        },
+        {
+          "text": "Thuyền phó 2."
+        },
+        {
+          "text": "Thủy thủ."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Tổ chức giao nhận hàng hóa, phục vụ hành khách theo lệnh điều động là trách nhiệm của:",
+      "answers": [
+        {
+          "text": "Thuyền trưởng."
+        },
+        {
+          "text": "Thuyền phó 1."
+        },
+        {
+          "text": "Thuyền phó 2."
+        },
+        {
+          "text": "Thủy thủ."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Theo tính  pháp lý thuyền trưởng là người có quyền hạng cao nhất:",
+      "answers": [
+        {
+          "text": "Trên tàu."
+        },
+        {
+          "text": "Tại công ty."
+        },
+        {
+          "text": "Trên ngành lái."
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Ngoài giờ đi ca, nếu thuyền phó hoặc máy trưởng đề nghị, thuyền trưởng phải:",
+      "answers": [
+        {
+          "text": "Có mặt kịp thời giải quyết công việc."
+        },
+        {
+          "text": "Có mặt ở vị trí chỉ huy để kịp thời giải quyết công việc."
+        },
+        {
+          "text": "Có mặt ở trên tàu để kịp thời giải quyết công việc."
+        },
+        {
+          "text": "Tất cả các trường hợp trên."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Trường hợp phương tiện bị đắm, sau khi đã thi hành các biện pháp cứu người, tài sản, hàng hoá và các giấy tờ cần thiết của phương tiện thì:",
+      "answers": [
+        {
+          "text": "Thuyền trưởng là người cuối cùng rời phương tiện."
+        },
+        {
+          "text": "Thuyền phó 1 là người cuối cùng rời phương tiện"
+        },
+        {
+          "text": "Thuyền phó 2 là người cuối cùng rời phương tiện"
+        },
+        {
+          "text": "Thủy thủ là người cuối cùng rời phương tiện"
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Quy định phân nhóm phương tiện để định biên thuyền viên thì phương tiện chở hàng có trọng tải toàn phần trên 1000 tấn thuộc nhóm:",
+      "answers": [
+        {
+          "text": "I."
+        },
+        {
+          "text": "II."
+        },
+        {
+          "text": "III."
+        },
+        {
+          "text": "IV."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Quy định phân nhóm phương tiện để định biên thuyền viên thì tàu khách có sức chở trên 50 khách đến 100 khách thuộc nhóm:",
+      "answers": [
+        {
+          "text": "I."
+        },
+        {
+          "text": "II."
+        },
+        {
+          "text": "III."
+        },
+        {
+          "text": "IV."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Ai sẽ thực hiện nhiệm vụ của thuyền phó nếu không có cơ cấu chức danh thuyền phó trên phương tiện ?",
+      "answers": [
+        {
+          "text": "Thuyền trưởng."
+        },
+        {
+          "text": "Máy trưởng."
+        },
+        {
+          "text": "Thủy thủ."
+        },
+        {
+          "text": "Người quản lý của công ty."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Giấy chứng nhận an toàn kỹ thuật và bảo vệ môi trường ở đâu cấp:",
+      "answers": [
+        {
+          "text": "Sở giao thông vận tải."
+        },
+        {
+          "text": "Đăng kiểm"
+        },
+        {
+          "text": "Chính quyền địa phương."
+        },
+        {
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Giấy chứng nhận bảo hiểm ở đâu cấp:",
+      "answers": [
+        {
+          "text": "Đăng kiểm"
+        },
+        {
+          "text": "Đơn vị có chức năng bảo hiểm tàu thuyền nơi chủ tàu mua bảo hiểm cấp."
+        },
+        {
+          "text": "Sở giao thông vận tải."
+        },
+        {
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Danh bạ thuyền viên mới do:",
+      "answers": [
+        {
+          "text": "Cơ quan công an xác nhận."
+        },
+        {
+          "text": "Chủ tàu xác nhận"
+        },
+        {
+          "text": "Sở giao thông xác nhận."
+        },
+        {
+          "text": "Cục đường thủy nội địa xác nhận."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Giấy chứng nhận đăng ký phương tiện thủy nội địa ở đâu cấp:",
+      "answers": [
+        {
+          "text": "Đăng kiểm"
+        },
+        {
+          "text": "Sở Xây dựng."
+        },
+        {
+          "text": "Chính quyền địa phương"
+        },
+        {
+          "text": "Tất cả các trường hợp trên"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Nhật ký hành trình phải được ghi chép rõ ràng bằng:",
+      "answers": [
+        {
+          "text": "Bút chì."
+        },
+        {
+          "text": "Bút mực."
+        },
+        {
+          "text": "Bút dạ quang."
+        },
+        {
+          "text": "Tất cả các trường hợp trên."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Trường hợp nhật ký hành trình ghi bị sai thì thuyền trưởng có thể:",
+      "answers": [
+        {
+          "text": "Xé bỏ các trang ghi sai."
+        },
+        {
+          "text": "Xóa trang ghi sai và có chữ ký xác nhận của sỹ quan đi ca."
+        },
+        {
+          "text": "Gạch một đường mảnh trên hàng chữ cần xóa."
+        },
+        {
+          "text": "Gạch đường mảnh trên hàng chỗ viết sai, thuyền phó đi ca và thuyền trưởng ký xác nhận."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Lập kế hoạch chuyến đi là trách nhiệm của:",
+      "answers": [
+        {
+          "text": "Thuyền trưởng."
+        },
+        {
+          "text": "Thuyền phó."
+        },
+        {
+          "text": "Trưởng phòng khai thác."
+        },
+        {
+          "text": "Thủy thủ."
+        }
+      ],
+      "correct_answer_index": 1
+    }
+  ]
+}

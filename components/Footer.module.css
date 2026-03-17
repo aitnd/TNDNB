@@ -1,9 +1,10 @@
 .footer {
-  background-color: var(--bg-footer);
-  color: var(--text-footer);
-  padding: 40px 0 20px;
-  margin-top: auto;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  background-color: var(--mau-chinh);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 60px 0 30px;
+  margin-top: 5rem;
+  border-top: 4px solid var(--mau-phu);
+  font-family: 'Be Vietnam Pro', sans-serif;
 }
 
 .container {

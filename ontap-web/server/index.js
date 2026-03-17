@@ -107,7 +107,9 @@ app.post('/api/admin/reset-password', authenticateAPI, async (req, res) => {
         console.error("Error resetting password:", error);
         res.status(500).json({ error: error.message });
     }
-    // 4. Google Analytics Data API
+});
+
+// 4. Google Analytics Data API
     const { BetaAnalyticsDataClient } = require('@google-analytics/data');
 
     const analyticsDataClient = new BetaAnalyticsDataClient({

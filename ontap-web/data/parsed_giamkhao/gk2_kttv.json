@@ -1,0 +1,353 @@
+{
+  "subject_id": "gk2_kttv",
+  "questions": [
+    {
+      "text": "Thế nào là nhật triều?",
+      "answers": [
+        {
+          "text": "Là hiện tượng xảy ra trong một ngày đêm trăng (24h50’) có 1 lần triều lên và 1 lần triều xuống."
+        },
+        {
+          "text": "Là hiện tượng xảy ra trong một ngày đêm trăng (24h50’) có 2 lần triều lên và 2 lần triều xuống."
+        },
+        {
+          "text": "Là hiện tượng xảy ra trong một ngày đêm trăng (24h50’) có 1 lần triều lên và 2 lần triều xuống."
+        },
+        {
+          "text": "Là hiện tượng xảy ra trong một ngày đêm trăng (24h50’) có 2 lần triều lên và 1 lần triều xuống."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Thế nào là bán nhật triều?",
+      "answers": [
+        {
+          "text": "Là hiện tượng xảy ra trong một ngày đêm trăng (24h50’) có 1 lần triều lên và 1 lần triều xuống."
+        },
+        {
+          "text": "Là hiện tượng xảy ra trong một ngày đêm trăng(24h50’)  có 2 lần triều lên và 2 lần triều xuống."
+        },
+        {
+          "text": "Là hiện tượng xảy ra trong một ngày đêm trăng (24h50’) có 1 lần triều lên và 2 lần triều xuống."
+        },
+        {
+          "text": "Là hiện tượng xảy ra trong một ngày đêm trăng (24h50’) có 2 lần triều lên và 1 lần triều xuống."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Thế nào là triều hỗn hợp?",
+      "answers": [
+        {
+          "text": "Là hiện tượng trong nửa tháng âm lịch, chu kỳ thuỷ triều thay đổi từ bán nhật triều sang nhật triều"
+        },
+        {
+          "text": "Là hiện tượng trong nửa tháng âm lịch, chu kỳ thuỷ triều thay đổi từ nhật triều sang bán nhật triều"
+        },
+        {
+          "text": "Là hiện tượng trong nửa tháng âm lịch, chu kỳ thuỷ triều thay đổi từ bán nhật triều sang nhật triều và ngược lại."
+        },
+        {
+          "text": "Là hiện tượng trong nửa tháng âm lịch, chu kỳ thuỷ triều  không thay đổi từ nhật triều sang bán nhật triều"
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Ở chu kỳ bán nhật triều thì triều hỗn hợp được gọi là?",
+      "answers": [
+        {
+          "text": "Bán nhật triều đều"
+        },
+        {
+          "text": "Bán nhật triều không đều"
+        },
+        {
+          "text": "Nhật triều đều"
+        },
+        {
+          "text": "Nhật triều không đều"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Ở chu kỳ nhật triều thì triều hỗn hợp được gọi là?",
+      "answers": [
+        {
+          "text": "Bán nhật triều đều"
+        },
+        {
+          "text": "Bán nhật triều không đều"
+        },
+        {
+          "text": "Nhật triều đều"
+        },
+        {
+          "text": "Nhật triều không đều"
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Thế nào là độ cao thủy triều (H)?",
+      "answers": [
+        {
+          "text": "Là độ cao mực nước tính từ đáy biển đến ki tàu tại thời điểm quan trắ"
+        },
+        {
+          "text": "Là độ cao mực nước tính từ đáy biển đến mớn nước hiện tại của tàu tại thời điểm quan trắ"
+        },
+        {
+          "text": "Là độ cao mực nước tính từ đáy biển đến mớn nước trung bình của tàu tại thời điểm quan trắ"
+        },
+        {
+          "text": "Là độ cao mực nước trên số “0” độ sâu tại thời điểm quan trắC"
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Thế nào là biên độ triều (B)?",
+      "answers": [
+        {
+          "text": "Là khoảng cách thẳng đứng giữa mực nước lớn  và đáy biển."
+        },
+        {
+          "text": "Là khoảng cách thẳng đứng giữa mực nước ròng  và đáy biển."
+        },
+        {
+          "text": "Là khoảng cách thẳng đứng giữa mực nước lớn  và số 0 độ sâu."
+        },
+        {
+          "text": "Là khoảng cách thẳng đứng giữa mực nước lớn và nước ròng kế tiếp."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Biên độ thủy triều đạt cao nhất ở chế độ :",
+      "answers": [
+        {
+          "text": "Bán nhật triều."
+        },
+        {
+          "text": "Nhật triều."
+        },
+        {
+          "text": "Tạp triều."
+        },
+        {
+          "text": "Triều hỗn hợp"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Thuỷ triều là?",
+      "answers": [
+        {
+          "text": "Hiện tượng dao động của mực nước biển và đại dương có chu kỳ, dưới tác động của lực hấp dẫn vũ trụ từ mặt trời."
+        },
+        {
+          "text": "Hiện tượng dao động của mực nước biển và đại dương có chu kỳ, dưới tác động của lực hấp dẫn vũ trụ từ mặt trăng."
+        },
+        {
+          "text": "Hiện tượng dao động của mực nước biển và đại dương có chu kỳ, dưới tác động của lực hấp dẫn vũ trụ từ mặt trăng và mặt trời."
+        },
+        {
+          "text": "Hiện tượng dao động của mực nước biển và đại dương có chu kỳ, dưới tác động của lực hấp dẫn vũ trụ từ các hành tinh trong hệ mặt trời."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Nước ta có các chế độ thủy triều nào?",
+      "answers": [
+        {
+          "text": "Nhật triều, bán nhật triều, triều hỗn hợp"
+        },
+        {
+          "text": "Nhật triều, bán nhật triều"
+        },
+        {
+          "text": "Bán nhật triều, triều hỗn hợp, triều sóc vọng"
+        },
+        {
+          "text": "Nhật triều, triều sóc vọng, triều trực thế."
+        },
+        {
+          "text": "Câu 11) Khi có dòng chảy phủ luồng, ta xác định luồng chạy tàu an toàn như thế nào?"
+        },
+        {
+          "text": "Mặt sông xuất hiện nước cuộn, nhiều ngấn nước, sóng nhấp nhô hoặc sóng ngang, bước sóng ngắn, gợn lăn tăn và có cả những xoáy nước hay bọt nước."
+        },
+        {
+          "text": "Mặt sông có dòng chảy mà vệt nước dài liên tục, bề mặt dòng chảy êm, lưu tốc dòng chảy mạnh."
+        },
+        {
+          "text": "Mặt sông có dòng chảy lưu tốc chậm, mặt nước sáng, có sóng gợn lăn tăn, tỏa màu lấp lánh hoặc mặt nước xáo động, thỉnh thoảng có sóng cuộn hay có bọt nước, mặt nước không êm thiếu ổn định và không liên tục"
+        },
+        {
+          "text": "Cả 3 đáp án đều đúng."
+        },
+        {
+          "text": "Câu 12) Dòng chảy vật thường xuất hiện ở khu vực nào ?"
+        },
+        {
+          "text": "Xuất hiện ở những nơi có mực nước cao, đột ngột đổ xuống thấp rồi lan  tỏa ra nhiều hướng hoặc những nơi giữa luồng sông có đá ngầm, bãi ngầm, bãi cát, hòn nổi."
+        },
+        {
+          "text": "Xuất hiện ở những nơi sông cong, dòng nước đến chổ bị uốn cong thì tập trung đổ thẳng về phía bờ lõm (bờ vịnh), bị bờ ngăn lại, dòng chảy lại quay hướng xuống đáy và đổ ngang về phía bờ lồi."
+        },
+        {
+          "text": "Xuất hiện ở khúc sông thẳng, vào mùa nước lớn, nhất là những ngày có lũ, mực nước sông dâng lên cao đột ngột."
+        },
+        {
+          "text": "Xuất hiện ở đoạn sông có bờ lõm vào, do dòng chảy đang đi thẳng gặp phải bờ lõm sẽ bị thay đổi hướng một cách đột ngột tạo nên hiện tượng chảy rối và dần dần đi theo hướng trôn ốc từ trên xuống dưới"
+        },
+        {
+          "text": "Câu 13) Nguyên nhân nào hình thành xoáy âm áp?"
+        },
+        {
+          "text": "Do dòng nước đang đi thẳng gặp bờ lồi hay ghềnh đá, chướng ngại vật ăn nhô ra sông, làm cho dòng chảy thay đổi chiều đột ngột, chảy cuộn tròn theo hình trôn ốc từ dưới lên trên"
+        },
+        {
+          "text": "Do dòng chảy đang đi thẳng gặp phải bờ lõm sẽ bị thay đổi hướng một cách đột ngột tạo nên hiện tượng chảy rối và dần dần đi theo hướng trôn ốc từ trên xuống dưới, làm cho nước hình thành một vùng có chiều dòng chảy cuộn tròn đi xuống."
+        },
+        {
+          "text": "Do dòng nước chảy đến chổ bị uốn cong thì tập trung đổ thẳng về phía bờ lõm (bờ vịnh), bị bờ ngăn lại, dòng chảy lại quay hướng xuống đáy và đổ ngang về phía bờ lồi (bờ doi)"
+        },
+        {
+          "text": "Tất cả các đáp án trên đều đúng."
+        },
+        {
+          "text": "Câu 14) Nguyên nhân nào hình thành dòng chảy xoáy trục ngang?"
+        },
+        {
+          "text": "do dòng nước đang đi thẳng gặp bờ lồi hay ghềnh đá, chướng ngại vật ăn nhô ra sông, làm cho dòng chảy thay đổi chiều đột ngột, chảy cuộn tròn theo hình trôn ốc từ dưới lên trên"
+        },
+        {
+          "text": "Do dòng chảy đang đi thẳng gặp phải bờ lõm sẽ bị thay đổi hướng một cách đột ngột tạo nên hiện tượng chảy rối và dần dần đi theo hướng trôn ốc từ trên xuống dưới, làm cho nước hình thành một vùng có chiều dòng chảy cuộn tròn đi xuống."
+        },
+        {
+          "text": "Do dòng chảy đang đi thẳng do gặp đáy sông không bằng phẳng dạng bậc thềm (tam cấp) nên bị mất thăng bằng và đâm thẳng xuống đáy, sau đó mới ngóc lên lại bị dòng nước trên mặt xô tới buộc chúng phải chảy cuộn tròn quanh đường trục nằm ngang."
+        },
+        {
+          "text": "Do dòng nước chảy đến chổ bị uốn cong thì tập trung đổ thẳng về phía bờ lõm (bờ vịnh), bị bờ ngăn lại, dòng chảy lại quay hướng xuống đáy và đổ ngang về phía bờ lồi (bờ doi)"
+        }
+      ],
+      "correct_answer_index": 22
+    },
+    {
+      "text": "Khu vực nào thường sinh ra cồn bãi nhiều nhất?",
+      "answers": [
+        {
+          "text": "Thượng lưu."
+        },
+        {
+          "text": "Trung lưu."
+        },
+        {
+          "text": "Hạ lưu."
+        },
+        {
+          "text": "Trung lưu - Hạ lưu."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Khu vực thượng lưu thường có đặc điểm gì?",
+      "answers": [
+        {
+          "text": "Độ dốc lớn, lưu tốc lớn và có nhiều bãi cạn."
+        },
+        {
+          "text": "Độ dốc lớn, lưu tốc nhỏ và có nhiều ghềnh đá nguy hiểm."
+        },
+        {
+          "text": "Độ dốc lớn, lưu tốc lớn , nhiều ghềnh đá nguy hiểm."
+        },
+        {
+          "text": "Độ dốc lớn, lưu tốc nhỏ"
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Dạng đoạn sông cong thường có đặc điểm gì?",
+      "answers": [
+        {
+          "text": "Bên bờ vịnh thường có bãi cạn."
+        },
+        {
+          "text": "Bên bờ doi thường có bãi cạn."
+        },
+        {
+          "text": "Cả hai bên ven bờ thường có bãi cạn."
+        },
+        {
+          "text": "Ở giữa sông có bãi cạn"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Dòng chảy vặn thường xuất hiện khi dòng chảy gặp phải địa hình gì?",
+      "answers": [
+        {
+          "text": "Đoạn sông cong."
+        },
+        {
+          "text": "Đoạn sông có dòng chảy phân luồng."
+        },
+        {
+          "text": "Đoạn sông có dòng chảy phủ  luồng"
+        },
+        {
+          "text": "Đoạn sông thẳng"
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Dòng chảy phân luồng thường xuất hiện khi nào?",
+      "answers": [
+        {
+          "text": "a. Có cồn ở giữa sông"
+        },
+        {
+          "text": "b. Có cồn ở bờ phải"
+        },
+        {
+          "text": "c. Có cồn ở bờ trái"
+        },
+        {
+          "text": "d. Có cồn ở cả hai bên bờ"
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Dòng nước chảy xoáy thường xuất hiện ở đâu?",
+      "answers": [
+        {
+          "text": "a. Nơi bờ sông bị lở đột ngột, nơi có các công trình ngầm hoặc chướng ngại vật"
+        },
+        {
+          "text": "b. Nơi sông thẳng"
+        },
+        {
+          "text": "c. Nơi sông cong đều"
+        },
+        {
+          "text": "d. Nơi cửa sông"
+        }
+      ],
+      "correct_answer_index": 0
+    }
+  ]
+}

@@ -2,9 +2,8 @@
 .sidebar {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
     width: 100%;
-    /* Đảm bảo sidebar chiếm đủ chỗ */
 }
 
 /* (Tiêu đề Widget) */
