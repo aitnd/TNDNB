@@ -1,0 +1,452 @@
+[
+  {
+    "text": "Câu 01. Điều động tàu rời cầu đi theo hướng đậu, có nước chảy từ mũi về lái, khi mũi tàu ngã được góc khoảng 300 :",
+    "options": [
+      "Bẻ lái ra ngoài cầu, cho máy tới nhẹ, tàu có trớn tới, dây chùng, mở dây.",
+      "Bẻ lái vào trong cầu, cho máy tới nhẹ, tàu có trớn tới, dây chùng, mở dây.",
+      "Bánh lái để 00, cho máy tới nhẹ, tàu có trớn tới, dây chùng, mở dây.",
+      "Bẻ lái ra ngoài cầu, mở dây."
+    ],
+    "correct": "Bẻ lái vào trong cầu, cho máy tới nhẹ, tàu có trớn tới, dây chùng, mở dây."
+  },
+  {
+    "text": "Câu 02. Điều động tàu rời cầu đi theo hướng đậu, có nước chảy từ lái về mũi, muốn ra lái trước phải:",
+    "options": [
+      "Để lại dây dọc lái, bẻ lái ra ngoài.",
+      "Để lại dây chéo mũi, bẻ lái ra ngoài.",
+      "Để lại dây ngang mũi, bẻ lái ra ngoài.",
+      "Để lại dây chéo, bẻ lái vào trong."
+    ],
+    "correct": "Để lại dây chéo mũi, bẻ lái ra ngoài."
+  },
+  {
+    "text": "Câu 03. Điều động tàu rời cầu đi theo hướng đậu, có nước chảy từ lái về mũi, khi lái tàu ngã được góc khoảng 300 thì:",
+    "options": [
+      "Bẻ lái ra ngoài cầu, cho máy lùi nhẹ, tàu có trớn lùi, dây chùng, mở dây",
+      "Bẻ lái vào trong cầu, cho máy lùi nhẹ, tàu có trớn lùi, dây chùng, mở dây.",
+      "Bánh lái để 00, cho máy lùi nhẹ, tàu có trớn lùi, dây chùng, mở dây.",
+      "Bẻ lái ra ngoài cầu, mở dây"
+    ],
+    "correct": "Bẻ lái vào trong cầu, cho máy lùi nhẹ, tàu có trớn lùi, dây chùng, mở dây."
+  },
+  {
+    "text": "Câu 04. Điều động tàu rời cầu đi theo hướng đậu, có gió ngoài cầu thổi vào muốn ra lái trước thì:",
+    "options": [
+      "Để lại dây chéo mũi, bẻ lái ra ngoài, cho máy tới.",
+      "Để lại dây chéo mũi, bẻ lái vào trong, cho máy tới.",
+      "Để lại dây dọc mũi, bẻ lái ra ngoài, cho máy lùi.",
+      "Để lại dây ngang mũi, bẻ lái ra ngoài, cho máy tới."
+    ],
+    "correct": "Để lại dây chéo mũi, bẻ lái vào trong, cho máy tới."
+  },
+  {
+    "text": "Câu 05. Điều động tàu cập cầu ngược nước, khi mũi tàu vào sát cầu phải:",
+    "options": [
+      "Bắt dây ngang mũi, bẻ lái ra ngoài.",
+      "Bắt dây dọc mũi, bẻ lái ra ngoài.",
+      "Bắt dây dọc mũi, bẻ lái vào trong.",
+      "Bắt dây chéo mũi, bẻ lái ra ngoài."
+    ],
+    "correct": "Bắt dây dọc mũi, bẻ lái ra ngoài."
+  },
+  {
+    "text": "Câu 06. Điều động tàu cập cầu ngược nước, khi mũi tàu gần tới cầu, nếu trớn còn mạnh phải phá trớn bằng cách:",
+    "options": [
+      "Cho máy tới.",
+      "Cho máy lùi.",
+      "Cho ngừng máy.",
+      "Cho thả neo."
+    ],
+    "correct": "Cho máy lùi."
+  },
+  {
+    "text": "Câu 07. Điều động tàu cập cầu xuôi nước, khi lái tàu vào sát cầu phải:",
+    "options": [
+      "Bắt dây ngang lái, bẻ lái ra ngoài.",
+      "Bắt dây dọc lái, bẻ lái ra ngoài.",
+      "Bắt dây dọc lái, bẻ lái vào trong.",
+      "Bắt dây ngang lái, bẻ lái vào trong."
+    ],
+    "correct": "Bắt dây dọc lái, bẻ lái ra ngoài."
+  },
+  {
+    "text": "Câu 08. Điều động tàu cập cầu, gió trong cầu thổi ra, khi bắt được dây chéo mũi thì:",
+    "options": [
+      "Để lái thẳng, cho máy tới để đưa lái tàu vào",
+      "Bẻ lái vào trong, cho máy tới để đưa lái tàu vào",
+      "Bẻ lái ra ngoài, cho máy tới để đưa lái tàu vào",
+      "Bẻ lái vào trong, cho máy lùi để đưa lái tàu vào"
+    ],
+    "correct": "Bẻ lái ra ngoài, cho máy tới để đưa lái tàu vào"
+  },
+  {
+    "text": "Câu 09. Khi điều động tàu cập cầu, cập phao, thả neo, chạy qua cầu thì thường lựa chọn:",
+    "options": [
+      "Nước ngược nhẹ.",
+      "Nước xuôi.",
+      "Nước ngược mạnh.",
+      "Nước nào cũng được."
+    ],
+    "correct": "Nước ngược nhẹ."
+  },
+  {
+    "text": "Câu 10. Khi có gió lớn từ ngoài cầu thổi vào thì sử dụng phương pháp điều động cập an toàn nhất là:",
+    "options": [
+      "Cập kết hợp sào hỗ trợ.",
+      "Cập với góc lớn.",
+      "Cập bằng neo.",
+      "Cập với góc nhỏ."
+    ],
+    "correct": "Cập bằng neo."
+  },
+  {
+    "text": "Câu 11. Nguyên tắc điều động tàu cập cầu:",
+    "options": [
+      "Nước ngược nhẹ.",
+      "Nước xuôi.",
+      "Nước ngược mạnh.",
+      "Nước nào cũng được."
+    ],
+    "correct": "Nước ngược nhẹ."
+  },
+  {
+    "text": "Câu 12. Điều động tàu chạy trên đường trường thì thường lựa chọn:",
+    "options": [
+      "Nước ngược.",
+      "Nước xuôi.",
+      "Nước ngược mạnh.",
+      "Nước nào cũng được."
+    ],
+    "correct": "Nước xuôi."
+  },
+  {
+    "text": "Câu 13. Tàu chạy ngược nước thì:",
+    "options": [
+      "Tốc độ giảm, ăn lái tốt.",
+      "Tốc độ giảm, ăn lái giảm.",
+      "Tốc độ không đổi, ăn lái tốt.",
+      "Tốc độ không đổi, ăn lái giảm."
+    ],
+    "correct": "Tốc độ giảm, ăn lái tốt."
+  },
+  {
+    "text": "Câu 14. Tàu chạy xuôi nước thì:",
+    "options": [
+      "Tốc độ tăng, ăn lái tốt.",
+      "Tốc độ tăng, ăn lái giảm.",
+      "Tốc độ không đổi, ăn lái tốt.",
+      "Tốc độ không đổi, ăn lái giảm."
+    ],
+    "correct": "Tốc độ tăng, ăn lái giảm."
+  },
+  {
+    "text": "Câu 15. Để đề phòng hiện tượng hai tàu hút nhau, khi vượt nhau, tốc độ của tàu vượt và tàu bị vượt:",
+    "options": [
+      "Phải chênh nhau ít.",
+      "Phải chênh nhau nhiều.",
+      "Không cần chênh nhau.",
+      "Chênh nhau vừa phải."
+    ],
+    "correct": "Phải chênh nhau nhiều."
+  },
+  {
+    "text": "Câu 16. Để đề phòng hiện tượng hai tàu hút nhau, khi tránh nhau, tốc độ của hai tàu:",
+    "options": [
+      "Không thay đổi.",
+      "Cả hai đều tăng.",
+      "Cả hai đều giảm.",
+      "Một tăng, một giảm."
+    ],
+    "correct": "Cả hai đều giảm."
+  },
+  {
+    "text": "Câu 17. Khi tàu chạy trong sông, kênh hẹp thì:",
+    "options": [
+      "Không cần thay đổi tốc độ.",
+      "Phải giảm tốc độ.",
+      "Phải tăng tốc độ.",
+      "Chạy thế nào cũng được."
+    ],
+    "correct": "Phải giảm tốc độ."
+  },
+  {
+    "text": "Câu 18. Điều động tàu rời cầu đi theo hướng đậu khi có nước chảy từ mũi về lái, muốn ra mũi trước phải:",
+    "options": [
+      "Để lại dây dọc mũi, bẻ lái ra ngoài",
+      "Để lại dây chéo lái, bẻ lái ra ngoài",
+      "Để lại dây ngang lái, bẻ lái ra ngoài",
+      "Để lại dây chéo lái, bẻ lái vào trong"
+    ],
+    "correct": "Để lại dây chéo lái, bẻ lái ra ngoài"
+  },
+  {
+    "text": "Câu 19. Tàu đang chạy mà có người ngã xuống nước thì người phát hiện đầu tiên phải:",
+    "options": [
+      "Báo động toàn tàu, báo cho người lái tàu biết.",
+      "Báo động toàn tàu, ném phao cho người ngã, báo cho người lái tàu biết.",
+      "Báo động toàn tàu, ném phao cho người ngã, theo dõi người ngã, báo cho người lái tàu biết.",
+      "Ném phao cho người ngã, báo cho người lái tàu biết."
+    ],
+    "correct": "Báo động toàn tàu, ném phao cho người ngã, theo dõi người ngã, báo cho người lái tàu biết."
+  },
+  {
+    "text": "Câu 20. Tàu đang chạy mà có người ngã xuống nước thì khi điều động tàu cứu người phải để người ngã ngang ca bin hay chỗ dễ vớt nhất, cách mạn tàu khoảng:",
+    "options": [
+      "Từ 1 ÷ 1,5 mét.",
+      "Từ 1,5 ÷ 2mét.",
+      "Từ 2 ÷ 2,5 mét.",
+      "Từ 2,5 ÷ 3 mét."
+    ],
+    "correct": "Từ 1 ÷ 1,5 mét."
+  },
+  {
+    "text": "Câu 21. Tàu đang chạy mà có người ngã xuống nước thì khi điều động tàu cứu người phải để người ngã phía:",
+    "options": [
+      "Mạn dưới sóng.",
+      "Mạn trên sóng.",
+      "Mạn nào cũng được.",
+      "Ngay trước mũi tàu."
+    ],
+    "correct": "Mạn dưới sóng."
+  },
+  {
+    "text": "Câu 22. Tàu đang chạy xuôi nước mà có người ngã xuống nước thì:",
+    "options": [
+      "Điều động tàu quay trở 2700 (chữ C) để cứu người",
+      "Điều động tàu quay trở 1800 (số 8) để cứu người",
+      "Điều động tàu quay trở ngay lâp tức để cứu người",
+      "Cả 3 cách trên đều được"
+    ],
+    "correct": "Điều động tàu quay trở 1800 (số 8) để cứu người"
+  },
+  {
+    "text": "Câu 23. Tàu đang chạy ngược nước mà có người ngã xuống nước thì:",
+    "options": [
+      "Điều động tàu quay trở 2700 (chữ C) để cứu người",
+      "Điều động tàu quay trở 1800 (số 8) để cứu người",
+      "Điều động tàu quay trở ngay lâp tức để cứu người",
+      "Cả 3 cách trên đều được"
+    ],
+    "correct": "Điều động tàu quay trở 2700 (chữ C) để cứu người"
+  },
+  {
+    "text": "Câu 24. Tàu đang chạy mà có người ngã xuống nước thì số phao ném cho người ngã là:",
+    "options": [
+      "1 phao.",
+      "2 phao.",
+      "3 phao",
+      "Số phao ném ra không hạn chế miễn sao gần người ngã là được."
+    ],
+    "correct": "Số phao ném ra không hạn chế miễn sao gần người ngã là được."
+  },
+  {
+    "text": "Câu 25. Khi tàu đang hành trình có người ngã xuống nước, phải cho người nhảy ngay xuống để cứu không:",
+    "options": [
+      "Có",
+      "Không",
+      "Tùy từng trường hợp",
+      "Cho người bơi giỏi nhất nhảy xuống."
+    ],
+    "correct": "Không"
+  },
+  {
+    "text": "Câu 26. Điều động tàu thả một neo ngược nước, khi neo chạm đáy nhấp nhẹ cần hãm để neo bám đáy, ban đầu xông một lượng dây neo bằng:",
+    "options": [
+      "Từ 1 đến 1,5 lần độ sâu",
+      "Từ 1 đến 2 lần độ sâu",
+      "Từ 1,5 đến 2 lần độ sâu",
+      "Từ 1,5 đến 2,5 lần độ sâu"
+    ],
+    "correct": "Từ 1,5 đến 2 lần độ sâu"
+  },
+  {
+    "text": "Câu 27 Điều động tàu thả một neo ngược nước, khi neo bám đáy, cần xông một lượng dây neo bằng:",
+    "options": [
+      "Từ 2 đến 3 lần độ sâu theo quy định.",
+      "Từ 2 đến 4 lần độ sâu theo quy định.",
+      "Từ 3 đến 4 lần độ sâu theo quy định.",
+      "Từ 3 đến 5 lần độ sâu theo quy định."
+    ],
+    "correct": "Từ 3 đến 4 lần độ sâu theo quy định."
+  },
+  {
+    "text": "Câu 28. Tàu bị trôi neo do nước chảy siết thì phải?",
+    "options": [
+      "Xông thêm dây neo.",
+      "Thả thêm neo.",
+      "Nhổ neo thả lại.",
+      "Rời vị trí neo"
+    ],
+    "correct": "Rời vị trí neo"
+  },
+  {
+    "text": "Câu 29. Tàu bị trôi neo do chất đáy bám không tốt thì phải?",
+    "options": [
+      "Nhổ neo thả lại.",
+      "Rời vị trí neo",
+      "Xông thêm dây neo.",
+      "Thả thêm neo."
+    ],
+    "correct": "Rời vị trí neo"
+  },
+  {
+    "text": "Câu 30. Tàu bị trôi neo do nước thủy triều dâng lên thì phải?",
+    "options": [
+      "Rời vị trí neo",
+      "Nhổ neo thả lại.",
+      "Xông thêm dây neo.",
+      "Thả thêm neo."
+    ],
+    "correct": "Xông thêm dây neo."
+  },
+  {
+    "text": "Câu 31. khi tàu đang chạy bị mắc cạn, phải xử lý như thế nào để hạn chế các rủi ro?",
+    "options": [
+      "Lập tức tăng máy để tàu vượt qua chỗ cạn.",
+      "Lập tức ngừng máy, báo động toàn tàu, báo các tàu chạy gần.",
+      "Lập tức cho máy lùi để tàu lùi ra khỏi chỗ cạn.",
+      "Lập tức bẻ lái ra chỗ sâu, tăng máy cho tàu vượt qua."
+    ],
+    "correct": "Lập tức ngừng máy, báo động toàn tàu, báo các tàu chạy gần."
+  },
+  {
+    "text": "Câu 32. Điều khiển tàu đi đường có ảnh hưởng của gió, nước ngang, để trừ hao độ dạt người điều khiển cần:",
+    "options": [
+      "Tăng tốc độ.",
+      "Giảm tốc độ.",
+      "Giữ nguyên tốc đô.",
+      "Bẻ lái về phía đầu gió, đầu nước."
+    ],
+    "correct": "Bẻ lái về phía đầu gió, đầu nước."
+  },
+  {
+    "text": "Câu 33. Nguyên nhân nào thường xảy ra nhiều nhất làm cho tàu bị thủng?",
+    "options": [
+      "Do hai tàu đâm nhau, tàu bị đâm vào đá ngầm, xác tàu đắm.",
+      "Do vỏ tàu yếu, xếp hàng nặng tập trung dẫn tới thủng tàu.",
+      "Do tàu bị trôi neo, bị mất chủ động làm cho tàu trôi vào bãi đá ngầm.",
+      "Do tàu bị mắc cạn trên đá mà xử lý không tốt."
+    ],
+    "correct": "Do hai tàu đâm nhau, tàu bị đâm vào đá ngầm, xác tàu đắm."
+  },
+  {
+    "text": "Câu 34. Biện pháp đề phòng tàu bị thủng?",
+    "options": [
+      "a.Người lái tàu có bằng chuyên môn phù hợp với loại tàu đang điều khiển, có nhiều kinh nghiệm, thuộc đường, lái tàu trong tình trạng thần kinh ổn định.",
+      "b.Khi xếp hàng nặng xuống tàu phải dùng gỗ lát sàn tàu để phân đều lực ra.",
+      "c.Trong trường hợp tàu bị mắc cạn trên đá tuyệt đối không được sử dụng máy mà chỉ tìm cách làm giảm mớn nước để tàu nổi nên rồi đưa tàu ra.",
+      "d.Cả ba đáp án trên"
+    ],
+    "correct": "d.Cả ba đáp án trên"
+  },
+  {
+    "text": "Câu 35. Việc đầu tiên phải làm khi tàu bị thủng?",
+    "options": [
+      "Tiến hành xác định vị trí, kích thước lỗ thủng, xác định lượng nước đã tràn vào trong tàu.",
+      "Tiến hành bị lỗ thủng, bơm nước ra ngoài.",
+      "Đóng tất cả các van thông nước, cửa kín nước với khoang bị thủng.Gia cường các vách ngăn kín nước với khoang bị thủng.",
+      "Người đang lái tàu phải lập tức giảm máy hoặc ngừng máy.Báo động toàn tàu, báo cho các tàu chạy gần. Kiểm tra độ nghiêng, chúi từ đó xác định mức độ nguy hiểm của tàu."
+    ],
+    "correct": "Người đang lái tàu phải lập tức giảm máy hoặc ngừng máy.Báo động toàn tàu, báo cho các tàu chạy gần. Kiểm tra độ nghiêng, chúi từ đó xác định mức độ nguy hiểm của tàu."
+  },
+  {
+    "text": "Câu 36. Phương pháp điều động tàu về bến sau khi bịt lỗ thủy tạm thời:",
+    "options": [
+      "a. Lái tàu chạy với tốc độ nhanh, ở ven bờ, nơi có độ sâu nhỏ.Trong trường hợp có sóng thì phải để lỗ thủng ở mạn dưới sóng để thân tàu che sóng cho lỗ thủng.",
+      "b.Lái tàu chạy với tốc độ chậm, ở ven bờ, nơi có độ sâu nhỏ.Trong trường hợp có sóng thì phải để lỗ thủng ở mạn dưới sóng để thân tàu che sóng cho lỗ thủng.",
+      "c.Lái tàu chạy với tốc độ nhanh, ở giữa sông. Trong trường hợp có sóng thì phải để lỗ thủng ở mạn dưới sóng để thân tàu che sóng cho lỗ thủng.",
+      "d.Lái tàu chạy với tốc độ chậm, ở giữa sông.Trong trường hợp có sóng thì phải để lỗ thủng ở mạn dưới sóng để thân tàu che sóng cho lỗ thủng."
+    ],
+    "correct": "b.Lái tàu chạy với tốc độ chậm, ở ven bờ, nơi có độ sâu nhỏ.Trong trường hợp có sóng thì phải để lỗ thủng ở mạn dưới sóng để thân tàu che sóng cho lỗ thủng."
+  },
+  {
+    "text": "Câu 37. Phương pháp tự đưa tàu ra cạn khi tàu bị mắc cạn trên đá?",
+    "options": [
+      "a. Cho máy tới lùi, bẻ lái qua lại nhiều lần để làm cho bùn, cát dưới đáy tàu lỏng ra, sau đó cho lùi mạnh để đưa tàu ra.",
+      "b. Cho thả neo mạn ngoài (dùng hai xuồng ghép lại để neo ở giữa, đem ra ngoài thả) kết hợp thu neo và máy để đưa tàu ra.",
+      "Chuyển dây lên bờ, kết hợp thu dây bằng tời và máy để đưa tàu ra.",
+      "Tìm mọi cách làm giảm mớn nước của tàu để tàu nổi nên (tuyệt đối không được sử dụng máy tránh làm cho tàu bị thủng lớn hơn ...), bằng cách bơm nước, chuyển hàng, dỡ hàng, chờ thủy triều."
+    ],
+    "correct": "Tìm mọi cách làm giảm mớn nước của tàu để tàu nổi nên (tuyệt đối không được sử dụng máy tránh làm cho tàu bị thủng lớn hơn ...), bằng cách bơm nước, chuyển hàng, dỡ hàng, chờ thủy triều."
+  },
+  {
+    "text": "Câu 38. Phương pháp nào hay được sử dụng nhiều nhất khi tự đưa tàu ra cạn trường hợp tàu bị mắc cạn trên bùn cát?",
+    "options": [
+      "a. Bẻ lái qua lại, cho máy tới lùi nhiều lần để làm cho bùn, cát dưới đáy tàu lỏng ra, sau đó cho lùi mạnh để đưa tàu ra.",
+      "b. Cho thả neo mạn ngoài (dùng hai xuồng ghép lại để neo ở giữa, đem ra ngoài thả) kết hợp thu neo và máy để đưa tàu ra.",
+      "Chuyển dây lên bờ, kết hợp thu dây bằng tời và máy để đưa tàu ra.",
+      "Phải tìm mọi cách làm giảm mớn nước của tàu để tàu nổi nên (tuyệt đối không được sử dụng máy tránh làm cho tàu bị thủng lớn hơn ...), bằng cách bơm nước, chuyển hàng, dỡ hàng, chờ thủy triều."
+    ],
+    "correct": "a. Bẻ lái qua lại, cho máy tới lùi nhiều lần để làm cho bùn, cát dưới đáy tàu lỏng ra, sau đó cho lùi mạnh để đưa tàu ra."
+  },
+  {
+    "text": "Câu 39. Khi chạy trong đường chập thì?",
+    "options": [
+      "Được phép vượt nhau, tránh nhau.",
+      "Không được phép vượt nhau.",
+      "không được phép tránh nhau.",
+      "Không được phép vượt nhau, tránh nhau."
+    ],
+    "correct": "Không được phép vượt nhau, tránh nhau."
+  },
+  {
+    "text": "Câu 40. Khi chạy trong đường chập mà có gió ngang thì?",
+    "options": [
+      "a. Phải bẻ lái tàu để mũi tàu thẳng theo đường chập.",
+      "b. Phải bẻ lái tàu về phía đầu gió.",
+      "c. Phải bẻ lái tàu về phía cuối gió.",
+      "d. Thả neo đậu tàu chờ hết gió mới đi."
+    ],
+    "correct": "b. Phải bẻ lái tàu về phía đầu gió."
+  },
+  {
+    "text": "Câu 41. Để hai tàu vượt nhau an toàn thì?",
+    "options": [
+      "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu nhỏ, tốc độ của tàu vượt và tàu bị vượt phải chênh nhau nhiều.",
+      "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu lớn, tốc độ của tàu vượt và tàu bị vượt không cần chênh nhau nhiều.",
+      "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu nhỏ, tốc độ của tàu vượt và tàu bị vượt không cần chênh nhau nhiều",
+      "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu lớn, tốc độ của tàu vượt và tàu bị vượt phải chênh nhau nhiều."
+    ],
+    "correct": "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu lớn, tốc độ của tàu vượt và tàu bị vượt phải chênh nhau nhiều."
+  },
+  {
+    "text": "Câu 42. Để hai tàu tránh nhau an toàn thì?",
+    "options": [
+      "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu nhỏ, Cả hai tàu đều phải giảm tốc độ.",
+      "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu lớn, Cả hai tàu đều phải giảm tốc độ.",
+      "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu nhỏ, Cả hai tàu đều phải tăng tốc độ.",
+      "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu lớn, Cả hai tàu đều phải tăng tốc độ."
+    ],
+    "correct": "Khoảng cách chính ngang giữa hai tàu không nhỏ hơn chiều dài của tàu lớn, Cả hai tàu đều phải giảm tốc độ."
+  },
+  {
+    "text": "Câu 43. Để tàu chạy trong sông, kênh hẹp an toàn thì?",
+    "options": [
+      "a. Khoảng cách chính ngang giữa tàu và bờ không lớn hơn chiều dài tàu, phải giảm tốc độ.",
+      "b. Khoảng cách chính ngang giữa tàu và bờ không nhỏ hơn chiều dài tàu, phải tăng tốc độ.",
+      "c. Khoảng cách chính ngang giữa tàu và bờ không nhỏ hơn chiều dài tàu, phải giảm tốc độ.",
+      "d. Khoảng cách chính ngang giữa tàu và bờ không nhỏ hơn chiều dài tàu, không cần thay đổi tốc độ."
+    ],
+    "correct": "c. Khoảng cách chính ngang giữa tàu và bờ không nhỏ hơn chiều dài tàu, phải giảm tốc độ."
+  },
+  {
+    "text": "Câu 44. Điều động tàu khi có xương mù thì?",
+    "options": [
+      "a.Phải giảm tốc độ, phát âm hiệu, bật đèn hành trình, neo phải được chuẩn bị sẵn sàng để thả.",
+      "b. Phải giảm tốc độ, tăng cường cảnh giới, bật đèn hành trình, neo phải được chuẩn bị sẵn sàng để thả.",
+      "c.Phải giảm tốc độ, tăng cường cảnh giới, phát âm hiệu, neo phải được chuẩn bị sẵn sàng để thả.",
+      "d.Phải giảm tốc độ, tăng cường cảnh giới, phát âm hiệu, bật đèn hành trình, neo phải được chuẩn bị sẵn sàng để thả."
+    ],
+    "correct": "d.Phải giảm tốc độ, tăng cường cảnh giới, phát âm hiệu, bật đèn hành trình, neo phải được chuẩn bị sẵn sàng để thả."
+  },
+  {
+    "text": "Câu 45. Điều động tàu khi có xương mù dày đặc không thể chạy được thì?",
+    "options": [
+      "a.Cho thả neo, bật đèn neo, tăng cường cảnh giới để đề phòng các phương tiện khác đâm vào mình.",
+      "b.Cho thả neo, phát âm hiệu, tăng cường cảnh giới để đề phòng các phương tiện khác đâm vào mình.",
+      "c.Cho thả neo, bật đèn neo, phát âm hiệu (cách hai phút phát hai tiếng còi dài) để báo tàu đã dừng lại.",
+      "d.Cho thả neo, bật đèn neo, phát âm hiệu, tăng cường cảnh giới để đề phòng các phương tiện khác đâm vào mình."
+    ],
+    "correct": "d.Cho thả neo, bật đèn neo, phát âm hiệu, tăng cường cảnh giới để đề phòng các phương tiện khác đâm vào mình."
+  }
+]

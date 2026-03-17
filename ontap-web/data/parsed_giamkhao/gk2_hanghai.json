@@ -1,0 +1,851 @@
+{
+  "subject_id": "gk2_hanghai",
+  "questions": [
+    {
+      "text": "Vòng tròn lớn nằm trong mặt phẳng vuông góc với trục trái đất, đi qua tâm trái đất là:",
+      "answers": [
+        {
+          "text": "Vòng tròn kinh tuyến"
+        },
+        {
+          "text": "Vòng tròn xích đạo"
+        },
+        {
+          "text": "Vòng tròn vĩ tuyến"
+        },
+        {
+          "text": "Vòng tròn kinh tuyến gốc"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Vòng tròn nhỏ mà mặt phẳng chứa nó song song với mặt phẳng xích đạo là:",
+      "answers": [
+        {
+          "text": "Vòng tròn vĩ tuyến."
+        },
+        {
+          "text": "Vòng tròn kinh tuyến."
+        },
+        {
+          "text": "Vòng tròn xích đạo."
+        },
+        {
+          "text": "Vòng tròn xích vĩ."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Hướng đi thật của tàu là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Phương vị thật của mục tiêu là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Góc mạn là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 000 đến 1800."
+        },
+        {
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính từ mũi tàu sang phải hoặc sang trái từ 000 đến 1800."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 000 đến 1800."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến trái đất đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 1800."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Độ lệch địa từ là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường bắc kinh tuyến từ tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường hướng đi của tàu tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường phương vị mục tiêu tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi đường kinh tuyến trái đất đường phương vị mục tiêu ngược tại một điểm."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Hướng đi địa từ của tàu là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Phương vị địa từ của mục tiêu là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến từ đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Hướng đi la bàn của tàu là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Phương vị la bàn của mục tiêu là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường phương vị mục tiêu ngược, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường bắc kinh tuyến la bàn từ đến đường hướng đi của tàu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        },
+        {
+          "text": "Góc hợp bởi đường mũi lái tàu và đường phương vị mục tiêu, tính thuận chiều kim đồng hồ từ 000 đến 3600."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Sai số riêng la bàn từ là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến từ với đường bắc kinh tuyến la bàn tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến từ với đường hướng đi của tàu tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến từ với đường phương vị mục tiêu tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi đường kinh từ đất đường phương vị mục tiêu ngược tại một điểm."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Kinh tuyến gốc là kinh tuyến đi qua:",
+      "answers": [
+        {
+          "text": "Nước Anh."
+        },
+        {
+          "text": "Nước Hà Lan."
+        },
+        {
+          "text": "Nước Pháp."
+        },
+        {
+          "text": "Nước Đức."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Một hải lý ở vĩ độ 450 có chiều dài là:",
+      "answers": [
+        {
+          "text": "1862.3 mét"
+        },
+        {
+          "text": "1852,3 mét"
+        },
+        {
+          "text": "1842,3 mét"
+        },
+        {
+          "text": "1832,3 mét"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Số 0 hải đồ được tính từ đáy sông, biển đến:",
+      "answers": [
+        {
+          "text": "Mực nước thuỷ triều cao nhất."
+        },
+        {
+          "text": "Mực nước thuỷ triều thấp nhất."
+        },
+        {
+          "text": "Mực nước thuỷ triều trung bình."
+        },
+        {
+          "text": "Mực nước tại thời điểm tàu đang hành trình."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Trái đất có bán kính là:",
+      "answers": [
+        {
+          "text": "R = 6.361.110 mét."
+        },
+        {
+          "text": "R = 6.371.110 mét."
+        },
+        {
+          "text": "R= 6.381.110 mét."
+        },
+        {
+          "text": "R= 6.391.110 mét."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Trên hải đồ Việt Nam, có chỗ ghi 15 có ý nghĩa:",
+      "answers": [
+        {
+          "text": "Số 0 hải đồ tại vị trí đó = 15 m."
+        },
+        {
+          "text": "Số 0 hải đồ tại vị trí đó = 1,5m."
+        },
+        {
+          "text": "Độ sâu mực nước tại thời điểm tàu đang hành trình = 1,5m."
+        },
+        {
+          "text": "Độ sâu mực nước khi thuỷ triều lên cao nhất = 15m."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Vĩ độ của một điểm trên bề mặt trái đất được xác định bởi:",
+      "answers": [
+        {
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 3000 và vĩ tuyến đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 2000 và vĩ tuyến đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 1000 và vĩ tuyến đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 000(xích đạo) và vĩ tuyến đi qua điểm ấy."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Bán kính trái đất có chiều dài là:",
+      "answers": [
+        {
+          "text": "R = 3436,8 hải lý."
+        },
+        {
+          "text": "R= 3437,8 hải lý."
+        },
+        {
+          "text": "R= 3438,8 hải lý."
+        },
+        {
+          "text": "R= 3439,8 hải lý."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Kinh độ của một điểm trên bề mặt trái đất được xác định bởi:",
+      "answers": [
+        {
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 0000(kinh tuyến gốc) và kinh tuyến đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 6000 và kinh tuyến đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 12000và kinh tuyến đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 18000 và kinh tuyến đi qua điểm ấy."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Hiệu vĩ độ của hai điểm trên bề mặt trái đất được xác định bởi:",
+      "answers": [
+        {
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 300 và vĩ tuyến thứ 2 đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 1800 và vĩ tuyến thứ 2 đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung kinh tuyến chắn giữa vĩ tuyến 000 và vĩ tuyến thứ 2 đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung kinh tuyến chắn giữa hai vĩ tuyến đi  qua hai điểm ấy đi qua điểm ấy."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Hiệu kinh độ của hai điểm trên bề mặt trái đất được xác định bởi:",
+      "answers": [
+        {
+          "text": "Số đo cung vĩ tuyến chắn giữa hai kinh tuyến đi qua hai điểm ấy."
+        },
+        {
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 0000 và kinh tuyến thứ 2 đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 12000 và kinh tuyến thứ 2 đi qua điểm ấy."
+        },
+        {
+          "text": "Số đo cung vĩ tuyến chắn giữa kinh tuyến 18000 và kinh tuyến thứ 2 đi qua điểm ấy."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Sai số la bàn là:",
+      "answers": [
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường bắc kinh tuyến la bàn tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường hướng đi của tàu tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi bắc kinh tuyến trái đất với đường phương vị mục tiêu tại một điểm."
+        },
+        {
+          "text": "Góc hợp bởi đường kinh trái đất với đường phương vị mục tiêu ngược tại một điểm."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Kinh tuyến người quan sát là:",
+      "answers": [
+        {
+          "text": "Kinh tuyến 18000."
+        },
+        {
+          "text": "Kinh tuyến đi 12000."
+        },
+        {
+          "text": "Kinh tuyến đi qua Vị trí người quan sát."
+        },
+        {
+          "text": "Kinh tuyến gốc 0000"
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Một liên có chiều dài là:",
+      "answers": [
+        {
+          "text": "187,23 mét"
+        },
+        {
+          "text": "186,23 mét"
+        },
+        {
+          "text": "185,23 mét"
+        },
+        {
+          "text": "184,23 mét"
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Một hải lý có chiều dài là bằng bao nhiêu liên:",
+      "answers": [
+        {
+          "text": "6 liên"
+        },
+        {
+          "text": "8 liên"
+        },
+        {
+          "text": "10 liên"
+        },
+        {
+          "text": "12 liên"
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Một mét có chiều dài là:",
+      "answers": [
+        {
+          "text": "1: 10.000.000 của 1/4vòng kinh tuyến trái đất"
+        },
+        {
+          "text": "1: 9.000.000 của 1/4vòng kinh tuyến trái đất"
+        },
+        {
+          "text": "1: 8.000.000 của 1/4vòng kinh tuyến trái đất"
+        },
+        {
+          "text": "1: 7.000.000 của 1/4vòng kinh tuyến trái đất"
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Đơn vị đo vận tốc Hải lý/giờ (Nơ, Gút) thường dùng để chỉ:",
+      "answers": [
+        {
+          "text": "Tốc độ ô tô."
+        },
+        {
+          "text": "Tốc độ máy bay."
+        },
+        {
+          "text": "Tốc độ tàu hỏa."
+        },
+        {
+          "text": "Tốc độ tàu thủy."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Đơn vị đo vận tốc Liên/phút thường dùng để chỉ:",
+      "answers": [
+        {
+          "text": "Tốc độ của nước, gió."
+        },
+        {
+          "text": "Tốc độ máy bay."
+        },
+        {
+          "text": "Tốc độ tàu hỏa."
+        },
+        {
+          "text": "Tốc độ tàu thủy."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Đơn vị đo vận tốc Mét/giây thường dùng để chỉ:",
+      "answers": [
+        {
+          "text": "Tốc độ của nước, gió."
+        },
+        {
+          "text": "Tốc độ máy bay."
+        },
+        {
+          "text": "Tốc độ tàu hỏa."
+        },
+        {
+          "text": "Tốc độ tàu thủy."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Trái đất quay một vòng thì:",
+      "answers": [
+        {
+          "text": "Đồng hồ quay được 12 giờ."
+        },
+        {
+          "text": "Đồng hồ quay được 18 giờ."
+        },
+        {
+          "text": "Đồng hồ quay được 24 giờ."
+        },
+        {
+          "text": "Đồng hồ quay được 30 giờ."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Trái đất quay 150:",
+      "answers": [
+        {
+          "text": "Đồng hồ quay được 1 giờ."
+        },
+        {
+          "text": "Đồng hồ quay được 2 giờ."
+        },
+        {
+          "text": "Đồng hồ quay được 3 giờ."
+        },
+        {
+          "text": "Đồng hồ quay được 4 giờ."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Một múi giờ cách nhau:",
+      "answers": [
+        {
+          "text": "100 kinh tuyến"
+        },
+        {
+          "text": "150 kinh tuyến"
+        },
+        {
+          "text": "200 kinh tuyến"
+        },
+        {
+          "text": "250 kinh tuyến"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Trái đất tự quay quanh mình nó theo chiều:",
+      "answers": [
+        {
+          "text": "Từ Tây sang Đông"
+        },
+        {
+          "text": "Từ Đông sang Tây"
+        },
+        {
+          "text": "Từ Bắc xuống Nam"
+        },
+        {
+          "text": "Từ Nam lên Bắc"
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Đơn vị đo độ sâu của nước trên hải đồ Việt Nam đơn vị tính là:",
+      "answers": [
+        {
+          "text": "Feet"
+        },
+        {
+          "text": "Inches"
+        },
+        {
+          "text": "decimet"
+        },
+        {
+          "text": "Mét"
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Đơn vị đo độ cao của tháp đèn, đèn biển trên hải đồ Việt Nam đơn vị tính là:",
+      "answers": [
+        {
+          "text": "decimet"
+        },
+        {
+          "text": "Mét"
+        },
+        {
+          "text": "Inches"
+        },
+        {
+          "text": "Feet"
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Đơn vị đo độ cao của đảo, núi trên hải đồ Việt Nam đơn vị tính là:",
+      "answers": [
+        {
+          "text": "Mét"
+        },
+        {
+          "text": "Ki lô mét"
+        },
+        {
+          "text": "Liên"
+        },
+        {
+          "text": "Hải lý"
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Trên hải đồ Việt Nam, độ sâu ghi 12 có ý nghĩa:",
+      "answers": [
+        {
+          "text": "Số 0 hải đồ tại vị trí đó = 12 m."
+        },
+        {
+          "text": "Số 0 hải đồ tại vị trí đó = 1,2m."
+        },
+        {
+          "text": "Độ sâu mực nước tại thời điểm tàu đang hành trình = 1,2m."
+        },
+        {
+          "text": "Độ sâu mực nước khi thuỷ triều lên cao nhất = 12m."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Trên hải đồ Việt Nam ký hiệu .. .. .. .. .. chỉ đường đẳng sâu nào:",
+      "answers": [
+        {
+          "text": "Đường đẳng sâu 2 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 5 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 10 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 20 mét."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Trên hải đồ Việt Nam ký hiệu - - - - - chỉ đường đẳng sâu nào:",
+      "answers": [
+        {
+          "text": "Đường đẳng sâu 2 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 5 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 10 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 20 mét."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Trên hải đồ Việt Nam ký hiệu -. -. -. -. -. chỉ đường đẳng sâu nào:",
+      "answers": [
+        {
+          "text": "Đường đẳng sâu 2 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 5 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 10 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 20 mét."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Trên hải đồ Việt Nam ký hiệu -.. -.. -.. -.. -.. chỉ đường đẳng sâu nào:",
+      "answers": [
+        {
+          "text": "Đường đẳng sâu 2 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 5 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 10 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 20 mét."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Trên hải đồ Việt Nam ký hiệu -… -… -... -… -… chỉ đường đẳng sâu nào:",
+      "answers": [
+        {
+          "text": "Đường đẳng sâu 30 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 10 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 20 mét."
+        },
+        {
+          "text": "Đường đẳng sâu 2 mét."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Trên radar núm chức năng đo khoảng cách tới mục tiêu có ký hiệu là:",
+      "answers": [
+        {
+          "text": "SELECT/ CANCL."
+        },
+        {
+          "text": "VRM1/ VRM2."
+        },
+        {
+          "text": "EBL1 /EBL2."
+        },
+        {
+          "text": "POWER."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Núm chức năng A/C RAIN trên máy radar dùng để:",
+      "answers": [
+        {
+          "text": "Khử nhiễu mưa."
+        },
+        {
+          "text": "Khử nhiễu biển."
+        },
+        {
+          "text": "Khử nhiễu giao thoa."
+        },
+        {
+          "text": "Điều chỉnh độ sáng màn hình."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Núm chức năng của A/C SEA trên máy radar dùng để:",
+      "answers": [
+        {
+          "text": "Khử nhiễu mưa."
+        },
+        {
+          "text": "Khử nhiễu biển."
+        },
+        {
+          "text": "Khử nhiễu giao thoa."
+        },
+        {
+          "text": "Điều chỉnh độ sáng màn hình."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Radar được sử dụng trong hàng hải để:",
+      "answers": [
+        {
+          "text": "Đo khoảng cách từ tàu tới mục tiêu."
+        },
+        {
+          "text": "Đo phương vị từ tàu tới mục tiêu."
+        },
+        {
+          "text": "Dẫn tàu vào luồng."
+        },
+        {
+          "text": "Tất cả các trường hợp trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Để đo được phương vị đến mục tiêu thì phải bố trí anten và tia quét sao cho:",
+      "answers": [
+        {
+          "text": "Anten và tia quét đồng bộ với nhau."
+        },
+        {
+          "text": "Anten và tia quét lệch nhau 900."
+        },
+        {
+          "text": "Anten và tia quét lệch nhau 1800."
+        },
+        {
+          "text": "Anten và tia quét lệch nhau 2700."
+        }
+      ],
+      "correct_answer_index": 0
+    }
+  ]
+}

@@ -14,9 +14,10 @@ interface GiamKhaoSelectionScreenProps {
  */
 const GiamKhaoSelectionScreen: React.FC<GiamKhaoSelectionScreenProps> = ({ licenses, onSelectLicense, onBack }) => {
   
-  // Filter chỉ các bằng Giám khảo
+  // Filter các bằng dành cho Giám khảo
+  const GK_NAMES = ['lý thuyết chung', 'chuyên môn'];
   const gkLicenses = useMemo(() => 
-    licenses.filter(l => l.id.includes('giam-khao') || l.name.toLowerCase().includes('giám khảo')),
+    licenses.filter(l => l.id.includes('giam-khao') || l.name.toLowerCase().includes('giám khảo') || GK_NAMES.includes(l.name.toLowerCase())),
   [licenses]);
 
   // Tổng số môn + câu hỏi

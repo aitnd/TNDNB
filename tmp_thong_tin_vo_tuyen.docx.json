@@ -1,0 +1,102 @@
+[
+  {
+    "text": "Câu 1. Báo động cấp cứu giữa các tàu bằng máy VHF được trực liên lạc trên kênh:",
+    "options": [
+      "14.",
+      "16.",
+      "20.",
+      "70."
+    ],
+    "correct": "70."
+  },
+  {
+    "text": "Câu 2. Thông tin liên lạc trên VHF thường sử dụng kênh:",
+    "options": [
+      "14.",
+      "16.",
+      "20.",
+      "69."
+    ],
+    "correct": "16."
+  },
+  {
+    "text": "Câu 3. Bức điện gọi chọn số DSC có thông tin:",
+    "options": [
+      "Tên hay số hiệu ID của đài phát",
+      "Mức độ ưu tiên của cuộc gọi",
+      "Đài trạm được gọi",
+      "Tất cả các đáp án trên"
+    ],
+    "correct": "Tất cả các đáp án trên"
+  },
+  {
+    "text": "Câu 4.Báo động cấp cứu là:",
+    "options": [
+      "Tàu báo đi báo động cấp cứu trực tiếp thông qua các đài duyên hải.",
+      "Tàu báo đi báo động cấp cứu gián tiếp thông qua các đài duyên hải.",
+      "Tàu báo đi báo động cấp cứu trực tiếp hoặc gián tiếp thông qua các đài duyên hải.",
+      "Tàu báo đi báo động cấp cứu tới tàu xung quanh."
+    ],
+    "correct": "Tàu báo đi báo động cấp cứu trực tiếp hoặc gián tiếp thông qua các đài duyên hải."
+  },
+  {
+    "text": "Câu 5.Thông tin an toàn hàng hải là:",
+    "options": [
+      "Thông báo khí tượng thủy văn.",
+      "Thông báo hàng hải.",
+      "Thông tin quan trọng khác cho hàng hải.",
+      "Tất cả các trường hợp trên."
+    ],
+    "correct": null
+  },
+  {
+    "text": "Câu 6. Thông tin an toàn hàng hải sử dụng liên lạc bằng phương thức thoại được bắt đầu bằng việc gọi:",
+    "options": [
+      "MAYDAY (3 lần).",
+      "SECURITY (3 lần).",
+      "PANPAN (3 lần).",
+      "Tất cả các trường hợp trên."
+    ],
+    "correct": "SECURITY (3 lần)."
+  },
+  {
+    "text": "Câu 7. Thông tin khẩn cấp sử dụng bằng phương thức thoại bắt đầu bằng việc gọi:",
+    "options": [
+      "MAYDAY (3 lần).",
+      "PANPAN (3 lần).",
+      "SECURITY (3 lần).",
+      "Tất cả các đáp án trên."
+    ],
+    "correct": "PANPAN (3 lần)."
+  },
+  {
+    "text": "Câu 8.Thông tin cấp cứu bằng phương thức thoại được bắt đầu bằng việc gọi:",
+    "options": [
+      "PANPAN (3 lần).",
+      "MAYDAY (3 lần).",
+      "SECURITY (3 lần).",
+      "Tất cả các trường hợp trên."
+    ],
+    "correct": "MAYDAY (3 lần)."
+  },
+  {
+    "text": "Câu 9. Khi 1 đài được gọi trên kênh 16 VHF thì nó sẽ trả lời trên kênh:",
+    "options": [
+      "06.",
+      "13.",
+      "16.",
+      "68."
+    ],
+    "correct": "16."
+  },
+  {
+    "text": "Câu 10. Liên lạc gọi chọn số DSC được dùng để:",
+    "options": [
+      "Cho tàu bị nạn phát đi các bức điện cấp cứu.",
+      "Trạm bờ xác nhận tín hiệu cấp cứu.",
+      "Trạm bờ phát đi các thông tin khẩn cấp và thông tin an toàn hàng hải.",
+      "Tất cả các trường hợp trên."
+    ],
+    "correct": "Tất cả các trường hợp trên."
+  }
+]

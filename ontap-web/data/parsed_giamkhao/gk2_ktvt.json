@@ -1,0 +1,365 @@
+{
+  "subject_id": "gk2_ktvt",
+  "questions": [
+    {
+      "text": "Người kinh doanh vận tải hàng hóa không có nghĩa vụ:",
+      "answers": [
+        {
+          "text": "a. Cung cấp phương tiện đúng chủng loại, đúng địa điểm, bảo quản hàng hóa trong quá trình vận tải và giao hàng hóa cho người nhận hàng theo thỏa thuận trong hợp đồng."
+        },
+        {
+          "text": "b. Hướng dẫn xếp, dỡ hàng hóa trên phương tiện"
+        },
+        {
+          "text": "c. Chuẩn bị đầy đủ giấy tờ hợp pháp về hàng hóa, đóng gói hàng hóa đúng quy cách, ghi ký hiệu, mã hiệu hàng hóa đầy đủ rõ ràng"
+        },
+        {
+          "text": "d. Thông báo cho người thuê vận tải biết thời gian phương tiện đến cảng, bến và thời gian phương tiện đã làm xong thủ tục vào cảng, bến."
+        }
+      ],
+      "correct_answer_index": 2
+    },
+    {
+      "text": "Người thuê vận tải hàng hóa không có nghĩa vụ:",
+      "answers": [
+        {
+          "text": "a. Cung cấp giấy tờ, tài liệu và các thông tin cần thiết khác về hàng hóa và đảm bảo tính pháp lý của hàng hóa."
+        },
+        {
+          "text": "b. Thanh toán cước phí vận tải và chi phí phát sinh cho người kinh doanh vận tải hàng hoá;"
+        },
+        {
+          "text": "c. Cử người áp tải hàng hoá trong quá trình vận tải đối với loại hàng hoá bắt buộc phải có người áp tải."
+        },
+        {
+          "text": "d. Lập giấy vận chuyển theo mẫu quy định."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Người thuê vận tải hàng hóa có quyền:",
+      "answers": [
+        {
+          "text": "a. Từ chối xếp hàng hoá lên phương tiện mà người kinh doanh vận tải đã bố trí nếu phương tiện không phù hợp để vận tải loại hàng hoá đã thoả thuận trong hợp đồng."
+        },
+        {
+          "text": "b. Yêu cầu người kinh doanh vận tải xác nhận số lượng, niêm phong đối với hàng hóa mà mình gửi đi;"
+        },
+        {
+          "text": "c. Yêu cầu người kinh doanh vận tải giao hàng hoá đúng địa điểm, thời gian đã thoả thuận trong hợp đồng."
+        },
+        {
+          "text": "d. Cả ba ý trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Người kinh doanh vận tải hàng hóa có quyền:",
+      "answers": [
+        {
+          "text": "a. Yêu cầu người thuê vận tải hàng hóa mở bao, kiện để kiểm tra trong trường hợp nghi ngờ về tính xác thực của việc khai báo chủng loại hàng hóa."
+        },
+        {
+          "text": "b. Từ chối vận tải nếu người thuê vận tải không giao hàng hóa theo thỏa thuận trong hợp đồng;"
+        },
+        {
+          "text": "c. Yêu cầu trả tiền lưu hàng hóa trên phương tiện do lỗi của người thuê vận tải, người nhận hàng gây ra."
+        },
+        {
+          "text": "d. Cả ba ý trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Hàng hóa siêu trường, siêu trọng có kích thước, trọng lượng thực tế là:",
+      "answers": [
+        {
+          "text": "Chiều rộng trên 10 mét hoặc chiều dài trên 30 mét hoặc chiều cao trên 4,5 mét, trọng lượng trên 50 tấn."
+        },
+        {
+          "text": "Chiều rộng trên 10 mét hoặc chiều dài trên 40 mét hoặc chiều cao trên 3,5 mét, trọng lượng trên 50 tấn."
+        },
+        {
+          "text": "Chiều rộng trên 10 mét hoặc chiều dài trên 30 mét hoặc chiều cao trên 3,5 mét, trọng lượng trên 100 tấn."
+        },
+        {
+          "text": "Chiều rộng trên 10 mét hoặc chiều dài trên 40 mét hoặc chiều cao trên 4,5 mét, trọng lượng trên 100 tấn."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Khi giao hàng hóa theo nguyên hầm kẹp chì nếu niêm phong, kẹp chì còn nguyên vẹn thì người kinh doanh vận tải:",
+      "answers": [
+        {
+          "text": "Phải chịu trách nhiệm về hàng hóa."
+        },
+        {
+          "text": "Tùy từng trường hợp mà phải chịu trách nhiệm về hàng hóa."
+        },
+        {
+          "text": "Phải chịu trách nhiệm 50% về hàng hóa."
+        },
+        {
+          "text": "Không phải chịu trách nhiệm về hàng hóa."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Cách xác định trọng lượng hàng bằng vạch mớn nước trên vỏ tàu có đặc điểm:",
+      "answers": [
+        {
+          "text": "Nhanh chóng."
+        },
+        {
+          "text": "Chính xác."
+        },
+        {
+          "text": "Chỉ dùng xác định các loại hàng có khối lượng nhỏ."
+        },
+        {
+          "text": "Dùng để xác định hàng hóa có giá trị cao."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Trên đường vận tải nếu phát hiện hàng hóa thông thường không đúng với kê khai của người thuê vận tải thì người kinh doanh vận tải xử lý:",
+      "answers": [
+        {
+          "text": "Báo cho người thuê vận tải biết và tiếp tục vận tải đến nơi trả hàng."
+        },
+        {
+          "text": "Báo cho người thuê vận tải biết và cho tàu dừng lại."
+        },
+        {
+          "text": "Báo cho người thuê vận tải biết và vận tải quay về nơi nhận hàng."
+        },
+        {
+          "text": "Không báo cho người thuê vận tải biết và tiếp tục vận tải đến nơi trả hàng."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Phương tiện vận tải bị trưng dụng do lệnh của cơ quan có thẩm quyền thì thuyền trưởng phải:",
+      "answers": [
+        {
+          "text": "Thông báo cho người kinh doanh vận tải biết."
+        },
+        {
+          "text": "Thông báo cho người thuê vận tải biết."
+        },
+        {
+          "text": "Không cần phải thông báo cho người kinh doanh vận tải và người thuê vận tải biết."
+        },
+        {
+          "text": "Thông báo cho người kinh doanh vận tải và người thuê vận tải biết để phối hợp thực hiện."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Ngành vận tải thủy nội địa có những đặc điểm:",
+      "answers": [
+        {
+          "text": "Tốc độ vận tải thấp và giá thành vận tải thấp."
+        },
+        {
+          "text": "Tốc độ vận tải cao và giá thành vận tải thấp."
+        },
+        {
+          "text": "Tốc độ vận tải thấp và giá thành vận tải cao."
+        },
+        {
+          "text": "Tốc độ vận tải cao và giá thành vận tải cao."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Quá trình sản xuất vận tải thủy nội địa bao gồm những thành phần:",
+      "answers": [
+        {
+          "text": "Người kinh doanh vận tải và cảng bến phục vụ xếp dỡ hàng hóa."
+        },
+        {
+          "text": "Người thuê vận tải và người kinh doanh vận tải."
+        },
+        {
+          "text": "Người thuê vận tải và cảng bến phục vụ xếp dỡ hàng hóa."
+        },
+        {
+          "text": "Người thuê vận tải, người kinh doanh vận tải và cảng bến phục vụ xếp dỡ hàng hóa."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Hàng hóa có những đặc tính cơ bản là:",
+      "answers": [
+        {
+          "text": "Tính vật lý"
+        },
+        {
+          "text": "Tính hóa học."
+        },
+        {
+          "text": "Tính sinh học."
+        },
+        {
+          "text": "Tất cả các đặc tính trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Khi bảo quản hàng hóa cần phải chú ý những đặc tính:",
+      "answers": [
+        {
+          "text": "Tính chất hàng hóa."
+        },
+        {
+          "text": "Kích thước hàng hóa."
+        },
+        {
+          "text": "Trọng lượng hàng hóa."
+        },
+        {
+          "text": "Cả ba đặc tính trên."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Các biện pháp hạ giá thành vận chuyển:",
+      "answers": [
+        {
+          "text": "Giảm bớt các khoản chi phí không cần thiết."
+        },
+        {
+          "text": "Tăng lượng luân chuyển hàng hóa."
+        },
+        {
+          "text": "Áp dụng khoa học kỹ thuật vào sản xuất vận tải."
+        },
+        {
+          "text": "Tất cả các biện pháp trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Giá thành vận tải thủy nội địa càng hạ thể hiện những khả năng nào của doanh nghiệp vận tải:",
+      "answers": [
+        {
+          "text": "Quá trình sản xuất vận tải của doanh nghiệp hợp lý."
+        },
+        {
+          "text": "Quá trình sản xuất vận tải của doanh nghiệp không hợp lý."
+        },
+        {
+          "text": "Sự đi xuống của doanh nghiệp."
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 0
+    },
+    {
+      "text": "Giá thành vận chuyển đường thủy nội địa là:",
+      "answers": [
+        {
+          "text": "Tổng các khoản chi phí cần thiết và hợp lý để làm ra một số lượng sản phẩm là 1TPT."
+        },
+        {
+          "text": "Tổng các khoản chi phí cần thiết và hợp lý để làm ra một số lượng sản phẩm là 1T.km hay 1000 T.km."
+        },
+        {
+          "text": "Tổng lợi nhuận để làm ra một số lượng sản phẩm là 1 tấn hàng."
+        },
+        {
+          "text": "Tất cả đáp án trên."
+        }
+      ],
+      "correct_answer_index": 1
+    },
+    {
+      "text": "Sự cố thương vụ thường được biểu hiện ở các mặt:",
+      "answers": [
+        {
+          "text": "Hàng hóa bị hư hỏng, biến chất."
+        },
+        {
+          "text": "Hàng hóa bị hao hụt quá mức quy định."
+        },
+        {
+          "text": "Hàng hóa bị mất mát trong khi vận chuyển."
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Nguyên nhân nào sau đây gây ra sự cố thương vụ là:",
+      "answers": [
+        {
+          "text": "Giao nhận không chính xác, hàng hóa và giấy tờ không khớp với nhau."
+        },
+        {
+          "text": "Xếp dỡ hàng không đúng kỹ thuật làm rách vỡ, hư hỏng."
+        },
+        {
+          "text": "Phương tiện đưa vận chuyển không chuyên dụng."
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Khi xảy ra sự cố thương vụ, thuyền trưởng sẽ xử lý:",
+      "answers": [
+        {
+          "text": "Lập biên bản sự cố thương vụ cụ thể ngay tại hiện trường, có kiểm tra chính xác."
+        },
+        {
+          "text": "Trong biên bản phải có xác nhận của các nhân chứng và cơ quan chính quyền địa phương."
+        },
+        {
+          "text": "Phải tìm mọi biện pháp giải quyết, ngăn ngừa sự cố lan rộng và thông báo kịp thời cho chủ hàng biết."
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 3
+    },
+    {
+      "text": "Trong quá trình vận chuyển hàng hóa, nếu hàng hóa bị mất mát, hư hỏng thì người kinh doanh vận tải phải bồi thường cho người thuê vận tải trong những trường hợp:",
+      "answers": [
+        {
+          "text": "Hàng hóa bị hư hỏng, mất mát do lỗi của người kinh doanh vận tải."
+        },
+        {
+          "text": "Hàng hóa bị biến chất, bốc hơi do bản chất của hàng hóa hay do thời tiết."
+        },
+        {
+          "text": "Tai nạn do thiên tai gây ra mà bên vận tải đã chuẩn bị mọi biện pháp đề phòng và đã hết sức chống đỡ nhưng không thể khắc phục được."
+        },
+        {
+          "text": "Tất cả các ý trên."
+        }
+      ],
+      "correct_answer_index": 0
+    }
+  ]
+}

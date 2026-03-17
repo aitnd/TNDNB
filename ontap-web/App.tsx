@@ -527,6 +527,53 @@ const AppContent: React.FC = () => {
     }
   };
 
+  // Hàm thi thử riêng cho giám khảo (navigate đúng route)
+  const startGiamkhaoOnlineExam = async () => {
+    if (!selectedLicense) return;
+    const allowed = await checkUsage(userProfile);
+    if (allowed !== 'ALLOWED') {
+      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
+      return;
+    }
+    await incrementUsage(userProfile);
+
+    const allQuestions: any[] = [];
+    selectedLicense.subjects.forEach(subj => {
+      allQuestions.push(...subj.questions);
+    });
+    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 30);
+
+    if (selected.length === 0) {
+      alert("Chưa có câu hỏi nào cho hạng bằng này. Vui lòng thử lại sau.");
+      return;
+    }
+
+    const examQuiz: Quiz = {
+      id: `exam_${Date.now()}`,
+      title: `Thi Thử - ${selectedLicense.name}`,
+      questions: selected,
+      timeLimit: 2700
+    };
+
+    setCurrentQuiz(examQuiz);
+    setUserAnswers({});
+    setScore(0);
+    localStorage.removeItem('ontap_quiz_session');
+    navigate('/ontap/giamkhao/thithu');
+  };
+
+  const handleGiamkhaoModeSelect = async (mode: 'practice' | 'exam' | 'online_exam') => {
+    if (mode === 'practice') {
+      if (selectedLicense) {
+        setSubjects(selectedLicense.subjects);
+        navigate('/ontap/giamkhao/chonmon');
+      }
+    } else if (mode === 'online_exam') {
+      startGiamkhaoOnlineExam();
+    }
+  };
+
   const handleSubjectSelect = async (subject: Subject) => {
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
@@ -704,43 +751,54 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/giamkhao" element={
             userProfile && ['admin', 'giao_vien', 'quan_ly', 'lanh_dao'].includes(userProfile.role)
               ? <GiamKhaoSelectionScreen
-                  licenses={licenses}
-                  onSelectLicense={(license) => {
-                    setSelectedLicense(license);
-                    setSubjects(license.subjects);
-                    navigate('/ontap/giamkhao/chonmon');
-                  }}
-                  onBack={() => navigate('/ontap/dashboard')}
-                />
+                licenses={licenses}
+                onSelectLicense={(license) => {
+                  setSelectedLicense(license);
+                  setSubjects(license.subjects);
+                  navigate('/ontap/giamkhao/chonchedo');
+                }}
+                onBack={() => navigate('/ontap/dashboard')}
+              />
               : <Navigate to="/ontap/dashboard" replace />
+          } />
+
+          <Route path="/ontap/giamkhao/chonchedo" element={
+            userProfile && ['admin', 'giao_vien', 'quan_ly', 'lanh_dao'].includes(userProfile.role) && selectedLicense
+              ? <ModeSelectionScreen
+                onModeSelect={handleGiamkhaoModeSelect}
+                licenseName={selectedLicense?.name || ''}
+                userName={userName}
+                onSwitchLicense={() => navigate('/ontap/giamkhao')}
+              />
+              : <Navigate to="/ontap/giamkhao" replace />
           } />
 
           <Route path="/ontap/giamkhao/chonmon" element={
             userProfile && ['admin', 'giao_vien', 'quan_ly', 'lanh_dao'].includes(userProfile.role) && selectedLicense
               ? <SubjectSelectionScreen
-                  subjects={subjects}
-                  progress={{}}
-                  onSelect={async (subject) => {
-                    const allowed = await checkUsage(userProfile);
-                    if (allowed !== 'ALLOWED') {
-                      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
-                      return;
-                    }
-                    await incrementUsage(userProfile);
-                    setSelectedSubject(subject);
-                    const newQuiz: Quiz = {
-                      id: subject.id,
-                      title: subject.name,
-                      questions: subject.questions,
-                      timeLimit: 0
-                    };
-                    setCurrentQuiz(newQuiz);
-                    setUserAnswers({});
-                    localStorage.removeItem('ontap_quiz_session');
-                    navigate('/ontap/giamkhao/lambai');
-                  }}
-                  onBack={() => navigate('/ontap/giamkhao')}
-                />
+                subjects={subjects}
+                progress={{}}
+                onSelect={async (subject) => {
+                  const allowed = await checkUsage(userProfile);
+                  if (allowed !== 'ALLOWED') {
+                    await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
+                    return;
+                  }
+                  await incrementUsage(userProfile);
+                  setSelectedSubject(subject);
+                  const newQuiz: Quiz = {
+                    id: subject.id,
+                    title: subject.name,
+                    questions: subject.questions,
+                    timeLimit: 0
+                  };
+                  setCurrentQuiz(newQuiz);
+                  setUserAnswers({});
+                  localStorage.removeItem('ontap_quiz_session');
+                  navigate('/ontap/giamkhao/lambai');
+                }}
+                onBack={() => navigate('/ontap/giamkhao/chonchedo')}
+              />
               : <Navigate to="/ontap/giamkhao" replace />
           } />
 
@@ -812,7 +870,7 @@ const AppContent: React.FC = () => {
           } />
           {/* ===== END GIÁM KHẢO ROUTES ===== */}
 
-          <Route path="/ontap/chonbang" element={<LicenseSelectionScreen licenses={licenses} onSelect={handleLicenseSelect} onBack={() => navigate('/')} />} />
+          <Route path="/ontap/chonbang" element={<LicenseSelectionScreen licenses={licenses.filter(l => !['Lý thuyết chung', 'Chuyên môn'].includes(l.name))} onSelect={handleLicenseSelect} onBack={() => navigate('/')} />} />
           <Route path="/ontap/nhapten" element={<NameInputScreen onNameSubmit={handleNameSubmit} onBack={() => navigate('/ontap/chonbang')} />} />
 
           <Route path="/ontap/chonchedo" element={

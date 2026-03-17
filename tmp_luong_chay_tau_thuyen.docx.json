@@ -1,0 +1,312 @@
+[
+  {
+    "text": "Câu 1. Sông Hồng chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Ba Lạt.",
+      "Cửa Lạch Trường.",
+      "Cửa Lạch Giang.",
+      "Cửa Đáy."
+    ],
+    "correct": "Cửa Ba Lạt."
+  },
+  {
+    "text": "Câu 2. Sông Đáy chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Ba Lạt.",
+      "Cửa Lạch Trường.",
+      "Cửa Lạch Giang.",
+      "Cửa Đáy."
+    ],
+    "correct": "Cửa Đáy."
+  },
+  {
+    "text": "Câu 3. Sông Trà Lý chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Ba Lạt.",
+      "Cửa Lạch Trường.",
+      "Cửa Trà Lý.",
+      "Cửa Đáy."
+    ],
+    "correct": "Cửa Trà Lý."
+  },
+  {
+    "text": "Câu 4. Sông Thái Bình chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Thái Bình.",
+      "Cửa Lạch Trường.",
+      "Cửa Lạch Giang.",
+      "Cửa Đáy."
+    ],
+    "correct": "Cửa Thái Bình."
+  },
+  {
+    "text": "Câu 5. Sông Lam (Trung bộ) thuộc tỉnh nào?",
+    "options": [
+      "Thanh Hóa.",
+      "Nghệ An.",
+      "Hà Tĩnh.",
+      "Quảng Bình."
+    ],
+    "correct": "Nghệ An."
+  },
+  {
+    "text": "Câu 6. Sông Nhật Lệ thuộc tỉnh nào?",
+    "options": [
+      "Quảng Trị.",
+      "Quảng Bình.",
+      "Hà Tĩnh.",
+      "Huế."
+    ],
+    "correct": "Quảng Bình."
+  },
+  {
+    "text": "Câu 7. Sông Bến Hải thuộc hệ thống sông kênh nào?",
+    "options": [
+      "Hệ thống sông, kênh miền Trung.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông, kênh miền Trung."
+  },
+  {
+    "text": "Câu 8. Sông Bến Hải thuộc tỉnh nào?",
+    "options": [
+      "Quảng Ngãi.",
+      "Quảng Nam.",
+      "Quảng Trị.",
+      "Quảng Bình."
+    ],
+    "correct": "Quảng Trị."
+  },
+  {
+    "text": "Câu 9. Sông Vàm Cỏ Đông thuộc hê thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Đồng Nai."
+  },
+  {
+    "text": "Câu 10. Sông Hậu thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Mê Kông."
+  },
+  {
+    "text": "Câu 11. Hệ thống sông Cửu Long đổ ra biển bởi mấy cửa?",
+    "options": [
+      "6 cửa.",
+      "7 Cửa.",
+      "8 cửa.",
+      "9 cửa."
+    ],
+    "correct": "9 cửa."
+  },
+  {
+    "text": "Câu 12. Sông Hồng thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Hồng."
+  },
+  {
+    "text": "Câu 13. Sông Cấm thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Thái Bình."
+  },
+  {
+    "text": "Câu 14. Sông Bạch Đằng thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Thái Bình."
+  },
+  {
+    "text": "Câu 16. Đặc điểm của sông ngòi miền Trung là gì?",
+    "options": [
+      "Sông thường rất ngắn và dốc.",
+      "Sông thường rất dài và bằng phẳng.",
+      "Sông thường rất dài và dốc.",
+      "Tất cả đáp án trên đều đúng."
+    ],
+    "correct": "Sông thường rất ngắn và dốc."
+  },
+  {
+    "text": "Câu 17. Sông Bến Hải chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Ba Lạt.",
+      "Cửa Tùng.",
+      "Cửa Lạch Giang.",
+      "Cửa Đáy."
+    ],
+    "correct": "Cửa Tùng."
+  },
+  {
+    "text": "Câu 18. Sông Hương chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Ba Lạt.",
+      "Cửa Tùng.",
+      "Cửa Thuận An.",
+      "Cửa Đáy."
+    ],
+    "correct": "Cửa Thuận An."
+  },
+  {
+    "text": "Câu 19. Sông Vàm Cỏ Tây thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Đồng Nai."
+  },
+  {
+    "text": "Câu 20. Sông Đồng Nai thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Đồng Nai."
+  },
+  {
+    "text": "Câu 21. Sông Tiền thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Đồng Nai."
+  },
+  {
+    "text": "Câu 22. Sông Tiền đổ ra biển ở mấy cửa?",
+    "options": [
+      "3 cửa.",
+      "4 cửa.",
+      "5 cửa.",
+      "6 cửa."
+    ],
+    "correct": "6 cửa."
+  },
+  {
+    "text": "Câu 23. Sông Hậu đổ ra biển ở mấy cửa?",
+    "options": [
+      "3 cửa.",
+      "4 cửa.",
+      "5 cửa.",
+      "6 cửa."
+    ],
+    "correct": "3 cửa."
+  },
+  {
+    "text": "Câu 23. Sông Hậu đổ ra biển ở mấy cửa?",
+    "options": [
+      "3 cửa.",
+      "4 cửa.",
+      "5 cửa.",
+      "6 cửa."
+    ],
+    "correct": "3 cửa."
+  },
+  {
+    "text": "Câu 24. Sông Bạch Đằng thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Thái Bình."
+  },
+  {
+    "text": "Câu 25. Sông Cầu thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Thái Bình."
+  },
+  {
+    "text": "Câu 26. Sông Đà thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Hồng."
+  },
+  {
+    "text": "Câu 26. Sông Đuống thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông miền Trung.",
+      "Hệ thống sông Hồng.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông Hồng."
+  },
+  {
+    "text": "Câu 27. Sông Thu Bồn chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Thái Bình.",
+      "Cửa Hội An.",
+      "Cửa Lạch Giang.",
+      "Cửa Đáy."
+    ],
+    "correct": "Cửa Hội An."
+  },
+  {
+    "text": "Câu 28. Sông Hậu chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Thái Bình.",
+      "Cửa Hội An.",
+      "Cửa Lạch Giang.",
+      "Cửa Định An."
+    ],
+    "correct": "Cửa Định An."
+  },
+  {
+    "text": "Câu 29. Sông Bạch Đằng chảy ra biển Đông ở đâu?",
+    "options": [
+      "Cửa Thái Bình.",
+      "Cửa Nam Triệu",
+      "Cửa Lạch Giang.",
+      "Cửa Đáy."
+    ],
+    "correct": "Cửa Nam Triệu"
+  },
+  {
+    "text": "Câu 30. Sông Mã thuộc hệ thống sông nào?",
+    "options": [
+      "Hệ thống sông Thái Bình.",
+      "Hệ thống sông kênh miền Trung.",
+      "Hệ thống sông Mê Kông.",
+      "Hệ thống sông Đồng Nai."
+    ],
+    "correct": "Hệ thống sông kênh miền Trung."
+  }
+]
