@@ -49,7 +49,7 @@ export default function DownloadAppPage() {
                         <ol className="list-decimal list-inside space-y-2 text-gray-700 text-sm">
                             <li>Tải file <strong>.apk</strong> ở trên về máy.</li>
                             <li>Mở file vừa tải lên.</li>
-                            <li>Nếu điện thoại hỏi bảo mật, chọn <strong>"Cài đặt"</strong> (hoặc "Cho phép từ nguồn này").</li>
+                            <li>Nếu điện thoại hỏi bảo mật, chọn <strong>&quot;Cài đặt&quot;</strong> (hoặc &quot;Cho phép từ nguồn này&quot;).</li>
                             <li>Đợi cài xong và mở App lên học thôi! 🎉</li>
                         </ol>
                     </div>

@@ -46,7 +46,7 @@ type PostPageData = {
 async function getPostDetails(postId: string): Promise<PostPageData | null> {
 
   // (Lấy Bài viết từ Supabase)
-  console.log(`[Server] Lấy bài viết ID: ${postId} từ Supabase...`);
+
   const { data: postData, error: postError } = await supabase
     .from('posts')
     .select('*')
@@ -63,7 +63,7 @@ async function getPostDetails(postId: string): Promise<PostPageData | null> {
   // (Lấy Tên Tác giả từ Firestore)
   if (postData.author_id) {
     try {
-      console.log(`[Server] Lấy tác giả ID: ${postData.author_id} từ Firestore...`);
+
       const userDocRef = adminDb.collection('users').doc(postData.author_id);
       const userDoc = await userDocRef.get();
 
@@ -87,7 +87,7 @@ async function getPostDetails(postId: string): Promise<PostPageData | null> {
 
 // (Hàm lấy bài viết liên quan - Giữ nguyên)
 async function getRelatedPosts(categoryId: string, currentPostId: string): Promise<Post[]> {
-  console.log(`[Server] Lấy 3 bài viết liên quan (danh mục: ${categoryId})...`);
+
   try {
     const { data, error } = await supabase
       .from('posts')

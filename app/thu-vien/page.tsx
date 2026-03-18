@@ -39,7 +39,7 @@ export default function ThuVienPage() {
   // 💖 3. "PHÉP THUẬT": LẤY DỮ LIỆU (Chuyển vào useEffect) 💖
   useEffect(() => {
     async function getGroupedMedia() {
-      console.log('[Thư viện] Đang lấy tất cả media từ kho...');
+
       setLoading(true);
       
       const { data: mediaData, error } = await supabase
@@ -80,7 +80,7 @@ export default function ThuVienPage() {
         return bNewest - aNewest;
       });
 
-      console.log(`[Thư viện] Đã gom nhóm thành ${albumsArray.length} albums.`);
+
       setAlbums(albumsArray); // (Nhét vào "não")
       setLoading(false);
     }

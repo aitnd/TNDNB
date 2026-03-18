@@ -17,3 +17,5 @@ module.exports = (req, res) => {
     }
 
     // ... (Phần logic tìm kiếm cũ giữ nguyên)
+    return res.status(200).json([]);
+};

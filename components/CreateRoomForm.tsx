@@ -142,7 +142,7 @@ export default function CreateRoomForm() {
 
         <div className={styles.formGroup}>
           <label htmlFor="roomName" className={styles.label}>
-            Tên phòng thi (Ví dụ: "Thi thử M1 - Lần 1")
+            {"Tên phòng thi (Ví dụ: \"Thi thử M1 - Lần 1\")"}
           </label>
           <input
             type="text"

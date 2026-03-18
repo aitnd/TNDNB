@@ -154,7 +154,7 @@ function AdminDashboard() {
                 className={styles.checkbox}
               />
               <label htmlFor="is_featured" className={styles.label}>
-                Đánh dấu là "Tin tiêu điểm"
+                Đánh dấu là &quot;Tin tiêu điểm&quot;
               </label>
             </div>
 

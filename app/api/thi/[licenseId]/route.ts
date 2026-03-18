@@ -26,7 +26,7 @@ export async function GET(
 ) {
   try {
     const licenseId = params.licenseId
-    console.log(`[API Trộn Đề] Bắt đầu "trộn" đề cho hạng: ${licenseId} (từ Supabase)`)
+
 
     // 2. 💖 LẤY "KHO" CÂU HỎI TỪ SUPABASE 💖
     // Truy vấn: licenses -> subjects -> questions -> answers
@@ -68,7 +68,7 @@ export async function GET(
       });
     }
 
-    console.log(`[API Trộn Đề] Tìm thấy ${allQuestions.length} câu hỏi gốc.`)
+
 
     if (allQuestions.length === 0) {
       throw new Error(`Hạng bằng ${licenseName} chưa có câu hỏi nào.`);
@@ -88,7 +88,7 @@ export async function GET(
       }
     }
 
-    console.log(`[API Trộn Đề] Giới hạn số câu: ${limit}`);
+
     deThiCuoiCung = deThiCuoiCung.slice(0, limit);
 
     // 5. "LỌC" ĐÁP ÁN ĐÚNG & XÁO ĐÁP ÁN (Bảo mật)
@@ -104,7 +104,7 @@ export async function GET(
       return safeQuestion;
     });
 
-    console.log(`[API Trộn Đề] "Trộn" đề thành công! Gửi ${deThiAnToan.length} câu.`)
+
 
     // 6. "Gửi" bộ đề
     return NextResponse.json({

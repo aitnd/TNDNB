@@ -64,7 +64,7 @@ export default function AnalyticsWidget() {
         <h2 className={styles.analyticsTitle} style={{ color: '#9b2c2c' }}>Lỗi khi tải Thống kê</h2>
         <p style={{ color: '#9b2c2c' }}>{error}</p>
         <p style={{ color: '#9b2c2c', fontSize: '0.9rem', fontStyle: 'italic' }}>
-          (Anh kiểm tra lại 2 'chìa khóa' GOOGLE_... trên Vercel và quyền 'Viewer' của robot email nha)
+          (Anh kiểm tra lại 2 &apos;chìa khóa&apos; GOOGLE_... trên Vercel và quyền &apos;Viewer&apos; của robot email nha)
         </p>
       </div>
     )

@@ -150,7 +150,6 @@ function CreatePostForm() {
       }
 
       const fileName = `content_${Date.now()}_${blobInfo.filename()}`;
-      console.log(`[TinyMCE] Đang tải ảnh: ${fileName}`);
 
       supabase.storage
         .from('post_images') 
@@ -165,7 +164,6 @@ function CreatePostForm() {
             .from('post_images')
             .getPublicUrl(fileName);
 
-          console.log('[TinyMCE] Tải ảnh thành công, link:', publicUrlData.publicUrl);
           resolve(publicUrlData.publicUrl); 
         })
         .catch(err => {
@@ -183,13 +181,13 @@ function CreatePostForm() {
     content: string,
     thumbnailUrl: string | null
   ) => {
-    console.log(`[Thư viện] Bắt đầu quét media cho bài: ${postTitle}`);
+
     const imgRegex = /<img[^>]+src="([^">]+)"/g;
     const mediaToInsert: any[] = [];
     let match;
     while ((match = imgRegex.exec(content)) !== null) {
       const url = match[1];
-      console.log(`[Thư viện] Tìm thấy ảnh nội dung: ${url}`);
+
       mediaToInsert.push({
         post_id: postId,
         post_title: postTitle,
@@ -198,7 +196,7 @@ function CreatePostForm() {
       });
     }
     if (thumbnailUrl) {
-      console.log(`[Thư viện] Thêm ảnh đại diện: ${thumbnailUrl}`);
+
       mediaToInsert.push({
         post_id: postId,
         post_title: postTitle,
@@ -207,7 +205,7 @@ function CreatePostForm() {
       });
     }
     if (mediaToInsert.length > 0) {
-      console.log(`[Thư viện] Đang cất ${mediaToInsert.length} media vào kho...`);
+
       const { error: mediaError } = await supabase
         .from('media_library') 
         .insert(mediaToInsert);
@@ -215,10 +213,10 @@ function CreatePostForm() {
         console.error('[Thư viện] Lỗi khi lưu vào media_library:', mediaError.message);
         setFormError('Đăng bài OK, nhưng lỗi khi lưu vào thư viện media.');
       } else {
-        console.log('[Thư viện] Đã cất media thành công!');
+
       }
     } else {
-      console.log('[Thư viện] Không tìm thấy media nào để cất.');
+
     }
   };
 
@@ -253,7 +251,7 @@ function CreatePostForm() {
 
       // 1. "Đẩy" ảnh đại diện
       if (thumbnailFile) {
-        console.log('Đang tải ảnh đại diện lên...');
+
         const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
         const { error: uploadError } = await supabase.storage
           .from('post_images') 
@@ -267,7 +265,7 @@ function CreatePostForm() {
 
       // 2. "ĐẨY" TỆP ĐÍNH KÈM
       if (attachmentFiles.length > 0) {
-        console.log(`Đang tải ${attachmentFiles.length} tệp đính kèm...`);
+
         for (const file of attachmentFiles) {
           const cleanName = sanitizeFileName(file.name);
           const fileName = `file_${Date.now()}_${cleanName}`;
@@ -290,7 +288,7 @@ function CreatePostForm() {
             file_type: file.type,
           });
         }
-        console.log('Tải tệp đính kèm thành công!');
+
       }
 
       // 3. "CẤT" BÀI VIẾT
@@ -312,8 +310,6 @@ function CreatePostForm() {
 
       if (error) throw error; 
       if (!postData) throw new Error('Không nhận được ID bài viết sau khi tạo.');
-
-      console.log('Đăng bài thành công! ID:', postData.id);
 
       // 4. GỌI "PHÉP THUẬT" (Lưu thư viện)
       extractMediaAndSave(postData.id, postData.title, editorContent, thumbnailUrl);
@@ -471,7 +467,7 @@ function CreatePostForm() {
                 className={styles.checkbox}
               />
               <label htmlFor="is_featured" className={styles.label}>
-                Đánh dấu là "Tin tiêu điểm" (Sẽ hiện ở Slider)
+                {"Đánh dấu là \"Tin tiêu điểm\" (Sẽ hiện ở Slider)"}
               </label>
             </div>
             
@@ -484,7 +480,7 @@ function CreatePostForm() {
               <div className={styles.editorWrapper}>
                 {editorLoading && (
                   <div className={styles.editorLoadingPlaceholder}>
-                    Đang tải trình soạn thảo "xịn"...
+                    {"Đang tải trình soạn thảo \"xịn\"..."}
                   </div>
                 )}
                 <Editor
