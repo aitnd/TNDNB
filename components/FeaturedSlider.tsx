@@ -31,7 +31,7 @@ export default function FeaturedSlider() {
   // 2. "Phép thuật" Tự động lấy tin
   useEffect(() => {
     async function getFeaturedPosts() {
-      console.log('[Slider] Đang lấy Tin Tiêu Điểm...');
+
       setLoading(true);
       const { data, error } = await supabase
         .from('posts')

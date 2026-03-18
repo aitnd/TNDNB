@@ -50,7 +50,6 @@ function SearchResults() {
     }
 
     async function fetchResults() {
-      console.log(`Đang tìm kiếm với từ khóa: ${query}`);
       setLoading(true);
       
       try {
@@ -85,7 +84,7 @@ function SearchResults() {
       <h2 className={styles.widgetTitle}>
         {query ? (
           <>
-            Kết quả tìm kiếm cho: <span>"{query}"</span>
+            Kết quả tìm kiếm cho: <span>&quot;{query}&quot;</span>
           </>
         ) : (
           'Vui lòng nhập từ khóa để tìm kiếm'

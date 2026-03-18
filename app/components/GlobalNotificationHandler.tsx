@@ -76,7 +76,7 @@ const GlobalNotificationHandler = () => {
 
             if (notificationsToSchedule.length > 0) {
                 await LocalNotifications.schedule({ notifications: notificationsToSchedule });
-                console.log(`Scheduled ${notificationsToSchedule.length} local notifications.`);
+
             }
 
         } catch (error) {

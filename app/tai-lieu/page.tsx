@@ -37,7 +37,7 @@ export default function TaiLieuPage() {
   // 💖 3. "PHÉP THUẬT": LẤY DỮ LIỆU (Đã "phẫu thuật") 💖
   useEffect(() => {
     async function getGroupedFiles() {
-      console.log('[Tài liệu] Đang lấy tất cả "attachments" từ kho `posts`...');
+
       setLoading(true);
       
       const { data: postData, error } = await supabase
@@ -66,7 +66,7 @@ export default function TaiLieuPage() {
         // (Lọc bỏ bài nào có 'attachments' mà lại rỗng [])
         .filter(album => album.media.length > 0); 
       
-      console.log(`[Tài liệu] Đã gom nhóm thành ${albumsArray.length} albums.`);
+
       setAlbums(albumsArray); // (Nhét vào "não")
       setLoading(false);
     }

@@ -23,7 +23,7 @@ export async function POST(
       throw new Error('Bài nộp không hợp lệ, thiếu thông tin học viên (userId/userEmail).')
     }
 
-    console.log(`[API Chấm Bài] Nhận được bài làm cho phòng: ${roomId}`)
+
 
     // 💖 CHECK ADMIN DB 💖
     if (!adminDb) {
@@ -38,7 +38,7 @@ export async function POST(
     const roomData = roomSnap.data()
     const licenseId = roomData?.license_id
 
-    console.log(`[API Chấm Bài] Phòng thi hạng: ${licenseId}`)
+
 
     // 3. 💖 LẤY "ĐÁP ÁN ĐÚNG" (DÙNG CÚ PHÁP ADMIN "XỊN") 💖
     const questionsRef = adminDb.collection('questions_master');
@@ -63,13 +63,13 @@ export async function POST(
         });
       }
     } else {
-      console.log('[API Chấm Bài] Học viên nộp giấy trắng (không có câu trả lời nào).');
+
     }
 
     // 4. "CHẤM BÀI" (Giữ nguyên)
     let score = 0
     const totalQuestions = correctAnswers.length
-    console.log(`[API Chấm Bài] Đang so sánh ${totalQuestions} câu trả lời...`)
+
 
     correctAnswers.forEach((correctAnswer: CorrectAnswer) => {
       const studentAnswer = studentAnswers[correctAnswer.id]
@@ -78,7 +78,7 @@ export async function POST(
       }
     })
 
-    console.log(`[API Chấm Bài] Điểm số: ${score} / ${totalQuestions}`)
+
 
     // 5. LƯU KẾT QUẢ VÀO FIRESTORE (Ngăn 'exam_results')
     const resultId = `${roomId}_${userId}`;
@@ -93,7 +93,7 @@ export async function POST(
       submittedAnswers: studentAnswers,
       submitted_at: FieldValue.serverTimestamp() // (Dùng FieldValue của Admin)
     });
-    console.log(`[API Chấm Bài] Đã lưu kết quả cho: ${userEmail}`)
+
 
     // 6. CẬP NHẬT "NGĂN CON" 'participants' (Cho Live Dashboard)
     try {
@@ -103,7 +103,7 @@ export async function POST(
         score: score,
         totalQuestions: totalQuestions
       });
-      console.log(`[API Chấm Bài] Đã cập nhật trạng thái 'participants' cho: ${userEmail}`)
+
     } catch (participantError) {
       console.warn(`[API Chấm Bài] Lỗi (nhẹ): Không thể cập nhật 'participants': ${participantError}`)
     }

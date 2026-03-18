@@ -44,7 +44,7 @@ export default function PostManager() {
     // (Hàm "Lấy Bài viết" & "Tác giả" - Giữ nguyên)
     useEffect(() => {
         async function fetchAuthors(): Promise<AuthorMap> {
-            console.log('Đang lấy "Bản đồ" Tác giả từ Firestore...');
+
             const authorMap: AuthorMap = {};
             try {
                 const usersRef = collection(db, 'users');
@@ -52,7 +52,7 @@ export default function PostManager() {
                 querySnapshot.forEach((doc) => {
                     authorMap[doc.id] = doc.data().fullName || 'Tác giả ẩn danh';
                 });
-                console.log('Lấy "Bản đồ" Tác giả thành công!');
+
                 return authorMap;
             } catch (err) {
                 console.error('Lỗi khi lấy "Bản đồ" Tác giả:', err);

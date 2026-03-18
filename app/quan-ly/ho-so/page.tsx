@@ -79,7 +79,7 @@ function HoSoCaNhan() {
       // 1. Nếu có chọn ảnh mới -> Upload lên Supabase Storage
       if (avatarFile) {
         // ⚡ Tối ưu ảnh trước khi upload ⚡
-        console.log("Đang tối ưu ảnh...");
+
         const optimizedFile = await optimizeImage(avatarFile);
 
         // Tạo tên file duy nhất: uid + timestamp + tên file

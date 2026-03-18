@@ -214,7 +214,7 @@ function EditPostForm() {
     content: string,
     thumbnailUrl: string | null
   ) => {
-    console.log(`[Thư viện] Bắt đầu quét media cho bài: ${postTitle}`);
+
     const imgRegex = /<img[^>]+src="([^">]+)"/g;
     const mediaToInsert: any[] = [];
     let match;
@@ -230,7 +230,7 @@ function EditPostForm() {
       });
     }
     if (mediaToInsert.length > 0) {
-      console.log(`[Thư viện] Đang cất ${mediaToInsert.length} media vào kho...`);
+
       const { error: mediaError } = await supabase
         .from('media_library') 
         .insert(mediaToInsert);
@@ -238,10 +238,10 @@ function EditPostForm() {
         console.error('[Thư viện] Lỗi khi lưu vào media_library:', mediaError.message);
         setFormError('Sửa bài OK, nhưng lỗi khi đồng bộ thư viện media.');
       } else {
-        console.log('[Thư viện] Đã cất media thành công!');
+
       }
     } else {
-      console.log('[Thư viện] Không tìm thấy media nào để cất.');
+
     }
   };
 
@@ -292,7 +292,7 @@ function EditPostForm() {
       // 2. "ĐẨY" TỆP ĐÍNH KÈM MỚI
       const newlyUploadedAttachments: Attachment[] = [];
       if (newAttachmentFiles.length > 0) {
-        console.log(`Đang tải ${newAttachmentFiles.length} tệp đính kèm MỚI...`);
+
         for (const file of newAttachmentFiles) {
           const cleanName = sanitizeFileName(file.name);
           const fileName = `file_${Date.now()}_${cleanName}`;
@@ -330,7 +330,6 @@ function EditPostForm() {
       // 5. "Dọn dẹp" Thư viện
       const finalThumbnailUrl = updateData.thumbnail_url || (thumbnailPreview && !thumbnailFile ? thumbnailPreview : null);
 
-      console.log(`[Thư viện] Đang xóa media cũ của bài: ${postId}`);
       const { error: deleteError } = await supabase
         .from('media_library')
         .delete()
@@ -517,7 +516,7 @@ function EditPostForm() {
                 className={styles.checkbox}
               />
               <label htmlFor="is_featured" className={styles.label}>
-                Đánh dấu là "Tin tiêu điểm" (Sẽ hiện ở Slider)
+                {"Đánh dấu là \"Tin tiêu điểm\" (Sẽ hiện ở Slider)"}
               </label>
             </div>
             
@@ -530,7 +529,7 @@ function EditPostForm() {
               <div className={styles.editorWrapper}>
                 {(editorLoading || isLoadingPost) && (
                   <div className={styles.editorLoadingPlaceholder}>
-                    Đang tải trình soạn thảo "xịn"...
+                    {"Đang tải trình soạn thảo \"xịn\"..."}
                   </div>
                 )}
                 
