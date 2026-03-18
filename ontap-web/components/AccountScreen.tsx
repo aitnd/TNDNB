@@ -84,7 +84,7 @@ const AdminSessionList: React.FC<{ userId: string }> = ({ userId }) => {
             {sessions.map(s => (
                 <div key={s.id} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-slate-700/30 rounded border border-gray-100 dark:border-slate-600">
                     <div className="flex items-center gap-2">
-                        {s.deviceName.toLowerCase().includes('windows') ? <FaLaptop className="text-blue-500 text-xs" /> : <FaMobileAlt className="text-green-500 text-xs" />}
+                        {(s.deviceName || '').toLowerCase().includes('windows') ? <FaLaptop className="text-blue-500 text-xs" /> : <FaMobileAlt className="text-green-500 text-xs" />}
                         <div className="text-[11px]">
                             <div className="font-bold truncate max-w-[120px]">{s.deviceName}</div>
                             <div className="text-gray-400">{s.ip}</div>
@@ -163,8 +163,8 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
         if (searchTerm.trim()) {
             const lower = searchTerm.toLowerCase();
             result = result.filter(u =>
-                u.fullName.toLowerCase().includes(lower) ||
-                u.email.toLowerCase().includes(lower) ||
+                (u.fullName || '').toLowerCase().includes(lower) ||
+                (u.email || '').toLowerCase().includes(lower) ||
                 (u.phoneNumber && u.phoneNumber.includes(lower))
             );
         }
