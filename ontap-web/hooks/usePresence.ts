@@ -53,9 +53,20 @@ const usePresence = () => {
                 last_changed: serverTimestamp(),
             };
 
-            onDisconnect(userStatusDatabaseRef).set(isOfflineForDatabase).then(() => {
-                set(userStatusDatabaseRef, isOnlineForDatabase);
-            });
+            onDisconnect(userStatusDatabaseRef)
+                .set(isOfflineForDatabase)
+                .then(() => {
+                    set(userStatusDatabaseRef, isOnlineForDatabase)
+                        .catch((error) => {
+                            console.error('[Presence] Error setting online status:', error.message);
+                            if (error.message.includes('permission_denied')) {
+                                console.warn('[Presence] Please check your Firebase RTDB Security Rules. Read and Write access to "/status" node might be restricted.');
+                            }
+                        });
+                })
+                .catch((error) => {
+                    console.error('[Presence] Error setting onDisconnect:', error.message);
+                });
         });
 
         return () => {
