@@ -93,6 +93,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [teacherSearchTerm, setTeacherSearchTerm] = useState('');
     const [addingStudent, setAddingStudent] = useState(false);
     const [addingTeacher, setAddingTeacher] = useState(false);
+    // Course Search State
+    const [courseSearchTerm, setCourseSearchTerm] = useState('');
     // Bulk Add State
     const [selectedStudentIds, setSelectedStudentIds] = useState<Set<string>>(new Set());
     const [isBulkAdding, setIsBulkAdding] = useState(false);
@@ -1008,13 +1010,35 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                     )
                 }
 
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex justify-between items-center mb-6">
                     <h1 className="text-3xl font-bold flex items-center gap-3 bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-emerald-600">
                         <FaSchool className="text-teal-600" /> Quản lý Lớp học
                     </h1>
-                    <button onClick={onBack} className="bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors">
+                    <button onClick={onBack} className="bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors shadow-sm">
                         Back Dashboard
                     </button>
+                </div>
+
+                {/* Search Bar (UI/UX Pro Max) */}
+                <div className="mb-8 relative max-w-xl group animate-slide-in-right" style={{animationDelay: '0.1s'}}>
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <FaSearch className="text-gray-400 group-focus-within:text-teal-500 text-lg transition-colors duration-300" />
+                    </div>
+                    <input
+                        type="text"
+                        className="w-full pl-12 pr-10 py-3.5 bg-white dark:bg-slate-800 border-2 border-transparent focus:border-teal-500 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 transition-all duration-300 hover:-translate-y-0.5"
+                        placeholder="Tìm kiếm lớp học theo tên hoặc mô tả..."
+                        value={courseSearchTerm}
+                        onChange={(e) => setCourseSearchTerm(e.target.value)}
+                    />
+                    {courseSearchTerm && (
+                        <button 
+                            onClick={() => setCourseSearchTerm('')}
+                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-red-500 transition-colors"
+                        >
+                            <FaTimes />
+                        </button>
+                    )}
                 </div>
 
                 {/* Course List */}
@@ -1035,7 +1059,9 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     <h3 className="font-bold text-lg">Thêm Lớp Mới</h3>
                                 </div>
                             )}
-                            {courses.map(course => {
+                            {courses
+                                .filter(c => safeLower(c.name).includes(safeLower(courseSearchTerm)) || safeLower(c.description).includes(safeLower(courseSearchTerm)))
+                                .map(course => {
                                 // Permission Check
                                 const currentRole = userProfile?.role || 'hoc_vien';
                                 const canEditThis = ['admin', 'quan_ly', 'lanh_dao'].includes(currentRole) || (currentRole === 'giao_vien' && (course.headTeacherId === userProfile?.id || (course.teacherIds || []).includes(userProfile?.id)));
