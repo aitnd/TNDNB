@@ -1,11 +1,3 @@
-/**
- * GitHub Service - Kết nối với GitHub API để quản lý Releases
- * Sử dụng cho tính năng Auto-Update của ứng dụng Electron
- */
-
-// Cấu hình mặc định
-const GITHUB_OWNER = 'aitnd';
-const GITHUB_REPO = 'TNDNB';
 const GITHUB_API_BASE = 'https://api.github.com';
 
 export interface GitHubRelease {
@@ -19,6 +11,7 @@ export interface GitHubRelease {
     published_at: string;
     html_url: string;
     assets: GitHubAsset[];
+    upload_url: string; // Thêm upload_url vào interface
 }
 
 export interface GitHubAsset {
@@ -40,8 +33,8 @@ export interface CreateReleaseParams {
 /**
  * Lấy danh sách các releases
  */
-export const getReleases = async (token: string): Promise<GitHubRelease[]> => {
-    const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases`, {
+export const getReleases = async (token: string, owner = 'aitnd', repo = 'TNDNB'): Promise<GitHubRelease[]> => {
+    const response = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/vnd.github+json',
@@ -60,9 +53,9 @@ export const getReleases = async (token: string): Promise<GitHubRelease[]> => {
 /**
  * Lấy release mới nhất
  */
-export const getLatestRelease = async (token: string): Promise<GitHubRelease | null> => {
+export const getLatestRelease = async (token: string, owner = 'aitnd', repo = 'TNDNB'): Promise<GitHubRelease | null> => {
     try {
-        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/latest`, {
+        const response = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/latest`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/vnd.github+json',
@@ -87,10 +80,31 @@ export const getLatestRelease = async (token: string): Promise<GitHubRelease | n
 };
 
 /**
+ * Lấy release theo tag
+ */
+export const getReleaseByTag = async (token: string, tag: string, owner = 'aitnd', repo = 'TNDNB'): Promise<GitHubRelease | null> => {
+    try {
+        const response = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/tags/${tag}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+
+        if (response.status === 404) return null;
+        if (!response.ok) return null;
+        return response.json();
+    } catch {
+        return null;
+    }
+};
+
+/**
  * Tạo release mới
  */
-export const createRelease = async (token: string, params: CreateReleaseParams): Promise<GitHubRelease> => {
-    const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases`, {
+export const createRelease = async (token: string, params: CreateReleaseParams, owner = 'aitnd', repo = 'TNDNB'): Promise<GitHubRelease> => {
+    const response = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -108,8 +122,15 @@ export const createRelease = async (token: string, params: CreateReleaseParams):
     });
 
     if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to create release');
+        let errorMessage = 'Failed to create release';
+        try {
+            const error = await response.json();
+            errorMessage = error.message || errorMessage;
+            if (response.status === 422 && errorMessage.includes('already_exists')) {
+                errorMessage = 'ALREADY_EXISTS';
+            }
+        } catch (e) {}
+        throw new Error(errorMessage);
     }
 
     return response.json();
@@ -122,9 +143,12 @@ export const uploadReleaseAsset = async (
     token: string,
     releaseId: number,
     file: File,
-    onProgress?: (percent: number) => void
+    onProgress?: (percent: number) => void,
+    owner = 'aitnd',
+    repo = 'TNDNB'
 ): Promise<GitHubAsset> => {
-    const releaseResponse = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/${releaseId}`, {
+    // 1. Lấy upload_url của release
+    const releaseResponse = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/${releaseId}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Accept': 'application/vnd.github+json',
@@ -155,14 +179,14 @@ export const uploadReleaseAsset = async (
             } else {
                 try {
                     const error = JSON.parse(xhr.responseText);
-                    reject(new Error(error.message || 'Upload failed'));
+                    reject(new Error(error.message || `Upload failed (${xhr.status})`));
                 } catch {
-                    reject(new Error('Upload failed'));
+                    reject(new Error(`Upload failed (${xhr.status})`));
                 }
             }
         };
 
-        xhr.onerror = () => reject(new Error('Network error during upload'));
+        xhr.onerror = () => reject(new Error('Network error during upload (check CORS or Token)'));
 
         xhr.open('POST', uploadUrl);
         xhr.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -175,8 +199,8 @@ export const uploadReleaseAsset = async (
 /**
  * Xóa release
  */
-export const deleteRelease = async (token: string, releaseId: number): Promise<void> => {
-    const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/${releaseId}`, {
+export const deleteRelease = async (token: string, releaseId: number, owner = 'aitnd', repo = 'TNDNB'): Promise<void> => {
+    const response = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/releases/${releaseId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -194,9 +218,9 @@ export const deleteRelease = async (token: string, releaseId: number): Promise<v
 /**
  * Kiểm tra token có hợp lệ và có quyền repo không
  */
-export const validateToken = async (token: string): Promise<boolean> => {
+export const validateToken = async (token: string, owner = 'aitnd', repo = 'TNDNB'): Promise<boolean> => {
     try {
-        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}`, {
+        const response = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/vnd.github+json',
@@ -204,9 +228,8 @@ export const validateToken = async (token: string): Promise<boolean> => {
             }
         });
 
-        if (!response.ok) {
-            return false;
-        }
+        if (response.status === 401) return false;
+        if (!response.ok) return false;
 
         const data = await response.json();
         return data.permissions?.push === true;
@@ -214,3 +237,4 @@ export const validateToken = async (token: string): Promise<boolean> => {
         return false;
     }
 };
+
