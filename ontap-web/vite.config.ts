@@ -28,6 +28,18 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: '../public/ontap',
       emptyOutDir: true,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('firebase')) return 'vendor-firebase';
+              if (id.includes('recharts')) return 'vendor-recharts';
+              if (id.includes('lucide-react')) return 'vendor-icons';
+              return 'vendor';
+            }
+          }
+        }
+      }
     },
   };
 });

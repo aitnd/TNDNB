@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'sonner';
@@ -996,6 +997,7 @@ const App: React.FC = () => {
     <ThemeProvider>
       <SnowEffect />
       <AppContent />
+      <Analytics />
       <div className="fixed bottom-4 right-4 z-50">
         <ThemeSwitcher />
       </div>

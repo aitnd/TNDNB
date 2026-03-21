@@ -15,6 +15,7 @@
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/push-notifications": "^8.0.1",
     "@supabase/supabase-js": "2",
+    "@vercel/analytics": "^2.0.1",
     "@vitejs/plugin-react": "^5.0.0",
     "capacitor-native-biometric": "^4.2.2",
     "cors": "^2.8.5",
