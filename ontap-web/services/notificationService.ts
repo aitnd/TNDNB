@@ -225,7 +225,7 @@ export const fetchActiveMarqueeNotifications = async (userId?: string, userRole?
 
             if ((data.type === 'special' || data.type === 'attention')) {
                 if (!data.expiryDate || (data.expiryDate.seconds && data.expiryDate.seconds > now.seconds)) {
-                    results.push({ id: d.id, ...data });
+                    results.push({ ...data, id: d.id } as Notification);
                 }
             }
         });
@@ -243,7 +243,7 @@ export const fetchActiveMarqueeNotifications = async (userId?: string, userRole?
                 const data = d.data() as Notification;
                 if ((data.type === 'special' || data.type === 'attention')) {
                     if (!data.expiryDate || (data.expiryDate.seconds && data.expiryDate.seconds > now.seconds)) {
-                        results.push({ id: d.id, ...data });
+                        results.push({ ...data, id: d.id } as Notification);
                     }
                 }
             });

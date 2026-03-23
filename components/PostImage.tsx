@@ -10,6 +10,8 @@ interface PostImageProps {
     style?: React.CSSProperties
 }
 
+import Image from 'next/image'
+
 export default function PostImage({
     src,
     alt,
@@ -20,12 +22,15 @@ export default function PostImage({
     const [imgSrc, setImgSrc] = useState(src)
 
     return (
-        <img
+        <Image
             src={imgSrc}
             alt={alt}
             className={className}
-            style={style}
+            style={{ width: '100%', height: 'auto', ...style }}
+            width={1200}
+            height={800}
             onError={() => setImgSrc(fallbackSrc)}
+            loading="lazy"
         />
     )
 }

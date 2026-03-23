@@ -471,7 +471,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                                             {foundUsers.map(u => (
                                                 <div
                                                     key={u.id}
-                                                    onClick={() => { setSelectedUser(u); setFoundUsers([]); setUserSearchTerm(u.email); }}
+                                                    onClick={() => { setSelectedUser(u); setFoundUsers([]); setUserSearchTerm(u.email || ''); }}
                                                     className="p-2 hover:bg-teal-50 cursor-pointer flex justify-between items-center border-b last:border-0"
                                                 >
                                                     <span className="font-medium">{u.full_name}</span>

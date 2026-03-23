@@ -686,10 +686,11 @@ const AppContent: React.FC = () => {
             ) : <Navigate to="/ontap/chonchedo" replace />
           } />
 
-          <Route path="/ontap/lichsu" element={<HistoryScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/lopcuatoi" element={<MyClassScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/quanlylop" element={<ClassManagementScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/taikhoan" element={<AccountScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} />} />
+          <Route path="/ontap/lichsu" element={userProfile ? <HistoryScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/lopcuatoi" element={userProfile ? <MyClassScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/quanlylop" element={userProfile ? <ClassManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/quanlylop/:courseId" element={userProfile ? <ClassManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/taikhoan" element={userProfile ? <AccountScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/dangnhap" replace />} />
           <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/thongbao" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/homthu" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />

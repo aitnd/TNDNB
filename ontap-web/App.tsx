@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Toaster } from 'sonner';
@@ -38,7 +39,7 @@ import DownloadAppPage from './components/DownloadAppPage';
 import WindowsDownloadRedirect from './components/WindowsDownloadRedirect';
 import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
-import EntertainmentScreen from './components/EntertainmentScreen.tsx';
+import EntertainmentScreen from './components/EntertainmentScreen';
 import GiamKhaoSelectionScreen from './components/GiamKhaoSelectionScreen';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
@@ -945,10 +946,11 @@ const AppContent: React.FC = () => {
             ) : <Navigate to="/ontap/chonchedo" replace />
           } />
 
-          <Route path="/ontap/lichsu" element={<HistoryScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/lopcuatoi" element={<MyClassScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/quanlylop" element={<ClassManagementScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/taikhoan" element={<AccountScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} />} />
+          <Route path="/ontap/lichsu" element={userProfile ? <HistoryScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/lopcuatoi" element={userProfile ? <MyClassScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/quanlylop" element={userProfile ? <ClassManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/quanlylop/:courseId" element={userProfile ? <ClassManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/taikhoan" element={userProfile ? <AccountScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/dangnhap" replace />} />
           <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/thongbao" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/homthu" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
@@ -996,6 +998,7 @@ const App: React.FC = () => {
     <ThemeProvider>
       <SnowEffect />
       <AppContent />
+      <Analytics />
       <div className="fixed bottom-4 right-4 z-50">
         <ThemeSwitcher />
       </div>

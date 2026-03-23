@@ -37,11 +37,11 @@ export const fetchActiveMarqueeNotifications = async (): Promise<Notification[]>
                 // Check expiry if exists; if NOT exists, assume active (essential for legacy or simplified creation)
                 if (data.expiryDate && data.expiryDate.seconds) {
                     if (data.expiryDate.seconds > now.seconds) {
-                        results.push({ id: d.id, ...data });
+                        results.push({ ...data, id: d.id } as Notification);
                     }
                 } else {
                     // No expiry set -> Always show (or limit to X days logic if desired, but for now show)
-                    results.push({ id: d.id, ...data });
+                    results.push({ ...data, id: d.id } as Notification);
                 }
             }
         });

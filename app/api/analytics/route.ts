@@ -35,7 +35,7 @@ export async function POST(request: Request) {
                 metrics: [{ name: 'activeUsers' }]
             });
             const activeUsers = response.rows && response.rows.length > 0
-                ? parseInt(response.rows[0].metricValues[0].value ?? '0')
+                ? parseInt(response.rows[0].metricValues?.[0]?.value ?? '0')
                 : 0;
             return NextResponse.json({ activeUsers });
         }

@@ -14,9 +14,9 @@ interface CreateStudentModalProps {
 }
 
 const CreateStudentModal: React.FC<CreateStudentModalProps> = ({ courseId, courseName, licenseId, onClose, onSuccess }) => {
-    const [sbd, setSbd] = useState('');
     const [fullName, setFullName] = useState('');
-    const [birthDate, setBirthDate] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('123456');
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState('');
@@ -37,16 +37,14 @@ const CreateStudentModal: React.FC<CreateStudentModalProps> = ({ courseId, cours
         const secondaryAuth = getAuth(secondaryApp);
 
         try {
-            const email = `${sbd.trim()}@daotaothuyenvien.com`;
-
             // 1. Create User in Auth
             let uid = '';
             try {
-                const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+                const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email.trim(), password);
                 uid = userCredential.user.uid;
             } catch (authError: any) {
                 if (authError.code === 'auth/email-already-in-use') {
-                    throw new Error('Số báo danh này đã tồn tại trong hệ thống.');
+                    throw new Error('Email này đã tồn tại trong hệ thống.');
                 } else {
                     throw authError;
                 }
@@ -56,9 +54,9 @@ const CreateStudentModal: React.FC<CreateStudentModalProps> = ({ courseId, cours
                 // 2. Create/Update Firestore Doc
                 await setDoc(doc(db, 'users', uid), {
                     fullName: fullName.trim(),
-                    email: email,
+                    email: email.trim(),
+                    phoneNumber: phoneNumber.trim(),
                     role: 'hoc_vien',
-                    birthDate: birthDate,
                     courseId: courseId,
                     courseName: courseName,
                     class: courseName,
@@ -100,18 +98,6 @@ const CreateStudentModal: React.FC<CreateStudentModalProps> = ({ courseId, cours
 
                 <form onSubmit={handleCreate} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Số Báo Danh (SBD) <span className="text-red-500">*</span></label>
-                        <input
-                            type="text"
-                            value={sbd}
-                            onChange={e => setSbd(e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-700 dark:border-slate-600 dark:text-white"
-                            placeholder="Ví dụ: TMK3-001"
-                            required
-                        />
-                    </div>
-
-                    <div>
                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Họ và Tên <span className="text-red-500">*</span></label>
                         <input
                             type="text"
@@ -124,13 +110,25 @@ const CreateStudentModal: React.FC<CreateStudentModalProps> = ({ courseId, cours
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Ngày sinh</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Email <span className="text-red-500">*</span></label>
                         <input
-                            type="text"
-                            value={birthDate}
-                            onChange={e => setBirthDate(e.target.value)}
+                            type="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-700 dark:border-slate-600 dark:text-white"
-                            placeholder="DD/MM/YYYY"
+                            placeholder="Ví dụ: hocvien@gmail.com"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Số điện thoại</label>
+                        <input
+                            type="tel"
+                            value={phoneNumber}
+                            onChange={e => setPhoneNumber(e.target.value)}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                            placeholder="Ví dụ: 0912345678"
                         />
                     </div>
 

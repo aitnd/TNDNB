@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "schema_version": "1.1.0",
+    "awf_version": "3.3.0"
+  },
+  "project": {
+    "name": "ontap-web",
+    "type": "Vite/React",
+    "status": "In Development (Analytics Integrated)",
+    "para": "Project"
+  },
+  "tech_stack": {
+    "frontend": {
+      "framework": "React 19",
+      "build_tool": "Vite 6",
+      "styling": "Vanilla CSS",
+      "state_management": "React Hooks",
+      "analytics": "Vercel Analytics"
+    },
+    "backend": {
+      "database": "Firebase RTDB"
+    }
+  },
+  "features": [
+    "Vercel Analytics Integration",
+    "Admin Dashboard for Session Management",
+    "Realtime Exam Statistics",
+    "Search functionality in Account screen"
+  ],
+  "knowledge_items": {
+    "patterns": [
+      "Vite Proxy for `/api` matching backend port",
+      "Optional Chaining for inconsistent Firebase RTDB schema"
+    ],
+    "gotchas": [
+      "AdminSessionList might crash if data is null/undefined",
+      "Search filter needs null checks for deviceName"
+    ]
+  }
+}

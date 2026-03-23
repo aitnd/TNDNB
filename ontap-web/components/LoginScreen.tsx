@@ -67,7 +67,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     setError(null);
 
     try {
-      const savedPassword = getAccountPassword(savedAcc.email);
+      const savedPassword = await getAccountPassword(savedAcc.email);
 
       if (savedPassword) {
         // Có mật khẩu đã lưu -> đăng nhập tự động

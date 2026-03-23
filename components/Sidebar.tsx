@@ -6,7 +6,7 @@ import styles from './Sidebar.module.css'
 import Searchbar from './Searchbar'
 import SidebarMediaWidgets from './SidebarMediaWidgets'
 
-export const revalidate = 0;
+export const revalidate = 3600; // Cache 1 giờ
 
 type Post = {
   id: string;

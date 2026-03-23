@@ -13,7 +13,7 @@ const NotificationBanner: React.FC<NotificationBannerProps> = ({ notification, u
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        if (notification && !notification.readBy.includes(userId)) {
+        if (notification && !notification.readBy?.includes(userId)) {
             setVisible(true);
             // Auto hide after 8 seconds if not system
             if (notification.type !== 'system') {

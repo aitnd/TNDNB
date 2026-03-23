@@ -5,7 +5,7 @@ import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, F
 import { db } from '../services/firebaseClient';
 import { collection, getDocs, doc, updateDoc, writeBatch, query, where } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease } from '../services/githubService';
+import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease, getReleaseByTag, deleteRelease } from '../services/githubService';
 
 const UsageConfigPanel: React.FC = () => {
     const navigate = useNavigate();
@@ -93,39 +93,78 @@ const UsageConfigPanel: React.FC = () => {
         setUploadProgress(0);
 
         try {
-            // 1. Tạo Release
+            // 0. Kiểm tra Token trước khi tốn thời gian upload
+            const valid = await validateToken(githubConfig.token, githubConfig.owner, githubConfig.repo);
+            if (!valid) {
+                Swal.fire('Lỗi Token', 'Token GitHub của bạn không hợp lệ hoặc không có quyền ghi. Vui lòng kiểm tra lại.', 'error');
+                setPublishing(false);
+                return;
+            }
+
+            // 1. Kiểm tra xem Release đã tồn tại chưa
+            const tag = `v${releaseVersion}`;
+            const existingRelease = await getReleaseByTag(githubConfig.token, tag, githubConfig.owner, githubConfig.repo);
+
+            let releaseId: number;
+            let currentRelease: GitHubRelease;
+
+            if (existingRelease) {
+                const result = await Swal.fire({
+                    title: 'Phiên bản đã tồn tại',
+                    text: `Phiên bản ${tag} đã có trên GitHub. Bạn có muốn xóa bản cũ để phát hành lại không?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Có, xóa và ghi đè',
+                    cancelButtonText: 'Không, để em xem lại',
+                    confirmButtonColor: '#d33'
+                });
+
+                if (!result.isConfirmed) {
+                    setPublishing(false);
+                    return;
+                }
+
+                // Xóa release cũ
+                setUploadProgress(5);
+                await deleteRelease(githubConfig.token, existingRelease.id, githubConfig.owner, githubConfig.repo);
+            }
+
+            // 1. Tạo Release mới
+            setUploadProgress(10);
             const release = await createRelease(githubConfig.token, {
-                tag_name: `v${releaseVersion}`,
+                tag_name: tag,
                 name: `Version ${releaseVersion}`,
                 body: releaseNotes || `Phát hành phiên bản ${releaseVersion}`,
                 draft: false,
                 prerelease: false
-            });
+            }, githubConfig.owner, githubConfig.repo);
+            
+            currentRelease = release;
+            releaseId = release.id;
 
             // 2. Upload file .exe và lấy browser_download_url
-            setUploadProgress(10);
-            const exeAsset = await uploadReleaseAsset(githubConfig.token, release.id, exeFile, (p) => {
-                setUploadProgress(10 + Math.round(p * 0.6)); // 10-70%
-            });
+            setUploadProgress(15);
+            const exeAsset = await uploadReleaseAsset(githubConfig.token, releaseId, exeFile, (p) => {
+                setUploadProgress(15 + Math.round(p * 0.55)); // 15-70%
+            }, githubConfig.owner, githubConfig.repo);
 
             // 3. Upload file latest.yml
             setUploadProgress(75);
-            await uploadReleaseAsset(githubConfig.token, release.id, ymlFile, (p) => {
+            await uploadReleaseAsset(githubConfig.token, releaseId, ymlFile, (p) => {
                 setUploadProgress(75 + Math.round(p * 0.15)); // 75-90%
-            });
+            }, githubConfig.owner, githubConfig.repo);
 
             // 4. Upload blockmap nếu có
             if (blockmapFile) {
                 setUploadProgress(90);
-                await uploadReleaseAsset(githubConfig.token, release.id, blockmapFile, (p) => {
+                await uploadReleaseAsset(githubConfig.token, releaseId, blockmapFile, (p) => {
                     setUploadProgress(90 + Math.round(p * 0.1)); // 90-100%
-                });
+                }, githubConfig.owner, githubConfig.repo);
             }
 
             setUploadProgress(100);
 
             // 5. Cập nhật app_links trong config
-            // 💖 Sử dụng browser_download_url trực tiếp từ asset thay vì tự tạo URL (SỬA LỖI)
             const windowsUrl = exeAsset.browser_download_url;
             if (config) {
                 const updatedConfig = {
@@ -142,11 +181,11 @@ const UsageConfigPanel: React.FC = () => {
 
 
             // 6. Cập nhật latest release
-            setLatestRelease(release);
+            setLatestRelease(currentRelease);
 
             Swal.fire({
                 title: 'Phát hành thành công!',
-                html: `<p>Phiên bản <strong>v${releaseVersion}</strong> đã được đẩy lên GitHub.</p><a href="${release.html_url}" target="_blank" class="text-blue-600 underline">Xem trên GitHub</a>`,
+                html: `<p>Phiên bản <strong>v${releaseVersion}</strong> đã được đẩy lên GitHub.</p><a href="${currentRelease.html_url}" target="_blank" class="text-blue-600 underline">Xem trên GitHub</a>`,
                 icon: 'success'
             });
 
@@ -159,7 +198,13 @@ const UsageConfigPanel: React.FC = () => {
 
         } catch (err: any) {
             console.error('Publish error:', err);
-            Swal.fire('Lỗi phát hành', err.message || 'Không thể phát hành release', 'error');
+            let msg = err.message || 'Không thể phát hành release';
+            if (msg.includes('401') || msg.toLowerCase().includes('bad credentials')) {
+                msg = 'Token GitHub không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại cấu hình.';
+            } else if (msg === 'ALREADY_EXISTS') {
+                msg = 'Phiên bản này đã tồn tại trên GitHub. Vui lòng xóa tag cũ hoặc đổi số phiên bản.';
+            }
+            Swal.fire('Lỗi phát hành', msg, 'error');
         } finally {
             setPublishing(false);
         }

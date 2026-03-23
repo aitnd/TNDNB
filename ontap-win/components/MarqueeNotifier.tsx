@@ -3,19 +3,7 @@ import { fetchActiveMarqueeNotifications, Notification } from '../services/notif
 import Marquee from 'react-fast-marquee';
 import { FaExclamationTriangle, FaBell } from 'react-icons/fa';
 
-// Augment JSX to support marquee
-declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            marquee: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-                behavior?: string;
-                direction?: string;
-                scrollamount?: string | number;
-                width?: string;
-            };
-        }
-    }
-}
+
 
 const MarqueeNotifier: React.FC = () => {
     const [activeNotifs, setActiveNotifs] = useState<Notification[]>([]);
@@ -53,13 +41,13 @@ const MarqueeNotifier: React.FC = () => {
                         {/* 
                             // @ts-ignore - marquee tag is deprecated but explicitly requested by user 
                         */}
-                        <marquee behavior="scroll" direction="left" scrollamount="5" width="100%">
+                        {React.createElement('marquee' as any, { behavior: "scroll", direction: "left", scrollamount: "5", width: "100%" }, 
                             <div className="inline-flex items-center gap-4 mx-8 font-bold text-sm md:text-base uppercase tracking-wider">
                                 {isSpecial ? <FaExclamationTriangle className="animate-pulse" /> : <FaBell className="animate-bounce" />}
                                 <span>{n.title}:</span>
                                 <span className="font-medium normal-case">{n.message}</span>
                             </div>
-                        </marquee>
+                        )}
                     </div>
                 );
             })}
