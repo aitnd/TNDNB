@@ -14,6 +14,8 @@ interface ClassDetailClientProps {
   userProfile: UserProfile;
   studentLatestResults?: Record<string, any>;
   deviceCounts?: Record<string, number>;
+  subjectStats?: any[];
+  creatorProfiles?: Record<string, {name: string, role: string}>;
 }
 
 type TabType = 'overview' | 'students' | 'teachers' | 'settings';
@@ -30,7 +32,9 @@ const ClassDetailClient: React.FC<ClassDetailClientProps> = ({
   onBack, 
   userProfile,
   studentLatestResults = {},
-  deviceCounts = {}
+  deviceCounts = {},
+  subjectStats = [],
+  creatorProfiles = {}
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [studentCount, setStudentCount] = useState(0);
@@ -99,7 +103,7 @@ const ClassDetailClient: React.FC<ClassDetailClientProps> = ({
             className="w-full"
           >
             {activeTab === 'overview' && (
-              <OverviewTab course={course} studentCount={studentCount} />
+              <OverviewTab course={course} studentCount={studentCount} subjectStats={subjectStats} creatorProfiles={creatorProfiles} />
             )}
 
             {activeTab === 'students' && (

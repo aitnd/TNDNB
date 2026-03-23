@@ -6,9 +6,11 @@ import { Course } from '../../types';
 interface OverviewTabProps {
   course: Course;
   studentCount?: number;
+  subjectStats?: any[];
+  creatorProfiles?: Record<string, {name: string, role: string}>;
 }
 
-const OverviewTab: React.FC<OverviewTabProps> = ({ course, studentCount = 0 }) => {
+const OverviewTab: React.FC<OverviewTabProps> = ({ course, studentCount = 0, subjectStats = [], creatorProfiles = {} }) => {
   const formatDate = (date: any) => {
     if (!date) return 'Chưa xác định';
     if (date.toDate) return date.toDate().toLocaleDateString('vi-VN');
@@ -56,6 +58,52 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ course, studentCount = 0 }) =
                 <FaCalendarAlt className="text-xs" /> Ngày tạo
               </span>
               <span className="font-medium dark:text-white">{formatDate(course.createdAt)}</span>
+            </div>
+
+            <div className="flex items-center justify-between py-3 border-b border-gray-50 dark:border-slate-800/50">
+              <span className="text-gray-500 dark:text-slate-400 text-sm flex items-center gap-2">
+                <FaUserTie className="text-xs" /> Người tạo
+              </span>
+              <div className="flex items-center gap-2">
+                {(() => {
+                   const creatorInfo = course.createdBy && creatorProfiles?.[course.createdBy] 
+                     ? creatorProfiles[course.createdBy] 
+                     : { name: course.createdBy || 'Hệ thống', role: course.createdBy ? 'giao_vien' : 'admin' };
+                   
+                   const getRoleBadgeColor = (role: string) => {
+                     switch(role) {
+                       case 'admin': return 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border-violet-200 dark:border-violet-800';
+                       case 'lanh_dao': return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800';
+                       case 'quan_ly': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800';
+                       case 'giao_vien': return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800';
+                       default: return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 border-gray-200 dark:border-gray-700';
+                     }
+                   };
+                   
+                   const getRoleLabel = (role: string) => {
+                     switch(role) {
+                       case 'admin': return 'Admin';
+                       case 'lanh_dao': return 'Lãnh đạo';
+                       case 'quan_ly': return 'Quản lý';
+                       case 'giao_vien': return 'Giáo viên';
+                       default: return 'Khách';
+                     }
+                   };
+
+                   return (
+                     <>
+                       {creatorInfo.name !== 'Hệ thống' && (
+                         <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${getRoleBadgeColor(creatorInfo.role)}`}>
+                           {getRoleLabel(creatorInfo.role)}
+                         </span>
+                       )}
+                       <span className="text-sm font-bold text-gray-800 dark:text-white shrink-0 truncate max-w-[150px]" title={creatorInfo.name}>
+                         {creatorInfo.name}
+                       </span>
+                     </>
+                   );
+                })()}
+              </div>
             </div>
 
             <div className="flex items-center justify-between py-3">
@@ -119,6 +167,35 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ course, studentCount = 0 }) =
               </div>
             </div>
           </div>
+
+          {/* Thống kê Điểm theo Môn */}
+          {subjectStats && subjectStats.length > 0 && (
+            <div className="mt-8 pt-6 border-t border-gray-50 dark:border-slate-800/50">
+              <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Thống kê điểm (Chỉ học viên đã nộp bài)</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-[11px] text-gray-500 uppercase bg-gray-50 dark:bg-slate-800/50 dark:text-gray-400">
+                    <tr>
+                      <th className="px-4 py-3 rounded-l-lg font-bold">Tên bài thi / Môn</th>
+                      <th className="px-2 py-3 text-center font-bold">Cao nhất</th>
+                      <th className="px-2 py-3 text-center font-bold">Thấp nhất</th>
+                      <th className="px-2 py-3 text-center rounded-r-lg font-bold">Trung bình</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subjectStats.map((stat, idx) => (
+                      <tr key={idx} className="border-b dark:border-slate-800/50 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors">
+                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white max-w-[200px] truncate" title={stat.name}>{stat.name}</td>
+                        <td className="px-2 py-3 text-center text-teal-600 font-bold">{stat.highest !== null ? stat.highest : '--'}</td>
+                        <td className="px-2 py-3 text-center text-rose-500 font-bold">{stat.lowest !== null ? stat.lowest : '--'}</td>
+                        <td className="px-2 py-3 text-center text-amber-500 font-bold">{stat.average !== null ? stat.average : '--'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

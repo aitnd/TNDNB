@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils, Gamepad2 } from 'lucide-react';
+import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils, Gamepad2 , Compass, ShieldCheck, FileEdit} from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
 
@@ -14,7 +14,8 @@ interface TopNavbarProps {
 
 const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout }) => {
     const [showChangelog, setShowChangelog] = React.useState(false);
-    const [showLinksDropdown, setShowLinksDropdown] = React.useState(false); // Dropdown liên kết khác
+    const [showLinksDropdown, setShowLinksDropdown] = React.useState(false);
+    const [showSystemDropdown, setShowSystemDropdown] = React.useState(false);
 
     return (
         <>
@@ -32,12 +33,33 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                         <span className="font-semibold text-sm md:text-base">Ôn tập</span>
                     </button>
 
-                    {/* 1.1 Thi Trực Tuyến */}
+                    {/* 2. Lớp học */}
+                    {userProfile && (
+                        ['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile?.role || 'hoc_vien') ? (
+                            <button
+                                onClick={() => onNavigate('class_management')}
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+                            >
+                                <School size={18} className="text-indigo-600 dark:text-indigo-400" />
+                                <span className="font-semibold text-sm md:text-base">Quản lý lớp</span>
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => onNavigate('my_class')}
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+                            >
+                                <GraduationCap size={18} className="text-green-600 dark:text-green-400" />
+                                <span className="font-semibold text-sm md:text-base">Lớp của tôi</span>
+                            </button>
+                        )
+                    )}
+
+                    {/* 3. Thi Trực Tuyến */}
                     <button
                         onClick={() => {
                             if (!userProfile) {
                                 onNavigate('thi_truc_tuyen');
-                            } else if (['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || '')) {
+                            } else if (['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || 'hoc_vien')) {
                                 onNavigate('online_exam_management');
                             } else {
                                 onNavigate('thi_truc_tuyen');
@@ -45,142 +67,94 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                         }}
                         className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
                     >
-                        <Newspaper size={18} className="text-red-600 dark:text-red-400" />
+                        <FileEdit size={18} className="text-red-600 dark:text-red-400" />
                         <span className="font-semibold text-sm md:text-base">Thi trực tuyến</span>
                     </button>
 
-                    <a
-                        href="/"
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap decoration-0"
-                    >
-                        <Newspaper size={18} className="text-teal-600 dark:text-teal-400" />
-                        <span className="font-medium text-sm md:text-base">Tin tức</span>
-                    </a>
+                    {/* Giám khảo */}
+                    {userProfile && ['admin', 'giao_vien', 'quan_ly', 'lanh_dao'].includes(userProfile.role) && (
+                        <button
+                            onClick={() => onNavigate('giam_khao')}
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-colors whitespace-nowrap border border-amber-200 dark:border-amber-500/20"
+                        >
+                            <Award size={18} className="text-amber-600 dark:text-amber-400" />
+                            <span className="font-bold text-sm md:text-base">Giám khảo</span>
+                        </button>
+                    )}
 
-                    {/* 2.1 Giải trí */}
-                    <button
-                        onClick={() => onNavigate('giaitri')}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <Gamepad2 size={18} className="text-indigo-600 dark:text-indigo-400" />
-                        <span className="font-semibold text-sm md:text-base">Giải trí</span>
-                    </button>
-
-                    {/* Liên kết khác - Dropdown (dùng fixed để tránh bị cắt) */}
+                    {/* Dropdown "Khám phá" */}
                     <div className="relative">
                         <button
                             onClick={() => setShowLinksDropdown(!showLinksDropdown)}
                             onBlur={() => setTimeout(() => setShowLinksDropdown(false), 200)}
                             className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
                         >
-                            <Link2 size={18} className="text-pink-600 dark:text-pink-400" />
-                            <span className="font-medium text-sm md:text-base">Liên kết</span>
+                            <Compass size={18} className="text-teal-600 dark:text-teal-400" />
+                            <span className="font-semibold text-sm md:text-base">Khám phá</span>
                             <ChevronDown size={16} className={`transition-transform ${showLinksDropdown ? 'rotate-180' : ''}`} />
                         </button>
-
-                        {/* Dropdown menu - dùng fixed position */}
                         {showLinksDropdown && (
-                            <div className="fixed mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]"
-                                style={{ top: '56px' }}>
+                            <div className="fixed mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]" style={{ top: '56px' }}>
+                                {/* Giải trí */}
+                                {userProfile && (
+                                    <button onClick={() => { setShowLinksDropdown(false); onNavigate('giaitri'); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left relative overflow-hidden group">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <Gamepad2 size={18} className="text-emerald-500" />
+                                        <span className="font-semibold text-sm">Giải trí (VIP)</span>
+                                    </button>
+                                )}
+                                {/* Tin tức */}
+                                <a href="/" className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                    <Newspaper size={18} className="text-blue-500" />
+                                    <span className="font-medium text-sm">Tin tức</span>
+                                </a>
                                 {/* Tải App */}
-                                <button
-                                    onClick={() => { setShowLinksDropdown(false); onNavigate('download_app'); }}
-                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left"
-                                >
+                                <button onClick={() => { setShowLinksDropdown(false); onNavigate('download_app'); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left">
                                     <Download size={18} className="text-green-500" />
                                     <span className="font-medium text-sm">Tải App học offline</span>
                                 </button>
                                 {/* Ẩm thực */}
-                                <a
-                                    href="https://daotaothuyenvien.com/amthuc"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-                                >
-                                    <Utensils size={18} className="text-orange-500" />
-                                    <span className="font-medium text-sm">Ẩm thực Ninh Bình</span>
-                                </a>
-                                {/* Có thể thêm link khác ở đây */}
+                                <a href="https://daotaothuyenvien.com/amthuc" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                        <Utensils size={18} className="text-orange-500" />
+                                        <span className="font-medium text-sm">Ẩm thực Ninh Bình</span>
+                                    </a>
                             </div>
                         )}
                     </div>
 
-                    {/* 3. Tài khoản */}
-                    <button
-                        onClick={() => onNavigate('account')}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <UserCog size={18} className="text-orange-600 dark:text-orange-400" />
-                        <span className="font-medium text-sm md:text-base">Tài khoản</span>
-                    </button>
-
-                    {/* 3.1 Hộp thư */}
-                    <button
-                        onClick={() => onNavigate('mailbox')}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                    >
-                        <Mail size={18} className="text-pink-600 dark:text-pink-400" />
-                        <span className="font-medium text-sm md:text-base">Hộp thư</span>
-                    </button>
-
-                    {/* 4. Lịch sử / Lớp học (Chỉ hiện khi đã đăng nhập) */}
-                    {userProfile && (
-                        <>
-                            {/* Class Navigation based on Role */}
-                            {['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile?.role || '') ? (
-                                <button
-                                    onClick={() => onNavigate('class_management')}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                                >
-                                    <School size={18} className="text-indigo-600 dark:text-indigo-400" />
-                                    <span className="font-medium text-sm md:text-base">Quản lý lớp</span>
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={() => onNavigate('my_class')}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
-                                >
-                                    <GraduationCap size={18} className="text-green-600 dark:text-green-400" />
-                                    <span className="font-medium text-sm md:text-base">Lớp của tôi</span>
-                                </button>
-                            )}
-
-                            {/* Notification Management (Admin/Leader/Manager/Teacher) */}
-                            {['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile?.role || '') && (
-                                <button
-                                    onClick={() => onNavigate('notification_mgmt')}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap border-l border-gray-200 dark:border-gray-700 ml-2 pl-4"
-                                >
-                                    <AlertTriangle size={18} className="text-red-500 animate-pulse-slow" />
-                                    <span className="font-bold text-sm md:text-base text-red-600 dark:text-red-400">Quản lý TB</span>
-                                </button>
-                            )}
-
-                            {/* Admin Config Button (ONLY ADMIN) */}
-                            {userProfile?.role === 'admin' && (
-                                <button
-                                    onClick={() => onNavigate('config')}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap border-l border-gray-200 dark:border-gray-700 ml-2 pl-4"
-                                >
-                                    <Settings size={18} className="text-purple-600 animate-spin-slow" />
-                                    <span className="font-bold text-sm md:text-base text-purple-600 dark:text-purple-400">Cấu hình</span>
-                                </button>
-                            )}
-
+                    {/* Dropdown "Hệ thống" (chỉ cho quản lý) */}
+                    {userProfile && ['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile.role) && (
+                        <div className="relative">
                             <button
-                                onClick={() => onNavigate('history')}
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+                                onClick={() => setShowSystemDropdown(!showSystemDropdown)}
+                                onBlur={() => setTimeout(() => setShowSystemDropdown(false), 200)}
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap border-l border-gray-200 dark:border-gray-700 md:ml-2 pl-4"
                             >
-                                <History size={18} className="text-purple-600 dark:text-purple-400" />
-                                <span className="font-medium text-sm md:text-base">Lịch sử</span>
+                                <ShieldCheck size={18} className="text-purple-600 dark:text-purple-400" />
+                                <span className="font-semibold text-sm md:text-base">Hệ thống</span>
+                                <ChevronDown size={16} className={`transition-transform ${showSystemDropdown ? 'rotate-180' : ''}`} />
                             </button>
-                        </>
+                            {showSystemDropdown && (
+                                <div className="fixed mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]" style={{ top: '56px' }}>
+                                    <button onClick={() => { setShowSystemDropdown(false); onNavigate('notification_mgmt'); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left">
+                                        <AlertTriangle size={18} className="text-red-500" />
+                                        <span className="font-medium text-sm">Quản lý TB</span>
+                                    </button>
+                                    {userProfile.role === 'admin' && (
+                                        <button onClick={() => { setShowSystemDropdown(false); onNavigate('config'); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left">
+                                            <Settings size={18} className="text-purple-500" />
+                                            <span className="font-medium text-sm">Cấu hình</span>
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
 
                 {/* RIGHT: User Info & Logout */}
-                <div className="flex items-center gap-3 md:gap-4 ml-4 flex-shrink-0">
-                    <div className="flex items-center gap-2 px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-xs font-medium">
+                <div className="flex items-center gap-2 md:gap-4 ml-4 flex-shrink-0">
+                    <div className="flex items-center gap-2 px-2 py-1 rounded bg-gray-100 dark:bg-slate-800 text-xs font-medium mr-2">
                         {navigator.onLine ? (
                             <><Wifi size={14} className="text-green-500" /> <span className="text-green-600 dark:text-green-400 hidden sm:inline">Trực tuyến</span></>
                         ) : (
@@ -189,10 +163,26 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                     </div>
                     {userProfile ? (
                         <>
-                            <div className="mr-2">
+                            {/* Actions (Mail, History, Bell) */}
+                            <div className="flex items-center gap-1 md:gap-2 mr-0 md:mr-2">
+                                <button
+                                    onClick={() => onNavigate('mailbox')}
+                                    className="p-1.5 md:p-2 text-gray-500 hover:text-pink-600 dark:text-gray-400 dark:hover:text-pink-400 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-slate-800"
+                                    title="Hộp thư"
+                                >
+                                    <Mail size={20} />
+                                </button>
+                                <button
+                                    onClick={() => onNavigate('history')}
+                                    className="p-1.5 md:p-2 text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-slate-800"
+                                    title="Lịch sử"
+                                >
+                                    <History size={20} />
+                                </button>
                                 <NotificationBell />
                             </div>
-                            <div className="hidden md:flex flex-col items-end mr-4">
+
+                            <div className="hidden md:flex flex-col items-end mr-2">
                                 <button
                                     onClick={() => setShowChangelog(true)}
                                     className="text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors"
@@ -201,36 +191,31 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 </button>
                             </div>
 
-                            <div className="hidden md:flex flex-col items-end">
-                                <span className="text-xs text-gray-500 dark:text-gray-400">Xin chào,</span>
-                                <span className="text-sm font-bold text-gray-800 dark:text-white max-w-[150px] truncate">
-                                    {userProfile.isVerified || userProfile.courseId ? (
-                                        <span className={`flex items-center gap-1 font-bold ${userProfile?.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
-                                            userProfile?.role === 'quan_ly' || userProfile?.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
-                                                userProfile?.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
-                                                    'text-blue-600'
-                                            }`}>
-                                            {userProfile.full_name || userProfile.fullName || '---'}
-                                            {userProfile?.role === 'hoc_vien' && <CheckCircle size={14} className="text-green-500" />}
-                                        </span>
-                                    ) : (
-                                        <span className={`font-bold ${userProfile?.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
-                                            userProfile?.role === 'quan_ly' || userProfile?.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
-                                                userProfile?.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
-                                                    'text-gray-800 dark:text-white'
-                                            }`}>
-                                            {userProfile.full_name || userProfile.fullName || '---'}
-                                        </span>
-                                    )}
+                            {/* User Account Button */}
+                            <button 
+                                onClick={() => onNavigate('account')}
+                                className="hidden md:flex flex-col items-end justify-center hover:opacity-80 transition-opacity text-right cursor-pointer"
+                                title="Quản lý tài khoản"
+                            >
+                                <span className="text-xs text-gray-500 dark:text-gray-400 leading-tight">Xin chào,</span>
+                                <span className="text-sm font-bold text-gray-800 dark:text-white max-w-[150px] truncate leading-tight mt-0.5">
+                                    <span className={`flex items-center gap-1 font-bold ${userProfile?.role === 'giao_vien' ? 'text-yellow-600 dark:text-yellow-400' :
+                                        userProfile?.role === 'quan_ly' || userProfile?.role === 'lanh_dao' ? 'text-red-600 dark:text-red-400' :
+                                            userProfile?.role === 'admin' ? 'text-purple-600 dark:text-purple-400' :
+                                                'text-blue-600'
+                                        }`}>
+                                        {userProfile.full_name || userProfile.fullName || '---'}
+                                        {userProfile?.role === 'hoc_vien' && (userProfile.isVerified || userProfile.courseId) && <CheckCircle size={14} className="text-green-500" />}
+                                    </span>
                                 </span>
-                            </div>
+                            </button>
 
-                            {/* Mobile Icon for User */}
-                            <div className="md:hidden text-gray-700 dark:text-gray-200">
-                                <GraduationCap size={20} />
-                            </div>
+                            {/* Mobile Icon for Account */}
+                            <button onClick={() => onNavigate('account')} className="md:hidden text-gray-700 dark:text-gray-200 mx-1">
+                                <UserCog size={20} />
+                            </button>
 
-                            <div className="h-8 w-[1px] bg-gray-300 dark:bg-gray-700 mx-1"></div>
+                            <div className="h-6 w-[1px] bg-gray-300 dark:bg-gray-700 mx-1 md:mx-2"></div>
 
                             <button
                                 onClick={onLogout}
@@ -238,7 +223,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 title="Đăng xuất"
                             >
                                 <LogOut size={18} className="group-hover:translate-x-1 transition-transform" />
-                                <span className="hidden md:inline font-medium text-sm">Thoát</span>
+                                <span className="hidden md:inline font-bold text-sm">Thoát</span>
                             </button>
                         </>
                     ) : (

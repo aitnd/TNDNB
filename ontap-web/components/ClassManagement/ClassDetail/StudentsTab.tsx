@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   collection, query, where, onSnapshot, 
@@ -10,7 +10,8 @@ import {
   FaFileExcel, FaPlus, FaCheckCircle, FaLaptop, 
   FaPaperPlane, FaEdit, FaHistory, FaTrash, 
   FaChevronLeft, FaChevronRight, FaUserClock, 
-  FaUserGraduate
+  FaUserGraduate,
+  FaSortUp, FaSortDown, FaSort
 } from 'react-icons/fa';
 import { Course, UserProfile } from '../../types';
 import * as XLSX from 'xlsx';
@@ -34,6 +35,22 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Sorting
+  type SortColumn = 'name' | 'type' | 'time' | 'score';
+  type SortDirection = 'asc' | 'desc';
+  const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
+  const handleSort = useCallback((column: SortColumn) => {
+    if (sortColumn === column) {
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+    setCurrentPage(1);
+  }, [sortColumn]);
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -90,8 +107,56 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
         (st.phoneNumber || '').includes(s)
       );
     }
+
+    // Sắp xếp toàn bộ danh sách
+    if (sortColumn) {
+      result.sort((a, b) => {
+        let valA: string | number = '';
+        let valB: string | number = '';
+
+        switch (sortColumn) {
+          case 'name':
+            valA = (a.fullName || a.full_name || '').toLowerCase();
+            valB = (b.fullName || b.full_name || '').toLowerCase();
+            break;
+          case 'type':
+            valA = (studentLatestResults[a.id]?.type || '').toLowerCase();
+            valB = (studentLatestResults[b.id]?.type || '').toLowerCase();
+            break;
+          case 'time':
+            valA = studentLatestResults[a.id]?.time || '';
+            valB = studentLatestResults[b.id]?.time || '';
+            break;
+          case 'score': {
+            const parseScore = (s: string) => {
+              if (!s || s === '--') return -1;
+              const match = s.match(/(\d+)\s*\/\s*(\d+)/);
+              if (match) return parseInt(match[1]) / parseInt(match[2]);
+              const num = parseFloat(s);
+              return isNaN(num) ? -1 : num;
+            };
+            valA = parseScore(studentLatestResults[a.id]?.score || '');
+            valB = parseScore(studentLatestResults[b.id]?.score || '');
+            break;
+          }
+        }
+
+        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
     return result;
-  }, [students, searchTerm]);
+  }, [students, searchTerm, sortColumn, sortDirection, studentLatestResults]);
+
+  // Component hiển thị icon sắp xếp
+  const SortIcon: React.FC<{ column: SortColumn }> = ({ column }) => {
+    if (sortColumn !== column) return <FaSort className="inline ml-1 opacity-30" size={10} />;
+    return sortDirection === 'asc' 
+      ? <FaSortUp className="inline ml-1 text-teal-400" size={10} />
+      : <FaSortDown className="inline ml-1 text-teal-400" size={10} />;
+  };
 
   const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
   const paginatedStudents = filteredStudents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -348,11 +413,11 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-800">
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400">Học viên</th>
+                <th onClick={() => handleSort('name')} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 cursor-pointer select-none hover:text-teal-500 transition-colors">Học viên <SortIcon column="name" /></th>
                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden sm:table-cell">Trạng thái</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden md:table-cell text-center">Bài làm gần nhất</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden lg:table-cell text-center">Thời gian</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden md:table-cell text-center">Điểm</th>
+                <th onClick={() => handleSort('type')} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden md:table-cell text-center cursor-pointer select-none hover:text-teal-500 transition-colors">Bài làm gần nhất <SortIcon column="type" /></th>
+                <th onClick={() => handleSort('time')} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden lg:table-cell text-center cursor-pointer select-none hover:text-teal-500 transition-colors">Thời gian <SortIcon column="time" /></th>
+                <th onClick={() => handleSort('score')} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden md:table-cell text-center cursor-pointer select-none hover:text-teal-500 transition-colors">Điểm <SortIcon column="score" /></th>
                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Thao tác</th>
               </tr>
             </thead>

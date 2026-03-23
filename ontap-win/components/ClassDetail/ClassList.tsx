@@ -18,6 +18,7 @@ interface ClassListProps {
     onBack: () => void;
     userProfile: UserProfile;
     headTeacherNames: Record<string, string>;
+    creatorProfiles?: Record<string, {name: string, role: string}>;
     licenses: any[];
     canCreateClass: boolean;
 }
@@ -36,6 +37,7 @@ const ClassList: React.FC<ClassListProps> = ({
     onBack,
     userProfile,
     headTeacherNames,
+    creatorProfiles = {},
     licenses,
     canCreateClass
 }) => {
@@ -223,11 +225,29 @@ const ClassList: React.FC<ClassListProps> = ({
                                                 <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
                                                     <FaUserTie className="text-blue-600" />
                                                 </div>
-                                                <div className="min-w-0">
+                                                <div className="min-w-0 flex-1">
                                                     <span className="text-[10px] text-gray-400 block uppercase font-bold tracking-tighter">GV Chủ nhiệm</span>
-                                                    <span className="text-sm font-bold truncate block">
+                                                    <span className="text-sm font-bold truncate block dark:text-white">
                                                         {course.headTeacherId ? (headTeacherNames[course.headTeacherId] || '...') : 'Chưa phân công'}
                                                     </span>
+                                                    {course.createdBy && creatorProfiles[course.createdBy] && (
+                                                        <div className="flex items-center gap-1.5 mt-1 border-t border-gray-100 dark:border-slate-700/50 pt-1">
+                                                            <span className="text-[9px] text-gray-400 uppercase font-bold">Người tạo:</span>
+                                                            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 truncate max-w-[80px]" title={creatorProfiles[course.createdBy].name}>
+                                                              {creatorProfiles[course.createdBy].name}
+                                                            </span>
+                                                            <span className={`px-1.5 py-[1px] border rounded text-[8px] font-bold ${
+                                                              creatorProfiles[course.createdBy].role === 'admin' ? 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800' :
+                                                              creatorProfiles[course.createdBy].role === 'lanh_dao' ? 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800' :
+                                                              creatorProfiles[course.createdBy].role === 'quan_ly' ? 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800' :
+                                                              'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800'
+                                                            }`}>
+                                                              {creatorProfiles[course.createdBy].role === 'admin' ? 'Admin' :
+                                                               creatorProfiles[course.createdBy].role === 'lanh_dao' ? 'Lãnh đạo' :
+                                                               creatorProfiles[course.createdBy].role === 'quan_ly' ? 'Quản lý' : 'Giáo viên'}
+                                                            </span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-1 text-teal-600 font-bold text-sm bg-teal-50 dark:bg-teal-900/20 px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
