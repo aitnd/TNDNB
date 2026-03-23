@@ -1,0 +1,5 @@
+﻿components/ClassDetail/StudentsTab.tsx(18,32): error TS2307: Cannot find module './CreateStudentModal' or its corresponding type declarations.
+components/CourseManager.tsx(8,29): error TS2307: Cannot find module './ClassDetailView' or its corresponding type declarations.
+ontap-web/App.tsx(42,33): error TS5097: An import path can only end with a '.tsx' extension when 'allowImportingTsExtensions' is enabled.
+ontap-win/components/OnlineExamManagementScreen.tsx(127,38): error TS2322: Type '{ roomId: string; onBack: () => void; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'roomId' does not exist on type 'IntrinsicAttributes'.

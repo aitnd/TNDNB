@@ -1,11 +1,22 @@
-<<<<<<< HEAD
 # CHANGELOG — [ontap-web]
 
-## [Unreleased] - 2026-03-18
+## [2026-03-22] - Research
+- Nghiên cứu và phân tích cấu trúc component Quản lý Lớp học (`ClassDetailClient`).
+- Lên kế hoạch nâng cấp tính năng gán học viên vào lớp.
+
+## [3.9.1] - 2026-03-22 - Đồng bộ hóa Props và Type Error Fix
+
+### Fixed
+- **ClassDetailClient.tsx**: Sửa lỗi Type Error và đồng bộ hóa hệ thống Props (thay `classData` bằng `course`).
+- **ClassManagementScreen.tsx**: Cập nhật logic render và truyền Props chính xác cho Chi tiết lớp học.
+- **Sub-components**: Đồng bộ hóa `OverviewTab`, `StudentsTab`, `TeachersTab` theo chuẩn dữ liệu mới.
+
+## [3.9.0] - 2026-03-18 - Lớp Học & Analytics
 
 ### 🚀 Features
 - **Analytics**: Tích hợp Vercel Analytics để theo dõi Performance và Web Vitals.
 - **Network**: Cấu hình Vite Proxy hỗ trợ gọi API Backend thông qua path `/api`.
+- **Search**: Cập nhật thanh tìm kiếm Lớp học (Search bar) theo chuẩn thiết kế UI/UX Pro Max.
 
 ### 🐛 Bug Fixes
 - **Search**: Sửa lỗi crash khi tìm kiếm thiết bị không có tên (`deviceName` null).
@@ -15,16 +26,3 @@
 ### 📝 Documentation
 - Khởi tạo hệ thống tài liệu AI Agent trong `.brain/`.
 - Cập nhật `CURRENT_SYSTEM_OVERVIEW.md` và `LEARNINGS.md`.
-=======
-# Changelog
-
-## [3.9.0] - Lớp Học - Cập nhật thanh tìm kiếm
-
-### Added
-- **ClassManagementScreen.tsx**: Thêm giao diện thanh tìm kiếm Lớp học (Search bar) theo chuẩn thiết kế UI/UX Pro Max.
-- Cập nhật state list courses để hỗ trợ tính năng lọc (filter) offline theo Tên lớp và Mô tả nhằm tăng tốc độ thao tác người dùng.
-
-### Changed
-- Refactor layout header của trang Quản lý Lớp học để bố trí nút Back và thanh tìm kiếm hợp lý.
-
->>>>>>> e2013370c468c50e8343c8e1201d3c9cdb4d498a

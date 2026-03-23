@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "schema_version": "1.1.0",
+    "awf_version": "3.3.0"
+  },
+  "project": {
+    "name": "TNDNB",
+    "type": "Monorepo (Next.js + Electron)",
+    "status": "active"
+  },
+  "tech_stack": {
+    "frontend": {
+      "framework": "React / Vite / Tailwind",
+      "routing": "react-router-dom",
+      "state_management": "zustand"
+    },
+    "backend": {
+      "database": "Firebase Firestore & Realtime DB",
+      "auth": "Firebase Auth"
+    },
+    "mobile_desktop": {
+      "desktop": "Electron",
+      "mobile": "Capacitor"
+    }
+  },
+  "database_schema": {
+    "summary": "Firebase with classes, students, exams, configs, and usage limit tracking"
+  },
+  "api_endpoints": [
+    {
+      "path": "/api/admin/reset-password",
+      "explained": "Giao tiếp với Firebase Admin SDK để sửa Auth Password và cập nhật lại Firestore password map"
+    }
+  ],
+  "business_rules": [
+    {
+      "rule": "Offline support requires explicit toggle per student",
+      "description": "Cột sóng icon in ClassManagement"
+    }
+  ],
+  "features": [
+    {
+      "name": "Class Management - Students Tab",
+      "status": "implemented",
+      "details": "Includes Excel Import, Password Reset via Admin API, Offline Enable toggle, Realtime search across specific properties."
+    }
+  ],
+  "knowledge_items": {
+    "patterns": ["Shared components between ontap-web and ontap-win"],
+    "gotchas": ["Electron build uses ELECTRON_BUILD=true causing 'base: ./' in vite config to support file:// urls"],
+    "conventions": []
+  }
+}

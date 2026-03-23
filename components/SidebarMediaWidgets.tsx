@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import styles from './Sidebar.module.css'
 import { FaPlayCircle, FaFileAlt, FaTimes } from 'react-icons/fa'
+import Image from 'next/image'
 
 type MediaItem = {
     id: number;
@@ -64,7 +65,7 @@ export default function SidebarMediaWidgets({ latestMedia, latestFiles }: Sideba
                         </button>
 
                         {selectedItem.type === 'image' && (
-                            <img src={selectedItem.url} alt="Preview" className={styles.modalImage} />
+                            <Image src={selectedItem.url} alt="Preview" className={styles.modalImage} width={1200} height={800} style={{ width: '100%', height: 'auto', maxHeight: '80vh', objectFit: 'contain' }} />
                         )}
 
                         {selectedItem.type === 'video' && (
@@ -113,7 +114,7 @@ export default function SidebarMediaWidgets({ latestMedia, latestFiles }: Sideba
                                         </div>
                                     </div>
                                 ) : (
-                                    <img src={item.media_url} alt="Thư viện" loading="lazy" />
+                                    <Image src={item.media_url} alt="Thư viện" width={300} height={300} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 )}
                             </div>
                         ))
@@ -146,11 +147,12 @@ export default function SidebarMediaWidgets({ latestMedia, latestFiles }: Sideba
                                 })}
                             >
                                 {/* Ảnh nền là Thumbnail bài viết (hoặc ảnh mặc định nếu ko có) */}
-                                <img
+                                <Image
                                     src={file.post_thumbnail || '/assets/img/document-placeholder.jpg'}
                                     alt={file.file_name}
-                                    loading="lazy"
-                                    style={{ filter: 'brightness(0.6)' }}
+                                    width={300}
+                                    height={300}
+                                    style={{ filter: 'brightness(0.6)', width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
 
                                 {/* Overlay Icon & Tên file */}

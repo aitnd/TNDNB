@@ -30,9 +30,15 @@ interface Participant {
     joined_at?: number;
 }
 
-const ExamRoomDetailScreen: React.FC = () => {
-    const { roomId } = useParams<{ roomId: string }>();
+interface ExamRoomDetailScreenProps {
+    roomId?: string;
+    onBack?: () => void;
+}
+
+const ExamRoomDetailScreen: React.FC<ExamRoomDetailScreenProps> = (props) => {
+    const params = useParams<{ roomId: string }>();
     const navigate = useNavigate();
+    const roomId = props.roomId || params.roomId;
     const [room, setRoom] = useState<ExamRoom | null>(null);
     const [loading, setLoading] = useState(true);
     const [participants, setParticipants] = useState<Participant[]>([]);
@@ -47,7 +53,8 @@ const ExamRoomDetailScreen: React.FC = () => {
                 setRoom({ id: docSnap.id, ...docSnap.data() } as ExamRoom);
             } else {
                 toast.error("Phòng thi không tồn tại!");
-                navigate('/admin/exam-manager');
+                if (props.onBack) props.onBack();
+                else navigate('/admin/exam-manager');
             }
             setLoading(false);
         }, (error) => {
@@ -91,7 +98,8 @@ const ExamRoomDetailScreen: React.FC = () => {
         try {
             await deleteDoc(doc(db, 'exam_rooms', room.id));
             toast.success("Đã xóa phòng thi");
-            navigate('/admin/exam-manager');
+            if (props.onBack) props.onBack();
+            else navigate('/admin/exam-manager');
         } catch (error) {
             toast.error("Lỗi xóa phòng thi");
         }
@@ -129,7 +137,14 @@ const ExamRoomDetailScreen: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                 <div className="flex justify-between items-start">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-800 mb-2">{room.name}</h1>
+                        <div className="flex items-center gap-3 mb-2">
+                            {props.onBack && (
+                                <button onClick={props.onBack} className="text-gray-500 hover:text-gray-700">
+                                    ← Quay lại
+                                </button>
+                            )}
+                            <h1 className="text-2xl font-bold text-gray-800">{room.name}</h1>
+                        </div>
                         <div className="flex gap-4 text-sm text-gray-600">
                             <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full">
                                 {room.license_id ? `Hạng ${room.license_id}` : 'Tự do'}

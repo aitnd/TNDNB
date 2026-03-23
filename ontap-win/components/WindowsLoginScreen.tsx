@@ -104,7 +104,7 @@ const WindowsLoginScreen: React.FC = () => {
                         email,
                         profile.full_name || username,
                         pwd,
-                        profile.photo_url || undefined
+                        profile.photoURL || undefined
                     );
                 }
             }

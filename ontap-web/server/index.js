@@ -13,7 +13,7 @@ admin.initializeApp({
 });
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000" }));
 
 // Serve Static Files (Production Build)
 const path = require('path');
@@ -34,7 +34,7 @@ app.get([/^\/ontap\/.*$/, /^\/thitructuyen\/?.*$/], (req, res, next) => {
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ["GET", "POST"]
     }
 });

@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.1] - 2026-03-22 - Đồng bộ hóa Props và Type Error Fix
+
+### Fixed
+- **ClassDetailClient.tsx**: Sửa lỗi Type Error và đồng bộ hóa hệ thống Props (thay `classData` bằng `course`).
+- **ClassManagementScreen.tsx**: Cập nhật logic render và truyền Props chính xác cho Chi tiết lớp học.
+- **Sub-components**: Đồng bộ hóa `OverviewTab`, `StudentsTab`, `TeachersTab` theo chuẩn dữ liệu mới.
+
 ## [3.9.0] - Lớp Học - Cập nhật thanh tìm kiếm (Desktop)
 
 ### Added

@@ -7,10 +7,12 @@ interface HeaderProps {
   onLogout: () => void;
 }
 
-const roleMap = {
+const roleMap: Record<string, string> = {
   admin: 'Quản trị viên',
-  teacher: 'Giáo viên',
-  student: 'Học viên'
+  giao_vien: 'Giáo viên',
+  hoc_vien: 'Học viên',
+  quan_ly: 'Quản lý',
+  lanh_dao: 'Lãnh đạo'
 };
 
 

@@ -62,6 +62,19 @@ export interface Quiz {
   timeLimit?: number; // in seconds
 }
 
+export interface Course {
+  id: string;
+  name: string;
+  description?: string;
+  headTeacherId?: string;
+  teacherIds?: string[];
+  createdAt?: any;
+  createdBy?: string;
+  licenseId?: string;
+  avatarUrl?: string; // TNDNB uses avatarUrl
+  expiryDate?: any;
+}
+
 export type AppState =
   | 'welcome'
   | 'login'
@@ -100,4 +113,5 @@ export interface UserProfile {
   isVerified?: boolean;
   offlineAccess?: boolean; // Quyền đăng nhập offline
   updatedAt?: number; // Dấu thời gian cập nhật cuối cùng
+  createdAt?: any;
 }

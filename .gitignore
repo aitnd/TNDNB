@@ -47,6 +47,8 @@ next-env.d.ts
 # ========================
 
 # Credentials & Secrets (NEVER commit)
+serviceAccountKey.json
+**/serviceAccountKey.json
 google-credentials.json
 *firebase-adminsdk*.json
 private_key*.txt
@@ -72,6 +74,10 @@ public/ontap/
 # Misc
 *.pdf
 .agent/
-.brain/
+#.brain/
 ontap-web/scripts/
 ontap-win/scripts/
+
+# Ontap-win builds
+ontap-win/dist/
+ontap-win/release/
