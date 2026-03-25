@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus, 
@@ -294,11 +295,14 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="relative">
-                    <img 
-                      src={getAvatar(st)} 
-                      alt="" 
-                      className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800 group-hover:ring-teal-500/20 transition-all"
-                    />
+                    <div className="w-14 h-14 relative ring-4 ring-gray-50 dark:ring-slate-800 group-hover:ring-teal-500/20 transition-all rounded-2xl overflow-hidden">
+                      <Image 
+                        src={getAvatar(st)} 
+                        alt="" 
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                     {st.isVerified && (
                       <div className="absolute -top-1 -right-1 bg-teal-500 text-white p-0.5 rounded-full border-2 border-white dark:border-slate-800 shadow-sm">
                         <FaCheckCircle className="text-[10px]" />
@@ -360,7 +364,14 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
                 <tr key={st.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" />
+                      <div className="w-10 h-10 relative overflow-hidden rounded-xl">
+                        <Image 
+                          src={getAvatar(st)} 
+                          alt="" 
+                          fill
+                          className="object-cover" 
+                        />
+                      </div>
                       <div>
                         <p className="text-sm font-bold text-gray-900 dark:text-white">{st.fullName || st.full_name}</p>
                         <p className="text-xs text-gray-400 truncate max-w-[150px]">{st.email}</p>
