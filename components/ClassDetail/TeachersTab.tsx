@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { 
   FaUserTie, FaPlus, FaTrash, FaGraduationCap, 
@@ -138,15 +137,12 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
 
                   <div className="flex items-center gap-5 mb-6">
                      <div className="relative">
-                        <div className="w-16 h-16 rounded-2xl overflow-hidden relative ring-4 ring-gray-50 dark:ring-slate-800">
-                          <Image 
-                            src={getAvatar(t)} 
-                            alt="" 
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-4 border-white dark:border-slate-900 rounded-full z-10" />
+                        <img 
+                          src={getAvatar(t)} 
+                          alt="" 
+                          className="w-16 h-16 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800"
+                        />
+                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-4 border-white dark:border-slate-900 rounded-full" />
                      </div>
                      <div className="flex-1 min-w-0">
                         <h4 className="font-extrabold text-gray-900 dark:text-white truncate text-lg tracking-tight">
