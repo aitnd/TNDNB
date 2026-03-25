@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { 
   FaUsers, FaCheckCircle, FaExclamationTriangle, FaCalendarAlt, 
@@ -136,8 +137,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
                     </div>
                  </div>
                  <p className="text-sm leading-relaxed text-indigo-50/90 font-medium italic">
-                    "Hiện tại lớp có {stats.unverifiedStudents} học viên chưa xác minh danh tính. 
-                    Bạn nên thông báo yêu cầu bổ sung thông tin trước kỳ thi sắp tới để tránh gián đoạn truy cập."
+                    &quot;Hiện tại lớp có {stats.unverifiedStudents} học viên chưa xác minh danh tính. 
+                    Bạn nên thông báo yêu cầu bổ sung thông tin trước kỳ thi sắp tới để tránh gián đoạn truy cập.&quot;
                  </p>
                  <button className="px-6 py-2.5 bg-white text-indigo-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-lg active:scale-95">
                     Gửi thông báo ngay
@@ -155,8 +156,13 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
               <div className="space-y-4">
                  {(classData.teacherIds || []).slice(0, 3).map((tid, idx) => (
                     <div key={tid} className="flex items-center gap-3">
-                       <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 overflow-hidden border-2 border-white dark:border-slate-700">
-                          <img src={`https://ui-avatars.com/api/?name=Teacher&background=random`} alt="" className="w-full h-full object-cover" />
+                       <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 overflow-hidden border-2 border-white dark:border-slate-700 relative">
+                          <Image 
+                            src={`https://ui-avatars.com/api/?name=Teacher&background=random`} 
+                            alt="" 
+                            fill
+                            className="object-cover" 
+                          />
                        </div>
                        <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-gray-900 dark:text-white truncate">Chưa cập nhật tên</p>
@@ -173,8 +179,13 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
            <div className="bg-slate-900 dark:bg-black rounded-3xl p-6 text-white text-center space-y-4">
               <FaQrcode className="text-4xl mx-auto text-teal-400" />
               <h4 className="font-black text-sm uppercase tracking-tight">QR Truy cập lớp</h4>
-              <div className="w-32 h-32 bg-white p-2 rounded-2xl mx-auto shadow-inner border-4 border-slate-800">
-                 <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=class-${classData.id}`} alt="QR" className="w-full h-full" />
+              <div className="w-32 h-32 bg-white p-2 rounded-2xl mx-auto shadow-inner border-4 border-slate-800 relative overflow-hidden">
+                 <Image 
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=class-${classData.id}`} 
+                  alt="QR" 
+                  fill
+                  className="object-contain p-2" 
+                />
               </div>
               <p className="text-[10px] text-slate-400 font-medium px-4">Quét để đăng nhập nhanh học viên (Nếu được quyền)</p>
            </div>
