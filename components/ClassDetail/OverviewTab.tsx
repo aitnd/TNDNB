@@ -136,8 +136,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
                     </div>
                  </div>
                  <p className="text-sm leading-relaxed text-indigo-50/90 font-medium italic">
-                    "Hiện tại lớp có {stats.unverifiedStudents} học viên chưa xác minh danh tính. 
-                    Bạn nên thông báo yêu cầu bổ sung thông tin trước kỳ thi sắp tới để tránh gián đoạn truy cập."
+                    &quot;Hiện tại lớp có {stats.unverifiedStudents} học viên chưa xác minh danh tính. 
+                    Bạn nên thông báo yêu cầu bổ sung thông tin trước kỳ thi sắp tới để tránh gián đoạn truy cập.&quot;
                  </p>
                  <button className="px-6 py-2.5 bg-white text-indigo-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-lg active:scale-95">
                     Gửi thông báo ngay
