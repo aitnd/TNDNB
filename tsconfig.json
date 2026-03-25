@@ -38,6 +38,8 @@
   ],
   "exclude": [
     "node_modules",
-    "ontap"
+    "amthuc-web",
+    "ontap-web",
+    "ontap-win"
   ]
 }
