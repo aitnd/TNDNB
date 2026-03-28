@@ -8,7 +8,7 @@ import {
 import { db } from '@/utils/firebaseClient';
 import { 
   collection, query, where, documentId, 
-  getDocs, onSnapshot, doc, updateDoc, arrayRemove 
+  getDocs, onSnapshot, doc, updateDoc, arrayRemove, QuerySnapshot, DocumentData, QueryDocumentSnapshot, DocumentSnapshot 
 } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Course, UserProfile } from '@/types/classManagement';
@@ -25,7 +25,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
 
   // Sync current course data in real-time to get updated teacherIds
   useEffect(() => {
-    const unsubCourse = onSnapshot(doc(db, 'courses', classData.id), (docSnap) => {
+    const unsubCourse = onSnapshot(doc(db, 'courses', classData.id), (docSnap: DocumentSnapshot<DocumentData>) => {
       if (docSnap.exists()) {
         setCurrentCourse({ id: docSnap.id, ...docSnap.data() } as Course);
       }
@@ -49,8 +49,8 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
       where(documentId(), 'in', teacherIds.slice(0, 30)) 
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const list = snapshot.docs.map(doc => ({
+    const unsubscribe = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
+      const list = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({
         id: doc.id,
         ...doc.data()
       })) as UserProfile[];
@@ -174,7 +174,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
                        className="p-2.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-all"
                      >
                         <FaTrash size={14} />
-                     </button>
+                      </button>
                   </div>
                 </motion.div>
               );

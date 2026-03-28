@@ -29,12 +29,11 @@ const AddStudentModal: React.FC<AddStudentModalProps> = ({ isOpen, onClose, clas
     setLoading(true);
     try {
       // Fetch all students (hoc_vien) 
-      // Note: We might want to filter those without a class in the UI or fetch all
       const q = query(collection(db, 'users'), where('role', '==', 'hoc_vien'));
       const snap = await getDocs(q);
-      const list = snap.docs.map(d => ({ id: d.id, ...d.data() })) as UserProfile[];
+      const list = snap.docs.map((d: any) => ({ id: d.id, ...d.data() })) as UserProfile[];
       setAllStudents(list);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
     } finally {
       setLoading(false);

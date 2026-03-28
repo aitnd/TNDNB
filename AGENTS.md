@@ -24,7 +24,7 @@ LUÔN cấu hình TẤT CẢ parameters một cách rõ ràng.
 
 1. **Bắt đầu**: Gọi `tools_documentation()` để xem best practices
 
-2. **Tìm template**: 
+2. **Tìm template**:
    - `search_templates({searchMode: 'by_task', task: 'webhook_processing'})`
    - `search_templates({query: 'telegram bot'})`
 
@@ -77,3 +77,4 @@ Gõ trong Antigravity chat để xem hướng dẫn chi tiết:
 | `/n8n-workflow-management` | Tạo, sửa, xóa, kích hoạt workflows |
 | `/n8n-deploy-template` | Tìm và deploy templates từ n8n.io |
 | `/n8n-debug` | Debug và khắc phục lỗi workflows |
+

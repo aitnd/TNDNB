@@ -57,7 +57,7 @@ export default function TeacherRoomPage() {
   useEffect(() => {
     if (!roomId) return
     const roomRef = doc(db, 'exam_rooms', roomId)
-    const unsubscribe = onSnapshot(roomRef, (docSnap) => {
+    const unsubscribe = onSnapshot(roomRef, (docSnap: any) => {
       if (docSnap.exists()) {
         setRoom({ id: docSnap.id, ...docSnap.data() } as ExamRoom)
       } else {
@@ -73,8 +73,8 @@ export default function TeacherRoomPage() {
   useEffect(() => {
     if (!roomId) return
     const participantsRef = collection(db, 'exam_rooms', roomId, 'participants')
-    const unsubscribe = onSnapshot(participantsRef, (snapshot) => {
-      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Participant))
+    const unsubscribe = onSnapshot(participantsRef, (snapshot: any) => {
+      const list = snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as Participant))
       setParticipants(list)
     })
     return () => unsubscribe()
@@ -141,7 +141,7 @@ export default function TeacherRoomPage() {
       setSelectedIds(new Set());
       setIsSelectAll(false);
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi khi bắt đầu thi:', err)
       alert('Có lỗi xảy ra.')
     }
@@ -154,7 +154,7 @@ export default function TeacherRoomPage() {
       await updateDoc(doc(db, 'exam_rooms', roomId), {
         status: 'finished'
       })
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi khi kết thúc thi:', err)
     }
   }
@@ -185,7 +185,7 @@ export default function TeacherRoomPage() {
       alert('Đã reset thành công!');
       setSelectedIds(new Set());
       setIsSelectAll(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi reset:', err);
       alert('Lỗi khi reset.');
     }
@@ -209,7 +209,7 @@ export default function TeacherRoomPage() {
       alert('Đã mời ra khỏi phòng!');
       setSelectedIds(new Set());
       setIsSelectAll(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi kick:', err);
       alert('Lỗi khi kick.');
     }
@@ -260,7 +260,7 @@ export default function TeacherRoomPage() {
       setSelectedIds(new Set());
       setIsSelectAll(false);
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi toggle pause:', err);
       alert('Có lỗi xảy ra.');
     }
@@ -273,7 +273,7 @@ export default function TeacherRoomPage() {
       await updateDoc(doc(db, 'exam_rooms', roomId), {
         auto_distribute: !room.auto_distribute
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi toggle auto:', err);
     }
   }
@@ -285,7 +285,7 @@ export default function TeacherRoomPage() {
       await updateDoc(doc(db, 'exam_rooms', roomId), {
         is_paused: !room.is_paused
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi toggle pause:', err);
     }
   }

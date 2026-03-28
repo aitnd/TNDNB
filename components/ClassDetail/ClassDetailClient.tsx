@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaUserGraduate, FaChalkboardTeacher, FaInfoCircle, FaCog } from 'react-icons/fa';
+import { FaUserGraduate, FaChalkboardTeacher, FaInfoCircle, FaCog, FaChevronLeft } from 'react-icons/fa';
 import { Course } from '@/types/classManagement';
 import StudentsTab from './StudentsTab';
 import TeachersTab from './TeachersTab';
@@ -12,6 +12,8 @@ import OverviewTab from './OverviewTab';
 
 interface ClassDetailClientProps {
   classData: Course;
+  onBack?: () => void;
+  onEdit?: () => void;
 }
 
 type TabType = 'overview' | 'students' | 'teachers' | 'settings';
@@ -23,13 +25,29 @@ const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
   { id: 'settings', label: 'Cài đặt', icon: <FaCog /> },
 ];
 
-const ClassDetailClient: React.FC<ClassDetailClientProps> = ({ classData }) => {
+const ClassDetailClient: React.FC<ClassDetailClientProps> = ({ classData, onBack }) => {
   const [activeTab, setActiveTab] = useState<TabType>('students');
   const [showAddTeacher, setShowAddTeacher] = useState(false);
   const [showAddStudent, setShowAddStudent] = useState(false);
 
   return (
     <div className="w-full space-y-6">
+      {/* Header with Back Button */}
+      {onBack && (
+        <div className="flex items-center gap-4 mb-2">
+          <button 
+            onClick={onBack}
+            className="p-3 bg-white dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-teal-500/10 text-gray-400 hover:text-teal-600 rounded-2xl transition-all shadow-sm border border-gray-100 dark:border-slate-800"
+          >
+            <FaChevronLeft />
+          </button>
+          <div className="text-left">
+            <h1 className="text-2xl font-black dark:text-white tracking-tight leading-none mb-1">{classData.name}</h1>
+            <p className="text-sm text-gray-400 dark:text-slate-500 font-medium tracking-tight">Chi tiết lớp học & Quản lý</p>
+          </div>
+        </div>
+      )}
+
       {/* Tab Navigation */}
       <div className="flex items-center gap-1 p-1 bg-gray-100 dark:bg-slate-900/80 rounded-2xl w-fit border border-gray-200 dark:border-slate-800 shadow-inner">
         {tabs.map((tab) => (

@@ -6,7 +6,7 @@ import {
   FaUserTie, FaQrcode, FaChartPie, FaPercent, FaRegLightbulb 
 } from 'react-icons/fa';
 import { db } from '@/utils/firebaseClient';
-import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, QuerySnapshot, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { Course, UserProfile } from '@/types/classManagement';
 
@@ -26,8 +26,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
   useEffect(() => {
     // Real-time listener for basic stats
     const q = query(collection(db, 'users'), where('courseId', '==', classData.id));
-    const unsub = onSnapshot(q, (snap) => {
-      const all = snap.docs.map(d => d.data() as UserProfile);
+    const unsub = onSnapshot(q, (snap: QuerySnapshot<DocumentData>) => {
+      const all = snap.docs.map((d: QueryDocumentSnapshot<DocumentData>) => d.data() as UserProfile);
       setStats({
         totalStudents: all.length,
         verifiedStudents: all.filter(s => s.isVerified).length,
@@ -184,8 +184,16 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
   );
 };
 
-const StatCard = ({ icon, label, value, color, subLabel }: any) => {
-  const colors: any = {
+interface StatCardProps {
+    icon: React.ReactNode;
+    label: string;
+    value: string | number;
+    color: 'teal' | 'emerald' | 'rose' | 'indigo';
+    subLabel: string;
+}
+
+const StatCard = ({ icon, label, value, color, subLabel }: StatCardProps) => {
+  const colors: Record<string, string> = {
     teal: 'bg-teal-500 text-teal-600',
     emerald: 'bg-emerald-500 text-emerald-600',
     rose: 'bg-rose-500 text-rose-600',

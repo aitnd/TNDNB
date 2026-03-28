@@ -10,7 +10,7 @@ import {
 import { db } from '@/utils/firebaseClient';
 import { 
   collection, query, where, onSnapshot, 
-  doc, updateDoc, deleteDoc, getDoc 
+  doc, updateDoc, deleteDoc, getDoc, QuerySnapshot, DocumentData, QueryDocumentSnapshot 
 } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Course, UserProfile } from '@/types/classManagement';
@@ -58,8 +58,8 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
       where('role', '==', 'hoc_vien')
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const list = snapshot.docs.map(doc => ({
+    const unsubscribe = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
+      const list = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({
         id: doc.id,
         ...doc.data()
       })) as UserProfile[];
@@ -92,9 +92,9 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
       where('studentId', 'in', studentIds.slice(0, 30))
     );
 
-    const unsubDevices = onSnapshot(qDevices, (snapshot) => {
+    const unsubDevices = onSnapshot(qDevices, (snapshot: QuerySnapshot<DocumentData>) => {
       const deviceCounts: Record<string, number> = {};
-      snapshot.docs.forEach(doc => {
+      snapshot.docs.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
         const data = doc.data();
         deviceCounts[data.userId] = (deviceCounts[data.userId] || 0) + 1;
       });
@@ -109,9 +109,9 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
       });
     });
 
-    const unsubResults = onSnapshot(qResults, (snapshot) => {
+    const unsubResults = onSnapshot(qResults, (snapshot: QuerySnapshot<DocumentData>) => {
       const resultData: Record<string, { count: number, totalScore: number }> = {};
-      snapshot.docs.forEach(doc => {
+      snapshot.docs.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
         const data = doc.data();
         if (!resultData[data.studentId]) resultData[data.studentId] = { count: 0, totalScore: 0 };
         resultData[data.studentId].count++;

@@ -30,9 +30,9 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, clas
     try {
       const q = query(collection(db, 'users'), where('role', '==', 'giao_vien'));
       const snap = await getDocs(q);
-      const list = snap.docs.map(d => ({ id: d.id, ...d.data() })) as UserProfile[];
+      const list = snap.docs.map((d: any) => ({ id: d.id, ...d.data() })) as UserProfile[];
       setAllTeachers(list);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
     } finally {
       setLoading(false);

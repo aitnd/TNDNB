@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(process.cwd(), '.'),
       }
     },
-    base: process.env.ELECTRON_BUILD === 'true' ? './' : '/', /* 💖 Base path: './' for Offline Build, '/' for Dev Server */
+    base: './', /* 💖 Force relative paths for Electron reliability */
     build: {
       outDir: 'dist',
       emptyOutDir: true,
