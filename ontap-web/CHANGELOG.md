@@ -1,28 +1,23 @@
 # CHANGELOG — [ontap-web]
 
-## [2026-03-22] - Research
-- Nghiên cứu và phân tích cấu trúc component Quản lý Lớp học (`ClassDetailClient`).
-- Lên kế hoạch nâng cấp tính năng gán học viên vào lớp.
+## [3.9.2] - 2026-03-29 - Premium Native Experience
+- **UI/UX Native Overhaul**: Thiết kế lại toàn bộ giao diện theo phong cách Native Mobile cao cấp (Premium Cards, 3D icons, Apple-style spacing).
+- **Haptic Feedback**: Tích hợp rung phản hồi (Vibration) cho mọi tương tác (Bấm nút, nộp bài, kết quả thi).
+- **Mobile Navigation**: Thanh điều hướng dưới chân màn hình (Bottom Bar) chuẩn Mobile UI.
+- **Enhanced Quiz Engine**: Tách biệt rõ ràng chế độ "Ôn tập" và "Thi thử mô phỏng" với bộ phím điều hướng tối ưu cho ngón cái.
+- **Premium Animations**: Hệ thống chuyển cảnh mượt mà (Slide-up, Scale-up, Float) tối ưu cho cảm giác Native App.
+- **Bug Fixes**: Sửa lỗi so sánh phiên bản và đồng bộ Electron-updater.
 
 ## [3.9.1] - 2026-03-22 - Đồng bộ hóa Props và Type Error Fix
-
-### Fixed
 - **ClassDetailClient.tsx**: Sửa lỗi Type Error và đồng bộ hóa hệ thống Props (thay `classData` bằng `course`).
-- **ClassManagementScreen.tsx**: Cập nhật logic render và truyền Props chính xác cho Chi tiết lớp học.
-- **Sub-components**: Đồng bộ hóa `OverviewTab`, `StudentsTab`, `TeachersTab` theo chuẩn dữ liệu mới.
 
 ## [3.9.0] - 2026-03-18 - Lớp Học & Analytics
+- **Analytics**: Tích hợp Vercel Analytics để theo dõi Performance.
+- **Search**: Cập nhật thanh tìm kiếm Lớp học (Search bar) UI/UX Pro Max.
 
-### 🚀 Features
-- **Analytics**: Tích hợp Vercel Analytics để theo dõi Performance và Web Vitals.
-- **Network**: Cấu hình Vite Proxy hỗ trợ gọi API Backend thông qua path `/api`.
-- **Search**: Cập nhật thanh tìm kiếm Lớp học (Search bar) theo chuẩn thiết kế UI/UX Pro Max.
+## [3.8.12] - 2026-01-18 - Nâng cấp giao diện Thẻ
+- **UI**: Thiết kế lại Thẻ Học viên/Giáo viên phong cách Premium Hologram v2.2.
+- **Fix**: Sửa lỗi chính tả "THÈ" thành "THẺ" trên toàn hệ thống.
 
-### 🐛 Bug Fixes
-- **Search**: Sửa lỗi crash khi tìm kiếm thiết bị không có tên (`deviceName` null).
-- **Admin**: Khắc phục lỗi render `AdminSessionList` khi danh sách session rỗng hoặc không hợp lệ.
-- **Stability**: Thêm các kiểm tra null-check (Optional Chaining) cho các hợp phần sử dụng dữ liệu từ Firebase RTDB.
-
-### 📝 Documentation
-- Khởi tạo hệ thống tài liệu AI Agent trong `.brain/`.
-- Cập nhật `CURRENT_SYSTEM_OVERVIEW.md` và `LEARNINGS.md`.
+## [3.8.11] - 2026-01-18 - Góc giải trí VIP
+- **Feature**: Thêm "Góc Giải Trí" với kho trò chơi HTML5 (Contra, Đào Vàng...).

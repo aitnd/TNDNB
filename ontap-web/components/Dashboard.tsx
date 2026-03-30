@@ -3,11 +3,15 @@ import { UserProfile } from '../types';
 import StudentCard from './StudentCard';
 import { useTheme } from '../contexts/ThemeContext';
 import { HelmIcon3D, BookOpenIcon3D, ClipboardListIcon3D } from './icons';
+import { triggerHaptic } from '../utils/nativeUX';
+import { useAppStore } from '../stores/useAppStore';
 
 import { useState, useEffect } from 'react';
 
 import OnlineStatsWidget from './OnlineStatsWidget';
 import CustomAnalyticsWidget from './CustomAnalyticsWidget';
+import NativeSettingsModal from './NativeSettingsModal';
+import { Settings } from 'lucide-react';
 
 interface DashboardProps {
     userProfile: UserProfile;
@@ -19,6 +23,8 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryClick, onClassClick, onOnlineExamClick }) => {
     const { theme } = useTheme();
+    const isMobileApp = useAppStore(state => state.isMobileApp);
+    const [isNativeSettingsOpen, setIsNativeSettingsOpen] = useState(false);
 
     // === PREMIUM v2 THEME ===
     if (theme === 'premium') {
@@ -60,15 +66,30 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
                                     Chúc bạn có một buổi ôn tập hiệu quả và đạt kết quả cao! 🚀
                                 </p>
 
+                                {isMobileApp && (
+                                    <button 
+                                        onClick={() => {
+                                            triggerHaptic('light');
+                                            setIsNativeSettingsOpen(true);
+                                        }}
+                                        className="absolute top-8 right-8 p-3 rounded-2xl glass-premium border-white/20 text-slate-400 hover:text-blue-500 transition-all active:scale-90"
+                                    >
+                                        <Settings size={24} />
+                                    </button>
+                                )}
+
                                 <div className="grid grid-cols-1 gap-6">
                                     <button
-                                        onClick={onStart}
-                                        className="w-full relative group overflow-hidden py-6 px-10 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] shadow-2xl hover:shadow-cyan-500/40"
+                                        onClick={() => {
+                                            triggerHaptic('medium');
+                                            onStart();
+                                        }}
+                                        className="w-full relative group overflow-hidden py-6 px-4 md:px-10 rounded-2xl transition-all duration-300 transform active:scale-95 shadow-2xl hover:shadow-cyan-500/40"
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 group-hover:scale-110 transition-transform duration-500" />
                                         <div className="relative z-10 flex items-center justify-center gap-4 text-white">
                                             <BookOpenIcon3D className="w-10 h-10 drop-shadow-lg" />
-                                            <span className="text-2xl font-black uppercase tracking-tight">Vào Ôn Tập / Thi Thử</span>
+                                            <span className="text-xl md:text-2xl font-black uppercase tracking-tight">Vào Ôn Tập / Thi Thử</span>
                                         </div>
                                     </button>
 
@@ -87,28 +108,34 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
                                 </div>
 
                                 {/* Secondary Actions Grid */}
-                                <div className="mt-10 grid grid-cols-2 gap-6">
+                                <div className="mt-10 grid grid-cols-2 gap-4 md:gap-6">
                                     <button 
-                                        onClick={onHistoryClick} 
-                                        className="group rounded-[32px] p-6 glass-premium border-white/5 hover:bg-white/10 transition-all hover:-translate-y-1 text-left relative overflow-hidden"
+                                        onClick={() => {
+                                            triggerHaptic('light');
+                                            onHistoryClick();
+                                        }} 
+                                        className="group rounded-[32px] p-4 md:p-6 glass-premium border-white/5 hover:bg-white/10 transition-all active:scale-95 text-left relative overflow-hidden"
                                     >
                                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <ClipboardListIcon3D className="w-16 h-16" />
                                         </div>
-                                        <p className="text-sm font-black uppercase tracking-widest text-cyan-500 mb-2">📊 Lịch sử</p>
-                                        <p className="text-lg font-bold text-slate-800 dark:text-slate-100">Xem kết quả</p>
+                                        <p className="text-[10px] md:text-sm font-black uppercase tracking-widest text-cyan-500 mb-1 md:mb-2">📊 Lịch sử</p>
+                                        <p className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100">Xem kết quả</p>
                                     </button>
                                     
                                     <button 
-                                        onClick={onClassClick} 
-                                        className="group rounded-[32px] p-6 glass-premium border-white/5 hover:bg-white/10 transition-all hover:-translate-y-1 text-left relative overflow-hidden"
+                                        onClick={() => {
+                                            triggerHaptic('light');
+                                            onClassClick();
+                                        }} 
+                                        className="group rounded-[32px] p-4 md:p-6 glass-premium border-white/5 hover:bg-white/10 transition-all active:scale-95 text-left relative overflow-hidden"
                                     >
                                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <HelmIcon3D className="w-16 h-16" />
                                         </div>
-                                        <p className="text-sm font-black uppercase tracking-widest text-violet-500 mb-2">👥 Lớp học</p>
-                                        <p className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                                            {['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || 'hoc_vien') ? 'Quản lý lớp' : 'Lớp của tôi'}
+                                        <p className="text-[10px] md:text-sm font-black uppercase tracking-widest text-violet-500 mb-1 md:mb-2">👥 Lớp học</p>
+                                        <p className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 line-clamp-1">
+                                            {['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || 'hoc_vien') ? 'Quản lý' : 'Lớp của con'}
                                         </p>
                                     </button>
                                 </div>
@@ -116,6 +143,12 @@ const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryCl
                         </div>
                     </div>
                 </div>
+
+                {/* Native Settings Modal */}
+                <NativeSettingsModal 
+                    isOpen={isNativeSettingsOpen} 
+                    onClose={() => setIsNativeSettingsOpen(false)} 
+                />
             </div>
         );
     }

@@ -12,11 +12,12 @@
 
 # testing
 /coverage
-
+/android
 # next.js
 /.next/
 /out/
-
+/ontap-win/release/
+/ontap-win/dist/
 # production
 /build
 
@@ -71,13 +72,11 @@ ontap-win/node_modules/
 # Build output
 public/ontap/
 
-# Misc
-*.pdf
-.agent/
-#.brain/
-ontap-web/scripts/
-ontap-win/scripts/
-
-# Ontap-win builds
-ontap-win/dist/
-ontap-win/release/
+# Logs & Temp outputs
+*.log
+*_output.txt
+*.docx.json
+tmp_*.sql
+insert_questions.sql
+tsc_errors*.log
+lint*_output.txt

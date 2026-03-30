@@ -1,41 +1,58 @@
 {
-  "updated_at": "2026-03-23T07:20:00Z",
+  "updated_at": "2026-03-29T00:30:00Z",
   "working_on": {
-    "feature": "Class Management - Student Actions",
-    "task": "Testing & Deployment",
-    "status": "testing",
+    "feature": "Hệ thống Ôn tập Windows (Electron)",
+    "task": "Sửa lỗi đáp án sai & Bảo trì dữ liệu",
+    "status": "waiting_user_input",
     "files": [
-      "ontap-web/components/ClassDetail/StudentsTab.tsx",
-      "ontap-win/components/ClassDetail/StudentsTab.tsx"
+      "ontap-win/data/questions_db.json",
+      "ontap-win/components/TopNavbar.tsx"
     ],
-    "blockers": ["White screen issue on ontap-win installer build (electron)"],
-    "notes": "Finished Syncing Excel import, Reset Password, Offline access between Web and Win."
+    "blockers": [],
+    "notes": "Đã sửa thành công lỗi màn hình trắng (White Screen). Hiện đang chờ người dùng cung cấp thông tin câu hỏi bị sai đáp án để sửa trong questions_db.json."
   },
   "pending_tasks": [
     {
-      "task": "Investigate and fix white screen on ontap-win electron build",
+      "task": "Tìm và sửa câu hỏi có đáp án sai trong questions_db.json",
       "priority": "high",
-      "notes": "App works in dev and build, but electron:build produces a white screen on launch. Suspect missing .env variables or routing issue."
+      "notes": "Cần ID câu hỏi hoặc nội dung text từ người dùng."
+    },
+    {
+      "task": "Cân nhắc vô hiệu hóa chuột phải (Inspect Element) để bảo mật hơn",
+      "priority": "medium",
+      "notes": "Chờ xác nhận từ người dùng."
     }
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-03-23T07:12:00Z",
-      "type": "feature",
-      "description": "Synced complete StudentsTab features from web to win (Import Excel, Search Fixes, Password Reset, Offline access toggle)."
+      "timestamp": "2026-03-29T00:20:00Z",
+      "type": "bugfix",
+      "description": "Fix 'ReferenceError: Award is not defined' in TopNavbar.tsx causing Electron crash.",
+      "files": ["ontap-win/components/TopNavbar.tsx"]
+    },
+    {
+      "timestamp": "2026-03-29T00:25:00Z",
+      "type": "security",
+      "description": "Disable auto openDevTools and hide DevTools toggle button in main UI.",
+      "files": ["ontap-win/electron/main.cjs", "ontap-win/App.tsx"]
     }
   ],
   "errors_encountered": [
     {
-      "error": "White screen on ontap-win electron build",
-      "solution": "Pending investigation",
-      "resolved": false
+      "error": "ReferenceError: Award is not defined",
+      "solution": "Import 'Award' icon from 'lucide-react' in the missing component.",
+      "resolved": true
+    },
+    {
+      "error": "White screen on app launch (Production/Electron)",
+      "solution": "Fixed the runtime JS exception during React initial render.",
+      "resolved": true
     }
   ],
   "decisions_made": [
     {
-      "decision": "Synchronize Web and Win codebase manually",
-      "reason": "Ensure parity between React App and Electron App versions of TNDNB"
+      "decision": "Vô hiệu hóa F12 và DevTools button",
+      "reason": "Yêu cầu của người dùng để khóa tính năng can thiệp kỹ thuật trong app ôn tập."
     }
   ]
 }

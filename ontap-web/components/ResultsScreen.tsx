@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { Quiz, UserAnswers } from '../types';
 import { CheckIcon3D, XIcon3D, TrophyIcon3D } from './icons';
+import { triggerHaptic } from '../utils/nativeUX';
 
 interface ResultsScreenProps {
     quiz: Quiz;
@@ -14,6 +15,10 @@ interface ResultsScreenProps {
 const ResultsScreen: React.FC<ResultsScreenProps> = ({ quiz, userAnswers, score, onRetry, onBack, userName }) => {
     const [filter, setFilter] = useState<'all' | 'incorrect'>('all');
     const [completionDate] = useState(() => new Date());
+
+    useEffect(() => {
+        triggerHaptic('success');
+    }, []);
 
     const totalQuestions = quiz.questions.length;
     const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
@@ -37,32 +42,45 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ quiz, userAnswers, score,
 
     return (
         <div className="w-full max-w-4xl mx-auto p-4 animate-slide-in-right font-quiz-default">
-            <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-8 text-center mb-8">
-                <TrophyIcon3D className="h-24 w-24 mx-auto text-yellow-400 mb-4" />
-                <h1 className="text-4xl font-bold text-foreground mb-2">Kết quả Ôn tập</h1>
+            <div className="bg-gradient-to-br from-indigo-50 to-blue-100 dark:from-indigo-950/20 dark:to-blue-900/10 rounded-3xl shadow-xl p-8 md:p-12 text-center mb-8 relative overflow-hidden">
+                <div className="relative z-10">
+                    <TrophyIcon3D className="h-28 w-28 mx-auto text-yellow-500 mb-4 drop-shadow-lg" />
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-2 uppercase tracking-tight">Kết quả Ôn tập</h1>
 
-                <div className="my-4 text-muted-foreground">
-                    <p className="text-lg">Học viên: <span className="font-bold text-primary">{userName}</span></p>
-                    <p className="text-sm">Hoàn thành lúc: {formattedDate}</p>
-                </div>
+                    <div className="my-4 text-slate-600 dark:text-slate-400">
+                        <p className="text-lg">Học viên: <span className="font-bold text-indigo-600 dark:text-indigo-400">{userName}</span></p>
+                        <p className="text-sm">Hoàn thành lúc: {formattedDate}</p>
+                    </div>
 
-                <div className="bg-primary/10 inline-block p-6 rounded-xl border border-primary/20 mt-4">
-                    <p className="text-5xl font-extrabold text-primary">
-                        {score} / {totalQuestions}
-                    </p>
-                    <p className="text-2xl font-semibold text-primary/80 mt-1">({percentage}%)</p>
+                    <div className="mt-6 flex flex-col items-center">
+                        <div className="relative">
+                            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-8 border-indigo-500/20 flex flex-col items-center justify-center bg-white dark:bg-slate-900 shadow-inner">
+                                <p className="text-4xl md:text-5xl font-black text-indigo-600">{score}</p>
+                                <p className="text-xs md:text-sm font-bold text-slate-400 uppercase">/{totalQuestions} Câu</p>
+                            </div>
+                            <div className="absolute -bottom-2 -right-2 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-black shadow-lg">
+                                {percentage}%
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-8">
-                <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-foreground">Xem lại bài làm</h2>
-                    <div className="flex items-center gap-2 mt-4 sm:mt-0">
-                        <button onClick={() => setFilter('all')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors ${filter === 'all' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Chi tiết bài làm</h2>
+                    <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl w-full md:w-auto">
+                        <button 
+                            onClick={() => { triggerHaptic('light'); setFilter('all'); }} 
+                            className={`flex-1 md:flex-none px-6 py-2.5 text-sm font-bold rounded-xl transition-all ${filter === 'all' ? 'bg-white dark:bg-slate-700 text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+                        >
                             Tất cả
                         </button>
-                        <button onClick={() => setFilter('incorrect')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors ${filter === 'incorrect' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
-                            Chỉ câu sai ({quiz.questions.length - score})
+                        <button 
+                            onClick={() => { triggerHaptic('light'); setFilter('incorrect'); }} 
+                            className={`flex-1 md:flex-none px-6 py-2.5 text-sm font-bold rounded-xl transition-all ${filter === 'incorrect' ? 'bg-white dark:bg-slate-700 text-red-600 shadow-sm' : 'text-slate-500'}`}
+                        >
+                            Câu sai ({totalQuestions - score})
                         </button>
                     </div>
                 </div>
@@ -113,16 +131,16 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ quiz, userAnswers, score,
                 </div>
             </div>
 
-            <div className="text-center mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+            <div className="mt-10 flex flex-col md:flex-row justify-center items-center gap-4">
                 <button
-                    onClick={onBack}
-                    className="w-full sm:w-auto bg-primary text-primary-foreground font-bold py-3 px-8 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-ring transition-all duration-300 transform hover:scale-105"
+                    onClick={() => { triggerHaptic('light'); onBack(); }}
+                    className="w-full md:w-auto px-10 py-4 bg-slate-800 dark:bg-slate-700 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 active:scale-95 transition-all shadow-lg"
                 >
                     Các môn khác
                 </button>
                 <button
-                    onClick={onRetry}
-                    className="w-full sm:w-auto bg-secondary text-secondary-foreground font-bold py-3 px-8 rounded-lg hover:bg-muted focus:outline-none focus:ring-4 focus:ring-ring transition-colors duration-300"
+                    onClick={() => { triggerHaptic('medium'); onRetry(); }}
+                    className="w-full md:w-auto px-10 py-4 bg-indigo-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-indigo-700 active:scale-95 transition-all shadow-lg"
                 >
                     Làm lại
                 </button>

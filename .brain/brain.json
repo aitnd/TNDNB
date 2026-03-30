@@ -16,7 +16,8 @@
     },
     "backend": {
       "database": "Firebase Firestore & Realtime DB",
-      "auth": "Firebase Auth"
+      "auth": "Firebase Auth",
+      "offline_data": "questions_db.json (1.6MB JSON local file)"
     },
     "mobile_desktop": {
       "desktop": "Electron",
@@ -24,7 +25,7 @@
     }
   },
   "database_schema": {
-    "summary": "Firebase with classes, students, exams, configs, and usage limit tracking"
+    "summary": "Firebase with classes, students, exams, configs, and usage limit tracking. Local storage uses Dexie for caching and questions_db.json for offline quizzes."
   },
   "api_endpoints": [
     {
@@ -40,14 +41,22 @@
   ],
   "features": [
     {
-      "name": "Class Management - Students Tab",
+      "name": "Hệ thống Ôn tập Windows (Electron)",
       "status": "implemented",
-      "details": "Includes Excel Import, Password Reset via Admin API, Offline Enable toggle, Realtime search across specific properties."
+      "details": "Chế độ ôn tập offline hoàn toàn dùng JSON local. Hỗ trợ đồng bộ kết quả thi về Firebase khi có mạng."
     }
   ],
   "knowledge_items": {
-    "patterns": ["Shared components between ontap-web and ontap-win"],
-    "gotchas": ["Electron build uses ELECTRON_BUILD=true causing 'base: ./' in vite config to support file:// urls"],
-    "conventions": []
+    "patterns": [
+      "Shared components between ontap-web and ontap-win",
+      "Lucide-react for iconography"
+    ],
+    "gotchas": [
+      "Electron build uses ELECTRON_BUILD=true causing 'base: ./' in vite config to support file:// urls",
+      "Missing icons in lucide-react result in silent ReferenceErrors causing White Screen crashes."
+    ],
+    "conventions": [
+      "DevTools disabled in production builds (main.cjs and UI toggle both disabled)."
+    ]
   }
 }

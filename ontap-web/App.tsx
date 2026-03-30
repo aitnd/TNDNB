@@ -50,6 +50,9 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
 import usePresence from './hooks/usePresence';
 import AlertMarquee from './components/AlertMarquee';
+import { Preferences } from '@capacitor/preferences';
+import { NativeBiometric } from 'capacitor-native-biometric';
+import { Fingerprint } from 'lucide-react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 
 const AppContent: React.FC = () => {
@@ -57,6 +60,8 @@ const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const unsubProfileRef = useRef<(() => void) | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
+  const [isBiometricChecking, setIsBiometricChecking] = useState(false);
 
 
   const licenses = useAppStore(state => state.licenses);
@@ -93,6 +98,16 @@ const AppContent: React.FC = () => {
       setIsMobileApp(false);
     }
 
+    // Biometric Check
+    if (isNative) {
+      Preferences.get({ key: 'biometric_enabled' }).then(async (res) => {
+        if (res.value === 'true') {
+          setIsLocked(true);
+          handleBiometricUnlock();
+        }
+      });
+    }
+
     // Ẩn SplashScreen khi App load xong trên Native
     if (isNative) {
       setTimeout(() => {
@@ -100,6 +115,33 @@ const AppContent: React.FC = () => {
       }, 500);
     }
   }, []);
+
+  const handleBiometricUnlock = async () => {
+    if (isBiometricChecking) return;
+    setIsBiometricChecking(true);
+    try {
+      const result = await NativeBiometric.isAvailable();
+      if (result.isAvailable) {
+        // Một số version trả về void (thành công) hoặc ném lỗi (thất bại)
+        // Ta bọc vào try/catch và assume success nếu không có lỗi
+        await NativeBiometric.verifyIdentity({
+          reason: "Vui lòng xác thực để vào ứng dụng",
+          title: "Xác thực bảo mật",
+          subtitle: "Dùng vân tay hoặc khuôn mặt",
+          description: "Bảo vệ thông tin cá nhân của bạn",
+        });
+        
+        setIsLocked(false);
+      } else {
+        setIsLocked(false);
+      }
+    } catch (e) {
+      console.error('Biometric error:', e);
+      // Nếu user cancel hoặc lỗi, giữ nguyên lock
+    } finally {
+      setIsBiometricChecking(false);
+    }
+  };
 
   // --- HARDWARE BACK BUTTON (ANDROID) ---
   useEffect(() => {
@@ -683,6 +725,34 @@ const AppContent: React.FC = () => {
     navigate('/');
   };
 
+  if (isLocked) {
+    return (
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-900 text-white p-8">
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="flex flex-col items-center text-center"
+        >
+          <div className="w-24 h-24 bg-blue-600 rounded-[32px] flex items-center justify-center mb-8 shadow-2xl shadow-blue-500/20">
+            <Fingerprint size={48} strokeWidth={1.5} />
+          </div>
+          <h1 className="text-3xl font-black mb-4 uppercase tracking-tighter">Bảo mật ứng dụng</h1>
+          <p className="text-slate-400 mb-12 max-w-xs leading-relaxed font-medium">
+            Vui lòng xác thực vân tay hoặc khuôn mặt để tiếp tục sử dụng ứng dụng.
+          </p>
+          
+          <button 
+            onClick={handleBiometricUnlock}
+            disabled={isBiometricChecking}
+            className="px-10 py-5 bg-white text-slate-900 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl active:scale-95 transition-all disabled:opacity-50"
+          >
+            {isBiometricChecking ? 'Đang xác thực...' : 'Chạm để mở khóa'}
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
+
   // --- STRICT WINDOWS APP LOGIC ---
   // @ts-ignore
   const isElectron = window.electron?.isElectron || window.location.protocol === 'file:' || navigator.userAgent.toLowerCase().includes('electron');
@@ -697,7 +767,7 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-16' : 'pt-16'}`}>
+    <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-32' : 'pt-16'}`}>
       <SweetAlertPopup />
       <Toaster position="top-right" richColors expand={true} closeButton />
 

@@ -2,31 +2,31 @@
 📋 HANDOVER DOCUMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📍 Đang làm: Quản lý Lớp học - Tính năng Gán học viên
-🔢 Đến bước: Research Phase (Hoàn thành phân tích component)
+📍 Đang làm: Sửa lỗi Ứng dụng Ôn tập Windows & Bảo trì dữ liệu
+🔢 Đến bước: Đã sửa xong lỗi Crash (White screen) & Đang chờ thông tin câu hỏi sai.
 
 ✅ ĐÃ XONG:
-   - Tìm thấy các file core của tính năng Class Management ✓
-   - Hiểu logic gán học viên hiện tại (qua Firebase updateDoc: courseId, courseName) ✓
-   - Phân tích xong component `AddStudentModal.tsx` và `StudentsTab.tsx` ✓
+   - Sửa lỗi import icon 'Award' trong TopNavbar.tsx (Khắc phục lỗi Màn hình trắng). ✓
+   - Vô hiệu hóa DevTools (F12) trong main.cjs và ẩn nút toggle trong App.tsx. ✓
+   - Xác định file dữ liệu câu hỏi: ontap-win/data/questions_db.json. ✓
+   - Chạy Build thành công (npm run build) để xác minh code không còn lỗi runtime. ✓
 
 ⏳ CÒN LẠI:
-   - Task 1: Thiết kế lại UI cho `AddStudentModal` để hỗ trợ chọn nhiều học viên (Checkbox).
-   - Task 2: Implement logic cập nhật hàng loạt (Firestore transaction hoặc batch write).
-   - Task 3: Test lại khả năng cập nhật real-time trên `StudentsTab`.
+   - Task 1: Sửa nội dung câu hỏi bị sai đáp án (Chờ user cung cấp text/ID).
+   - Task 2: Cân nhắc vô hiệu hóa chuột phải (Inspect Element) để bảo vệ dữ liệu triệt để hơn.
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-   - Sẽ cải tiến `AddStudentModal` thay vì tạo modal mới để tận dụng logic search hiện có.
-   - Dùng Framer Motion để tạo hiệu ứng mượt mà khi gán học viên.
+   - Tắt Console/DevTools trên bản build để tránh người dùng can thiệp vào mã nguồn hoặc dữ liệu thi.
+   - Sử dụng JSON local cho dữ liệu câu hỏi thay vì fetch Firestore liên tục để tối ưu tốc độ offline.
 
 ⚠️ LƯU Ý CHO SESSION SAU:
-   - File `components/ClassDetail/AddStudentModal.tsx` cần được sửa lại phần `handleAddStudent`.
-   - Cần kiểm tra xem có cần update `studentCount` trong collection `courses` không (tốt nhất là auto-calc).
+   - File questions_db.json rất lớn (43k+ dòng), nên dùng keyword để tìm câu hỏi cụ thể thay vì đọc file.
+   - Cần nhắc user Rebuild (npm run build hoặc npm run electron:build) để cập nhật các thay đổi UI mới nhất.
 
 📁 FILES QUAN TRỌNG:
-   - `components/ClassDetail/ClassDetailClient.tsx`
-   - `components/ClassDetail/AddStudentModal.tsx`
-   - `components/ClassDetail/StudentsTab.tsx`
+   - ontap-win/data/questions_db.json (Dữ liệu quan trọng nhất hiện tại)
+   - .brain/session.json (Tiến độ chi tiết)
+   - CHANGELOG.md (Lịch sử thay đổi)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 Đã lưu! Để tiếp tục: Gõ /recap

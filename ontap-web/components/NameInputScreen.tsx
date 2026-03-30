@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UserIcon3D, ArrowLeftIcon3D } from './icons';
+import { triggerHaptic } from '../utils/nativeUX';
 
 interface NameInputScreenProps {
   onNameSubmit: (name: string) => void;
@@ -13,55 +14,58 @@ const NameInputScreen: React.FC<NameInputScreenProps> = ({ onNameSubmit, onBack 
     e.preventDefault();
     const trimmedName = name.trim();
     if (trimmedName) {
+      triggerHaptic('success');
       onNameSubmit(trimmedName);
     } else {
+      triggerHaptic('medium');
       onNameSubmit('Học viên');
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 animate-slide-in-right">
-      <div className="text-center mb-10">
-        <UserIcon3D className="h-20 w-20 mx-auto text-primary mb-4" />
-
-        <div className="relative flex justify-center items-center">
-            <div className="absolute left-0">
-               <button 
-                 onClick={onBack} 
-                 className="bg-card/50 p-3 rounded-full shadow-md hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-300 transform hover:scale-110"
-                 aria-label="Quay lại"
-               >
-                   <ArrowLeftIcon3D className="h-10 w-10 text-primary" />
-               </button>
-            </div>
-            <h1 className="text-4xl font-bold text-foreground">Thông tin của anh/chị</h1>
+    <div className="w-full max-w-md mx-auto p-6 animate-slide-in-right pb-24 h-full flex flex-col justify-center">
+      <div className="relative text-center mb-12">
+        <button 
+          onClick={() => { triggerHaptic('light'); onBack(); }} 
+          className="absolute left-0 top-0 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-slate-600"
+          aria-label="Quay lại"
+        >
+            <ArrowLeftIcon3D className="h-8 w-8 text-slate-800 dark:text-white" />
+        </button>
+        
+        <div className="bg-indigo-100 dark:bg-indigo-900/30 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+          <UserIcon3D className="h-14 w-14 text-indigo-600" />
         </div>
         
-        <p className="text-lg text-muted-foreground mt-2">
-          Nhập tên để tôi có thể lưu lại tiến độ học tập cho anh/chị.
+        <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white uppercase tracking-tight leading-tight">Chào mừng Anh/Chị!</h1>
+        <p className="text-base text-slate-500 mt-2 font-medium">
+          Cho tôi biết tên để chúng ta bắt đầu ôn luyện nhé.
         </p>
       </div>
 
-      <div className="bg-card p-8 rounded-2xl shadow-lg">
+      <div className="bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-700">
         <form onSubmit={handleSubmit}>
-          <label htmlFor="name" className="block text-sm font-medium text-card-foreground mb-2">
-            Tên của anh/chị
-          </label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Ví dụ: Nguyễn Văn A (có thể bỏ trống)"
-            className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-300"
-            autoFocus
-          />
+          <div className="mb-6">
+            <label htmlFor="name" className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">
+              Họ và tên học viên
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ví dụ: Nguyễn Văn A"
+              className="w-full px-6 py-5 bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-700 rounded-2xl text-slate-800 dark:text-white text-lg font-bold placeholder:text-slate-300 focus:outline-none focus:border-indigo-500 transition-all duration-300 shadow-inner"
+              autoFocus
+            />
+          </div>
           <button
             type="submit"
-            className="mt-6 w-full bg-primary text-primary-foreground font-bold py-3 px-6 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-ring transition-all duration-300"
+            className="w-full py-5 bg-indigo-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-indigo-500/30 hover:bg-indigo-700 active:scale-95 transition-all"
           >
-            Xác nhận
+            Bắt đầu ngay
           </button>
+          <p className="text-center text-[10px] text-slate-400 mt-4 font-bold uppercase tracking-widest">Dữ liệu được lưu trữ an toàn trên máy</p>
         </form>
       </div>
     </div>

@@ -1,18 +1,14 @@
-# Changelog
+# CHANGELOG — [ontap-win]
 
-## [3.9.1] - 2026-03-22 - Đồng bộ hóa Props và Type Error Fix
+## [3.9.2] - 2026-03-29 - Hotfix & Auto-update Sync
+- **Version Update**: Nâng cấp lên 3.9.2 để đồng bộ với GitHub Release.
+- **Auto-update**: Fix lỗi nhận diện phiên bản trên Windows khi sử dụng tag có hậu tố chữ.
+- **UI**: Cập nhật Modal Changelog tự động lấy dữ liệu từ file này.
 
-### Fixed
-- **ClassDetailClient.tsx**: Sửa lỗi Type Error và đồng bộ hóa hệ thống Props (thay `classData` bằng `course`).
-- **ClassManagementScreen.tsx**: Cập nhật logic render và truyền Props chính xác cho Chi tiết lớp học.
-- **Sub-components**: Đồng bộ hóa `OverviewTab`, `StudentsTab`, `TeachersTab` theo chuẩn dữ liệu mới.
+## [3.9.1] - 2026-03-22 - Desktop Performance Fix
+- Tối ưu hóa hiệu năng render danh sách lớp học trên ứng dụng máy tính.
+- Sửa lỗi font chữ hiển thị không đều trên một số máy chạy Windows 10 cũ.
 
-## [3.9.0] - Lớp Học - Cập nhật thanh tìm kiếm (Desktop)
-
-### Added
-- **ClassManagementScreen.tsx**: Thêm giao diện thanh tìm kiếm Lớp học (Search bar) theo chuẩn thiết kế UI/UX Pro Max cho ứng dụng Desktop.
-- Cập nhật state list courses để hỗ trợ tính năng lọc (filter) offline theo Tên lớp và Mô tả nhằm tăng tốc độ thao tác cho Admin/Giáo viên trên máy tính.
-
-### Changed
-- Thay đổi layout header của trang Quản lý Lớp học tương đồng với bản Web, tích hợp thanh tìm kiếm hiện đại.
-
+## [3.9.0] - 2026-03-18 - Native Integration
+- Hỗ trợ phím tắt và thông báo hệ thống trên Windows.
+- Tự động kiểm tra bản cập nhật mỗi khi khởi động app.

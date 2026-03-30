@@ -43,11 +43,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
         {
             name: 'Tin tức',
             icon: FaHome,
-            action: () => {
-                triggerHaptic('light');
-                window.location.href = '/';
-            },
-            active: false,
+            action: () => handleNavigate('dashboard'),
+            active: isActive('dashboard'),
             key: 'news'
         },
         {
