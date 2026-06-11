@@ -1,29 +1,30 @@
 {
-  "updated_at": "2026-03-29T00:30:00Z",
+  "updated_at": "2026-06-11T08:27:16+07:00",
   "working_on": {
-    "feature": "Hệ thống Ôn tập Windows (Electron)",
-    "task": "Sửa lỗi đáp án sai & Bảo trì dữ liệu",
-    "status": "waiting_user_input",
+    "feature": "Bảo trì & Bảo mật TNDNB",
+    "task": "Hoàn thành khóa chuột phải và phân quyền trên App Win & Web",
+    "status": "completed",
     "files": [
-      "ontap-win/data/questions_db.json",
-      "ontap-win/components/TopNavbar.tsx"
+      "ontap-win/App.tsx",
+      "ontap-web/App.tsx"
     ],
     "blockers": [],
-    "notes": "Đã sửa thành công lỗi màn hình trắng (White Screen). Hiện đang chờ người dùng cung cấp thông tin câu hỏi bị sai đáp án để sửa trong questions_db.json."
+    "notes": "Đã hoàn thành khóa chuột phải. App Win khóa toàn cục trừ Admin. Web khóa có chọn lọc trong 4 màn hình thi/làm bài trừ Admin."
   },
   "pending_tasks": [
     {
-      "task": "Tìm và sửa câu hỏi có đáp án sai trong questions_db.json",
+      "task": "Deploy bản build mới cho App Win và Web",
       "priority": "high",
-      "notes": "Cần ID câu hỏi hoặc nội dung text từ người dùng."
-    },
-    {
-      "task": "Cân nhắc vô hiệu hóa chuột phải (Inspect Element) để bảo mật hơn",
-      "priority": "medium",
-      "notes": "Chờ xác nhận từ người dùng."
+      "notes": "Cần chạy build và cập nhật phiên bản trên môi trường thực tế."
     }
   ],
   "recent_changes": [
+    {
+      "timestamp": "2026-06-11T08:22:00+07:00",
+      "type": "security",
+      "description": "Triển khai khóa chuột phải trên Web (selective) và App Win (global), cho phép admin bỏ qua.",
+      "files": ["ontap-win/App.tsx", "ontap-web/App.tsx"]
+    },
     {
       "timestamp": "2026-03-29T00:20:00Z",
       "type": "bugfix",
@@ -50,6 +51,10 @@
     }
   ],
   "decisions_made": [
+    {
+      "decision": "Khóa chuột phải trên App Win toàn cục và Web có chọn lọc",
+      "reason": "Chặn Inspect Element để chống gian lận thi cử và copy dữ liệu ngoại trừ Admin để debug."
+    },
     {
       "decision": "Vô hiệu hóa F12 và DevTools button",
       "reason": "Yêu cầu của người dùng để khóa tính năng can thiệp kỹ thuật trong app ôn tập."

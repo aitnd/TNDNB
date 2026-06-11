@@ -7,11 +7,22 @@ import { collection, getDocs, doc, updateDoc, writeBatch, query, where } from 'f
 import { useNavigate } from 'react-router-dom';
 import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease } from '../services/githubService';
 
-const UsageConfigPanel: React.FC = () => {
+const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
     const navigate = useNavigate();
     const [config, setConfig] = useState<UsageConfig | null>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+
+    // Kiểm tra quyền truy cập của người dùng
+    useEffect(() => {
+        if (userProfile) {
+            const role = userProfile.role;
+            if (!['admin', 'lanh_dao'].includes(role)) {
+                Swal.fire('Bị chặn', 'Bạn không có quyền truy cập trang cấu hình hệ thống!', 'error');
+                navigate('/ontap/dashboard');
+            }
+        }
+    }, [userProfile]);
 
     // Main Tabs: 'limits' | 'system' | 'app_links'
     const [activeMainTab, setActiveMainTab] = useState<'limits' | 'system' | 'app_links'>('limits');
@@ -19,6 +30,10 @@ const UsageConfigPanel: React.FC = () => {
     // Sub Tab for Roles (only used when activeMainTab === 'limits')
     type RoleKey = Exclude<keyof UsageConfig, 'app_links'>;
     const [activeRole, setActiveRole] = useState<RoleKey>('guest');
+
+    // Phân quyền sửa cấu hình vai trò Admin
+    const isLanhDao = userProfile?.role === 'lanh_dao';
+    const isReadOnly = isLanhDao && activeRole === 'admin';
 
     // --- SYSTEM UTILS ---
     const [orphanCount, setOrphanCount] = useState<number | null>(null);
@@ -371,6 +386,12 @@ const UsageConfigPanel: React.FC = () => {
 
                                 {/* Config Form for Selected Role */}
                                 <div className="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-6 border border-gray-100 dark:border-slate-700">
+                                    {isReadOnly && (
+                                        <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 rounded-xl text-sm font-medium border border-amber-200 dark:border-amber-700/50 flex items-center gap-2 animate-fade-in">
+                                            ⚠️ Bạn đang xem cấu hình của vai trò Quản trị viên (Admin). Chỉ tài khoản Admin mới có quyền chỉnh sửa cấu hình này.
+                                        </div>
+                                    )}
+
                                     <div className="flex items-center justify-between mb-6">
                                         <h3 className="text-lg font-bold flex items-center gap-2">
                                             {React.createElement(roles.find(r => r.id === activeRole)!.icon, { className: roles.find(r => r.id === activeRole)!.color })}
@@ -381,10 +402,11 @@ const UsageConfigPanel: React.FC = () => {
                                             <input
                                                 type="checkbox"
                                                 checked={currentRoleConfig.isEnabled}
+                                                disabled={isReadOnly}
                                                 onChange={(e) => updateRoleConfig(activeRole, 'isEnabled', e.target.checked)}
                                                 className="sr-only peer"
                                             />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                 {currentRoleConfig.isEnabled ? 'Đang bật giới hạn' : 'Không giới hạn (Tắt)'}
                                             </span>
@@ -399,16 +421,18 @@ const UsageConfigPanel: React.FC = () => {
                                                     <input
                                                         type="number"
                                                         value={currentRoleConfig.limit}
+                                                        disabled={isReadOnly}
                                                         onChange={(e) => updateRoleConfig(activeRole, 'limit', parseInt(e.target.value) || 0)}
-                                                        className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none"
+                                                        className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
                                                     />
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-bold mb-2 dark:text-gray-300">Chu kỳ reset</label>
                                                     <select
                                                         value={currentRoleConfig.period}
+                                                        disabled={isReadOnly}
                                                         onChange={(e) => updateRoleConfig(activeRole, 'period', e.target.value)}
-                                                        className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none"
+                                                        className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
                                                     >
                                                         <option value="daily">Hàng Ngày (00:00)</option>
                                                         <option value="weekly">Hàng Tuần (Thứ 2)</option>
@@ -421,8 +445,9 @@ const UsageConfigPanel: React.FC = () => {
                                                 <textarea
                                                     rows={3}
                                                     value={currentRoleConfig.message}
+                                                    disabled={isReadOnly}
                                                     onChange={(e) => updateRoleConfig(activeRole, 'message', e.target.value)}
-                                                    className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none"
+                                                    className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
                                                     placeholder="Nhập tin nhắn..."
                                                 />
                                                 <p className="text-xs text-gray-500 mt-2">
@@ -437,21 +462,41 @@ const UsageConfigPanel: React.FC = () => {
                                         </div>
                                     )}
 
-                                    {/* AdSense Toggle */}
-                                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600 flex items-center justify-between">
-                                        <div>
-                                            <h4 className="font-bold text-orange-700 dark:text-orange-400">Hiển thị Quảng Cáo (Google Adsense)</h4>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">Bật để hiện quảng cáo cho nhóm này (Không phụ thuộc giới hạn).</p>
+                                    {/* Bảo mật & Quảng cáo Toggles */}
+                                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600 space-y-6">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-red-700 dark:text-red-400">Cấm sao chép & bôi đen đề thi</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Ngăn học viên bôi đen, copy và dùng chuột phải khi thi.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.preventCopy || false}
+                                                    disabled={isReadOnly}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'preventCopy', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600 disabled:opacity-50"></div>
+                                            </label>
                                         </div>
-                                        <label className="relative inline-flex items-center cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                checked={currentRoleConfig.showAds}
-                                                onChange={(e) => updateRoleConfig(activeRole, 'showAds', e.target.checked)}
-                                                className="sr-only peer"
-                                            />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500"></div>
-                                        </label>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-orange-700 dark:text-orange-400">Hiển thị Quảng Cáo (Google Adsense)</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Bật để hiện quảng cáo cho nhóm này (Không phụ thuộc giới hạn).</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.showAds}
+                                                    disabled={isReadOnly}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'showAds', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500 disabled:opacity-50"></div>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

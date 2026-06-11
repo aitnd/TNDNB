@@ -12,6 +12,7 @@ export interface RoleConfig {
     showAdSense: boolean;
     showAdsterra: boolean;
     message: string;
+    preventCopy?: boolean; // 🔒 Bật/Tắt chặn bôi đen và Ctrl + C khi thi
 }
 
 export interface UsageConfig {
@@ -45,7 +46,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        message: 'Bạn đã sử dụng hết {limit} lượt làm thử miễn phí trong ngày. Vui lòng đăng nhập để tiếp tục ôn tập! Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969'
+        message: 'Bạn đã sử dụng hết {limit} lượt làm thử miễn phí trong ngày. Vui lòng đăng nhập để tiếp tục ôn tập! Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969',
+        preventCopy: true
     },
     free_user: {
         limit: 10,
@@ -54,7 +56,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        message: 'Bạn đã hết {limit} lượt làm bài miễn phí hôm nay. Hãy đăng ký lớp học để mở khóa toàn bộ tính năng và ôn tập không giới hạn. Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969'
+        message: 'Bạn đã hết {limit} lượt làm bài miễn phí hôm nay. Hãy đăng ký lớp học để mở khóa toàn bộ tính năng và ôn tập không giới hạn. Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969',
+        preventCopy: true
     },
     verified_user: {
         limit: 50,
@@ -63,7 +66,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        message: 'Tài khoản lớp của bạn đã đạt giới hạn {limit} lượt truy cập. Vui lòng liên hệ giáo viên hoặc admin để được hỗ trợ.'
+        message: 'Tài khoản lớp của bạn đã đạt giới hạn {limit} lượt truy cập. Vui lòng liên hệ giáo viên hoặc admin để được hỗ trợ.',
+        preventCopy: true
     },
     vip_user: {
         limit: 100,
@@ -72,7 +76,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        message: 'Tài khoản VIP của bạn đã hết {limit} lượt sử dụng. Vui lòng gia hạn hoặc liên hệ hỗ trợ.'
+        message: 'Tài khoản VIP của bạn đã hết {limit} lượt sử dụng. Vui lòng gia hạn hoặc liên hệ hỗ trợ.',
+        preventCopy: true
     },
     teacher: {
         limit: 9999,
@@ -81,7 +86,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        message: 'Giới hạn giáo viên.'
+        message: 'Giới hạn giáo viên.',
+        preventCopy: false
     },
     manager: {
         limit: 9999,
@@ -90,7 +96,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        message: 'Giới hạn cán bộ quản lý.'
+        message: 'Giới hạn cán bộ quản lý.',
+        preventCopy: false
     },
     admin: {
         limit: 9999,
@@ -99,7 +106,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        message: 'Giới hạn Admin.'
+        message: 'Giới hạn Admin.',
+        preventCopy: false
     }
 };
 

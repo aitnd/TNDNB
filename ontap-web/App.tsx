@@ -62,6 +62,22 @@ const AppContent: React.FC = () => {
   const unsubProfileRef = useRef<(() => void) | null>(null);
   const [isLocked, setIsLocked] = useState(false);
   const [isBiometricChecking, setIsBiometricChecking] = useState(false);
+  const [usageConfig, setUsageConfig] = useState<any>(null);
+
+  // Lắng nghe cấu hình bảo mật realtime từ Firestore
+  useEffect(() => {
+    import('firebase/firestore').then(({ onSnapshot, doc }) => {
+      const unsubConfig = onSnapshot(doc(db, 'settings', 'usage_config'), (docSnap) => {
+        if (docSnap.exists()) {
+          setUsageConfig(docSnap.data());
+        }
+      }, (error) => {
+        console.warn('⚠️ [App] usage_config onSnapshot error:', error.message);
+      });
+
+      return () => unsubConfig();
+    });
+  }, []);
 
 
   const licenses = useAppStore(state => state.licenses);
@@ -434,6 +450,101 @@ const AppContent: React.FC = () => {
       return () => unsubSession();
     });
   }, [userProfile]);
+
+  // 🔒 KHÓA CHUỘT PHẢI & CHẶN COPY BẢO MẬT (Động theo cấu hình role)
+  useEffect(() => {
+    const examPaths = ['/ontap/lambai', '/ontap/thithu', '/ontap/giamkhao/lambai', '/ontap/giamkhao/thithu'];
+    const isExamScreen = examPaths.includes(location.pathname);
+
+    if (!isExamScreen) return;
+
+    // Xác định role hiện tại (mặc định guest nếu không đăng nhập)
+    const currentRole = userProfile?.role || 'guest';
+    
+    // Mặc định cấm copy đối với các role học viên/khách vãng lai nếu chưa tải xong cấu hình
+    const isCopyPreventedByDefault = ['guest', 'free_user', 'verified_user', 'vip_user'].includes(currentRole);
+    const preventCopy = usageConfig 
+      ? (usageConfig[currentRole]?.preventCopy ?? isCopyPreventedByDefault)
+      : isCopyPreventedByDefault;
+
+    if (!preventCopy) return;
+
+    // 1. Chặn bôi đen bằng CSS
+    const originalUserSelect = document.body.style.userSelect;
+    const originalWebkitSelect = document.body.style.webkitUserSelect;
+    // @ts-ignore
+    const originalMsSelect = document.body.style.msUserSelect;
+    // @ts-ignore
+    const originalMozSelect = document.body.style.mozUserSelect;
+
+    document.body.style.userSelect = 'none';
+    document.body.style.webkitUserSelect = 'none';
+    // @ts-ignore
+    document.body.style.msUserSelect = 'none';
+    // @ts-ignore
+    document.body.style.mozUserSelect = 'none';
+
+    // 2. Chặn menu chuột phải
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    // 3. Chặn sự kiện copy
+    const handleCopy = (e: ClipboardEvent) => {
+      e.preventDefault();
+      import('sweetalert2').then(({ default: Swal }) => {
+        Swal.fire({
+          title: 'Cảnh báo bảo mật',
+          text: 'Tính năng sao chép đề thi đã bị cấm!',
+          icon: 'warning',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      });
+    };
+
+    // 4. Chặn phím tắt Ctrl+C, Cmd+C, Ctrl+U
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+      
+      // Ctrl+C hoặc Cmd+C
+      if (isCtrlOrCmd && e.key.toLowerCase() === 'c') {
+        e.preventDefault();
+        import('sweetalert2').then(({ default: Swal }) => {
+          Swal.fire({
+            title: 'Cảnh báo bảo mật',
+            text: 'Không được phép sử dụng phím tắt sao chép!',
+            icon: 'warning',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        });
+      }
+
+      // Ctrl+U
+      if (isCtrlOrCmd && e.key.toLowerCase() === 'u') {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('contextmenu', handleContextMenu);
+    window.addEventListener('copy', handleCopy as any);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      // Khôi phục lại style cũ
+      document.body.style.userSelect = originalUserSelect;
+      document.body.style.webkitUserSelect = originalWebkitSelect;
+      // @ts-ignore
+      document.body.style.msUserSelect = originalMsSelect;
+      // @ts-ignore
+      document.body.style.mozUserSelect = originalMozSelect;
+
+      window.removeEventListener('contextmenu', handleContextMenu);
+      window.removeEventListener('copy', handleCopy as any);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [location.pathname, userProfile, usageConfig]);
 
   const persistSession = useCallback((
     idx: number,
@@ -1021,7 +1132,7 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/quanlylop" element={userProfile ? <ClassManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
           <Route path="/ontap/quanlylop/:courseId" element={userProfile ? <ClassManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
           <Route path="/ontap/taikhoan" element={userProfile ? <AccountScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/dangnhap" replace />} />
-          <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel /> : <Navigate to="/ontap/dangnhap" />} />
+          <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/thongbao" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/homthu" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/quanlythi" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
