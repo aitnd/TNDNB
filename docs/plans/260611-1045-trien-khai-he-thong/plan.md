@@ -15,8 +15,8 @@ Kế hoạch triển khai phiên bản v3.9.6 bao gồm việc commit các thay 
 
 | Phase | Name | Status | Progress |
 |-------|------|--------|----------|
-| 01 | Commit & Changelog | ⬜ Pending | 0% |
-| 02 | Kiểm thử & Deploy bản Web | ⬜ Pending | 0% |
+| 01 | Commit & Changelog | ✅ Complete | 100% |
+| 02 | Kiểm thử & Deploy bản Web | ✅ Complete | 100% |
 | 03 | Đóng gói & Phát hành bản Win (EXE) | ⬜ Pending | 0% |
 | 04 | Xác minh trên Production | ⬜ Pending | 0% |
 

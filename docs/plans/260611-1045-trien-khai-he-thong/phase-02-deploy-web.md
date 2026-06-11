@@ -1,5 +1,5 @@
 # Phase 02: Kiểm thử & Deploy bản Web
-Status: ⬜ Pending
+Status: ✅ Complete
 Dependencies: Phase 01
 
 ## Objective
