@@ -2,29 +2,33 @@
 📋 HANDOVER DOCUMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📍 Đang làm: Bảo mật & Bảo trì Hệ thống Ôn tập (TNDNB)
-🔢 Đến bước: Hoàn thành triển khai và kiểm thử tính năng bảo mật.
+📍 Đang làm: Phân tách cấu hình vai trò & Triển khai v3.9.6
+🔢 Đến bước: Đóng gói và phát hành thành công v3.9.6 (Web & Win Setup).
 
 ✅ ĐÃ XONG:
-   - Sửa lỗi import icon 'Award' trong TopNavbar.tsx (Khắc phục lỗi Màn hình trắng) ✓
-   - Vô hiệu hóa DevTools (F12) trong main.cjs và ẩn nút toggle trong App.tsx ✓
-   - Sửa nội dung các câu hỏi bị sai đáp án trong questions_db.json ✓
-   - Khóa chuột phải (contextmenu) trên App Win: Khóa toàn cục cho mọi user trừ Admin ✓
-   - Khóa chuột phải (contextmenu) trên Web: Khóa chọn lọc tại 4 màn hình thi/làm bài (`/lambai`, `/thithu`) trừ Admin ✓
+   - Phân tách cấu hình vai trò Ban Lãnh Đạo (leader) và Quản Lý (manager) độc lập trong Firestore và UI panel config ✓
+   - Đồng bộ hóa logic check quyền `getRoleConfigKey` trên toàn hệ thống (Web, Win, Next.js Portal đăng bài) ✓
+   - Sửa lỗi TypeScript cho file test và chạy Vitest pass 100% (5/5 cases) trên cả 2 bản ✓
+   - Cập nhật CHANGELOG.md và nâng version lên v3.9.6 trong package.json ✓
+   - Build thành công bản Web (Vite output vào public/ontap) ✓
+   - Build và đóng gói thành công setup exe Windows: `Onthi-3.9.6-Setup.exe` ✓
 
 ⏳ CÒN LẠI:
-   - Build và deploy các phiên bản mới của App Win (Electron) và Web lên production.
+   - Người dùng thực hiện `git push` để đẩy code lên GitHub và trigger Vercel deploy Web.
+   - Kiểm tra, nghiệm thu thực tế trên môi trường thật (xác minh phân quyền Lãnh đạo hoạt động độc lập với Quản lý).
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-   - Chặn Console/DevTools và chuột phải (contextmenu) trên cả App Win và Web đối với tài khoản thường/chưa đăng nhập nhằm tăng bảo mật chống gian lận và rò rỉ dữ liệu.
-   - Cho phép tài khoản role 'admin' bỏ qua khóa chuột phải để thuận tiện cho việc kiểm tra, debug.
+   - Ánh xạ vai trò `lanh_dao` sang thuộc tính cấu hình `leader` trong Firestore, giải quyết vấn đề cấu hình dùng chung của Quản lý và Lãnh đạo trước đây.
 
 ⚠️ LƯU Ý CHO SESSION SAU:
-   - Cần chạy build (npm run build) cho cả `ontap-win/` và `ontap-web/` để cập nhật các tính năng bảo mật mới.
+   - Bản Windows setup exe được lưu trữ tại `ontap-win/release/Onthi-3.9.6-Setup.exe`.
+   - Cần chạy git push để Vercel deploy các thay đổi mới nhất của bản Web và Next.js Portal.
 
 📁 FILES QUAN TRỌNG:
-   - ontap-win/App.tsx (Khóa chuột phải App Win)
-   - ontap-web/App.tsx (Khóa chuột phải Web)
+   - ontap-win/services/adminConfigService.ts
+   - ontap-web/services/adminConfigService.ts
+   - ontap-win/components/UsageConfigPanel.tsx
+   - ontap-web/components/UsageConfigPanel.tsx
    - .brain/session.json (Tiến độ chi tiết)
    - CHANGELOG.md (Lịch sử thay đổi)
 

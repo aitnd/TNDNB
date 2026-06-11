@@ -1,5 +1,5 @@
 # Phase 03: Đóng gói & Phát hành bản Win (EXE)
-Status: ⬜ Pending
+Status: ✅ Complete
 Dependencies: Phase 02
 
 ## Objective

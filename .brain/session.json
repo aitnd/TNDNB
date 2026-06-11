@@ -1,63 +1,60 @@
 {
-  "updated_at": "2026-06-11T08:27:16+07:00",
+  "updated_at": "2026-06-11T15:15:00+07:00",
   "working_on": {
-    "feature": "Bảo trì & Bảo mật TNDNB",
-    "task": "Hoàn thành khóa chuột phải và phân quyền trên App Win & Web",
+    "feature": "Triển khai & Phân tách vai trò Lãnh đạo v3.9.6",
+    "task": "Commit, kiểm thử tự động, build web và đóng gói exe Electron hoàn tất",
     "status": "completed",
     "files": [
-      "ontap-win/App.tsx",
-      "ontap-web/App.tsx"
+      "ontap-win/services/adminConfigService.ts",
+      "ontap-web/services/adminConfigService.ts",
+      "ontap-win/components/UsageConfigPanel.tsx",
+      "ontap-web/components/UsageConfigPanel.tsx"
     ],
     "blockers": [],
-    "notes": "Đã hoàn thành khóa chuột phải. App Win khóa toàn cục trừ Admin. Web khóa có chọn lọc trong 4 màn hình thi/làm bài trừ Admin."
+    "notes": "Đã phân tách thành công hai key leader và manager, cập nhật UI config panel, và sửa các màn hình liên quan cùng với Next.js Portal."
   },
-  "pending_tasks": [
-    {
-      "task": "Deploy bản build mới cho App Win và Web",
-      "priority": "high",
-      "notes": "Cần chạy build và cập nhật phiên bản trên môi trường thực tế."
-    }
-  ],
+  "pending_tasks": [],
   "recent_changes": [
+    {
+      "timestamp": "2026-06-11T15:00:00+07:00",
+      "type": "feature",
+      "description": "Phân tách hoàn toàn cấu hình vai trò Ban Lãnh Đạo (leader) và Quản Lý (manager) trong database Firestore và UI cấu hình.",
+      "files": [
+        "ontap-win/services/adminConfigService.ts",
+        "ontap-web/services/adminConfigService.ts",
+        "ontap-win/components/UsageConfigPanel.tsx",
+        "ontap-web/components/UsageConfigPanel.tsx",
+        "ontap-win/components/AccountScreen.tsx",
+        "ontap-web/components/AccountScreen.tsx",
+        "ontap-win/components/ClassManagementScreen.tsx",
+        "ontap-web/components/ClassManagementScreen.tsx",
+        "app/quan-ly/dang-bai/page.tsx",
+        "app/quan-ly/dang-bai/sua/[postId]/page.tsx"
+      ]
+    },
     {
       "timestamp": "2026-06-11T08:22:00+07:00",
       "type": "security",
       "description": "Triển khai khóa chuột phải trên Web (selective) và App Win (global), cho phép admin bỏ qua.",
       "files": ["ontap-win/App.tsx", "ontap-web/App.tsx"]
-    },
-    {
-      "timestamp": "2026-03-29T00:20:00Z",
-      "type": "bugfix",
-      "description": "Fix 'ReferenceError: Award is not defined' in TopNavbar.tsx causing Electron crash.",
-      "files": ["ontap-win/components/TopNavbar.tsx"]
-    },
-    {
-      "timestamp": "2026-03-29T00:25:00Z",
-      "type": "security",
-      "description": "Disable auto openDevTools and hide DevTools toggle button in main UI.",
-      "files": ["ontap-win/electron/main.cjs", "ontap-win/App.tsx"]
     }
   ],
   "errors_encountered": [
     {
-      "error": "ReferenceError: Award is not defined",
-      "solution": "Import 'Award' icon from 'lucide-react' in the missing component.",
+      "error": "Lỗi build Electron EPERM do folder release bị khóa",
+      "solution": "Tắt các ứng dụng chạy ngầm trước khi đóng gói bằng taskkill.",
       "resolved": true
     },
     {
-      "error": "White screen on app launch (Production/Electron)",
-      "solution": "Fixed the runtime JS exception during React initial render.",
+      "error": "Lỗi TypeScript TS2322 cho thuộc tính role trong AccountScreen.test.tsx",
+      "solution": "Ép kiểu as 'admin' trong file test.",
       "resolved": true
     }
   ],
   "decisions_made": [
     {
-      "decision": "Khóa chuột phải trên App Win toàn cục và Web có chọn lọc",
-      "reason": "Chặn Inspect Element để chống gian lận thi cử và copy dữ liệu ngoại trừ Admin để debug."
-    },
-    {
-      "decision": "Vô hiệu hóa F12 và DevTools button",
-      "reason": "Yêu cầu của người dùng để khóa tính năng can thiệp kỹ thuật trong app ôn tập."
+      "decision": "Phân tách lanh_dao sang key leader thay vì dùng chung key manager",
+      "reason": "Yêu cầu của người dùng để phân quyền giới hạn và tính năng độc lập cho 2 ban bệ quản lý khác nhau."
     }
   ]
 }

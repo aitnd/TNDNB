@@ -37,6 +37,10 @@
     {
       "rule": "Offline support requires explicit toggle per student",
       "description": "Cột sóng icon in ClassManagement"
+    },
+    {
+      "rule": "Phân tách vai trò Lãnh đạo và Quản lý",
+      "description": "Vai trò lanh_dao dùng key cấu hình leader, quan_ly dùng key manager để thiết lập quyền độc lập"
     }
   ],
   "features": [
