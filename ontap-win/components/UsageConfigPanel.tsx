@@ -498,6 +498,194 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             </label>
                                         </div>
                                     </div>
+
+                                    {/* 🏫 Phân quyền Tính Năng */}
+                                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600">
+                                        <h4 className="font-bold text-lg text-purple-700 dark:text-purple-400 mb-4 flex items-center gap-2">
+                                            <FaShieldAlt /> Phân Quyền Tính Năng Chi Tiết
+                                        </h4>
+                                        
+                                        <div className="space-y-6">
+                                            {/* Quyền Lớp học */}
+                                            <div className="p-4 bg-gray-50 dark:bg-slate-800/40 rounded-xl border dark:border-slate-700 space-y-4">
+                                                <h5 className="font-bold text-sm text-gray-700 dark:text-slate-300 border-b dark:border-slate-700 pb-1.5 uppercase tracking-wider">🏫 Quản lý lớp học</h5>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Xem danh sách lớp học</label>
+                                                        <select
+                                                            value={currentRoleConfig.courseViewList || 'none'}
+                                                            disabled={isReadOnly}
+                                                            onChange={(e) => updateRoleConfig(activeRole, 'courseViewList', e.target.value as any)}
+                                                            className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                        >
+                                                            <option value="all">Xem tất cả các lớp</option>
+                                                            <option value="managed">Chỉ xem lớp được quản lý (chủ nhiệm, dạy, tạo)</option>
+                                                            <option value="none">Không được xem</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Tạo / Xóa lớp học mới</label>
+                                                        <select
+                                                            value={currentRoleConfig.courseCreateDelete || 'none'}
+                                                            disabled={isReadOnly}
+                                                            onChange={(e) => updateRoleConfig(activeRole, 'courseCreateDelete', e.target.value as any)}
+                                                            className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                        >
+                                                            <option value="all">Được phép với tất cả các lớp</option>
+                                                            <option value="managed">Chỉ được phép với lớp quản lý (do mình tạo)</option>
+                                                            <option value="none">Không được phép</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Sửa thông tin cơ bản lớp học</label>
+                                                        <select
+                                                            value={currentRoleConfig.courseEdit || 'none'}
+                                                            disabled={isReadOnly}
+                                                            onChange={(e) => updateRoleConfig(activeRole, 'courseEdit', e.target.value as any)}
+                                                            className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                        >
+                                                            <option value="all">Sửa tất cả các lớp</option>
+                                                            <option value="managed">Chỉ sửa lớp quản lý (chủ nhiệm, dạy, tạo)</option>
+                                                            <option value="none">Không được sửa</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Gán/Xóa Giáo viên & Học viên</h6>
+                                                            <p className="text-[10px] text-gray-500">Cho phép phân quyền thành viên vào lớp.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.courseAssignMembers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'courseAssignMembers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Quyền Quản lý Tài khoản */}
+                                            <div className="p-4 bg-gray-50 dark:bg-slate-800/40 rounded-xl border dark:border-slate-700 space-y-4">
+                                                <h5 className="font-bold text-sm text-gray-700 dark:text-slate-300 border-b dark:border-slate-700 pb-1.5 uppercase tracking-wider">👤 Quản lý người dùng</h5>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xem & Sửa tài khoản khác</h6>
+                                                            <p className="text-[10px] text-gray-500">Chỉ thao tác trên tài khoản cấp thấp hơn.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.userViewEditOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'userViewEditOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Thay đổi vai trò (Role)</h6>
+                                                            <p className="text-[10px] text-gray-500">Cho phép chuyển vai trò của tài khoản thấp hơn.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.userChangeRoleOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'userChangeRoleOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xóa vĩnh viễn tài khoản</h6>
+                                                            <p className="text-[10px] text-gray-500">Cho phép xóa tài khoản cấp thấp hơn (Xóa mềm).</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.userDeleteOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'userDeleteOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Đăng xuất từ xa / Thiết bị</h6>
+                                                            <p className="text-[10px] text-gray-500">Đăng xuất các thiết bị của tài khoản thấp hơn.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.userForceLogoutOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'userForceLogoutOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Quyền Tin tức */}
+                                            <div className="p-4 bg-gray-50 dark:bg-slate-800/40 rounded-xl border dark:border-slate-700 space-y-4">
+                                                <h5 className="font-bold text-sm text-gray-700 dark:text-slate-300 border-b dark:border-slate-700 pb-1.5 uppercase tracking-wider">📰 Tin tức & Bài viết</h5>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Đăng / Sửa bài viết tin tức</label>
+                                                        <select
+                                                            value={currentRoleConfig.newsCreateEdit || 'none'}
+                                                            disabled={isReadOnly}
+                                                            onChange={(e) => updateRoleConfig(activeRole, 'newsCreateEdit', e.target.value as any)}
+                                                            className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                        >
+                                                            <option value="all">Đăng và sửa tất cả các bài</option>
+                                                            <option value="own">Chỉ đăng và sửa bài của bản thân</option>
+                                                            <option value="none">Không được phép</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xóa bài viết của người khác</h6>
+                                                            <p className="text-[10px] text-gray-500">Xóa bài viết do thành viên khác đăng.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.newsDeleteOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'newsDeleteOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}

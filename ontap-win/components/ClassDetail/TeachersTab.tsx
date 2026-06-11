@@ -9,9 +9,10 @@ import { AddTeacherModal } from './Modals';
 
 interface TeachersTabProps {
   course: Course;
+  canAssignMembers?: boolean;
 }
 
-const TeachersTab: React.FC<TeachersTabProps> = ({ course }) => {
+const TeachersTab: React.FC<TeachersTabProps> = ({ course, canAssignMembers = true }) => {
   const [teachers, setTeachers] = useState<UserProfile[]>([]);
   const [availableTeachers, setAvailableTeachers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -109,12 +110,14 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ course }) => {
         <h3 className="text-xl font-bold dark:text-white flex items-center gap-2">
           <FaChalkboardTeacher className="text-teal-500" /> Danh sách giảng dạy
         </h3>
-        <button 
-          onClick={() => { setShowAddModal(true); fetchAvailableTeachers(); }}
-          className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 dark:bg-teal-600 hover:bg-slate-800 dark:hover:bg-teal-700 text-white rounded-xl font-bold transition-all shadow-lg active:scale-95 text-sm"
-        >
-          <FaPlus /> Thêm giáo viên
-        </button>
+        {canAssignMembers && (
+          <button 
+            onClick={() => { setShowAddModal(true); fetchAvailableTeachers(); }}
+            className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 dark:bg-teal-600 hover:bg-slate-800 dark:hover:bg-teal-700 text-white rounded-xl font-bold transition-all shadow-lg active:scale-95 text-sm"
+          >
+            <FaPlus /> Thêm giáo viên
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -167,7 +170,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ course }) => {
                   </div>
                 </div>
 
-                {teacher.id !== course.headTeacherId && (
+                {teacher.id !== course.headTeacherId && canAssignMembers && (
                   <button 
                     onClick={() => handleRemoveTeacher(teacher.id, teacher.full_name || teacher.fullName || '')}
                     className="p-3 text-gray-300 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-2xl transition-all"

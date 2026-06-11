@@ -16,6 +16,7 @@ interface ClassDetailClientProps {
   deviceCounts?: Record<string, number>;
   subjectStats?: any[];
   creatorProfiles?: Record<string, {name: string, role: string}>;
+  canAssignMembers?: boolean;
 }
 
 type TabType = 'overview' | 'students' | 'teachers' | 'settings';
@@ -34,7 +35,8 @@ const ClassDetailClient: React.FC<ClassDetailClientProps> = ({
   studentLatestResults = {},
   deviceCounts = {},
   subjectStats = [],
-  creatorProfiles = {}
+  creatorProfiles = {},
+  canAssignMembers = false
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [studentCount, setStudentCount] = useState(0);
@@ -111,12 +113,14 @@ const ClassDetailClient: React.FC<ClassDetailClientProps> = ({
                 course={course} 
                 studentLatestResults={studentLatestResults}
                 deviceCounts={deviceCounts}
+                canAssignMembers={canAssignMembers}
               />
             )}
 
             {activeTab === 'teachers' && (
               <TeachersTab 
                 course={course} 
+                canAssignMembers={canAssignMembers}
               />
             )}
 

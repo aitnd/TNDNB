@@ -11,6 +11,22 @@ export interface RoleConfig {
     showAds: boolean; // Control Google Adsense
     message: string;
     preventCopy?: boolean; // 🔒 Bật/Tắt chặn bôi đen và Ctrl + C khi thi
+
+    // 🏫 Phân quyền Lớp học (Course Management)
+    courseCreateDelete?: 'all' | 'managed' | 'none'; // Tạo / Xóa lớp học mới
+    courseEdit?: 'all' | 'managed' | 'none';         // Sửa thông tin cơ bản lớp học
+    courseAssignMembers?: boolean;                    // Gán/Xóa Giáo viên & Học viên vào lớp
+    courseViewList?: 'all' | 'managed' | 'none';      // Xem danh sách lớp học
+
+    // 👤 Phân quyền Quản lý Tài khoản (User Management)
+    userViewEditOthers?: boolean;                     // Xem & Sửa thông tin chi tiết tài khoản khác
+    userChangeRoleOthers?: boolean;                   // Thay đổi vai trò (role) của tài khoản khác
+    userDeleteOthers?: boolean;                       // Xóa vĩnh viễn tài khoản người khác
+    userForceLogoutOthers?: boolean;                  // Đăng xuất từ xa tài khoản khác
+
+    // 📰 Phân quyền Tin tức / Bài viết (News Management)
+    newsCreateEdit?: 'all' | 'own' | 'none';          // Đăng / Sửa bài viết
+    newsDeleteOthers?: boolean;                       // Xóa bài viết của người khác
 }
 
 export interface UsageConfig {
@@ -43,7 +59,17 @@ const DEFAULT_CONFIG: UsageConfig = {
         isEnabled: true,
         showAds: true,
         message: 'Bạn đã sử dụng hết {limit} lượt làm thử miễn phí trong ngày. Vui lòng đăng nhập để tiếp tục ôn tập! Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969',
-        preventCopy: true
+        preventCopy: true,
+        courseCreateDelete: 'none',
+        courseEdit: 'none',
+        courseAssignMembers: false,
+        courseViewList: 'none',
+        userViewEditOthers: false,
+        userChangeRoleOthers: false,
+        userDeleteOthers: false,
+        userForceLogoutOthers: false,
+        newsCreateEdit: 'none',
+        newsDeleteOthers: false
     },
     free_user: {
         limit: 10,
@@ -51,7 +77,17 @@ const DEFAULT_CONFIG: UsageConfig = {
         isEnabled: true,
         showAds: true,
         message: 'Bạn đã hết {limit} lượt làm bài miễn phí hôm nay. Hãy đăng ký lớp học để mở khóa toàn bộ tính năng và ôn tập không giới hạn. Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969',
-        preventCopy: true
+        preventCopy: true,
+        courseCreateDelete: 'none',
+        courseEdit: 'none',
+        courseAssignMembers: false,
+        courseViewList: 'none',
+        userViewEditOthers: false,
+        userChangeRoleOthers: false,
+        userDeleteOthers: false,
+        userForceLogoutOthers: false,
+        newsCreateEdit: 'none',
+        newsDeleteOthers: false
     },
     verified_user: {
         limit: 50,
@@ -59,7 +95,17 @@ const DEFAULT_CONFIG: UsageConfig = {
         isEnabled: false,
         showAds: false,
         message: 'Tài khoản lớp của bạn đã đạt giới hạn {limit} lượt truy cập. Vui lòng liên hệ giáo viên hoặc admin để được hỗ trợ.',
-        preventCopy: true
+        preventCopy: true,
+        courseCreateDelete: 'none',
+        courseEdit: 'none',
+        courseAssignMembers: false,
+        courseViewList: 'managed',
+        userViewEditOthers: false,
+        userChangeRoleOthers: false,
+        userDeleteOthers: false,
+        userForceLogoutOthers: false,
+        newsCreateEdit: 'none',
+        newsDeleteOthers: false
     },
     vip_user: {
         limit: 100,
@@ -67,7 +113,17 @@ const DEFAULT_CONFIG: UsageConfig = {
         isEnabled: false,
         showAds: false,
         message: 'Tài khoản VIP của bạn đã hết {limit} lượt sử dụng. Vui lòng gia hạn hoặc liên hệ hỗ trợ.',
-        preventCopy: true
+        preventCopy: true,
+        courseCreateDelete: 'none',
+        courseEdit: 'none',
+        courseAssignMembers: false,
+        courseViewList: 'managed',
+        userViewEditOthers: false,
+        userChangeRoleOthers: false,
+        userDeleteOthers: false,
+        userForceLogoutOthers: false,
+        newsCreateEdit: 'none',
+        newsDeleteOthers: false
     },
     teacher: {
         limit: 9999,
@@ -75,7 +131,17 @@ const DEFAULT_CONFIG: UsageConfig = {
         isEnabled: false,
         showAds: false,
         message: 'Giới hạn giáo viên.',
-        preventCopy: false
+        preventCopy: false,
+        courseCreateDelete: 'none',
+        courseEdit: 'managed',
+        courseAssignMembers: true,
+        courseViewList: 'managed',
+        userViewEditOthers: true,
+        userChangeRoleOthers: false,
+        userDeleteOthers: false,
+        userForceLogoutOthers: false,
+        newsCreateEdit: 'own',
+        newsDeleteOthers: false
     },
     manager: {
         limit: 9999,
@@ -83,7 +149,17 @@ const DEFAULT_CONFIG: UsageConfig = {
         isEnabled: false,
         showAds: false,
         message: 'Giới hạn cán bộ quản lý.',
-        preventCopy: false
+        preventCopy: false,
+        courseCreateDelete: 'all',
+        courseEdit: 'all',
+        courseAssignMembers: true,
+        courseViewList: 'all',
+        userViewEditOthers: true,
+        userChangeRoleOthers: true,
+        userDeleteOthers: true,
+        userForceLogoutOthers: true,
+        newsCreateEdit: 'all',
+        newsDeleteOthers: true
     },
     admin: {
         limit: 9999,
@@ -91,7 +167,17 @@ const DEFAULT_CONFIG: UsageConfig = {
         isEnabled: false,
         showAds: false,
         message: 'Giới hạn Admin.',
-        preventCopy: false
+        preventCopy: false,
+        courseCreateDelete: 'all',
+        courseEdit: 'all',
+        courseAssignMembers: true,
+        courseViewList: 'all',
+        userViewEditOthers: true,
+        userChangeRoleOthers: true,
+        userDeleteOthers: true,
+        userForceLogoutOthers: true,
+        newsCreateEdit: 'all',
+        newsDeleteOthers: true
     }
 };
 

@@ -26,12 +26,14 @@ interface StudentsTabProps {
   course: Course;
   studentLatestResults?: Record<string, any>;
   deviceCounts?: Record<string, number>;
+  canAssignMembers?: boolean;
 }
 
 const StudentsTab: React.FC<StudentsTabProps> = ({ 
   course, 
   studentLatestResults = {},
-  deviceCounts = {}
+  deviceCounts = {},
+  canAssignMembers = false
 }) => {
   const [students, setStudents] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -376,24 +378,28 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           >
             <FaFileExcel /> Xuất Excel
           </button>
-          <button 
-            onClick={() => setShowImportModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-green-100 transition-colors"
-          >
-            <FaFileImport /> Import Excel
-          </button>
-          <button 
-            onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-indigo-100 transition-colors"
-          >
-            <FaUserPlus /> Thêm mới
-          </button>
-          <button 
-            onClick={() => { setShowAddExistingModal(true); fetchAvailableStudents(); }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-black uppercase tracking-tight hover:bg-teal-700 shadow-lg shadow-teal-600/20 active:scale-95 transition-all"
-          >
-            <FaPlus /> Gán học viên
-          </button>
+          {canAssignMembers && (
+            <>
+              <button 
+                onClick={() => setShowImportModal(true)}
+                className="flex items-center gap-2 px-4 py-2.5 bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-green-100 transition-colors"
+              >
+                <FaFileImport /> Import Excel
+              </button>
+              <button 
+                onClick={() => setShowCreateModal(true)}
+                className="flex items-center gap-2 px-4 py-2.5 bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-indigo-100 transition-colors"
+              >
+                <FaUserPlus /> Thêm mới
+              </button>
+              <button 
+                onClick={() => { setShowAddExistingModal(true); fetchAvailableStudents(); }}
+                className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-black uppercase tracking-tight hover:bg-teal-700 shadow-lg shadow-teal-600/20 active:scale-95 transition-all"
+              >
+                <FaPlus /> Gán học viên
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -454,12 +460,14 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                   </div>
                 </div>
                 
-                <button 
-                  onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')}
-                  className="absolute top-4 right-4 text-xs text-gray-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <FaTrash />
-                </button>
+                {canAssignMembers && (
+                  <button 
+                    onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')}
+                    className="absolute top-4 right-4 text-xs text-gray-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <FaTrash />
+                  </button>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>
@@ -509,7 +517,9 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                       <button onClick={() => handleViewHistory(st)} className="p-2 text-gray-400 hover:text-purple-600 rounded-lg" title="Lịch sử thi"><FaHistory size={14} /></button>
                       <button onClick={() => handleViewSessions(st)} className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg" title="Lịch sử truy cập"><FaUserClock size={14} /></button>
                       <button onClick={() => handleEditStudent(st)} className="p-2 text-gray-400 hover:text-teal-600 rounded-lg" title="Chỉnh sửa"><FaEdit size={14} /></button>
-                      <button onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-gray-400 hover:text-rose-600 rounded-lg" title="Gỡ học viên"><FaTrash size={14} /></button>
+                      {canAssignMembers && (
+                        <button onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-gray-400 hover:text-rose-600 rounded-lg" title="Gỡ học viên"><FaTrash size={14} /></button>
+                      )}
                     </div>
                   </td>
                 </tr>

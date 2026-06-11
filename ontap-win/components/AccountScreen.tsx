@@ -11,6 +11,7 @@ interface AccountScreenProps {
     userProfile: UserProfile;
     onBack: () => void;
     onNavigate: (screen: string) => void;
+    usageConfig?: any;
 }
 
 // Reuse logic from UserAccountManager
@@ -99,9 +100,39 @@ const AdminSessionList: React.FC<{ userId: string }> = ({ userId }) => {
     );
 };
 
-const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNavigate }) => {
+const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNavigate, usageConfig }) => {
     // --- PERSONAL INFO STATE ---
     const [myInfo, setMyInfo] = useState<UserProfile>(userProfile);
+
+    // --- Dynamic Privilege Check Helper ---
+    const getRoleWeight = (role: string): number => {
+        switch (role) {
+            case 'admin': return 100;
+            case 'lanh_dao': return 80;
+            case 'quan_ly': return 60;
+            case 'giao_vien': return 40;
+            case 'hoc_vien': return 20;
+            case 'guest': return 0;
+            default: return 20;
+        }
+    };
+
+    const getRoleConfigKey = (role: string): string => {
+        if (role === 'admin') return 'admin';
+        if (role === 'lanh_dao' || role === 'quan_ly') return 'manager';
+        if (role === 'giao_vien') return 'teacher';
+        if (role === 'hoc_vien') return 'verified_user';
+        return 'guest';
+    };
+
+    const userRole = userProfile?.role || 'guest';
+    const roleConfig = usageConfig?.[getRoleConfigKey(userRole)] || {};
+
+    const isAdmin = userProfile?.role === 'admin';
+    const canViewEditOthers = isAdmin || (roleConfig.userViewEditOthers || false);
+    const canChangeRoleOthers = isAdmin || (roleConfig.userChangeRoleOthers || false);
+    const canDeleteOthers = isAdmin || (roleConfig.userDeleteOthers || false);
+    const canForceLogoutOthers = isAdmin || (roleConfig.userForceLogoutOthers || false);
     const [isSavingMyInfo, setIsSavingMyInfo] = useState(false);
 
     // --- MANAGER STATE ---
@@ -250,10 +281,13 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
 
     // Manager Actions
     const handleDeleteUser = async (uid: string) => {
-        if (!confirm('Bạn có chắc chắn muốn xóa tài khoản này?')) return;
+        if (!confirm('Bạn có chắc chắn muốn xóa tài khoản này? (Tài khoản sẽ bị khóa)')) return;
         try {
-            await deleteDoc(doc(db, 'users', uid));
+            await updateDoc(doc(db, 'users', uid), {
+                status: 'deleted'
+            });
             setUsers(prev => prev.filter(u => u.id !== uid));
+            alert('Đã xóa mềm tài khoản thành công!');
         } catch (e) {
             console.error(e);
             alert('Lỗi khi xóa.');
@@ -611,75 +645,92 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                 ) : paginatedUsers.length === 0 ? (
                                     <tr><td colSpan={5} className="p-4 text-center italic text-gray-500">Không tìm thấy người dùng.</td></tr>
                                 ) : (
-                                    paginatedUsers.map(u => (
-                                        <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
-                                            {/* Name - Click to View Detail */}
-                                            <td className="p-3 font-medium text-gray-900 dark:text-white cursor-pointer group" onClick={() => { setSelectedUser(u); setShowDetailModal(true); }}>
-                                                <div className="flex items-center gap-3">
-                                                    <img
-                                                        src={u.photoURL}
-                                                        alt={u.fullName}
-                                                        className="w-9 h-9 rounded-full object-cover border border-gray-200 dark:border-gray-600 shadow-sm"
-                                                        onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + u.fullName; }}
-                                                    />
-                                                    <div className="flex flex-col">
-                                                        <div className="flex items-center gap-1">
-                                                            {u.role === 'hoc_vien' && (u.isVerified || u.courseId) ? (
-                                                                <span className="flex items-center gap-1 text-blue-600 font-semibold group-hover:underline">
-                                                                    {u.fullName} <FaCheckCircle className="text-blue-500 text-xs" />
-                                                                </span>
-                                                            ) : u.role === 'giao_vien' ? (
-                                                                <span className="font-bold text-yellow-600 dark:text-yellow-400 group-hover:underline">
-                                                                    {u.fullName}
-                                                                </span>
-                                                            ) : u.role === 'quan_ly' || u.role === 'lanh_dao' ? (
-                                                                <span className="font-bold text-red-600 dark:text-red-400 group-hover:underline">
-                                                                    {u.fullName}
-                                                                </span>
-                                                            ) : u.role === 'admin' ? (
-                                                                <span className="font-bold text-purple-600 dark:text-purple-400 group-hover:underline">
-                                                                    {u.fullName}
-                                                                </span>
-                                                            ) : (
-                                                                <span className="group-hover:underline">{u.fullName}</span>
-                                                            )}
+                                    paginatedUsers.map(u => {
+                                        const uWeight = getRoleWeight(u.role);
+                                        const myWeight = getRoleWeight(userProfile.role);
+                                        const hasHierarchy = myWeight > uWeight;
+                                        const canClickDetail = canViewEditOthers && hasHierarchy;
+
+                                        return (
+                                            <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
+                                                {/* Name - Click to View Detail */}
+                                                <td 
+                                                    className={`p-3 font-medium text-gray-900 dark:text-white ${canClickDetail ? 'cursor-pointer group' : ''}`} 
+                                                    onClick={() => { 
+                                                        if (canClickDetail) { 
+                                                            setSelectedUser(u); 
+                                                            setShowDetailModal(true); 
+                                                        } else {
+                                                            alert('Bạn không có quyền xem chi tiết tài khoản này (chỉ được thao tác với vai trò thấp hơn).');
+                                                        }
+                                                    }}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <img
+                                                            src={u.photoURL}
+                                                            alt={u.fullName}
+                                                            className="w-9 h-9 rounded-full object-cover border border-gray-200 dark:border-gray-600 shadow-sm"
+                                                            onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + u.fullName; }}
+                                                        />
+                                                        <div className="flex flex-col">
+                                                            <div className="flex items-center gap-1">
+                                                                {u.role === 'hoc_vien' && (u.isVerified || u.courseId) ? (
+                                                                    <span className={`flex items-center gap-1 text-blue-600 font-semibold ${canClickDetail ? 'group-hover:underline' : ''}`}>
+                                                                        {u.fullName} <FaCheckCircle className="text-blue-500 text-xs" />
+                                                                    </span>
+                                                                ) : u.role === 'giao_vien' ? (
+                                                                    <span className={`font-bold text-yellow-600 dark:text-yellow-400 ${canClickDetail ? 'group-hover:underline' : ''}`}>
+                                                                        {u.fullName}
+                                                                    </span>
+                                                                ) : u.role === 'quan_ly' || u.role === 'lanh_dao' ? (
+                                                                    <span className={`font-bold text-red-600 dark:text-red-400 ${canClickDetail ? 'group-hover:underline' : ''}`}>
+                                                                        {u.fullName}
+                                                                    </span>
+                                                                ) : u.role === 'admin' ? (
+                                                                    <span className={`font-bold text-purple-600 dark:text-purple-400 ${canClickDetail ? 'group-hover:underline' : ''}`}>
+                                                                        {u.fullName}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className={canClickDetail ? 'group-hover:underline' : ''}>{u.fullName}</span>
+                                                                )}
+                                                            </div>
                                                         </div>
+                                                        {canClickDetail && <FaInfoCircle className="opacity-0 group-hover:opacity-100 text-gray-400 text-xs ml-auto" />}
                                                     </div>
-                                                    <FaInfoCircle className="opacity-0 group-hover:opacity-100 text-gray-400 text-xs ml-auto" />
-                                                </div>
-                                            </td>
+                                                </td>
 
-                                            {/* Course/Class - Click to Navigate (if exists) */}
-                                            <td className="p-3 text-sm">
-                                                {(u.courseName || u.courseId) ? (
-                                                    <span
-                                                        className="cursor-pointer text-blue-600 hover:underline hover:text-blue-800 flex items-center gap-1"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            onNavigate('class_management');
-                                                        }}
-                                                        title="Đi tới quản lý lớp"
-                                                    >
-                                                        {u.courseName || u.courseId} <FaArrowRight className="text-xs" />
+                                                {/* Course/Class - Click to Navigate (if exists) */}
+                                                <td className="p-3 text-sm">
+                                                    {(u.courseName || u.courseId) ? (
+                                                        <span
+                                                            className="cursor-pointer text-blue-600 hover:underline hover:text-blue-800 flex items-center gap-1"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                onNavigate('class_management');
+                                                            }}
+                                                            title="Đi tới quản lý lớp"
+                                                        >
+                                                            {u.courseName || u.courseId} <FaArrowRight className="text-xs" />
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-gray-400">--</span>
+                                                    )}
+                                                </td>
+
+                                                <td className="p-3 text-sm">
+                                                    <div>{u.email}</div>
+                                                    <div className="text-xs text-gray-500">{u.phoneNumber}</div>
+                                                </td>
+                                                <td className="p-3">
+                                                    <span className={`px-2 py-1 rounded text-xs font-bold ${u.role === 'hoc_vien' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800'}`}>
+                                                        {roleName(u.role)}
                                                     </span>
-                                                ) : (
-                                                    <span className="text-gray-400">--</span>
-                                                )}
-                                            </td>
-
-                                            <td className="p-3 text-sm">
-                                                <div>{u.email}</div>
-                                                <div className="text-xs text-gray-500">{u.phoneNumber}</div>
-                                            </td>
-                                            <td className="p-3">
-                                                <span className={`px-2 py-1 rounded text-xs font-bold ${u.role === 'hoc_vien' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800'}`}>
-                                                    {roleName(u.role)}
-                                                </span>
-                                            </td>
-                                            <td className="p-3 flex justify-center gap-2">
-                                                <button onClick={() => { setEditingUser(u); setShowEditModal(true); }} className="p-2 text-blue-600 hover:bg-blue-50 rounded" title="Sửa thông tin"><FaEdit /></button>
-                                                {userProfile?.role === 'admin' && (
-                                                    <>
+                                                </td>
+                                                <td className="p-3 flex justify-center gap-2">
+                                                    {(canViewEditOthers && hasHierarchy) && (
+                                                        <button onClick={() => { setEditingUser(u); setShowEditModal(true); }} className="p-2 text-blue-600 hover:bg-blue-50 rounded" title="Sửa thông tin"><FaEdit /></button>
+                                                    )}
+                                                    {(isAdmin && hasHierarchy) && (
                                                         <button
                                                             onClick={() => handleResetPassword(u.id, u.fullName)}
                                                             className="p-2 text-yellow-600 hover:bg-yellow-50 rounded"
@@ -687,12 +738,14 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                                         >
                                                             <FaKey />
                                                         </button>
+                                                    )}
+                                                    {(canDeleteOthers && hasHierarchy) && (
                                                         <button onClick={() => handleDeleteUser(u.id)} className="p-2 text-red-600 hover:bg-red-50 rounded" title="Xóa tài khoản"><FaTrash /></button>
-                                                    </>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
                                 )}
                             </tbody>
                         </table>
@@ -771,8 +824,15 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
 
                                 <div className="col-span-2">
                                     <label className="block text-sm font-bold mb-1">Vai trò</label>
-                                    <select className="w-full p-2 border rounded dark:bg-slate-700" value={editingUser.role} onChange={e => setEditingUser({ ...editingUser, role: e.target.value })}>
-                                        {allRoles.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+                                    <select 
+                                        className="w-full p-2 border rounded dark:bg-slate-700" 
+                                        value={editingUser.role} 
+                                        onChange={e => setEditingUser({ ...editingUser, role: e.target.value })}
+                                        disabled={!canChangeRoleOthers}
+                                    >
+                                        {allRoles
+                                            .filter(r => getRoleWeight(userProfile.role) > getRoleWeight(r.id) || r.id === editingUser.role)
+                                            .map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                                     </select>
                                 </div>
                             </div>
@@ -810,16 +870,18 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                     </h2>
                                     <p className="text-gray-500 text-sm font-medium uppercase tracking-wide">{allRoles.find(r => r.id === selectedUser.role)?.name || selectedUser.role}</p>
                                 </div>
-                                <button
-                                    onClick={() => {
-                                        setEditingUser(selectedUser);
-                                        setShowDetailModal(false);
-                                        setShowEditModal(true);
-                                    }}
-                                    className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-full font-bold hover:bg-blue-200 dark:hover:bg-blue-900/50 transition"
-                                >
-                                    <FaEdit /> Sửa
-                                </button>
+                                {(canViewEditOthers && getRoleWeight(userProfile.role) > getRoleWeight(selectedUser.role)) && (
+                                    <button
+                                        onClick={() => {
+                                            setEditingUser(selectedUser);
+                                            setShowDetailModal(false);
+                                            setShowEditModal(true);
+                                        }}
+                                        className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-full font-bold hover:bg-blue-200 dark:hover:bg-blue-900/50 transition"
+                                    >
+                                        <FaEdit /> Sửa
+                                    </button>
+                                )}
                             </div>
 
                             <div className="space-y-3">
@@ -863,12 +925,14 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                 )}
 
                                 {/* 💖 ADMIN: LOGIN SESSIONS TAB (MỚI) 💖 */}
-                                <div className="mt-6 border-t pt-4">
-                                    <h3 className="text-sm font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
-                                        <FaHistory className="text-blue-500" /> Phiên đăng nhập hoạt động
-                                    </h3>
-                                    <AdminSessionList userId={selectedUser.id} />
-                                </div>
+                                {(canForceLogoutOthers && getRoleWeight(userProfile.role) > getRoleWeight(selectedUser.role)) && (
+                                    <div className="mt-6 border-t pt-4">
+                                        <h3 className="text-sm font-bold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
+                                            <FaHistory className="text-blue-500" /> Phiên đăng nhập hoạt động
+                                        </h3>
+                                        <AdminSessionList userId={selectedUser.id} />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
