@@ -329,6 +329,20 @@ const AppContent: React.FC = () => {
           unsubProfileRef.current = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
             if (docSnap.exists()) {
               const profile = { id: docSnap.id, ...docSnap.data() } as UserProfile;
+              // 🔒 Kiểm tra trạng thái tài khoản disabled → force logout ngay lập tức
+              if (profile.status === 'disabled') {
+                import('sweetalert2').then(({ default: Swal }) => {
+                  Swal.fire({
+                    title: 'Tài khoản đã bị vô hiệu hoá',
+                    text: 'Tài khoản của bạn đã bị vô hiệu hoá bởi quản trị viên. Vui lòng liên hệ để được hỗ trợ.',
+                    icon: 'error',
+                    confirmButtonText: 'Đồng ý'
+                  }).then(() => {
+                    auth.signOut();
+                  });
+                });
+                return;
+              }
               setUserProfile(profile);
               setUserName(profile.full_name || firebaseUser.displayName || '');
             }
@@ -344,25 +358,35 @@ const AppContent: React.FC = () => {
           console.error("❌ Critical: Could not fetch user profile:", fetchErr);
         }
 
+        // 🔒 Tài khoản không tồn tại trên Firestore → từ chối truy cập (KHÔNG tự tạo mới)
         if (profile === null) {
-          const defaultProfile: UserProfile = {
-            id: firebaseUser.uid,
-            full_name: firebaseUser.displayName || 'Người dùng mới',
-            email: firebaseUser.email || '',
-            role: 'hoc_vien',
-            photoURL: firebaseUser.photoURL || '',
-            isVerified: false
-          };
+          console.warn("⚠️ Tài khoản Firebase Auth không có profile Firestore. Từ chối truy cập.");
+          import('sweetalert2').then(({ default: Swal }) => {
+            Swal.fire({
+              title: 'Tài khoản không tồn tại',
+              text: 'Tài khoản của bạn không tồn tại trên hệ thống. Vui lòng liên hệ quản trị viên.',
+              icon: 'error',
+              confirmButtonText: 'Đồng ý'
+            }).then(() => {
+              auth.signOut();
+            });
+          });
+          return;
+        }
 
-          try {
-            const { setDoc, doc } = await import('firebase/firestore');
-            await setDoc(doc(db, 'users', firebaseUser.uid), defaultProfile, { merge: true });
-            profile = defaultProfile;
-            setUserProfile(profile);
-            setUserName(profile.full_name);
-          } catch (err) {
-            console.error("❌ Failed to create default profile:", err);
-          }
+        // 🔒 Kiểm tra trạng thái tài khoản bị disabled
+        if (profile.status === 'disabled') {
+          import('sweetalert2').then(({ default: Swal }) => {
+            Swal.fire({
+              title: 'Tài khoản đã bị vô hiệu hoá',
+              text: 'Tài khoản của bạn đã bị vô hiệu hoá bởi quản trị viên. Vui lòng liên hệ để được hỗ trợ.',
+              icon: 'error',
+              confirmButtonText: 'Đồng ý'
+            }).then(() => {
+              auth.signOut();
+            });
+          });
+          return;
         }
 
         import('./services/fcmClient').then(({ initializeFCM }) => {

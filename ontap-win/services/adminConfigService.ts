@@ -17,6 +17,8 @@ export interface RoleConfig {
     courseEdit?: 'all' | 'managed' | 'none';         // Sửa thông tin cơ bản lớp học
     courseAssignMembers?: boolean;                    // Gán/Xóa Giáo viên & Học viên vào lớp
     courseViewList?: 'all' | 'managed' | 'none';      // Xem danh sách lớp học
+    courseDisableAccounts?: 'all' | 'managed' | 'none'; // Vô hiệu hóa tài khoản học viên lớp
+    courseFinish?: 'all' | 'managed' | 'none';          // Kết thúc / Mở lại lớp học
 
     // 👤 Phân quyền Quản lý Tài khoản (User Management)
     userViewEditOthers?: boolean;                     // Xem & Sửa thông tin chi tiết tài khoản khác
@@ -64,6 +66,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         courseEdit: 'none',
         courseAssignMembers: false,
         courseViewList: 'none',
+        courseDisableAccounts: 'none',
+        courseFinish: 'none',
         userViewEditOthers: false,
         userChangeRoleOthers: false,
         userDeleteOthers: false,
@@ -82,6 +86,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         courseEdit: 'none',
         courseAssignMembers: false,
         courseViewList: 'none',
+        courseDisableAccounts: 'none',
+        courseFinish: 'none',
         userViewEditOthers: false,
         userChangeRoleOthers: false,
         userDeleteOthers: false,
@@ -100,6 +106,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         courseEdit: 'none',
         courseAssignMembers: false,
         courseViewList: 'managed',
+        courseDisableAccounts: 'none',
+        courseFinish: 'none',
         userViewEditOthers: false,
         userChangeRoleOthers: false,
         userDeleteOthers: false,
@@ -118,6 +126,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         courseEdit: 'none',
         courseAssignMembers: false,
         courseViewList: 'managed',
+        courseDisableAccounts: 'none',
+        courseFinish: 'none',
         userViewEditOthers: false,
         userChangeRoleOthers: false,
         userDeleteOthers: false,
@@ -136,6 +146,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         courseEdit: 'managed',
         courseAssignMembers: true,
         courseViewList: 'managed',
+        courseDisableAccounts: 'managed',
+        courseFinish: 'managed',
         userViewEditOthers: true,
         userChangeRoleOthers: false,
         userDeleteOthers: false,
@@ -154,6 +166,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         courseEdit: 'all',
         courseAssignMembers: true,
         courseViewList: 'all',
+        courseDisableAccounts: 'all',
+        courseFinish: 'all',
         userViewEditOthers: true,
         userChangeRoleOthers: true,
         userDeleteOthers: true,
@@ -172,6 +186,8 @@ const DEFAULT_CONFIG: UsageConfig = {
         courseEdit: 'all',
         courseAssignMembers: true,
         courseViewList: 'all',
+        courseDisableAccounts: 'all',
+        courseFinish: 'all',
         userViewEditOthers: true,
         userChangeRoleOthers: true,
         userDeleteOthers: true,

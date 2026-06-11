@@ -615,6 +615,34 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         </select>
                                                     </div>
 
+                                                     <div>
+                                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Vô hiệu hóa tài khoản học viên</label>
+                                                         <select
+                                                             value={currentRoleConfig.courseDisableAccounts || 'none'}
+                                                             disabled={isReadOnly}
+                                                             onChange={(e) => updateRoleConfig(activeRole, 'courseDisableAccounts', e.target.value as any)}
+                                                             className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                         >
+                                                             <option value="all">Được phép với tất cả các lớp</option>
+                                                             <option value="managed">Chỉ lớp được quản lý (chủ nhiệm, dạy, tạo)</option>
+                                                             <option value="none">Không có quyền</option>
+                                                         </select>
+                                                     </div>
+
+                                                     <div>
+                                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Kết thúc / Mở lại lớp học</label>
+                                                         <select
+                                                             value={currentRoleConfig.courseFinish || 'none'}
+                                                             disabled={isReadOnly}
+                                                             onChange={(e) => updateRoleConfig(activeRole, 'courseFinish', e.target.value as any)}
+                                                             className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                         >
+                                                             <option value="all">Được phép với tất cả các lớp</option>
+                                                             <option value="managed">Chỉ lớp được quản lý (chủ nhiệm, dạy, tạo)</option>
+                                                             <option value="none">Không có quyền</option>
+                                                         </select>
+                                                     </div>
+
                                                     <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
                                                         <div>
                                                             <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Gán/Xóa Giáo viên & Học viên</h6>

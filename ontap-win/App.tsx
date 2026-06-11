@@ -272,6 +272,20 @@ const AppContent: React.FC = () => {
           const unsubProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
             if (docSnap.exists()) {
               const profile = { id: docSnap.id, ...docSnap.data() } as UserProfile;
+              // 🔒 Kiểm tra trạng thái tài khoản disabled → force logout ngay lập tức
+              if (profile.status === 'disabled') {
+                import('sweetalert2').then(({ default: Swal }) => {
+                  Swal.fire({
+                    title: 'Tài khoản đã bị vô hiệu hoá',
+                    text: 'Tài khoản của bạn đã bị vô hiệu hoá bởi quản trị viên. Vui lòng liên hệ để được hỗ trợ.',
+                    icon: 'error',
+                    confirmButtonText: 'Đồng ý'
+                  }).then(() => {
+                    auth.signOut();
+                  });
+                });
+                return;
+              }
               setUserProfile(profile);
               setUserName(profile.full_name || firebaseUser.displayName || '');
             }

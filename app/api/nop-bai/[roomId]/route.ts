@@ -55,7 +55,7 @@ export async function POST(
       const questionsSnapshot = await q.get(); // (Chạy "câu hỏi")
 
       if (!questionsSnapshot.empty) {
-        questionsSnapshot.forEach(doc => {
+        questionsSnapshot.forEach((doc: any) => {
           correctAnswers.push({
             id: doc.id,
             correct_answer_id: doc.data().correct_answer_id

@@ -32,6 +32,7 @@ interface UserAccount {
     createdAt?: any;
     isVerified?: boolean;
     photoURL?: string; // Added for Detail Modal
+    status?: 'active' | 'disabled';
 }
 
 const allRoles = [
@@ -281,16 +282,30 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
 
     // Manager Actions
     const handleDeleteUser = async (uid: string) => {
-        if (!confirm('Bạn có chắc chắn muốn xóa tài khoản này? (Tài khoản sẽ bị khóa)')) return;
+        if (!confirm('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này? (Tài khoản sẽ bị khóa)')) return;
         try {
             await updateDoc(doc(db, 'users', uid), {
-                status: 'deleted'
+                status: 'disabled'
             });
-            setUsers(prev => prev.filter(u => u.id !== uid));
-            alert('Đã xóa mềm tài khoản thành công!');
+            setUsers(prev => prev.map(u => u.id === uid ? { ...u, status: 'disabled' } : u));
+            alert('Đã vô hiệu hóa tài khoản thành công!');
         } catch (e) {
             console.error(e);
-            alert('Lỗi khi xóa.');
+            alert('Lỗi khi vô hiệu hóa.');
+        }
+    };
+
+    const handleEnableUser = async (uid: string) => {
+        if (!confirm('Bạn có chắc chắn muốn kích hoạt lại tài khoản này?')) return;
+        try {
+            await updateDoc(doc(db, 'users', uid), {
+                status: 'active'
+            });
+            setUsers(prev => prev.map(u => u.id === uid ? { ...u, status: 'active' } : u));
+            alert('Đã kích hoạt lại tài khoản thành công!');
+        } catch (e) {
+            console.error(e);
+            alert('Lỗi khi kích hoạt lại.');
         }
     };
 
@@ -652,7 +667,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                         const canClickDetail = canViewEditOthers && hasHierarchy;
 
                                         return (
-                                            <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition">
+                                            <tr key={u.id} className={`hover:bg-gray-50 dark:hover:bg-slate-700/50 transition ${u.status === 'disabled' ? 'opacity-60' : ''}`}>
                                                 {/* Name - Click to View Detail */}
                                                 <td 
                                                     className={`p-3 font-medium text-gray-900 dark:text-white ${canClickDetail ? 'cursor-pointer group' : ''}`} 
@@ -694,6 +709,11 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                                                     <span className={canClickDetail ? 'group-hover:underline' : ''}>{u.fullName}</span>
                                                                 )}
                                                             </div>
+                                                            {u.status === 'disabled' && (
+                                                                <span className="text-[10px] font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 rounded mt-0.5 w-max">
+                                                                    🔴 Đã vô hiệu hóa
+                                                                </span>
+                                                            )}
                                                         </div>
                                                         {canClickDetail && <FaInfoCircle className="opacity-0 group-hover:opacity-100 text-gray-400 text-xs ml-auto" />}
                                                     </div>
@@ -740,7 +760,11 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                                                         </button>
                                                     )}
                                                     {(canDeleteOthers && hasHierarchy) && (
-                                                        <button onClick={() => handleDeleteUser(u.id)} className="p-2 text-red-600 hover:bg-red-50 rounded" title="Xóa tài khoản"><FaTrash /></button>
+                                                        u.status === 'disabled' ? (
+                                                            <button onClick={() => handleEnableUser(u.id)} className="p-2 text-green-600 hover:bg-green-50 rounded" title="Kích hoạt lại tài khoản"><FaCheckCircle /></button>
+                                                        ) : (
+                                                            <button onClick={() => handleDeleteUser(u.id)} className="p-2 text-red-600 hover:bg-red-50 rounded" title="Vô hiệu hóa tài khoản"><FaTrash /></button>
+                                                        )
                                                     )}
                                                 </td>
                                             </tr>

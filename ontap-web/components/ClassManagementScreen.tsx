@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../services/firebaseClient';
-import { collection, query, orderBy, onSnapshot, doc, getDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, where } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, getDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, where, getDocs } from 'firebase/firestore';
 import { Course, UserProfile } from '../types';
 import ClassDetailClient from './ClassDetail/ClassDetailClient';
 import ClassList from './ClassDetail/ClassList';
@@ -395,6 +395,71 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         setShowAddEditModal(true);
     };
 
+    const canFinishClass = React.useMemo(() => {
+        const perm = roleConfig.courseFinish || 'none';
+        if (perm === 'all') return true;
+        if (perm === 'none') return false;
+        if (!selectedCourse) return false;
+        return selectedCourse.createdBy === userProfile.id || 
+               selectedCourse.headTeacherId === userProfile.id || 
+               (selectedCourse.teacherIds && selectedCourse.teacherIds.includes(userProfile.id));
+    }, [roleConfig.courseFinish, selectedCourse, userProfile.id]);
+
+    const canDisableAccounts = React.useMemo(() => {
+        const perm = roleConfig.courseDisableAccounts || 'none';
+        if (perm === 'all') return true;
+        if (perm === 'none') return false;
+        if (!selectedCourse) return false;
+        return selectedCourse.createdBy === userProfile.id || 
+               selectedCourse.headTeacherId === userProfile.id || 
+               (selectedCourse.teacherIds && selectedCourse.teacherIds.includes(userProfile.id));
+    }, [roleConfig.courseDisableAccounts, selectedCourse, userProfile.id]);
+
+    const handleFinishCourse = async (courseId: string) => {
+        try {
+            await updateDoc(doc(db, 'courses', courseId), {
+                status: 'finished',
+                updatedAt: serverTimestamp()
+            });
+
+            const q = query(collection(db, 'users'), where('courseId', '==', courseId), where('role', '==', 'hoc_vien'));
+            const querySnapshot = await getDocs(q);
+            
+            const { writeBatch } = await import('firebase/firestore');
+            const batch = writeBatch(db);
+            querySnapshot.forEach((userDoc) => {
+                batch.update(doc(db, 'users', userDoc.id), {
+                    status: 'disabled',
+                    updatedAt: Date.now()
+                });
+            });
+            await batch.commit();
+            
+            import('sweetalert2').then(({ default: Swal }) => {
+                Swal.fire('Thành công', 'Đã kết thúc lớp học và vô hiệu hóa tài khoản tất cả học viên.', 'success');
+            });
+        } catch (error) {
+            console.error("Error finishing course:", error);
+            alert("Có lỗi xảy ra khi kết thúc lớp.");
+        }
+    };
+
+    const handleReopenCourse = async (courseId: string) => {
+        try {
+            await updateDoc(doc(db, 'courses', courseId), {
+                status: 'active',
+                updatedAt: serverTimestamp()
+            });
+            
+            import('sweetalert2').then(({ default: Swal }) => {
+                Swal.fire('Thành công', 'Đã mở lại lớp học. Vui lòng kích hoạt thủ công tài khoản học viên nếu cần thiết.', 'success');
+            });
+        } catch (error) {
+            console.error("Error reopening course:", error);
+            alert("Có lỗi xảy ra khi mở lại lớp.");
+        }
+    };
+
     // --- RENDER ---
     if (!selectedCourse) {
         return (
@@ -439,6 +504,10 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             subjectStats={subjectStats}
             creatorProfiles={creatorProfiles}
             canAssignMembers={canAssignMembers}
+            canFinishClass={canFinishClass}
+            canDisableAccounts={canDisableAccounts}
+            onFinishCourse={handleFinishCourse}
+            onReopenCourse={handleReopenCourse}
         />
     );
 };

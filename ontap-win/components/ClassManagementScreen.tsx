@@ -14,7 +14,8 @@ import {
     QuerySnapshot,
     DocumentData,
     QueryDocumentSnapshot,
-    Unsubscribe
+    Unsubscribe,
+    getDocs
 } from 'firebase/firestore';
 import { FaUserGraduate, FaChalkboardTeacher, FaSchool, FaPlus, FaSearch, FaTrash, FaEdit, FaTimes, FaArrowLeft, FaUserTie } from 'react-icons/fa';
 import { createPortal } from 'react-dom';
@@ -307,6 +308,71 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     };
 
 
+    const canFinishClass = React.useMemo(() => {
+        const perm = roleConfig.courseFinish || 'none';
+        if (perm === 'all') return true;
+        if (perm === 'none') return false;
+        if (!selectedCourse) return false;
+        return selectedCourse.createdBy === userProfile.id || 
+               selectedCourse.headTeacherId === userProfile.id || 
+               (selectedCourse.teacherIds && selectedCourse.teacherIds.includes(userProfile.id));
+    }, [roleConfig.courseFinish, selectedCourse, userProfile.id]);
+
+    const canDisableAccounts = React.useMemo(() => {
+        const perm = roleConfig.courseDisableAccounts || 'none';
+        if (perm === 'all') return true;
+        if (perm === 'none') return false;
+        if (!selectedCourse) return false;
+        return selectedCourse.createdBy === userProfile.id || 
+               selectedCourse.headTeacherId === userProfile.id || 
+               (selectedCourse.teacherIds && selectedCourse.teacherIds.includes(userProfile.id));
+    }, [roleConfig.courseDisableAccounts, selectedCourse, userProfile.id]);
+
+    const handleFinishCourse = async (courseId: string) => {
+        try {
+            await updateDoc(doc(db, 'courses', courseId), {
+                status: 'finished',
+                updatedAt: serverTimestamp()
+            });
+
+            const q = query(collection(db, 'users'), where('courseId', '==', courseId), where('role', '==', 'hoc_vien'));
+            const querySnapshot = await getDocs(q);
+            
+            const { writeBatch } = await import('firebase/firestore');
+            const batch = writeBatch(db);
+            querySnapshot.forEach((userDoc) => {
+                batch.update(doc(db, 'users', userDoc.id), {
+                    status: 'disabled',
+                    updatedAt: Date.now()
+                });
+            });
+            await batch.commit();
+            
+            import('sweetalert2').then(({ default: Swal }) => {
+                Swal.fire('Thành công', 'Đã kết thúc lớp học và vô hiệu hóa tài khoản tất cả học viên.', 'success');
+            });
+        } catch (error) {
+            console.error("Error finishing course:", error);
+            alert("Có lỗi xảy ra khi kết thúc lớp.");
+        }
+    };
+
+    const handleReopenCourse = async (courseId: string) => {
+        try {
+            await updateDoc(doc(db, 'courses', courseId), {
+                status: 'active',
+                updatedAt: serverTimestamp()
+            });
+            
+            import('sweetalert2').then(({ default: Swal }) => {
+                Swal.fire('Thành công', 'Đã mở lại lớp học. Vui lòng kích hoạt thủ công tài khoản học viên nếu cần thiết.', 'success');
+            });
+        } catch (error) {
+            console.error("Error reopening course:", error);
+            alert("Có lỗi xảy ra khi mở lại lớp.");
+        }
+    };
+
     // --- RENDER ---
     if (!selectedCourse) {
         return (
@@ -462,6 +528,13 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                                         {licenses.find((l: any) => l.id === course.licenseId)?.name || course.licenseId}
                                                     </span>
                                                 )}
+                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ml-2 ${
+                                                    course.status === 'finished' 
+                                                    ? 'bg-red-500/20 text-red-200 border border-red-500/30' 
+                                                    : 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/30'
+                                                }`}>
+                                                    {course.status === 'finished' ? '🔴 Đã kết thúc' : '🟢 Đang hoạt động'}
+                                                </span>
                                             </div>
                                         </div>
                                         <div className="p-5 flex-1 flex flex-col">
@@ -494,6 +567,10 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             studentLatestResults={studentLatestResults}
             deviceCounts={deviceCounts}
             canAssignMembers={canAssignMembers}
+            canFinishClass={canFinishClass}
+            canDisableAccounts={canDisableAccounts}
+            onFinishCourse={handleFinishCourse}
+            onReopenCourse={handleReopenCourse}
         />
     );
 };

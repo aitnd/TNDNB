@@ -82,6 +82,7 @@ export interface UserProfile {
   offlineAccess?: boolean; // Quyền đăng nhập offline
   updatedAt?: number; // Dấu thời gian cập nhật cuối cùng
   createdAt?: any;
+  status?: 'active' | 'disabled'; // Trạng thái tài khoản, mặc định 'active'
 }
 
 export interface Course {
@@ -95,4 +96,5 @@ export interface Course {
     licenseId?: string;
     avatarUrl?: string; // TNDNB uses avatarUrl
     expiryDate?: any;
+    status?: 'active' | 'finished'; // Trạng thái lớp học
 }

@@ -1,28 +1,29 @@
 // File: utils/firebaseAdmin.ts
 
-import * as admin from 'firebase-admin'
-import { getFirestore } from 'firebase-admin/firestore'; // (Import 'getFirestore')
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore, FieldValue as AdminFieldValue, Firestore } from 'firebase-admin/firestore';
 
 // 1. Đọc "Chìa khóa Kho" từ "Két sắt" Vercel
 const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
 
 // 💖 2. KHAI BÁO BIẾN "HỨA" TRƯỚC 💖
-let adminDb: admin.firestore.Firestore;
-let FieldValue: typeof admin.firestore.FieldValue;
+let adminDb: Firestore;
+let FieldValue: typeof AdminFieldValue;
 
 // 3. "Cắm điện" (Khởi tạo)
-if (!admin.apps.length) {
+const apps = getApps();
+if (!apps.length) {
   try {
     if (serviceAccountKey) {
-      admin.initializeApp({
+      initializeApp({
         // "Dùng chìa khóa"
-        credential: admin.credential.cert(JSON.parse(serviceAccountKey))
+        credential: cert(JSON.parse(serviceAccountKey))
       });
       console.log('[AdminSDK] Firebase Admin initialized.');
       
       // 💖 4. CHỈ "GÁN" SAU KHI KHỞI TẠO THÀNH CÔNG 💖
       adminDb = getFirestore(); 
-      FieldValue = admin.firestore.FieldValue;
+      FieldValue = AdminFieldValue;
     } else {
       console.warn('[AdminSDK] Thiếu FIREBASE_SERVICE_ACCOUNT_KEY. Các tính năng Admin sẽ không hoạt động.');
     }
@@ -34,7 +35,7 @@ if (!admin.apps.length) {
   // 💖 5. NẾU APP ĐÃ CÓ, "GÁN" LUÔN 💖
   try {
      adminDb = getFirestore(); 
-     FieldValue = admin.firestore.FieldValue;
+     FieldValue = AdminFieldValue;
   } catch (e) {
      console.warn('[AdminSDK] App đã có nhưng không lấy được Firestore (có thể do lỗi init trước đó).');
   }
