@@ -328,8 +328,9 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
         { id: 'verified_user', label: 'Học Viên Lớp', icon: FaUserShield, color: 'text-blue-500' },
         { id: 'vip_user', label: 'Thành Viên VIP', icon: FaUserSecret, color: 'text-yellow-500' },
         { id: 'teacher', label: 'Giáo Viên', icon: FaChalkboardTeacher, color: 'text-purple-500' },
-        { id: 'manager', label: 'Cán Bộ Quản Lý', icon: FaUserTie, color: 'text-red-500' },
-        { id: 'admin', label: 'Quản Trị Viên', icon: FaUserAstronaut, color: 'text-indigo-600' },
+        { id: 'manager', label: 'Quản Lý', icon: FaUserTie, color: 'text-red-500' },
+        { id: 'leader', label: 'Ban Lãnh Đạo', icon: FaUserAstronaut, color: 'text-teal-500' },
+        { id: 'admin', label: 'Quản Trị Viên', icon: FaUserShield, color: 'text-indigo-600' },
     ];
 
     const currentRoleConfig = config[activeRole] as RoleConfig;

@@ -47,7 +47,7 @@ describe('AccountScreen Component Tests', () => {
       full_name: 'Quản trị viên',
       fullName: 'Quản trị viên',
       email: 'admin@tndnb.com',
-      role: 'admin',
+      role: 'admin' as 'admin',
       phoneNumber: '0900000000',
     },
     onBack: vi.fn(),

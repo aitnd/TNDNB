@@ -37,7 +37,8 @@ export interface UsageConfig {
     verified_user: RoleConfig;
     vip_user: RoleConfig;
     teacher: RoleConfig; // giao_vien
-    manager: RoleConfig; // quan_ly, lanh_dao
+    manager: RoleConfig; // quan_ly
+    leader: RoleConfig;  // lanh_dao
     admin: RoleConfig;   // admin
     app_links?: {        // Added for App Download Links
         version?: string;
@@ -175,6 +176,26 @@ const DEFAULT_CONFIG: UsageConfig = {
         newsCreateEdit: 'all',
         newsDeleteOthers: true
     },
+    leader: {
+        limit: 9999,
+        period: 'daily',
+        isEnabled: false,
+        showAds: false,
+        message: 'Giới hạn Ban Lãnh Đạo.',
+        preventCopy: false,
+        courseCreateDelete: 'all',
+        courseEdit: 'all',
+        courseAssignMembers: true,
+        courseViewList: 'all',
+        courseDisableAccounts: 'all',
+        courseFinish: 'all',
+        userViewEditOthers: true,
+        userChangeRoleOthers: true,
+        userDeleteOthers: true,
+        userForceLogoutOthers: true,
+        newsCreateEdit: 'all',
+        newsDeleteOthers: true
+    },
     admin: {
         limit: 9999,
         period: 'daily',
@@ -214,6 +235,7 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 vip_user: { ...DEFAULT_CONFIG.vip_user, ...(data.vip_user || {}) },
                 teacher: { ...DEFAULT_CONFIG.teacher, ...(data.teacher || {}) },
                 manager: { ...DEFAULT_CONFIG.manager, ...(data.manager || {}) },
+                leader: { ...DEFAULT_CONFIG.leader, ...(data.leader || {}) },
                 admin: { ...DEFAULT_CONFIG.admin, ...(data.admin || {}) },
                 app_links: data.app_links || DEFAULT_CONFIG.app_links // Include app_links
             };

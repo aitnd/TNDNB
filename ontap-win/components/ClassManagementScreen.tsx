@@ -81,7 +81,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
     const getRoleConfigKey = (role: string): string => {
         if (role === 'admin') return 'admin';
-        if (role === 'lanh_dao' || role === 'quan_ly') return 'manager';
+        if (role === 'lanh_dao') return 'leader';
+        if (role === 'quan_ly') return 'manager';
         if (role === 'giao_vien') return 'teacher';
         if (role === 'hoc_vien') return 'verified_user';
         return 'guest';
