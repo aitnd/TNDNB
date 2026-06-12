@@ -46,6 +46,7 @@ export interface UsageConfig {
         android?: string;
         ios?: string;
     };
+    showPortalAds?: boolean; // Bật/Tắt quảng cáo trên trang chủ tin tức (Next.js Portal)
 }
 
 // Cấu hình GitHub cho Release Manager
@@ -237,7 +238,8 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 manager: { ...DEFAULT_CONFIG.manager, ...(data.manager || {}) },
                 leader: { ...DEFAULT_CONFIG.leader, ...(data.leader || {}) },
                 admin: { ...DEFAULT_CONFIG.admin, ...(data.admin || {}) },
-                app_links: data.app_links || DEFAULT_CONFIG.app_links // Include app_links
+                app_links: data.app_links || DEFAULT_CONFIG.app_links, // Include app_links
+                showPortalAds: data.showPortalAds ?? true // Mặc định bật quảng cáo trang tin tức
             };
         } else {
             // Initialize if not exists

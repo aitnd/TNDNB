@@ -1,9 +1,11 @@
 {
-  "updated_at": "2026-06-11T15:15:00+07:00",
+  "updated_at": "2026-06-12T14:51:00+07:00",
   "working_on": {
     "feature": "Triển khai & Phân tách vai trò Lãnh đạo v3.9.6",
     "task": "Commit, kiểm thử tự động, build web và đóng gói exe Electron hoàn tất",
-    "status": "completed",
+    "status": "running",
+    "last_run": "2026-06-12T14:51:00+07:00",
+    "last_run_url": "http://localhost:3000",
     "files": [
       "ontap-win/services/adminConfigService.ts",
       "ontap-web/services/adminConfigService.ts",

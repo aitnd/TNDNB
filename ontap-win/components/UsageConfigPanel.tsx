@@ -911,6 +911,32 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                     Công cụ Hệ thống
                                 </h2>
 
+                                {/* 📰 Cấu hình Quảng cáo Trang chủ Tin tức */}
+                                <div className="p-6 bg-green-50 dark:bg-slate-700/30 rounded-xl border border-green-200 dark:border-slate-600 mb-6">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h4 className="font-bold text-lg text-green-800 dark:text-green-400 flex items-center gap-2">
+                                                📰 Quảng cáo Trang chủ & Tin tức
+                                            </h4>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                                Bật/Tắt quảng cáo Adsterra trên toàn bộ trang chủ tin tức (Next.js Portal). Không ảnh hưởng đến quảng cáo trên trang Ôn tập.
+                                            </p>
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+                                            <input
+                                                type="checkbox"
+                                                checked={config.showPortalAds ?? true}
+                                                onChange={(e) => setConfig({ ...config, showPortalAds: e.target.checked })}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                {(config.showPortalAds ?? true) ? 'Đang bật' : 'Đã tắt'}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
                                 <div className="p-6 bg-orange-50 dark:bg-slate-700/30 rounded-xl border border-orange-200 dark:border-slate-600">
                                     <h4 className="font-bold text-lg mb-2 text-orange-800 dark:text-orange-400 flex items-center gap-2"><FaBroom /> Dọn dẹp dữ liệu rác</h4>
                                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">

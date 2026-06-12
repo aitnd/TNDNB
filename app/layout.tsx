@@ -15,6 +15,7 @@ import dynamic from 'next/dynamic'
 const MobileBottomNav = dynamic(() => import('../components/MobileBottomNav'), { ssr: false })
 const CapacitorDetector = dynamic(() => import('./components/CapacitorDetector'), { ssr: false })
 const GlobalNotificationHandler = dynamic(() => import('./components/GlobalNotificationHandler'), { ssr: false })
+const PortalAdLoader = dynamic(() => import('./components/PortalAdLoader'), { ssr: false })
 
 // Cấu hình font Rubik (Hỗ trợ tiếng Việt đầy đủ)
 const rubik = Rubik({
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <MobileBottomNav />
             <CapacitorDetector />
             <GlobalNotificationHandler />
+            <PortalAdLoader />
 
             <Footer />
 
@@ -98,10 +100,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               gtag('config', '${AW_TRACKING_ID}');
             `,
           }}
-        />
-        <Script
-          src="https://pl28592472.effectivegatecpm.com/40/38/4c/40384cc1f853bc02181ba010564ff378.js"
-          strategy="afterInteractive"
         />
         <SpeedInsights />
       </body>
