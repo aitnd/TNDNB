@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-06-12T14:57:00+07:00",
+  "updated_at": "2026-06-12T15:00:00+07:00",
   "working_on": {
     "feature": "Tối ưu hóa & Vá lỗi hệ thống (Fix All & Refactor)",
-    "task": "Sửa lỗi ESLint, dọn dẹp file log rác, đồng bộ .env và vá bảo mật hoàn tất",
+    "task": "Sửa lỗi ESLint, dọn dẹp file log rác, đồng bộ .env, vá bảo mật và refactor React hooks hoàn tất",
     "status": "completed",
     "last_run": "2026-06-12T14:51:00+07:00",
     "last_run_url": "http://localhost:3000",
@@ -11,23 +11,27 @@
       ".eslintrc.json",
       "package.json",
       ".env.example",
-      ".env"
+      ".env",
+      "app/quan-ly/tai-khoan/page.tsx",
+      "components/CourseManager.tsx"
     ],
     "blockers": [],
-    "notes": "Đã sửa thành công lỗi ESLint circular reference bằng cách hạ cấp eslint-config-next về bản v14 khớp Next.js, dọn sạch log rác, đồng bộ hóa cấu hình .env và vá bảo mật tự động."
+    "notes": "Đã sửa thành công lỗi ESLint circular reference bằng cách hạ cấp eslint-config-next về bản v14 khớp Next.js, dọn sạch log rác, đồng bộ hóa cấu hình .env, vá bảo mật tự động và sửa triệt để 2 lỗi React hook useEffect missing dependency."
   },
   "pending_tasks": [],
   "recent_changes": [
     {
-      "timestamp": "2026-06-12T14:57:00+07:00",
+      "timestamp": "2026-06-12T15:00:00+07:00",
       "type": "refactor",
-      "description": "Sửa lỗi ESLint Circular Reference, dọn dẹp các file log rác ở root, đồng bộ hóa .env thành .env.example và vá bảo mật tự động bằng npm audit fix.",
+      "description": "Sửa lỗi ESLint Circular Reference, dọn dẹp các file log rác ở root, đồng bộ hóa .env thành .env.example, vá bảo mật tự động và sửa triệt để 2 lỗi React hook useEffect missing dependency.",
       "files": [
         "eslint.config.mjs",
         ".eslintrc.json",
         "package.json",
         ".env.example",
-        ".env"
+        ".env",
+        "app/quan-ly/tai-khoan/page.tsx",
+        "components/CourseManager.tsx"
       ]
     },
     {

@@ -76,15 +76,19 @@ export default function CourseManager() {
             }
 
             setCourses(courseData)
-
-            // Update viewingCourse if it exists (to reflect realtime changes)
-            if (viewingCourse) {
-                const updated = courseData.find(c => c.id === viewingCourse.id)
-                if (updated) setViewingCourse(updated)
-            }
         })
         return () => unsubscribe()
-    }, [user, isTeacher, viewingCourse?.id])
+    }, [user, isTeacher])
+
+    // Update viewingCourse if it exists (to reflect realtime changes)
+    useEffect(() => {
+        if (viewingCourse) {
+            const updated = courses.find(c => c.id === viewingCourse.id)
+            if (updated && JSON.stringify(updated) !== JSON.stringify(viewingCourse)) {
+                setViewingCourse(updated)
+            }
+        }
+    }, [courses, viewingCourse])
 
     // 2. Fetch Students (When editing)
     useEffect(() => {
