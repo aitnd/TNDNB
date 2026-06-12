@@ -1,5 +1,13 @@
 # CHANGELOG — [ontap-web]
 
+## [3.9.7] - 2026-06-12 - Triển Khai Quảng Cáo Portal & Refactor
+- **Triển khai cấu hình quảng cáo Portal:** Bổ sung cấu hình `showPortalAds` trong Admin Panel cho phép bật/tắt quảng cáo trên Next.js Portal trang chủ & tin tức từ Firestore.
+- **Đồng bộ hóa UI quản trị:** Thêm toggle "Quảng cáo Trang chủ & Tin tức" vào tab "Hệ thống" của UsageConfigPanel cho vai trò Admin và Lãnh đạo.
+- **Tối ưu hóa Code (Refactor React Hooks):** 
+  - Sửa lỗi thiếu dependency useEffect trong `CourseManager.tsx` bằng cách tách biệt logic cập nhật `viewingCourse` và Firestore listener.
+  - Sửa lỗi useEffect trong `tai-khoan/page.tsx` bằng `useCallback` cho `fetchSessions`.
+- **Vá bảo mật tự động:** Vá lỗ hổng của thư viện `@grpc/grpc-js` bằng `npm audit fix`.
+
 ## [3.9.6] - 2026-06-11 - Phân Tách Cấu Hình Ban Lãnh Đạo
 - **Phân tách cấu hình vai trò:** Phân tách cấu hình giới hạn & quyền lợi giữa **Ban Lãnh Đạo** (`leader`) và **Cán Bộ Quản Lý** (`manager`) thành hai cấu hình độc lập trong database Firestore.
 - **Đồng bộ hóa giao diện cấu hình:** Tách nút cấu hình hệ thống thành hai tab riêng biệt: "Ban Lãnh Đạo" (key: `leader`) và "Quản Lý" (key: `manager`).

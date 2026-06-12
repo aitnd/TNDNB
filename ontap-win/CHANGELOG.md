@@ -1,5 +1,9 @@
 # CHANGELOG — [ontap-win]
 
+## [3.9.7] - 2026-06-12 - Triển Khai Quảng Cáo Portal & Refactor
+- **Đồng bộ hóa UI quản trị:** Bổ sung toggle "Quảng cáo Trang chủ & Tin tức" vào tab "Hệ thống" của UsageConfigPanel cho vai trò Admin và Lãnh đạo (Đồng bộ với bản Web).
+- **Vá bảo mật tự động:** Vá lỗ hổng bảo mật của `@grpc/grpc-js` thông qua npm audit fix.
+
 ## [3.9.6] - 2026-06-11 - Phân Tách Cấu Hình Ban Lãnh Đạo
 - **Phân tách cấu hình vai trò:** Phân tách cấu hình giới hạn & quyền lợi giữa **Ban Lãnh Đạo** (`leader`) và **Cán Bộ Quản Lý** (`manager`) thành hai cấu hình độc lập trong database Firestore.
 - **Đồng bộ hóa giao diện cấu hình:** Tách nút cấu hình hệ thống thành hai tab riêng biệt: "Ban Lãnh Đạo" (key: `leader`) và "Quản Lý" (key: `manager`).
