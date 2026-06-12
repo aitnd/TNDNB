@@ -1,22 +1,35 @@
 {
-  "updated_at": "2026-06-12T14:51:00+07:00",
+  "updated_at": "2026-06-12T14:57:00+07:00",
   "working_on": {
-    "feature": "Triển khai & Phân tách vai trò Lãnh đạo v3.9.6",
-    "task": "Commit, kiểm thử tự động, build web và đóng gói exe Electron hoàn tất",
-    "status": "running",
+    "feature": "Tối ưu hóa & Vá lỗi hệ thống (Fix All & Refactor)",
+    "task": "Sửa lỗi ESLint, dọn dẹp file log rác, đồng bộ .env và vá bảo mật hoàn tất",
+    "status": "completed",
     "last_run": "2026-06-12T14:51:00+07:00",
     "last_run_url": "http://localhost:3000",
     "files": [
-      "ontap-win/services/adminConfigService.ts",
-      "ontap-web/services/adminConfigService.ts",
-      "ontap-win/components/UsageConfigPanel.tsx",
-      "ontap-web/components/UsageConfigPanel.tsx"
+      "eslint.config.mjs",
+      ".eslintrc.json",
+      "package.json",
+      ".env.example",
+      ".env"
     ],
     "blockers": [],
-    "notes": "Đã phân tách thành công hai key leader và manager, cập nhật UI config panel, và sửa các màn hình liên quan cùng với Next.js Portal."
+    "notes": "Đã sửa thành công lỗi ESLint circular reference bằng cách hạ cấp eslint-config-next về bản v14 khớp Next.js, dọn sạch log rác, đồng bộ hóa cấu hình .env và vá bảo mật tự động."
   },
   "pending_tasks": [],
   "recent_changes": [
+    {
+      "timestamp": "2026-06-12T14:57:00+07:00",
+      "type": "refactor",
+      "description": "Sửa lỗi ESLint Circular Reference, dọn dẹp các file log rác ở root, đồng bộ hóa .env thành .env.example và vá bảo mật tự động bằng npm audit fix.",
+      "files": [
+        "eslint.config.mjs",
+        ".eslintrc.json",
+        "package.json",
+        ".env.example",
+        ".env"
+      ]
+    },
     {
       "timestamp": "2026-06-11T15:00:00+07:00",
       "type": "feature",
