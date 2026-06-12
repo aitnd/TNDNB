@@ -41,6 +41,10 @@
     {
       "rule": "Phân tách vai trò Lãnh đạo và Quản lý",
       "description": "Vai trò lanh_dao dùng key cấu hình leader, quan_ly dùng key manager để thiết lập quyền độc lập"
+    },
+    {
+      "rule": "Bật/Tắt Quảng Cáo Portal",
+      "description": "Quảng cáo trang chủ Next.js Portal được điều khiển động qua cấu hình showPortalAds trong Firestore (settings/usage_config) thông qua component PortalAdLoader."
     }
   ],
   "features": [
@@ -48,16 +52,23 @@
       "name": "Hệ thống Ôn tập Windows (Electron)",
       "status": "implemented",
       "details": "Chế độ ôn tập offline hoàn toàn dùng JSON local. Hỗ trợ đồng bộ kết quả thi về Firebase khi có mạng."
+    },
+    {
+      "name": "Portal Ad Dynamic Config",
+      "status": "implemented",
+      "details": "Bật/tắt động quảng cáo Adsterra trên Next.js Portal mà không ảnh hưởng tới trang ôn tập."
     }
   ],
   "knowledge_items": {
     "patterns": [
       "Shared components between ontap-web and ontap-win",
-      "Lucide-react for iconography"
+      "Lucide-react for iconography",
+      "Tách biệt state update của view screen khỏi Firestore listeners để tránh loop subscriptions"
     ],
     "gotchas": [
       "Electron build uses ELECTRON_BUILD=true causing 'base: ./' in vite config to support file:// urls",
-      "Missing icons in lucide-react result in silent ReferenceErrors causing White Screen crashes."
+      "Missing icons in lucide-react result in silent ReferenceErrors causing White Screen crashes.",
+      "Lệch phiên bản eslint-config-next với NextJS (ví dụ dùng v16 trên Next v14) gây circular reference và crash next lint"
     ],
     "conventions": [
       "DevTools disabled in production builds (main.cjs and UI toggle both disabled)."
