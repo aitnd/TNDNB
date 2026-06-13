@@ -40,7 +40,7 @@
     "sonner": "^2.0.7",
     "sweetalert2": "^11.26.4",
     "vite": "^6.2.0",
-    "xlsx": "^0.18.5",
+    "@sheetjs/xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "zustand": "^5.0.9"
   },
   "devDependencies": {

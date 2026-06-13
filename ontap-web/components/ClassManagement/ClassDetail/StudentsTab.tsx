@@ -14,7 +14,7 @@ import {
   FaSortUp, FaSortDown, FaSort
 } from 'react-icons/fa';
 import { Course, UserProfile } from '../../types';
-import * as XLSX from 'xlsx';
+import * as XLSX from '@sheetjs/xlsx';
 import Swal from 'sweetalert2';
 import CreateStudentModal from '../CreateStudentModal';
 import { EditStudentModal, HistoryModal, SessionModal, AddStudentModal } from './Modals';

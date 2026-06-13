@@ -15,7 +15,7 @@ import {
 } from 'react-icons/fa';
 import { TbPlaneOff } from 'react-icons/tb';
 import { Course, UserProfile } from '../../types';
-import * as XLSX from 'xlsx';
+import * as XLSX from '@sheetjs/xlsx';
 import Swal from 'sweetalert2';
 import CreateStudentModal from '../CreateStudentModal';
 import ImportStudentModal from '../ImportStudentModal';

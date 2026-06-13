@@ -14,7 +14,7 @@ import {
 } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Course, UserProfile } from '@/types/classManagement';
-import * as XLSX from 'xlsx';
+import * as XLSX from '@sheetjs/xlsx';
 import CreateStudentModal from './CreateStudentModal';
 
 interface StudentStats {
