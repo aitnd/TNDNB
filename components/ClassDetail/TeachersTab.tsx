@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  FaUserTie, FaPlus, FaTrash, FaGraduationCap, 
-  FaMailBulk, FaPhone, FaCheckCircle 
-} from 'react-icons/fa';
+import {    FaUserTie, FaPlus, FaTrash, FaGraduationCap,    FaMailBulk, FaPhone} from 'react-icons/fa'; 
+
+
+
 import { db } from '@/utils/firebaseClient';
-import { 
-  collection, query, where, documentId, 
-  getDocs, onSnapshot, doc, updateDoc, arrayRemove, QuerySnapshot, DocumentData, QueryDocumentSnapshot, DocumentSnapshot 
-} from 'firebase/firestore';
+import {    collection, query, where, documentId, onSnapshot, doc, updateDoc, arrayRemove, QuerySnapshot, DocumentData, QueryDocumentSnapshot, DocumentSnapshot  } from 'firebase/firestore'; 
+
+
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Course, UserProfile } from '@/types/classManagement';
 

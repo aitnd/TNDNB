@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 // import { useSocket } from '../contexts/SocketContext'; // Removed
 import { UserProfile } from '../types';
-import {
-    Send, Search, MoreHorizontal, Phone, Video, Image as ImageIcon, Smile,
-    ChevronLeft, Info, Trash2, WifiOff, Check, Clock, AlertCircle
-} from 'lucide-react';
+import {     Send, Search, Phone, Video, Image as ImageIcon, Smile,     ChevronLeft, Info, Trash2, WifiOff, Check, Clock, AlertCircle } from 'lucide-react'; 
+
+
+
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { collection, query, limit, getDocs, where, orderBy, startAfter, QueryDocumentSnapshot, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { db, rtdb } from '../services/firebaseClient';
-import { ref, set, onValue, remove, onDisconnect, serverTimestamp as rtdbServerTimestamp } from 'firebase/database';
+import { ref, set, onValue, remove} from 'firebase/database';  
 import { motion } from 'framer-motion';
 
 interface Message {

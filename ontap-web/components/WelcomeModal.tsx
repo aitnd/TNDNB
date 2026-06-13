@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelmIcon3D, InformationCircleIcon } from './icons';
+import { HelmIcon3D} from './icons'; 
 import { useTheme } from '../contexts/ThemeContext';
 
 interface WelcomeModalProps {

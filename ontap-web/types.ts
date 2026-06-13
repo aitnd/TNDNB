@@ -1,4 +1,4 @@
-import type { Session } from '@supabase/supabase-js';
+
 
 export type Theme = 'light' | 'dark' | 'modern' | 'classic' | 'sunrise' | 'tri-an' | 'noel' | 'premium';
 

@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient';
-import type { License, Subject, Question, Answer } from '../types';
+import type { License} from '../types';   
 
 // Helper function for natural sorting of questions (e.g., q2 before q10)
 const naturalSortQuestions = (a: { id: string }, b: { id: string }): number => {

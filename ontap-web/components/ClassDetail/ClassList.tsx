@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { 
-    FaSchool, FaSearch, FaTimes, FaPlus, FaChalkboardTeacher, 
-    FaEdit, FaTrash, FaUserTie, FaArrowLeft, FaSort, FaSortAmountDown, FaSortAmountUp,
-    FaChevronLeft, FaChevronRight
-} from 'react-icons/fa';
+import {      FaSchool, FaSearch, FaTimes, FaPlus, FaChalkboardTeacher,      FaEdit, FaTrash, FaUserTie, FaArrowLeft, FaSortAmountDown, FaSortAmountUp,     FaChevronLeft, FaChevronRight } from 'react-icons/fa'; 
+
+
+
+
 import { Course, UserProfile } from '../../types';
 
 interface ClassListProps {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchActiveMarqueeNotifications, Notification } from '../services/notificationService';
-import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
+import { FaExclamationTriangle} from 'react-icons/fa'; 
 
 const SweetAlertPopup: React.FC = () => {
     const [popupNotif, setPopupNotif] = useState<Notification | null>(null);

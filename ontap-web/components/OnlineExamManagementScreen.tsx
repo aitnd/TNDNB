@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebaseClient';
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, getDocs, where } from 'firebase/firestore';
+import { collection, addDoc, query, orderBy, serverTimestamp, getDocs, where } from 'firebase/firestore'; 
 import { toast } from 'sonner';
 import { FaPlus, FaEye } from 'react-icons/fa';
 import ExamRoomDetailScreen from './ExamRoomDetailScreen';

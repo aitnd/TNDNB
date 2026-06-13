@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Notification, fetchAllGlobalNotifications, hardDeleteNotification, sendNotification, updateNotification } from '../services/notificationService';
-import { getAllClasses, getUserProfile, searchUsersByEmail } from '../services/userService';
+import { getAllClasses, searchUsersByEmail } from '../services/userService'; 
 import { FaTrash, FaExclamationTriangle, FaClock, FaCheckCircle, FaBan, FaPlus, FaUsers, FaUser, FaGlobe, FaEdit } from 'react-icons/fa';
 import { UserProfile } from '../types';
 

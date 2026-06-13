@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Shield, Bell, Smartphone, Fingerprint, Clock, Zap, CheckCircle2 } from 'lucide-react';
+import { X, Bell, Smartphone, Fingerprint, Zap} from 'lucide-react';   
 import { triggerHaptic } from '../utils/nativeUX';
-import { useAppStore } from '../stores/useAppStore';
+
 import { Preferences } from '@capacitor/preferences';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { NativeBiometric } from 'capacitor-native-biometric';

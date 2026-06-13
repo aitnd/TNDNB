@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FaSearch, FaUserPlus, FaCheckCircle, FaUserGraduate } from 'react-icons/fa';
+import { FaSearch, FaUserGraduate } from 'react-icons/fa';  
 import { db } from '@/utils/firebaseClient';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import Modal from './Modal';

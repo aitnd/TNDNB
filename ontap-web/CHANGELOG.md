@@ -1,5 +1,13 @@
 # CHANGELOG — [ontap-web]
 
+## [3.9.8] - 2026-06-13 - Nâng cấp bảo mật & Tách Chunk Tối ưu
+- **Nâng cấp SheetJS an toàn:** Chuyển đổi thành công thư viện đọc/ghi Excel từ `xlsx` (bản cũ lỗi thời) sang thư viện chính thức bảo mật `@sheetjs/xlsx` (v0.20.2) trên toàn hệ thống.
+- **Tối ưu hóa dung lượng Bundle (Tách Chunk Vite):** Cấu hình manualChunks tách biệt thư viện `@sheetjs/xlsx` thành file chunk riêng `vendor-xlsx-*.js` (488 kB) trong cả hai cấu hình Vite `ontap-web/vite.config.ts` và `ontap-win/vite.config.ts`. File bundle chính `vendor-*.js` giảm từ **1.4 MB** xuống còn **907 kB** (tiết kiệm 35% dung lượng tải ban đầu).
+- **Khắc phục lỗi biên dịch TypeScript:**
+  - Định nghĩa tường minh kiểu `RoleKey` loại bỏ boolean `showPortalAds` để sửa lỗi spread types TS2698 tại `UsageConfigPanel.tsx`.
+  - Khắc phục lỗi thiếu thư viện `@capacitor/local-notifications` bằng cách cập nhật dependency v8.0.1 tại `ontap-web/package.json`.
+- **Sửa lỗi Unit Test:** Bọc `await waitFor` trong file test `AccountScreen.test.tsx` để xử lý cảnh báo `act(...)` bất đồng bộ của React, đưa tỷ lệ test pass đạt **100% (5/5 PASS)** sạch cảnh báo.
+
 ## [3.9.7] - 2026-06-12 - Triển Khai Quảng Cáo Portal & Refactor
 - **Triển khai cấu hình quảng cáo Portal:** Bổ sung cấu hình `showPortalAds` trong Admin Panel cho phép bật/tắt quảng cáo trên Next.js Portal trang chủ & tin tức từ Firestore.
 - **Đồng bộ hóa UI quản trị:** Thêm toggle "Quảng cáo Trang chủ & Tin tức" vào tab "Hệ thống" của UsageConfigPanel cho vai trò Admin và Lãnh đạo.

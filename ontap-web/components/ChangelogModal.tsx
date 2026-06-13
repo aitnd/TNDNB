@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { X, Shield, Smartphone, Rocket, Zap, Monitor, Layout, Settings, Code, Loader2 } from 'lucide-react';
+import { X, Rocket, Loader2 } from 'lucide-react';       
 import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
 // @ts-ignore
 import changelogRaw from '../CHANGELOG.md?raw';

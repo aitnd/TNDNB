@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+
 import ThemeSwitcher from './ThemeSwitcher'
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
@@ -9,7 +9,7 @@ import { auth } from '../utils/firebaseClient'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 // Icon
-import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaChevronDown, FaSun, FaMoon, FaSnowflake, FaStar, FaUserCog, FaSignOutAlt, FaCloudDownloadAlt } from 'react-icons/fa'
+import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaStar, FaUserCog, FaSignOutAlt, FaCloudDownloadAlt } from 'react-icons/fa'     
 
 import styles from './Navbar.module.css'
 

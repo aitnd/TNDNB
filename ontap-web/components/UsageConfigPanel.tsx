@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { getUsageConfig, saveUsageConfig, UsageConfig, RoleConfig, getGitHubConfig, saveGitHubConfig, GitHubConfig } from '../services/adminConfigService';
-import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, FaUser, FaChalkboardTeacher, FaUserAstronaut, FaTools, FaBroom, FaDownload, FaArrowLeft, FaShieldAlt, FaMobileAlt, FaServer, FaCheckCircle, FaRocket, FaGithub, FaKey, FaUpload, FaFileAlt } from 'react-icons/fa';
+import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, FaUser, FaChalkboardTeacher, FaUserAstronaut, FaBroom, FaArrowLeft, FaShieldAlt, FaMobileAlt, FaServer, FaCheckCircle, FaRocket, FaGithub, FaKey, FaUpload, FaFileAlt } from 'react-icons/fa';  
 import { db } from '../services/firebaseClient';
-import { collection, getDocs, doc, updateDoc, writeBatch, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, writeBatch, query, where } from 'firebase/firestore'; 
 import { useNavigate } from 'react-router-dom';
 import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease, getReleaseByTag, deleteRelease } from '../services/githubService';
 
@@ -28,7 +28,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
     const [activeMainTab, setActiveMainTab] = useState<'limits' | 'system' | 'app_links'>('limits');
 
     // Sub Tab for Roles (only used when activeMainTab === 'limits')
-    type RoleKey = Exclude<keyof UsageConfig, 'app_links'>;
+    type RoleKey = 'guest' | 'free_user' | 'verified_user' | 'vip_user' | 'teacher' | 'manager' | 'leader' | 'admin';
     const [activeRole, setActiveRole] = useState<RoleKey>('guest');
 
     // Phân quyền sửa cấu hình vai trò Admin

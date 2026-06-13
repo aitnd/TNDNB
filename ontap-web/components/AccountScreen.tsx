@@ -2,7 +2,7 @@ import React, { useState, useEffect, FormEvent, useMemo } from 'react';
 import { UserProfile } from '../types';
 import { db } from '../services/firebaseClient';
 import { getDefaultAvatar, uploadAvatar } from '../services/userService';
-import { doc, updateDoc, collection, query, orderBy, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, updateDoc, collection, query, orderBy, getDocs} from 'firebase/firestore'; 
 import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaCamera, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes, FaKey, FaLock, FaHistory, FaLaptop, FaMobileAlt, FaSignOutAlt } from 'react-icons/fa';
 import { auth } from '../services/firebaseClient';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';

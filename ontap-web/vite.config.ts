@@ -35,6 +35,7 @@ export default defineConfig(({ mode }) => {
               if (id.includes('firebase')) return 'vendor-firebase';
               if (id.includes('recharts')) return 'vendor-recharts';
               if (id.includes('lucide-react')) return 'vendor-icons';
+              if (id.includes('xlsx') || id.includes('sheetjs') || id.includes('@sheetjs')) return 'vendor-xlsx';
               return 'vendor';
             }
           }

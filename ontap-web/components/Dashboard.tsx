@@ -6,7 +6,7 @@ import { HelmIcon3D, BookOpenIcon3D, ClipboardListIcon3D } from './icons';
 import { triggerHaptic } from '../utils/nativeUX';
 import { useAppStore } from '../stores/useAppStore';
 
-import { useState, useEffect } from 'react';
+import { useState} from 'react'; 
 
 import OnlineStatsWidget from './OnlineStatsWidget';
 import CustomAnalyticsWidget from './CustomAnalyticsWidget';

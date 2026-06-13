@@ -3,7 +3,7 @@ import { db } from '../services/firebaseClient';
 import { collection, query, where, onSnapshot, getDoc, doc, documentId } from 'firebase/firestore';
 import { toast } from 'sonner';
 import { UserProfile } from '../types';
-import { FaUserTie, FaUsers, FaArrowLeft, FaSchool, FaGraduationCap, FaThLarge, FaList, FaHistory } from 'react-icons/fa';
+import { FaUserTie, FaUsers, FaArrowLeft, FaSchool, FaGraduationCap, FaThLarge, FaList} from 'react-icons/fa'; 
 import { getExamHistory } from '../services/historyService';
 import { getDefaultAvatar } from '../services/userService';
 

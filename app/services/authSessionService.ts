@@ -1,17 +1,17 @@
-import { db, auth } from './firebaseClient';
-import {
-    collection,
-    addDoc,
-    query,
-    where,
-    getDocs,
-    updateDoc,
-    doc,
-    serverTimestamp,
-    orderBy,
-    onSnapshot,
-    getDoc
-} from 'firebase/firestore';
+import { db} from './firebaseClient'; 
+import {     collection,     addDoc,     query,     where,     getDocs,     updateDoc,     doc,     serverTimestamp,     orderBy,     onSnapshot} from 'firebase/firestore'; 
+
+
+
+
+
+
+
+
+
+
+
+
 import { getDeviceInfo } from './deviceService';
 
 export interface LoginSession {

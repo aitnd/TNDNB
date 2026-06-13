@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchActiveMarqueeNotifications, Notification } from '../services/notificationService';
-import Marquee from 'react-fast-marquee';
+import Marquee from 'react-fast-marquee'; 
 import { FaExclamationTriangle, FaBell } from 'react-icons/fa';
 
 

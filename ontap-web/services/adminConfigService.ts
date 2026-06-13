@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc} from 'firebase/firestore'; 
 import { db } from './firebaseClient';
 
 export const USAGE_CONFIG_DOC_ID = 'usage_config';

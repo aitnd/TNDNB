@@ -1,7 +1,7 @@
 {
   "name": "dao-tao-thuyen-vien",
   "private": true,
-  "version": "3.9.7",
+  "version": "3.9.8",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,8 +15,10 @@
     "@capacitor/core": "^8.1.0",
     "@capacitor/haptics": "^8.0.1",
     "@capacitor/preferences": "^8.0.1",
+    "@capacitor/local-notifications": "^8.0.1",
     "@capacitor/push-notifications": "^8.0.1",
     "@capacitor/splash-screen": "^8.0.1",
+    "@sheetjs/xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "@supabase/supabase-js": "2",
     "@vercel/analytics": "^2.0.1",
     "@vitejs/plugin-react": "^5.0.0",
@@ -40,7 +42,6 @@
     "sonner": "^2.0.7",
     "sweetalert2": "^11.26.4",
     "vite": "^6.2.0",
-    "@sheetjs/xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "zustand": "^5.0.9"
   },
   "devDependencies": {

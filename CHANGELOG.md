@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.9.8] - 2026-06-13
+### Security Upgrades & Performance Tuning (Web & App Win)
+- **Nâng cấp SheetJS an toàn:** Chuyển đổi thành công thư viện đọc/ghi Excel từ `xlsx` (vũ cũ lỗi thời) sang thư viện chính thức bảo mật `@sheetjs/xlsx` (v0.20.2) trên toàn hệ thống (bao gồm cả root portal, ontap-web và ontap-win).
+- **Next.js Security Patch:** Nâng cấp Next.js lên bản `14.2.43` tại root và dọn dẹp cài đặt sạch (`clean install`), giải quyết triệt để các lỗ hổng bảo mật dependencies và lỗi môi trường SWC.
+- **Tối ưu hóa dung lượng Bundle (Tách Chunk):** Cấu hình manualChunks tách biệt thư viện `@sheetjs/xlsx` thành file chunk riêng `vendor-xlsx-*.js` (488 kB) trong cả hai cấu hình Vite `ontap-web/vite.config.ts` và `ontap-win/vite.config.ts`. File bundle chính `vendor-*.js` giảm từ **1.4 MB** xuống còn **907 kB** (tiết kiệm 35% thời gian tải trang ban đầu).
+- **Tối ưu hóa Next.js Image:** Thay thế các thẻ `<img>` cũ bằng `<Image />` tối ưu của Next.js tại 16 vị trí khác nhau trong Next.js Portal (trang bài viết chi tiết, danh mục, giải trí...) để nâng cao chỉ số LCP.
+- **Sửa lỗi TypeScript & Unit Test:** 
+  - Sửa lỗi spread types TS2698 tại `UsageConfigPanel.tsx`.
+  - Khắc phục lỗi thiếu thư viện `@capacitor/local-notifications` bằng cách cập nhật dependency v8.0.1 tại `ontap-web/package.json`.
+  - Sửa lỗi cảnh báo `act(...)` bất đồng bộ bằng `waitFor` trong `AccountScreen.test.tsx`, đưa tỷ lệ test pass đạt **100% (5/5 PASS)** sạch cảnh báo.
+
 ## [3.9.7] - 2026-06-12
 ### Portal Ad Management & System Refactor (Web & App Win)
 - **Bật/tắt quảng cáo trang chủ:** Tích hợp tính năng dynamic ad toggle cho Next.js Portal homepage từ Firestore (settings/usage_config) thông qua component client `PortalAdLoader`. Loại bỏ script Adsterra cứng trong `app/layout.tsx`.

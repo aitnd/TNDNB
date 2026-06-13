@@ -5,8 +5,8 @@ import { db } from '../utils/firebaseClient'
 import { collection, query, where, onSnapshot, doc, getDoc, documentId } from 'firebase/firestore'
 import { useAuth } from '../context/AuthContext'
 import styles from './StudentClassView.module.css'
-import { FaUserTie, FaUsers, FaIdCard } from 'react-icons/fa'
-import UserName from './UserName' // 💖 IMPORT USER NAME 💖
+import { FaUserTie, FaUsers} from 'react-icons/fa' 
+import UserName from './UserName' // 💖 IMPORT USER NAME 💖 
 
 interface Course {
     id: string

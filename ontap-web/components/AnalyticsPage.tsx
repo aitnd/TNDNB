@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaCalendarAlt, FaDesktop, FaMobileAlt, FaTabletAlt, FaMapMarkerAlt, FaFileAlt } from 'react-icons/fa';
-import {
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-    PieChart, Pie, Cell, BarChart, Bar, Legend
-} from 'recharts';
+import { FaArrowLeft, FaCalendarAlt, FaDesktop, FaMapMarkerAlt, FaFileAlt } from 'react-icons/fa';  
+import {     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,     PieChart, Pie, Cell, Bar, Legend } from 'recharts'; 
+
+
+
 
 interface AnalyticsPageProps {
     onBack: () => void;

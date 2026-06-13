@@ -1,7 +1,7 @@
 // 💖 1. BIẾN THÀNH CLIENT COMPONENT 💖
 'use client'
 
-import React, { useState } from 'react' // (Thêm "não" useState)
+
 import styles from './page.module.css' 
 // 💖💖💖 ĐÃ XÓA Sidebar ở đây 💖💖💖
 

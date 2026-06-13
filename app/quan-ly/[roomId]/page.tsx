@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '../../../context/AuthContext'
 import { db } from '../../../utils/firebaseClient'
-import { doc, onSnapshot, updateDoc, collection, getDocs, writeBatch, serverTimestamp, deleteDoc } from 'firebase/firestore'
+import { doc, onSnapshot, updateDoc, collection, writeBatch, serverTimestamp} from 'firebase/firestore'  
 import styles from './page.module.css'
 import Link from 'next/link'
 
