@@ -261,7 +261,6 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
             };
         } else {
             // Initialize if not exists
-            console.log('Initializing default usage config...');
             await setDoc(docRef, DEFAULT_CONFIG);
             return DEFAULT_CONFIG;
         }

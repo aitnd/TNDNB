@@ -34,7 +34,6 @@ export const saveExamResult = async (userId: string, quiz: Quiz, score: number, 
             ...result,
             completedAt: Timestamp.fromDate(result.completedAt)
         });
-        console.log("Exam result saved successfully");
     } catch (error) {
         console.error("Error saving exam result:", error);
         throw error;

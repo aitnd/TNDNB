@@ -17,7 +17,6 @@ const naturalSortQuestions = (a, b) => {
 };
 
 async function run() {
-    console.log("Fetching licenses...");
     const { data, error } = await supabase
         .from('licenses')
         .select(`
@@ -50,7 +49,6 @@ async function run() {
         process.exit(1);
     }
 
-    console.log(`Fetched ${data.length} licenses. Transforming...`);
 
     const formattedData = data.map((license) => ({
         id: license.id,
@@ -81,7 +79,6 @@ async function run() {
     }
 
     fs.writeFileSync('./data/questions_db.json', JSON.stringify(formattedData, null, 2));
-    console.log("Done. Saved to data/questions_db.json");
 }
 
 run();

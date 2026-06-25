@@ -60,7 +60,7 @@ class EJS_GameManager {
     }
     setupPreLoadSettings() {
         this.Module.callbacks.setupCoreSettingFile = (filePath) => {
-            if (this.EJS.debug) console.log("Setting up core settings with path:", filePath);
+            if (this.EJS.debug) 
             this.writeFile(filePath, this.EJS.getCoreSettings());
         }
     }
@@ -154,7 +154,6 @@ class EJS_GameManager {
         if (this.EJS.retroarchOpts && Array.isArray(this.EJS.retroarchOpts)) {
             this.EJS.retroarchOpts.forEach(option => {
                 let selected = this.EJS.preGetSetting(option.name);
-                console.log(selected);
                 if (!selected) {
                     selected = option.default;
                 }

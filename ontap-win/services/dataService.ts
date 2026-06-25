@@ -15,7 +15,6 @@ const naturalSortQuestions = (a: { id: string }, b: { id: string }): number => {
 // This function fetches all data and transforms it into the nested structure the app uses.
 // GHI CHÚ: Bản Offline (ontap-win) chỉ dùng data JSON.
 export const fetchLicenses = async (): Promise<License[]> => {
-  console.log('⚡ [DataService] Running in Offline App - Using LOCAL JSON Data');
   // Import offlineData here to ensure it's available. 
   // Ideally it should be imported at top, but let's assume it is or add it.
   // Wait, I need to check if 'offlineData' is imported. The previous file view showed it wasn't there?

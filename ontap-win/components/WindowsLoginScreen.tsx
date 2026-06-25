@@ -110,7 +110,6 @@ const WindowsLoginScreen: React.FC = () => {
             }
         } else {
             // Đăng nhập Offline
-            console.log("Attempting offline login for:", email);
             const offlineUser = await getOfflineUser(email);
 
             if (!offlineUser) {
@@ -119,7 +118,6 @@ const WindowsLoginScreen: React.FC = () => {
             }
 
             if (offlineUser.hashedPassword === btoa(pwd)) {
-                console.log("Offline login successful");
                 const profile: UserProfile = {
                     id: offlineUser.id,
                     full_name: offlineUser.full_name,

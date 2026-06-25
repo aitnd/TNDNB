@@ -24,25 +24,21 @@ auth.onAuthStateChanged(async (user) => {
     
     if (user) {
         // Cưng đã đăng nhập, giờ check "vé" (role) trong "tủ"
-        console.log('Đã đăng nhập, đang check vé...');
         const docRef = db.collection('users').doc(user.uid);
         const doc = await docRef.get();
 
         if (doc.exists) {
             const userRole = doc.data().role; // Lấy tên raw
-            console.log('Vé của cưng là:', userRole);
             
             // 💖 QUYỀN LỰC LÀ ĐÂY (Thêm 'lanh_dao' nè) 💖
             if (userRole === 'giao_vien' || userRole === 'admin' || userRole === 'lanh_dao') {
                 // "Vé xịn"! Cho vô!
-                console.log('Vé xịn! Mời cưng vô!');
                 loadingMessage.style.display = 'none';
                 adminContent.style.display = 'block';
                 // Hiện luôn link "Quản lý" trên menu cho đẹp
                 document.getElementById('quan-ly-link').style.display = 'block';
             } else {
                 // "Vé thường" (hoc_vien)! Đuổi về!
-                console.log('Vé học viên! Không được vô!');
                 alert('Ui! Cưng không có "vé" (quyền) để vào trang này nha. 😥');
                 window.location.href = 'index.html'; // "Đá" về trang chủ
             }
@@ -54,7 +50,6 @@ auth.onAuthStateChanged(async (user) => {
         
     } else {
         // Cưng CHƯA đăng nhập! "Đá" về trang đăng nhập
-        console.log('Chưa đăng nhập! Biến về trang đăng nhập!');
         alert('Cưng phải đăng nhập mới vô được nha!');
         window.location.href = 'dang-nhap.html';
     }

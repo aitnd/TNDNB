@@ -75,4 +75,3 @@ const props = `
 content.splice(startLine, endLine - startLine + 1, props);
 
 fs.writeFileSync(filePath, content.join('\n'));
-console.log('Successfully refactored ClassManagementScreen.tsx');

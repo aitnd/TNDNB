@@ -13,7 +13,7 @@
     const folderPath = (path) => path.substring(0, path.length - path.split("/").pop().length);
     let scriptPath = (typeof window.EJS_pathtodata === "string") ? window.EJS_pathtodata : folderPath((new URL(document.currentScript.src)).pathname);
     if (!scriptPath.endsWith("/")) scriptPath += "/";
-    //console.log(scriptPath);
+    //
     function loadScript(file) {
         return new Promise(function(resolve) {
             let script = document.createElement("script");
@@ -58,7 +58,6 @@
         let minifiedFailed = file.includes(".min.") && !file.includes("socket");
         console[minifiedFailed ? "warn" : "error"]("Failed to load " + file + " beacuse it's likly that the minified files are missing.\nTo fix this you have 3 options:\n1. You can download the zip from the latest release here: https://github.com/EmulatorJS/EmulatorJS/releases/latest - Stable\n2. You can download the zip from here: https://cdn.emulatorjs.org/latest/data/emulator.min.zip and extract it to the data/ folder. (easiest option) - Beta\n3. You can build the files by running `npm i && npm run build` in the data/minify folder. (hardest option) - Beta\nNote: you will probably need to do the same for the cores, extract them to the data/cores/ folder.");
         if (minifiedFailed) {
-            console.log("Attempting to load non-minified files");
             if (file === "emulator.min.js") {
                 for (let i = 0; i < scripts.length; i++) {
                     await loadScript(scripts[i]);
@@ -142,7 +141,6 @@
         try {
             let languagePath;
             let fallbackPath = false;
-            console.log("Loading language", language);
             if ("undefined" != typeof EJS_paths && typeof EJS_paths[language] === "string") {
                 languagePath = EJS_paths[language];
             } else {
@@ -179,7 +177,6 @@
                 config.langJson = langJson;
             }
         } catch(e) {
-            console.log("Missing language:", language, "!!");
             delete config.language;
             delete config.langJson;
         }

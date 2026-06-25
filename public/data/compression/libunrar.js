@@ -324,91 +324,18 @@ var readRARContent = function (data, password, callbackFn) {
 //string|ArrayBufferView
 var _readRARContent = function (data, password,type,callbackFn) {
   var data = data
-  //console.log('Current working directory: ', Module.FS.cwd())
-
-  var returnVal = []
-  var arcData = new Module.RAROpenArchiveDataEx()
-  arcData.set_ArcName(data[0].name)
-  arcData.set_OpenMode(RAR_OM_EXTRACT)
-
-  var pars= {
-    password:password,
-    currFileName:null,
-    currFileSize:null,
-    currPackedFileSize:null,
-    currFileBuffer:null,
-    currFileBufferEnd:null,
-    currFileFlags:null,
-  }
-
-  var cb = Module.addFunction(RARcb(pars,callbackFn), 'iiiii')
-  arcData.set_Callback(cb)
-
-  var handle = Module._RAROpenArchiveEx(Module.getPointer(arcData))
-
-  var or = arcData.get_OpenResult()
-  if (or !== ERAR_SUCCESS || !handle) {
-    cleanup(data,handle,cb,type)
-    reportOpenError(or)
-    return null
-  }
-
-  //ShowArcInfo(arcData.get_Flags())
-  if (password) {
-    Module._RARSetPassword(handle, Module.ensureString(password))
-  }
-
-  var header = new Module.RARHeaderDataEx()
-  var res = Module._RARReadHeaderEx(handle, Module.getPointer(header))
+  //
   let i=0;
   while (res === ERAR_SUCCESS) { i++
     pars.currFileName = header.get_FileNameW()// getFileName()
-    if(i % 1000 ==0){console.log('filename: ', pars.currFileName);console.log(i);}
+    if(i % 1000 ==0){}
     pars.currFileSize = header.get_UnpSize()
     pars.currPackedFileSize = header.get_PackSize()
     pars.currFileBuffer = new ArrayBuffer(pars.currFileSize)
     pars.currFileBufferEnd = 0
 
     pars.currFileFlags = header.get_Flags()
-    //console.log('File continued from previous volume? ', pars.currFileFlags & RHDF_SPLITBEFORE ? 'yes' : 'no')
-    //console.log('File continued on next volume? ', pars.currFileFlags & RHDF_SPLITAFTER ? 'yes' : 'no')
-    //console.log('Previous files data is used (solid flag)? ', pars.currFileFlags & RHDF_SOLID ? 'yes' : 'no')
-
-    // ***process file***
-    // use RAR_TEST instead of RAR_EXTRACT
-    // because there is some problem reading from
-    // the extracted file in Emscripten file system
-    var PFCode = Module._RARProcessFileW(handle, RAR_TEST, 0, 0)
-    if (PFCode === ERAR_SUCCESS) {
-      returnVal.push({
-        type: (pars.currFileFlags & RHDF_DIRECTORY) ? 'dir' : 'file',
-        fileName: pars.currFileName,
-        fileNameSplit: pars.currFileName.split('/'),
-        fileSize: pars.currFileSize,
-        packedFileSize: pars.currPackedFileSize,
-        content: new Uint8Array(pars.currFileBuffer)
-      })
-    } else {
-      cleanup(data,handle,cb,type)
-      reportProcessFileError(PFCode)
-      return null
-    }
-    res = Module._RARReadHeaderEx(handle, Module.getPointer(header))
-  }
-  //console.log(res)
-  if (res !== ERAR_END_ARCHIVE) {
-    cleanup(data,handle,cb,type)
-    reportReadHeaderError(res)
-    return null
-  }
-
-  cleanup(data,handle,cb,type)
-  return makeDirTree(returnVal)
-}
-
-function cleanup (data,handle,cb,type) {
-  Module._RARCloseArchive(handle)
-  if(type=='W') Module.FS.unmount('/x')
+    //
   else for (var i = 0; i < data.length; i++) {
     Module.FS.unlink(data[i].name)
   }
@@ -451,69 +378,7 @@ function makeDirTree(returnVal){
   }
   files.forEach(putFile)
 
-  //console.log(rootDir)
-  return rootDir
-}
-
-function RARcb(pars,callbackFn) {
-  return function (msg, UserData, P1, P2) {
-    // volume change event
-    if (msg === UCM_CHANGEVOLUMEW) return 0
-    if (msg === UCM_CHANGEVOLUME) {
-      if (P2 === RAR_VOL_ASK) {
-        return -1
-      } else if (P2 === RAR_VOL_NOTIFY) {
-        console.log('... volume is :', /* Pointer_stringify */ Module.UTF8ToString(P1))
-        return 1
-      }
-      throw 'Unknown P2 value in volume change event'
-    }
-
-    if (msg === UCM_NEEDPASSWORDW) return 0
-    if (msg === UCM_NEEDPASSWORD) {
-      if (pars.password) {
-        Module.stringToUTF8(pars.password, P1, P2)
-        return 1
-      } else return -1
-    }
-
-    if (msg !== UCM_PROCESSDATA) {
-      return -1 // abort operation
-    }
-
-    if(callbackFn){callbackFn(pars.currFileName, pars.currFileSize, pars.currFileBufferEnd)}
-
-    // directly access the HEAP
-    var block = Module.HEAPU8.subarray(P1, P1 + P2)
-    var view = new Uint8Array(pars.currFileBuffer, pars.currFileBufferEnd, P2)
-    view.set(block)
-    pars.currFileBufferEnd += P2
-
-    return 1
-  }
-}
-
-function ShowArcInfo(Flags) {
-  // console.log("\nArchive %s\n",ArcName);
-  console.log('Volume:\t\t%s', (Flags & 1) ? 'yes' : 'no')
-  console.log('Comment:\t%s', (Flags & 2) ? 'yes' : 'no')
-  console.log('Locked:\t\t%s', (Flags & 4) ? 'yes' : 'no')
-  console.log('Solid:\t\t%s', (Flags & 8) ? 'yes' : 'no')
-  console.log('New naming:\t%s', (Flags & 16) ? 'yes' : 'no')
-  console.log('Recovery:\t%s', (Flags & 64) ? 'yes' : 'no')
-  console.log('Encr.headers:\t%s', (Flags & 128) ? 'yes' : 'no')
-  console.log('First volume:\t%s', (Flags & 256) ? 'yes' : 'no or older than 3.0')
-  console.log('---------------------------\n')
-}
-
-// export
-if (typeof process === 'object' && typeof require === 'function') { // NODE
-  module.exports = readRARContent
-} else if (typeof define === 'function' && define.amd) { // AMD
-  define('readRARContent', [], function() { return readRARContent })
-} else if (typeof window === 'object') { // WEB
-  window['readRARContent'] = readRARContent
-} else if (typeof importScripts === 'function') { // WORKER
+  // { // WORKER
   this['readRARContent'] = readRARContent
   this['readRARContentWorkerFS'] = readRARContentWorkerFS
 }

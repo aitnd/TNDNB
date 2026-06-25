@@ -142,7 +142,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     role: data.role || 'user'
                                 };
                             }
-                        } catch(e) { console.log(e); }
+                        } catch(e) {  }
                     }));
                     setHeadTeacherNames(prev => ({...prev, ...names}));
                     setCreatorProfiles(prev => ({...prev, ...profiles}));
@@ -176,7 +176,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 });
                 setDeviceCounts(counts);
             }, (error) => {
-                console.log("Ignored sessions snapshot error (Permissions):", error.message);
             });
 
             // Listen for latest results
@@ -213,7 +212,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 unsubSessions();
             };
         }, (error) => {
-            console.log("Ignored students snapshot error (Permissions):", error.message);
             setDeviceCounts({});
             setStudentLatestResults({});
         });

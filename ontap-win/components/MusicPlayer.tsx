@@ -13,7 +13,6 @@ const MusicPlayer: React.FC = () => {
           await audioRef.current.play();
           setIsPlaying(true);
         } catch (err) {
-          console.log("Trình duyệt chặn tự động phát nhạc, người dùng cần tương tác thủ công:", err);
           setIsPlaying(false);
         }
       }

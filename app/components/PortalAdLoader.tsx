@@ -56,14 +56,12 @@ const PortalAdLoader: React.FC = () => {
         script.src = 'https://pl28592472.effectivegatecpm.com/40/38/4c/40384cc1f853bc02181ba010564ff378.js';
         script.crossOrigin = 'anonymous';
         document.head.appendChild(script);
-        console.log('🟢 [Portal] Adsterra Script Loaded');
     };
 
     /** Gỡ bỏ script quảng cáo Adsterra */
     const removeAdsterraScript = () => {
         const el = document.getElementById('portal-adsterra-script');
         if (el) el.remove();
-        console.log('🔴 [Portal] Adsterra Script Removed');
     };
 
     /** Inject CSS ẩn toàn bộ phần tử quảng cáo (xử lý DOM thừa sau khi gỡ script) */

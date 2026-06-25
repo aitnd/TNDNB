@@ -1,5 +1,17 @@
 # CHANGELOG — [ontap-web]
 
+## [3.10.0] - 2026-06-25 - Thiết kế lại Admin Dashboard
+- **AdminStatsBar:** Thanh hiển thị thông số online slim realtime trực quan ở trên cùng.
+- **Giao diện 2 cột thông minh:**
+  - Cột trái: Thẻ học viên/giáo viên (`StudentCard`) được giữ nguyên, kết hợp thêm các nút phụ điều hướng nhanh.
+  - Cột phải: Lời chào thông minh theo giờ (`WelcomeHeader`), các nút thao tác nhanh dạng grid tiles (`QuickActionsGrid`).
+- **Haptic Feedback:** Tích hợp rung phản hồi (haptics) cho các thao tác trên thiết bị di động.
+- **Tối ưu hiệu năng (Lazy Loading):** Tách widget analytics (`CustomAnalyticsWidget`) thành chunk tải chậm (lazy-loaded chunk) chỉ tải khi admin click mở rộng để tiết kiệm băng thông tải trang ban đầu.
+
+## [3.9.9] - 2026-06-15 - Sửa lỗi & Đóng gói Phục hồi
+- **Đồng bộ hóa phiên bản:** Cập nhật phiên bản lên v3.9.9 để đồng bộ với root portal và ontap-win.
+- **QA & Testing:** Khởi chạy và xác minh chất lượng sản phẩm chuẩn bị deploy.
+
 ## [3.9.8] - 2026-06-13 - Nâng cấp bảo mật & Tách Chunk Tối ưu
 - **Nâng cấp SheetJS an toàn:** Chuyển đổi thành công thư viện đọc/ghi Excel từ `xlsx` (bản cũ lỗi thời) sang thư viện chính thức bảo mật `@sheetjs/xlsx` (v0.20.2) trên toàn hệ thống.
 - **Tối ưu hóa dung lượng Bundle (Tách Chunk Vite):** Cấu hình manualChunks tách biệt thư viện `@sheetjs/xlsx` thành file chunk riêng `vendor-xlsx-*.js` (488 kB) trong cả hai cấu hình Vite `ontap-web/vite.config.ts` và `ontap-win/vite.config.ts`. File bundle chính `vendor-*.js` giảm từ **1.4 MB** xuống còn **907 kB** (tiết kiệm 35% dung lượng tải ban đầu).

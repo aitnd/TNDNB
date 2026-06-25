@@ -263,7 +263,6 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
                 if (kickCount > 0) {
                     hadOldSessions = true;
                     await batch.commit();
-                    console.log(`[Session] Logged out ${kickCount} different device(s) for user ${userId}`);
                 }
             }
         }
@@ -334,7 +333,6 @@ const checkSuspiciousDeviceSwitching = async (userId: string, userProfile: any) 
         uniqueDevices.add(deviceKey);
     });
 
-    console.log(`[Session] User ${userId} used ${uniqueDevices.size} device(s) in last 24h`);
 
     if (uniqueDevices.size >= SUSPICIOUS_DEVICE_THRESHOLD) {
         console.warn(`[Session] ⚠️ Suspicious: User ${userId} switched ${uniqueDevices.size} devices in 24h!`);
@@ -398,7 +396,6 @@ const notifyAdminsAndTeachers = async (userId: string, userProfile: any, deviceC
         }
 
         await batch.commit();
-        console.log(`[Session] Sent suspicious activity alert to ${recipientIds.length} recipient(s)`);
     } catch (error) {
         console.error('[Session] Failed to send suspicious activity notification:', error);
     }

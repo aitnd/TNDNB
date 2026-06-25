@@ -183,7 +183,6 @@ class EmulatorJS {
                 response.text().then(body => {
                     let version = JSON.parse(body);
                     if (this.versionAsInt(this.ejs_version) < this.versionAsInt(version.version)) {
-                        console.log(`Using EmulatorJS version ${this.ejs_version} but the newest version is ${version.current_version}\nopen https://github.com/EmulatorJS/EmulatorJS to update`);
                     }
                 })
             }
@@ -216,13 +215,13 @@ class EmulatorJS {
             case 1: // Force mobile
             case "1":
             case "mobile":
-                if (this.debug) { console.log("Force mobile mode is enabled"); }
+                if (this.debug) {  }
                 this.config.browserMode = 1;
                 break;
             case 2: // Force desktop
             case "2":
             case "desktop":
-                if (this.debug) { console.log("Force desktop mode is enabled"); }
+                if (this.debug) {  }
                 this.config.browserMode = 2;
                 break;
             default: // Auto detect
@@ -386,7 +385,7 @@ class EmulatorJS {
         // Disabled
         if (period === 0 || isNaN(period)) return;
         if (this.started) this.gameManager.saveSaveFiles();
-        if (this.debug) console.log("Saving every", period, "miliseconds");
+        if (this.debug) 
         this.saveSaveInterval = setInterval(() => {
             if (this.started) this.gameManager.saveSaveFiles();
         }, period);
@@ -553,7 +552,7 @@ class EmulatorJS {
             if (typeof log === "undefined") log = true;
             if (!this.config.langJson[text] && log) {
                 if (!this.missingLang.includes(text)) this.missingLang.push(text);
-                if (this.debug) console.log(`Translation not found for '${text}'. Language set to '${this.config.language}'`);
+                if (this.debug) 
             }
             return this.config.langJson[text] || text;
         }
@@ -577,7 +576,6 @@ class EmulatorJS {
         }
     }
     startGameError(message) {
-        console.log(message);
         this.textElem.innerText = message;
         this.textElem.classList.add("ejs_error_text");
 
@@ -680,7 +678,6 @@ class EmulatorJS {
                 this.textElem.innerText = this.localization("Download Game Core") + progress;
             }, false, { responseType: "arraybuffer", method: "GET" });
             if (res === -1) {
-                console.log("File not found, attemping to fetch from emulatorjs cdn.");
                 console.error("**THIS METHOD IS A FAILSAFE, AND NOT OFFICIALLY SUPPORTED. USE AT YOUR OWN RISK**");
                 let version = this.ejs_version.endsWith("-beta") ? "nightly" : this.ejs_version;
                 res = await this.downloadFile(`https://cdn.emulatorjs.org/${version}/data/${corePath}`, (progress) => {
@@ -1018,17 +1015,15 @@ class EmulatorJS {
             parent: this.elements.parent,
             print: (msg) => {
                 if (this.debug) {
-                    console.log(msg);
                 }
             },
             printErr: (msg) => {
                 if (this.debug) {
-                    console.log(msg);
                 }
             },
             totalDependencies: 0,
             locateFile: function (fileName) {
-                if (this.debug) console.log(fileName);
+                if (this.debug) 
                 if (fileName.endsWith(".wasm")) {
                     return URL.createObjectURL(new Blob([wasmData], { type: "application/wasm" }));
                 } else if (fileName.endsWith(".worker.js")) {
@@ -1054,7 +1049,7 @@ class EmulatorJS {
             const args = [];
             if (this.debug) args.push("-v");
             args.push("/" + this.fileName);
-            if (this.debug) console.log(args);
+            if (this.debug) 
             this.Module.callMain(args);
             if (typeof this.config.softLoad === "number" && this.config.softLoad > 0) {
                 this.resetTimeout = setTimeout(() => {
@@ -1145,7 +1140,7 @@ class EmulatorJS {
             if (document.activeElement !== this.elements.parent && this.config.noAutoFocus !== true) this.elements.parent.focus();
         })
         this.addEventListener(window, "resize", this.handleResize.bind(this));
-        //this.addEventListener(window, "blur", e => console.log(e), true); //TODO - add "click to make keyboard keys work" message?
+        //this.addEventListener(window, "blur", e =>  //TODO - add "click to make keyboard keys work" message?
 
         let counter = 0;
         this.elements.statePopupPanel = this.createPopup("", {}, true);
@@ -2358,7 +2353,7 @@ class EmulatorJS {
         }
 
         if (this.config.buttonOpts) {
-            if (this.debug) console.log(this.config.buttonOpts);
+            if (this.debug) 
             if (this.config.buttonOpts.playPause.visible === false) {
                 pauseButton.style.display = "none";
                 playButton.style.display = "none";
@@ -4437,7 +4432,7 @@ class EmulatorJS {
     menuOptionChanged(option, value) {
         this.saveSettings();
         this.allSettings[option] = value;
-        if (this.debug) console.log(option, value);
+        if (this.debug) 
         if (!this.gameManager) return;
         this.handleSpecialOptions(option, value);
         this.gameManager.setVariable(option, value);
@@ -4620,7 +4615,6 @@ class EmulatorJS {
         this.disksMenu.style.display = "none";
 
         if (this.debug) {
-            console.log("Available core options", allOpts);
         }
 
         if (this.config.defaultOptions) {
@@ -5205,7 +5199,6 @@ class EmulatorJS {
         this.settingsMenu.style.display = "none";
 
         if (this.debug) {
-            console.log("Available core options", allOpts);
         }
 
         if (this.config.defaultOptions) {
@@ -5425,7 +5418,6 @@ class EmulatorJS {
             if (this.Module && this.Module.getNativeResolution) {
                 try {
                     const res = this.Module.getNativeResolution();
-                    console.log("Native resolution from Module:", res);
                     return res;
                 } catch (error) {
                     console.error("Failed to get native resolution:", error);
@@ -5452,12 +5444,6 @@ class EmulatorJS {
         };
 
         this.netplay.simulateInput = (player, index, value) => {
-            console.log("netplay.simulateInput called:", {
-                player,
-                index,
-                value,
-                playerIndex: this.netplayGetUserIndex()
-            });
             if (!this.isNetplay || !this.gameManager || !this.gameManager.functions || !this.gameManager.functions.simulateInput) {
                 console.error("Cannot simulate input: Netplay not active or gameManager.functions.simulateInput undefined");
                 return;
@@ -5551,7 +5537,6 @@ class EmulatorJS {
             try {
                 const response = await fetch(this.netplay.url + "/list?domain=" + window.location.host + "&game_id=" + this.config.gameId);
                 const data = await response.text();
-                console.log("Fetched open rooms:", data);
                 return JSON.parse(data);
             } catch (error) {
                 console.error("Error fetching open rooms:", error);
@@ -5634,19 +5619,12 @@ class EmulatorJS {
             submit.innerText = this.localization("Submit");
             popup.appendChild(submit);
             this.addEventListener(submit, "click", () => {
-                console.log("Submit button clicked");
                 if (!rninput.value.trim()) {
-                    console.log("Room name is empty, aborting");
                     return;
                 }
                 const roomName = rninput.value.trim();
                 const maxPlayers = parseInt(maxinput.value);
                 const password = pwinput.value.trim();
-                console.log("Creating room with:", {
-                    roomName,
-                    maxPlayers,
-                    password
-                });
                 this.netplayOpenRoom(roomName, maxPlayers, password);
                 popups[0].remove();
             });
@@ -5661,7 +5639,6 @@ class EmulatorJS {
         this.netplayInitWebRTCStream = async () => {
             if (this.netplay.localStream)
                 return;
-            console.log("Initializing WebRTC stream for owner...");
             const { width: nativeWidth, height: nativeHeight } = this.getNativeResolution();
             if (this.canvas) {
                 this.canvas.width = nativeWidth;
@@ -5669,10 +5646,6 @@ class EmulatorJS {
             }
             if (this.netplay.owner && this.Module && this.Module.setCanvasSize) {
                 this.Module.setCanvasSize(nativeWidth, nativeHeight);
-                console.log("Set emulator canvas size to native:", {
-                    width: nativeWidth,
-                    height: nativeHeight
-                });
             }
 
             const stream = this.collectScreenRecordingMediaTracks(this.canvas, 30);
@@ -5695,14 +5668,8 @@ class EmulatorJS {
                         max: 30
                     }
                 }).catch(err => console.error("Constraint error:", err));
-                console.log("Track settings:", videoTrack.getSettings());
             }
             stream.getTracks().forEach(track => {
-                console.log("Track:", {
-                    kind: track.kind,
-                    enabled: track.enabled,
-                    muted: track.muted
-                });
                 track.onmute = () => console.warn("Track muted:", track.id);
                 track.onended = () => console.warn("Track ended:", track.id);
             });
@@ -5719,7 +5686,7 @@ class EmulatorJS {
 
             if (this.netplay.owner) {
                 dataChannel = pc.createDataChannel('inputs');
-                dataChannel.onopen = () => console.log(`Data channel opened for peer ${peerId}`);
+                dataChannel.onopen = () => 
                 dataChannel.onmessage = (event) => {
                     const data = JSON.parse(event.data);
                     if (data.type === "host-left") {
@@ -5746,7 +5713,7 @@ class EmulatorJS {
             } else {
                 pc.ondatachannel = (event) => {
                     dataChannel = event.channel;
-                    dataChannel.onopen = () => console.log(`Data channel opened for peer ${peerId}`);
+                    dataChannel.onopen = () => 
                     dataChannel.onmessage = (event) => {
                         const data = JSON.parse(event.data);
                         if (data.type === "host-left") {
@@ -5754,7 +5721,6 @@ class EmulatorJS {
                             this.netplayLeaveRoom();
                             return;
                         }
-                        console.log(`Received input from host ${peerId}:`, data);
                         if (this.gameManager && this.gameManager.functions && this.gameManager.functions.simulateInput) {
                             this.gameManager.functions.simulateInput(data.player, data.index, data.value);
                         } else {
@@ -5867,10 +5833,8 @@ class EmulatorJS {
                 console.error("showVideoOverlay: videoElement is not initialized");
                 return;
             }
-            console.log("showVideoOverlay called, videoElement exists:", videoElement);
 
             if (videoElement.parentElement) {
-                console.log("Removing video element from current parent:", videoElement.parentElement);
                 videoElement.parentElement.removeChild(videoElement);
             }
 
@@ -5892,19 +5856,15 @@ class EmulatorJS {
             videoElement.style.display = "";
             videoElement.style.objectFit = "contain";
             document.body.appendChild(videoElement);
-            console.log("Video overlay added to DOM, styles:", videoElement.style.cssText);
 
             const playVideo = async() => {
-                console.log("Attempting to play video, readyState:", videoElement.readyState, "Paused:", videoElement.paused, "Ended:", videoElement.ended, "Muted:", videoElement.muted);
                 try {
                     await videoElement.play();
-                    console.log("Video playback started successfully, currentTime:", videoElement.currentTime);
                 } catch (error) {
                     console.error("Video play error:", error);
                     if (this.isMobile) {
                         this.promptUserInteraction(videoElement);
                     } else {
-                        console.log("Autoplay failed on desktop, but user interaction not required for muted video");
                     }
                 }
                 if (videoElement.videoWidth === 0 || videoElement.videoHeight === 0) {
@@ -5913,10 +5873,6 @@ class EmulatorJS {
                         videoHeight: videoElement.videoHeight
                     });
                 } else {
-                    console.log("Video dimensions:", {
-                        videoWidth: videoElement.videoWidth,
-                        videoHeight: videoElement.videoHeight
-                    });
                 }
             };
             playVideo();
@@ -5960,7 +5916,6 @@ class EmulatorJS {
                     if (videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
                         if (!this.netplay.lockedAspectRatio) {
                             this.netplay.lockedAspectRatio = videoElement.videoWidth / videoElement.videoHeight;
-                            console.log("Locked aspect ratio:", this.netplay.lockedAspectRatio);
                         }
                         break;
                     }
@@ -6027,7 +5982,6 @@ class EmulatorJS {
                 return;
             }
             if (this.netplay.socket && this.netplay.socket.connected) {
-                console.log("Socket already connected, reusing:", this.netplay.socket.id);
                 callback();
                 return;
             }
@@ -6036,10 +5990,8 @@ class EmulatorJS {
                 this.displayMessage("Network configuration error", 5000);
                 return;
             }
-            console.log("Initializing new Socket.IO connection to:", this.netplay.url);
             this.netplay.socket = io(this.netplay.url);
             this.netplay.socket.on("connect", () => {
-                console.log("Socket.IO connected:", this.netplay.socket.id);
                 callback();
             });
             this.netplay.socket.on("connect_error", (error) => {
@@ -6069,11 +6021,9 @@ class EmulatorJS {
 
                 this.netplay.previousPlayers = currentPlayers;
                 
-                console.log("Users updated:", users);
                 this.netplay.players = users;
                 this.netplayUpdatePlayersTable();
                 if (this.netplay.owner) {
-                    console.log("Owner setting up WebRTC for updated users...");
                     this.netplayInitWebRTCStream().then(() => {
                         Object.keys(users).forEach(playerId => {
                             if (playerId !== this.netplay.playerID) {
@@ -6084,7 +6034,6 @@ class EmulatorJS {
                                 }
                                 const peerId = socketId;
                                 if (!this.netplay.peerConnections[peerId]) {
-                                    console.log("Creating peer connection for", peerId);
                                     this.netplayCreatePeerConnection(peerId);
                                 }
                             }
@@ -6096,12 +6045,6 @@ class EmulatorJS {
             this.netplay.socket.on("data-message", (data) => this.netplayDataMessage(data));
             this.netplay.socket.on("webrtc-signal", async(data) => {
                 const { sender, offer, candidate, answer, requestRenegotiate } = data;
-                console.log(`Received WebRTC signal from ${sender}:`, {
-                    offer: !!offer,
-                    answer: !!answer,
-                    candidate: !!candidate,
-                    requestRenegotiate
-                });
                 if (!sender && !requestRenegotiate) {
                     console.warn("Ignoring signal with no sender and no renegotiation request", data);
                     return;
@@ -6121,7 +6064,6 @@ class EmulatorJS {
                 }
 
                 if (!pcData && sender) {
-                    console.log("No existing peer connection for", sender, "- creating new one");
                     pcData = {
                         pc: this.netplayCreatePeerConnection(sender),
                         dataChannel: null,
@@ -6132,11 +6074,9 @@ class EmulatorJS {
                 const pc = pcData.pc;
                 try {
                     if (offer) {
-                        console.log("Processing offer from", sender);
                         await pc.setRemoteDescription(new RTCSessionDescription(offer));
 
                         if (pcData.iceCandidateQueue.length > 0) {
-                            console.log(`Processing ${pcData.iceCandidateQueue.length} queued ICE candidates.`);
                             for (const queuedCandidate of pcData.iceCandidateQueue) {
                                 await pc.addIceCandidate(new RTCIceCandidate(queuedCandidate));
                             }
@@ -6145,17 +6085,14 @@ class EmulatorJS {
 
                         const answer = await pc.createAnswer();
                         await pc.setLocalDescription(answer);
-                        console.log("Sending answer to", sender);
                         this.netplay.socket.emit("webrtc-signal", {
                             target: sender,
                             answer: pc.localDescription
                         });
                     } else if (answer) {
-                        console.log("Processing answer from", sender);
                         await pc.setRemoteDescription(new RTCSessionDescription(answer));
 
                         if (pcData.iceCandidateQueue.length > 0) {
-                            console.log(`Processing ${pcData.iceCandidateQueue.length} queued ICE candidates.`);
                             for (const queuedCandidate of pcData.iceCandidateQueue) {
                                 await pc.addIceCandidate(new RTCIceCandidate(queuedCandidate));
                             }
@@ -6164,18 +6101,14 @@ class EmulatorJS {
 
                     } else if (candidate) {
                         if (pc.remoteDescription) {
-                            console.log("Adding ICE candidate from", sender);
                             await pc.addIceCandidate(new RTCIceCandidate(candidate));
                         } else {
-                            console.log("Remote description not set. Queueing ICE candidate from", sender);
                             pcData.iceCandidateQueue.push(candidate);
                         }
                     } else if (requestRenegotiate && this.netplay.owner) {
-                        console.log("Owner handling renegotiation request...");
                         Object.keys(this.netplay.peerConnections).forEach(peerId => {
                             if (peerId && this.netplay.peerConnections[peerId]) {
                                 const peerConn = this.netplay.peerConnections[peerId].pc;
-                                console.log("Closing and recreating peer connection for", peerId);
                                 peerConn.close();
                                 delete this.netplay.peerConnections[peerId];
                                 this.netplayCreatePeerConnection(peerId);
@@ -6315,7 +6248,6 @@ class EmulatorJS {
             this.isNetplay = true;
             this.netplay.inputs = {};
             this.netplay.owner = isOwner;
-            console.log("Room joined with extra:", this.netplay.extra);
 
             if (this.netplay.roomNameElem) {
                 this.netplay.roomNameElem.innerText = roomName;
@@ -6350,7 +6282,6 @@ class EmulatorJS {
                 this.canvas.style.display = "none";
                 if (!this.netplayCanvas.parentElement) {
                     this.elements.parent.appendChild(this.netplayCanvas);
-                    console.log("Appended netplayCanvas to this.elements.parent:", this.elements.parent);
                 }
                 this.netplayCanvas.width = nativeWidth;
                 this.netplayCanvas.height = nativeHeight;
@@ -6367,13 +6298,6 @@ class EmulatorJS {
                 });
 
                 const parentStyles = window.getComputedStyle(this.elements.parent);
-                console.log("Parent container styles:", {
-                    display: parentStyles.display,
-                    visibility: parentStyles.visibility,
-                    opacity: parentStyles.opacity,
-                    position: parentStyles.position,
-                    zIndex: parentStyles.zIndex
-                });
 
                 if (this.elements.bottomBar && this.elements.bottomBar.cheat && this.elements.bottomBar.cheat[0]) {
                     this.netplay.oldStyles = [this.elements.bottomBar.cheat[0].style.display];
@@ -6382,19 +6306,12 @@ class EmulatorJS {
                 if (this.gameManager && this.gameManager.resetCheat) {
                     this.gameManager.resetCheat();
                 }
-                console.log("Player 2 joined, awaiting WebRTC stream...");
                 this.elements.parent.focus();
 
                 if (this.gameManager && this.gameManager.functions && this.gameManager.functions.simulateInput) {
                     const originalSimulateInput = this.gameManager.functions.simulateInput;
                     this.gameManager.functions.simulateInput = (player, index, value) => {
                         const playerIndex = this.netplayGetUserIndex();
-                        console.log("Player 2 input:", {
-                            player,
-                            index,
-                            value,
-                            playerIndex
-                        });
                        Object.values(this.netplay.peerConnections).forEach((pcData) => {
                         if (
                             pcData.pc &&
@@ -6560,7 +6477,6 @@ class EmulatorJS {
         this.netplayLeaveRoom = () => {
             EJS_INSTANCE.updateNetplayUI(false);
 
-            console.log("Leaving netplay room...");
 
             if (this.netplay.owner && this.netplaySendMessage) {
                 this.netplaySendMessage({
@@ -6695,7 +6611,6 @@ class EmulatorJS {
                         frameAck: inFrame
                     });
                     if (this.netplay.owner) {
-                        console.log("Owner processing input:", value.connected_input);
                         if (this.gameManager && this.gameManager.functions && this.gameManager.functions.simulateInput) {
                             this.gameManager.functions.simulateInput(
                                 value.connected_input[0],
@@ -6708,7 +6623,6 @@ class EmulatorJS {
                 });
             }
             if (data.frameData) {
-                console.log("Received frame data on Player 2:", data.frameData);
                 if (!this.canvas) {
                     console.error("Canvas unavailable for frame data processing");
                     return;
@@ -6726,7 +6640,6 @@ class EmulatorJS {
                         console.error("reconstructFrame is undefined");
                     }
                 } else {
-                    console.log("Frame data indicates content, relying on WebRTC stream");
                 }
             }
         };
@@ -6734,7 +6647,6 @@ class EmulatorJS {
         this.netplaySendMessage = (data) => {
             if (this.netplay.socket && this.netplay.socket.connected) {
                 this.netplay.socket.emit("data-message", data);
-                console.log("Sent data message:", data);
             } else {
                 console.error("Cannot send message: Socket is not connected");
             }

@@ -229,7 +229,6 @@ const AppContent: React.FC = () => {
           const remoteVersion = config.app_links?.version;
           const downloadUrl = config.app_links?.windows;
 
-          console.log(`Current: ${currentVersion}, Remote: ${remoteVersion}`);
 
           if (currentVersion && remoteVersion && downloadUrl) {
             const v1 = currentVersion.split('.').map(Number);
@@ -943,6 +942,9 @@ const AppContent: React.FC = () => {
                 onHistoryClick={() => navigate('/ontap/lichsu')}
                 onClassClick={() => handleTopNavNavigate((userProfile?.role === 'hoc_vien') ? 'my_class' : 'class_management')}
                 onOnlineExamClick={() => navigate('/ontap/quanlythi')}
+                onNotificationClick={() => navigate('/ontap/homthu')}
+                onStatsClick={() => navigate('/ontap/thongke')}
+                onSettingsClick={() => navigate('/ontap/taikhoan')}
               />
             ) : (
               <WelcomeModal onStart={handleStart} onLoginClick={() => navigate('/ontap/dangnhap')} onRegisterClick={() => navigate('/ontap/dangky')} />

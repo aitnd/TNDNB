@@ -62,13 +62,15 @@ describe('AccountScreen Component Tests', () => {
     }
   };
 
-  it('1. Render thông tin cá nhân của người dùng đăng nhập chính xác', () => {
+  it('1. Render thông tin cá nhân của người dùng đăng nhập chính xác', async () => {
     render(<AccountScreen {...defaultProps} />);
     
     // Check personal info rendering
-    expect(screen.getByText('Tài khoản của tôi')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Quản trị viên')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('admin@tndnb.com')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Tài khoản của tôi')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('Quản trị viên')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('admin@tndnb.com')).toBeInTheDocument();
+    });
   });
 
   it('2. Hiển thị danh sách quản lý người dùng đối với quyền Admin/Manager', async () => {
@@ -123,7 +125,9 @@ describe('AccountScreen Component Tests', () => {
     const disableButton = screen.getByTitle('Vô hiệu hóa tài khoản');
     fireEvent.click(disableButton);
 
-    expect(window.confirm).toHaveBeenCalledWith('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này? (Tài khoản sẽ bị khóa)');
-    expect(updateDoc).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(window.confirm).toHaveBeenCalledWith('Bạn có chắc chắn muốn vô hiệu hóa tài khoản này? (Tài khoản sẽ bị khóa)');
+      expect(updateDoc).toHaveBeenCalled();
+    });
   });
 });

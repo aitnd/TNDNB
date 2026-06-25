@@ -300,7 +300,7 @@ export const markNotificationAsRead = async (notificationId: string, userId: str
             return; // Success, it was personal
         } catch (e) {
             // If error is "not found", try global
-            // console.log("Not found in personal, trying global...");
+            // 
         }
 
         // Try Global

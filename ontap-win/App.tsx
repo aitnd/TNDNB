@@ -127,7 +127,6 @@ const AppContent: React.FC = () => {
           const remoteVersion = config.app_links?.version;
           const downloadUrl = config.app_links?.windows;
 
-          console.log(`Current: ${currentVersion}, Remote: ${remoteVersion}`);
 
           if (currentVersion && remoteVersion && downloadUrl) {
             const v1 = currentVersion.split('.').map(Number);
@@ -246,7 +245,6 @@ const AppContent: React.FC = () => {
                 };
                 setUserProfile(profile);
                 setUserName(profile.full_name);
-                console.log('Restored offline session from localStorage');
               }
             }
             // Nếu online, Firebase auth sẽ tự xử lý
@@ -297,7 +295,6 @@ const AppContent: React.FC = () => {
         const savedSession = localStorage.getItem('rememberSession');
         if (!navigator.onLine && userProfile) {
           // Keep the current offline profile
-          console.log("Running in Offline Mode");
         } else if (!savedSession) {
           // Chỉ xóa profile nếu không có session lưu
           setUserProfile(null);
@@ -726,6 +723,9 @@ const AppContent: React.FC = () => {
                 onHistoryClick={() => navigate('/ontap/lichsu')}
                 onClassClick={() => handleTopNavNavigate((userProfile?.role === 'hoc_vien') ? 'my_class' : 'class_management')}
                 onOnlineExamClick={() => navigate('/ontap/quanlythi')}
+                onNotificationClick={() => navigate('/ontap/homthu')}
+                onStatsClick={() => navigate('/ontap/thongke')}
+                onSettingsClick={() => navigate('/ontap/taikhoan')}
               />
             ) : (
               <WelcomeModal onStart={handleStart} onLoginClick={() => navigate('/ontap/dangnhap')} onRegisterClick={() => navigate('/ontap/dangky')} />

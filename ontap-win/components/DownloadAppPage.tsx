@@ -29,7 +29,6 @@ const DownloadAppPage: React.FC = () => {
                         }
                     }
                 } catch (e) {
-                    console.log('Could not fetch Windows link from GitHub:', e);
                 }
             } else {
                 setWindowsLink(data.app_links.windows);

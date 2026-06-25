@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.10.0] - 2026-06-25
+### Tính năng Mới & Redesign Dashboard (Web & App Win)
+- **Thiết kế lại Admin Dashboard (Phương án C "Hybrid Smart"):**
+  - **AdminStatsBar:** Tích hợp thanh hiển thị thông số online slim realtime trực quan ở trên cùng, thay thế cho OnlineStatsWidget nặng nề.
+  - **Giao diện 2 cột thông minh:** 
+    - Cột trái: Giữ nguyên thẻ học viên/giáo viên (`StudentCard`) và bổ sung các nút phụ điều hướng nhanh.
+    - Cột phải: Lời chào thông minh theo giờ (`WelcomeHeader`), các nút thao tác nhanh dạng grid tiles (`QuickActionsGrid`).
+  - **Tối ưu hiệu năng (Lazy Loading):** Tách widget analytics (`CustomAnalyticsWidget`) thành chunk tải chậm (lazy-loaded chunk) chỉ tải khi admin click mở rộng để tiết kiệm băng thông tải trang ban đầu.
+  - **Haptic Feedback:** Tích hợp rung phản hồi (haptics) cho các thao tác trên thiết bị di động (bản Web).
+- **Đồng bộ hóa Windows App (ontap-win):** Áp dụng toàn bộ cấu trúc thiết kế Dashboard Phương án C sang ứng dụng Windows/Electron để đảm bảo trải nghiệm người dùng nhất quán.
+- **Sửa lỗi TypeScript:** Sửa lỗi spread types TS2698 liên quan tới thuộc tính `showPortalAds` trong `UsageConfigPanel.tsx` của bản Windows.
+
+## [3.9.9] - 2026-06-15
+- **QA Loop & Khôi phục hệ thống:** Chạy lại quy trình build tích hợp và kiểm tra chất lượng tự động để chuẩn bị phát hành.
+- **Sắp xếp cấu trúc code:** Đồng bộ hóa phiên bản build của portal root, ontap-web, và ontap-win thành v3.9.9.
+
 ## [3.9.8] - 2026-06-13
 ### Security Upgrades & Performance Tuning (Web & App Win)
 - **Nâng cấp SheetJS an toàn:** Chuyển đổi thành công thư viện đọc/ghi Excel từ `xlsx` (vũ cũ lỗi thời) sang thư viện chính thức bảo mật `@sheetjs/xlsx` (v0.20.2) trên toàn hệ thống (bao gồm cả root portal, ontap-web và ontap-win).

@@ -2,37 +2,34 @@
 📋 HANDOVER DOCUMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📍 Đang làm: Tối ưu hóa & Vá lỗi hệ thống (Fix All & Refactor)
-🔢 Đến bước: Hoàn tất build và đóng gói v3.9.7 (Web & Win)
+📍 Đang làm: Tối ưu hóa & Hoàn tất đóng gói build v3.9.9
+🔢 Đến bước: Hoàn tất build tất cả các bản (Root Portal, Web, Win) và kiểm tra QA thành công 100%
 
 ✅ ĐÃ XONG:
-   - Sửa lỗi ESLint circular reference nguy kịch (downgrade eslint-config-next và khôi phục .eslintrc.json) ✓
-   - Vá bảo mật tự động `@grpc/grpc-js` qua npm audit fix ✓
-   - Refactor 2 lỗi React Hook useEffect missing dependency và useCallback trong tai-khoan và CourseManager ✓
-   - Dọn sạch 9 file log rác ở root ✓
-   - Đồng bộ hóa file `.env` thành `.env.example` và giữ lại duy nhất `.env.local` ở máy local ✓
-   - Tăng phiên bản đồng bộ lên `v3.9.7` và ghi CHANGELOG ở cả 3 nơi ✓
-   - Build thành công bản Web (Vite) và đóng gói bản Windows Setup.exe không lỗi ✓
-   - Commit toàn bộ code sạch sẽ lên nhánh backup `backup/before-refactor-all` ✓
+   - Sửa lỗi môi trường chạy test ở `ontap-web` bằng việc cài đặt `@testing-library/dom` và các packages phụ trợ. ✓
+   - Khắc phục triệt để các cảnh báo `act(...)` bất đồng bộ trong các test case của `AccountScreen.test.tsx` (bản Web và Windows) bằng `waitFor` ➡️ Bộ test đạt **100% PASS (5/5 tests)** sạch sẽ. ✓
+   - Đồng bộ hóa phiên bản lên **`v3.9.9`** trên toàn bộ các file `package.json` và `CHANGELOG.md` của cả 3 sub-projects. ✓
+   - Vá bảo mật dependencies bằng việc nâng cấp thành công `firebase-admin` lên **`11.11.1`** tương thích tối đa với Next.js v14. ✓
+   - Tránh breaking changes: Đã rollback Next.js về bản `14.2.35` để sửa lỗi compile Turbopack v16. ✓
+   - Chạy lệnh `npx next build` và `vite build` cho web & win thành công tốt đẹp, xuất các pages tĩnh mượt mà. ✓
 
 ⏳ CÒN LẠI:
-   - Gộp nhánh `backup/before-refactor-all` vào nhánh chính khi deploy.
-   - Nâng cấp Next.js và xlsx (SheetJS) thủ công lên bản Major (nếu cần thiết và được phê duyệt).
+   - Đóng gói installer cho Windows (electron:build) nếu cần phát hành file setup.exe.
+   - Gộp nhánh `backup/upgrade-security-complete-2026-06-13` vào nhánh chính và commit/push code sạch sẽ lên git.
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-   - Giữ nguyên phiên bản Next.js và xlsx ở đợt này để tránh breaking changes.
-   - Tách logic state update ra khỏi Firestore listeners để tối ưu hóa hiệu năng và tránh loop subscription.
-   - Hạ cấp eslint-config-next về v14 để tương thích hoàn toàn với Next.js 14.
+   - Sử dụng Next.js v14 và firebase-admin v11.11.1 làm cấu hình chuẩn bảo mật mà không gây đứt gãy tương thích.
+   - Giữ cấu hình manualChunks để tách riêng gói SheetJS (`@sheetjs/xlsx`) giảm tải dung lượng bundle tải ban đầu.
 
 ⚠️ LƯU Ý CHO SESSION SAU:
-   - Bản build Web nằm tại `public/ontap/` (được portal phục vụ trực tiếp).
-   - Bản build Windows Setup.exe nằm tại `ontap-win/release/Onthi-3.9.7-Setup.exe`.
-   - Nếu dev mới join, copy `.env.example` thành `.env.local` và tự cấu hình Firebase / Supabase API keys.
+   - Bản build client tĩnh của Web nằm tại `public/ontap/`.
+   - Bản build tĩnh của Win nằm tại `ontap-win/dist/`.
+   - Next.js Portal chạy mượt mà tại cổng `http://localhost:3000`.
 
 📁 FILES QUAN TRỌNG:
-   - .brain/session.json (tiến độ chi tiết)
+   - .brain/session.json (progress chi tiết)
    - .brain/brain.json (kiến thức tĩnh của dự án)
-   - docs/reports/audit_2026-06-12.md (báo cáo chẩn đoán & resolution history)
+   - docs/reports/build_report.md (báo cáo QA & Build chi tiết v3.9.9)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 Đã lưu! Để tiếp tục: Gõ /recap

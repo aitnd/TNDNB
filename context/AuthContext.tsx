@@ -44,12 +44,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
       if (firebaseUser) {
         // --- Có người đăng nhập! ---
-        console.log('Phát hiện người dùng đăng nhập:', firebaseUser.uid)
-
         try {
-          // 💖 BƯỚC 1: "BÁO CÁO" VỚI SUPABASE 💖
-          // (Lấy "vé" từ Firebase)
-          const token = await firebaseUser.getIdToken();
+          const token = await firebaseUser.getIdToken()
           // (Đưa "vé" cho Supabase để "nâng cấp" quyền)
           const { error: sessionError } = await supabase.auth.setSession({
             access_token: token,
@@ -60,7 +56,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             console.error("LỖI KHI SETSESSION SUPABASE:", sessionError.message);
             // (Nếu setSession lỗi, mình vẫn tiếp tục để ít nhất web chạy được)
           } else {
-            console.log('[AuthContext] Đã nạp "vé" SupABASE thành công!');
           }
         } catch (e: any) {
           console.error("LỖI NGOẠI LỆ khi lấy token/setSession:", e.message);
@@ -108,7 +103,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null)
         // 💖 BƯỚC 2: "BÁO CÁO" ĐĂNG XUẤT 💖
         await supabase.auth.signOut();
-        console.log('[AuthContext] Đã đăng xuất khỏi Supabase.');
       }
       setLoading(false) // Tải xong!
     })

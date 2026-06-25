@@ -1,79 +1,59 @@
 {
-  "updated_at": "2026-06-12T15:00:00+07:00",
+  "updated_at": "2026-06-15T16:53:00+07:00",
   "working_on": {
-    "feature": "Tối ưu hóa & Vá lỗi hệ thống (Fix All & Refactor)",
-    "task": "Sửa lỗi ESLint, dọn dẹp file log rác, đồng bộ .env, vá bảo mật và refactor React hooks hoàn tất",
+    "feature": "Đồng bộ và hoàn tất build v3.9.9 cho TNDNB",
+    "task": "Chạy QA Loop, vá bảo mật firebase-admin v11, sửa test suite client và build thành công portal",
     "status": "completed",
-    "last_run": "2026-06-12T14:51:00+07:00",
+    "last_run": "2026-06-15T14:59:00+07:00",
     "last_run_url": "http://localhost:3000",
     "files": [
-      "eslint.config.mjs",
-      ".eslintrc.json",
       "package.json",
-      ".env.example",
-      ".env",
-      "app/quan-ly/tai-khoan/page.tsx",
-      "components/CourseManager.tsx"
+      "CHANGELOG.md",
+      "ontap-web/package.json",
+      "ontap-web/CHANGELOG.md",
+      "ontap-web/components/AccountScreen.test.tsx",
+      "ontap-win/package.json",
+      "ontap-win/CHANGELOG.md",
+      "ontap-win/components/AccountScreen.test.tsx"
     ],
     "blockers": [],
-    "notes": "Đã sửa thành công lỗi ESLint circular reference bằng cách hạ cấp eslint-config-next về bản v14 khớp Next.js, dọn sạch log rác, đồng bộ hóa cấu hình .env, vá bảo mật tự động và sửa triệt để 2 lỗi React hook useEffect missing dependency."
+    "notes": "Chạy thành công QA loop và build tất cả các bản. Tách độc lập SheetJS và vá thành công firebase-admin@11.11.1 trên Next.js v14."
   },
   "pending_tasks": [],
   "recent_changes": [
     {
-      "timestamp": "2026-06-12T15:00:00+07:00",
+      "timestamp": "2026-06-15T16:53:00+07:00",
       "type": "refactor",
-      "description": "Sửa lỗi ESLint Circular Reference, dọn dẹp các file log rác ở root, đồng bộ hóa .env thành .env.example, vá bảo mật tự động và sửa triệt để 2 lỗi React hook useEffect missing dependency.",
+      "description": "Sửa lỗi môi trường testing library của client, bọc waitfor cho sự kiện act trong file test, nâng cấp firebase-admin lên v11 và đồng bộ phiên bản v3.9.9.",
       "files": [
-        "eslint.config.mjs",
-        ".eslintrc.json",
         "package.json",
-        ".env.example",
-        ".env",
-        "app/quan-ly/tai-khoan/page.tsx",
-        "components/CourseManager.tsx"
+        "ontap-web/package.json",
+        "ontap-web/components/AccountScreen.test.tsx",
+        "ontap-win/package.json",
+        "ontap-win/components/AccountScreen.test.tsx"
       ]
-    },
-    {
-      "timestamp": "2026-06-11T15:00:00+07:00",
-      "type": "feature",
-      "description": "Phân tách hoàn toàn cấu hình vai trò Ban Lãnh Đạo (leader) và Quản Lý (manager) trong database Firestore và UI cấu hình.",
-      "files": [
-        "ontap-win/services/adminConfigService.ts",
-        "ontap-web/services/adminConfigService.ts",
-        "ontap-win/components/UsageConfigPanel.tsx",
-        "ontap-web/components/UsageConfigPanel.tsx",
-        "ontap-win/components/AccountScreen.tsx",
-        "ontap-web/components/AccountScreen.tsx",
-        "ontap-win/components/ClassManagementScreen.tsx",
-        "ontap-web/components/ClassManagementScreen.tsx",
-        "app/quan-ly/dang-bai/page.tsx",
-        "app/quan-ly/dang-bai/sua/[postId]/page.tsx"
-      ]
-    },
-    {
-      "timestamp": "2026-06-11T08:22:00+07:00",
-      "type": "security",
-      "description": "Triển khai khóa chuột phải trên Web (selective) và App Win (global), cho phép admin bỏ qua.",
-      "files": ["ontap-win/App.tsx", "ontap-web/App.tsx"]
     }
   ],
   "errors_encountered": [
     {
-      "error": "Lỗi build Electron EPERM do folder release bị khóa",
-      "solution": "Tắt các ứng dụng chạy ngầm trước khi đóng gói bằng taskkill.",
+      "error": "Lỗi biên dịch Turbopack và dynamic import ssr false khi nâng cấp Next.js v16",
+      "solution": "Rollback Next.js về v14.2.35 để đảm bảo tính ổn định và tương thích.",
       "resolved": true
     },
     {
-      "error": "Lỗi TypeScript TS2322 cho thuộc tính role trong AccountScreen.test.tsx",
-      "solution": "Ép kiểu as 'admin' trong file test.",
+      "error": "Lỗi thiếu module @testing-library/dom khi chạy test ở ontap-web",
+      "solution": "Cài đặt bổ sung devDependencies cho ontap-web.",
       "resolved": true
     }
   ],
   "decisions_made": [
     {
-      "decision": "Phân tách lanh_dao sang key leader thay vì dùng chung key manager",
-      "reason": "Yêu cầu của người dùng để phân quyền giới hạn và tính năng độc lập cho 2 ban bệ quản lý khác nhau."
+      "decision": "Rollback Next.js v16 về v14.2.35",
+      "reason": "Next.js 16 có nhiều breaking changes về Server Component Layout và CSS import không tương thích với cấu trúc hiện tại."
+    },
+    {
+      "decision": "Sử dụng firebase-admin v11.11.1 làm bản vá bảo mật",
+      "reason": "Firebase Admin v11 vá được lỗi bảo mật phụ thuộc mà vẫn tương thích hoàn toàn với Next.js v14."
     }
   ]
 }

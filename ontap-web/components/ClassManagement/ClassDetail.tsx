@@ -145,12 +145,6 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
         try {
             // This would typically call a cloud function or API endpoint
             // For now, we'll simulate it
-            console.log("Sending bulk notification:", {
-                recipients: Array.from(selectedUsers),
-                type: bulkNotifType,
-                title: bulkNotifTitle,
-                message: bulkNotifMessage
-            });
             await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
             toast.success(`Đã gửi thông báo tới ${selectedUsers.size} học viên`);
             setShowBulkNotifModal(false);

@@ -19,7 +19,6 @@ if (!apps.length) {
         // "Dùng chìa khóa"
         credential: cert(JSON.parse(serviceAccountKey))
       });
-      console.log('[AdminSDK] Firebase Admin initialized.');
       
       // 💖 4. CHỈ "GÁN" SAU KHI KHỞI TẠO THÀNH CÔNG 💖
       adminDb = getFirestore(); 

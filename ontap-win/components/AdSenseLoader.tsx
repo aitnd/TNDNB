@@ -50,7 +50,6 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         script.src = 'https://pl28592472.effectivegatecpm.com/40/38/4c/40384cc1f853bc02181ba010564ff378.js';
         script.crossOrigin = 'anonymous';
         document.head.appendChild(script);
-        console.log("🟢 Adsterra Script Loaded (Allowed for this role)");
     };
 
     const removeAdSenseScript = () => {
@@ -61,7 +60,6 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         const existingScript = document.getElementById('google-adsense-script');
         if (existingScript) {
             existingScript.remove();
-            console.log("🔴 Adsterra Script Removed (Blocked for this role)");
         }
     };
 
@@ -85,14 +83,12 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
             }
         `;
         document.head.appendChild(style);
-        console.log("🛡️ AdSense Blocker Style Injected");
     };
 
     const removeHideAdsStyle = () => {
         const style = document.getElementById('adsense-blocker-style');
         if (style) {
             style.remove();
-            console.log("🔓 AdSense Blocker Style Removed");
         }
     };
 

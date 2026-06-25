@@ -1,5 +1,16 @@
 # CHANGELOG — [ontap-win]
 
+## [3.10.0] - 2026-06-25 - Thiết kế lại Admin Dashboard
+- **Đồng bộ hóa Giao diện (Phương án C "Hybrid Smart"):** 
+  - Áp dụng cấu trúc Dashboard mới sang ứng dụng Windows/Electron: Thanh online slim realtime (`AdminStatsBar`) ở trên cùng.
+  - Cột trái: Thẻ học viên/giáo viên (`StudentCard`) được giữ nguyên, kết hợp thêm các nút phụ điều hướng nhanh.
+  - Cột phải: Lời chào thông minh theo giờ (`WelcomeHeader`), các nút thao tác nhanh dạng grid tiles (`QuickActionsGrid`).
+- **Sửa lỗi TypeScript:** Sửa lỗi spread types TS2698 liên quan tới thuộc tính `showPortalAds` trong `UsageConfigPanel.tsx` của bản Windows.
+
+## [3.9.9] - 2026-06-15 - Sửa lỗi & Đóng gói Phục hồi
+- **Đồng bộ hóa phiên bản:** Cập nhật phiên bản lên v3.9.9 để đồng bộ với root portal và ontap-web.
+- **QA & Testing:** Chạy kiểm thử tự động, linting và build chuẩn bị release.
+
 ## [3.9.7] - 2026-06-12 - Triển Khai Quảng Cáo Portal & Refactor
 - **Đồng bộ hóa UI quản trị:** Bổ sung toggle "Quảng cáo Trang chủ & Tin tức" vào tab "Hệ thống" của UsageConfigPanel cho vai trò Admin và Lãnh đạo (Đồng bộ với bản Web).
 - **Vá bảo mật tự động:** Vá lỗ hổng bảo mật của `@grpc/grpc-js` thông qua npm audit fix.
