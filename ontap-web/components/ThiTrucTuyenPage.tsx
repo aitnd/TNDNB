@@ -363,7 +363,7 @@ const ThiTrucTuyenPage: React.FC = () => {
                                                 <button
                                                     onClick={async () => {
                                                         await auth.signOut();
-                                                        window.location.href = '/ontap/thitructuyen';
+                                                        window.location.href = '/ontap/online-exam';
                                                     }}
                                                     className="text-sm font-bold text-red-600 hover:text-red-800 underline"
                                                 >

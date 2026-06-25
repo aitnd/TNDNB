@@ -5,9 +5,9 @@ import { resolve } from 'path'
 // Cấu hình Vite cho project Ẩm Thực
 export default defineConfig({
     plugins: [react()],
-    base: '/amthuc/', // Đường dẫn cơ sở khi deploy
+    base: '/food/', // Đường dẫn cơ sở khi deploy
     build: {
-        outDir: '../public/amthuc', // Output vào thư mục public của Next.js
+        outDir: '../public/food', // Output vào thư mục public của Next.js
         emptyOutDir: true,
         rollupOptions: {
             input: {

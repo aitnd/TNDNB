@@ -114,7 +114,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                     <span className="font-medium text-sm">Tải App học offline</span>
                                 </button>
                                 {/* Ẩm thực */}
-                                <a href="/amthuc" className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                <a href="/food" className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
                                         <Utensils size={18} className="text-orange-500" />
                                         <span className="font-medium text-sm">Ẩm thực Ninh Bình</span>
                                     </a>

@@ -468,7 +468,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                     loadingCourses={loadingCourses}
                     courseSearchTerm={courseSearchTerm}
                     setCourseSearchTerm={setCourseSearchTerm}
-                    onSelectCourse={(course) => navigate(`/ontap/quanlylop/${course.id}`)}
+                    onSelectCourse={(course) => navigate(`/ontap/class-manager/${course.id}`)}
                     onEditCourse={openEditCourseModal}
                     onDeleteCourse={handleDeleteCourse}
                     onAddCourse={() => { setEditingCourse(null); setShowAddEditModal(true); }}
@@ -496,7 +496,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     return (
         <ClassDetailClient 
             course={selectedCourse} 
-            onBack={() => navigate('/ontap/quanlylop')} 
+            onBack={() => navigate('/ontap/class-manager')} 
             userProfile={userProfile} 
             studentLatestResults={studentLatestResults}
             deviceCounts={deviceCounts}

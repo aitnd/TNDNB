@@ -18,6 +18,15 @@ const nextConfig = {
             },
         ],
     },
+    async redirects() {
+        return [
+            {
+                source: '/amthuc/:path*',
+                destination: '/food/:path*',
+                permanent: true,
+            },
+        ];
+    },
     async rewrites() {
         return [
             {
@@ -25,8 +34,8 @@ const nextConfig = {
                 destination: '/ontap/index.html',
             },
             {
-                source: '/amthuc/:path*',
-                destination: '/amthuc/index.html',
+                source: '/food/:path*',
+                destination: '/food/index.html',
             },
         ];
     },

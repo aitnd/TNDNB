@@ -663,7 +663,7 @@ const AppContent: React.FC = () => {
     if (!selectedLicense) return;
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
-      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
+      await showLimitAlert(userProfile, () => navigate('/ontap/login'));
       return;
     }
     await incrementUsage(userProfile);
@@ -710,7 +710,7 @@ const AppContent: React.FC = () => {
     if (!selectedLicense) return;
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
-      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
+      await showLimitAlert(userProfile, () => navigate('/ontap/login'));
       return;
     }
     await incrementUsage(userProfile);
@@ -755,7 +755,7 @@ const AppContent: React.FC = () => {
   const handleSubjectSelect = async (subject: Subject) => {
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
-      await showLimitAlert(userProfile, () => navigate('/ontap/dangnhap'));
+      await showLimitAlert(userProfile, () => navigate('/ontap/login'));
       return;
     }
     await incrementUsage(userProfile);
@@ -835,20 +835,20 @@ const AppContent: React.FC = () => {
   const handleTopNavNavigate = (screen: string) => {
     switch (screen) {
       case 'dashboard': navigate('/ontap/dashboard'); break;
-      case 'history': navigate('/ontap/lichsu'); break;
-      case 'login': navigate('/ontap/dangnhap'); break;
-      case 'my_class': navigate('/ontap/lopcuatoi'); break;
-      case 'class_management': navigate('/ontap/quanlylop'); break;
-      case 'account': navigate(userProfile ? '/ontap/taikhoan' : '/ontap/dangnhap'); break;
-      case 'config': navigate('/ontap/cauhinh'); break;
-      case 'notification_mgmt': navigate('/ontap/thongbao'); break;
-      case 'online_exam_management': navigate('/ontap/quanlythi'); break;
-      case 'mailbox': navigate('/ontap/homthu'); break;
-      case 'thi_truc_tuyen': navigate('/ontap/thitructuyen'); break;
+      case 'history': navigate('/ontap/history'); break;
+      case 'login': navigate('/ontap/login'); break;
+      case 'my_class': navigate('/ontap/my-class'); break;
+      case 'class_management': navigate('/ontap/class-manager'); break;
+      case 'account': navigate(userProfile ? '/ontap/profile' : '/ontap/login'); break;
+      case 'config': navigate('/ontap/settings'); break;
+      case 'notification_mgmt': navigate('/ontap/notifications'); break;
+      case 'online_exam_management': navigate('/ontap/exam-manager'); break;
+      case 'mailbox': navigate('/ontap/mailbox'); break;
+      case 'thi_truc_tuyen': navigate('/ontap/online-exam'); break;
       case 'download_app': navigate('/ontap/download'); break;
-      case 'analytics': navigate('/ontap/thongke'); break;
-      case 'login_history': navigate('/ontap/lichsudangnhap'); break;
-      case 'giaitri': navigate('/ontap/giaitri'); break;
+      case 'analytics': navigate('/ontap/analytics'); break;
+      case 'login_history': navigate('/ontap/login-history'); break;
+      case 'giaitri': navigate('/ontap/games'); break;
       case 'giam_khao': navigate('/ontap/giamkhao'); break;
       default: navigate('/ontap/dashboard');
     }
@@ -940,22 +940,22 @@ const AppContent: React.FC = () => {
               <Dashboard
                 userProfile={userProfile}
                 onStart={() => navigate('/ontap/chonbang')}
-                onHistoryClick={() => navigate('/ontap/lichsu')}
+                onHistoryClick={() => navigate('/ontap/history')}
                 onClassClick={() => handleTopNavNavigate((userProfile?.role === 'hoc_vien') ? 'my_class' : 'class_management')}
-                onOnlineExamClick={() => navigate('/ontap/quanlythi')}
-                onNotificationClick={() => navigate('/ontap/homthu')}
-                onStatsClick={() => navigate('/ontap/thongke')}
-                onSettingsClick={() => navigate('/ontap/taikhoan')}
+                onOnlineExamClick={() => navigate('/ontap/exam-manager')}
+                onNotificationClick={() => navigate('/ontap/mailbox')}
+                onStatsClick={() => navigate('/ontap/analytics')}
+                onSettingsClick={() => navigate('/ontap/profile')}
                 onUserManagerClick={() => navigate('/ontap/usermanager')}
               />
             ) : (
-              <WelcomeModal onStart={handleStart} onLoginClick={() => navigate('/ontap/dangnhap')} onRegisterClick={() => navigate('/ontap/dangky')} />
+              <WelcomeModal onStart={handleStart} onLoginClick={() => navigate('/ontap/login')} onRegisterClick={() => navigate('/ontap/register')} />
             )
           } />
 
-          <Route path="/ontap/dangnhap" element={!userProfile ? <LoginScreen onBack={() => navigate('/')} /> : <Navigate to="/ontap/dashboard" />} />
-          <Route path="/ontap/windowslogin" element={!userProfile ? <WindowsLoginScreen /> : <Navigate to="/ontap/dashboard" />} />
-          <Route path="/ontap/dangky" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/login" element={!userProfile ? <LoginScreen onBack={() => navigate('/')} /> : <Navigate to="/ontap/dashboard" />} />
+          <Route path="/ontap/windows-login" element={!userProfile ? <WindowsLoginScreen /> : <Navigate to="/ontap/dashboard" />} />
+          <Route path="/ontap/register" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
 
           {/* ===== GIÁM KHẢO ROUTES ===== */}
           <Route path="/ontap/giamkhao" element={
@@ -1155,39 +1155,64 @@ const AppContent: React.FC = () => {
             ) : <Navigate to="/ontap/chonchedo" replace />
           } />
 
-          <Route path="/ontap/lichsu" element={userProfile ? <HistoryScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
-          <Route path="/ontap/lopcuatoi" element={userProfile ? <MyClassScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
-          <Route path="/ontap/quanlylop" element={userProfile ? <ClassManagementScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
-          <Route path="/ontap/quanlylop/:courseId" element={userProfile ? <ClassManagementScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
-          <Route path="/ontap/taikhoan" element={userProfile ? <AccountScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/dangnhap" replace />} />
-          <Route path="/ontap/usermanager" element={userProfile ? <UserManagerScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/dangnhap" replace />} />
-          <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
-          <Route path="/ontap/thongbao" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
-          <Route path="/ontap/homthu" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
-          <Route path="/ontap/quanlythi" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />
-          <Route path="/ontap/thitructuyen" element={<ThiTrucTuyenPage />} />
+          <Route path="/ontap/history" element={userProfile ? <HistoryScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/my-class" element={userProfile ? <MyClassScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/class-manager" element={userProfile ? <ClassManagementScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/class-manager/:courseId" element={userProfile ? <ClassManagementScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/profile" element={userProfile ? <AccountScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/usermanager" element={userProfile ? <UserManagerScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/settings" element={userProfile ? <UsageConfigPanel userProfile={userProfile} /> : <Navigate to="/ontap/login" />} />
+          <Route path="/ontap/notifications" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/login" />} />
+          <Route path="/ontap/mailbox" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" />} />
+          <Route path="/ontap/exam-manager" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" />} />
+          <Route path="/ontap/online-exam" element={<ThiTrucTuyenPage />} />
           <Route path="/ontap/download" element={<DownloadAppPage />} />
-          <Route path="/ontap/thongke" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/lichsudangnhap" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
-          <Route path="/ontap/giaitri" element={<EntertainmentScreen onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/analytics" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/login-history" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/games" element={<EntertainmentScreen onBack={() => navigate('/ontap/dashboard')} />} />
 
           {/* Redirects từ URL cũ có dấu gạch ngang */}
           <Route path="/ontap/lam-bai" element={<Navigate to="/ontap/lambai" replace />} />
           <Route path="/ontap/chon-che-do" element={<Navigate to="/ontap/chonchedo" replace />} />
           <Route path="/ontap/chon-bang" element={<Navigate to="/ontap/chonbang" replace />} />
           <Route path="/ontap/nhap-ten" element={<Navigate to="/ontap/nhapten" replace />} />
-          <Route path="/ontap/dang-nhap" element={<Navigate to="/ontap/dangnhap" replace />} />
           <Route path="/ontap/chon-mon" element={<Navigate to="/ontap/chonmon" replace />} />
           <Route path="/ontap/ket-qua-thi" element={<Navigate to="/ontap/ketquathi" replace />} />
           <Route path="/ontap/ket-qua" element={<Navigate to="/ontap/ketqua" replace />} />
-          <Route path="/ontap/lich-su" element={<Navigate to="/ontap/lichsu" replace />} />
-          <Route path="/ontap/lop-cua-toi" element={<Navigate to="/ontap/lopcuatoi" replace />} />
-          <Route path="/ontap/quan-ly-lop" element={<Navigate to="/ontap/quanlylop" replace />} />
-          <Route path="/ontap/hom-thu" element={<Navigate to="/ontap/homthu" replace />} />
-          <Route path="/ontap/thong-ke" element={<Navigate to="/ontap/thongke" replace />} />
-          <Route path="/ontap/dang-ky" element={<Navigate to="/ontap/dangky" replace />} />
-          <Route path="/ontap/windows-login" element={<Navigate to="/ontap/windowslogin" replace />} />
-          <Route path="/ontap/thi-truc-tuyen" element={<Navigate to="/ontap/thitructuyen" replace />} />
+
+          {/* Hỗ trợ tương thích ngược cho URL Tiếng Việt sang Tiếng Anh mới */}
+          <Route path="/ontap/dangnhap" element={<Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/dang-nhap" element={<Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/dangky" element={<Navigate to="/ontap/register" replace />} />
+          <Route path="/ontap/dang-ky" element={<Navigate to="/ontap/register" replace />} />
+          <Route path="/ontap/windowslogin" element={<Navigate to="/ontap/windows-login" replace />} />
+          <Route path="/ontap/windows-login" element={<Navigate to="/ontap/windows-login" replace />} />
+          
+          <Route path="/ontap/lichsu" element={<Navigate to="/ontap/history" replace />} />
+          <Route path="/ontap/lich-su" element={<Navigate to="/ontap/history" replace />} />
+          <Route path="/ontap/lopcuatoi" element={<Navigate to="/ontap/my-class" replace />} />
+          <Route path="/ontap/lop-cua-toi" element={<Navigate to="/ontap/my-class" replace />} />
+          
+          <Route path="/ontap/quanlylop" element={<Navigate to="/ontap/class-manager" replace />} />
+          <Route path="/ontap/quan-ly-lop" element={<Navigate to="/ontap/class-manager" replace />} />
+          <Route path="/ontap/quanlylop/:courseId" element={<Navigate to="/ontap/class-manager/:courseId" replace />} />
+          
+          <Route path="/ontap/taikhoan" element={<Navigate to="/ontap/profile" replace />} />
+          <Route path="/ontap/cauhinh" element={<Navigate to="/ontap/settings" replace />} />
+          <Route path="/ontap/thongbao" element={<Navigate to="/ontap/notifications" replace />} />
+          
+          <Route path="/ontap/homthu" element={<Navigate to="/ontap/mailbox" replace />} />
+          <Route path="/ontap/hom-thu" element={<Navigate to="/ontap/mailbox" replace />} />
+          
+          <Route path="/ontap/quanlythi" element={<Navigate to="/ontap/exam-manager" replace />} />
+          <Route path="/ontap/thitructuyen" element={<Navigate to="/ontap/online-exam" replace />} />
+          <Route path="/ontap/thi-truc-tuyen" element={<Navigate to="/ontap/online-exam" replace />} />
+          
+          <Route path="/ontap/thongke" element={<Navigate to="/ontap/analytics" replace />} />
+          <Route path="/ontap/thong-ke" element={<Navigate to="/ontap/analytics" replace />} />
+          
+          <Route path="/ontap/lichsudangnhap" element={<Navigate to="/ontap/login-history" replace />} />
+          <Route path="/ontap/giaitri" element={<Navigate to="/ontap/games" replace />} />
 
           {isMobileApp && (
             <MobileBottomNav

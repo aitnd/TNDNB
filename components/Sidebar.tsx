@@ -143,7 +143,7 @@ export default async function Sidebar() {
             </Link>
           </li>
           <li>
-            <Link href="/amthuc">
+            <Link href="/food">
               <i className="fas fa-utensils" style={{ color: '#ff6b6b' }}></i> Ẩm thực Ninh Bình
             </Link>
           </li>
