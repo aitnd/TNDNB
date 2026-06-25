@@ -22,13 +22,19 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                 const config: UsageConfig = await getUsageConfig();
                 const { param } = getUserRoleConfig(config, userProfile);
 
-                if (param.showAds) {
+                const showAdSense = param.showAdSense || false;
+                const showAdsterra = param.showAdsterra || false;
+                const showMonetag = param.showMonetag || false;
+
+                if (showAdSense || showAdsterra || showMonetag) {
                     setShouldLoadAds(true);
-                    loadAdSenseScript();
+                    if (showAdSense) loadAdSenseScript();
+                    if (showAdsterra) loadAdsterraScript();
+                    if (showMonetag) loadMonetagScript();
                     removeHideAdsStyle(); // Allow ads to show
                 } else {
                     setShouldLoadAds(false);
-                    removeAdSenseScript();
+                    removeScripts();
                     injectHideAdsStyle(); // Force hide any existing ads
                 }
             } catch (error) {
@@ -40,10 +46,17 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
     }, [userProfile]); // Re-check when user changes (e.g. login/logout)
 
     const loadAdSenseScript = () => {
-        // Check if already exists
-        const existingScript = document.getElementById('google-adsense-script');
-        if (existingScript) return;
+        if (document.getElementById('adsense-script')) return;
+        const script = document.createElement('script');
+        script.id = 'adsense-script';
+        script.async = true;
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6121118706628509';
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+    };
 
+    const loadAdsterraScript = () => {
+        if (document.getElementById('adsterra-script')) return;
         const script = document.createElement('script');
         script.id = 'adsterra-script';
         script.async = true;
@@ -52,15 +65,22 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         document.head.appendChild(script);
     };
 
-    const removeAdSenseScript = () => {
-        // Note: This won't remove ads already rendered by the script, 
-        // but prevents further loading if the user switches context implies a refresh often.
-        // For Single Page Apps, fully unloading Adsense is tricky without refresh.
-        // But preventing the *initial* load is the main goal.
-        const existingScript = document.getElementById('google-adsense-script');
-        if (existingScript) {
-            existingScript.remove();
-        }
+    const loadMonetagScript = () => {
+        if (document.getElementById('monetag-script')) return;
+        const script = document.createElement('script');
+        script.id = 'monetag-script';
+        script.async = true;
+        script.src = 'https://3nbf4.com/act/files/micro.tag.min.js?z=11198611';
+        script.setAttribute('data-z', '11198611');
+        script.defer = true;
+        document.body.appendChild(script);
+    };
+
+    const removeScripts = () => {
+        ['adsense-script', 'adsterra-script', 'monetag-script'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        });
     };
 
     // NUCLEAR OPTION: CSS Hiding
@@ -71,7 +91,9 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         const style = document.createElement('style');
         style.id = 'adsense-blocker-style';
         style.innerHTML = `
-            .adsbygoogle, .google-auto-placed, ins.adsbygoogle {
+            .adsbygoogle, .google-auto-placed, ins.adsbygoogle,
+            [id^="adsterra"], [class*="adsterra"],
+            .at-social-bar, #pl28592472 {
                 display: none !important;
                 visibility: hidden !important;
                 height: 0 !important;
