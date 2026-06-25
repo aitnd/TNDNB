@@ -56,6 +56,12 @@ export interface UsageConfig {
     monetagDirectLinkUrl?: string; // 🔗 URL Direct Link Monetag (nhập từ Dashboard, lưu Firebase)
     isMaintenanceMode?: boolean; // Tầng 1: Soft Maintenance
     maintenanceMessage?: string; // Lời nhắn bảo trì
+    
+    // 🛡️ Bảo Vệ Quảng Cáo (IVT Shield)
+    adsenseMaxClicks?: number;
+    adsenseCooldownHours?: number;
+    monetagPopunderCooldownMinutes?: number;
+    monetagDirectLinkCooldownMinutes?: number;
 }
 
 // Cấu hình GitHub cho Release Manager
@@ -299,7 +305,11 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 showPortalAds: data.showPortalAds ?? true, // Mặc định bật quảng cáo trang tin tức
                 monetagDirectLinkUrl: data.monetagDirectLinkUrl || '', // URL Direct Link Monetag
                 isMaintenanceMode: data.isMaintenanceMode || false,
-                maintenanceMessage: data.maintenanceMessage || 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!'
+                maintenanceMessage: data.maintenanceMessage || 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!',
+                adsenseMaxClicks: data.adsenseMaxClicks ?? 2,
+                adsenseCooldownHours: data.adsenseCooldownHours ?? 24,
+                monetagPopunderCooldownMinutes: data.monetagPopunderCooldownMinutes ?? 30,
+                monetagDirectLinkCooldownMinutes: data.monetagDirectLinkCooldownMinutes ?? 30
             };
         } else {
             // Initialize if not exists

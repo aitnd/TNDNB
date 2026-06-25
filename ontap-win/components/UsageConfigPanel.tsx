@@ -1035,6 +1035,80 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                     )}
                                 </div>
 
+                                {/* 🛡️ Bảo vệ Quảng cáo (IVT Shield) */}
+                                <div className="p-6 bg-yellow-50 dark:bg-yellow-900/10 rounded-xl border border-yellow-200 dark:border-yellow-800/50 mb-6">
+                                    <h4 className="font-bold text-lg text-yellow-800 dark:text-yellow-500 flex items-center gap-2 mb-2">
+                                        <FaShieldAlt /> Bảo vệ Quảng cáo (IVT Shield)
+                                    </h4>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                        Cấu hình giới hạn tần suất quảng cáo để chống Invalid Traffic và bảo vệ tài khoản quảng cáo.
+                                    </p>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* AdSense */}
+                                        <div className="space-y-4">
+                                            <h5 className="font-bold text-orange-600 dark:text-orange-400 border-b border-orange-200 dark:border-orange-800/50 pb-2">Google AdSense</h5>
+                                            
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Số click tối đa</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.adsenseMaxClicks ?? 2}
+                                                        onChange={(e) => setConfig({ ...config, adsenseMaxClicks: parseInt(e.target.value) || 2 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">lần / chu kỳ</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Thời gian chu kỳ (Cooldown)</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.adsenseCooldownHours ?? 24}
+                                                        onChange={(e) => setConfig({ ...config, adsenseCooldownHours: parseInt(e.target.value) || 24 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">giờ</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Monetag */}
+                                        <div className="space-y-4">
+                                            <h5 className="font-bold text-purple-600 dark:text-purple-400 border-b border-purple-200 dark:border-purple-800/50 pb-2">Monetag</h5>
+                                            
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Popunder Cooldown</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagPopunderCooldownMinutes ?? 30}
+                                                        onChange={(e) => setConfig({ ...config, monetagPopunderCooldownMinutes: parseInt(e.target.value) || 30 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">phút</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Direct Link Cooldown</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagDirectLinkCooldownMinutes ?? 30}
+                                                        onChange={(e) => setConfig({ ...config, monetagDirectLinkCooldownMinutes: parseInt(e.target.value) || 30 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">phút</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {/* 🛑 Cấu hình Bảo trì (Maintenance Mode) */}
                                 <div className="p-6 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-200 dark:border-red-800 mb-6">
                                     <div className="flex items-start justify-between">

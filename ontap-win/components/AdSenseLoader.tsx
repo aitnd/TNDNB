@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getUsageConfig, UsageConfig } from '../services/adminConfigService';
 import { getUserRoleConfig } from '../services/usageService';
-import { MONETAG_CONFIG, getDirectLinkUrl } from '../services/monetagConfig';
+import { MONETAG_CONFIG, getDirectLinkUrl, setMonetagLimits, getMonetagLimits } from '../services/monetagConfig';
+import { isAdSenseBlocked, incrementAdSenseClick, setAdSenseLimits } from '../services/adsenseConfig';
 
 interface AdSenseLoaderProps {
     userProfile: any | null;
@@ -17,6 +18,11 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         const checkConfig = async () => {
             try {
                 const config: UsageConfig = await getUsageConfig();
+                
+                // Cập nhật giới hạn từ Firebase config vào state local
+                setAdSenseLimits(config.adsenseMaxClicks ?? 2, config.adsenseCooldownHours ?? 24);
+                setMonetagLimits(config.monetagPopunderCooldownMinutes ?? 30, config.monetagDirectLinkCooldownMinutes ?? 30);
+
                 const { param } = getUserRoleConfig(config, userProfile);
 
                 const showAdSense = param.showAdSense || false;
@@ -31,7 +37,14 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                     // Chúng ta quan sát body hoặc một thẻ cắm mốc
                     observer = new IntersectionObserver((entries) => {
                         if (entries[0].isIntersecting) {
-                            if (showAdSense) loadAdSenseScript();
+                            if (showAdSense) {
+                                if (isAdSenseBlocked()) {
+                                    console.log('AdSense is blocked due to invalid traffic protection');
+                                    injectHideAdsStyle();
+                                } else {
+                                    loadAdSenseScript();
+                                }
+                            }
                             if (showAdsterra) loadAdsterraScript();
                             if (showMonetag) loadMonetagScript();
                             observer?.disconnect();
@@ -69,18 +82,57 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
             if (popunderHandler) {
                 document.body.removeEventListener('click', popunderHandler);
             }
+            window.removeEventListener('blur', blurHandler);
         };
     }, [userProfile]); // Re-check when user changes (e.g. login/logout)
 
-    // 🖱️ Auto Popunder: Gắn click listener, mở Direct Link 1 lần/phiên
+    // Blur listener for AdSense clicks
+    const [isMouseOverAd, setIsMouseOverAd] = useState(false);
+
+    useEffect(() => {
+        window.addEventListener('blur', blurHandler);
+        return () => {
+            window.removeEventListener('blur', blurHandler);
+        };
+    }, [isMouseOverAd]);
+
+    const blurHandler = () => {
+        if (isMouseOverAd) {
+            incrementAdSenseClick();
+            if (isAdSenseBlocked()) {
+                injectHideAdsStyle();
+            }
+        }
+    };
+
+    // Global mouse tracker for AdSense (since it's an iframe)
+    useEffect(() => {
+        const mouseMoveHandler = (e: MouseEvent) => {
+            // Find if mouse is over an element with class adsbygoogle or ins
+            const target = e.target as HTMLElement;
+            if (target && (target.classList.contains('adsbygoogle') || target.closest('.adsbygoogle') || target.tagName.toLowerCase() === 'ins')) {
+                setIsMouseOverAd(true);
+            } else {
+                setIsMouseOverAd(false);
+            }
+        };
+
+        window.addEventListener('mousemove', mouseMoveHandler);
+        return () => window.removeEventListener('mousemove', mouseMoveHandler);
+    }, []);
+
+    // 🖱️ Auto Popunder: Gắn click listener, mở Direct Link dựa trên cooldown
     const setupAutoPopunder = (directLinkUrl: string): ((e: MouseEvent) => void) => {
         const handler = (e: MouseEvent) => {
-            const alreadyFired = sessionStorage.getItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED);
-            if (alreadyFired === 'true') return;
+            const limits = getMonetagLimits();
+            const lastFired = sessionStorage.getItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED);
+            const now = Date.now();
+            
+            if (lastFired && now - parseInt(lastFired, 10) < limits.popunderCooldownMs) return;
 
             try {
                 window.open(directLinkUrl, '_blank');
-                sessionStorage.setItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED, 'true');
+                sessionStorage.setItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED, now.toString());
             } catch {
                 // Popup bị chặn → bỏ qua
             }
@@ -130,25 +182,20 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         });
     };
 
-    // NUCLEAR OPTION: CSS Hiding
-    // Because removing the script doesn't remove iframes/DOM elements already created.
+    // NUCLEAR OPTION: CSS Hiding/Blocking
+    // Thay vì ẩn hoàn toàn (làm mất doanh thu hiển thị - Impression),
+    // chúng ta chỉ khóa khả năng click chuột (pointer-events: none).
+    // Quảng cáo vẫn hiện rành rành trên màn hình, vẫn được Google tính Viewability, nhưng không thể click được nữa.
     const injectHideAdsStyle = () => {
         if (document.getElementById('adsense-blocker-style')) return;
 
         const style = document.createElement('style');
         style.id = 'adsense-blocker-style';
         style.innerHTML = `
-            .adsbygoogle, .google-auto-placed, ins.adsbygoogle, 
-            [id^="adsterra"], [class*="adsterra"],
-            .at-social-bar, #pl28592472 {
-                display: none !important;
-                visibility: hidden !important;
-                height: 0 !important;
-                width: 0 !important;
-                overflow: hidden !important;
-                position: absolute !important;
+            .adsbygoogle, .google-auto-placed, ins.adsbygoogle {
+                /* Khóa click hoàn toàn, mọi click chuột / cảm ứng sẽ xuyên qua quảng cáo */
                 pointer-events: none !important;
-                z-index: -9999 !important;
+                /* Không ẩn, không giảm opacity để đảm bảo ActiveView của Google vẫn tính 100% Viewable */
             }
         `;
         document.head.appendChild(style);

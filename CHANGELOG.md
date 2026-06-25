@@ -1,136 +1,141 @@
-# Changelog
+﻿# Changelog
 
+## [3.10.5] - 2026-06-25
+### Tối ưu Google AdSense & Bảo vệ IVT (Web & App Win)
+- **Tối ưu AdSense Shield:** Thay đổi cơ chế chặn click tặc. Thay vì ẩn toàn bộ quảng cáo (display: none), chuyển sang sử dụng pointer-events: none để chặn click chuột nhưng vẫn giữ 100% hiển thị (Active View) nhằm duy trì doanh thu Impression.
+- **Nâng cấp giới hạn AdSense:** Quản trị viên có thể tùy chỉnh giới hạn số click và thời gian phục hồi (Cooldown) trực tiếp từ màn hình "Hệ thống" thay vì hardcode.
 ## [3.11.0] - 2026-06-25
-### Tích hợp & Tối ưu hóa Kiếm tiền Monetag (Web & App Win)
-- **Chiến lược Quảng cáo Đa dạng:** Tích hợp Smart Tag (Vignette/Interstitial), Auto Popunder (giới hạn 1 lần/phiên), và Direct Link để tối ưu hóa doanh thu từ CPM/eCPM cho thị trường Việt Nam.
-- **Dynamic Config qua Firebase:** Cho phép Admin thay đổi URL Direct Link động trực tiếp từ màn hình "Hệ thống" thay vì hardcode.
-- **Phân bổ theo Vai trò (RoleConfig):** Cho phép bật/tắt riêng biệt các định dạng Popunder, Direct Link, Countdown Ad theo từng hạng tài khoản (Free, Verified, VIP).
-- **Trải nghiệm chờ thông minh:** Bổ sung màn hình chờ đếm ngược `CountdownAdScreen` (5 giây) trước khi xem kết quả thi để hiển thị quảng cáo Interstitial hiệu quả. (Tự động vô hiệu hóa trên môi trường Electron/Windows).
-- **Service Worker Anti-Adblock:** Tích hợp `sw.js` nhằm giảm tỷ lệ quảng cáo bị chặn bởi các trình duyệt và extension.
+### TÃ­ch há»£p & Tá»‘i Æ°u hÃ³a Kiáº¿m tiá»n Monetag (Web & App Win)
+- **Chiáº¿n lÆ°á»£c Quáº£ng cÃ¡o Äa dáº¡ng:** TÃ­ch há»£p Smart Tag (Vignette/Interstitial), Auto Popunder (giá»›i háº¡n 1 láº§n/phiÃªn), vÃ  Direct Link Ä‘á»ƒ tá»‘i Æ°u hÃ³a doanh thu tá»« CPM/eCPM cho thá»‹ trÆ°á»ng Viá»‡t Nam.
+- **Dynamic Config qua Firebase:** Cho phÃ©p Admin thay Ä‘á»•i URL Direct Link Ä‘á»™ng trá»±c tiáº¿p tá»« mÃ n hÃ¬nh "Há»‡ thá»‘ng" thay vÃ¬ hardcode.
+- **PhÃ¢n bá»• theo Vai trÃ² (RoleConfig):** Cho phÃ©p báº­t/táº¯t riÃªng biá»‡t cÃ¡c Ä‘á»‹nh dáº¡ng Popunder, Direct Link, Countdown Ad theo tá»«ng háº¡ng tÃ i khoáº£n (Free, Verified, VIP).
+- **Tráº£i nghiá»‡m chá» thÃ´ng minh:** Bá»• sung mÃ n hÃ¬nh chá» Ä‘áº¿m ngÆ°á»£c `CountdownAdScreen` (5 giÃ¢y) trÆ°á»›c khi xem káº¿t quáº£ thi Ä‘á»ƒ hiá»ƒn thá»‹ quáº£ng cÃ¡o Interstitial hiá»‡u quáº£. (Tá»± Ä‘á»™ng vÃ´ hiá»‡u hÃ³a trÃªn mÃ´i trÆ°á»ng Electron/Windows).
+- **Service Worker Anti-Adblock:** TÃ­ch há»£p `sw.js` nháº±m giáº£m tá»· lá»‡ quáº£ng cÃ¡o bá»‹ cháº·n bá»Ÿi cÃ¡c trÃ¬nh duyá»‡t vÃ  extension.
 
 ## [3.10.1] - 2026-06-25
-### Tách biệt Module Quản lý Thành viên & Refactor Account Screen (Web & App Win)
-- **Trang Quản lý thành viên riêng biệt (`/ontap/usermanager`):**
-  - Tách toàn bộ bảng danh sách, bộ lọc, tìm kiếm và phân trang người dùng ra khỏi trang cá nhân thành một trang quản trị chuyên biệt mới.
-  - Tích hợp Slide-over Panel xem chi tiết và danh sách thiết bị/phiên đăng nhập để force logout từ xa.
-  - Thiết kế 3 thẻ KPI Stats tổng quan tài khoản (Học viên, nhân sự, bị khóa) hiển thị tĩnh ở đầu trang, tối ưu hóa Firestore Read Call.
-- **Refactor `AccountScreen` cá nhân:**
-  - Dọn dẹp hoàn toàn logic và giao diện quản trị thành viên cũ trong `AccountScreen.tsx` ở cả Web và Windows App (code giảm từ ~809 dòng xuống còn ~250 dòng).
-  - Tích hợp danh sách phiên đăng nhập hoạt động của chính cá nhân (`AdminSessionList`) hiển thị trực tiếp ở cuối trang hồ sơ để nâng cao trải nghiệm bảo mật tự phục vụ.
-- **Tích hợp Dashboard & Quick Actions:**
-  - Cập nhật `QuickActionsGrid.tsx` và `Dashboard.tsx` thêm nút **"Quản lý Thành viên"** vào Dashboard admin (Web & Windows).
-  - Đăng ký Route `/ontap/usermanager` và map điều hướng trong `App.tsx` ở cả 2 phân hệ.
-- **Kiểm thử & Build pass 100%:** Xác thực biên dịch TypeScript (`tsc --noEmit`) và đóng gói `npm run build` thành công trên cả phân hệ Web và Windows.
+### TÃ¡ch biá»‡t Module Quáº£n lÃ½ ThÃ nh viÃªn & Refactor Account Screen (Web & App Win)
+- **Trang Quáº£n lÃ½ thÃ nh viÃªn riÃªng biá»‡t (`/ontap/usermanager`):**
+  - TÃ¡ch toÃ n bá»™ báº£ng danh sÃ¡ch, bá»™ lá»c, tÃ¬m kiáº¿m vÃ  phÃ¢n trang ngÆ°á»i dÃ¹ng ra khá»i trang cÃ¡ nhÃ¢n thÃ nh má»™t trang quáº£n trá»‹ chuyÃªn biá»‡t má»›i.
+  - TÃ­ch há»£p Slide-over Panel xem chi tiáº¿t vÃ  danh sÃ¡ch thiáº¿t bá»‹/phiÃªn Ä‘Äƒng nháº­p Ä‘á»ƒ force logout tá»« xa.
+  - Thiáº¿t káº¿ 3 tháº» KPI Stats tá»•ng quan tÃ i khoáº£n (Há»c viÃªn, nhÃ¢n sá»±, bá»‹ khÃ³a) hiá»ƒn thá»‹ tÄ©nh á»Ÿ Ä‘áº§u trang, tá»‘i Æ°u hÃ³a Firestore Read Call.
+- **Refactor `AccountScreen` cÃ¡ nhÃ¢n:**
+  - Dá»n dáº¹p hoÃ n toÃ n logic vÃ  giao diá»‡n quáº£n trá»‹ thÃ nh viÃªn cÅ© trong `AccountScreen.tsx` á»Ÿ cáº£ Web vÃ  Windows App (code giáº£m tá»« ~809 dÃ²ng xuá»‘ng cÃ²n ~250 dÃ²ng).
+  - TÃ­ch há»£p danh sÃ¡ch phiÃªn Ä‘Äƒng nháº­p hoáº¡t Ä‘á»™ng cá»§a chÃ­nh cÃ¡ nhÃ¢n (`AdminSessionList`) hiá»ƒn thá»‹ trá»±c tiáº¿p á»Ÿ cuá»‘i trang há»“ sÆ¡ Ä‘á»ƒ nÃ¢ng cao tráº£i nghiá»‡m báº£o máº­t tá»± phá»¥c vá»¥.
+- **TÃ­ch há»£p Dashboard & Quick Actions:**
+  - Cáº­p nháº­t `QuickActionsGrid.tsx` vÃ  `Dashboard.tsx` thÃªm nÃºt **"Quáº£n lÃ½ ThÃ nh viÃªn"** vÃ o Dashboard admin (Web & Windows).
+  - ÄÄƒng kÃ½ Route `/ontap/usermanager` vÃ  map Ä‘iá»u hÆ°á»›ng trong `App.tsx` á»Ÿ cáº£ 2 phÃ¢n há»‡.
+- **Kiá»ƒm thá»­ & Build pass 100%:** XÃ¡c thá»±c biÃªn dá»‹ch TypeScript (`tsc --noEmit`) vÃ  Ä‘Ã³ng gÃ³i `npm run build` thÃ nh cÃ´ng trÃªn cáº£ phÃ¢n há»‡ Web vÃ  Windows.
 
 ## [3.10.0] - 2026-06-25
-### Tính năng Mới & Redesign Dashboard (Web & App Win)
-- **Thiết kế lại Admin Dashboard (Phương án C "Hybrid Smart"):**
-  - **AdminStatsBar:** Tích hợp thanh hiển thị thông số online slim realtime trực quan ở trên cùng, thay thế cho OnlineStatsWidget nặng nề.
-  - **Giao diện 2 cột thông minh:** 
-    - Cột trái: Giữ nguyên thẻ học viên/giáo viên (`StudentCard`) và bổ sung các nút phụ điều hướng nhanh.
-    - Cột phải: Lời chào thông minh theo giờ (`WelcomeHeader`), các nút thao tác nhanh dạng grid tiles (`QuickActionsGrid`).
-  - **Tối ưu hiệu năng (Lazy Loading):** Tách widget analytics (`CustomAnalyticsWidget`) thành chunk tải chậm (lazy-loaded chunk) chỉ tải khi admin click mở rộng để tiết kiệm băng thông tải trang ban đầu.
-  - **Haptic Feedback:** Tích hợp rung phản hồi (haptics) cho các thao tác trên thiết bị di động (bản Web).
-- **Đồng bộ hóa Windows App (ontap-win):** Áp dụng toàn bộ cấu trúc thiết kế Dashboard Phương án C sang ứng dụng Windows/Electron để đảm bảo trải nghiệm người dùng nhất quán.
-- **Sửa lỗi TypeScript:** Sửa lỗi spread types TS2698 liên quan tới thuộc tính `showPortalAds` trong `UsageConfigPanel.tsx` của bản Windows.
+### TÃ­nh nÄƒng Má»›i & Redesign Dashboard (Web & App Win)
+- **Thiáº¿t káº¿ láº¡i Admin Dashboard (PhÆ°Æ¡ng Ã¡n C "Hybrid Smart"):**
+  - **AdminStatsBar:** TÃ­ch há»£p thanh hiá»ƒn thá»‹ thÃ´ng sá»‘ online slim realtime trá»±c quan á»Ÿ trÃªn cÃ¹ng, thay tháº¿ cho OnlineStatsWidget náº·ng ná».
+  - **Giao diá»‡n 2 cá»™t thÃ´ng minh:** 
+    - Cá»™t trÃ¡i: Giá»¯ nguyÃªn tháº» há»c viÃªn/giÃ¡o viÃªn (`StudentCard`) vÃ  bá»• sung cÃ¡c nÃºt phá»¥ Ä‘iá»u hÆ°á»›ng nhanh.
+    - Cá»™t pháº£i: Lá»i chÃ o thÃ´ng minh theo giá» (`WelcomeHeader`), cÃ¡c nÃºt thao tÃ¡c nhanh dáº¡ng grid tiles (`QuickActionsGrid`).
+  - **Tá»‘i Æ°u hiá»‡u nÄƒng (Lazy Loading):** TÃ¡ch widget analytics (`CustomAnalyticsWidget`) thÃ nh chunk táº£i cháº­m (lazy-loaded chunk) chá»‰ táº£i khi admin click má»Ÿ rá»™ng Ä‘á»ƒ tiáº¿t kiá»‡m bÄƒng thÃ´ng táº£i trang ban Ä‘áº§u.
+  - **Haptic Feedback:** TÃ­ch há»£p rung pháº£n há»“i (haptics) cho cÃ¡c thao tÃ¡c trÃªn thiáº¿t bá»‹ di Ä‘á»™ng (báº£n Web).
+- **Äá»“ng bá»™ hÃ³a Windows App (ontap-win):** Ãp dá»¥ng toÃ n bá»™ cáº¥u trÃºc thiáº¿t káº¿ Dashboard PhÆ°Æ¡ng Ã¡n C sang á»©ng dá»¥ng Windows/Electron Ä‘á»ƒ Ä‘áº£m báº£o tráº£i nghiá»‡m ngÆ°á»i dÃ¹ng nháº¥t quÃ¡n.
+- **Sá»­a lá»—i TypeScript:** Sá»­a lá»—i spread types TS2698 liÃªn quan tá»›i thuá»™c tÃ­nh `showPortalAds` trong `UsageConfigPanel.tsx` cá»§a báº£n Windows.
 
 ## [3.9.9] - 2026-06-15
-- **QA Loop & Khôi phục hệ thống:** Chạy lại quy trình build tích hợp và kiểm tra chất lượng tự động để chuẩn bị phát hành.
-- **Sắp xếp cấu trúc code:** Đồng bộ hóa phiên bản build của portal root, ontap-web, và ontap-win thành v3.9.9.
+- **QA Loop & KhÃ´i phá»¥c há»‡ thá»‘ng:** Cháº¡y láº¡i quy trÃ¬nh build tÃ­ch há»£p vÃ  kiá»ƒm tra cháº¥t lÆ°á»£ng tá»± Ä‘á»™ng Ä‘á»ƒ chuáº©n bá»‹ phÃ¡t hÃ nh.
+- **Sáº¯p xáº¿p cáº¥u trÃºc code:** Äá»“ng bá»™ hÃ³a phiÃªn báº£n build cá»§a portal root, ontap-web, vÃ  ontap-win thÃ nh v3.9.9.
 
 ## [3.9.8] - 2026-06-13
 ### Security Upgrades & Performance Tuning (Web & App Win)
-- **Nâng cấp SheetJS an toàn:** Chuyển đổi thành công thư viện đọc/ghi Excel từ `xlsx` (vũ cũ lỗi thời) sang thư viện chính thức bảo mật `@sheetjs/xlsx` (v0.20.2) trên toàn hệ thống (bao gồm cả root portal, ontap-web và ontap-win).
-- **Next.js Security Patch:** Nâng cấp Next.js lên bản `14.2.43` tại root và dọn dẹp cài đặt sạch (`clean install`), giải quyết triệt để các lỗ hổng bảo mật dependencies và lỗi môi trường SWC.
-- **Tối ưu hóa dung lượng Bundle (Tách Chunk):** Cấu hình manualChunks tách biệt thư viện `@sheetjs/xlsx` thành file chunk riêng `vendor-xlsx-*.js` (488 kB) trong cả hai cấu hình Vite `ontap-web/vite.config.ts` và `ontap-win/vite.config.ts`. File bundle chính `vendor-*.js` giảm từ **1.4 MB** xuống còn **907 kB** (tiết kiệm 35% thời gian tải trang ban đầu).
-- **Tối ưu hóa Next.js Image:** Thay thế các thẻ `<img>` cũ bằng `<Image />` tối ưu của Next.js tại 16 vị trí khác nhau trong Next.js Portal (trang bài viết chi tiết, danh mục, giải trí...) để nâng cao chỉ số LCP.
-- **Sửa lỗi TypeScript & Unit Test:** 
-  - Sửa lỗi spread types TS2698 tại `UsageConfigPanel.tsx`.
-  - Khắc phục lỗi thiếu thư viện `@capacitor/local-notifications` bằng cách cập nhật dependency v8.0.1 tại `ontap-web/package.json`.
-  - Sửa lỗi cảnh báo `act(...)` bất đồng bộ bằng `waitFor` trong `AccountScreen.test.tsx`, đưa tỷ lệ test pass đạt **100% (5/5 PASS)** sạch cảnh báo.
+- **NÃ¢ng cáº¥p SheetJS an toÃ n:** Chuyá»ƒn Ä‘á»•i thÃ nh cÃ´ng thÆ° viá»‡n Ä‘á»c/ghi Excel tá»« `xlsx` (vÅ© cÅ© lá»—i thá»i) sang thÆ° viá»‡n chÃ­nh thá»©c báº£o máº­t `@sheetjs/xlsx` (v0.20.2) trÃªn toÃ n há»‡ thá»‘ng (bao gá»“m cáº£ root portal, ontap-web vÃ  ontap-win).
+- **Next.js Security Patch:** NÃ¢ng cáº¥p Next.js lÃªn báº£n `14.2.43` táº¡i root vÃ  dá»n dáº¹p cÃ i Ä‘áº·t sáº¡ch (`clean install`), giáº£i quyáº¿t triá»‡t Ä‘á»ƒ cÃ¡c lá»— há»•ng báº£o máº­t dependencies vÃ  lá»—i mÃ´i trÆ°á»ng SWC.
+- **Tá»‘i Æ°u hÃ³a dung lÆ°á»£ng Bundle (TÃ¡ch Chunk):** Cáº¥u hÃ¬nh manualChunks tÃ¡ch biá»‡t thÆ° viá»‡n `@sheetjs/xlsx` thÃ nh file chunk riÃªng `vendor-xlsx-*.js` (488 kB) trong cáº£ hai cáº¥u hÃ¬nh Vite `ontap-web/vite.config.ts` vÃ  `ontap-win/vite.config.ts`. File bundle chÃ­nh `vendor-*.js` giáº£m tá»« **1.4 MB** xuá»‘ng cÃ²n **907 kB** (tiáº¿t kiá»‡m 35% thá»i gian táº£i trang ban Ä‘áº§u).
+- **Tá»‘i Æ°u hÃ³a Next.js Image:** Thay tháº¿ cÃ¡c tháº» `<img>` cÅ© báº±ng `<Image />` tá»‘i Æ°u cá»§a Next.js táº¡i 16 vá»‹ trÃ­ khÃ¡c nhau trong Next.js Portal (trang bÃ i viáº¿t chi tiáº¿t, danh má»¥c, giáº£i trÃ­...) Ä‘á»ƒ nÃ¢ng cao chá»‰ sá»‘ LCP.
+- **Sá»­a lá»—i TypeScript & Unit Test:** 
+  - Sá»­a lá»—i spread types TS2698 táº¡i `UsageConfigPanel.tsx`.
+  - Kháº¯c phá»¥c lá»—i thiáº¿u thÆ° viá»‡n `@capacitor/local-notifications` báº±ng cÃ¡ch cáº­p nháº­t dependency v8.0.1 táº¡i `ontap-web/package.json`.
+  - Sá»­a lá»—i cáº£nh bÃ¡o `act(...)` báº¥t Ä‘á»“ng bá»™ báº±ng `waitFor` trong `AccountScreen.test.tsx`, Ä‘Æ°a tá»· lá»‡ test pass Ä‘áº¡t **100% (5/5 PASS)** sáº¡ch cáº£nh bÃ¡o.
 
 ## [3.9.7] - 2026-06-12
 ### Portal Ad Management & System Refactor (Web & App Win)
-- **Bật/tắt quảng cáo trang chủ:** Tích hợp tính năng dynamic ad toggle cho Next.js Portal homepage từ Firestore (settings/usage_config) thông qua component client `PortalAdLoader`. Loại bỏ script Adsterra cứng trong `app/layout.tsx`.
-- **Đồng bộ hóa UI quản trị:** Thêm toggle "Quảng cáo Trang chủ & Tin tức" vào tab "Hệ thống" của UsageConfigPanel cho vai trò Admin và Lãnh đạo.
-- **Sửa lỗi ESLint Circular Reference:** Khắc phục lỗi crash lint bằng cách hạ cấp package `eslint-config-next` về `14.2.35` tương thích, dọn dẹp các files cấu hình thừa.
-- **Refactor React Hooks:** Sửa triệt để 2 lỗi useEffect missing dependency và useCallback trong `tai-khoan/page.tsx` và `CourseManager.tsx`.
-- **Dọn dẹp log rác:** Xóa bỏ log build cũ và tạo template `.env.example` cấu hình môi trường an toàn.
-- **Vá bảo mật:** Vá lỗ hổng `@grpc/grpc-js` bằng npm audit fix.
+- **Báº­t/táº¯t quáº£ng cÃ¡o trang chá»§:** TÃ­ch há»£p tÃ­nh nÄƒng dynamic ad toggle cho Next.js Portal homepage tá»« Firestore (settings/usage_config) thÃ´ng qua component client `PortalAdLoader`. Loáº¡i bá» script Adsterra cá»©ng trong `app/layout.tsx`.
+- **Äá»“ng bá»™ hÃ³a UI quáº£n trá»‹:** ThÃªm toggle "Quáº£ng cÃ¡o Trang chá»§ & Tin tá»©c" vÃ o tab "Há»‡ thá»‘ng" cá»§a UsageConfigPanel cho vai trÃ² Admin vÃ  LÃ£nh Ä‘áº¡o.
+- **Sá»­a lá»—i ESLint Circular Reference:** Kháº¯c phá»¥c lá»—i crash lint báº±ng cÃ¡ch háº¡ cáº¥p package `eslint-config-next` vá» `14.2.35` tÆ°Æ¡ng thÃ­ch, dá»n dáº¹p cÃ¡c files cáº¥u hÃ¬nh thá»«a.
+- **Refactor React Hooks:** Sá»­a triá»‡t Ä‘á»ƒ 2 lá»—i useEffect missing dependency vÃ  useCallback trong `tai-khoan/page.tsx` vÃ  `CourseManager.tsx`.
+- **Dá»n dáº¹p log rÃ¡c:** XÃ³a bá» log build cÅ© vÃ  táº¡o template `.env.example` cáº¥u hÃ¬nh mÃ´i trÆ°á»ng an toÃ n.
+- **VÃ¡ báº£o máº­t:** VÃ¡ lá»— há»•ng `@grpc/grpc-js` báº±ng npm audit fix.
 
 ## [3.9.6] - 2026-06-11
-### Phân Tách Cấu Hình Ban Lãnh Đạo (Web & App Win)
-- **Phân tách cấu hình vai trò:** Phân tách cấu hình giới hạn & quyền lợi giữa **Ban Lãnh Đạo** (`leader`) và **Cán Bộ Quản Lý** (`manager`) thành hai cấu hình độc lập trong database Firestore.
-- **Đồng bộ hóa giao diện cấu hình:** Tách nút cấu hình hệ thống thành hai tab riêng biệt: "Ban Lãnh Đạo" (key: `leader`) và "Quản Lý" (key: `manager`).
-- **Đồng bộ ánh xạ vai trò:** Cập nhật hàm `getRoleConfigKey` trên toàn bộ hệ thống (bao gồm AccountScreen, ClassManagementScreen và Next.js Portal đăng bài) để nhận diện đúng key `leader` khi vai trò là `lanh_dao`.
-- **Sửa lỗi Unit Test:** Khắc phục lỗi kiểu dữ liệu TS2322 cho thuộc tính `role` trong `AccountScreen.test.tsx`.
+### PhÃ¢n TÃ¡ch Cáº¥u HÃ¬nh Ban LÃ£nh Äáº¡o (Web & App Win)
+- **PhÃ¢n tÃ¡ch cáº¥u hÃ¬nh vai trÃ²:** PhÃ¢n tÃ¡ch cáº¥u hÃ¬nh giá»›i háº¡n & quyá»n lá»£i giá»¯a **Ban LÃ£nh Äáº¡o** (`leader`) vÃ  **CÃ¡n Bá»™ Quáº£n LÃ½** (`manager`) thÃ nh hai cáº¥u hÃ¬nh Ä‘á»™c láº­p trong database Firestore.
+- **Äá»“ng bá»™ hÃ³a giao diá»‡n cáº¥u hÃ¬nh:** TÃ¡ch nÃºt cáº¥u hÃ¬nh há»‡ thá»‘ng thÃ nh hai tab riÃªng biá»‡t: "Ban LÃ£nh Äáº¡o" (key: `leader`) vÃ  "Quáº£n LÃ½" (key: `manager`).
+- **Äá»“ng bá»™ Ã¡nh xáº¡ vai trÃ²:** Cáº­p nháº­t hÃ m `getRoleConfigKey` trÃªn toÃ n bá»™ há»‡ thá»‘ng (bao gá»“m AccountScreen, ClassManagementScreen vÃ  Next.js Portal Ä‘Äƒng bÃ i) Ä‘á»ƒ nháº­n diá»‡n Ä‘Ãºng key `leader` khi vai trÃ² lÃ  `lanh_dao`.
+- **Sá»­a lá»—i Unit Test:** Kháº¯c phá»¥c lá»—i kiá»ƒu dá»¯ liá»‡u TS2322 cho thuá»™c tÃ­nh `role` trong `AccountScreen.test.tsx`.
 
 ## [3.9.5] - 2026-06-11
-### Trạng thái Tài khoản & Kết thúc Lớp học (Web & App Win)
-- **Quản lý trạng thái tài khoản:** Triển khai trạng thái tài khoản (`status: 'active' | 'disabled'`). Chặn đăng nhập và force logout thời gian thực khi tài khoản bị vô hiệu hóa.
-- **Trạng thái lớp học:** Thêm trạng thái lớp học (`status: 'active' | 'finished'`). Khi kết thúc lớp học, tự động vô hiệu hóa toàn bộ học viên trong lớp học đó.
-- **Quản lý học viên nâng cao:** Thêm chức năng chọn nhiều học viên trong lớp để vô hiệu hóa hàng loạt. Thêm badge hiển thị trạng thái tài khoản và lớp học.
-- **Phân quyền động mới:** Thêm phân quyền `courseDisableAccounts` (Vô hiệu hóa tài khoản học viên) và `courseFinish` (Kết thúc / Mở lại lớp học) cho từng vai trò.
+### Tráº¡ng thÃ¡i TÃ i khoáº£n & Káº¿t thÃºc Lá»›p há»c (Web & App Win)
+- **Quáº£n lÃ½ tráº¡ng thÃ¡i tÃ i khoáº£n:** Triá»ƒn khai tráº¡ng thÃ¡i tÃ i khoáº£n (`status: 'active' | 'disabled'`). Cháº·n Ä‘Äƒng nháº­p vÃ  force logout thá»i gian thá»±c khi tÃ i khoáº£n bá»‹ vÃ´ hiá»‡u hÃ³a.
+- **Tráº¡ng thÃ¡i lá»›p há»c:** ThÃªm tráº¡ng thÃ¡i lá»›p há»c (`status: 'active' | 'finished'`). Khi káº¿t thÃºc lá»›p há»c, tá»± Ä‘á»™ng vÃ´ hiá»‡u hÃ³a toÃ n bá»™ há»c viÃªn trong lá»›p há»c Ä‘Ã³.
+- **Quáº£n lÃ½ há»c viÃªn nÃ¢ng cao:** ThÃªm chá»©c nÄƒng chá»n nhiá»u há»c viÃªn trong lá»›p Ä‘á»ƒ vÃ´ hiá»‡u hÃ³a hÃ ng loáº¡t. ThÃªm badge hiá»ƒn thá»‹ tráº¡ng thÃ¡i tÃ i khoáº£n vÃ  lá»›p há»c.
+- **PhÃ¢n quyá»n Ä‘á»™ng má»›i:** ThÃªm phÃ¢n quyá»n `courseDisableAccounts` (VÃ´ hiá»‡u hÃ³a tÃ i khoáº£n há»c viÃªn) vÃ  `courseFinish` (Káº¿t thÃºc / Má»Ÿ láº¡i lá»›p há»c) cho tá»«ng vai trÃ².
 
 ## [3.9.4] - 2026-06-11
 ### Dynamic Permissions & Role Hierarchy (Web & App Win)
-- **Hệ thống phân quyền động chi tiết (10 tính năng cốt lõi):** Tích hợp kiểm tra quyền từ cấu hình Firestore (`settings/usage_config`) cho các thao tác quản trị lớp học, người dùng, tin tức và thiết bị.
-- **Trọng số vai trò (Role Hierarchy):** Áp dụng logic so sánh trọng số để đảm bảo người dùng chỉ có thể thao tác (Xem, Sửa, Xóa, Đổi vai trò, Force logout) trên các tài khoản có cấp bậc vai trò thấp hơn vai trò hiện tại của chính mình (`admin` (100) > `lanh_dao` (80) > `quan_ly` (60) > `giao_vien` (40) > `hoc_vien` (20) > `guest` (0)).
-- **Ẩn/Hiện UI theo phân quyền:**
-  - Giáo viên: Tự động ẩn các nút Thêm/Xóa học viên & giáo viên giảng dạy trong giao diện Lớp học (`StudentsTab`, `TeachersTab`) nếu cờ `courseAssignMembers` bị tắt.
-  - Quản trị viên & Lãnh đạo: Ẩn nút Sửa (`FaEdit`), Xóa (`FaTrash`), Reset mật khẩu (`FaKey`) đối với tài khoản ngang hàng hoặc cao hơn. Trong giao diện chỉnh sửa, danh sách lựa chọn vai trò mới chỉ hiển thị các vai trò thấp hơn người đang thao tác.
-  - Quản lý thiết bị: Ẩn danh sách phiên và nút Đăng xuất từ xa (`AdminSessionList`) đối với tài khoản không thuộc cấp dưới hoặc nếu thiếu quyền `userForceLogoutOthers`.
-- **Cơ chế Xóa mềm (Soft Delete) tài khoản:** Thay đổi hành động xóa tài khoản trong Firestore thành Xóa mềm bằng cách cập nhật `status: 'deleted'`. Client khi hoạt động sẽ tự động phát hiện trạng thái này và thực hiện đăng xuất.
+- **Há»‡ thá»‘ng phÃ¢n quyá»n Ä‘á»™ng chi tiáº¿t (10 tÃ­nh nÄƒng cá»‘t lÃµi):** TÃ­ch há»£p kiá»ƒm tra quyá»n tá»« cáº¥u hÃ¬nh Firestore (`settings/usage_config`) cho cÃ¡c thao tÃ¡c quáº£n trá»‹ lá»›p há»c, ngÆ°á»i dÃ¹ng, tin tá»©c vÃ  thiáº¿t bá»‹.
+- **Trá»ng sá»‘ vai trÃ² (Role Hierarchy):** Ãp dá»¥ng logic so sÃ¡nh trá»ng sá»‘ Ä‘á»ƒ Ä‘áº£m báº£o ngÆ°á»i dÃ¹ng chá»‰ cÃ³ thá»ƒ thao tÃ¡c (Xem, Sá»­a, XÃ³a, Äá»•i vai trÃ², Force logout) trÃªn cÃ¡c tÃ i khoáº£n cÃ³ cáº¥p báº­c vai trÃ² tháº¥p hÆ¡n vai trÃ² hiá»‡n táº¡i cá»§a chÃ­nh mÃ¬nh (`admin` (100) > `lanh_dao` (80) > `quan_ly` (60) > `giao_vien` (40) > `hoc_vien` (20) > `guest` (0)).
+- **áº¨n/Hiá»‡n UI theo phÃ¢n quyá»n:**
+  - GiÃ¡o viÃªn: Tá»± Ä‘á»™ng áº©n cÃ¡c nÃºt ThÃªm/XÃ³a há»c viÃªn & giÃ¡o viÃªn giáº£ng dáº¡y trong giao diá»‡n Lá»›p há»c (`StudentsTab`, `TeachersTab`) náº¿u cá» `courseAssignMembers` bá»‹ táº¯t.
+  - Quáº£n trá»‹ viÃªn & LÃ£nh Ä‘áº¡o: áº¨n nÃºt Sá»­a (`FaEdit`), XÃ³a (`FaTrash`), Reset máº­t kháº©u (`FaKey`) Ä‘á»‘i vá»›i tÃ i khoáº£n ngang hÃ ng hoáº·c cao hÆ¡n. Trong giao diá»‡n chá»‰nh sá»­a, danh sÃ¡ch lá»±a chá»n vai trÃ² má»›i chá»‰ hiá»ƒn thá»‹ cÃ¡c vai trÃ² tháº¥p hÆ¡n ngÆ°á»i Ä‘ang thao tÃ¡c.
+  - Quáº£n lÃ½ thiáº¿t bá»‹: áº¨n danh sÃ¡ch phiÃªn vÃ  nÃºt ÄÄƒng xuáº¥t tá»« xa (`AdminSessionList`) Ä‘á»‘i vá»›i tÃ i khoáº£n khÃ´ng thuá»™c cáº¥p dÆ°á»›i hoáº·c náº¿u thiáº¿u quyá»n `userForceLogoutOthers`.
+- **CÆ¡ cháº¿ XÃ³a má»m (Soft Delete) tÃ i khoáº£n:** Thay Ä‘á»•i hÃ nh Ä‘á»™ng xÃ³a tÃ i khoáº£n trong Firestore thÃ nh XÃ³a má»m báº±ng cÃ¡ch cáº­p nháº­t `status: 'deleted'`. Client khi hoáº¡t Ä‘á»™ng sáº½ tá»± Ä‘á»™ng phÃ¡t hiá»‡n tráº¡ng thÃ¡i nÃ y vÃ  thá»±c hiá»‡n Ä‘Äƒng xuáº¥t.
 
 ## [3.9.3] - 2026-06-11
 ### Security & Role Authorization (Web & App Win)
-- **Bảo mật đề thi động (Chặn Copy, Bôi đen, Chuột phải & Phím tắt):** Tự động áp dụng cấm chuột phải, bôi đen, copy và phím tắt (`Ctrl+C`, `Cmd+C`, `Ctrl+U`) trong các màn hình thi/làm bài (`/ontap/lambai`, `/ontap/thithu`, `/ontap/giamkhao/lambai`, `/ontap/giamkhao/thithu`) dựa trên cấu hình `preventCopy` động của từng vai trò được tải theo thời gian thực từ Firestore.
-- **Phân quyền cấu hình động:** 
-  - Admin có toàn quyền điều chỉnh giới hạn và chính sách bảo mật của toàn bộ vai trò.
-  - Lãnh đạo (`lanh_dao`) được quyền chỉnh sửa cấu hình các vai trò cấp dưới, riêng tab cấu hình của Admin sẽ ở trạng thái Chỉ xem (Read-only) và không cho Lãnh đạo chỉnh sửa.
-- **Đồng bộ hóa Route:** Truyền `userProfile` prop vào `UsageConfigPanel` tại Route `/ontap/cauhinh` để xác thực phân quyền chính xác.
+- **Báº£o máº­t Ä‘á» thi Ä‘á»™ng (Cháº·n Copy, BÃ´i Ä‘en, Chuá»™t pháº£i & PhÃ­m táº¯t):** Tá»± Ä‘á»™ng Ã¡p dá»¥ng cáº¥m chuá»™t pháº£i, bÃ´i Ä‘en, copy vÃ  phÃ­m táº¯t (`Ctrl+C`, `Cmd+C`, `Ctrl+U`) trong cÃ¡c mÃ n hÃ¬nh thi/lÃ m bÃ i (`/ontap/lambai`, `/ontap/thithu`, `/ontap/giamkhao/lambai`, `/ontap/giamkhao/thithu`) dá»±a trÃªn cáº¥u hÃ¬nh `preventCopy` Ä‘á»™ng cá»§a tá»«ng vai trÃ² Ä‘Æ°á»£c táº£i theo thá»i gian thá»±c tá»« Firestore.
+- **PhÃ¢n quyá»n cáº¥u hÃ¬nh Ä‘á»™ng:** 
+  - Admin cÃ³ toÃ n quyá»n Ä‘iá»u chá»‰nh giá»›i háº¡n vÃ  chÃ­nh sÃ¡ch báº£o máº­t cá»§a toÃ n bá»™ vai trÃ².
+  - LÃ£nh Ä‘áº¡o (`lanh_dao`) Ä‘Æ°á»£c quyá»n chá»‰nh sá»­a cáº¥u hÃ¬nh cÃ¡c vai trÃ² cáº¥p dÆ°á»›i, riÃªng tab cáº¥u hÃ¬nh cá»§a Admin sáº½ á»Ÿ tráº¡ng thÃ¡i Chá»‰ xem (Read-only) vÃ  khÃ´ng cho LÃ£nh Ä‘áº¡o chá»‰nh sá»­a.
+- **Äá»“ng bá»™ hÃ³a Route:** Truyá»n `userProfile` prop vÃ o `UsageConfigPanel` táº¡i Route `/ontap/cauhinh` Ä‘á»ƒ xÃ¡c thá»±c phÃ¢n quyá»n chÃ­nh xÃ¡c.
 
 ## [2026-06-11] (Legacy)
 ### Security & Role Authorization
-- **Khóa chuột phải bảo mật (App Win & Web)**:
-  - Trên App Win (Electron): Khóa chuột phải toàn cục đối với học viên và tài khoản thường để tránh rò rỉ mã nguồn và dữ liệu. Cho phép tài khoản `admin` sử dụng để debug.
-  - Trên Web: Khóa chuột phải tại 4 màn hình thi/làm bài và giám khảo (`/ontap/lambai`, `/ontap/thithu`, `/ontap/giamkhao/lambai`, `/ontap/giamkhao/thithu`) để chống gian lận thi cử. Bỏ qua chặn đối với tài khoản `admin`.
-- **Đồng bộ tiến độ**: Lưu trữ tiến độ thông qua `/save_brain`, cập nhật handover và dữ liệu bộ nhớ tĩnh/động (`brain.json`, `session.json`).
+- **KhÃ³a chuá»™t pháº£i báº£o máº­t (App Win & Web)**:
+  - TrÃªn App Win (Electron): KhÃ³a chuá»™t pháº£i toÃ n cá»¥c Ä‘á»‘i vá»›i há»c viÃªn vÃ  tÃ i khoáº£n thÆ°á»ng Ä‘á»ƒ trÃ¡nh rÃ² rá»‰ mÃ£ nguá»“n vÃ  dá»¯ liá»‡u. Cho phÃ©p tÃ i khoáº£n `admin` sá»­ dá»¥ng Ä‘á»ƒ debug.
+  - TrÃªn Web: KhÃ³a chuá»™t pháº£i táº¡i 4 mÃ n hÃ¬nh thi/lÃ m bÃ i vÃ  giÃ¡m kháº£o (`/ontap/lambai`, `/ontap/thithu`, `/ontap/giamkhao/lambai`, `/ontap/giamkhao/thithu`) Ä‘á»ƒ chá»‘ng gian láº­n thi cá»­. Bá» qua cháº·n Ä‘á»‘i vá»›i tÃ i khoáº£n `admin`.
+- **Äá»“ng bá»™ tiáº¿n Ä‘á»™**: LÆ°u trá»¯ tiáº¿n Ä‘á»™ thÃ´ng qua `/save_brain`, cáº­p nháº­t handover vÃ  dá»¯ liá»‡u bá»™ nhá»› tÄ©nh/Ä‘á»™ng (`brain.json`, `session.json`).
 
 ## [2026-03-29]
 ### Fixed
-- **Hệ thống Ôn tập Windows (Electron)**: Khắc phục lỗi **Màn hình trắng (ReferenceError: Award is not defined)** bằng cách bổ sung import icon `Award` còn thiếu trong `TopNavbar.tsx`.
-- **Ổn định hóa hệ thống**: Đã thực hiện build và kiểm thử (`npm run build`) trong thư mục `ontap-win` đảm bảo ứng dụng không còn bị crash khi render.
+- **Há»‡ thá»‘ng Ã”n táº­p Windows (Electron)**: Kháº¯c phá»¥c lá»—i **MÃ n hÃ¬nh tráº¯ng (ReferenceError: Award is not defined)** báº±ng cÃ¡ch bá»• sung import icon `Award` cÃ²n thiáº¿u trong `TopNavbar.tsx`.
+- **á»”n Ä‘á»‹nh hÃ³a há»‡ thá»‘ng**: ÄÃ£ thá»±c hiá»‡n build vÃ  kiá»ƒm thá»­ (`npm run build`) trong thÆ° má»¥c `ontap-win` Ä‘áº£m báº£o á»©ng dá»¥ng khÃ´ng cÃ²n bá»‹ crash khi render.
 
 ### Changed
-- **Bảo mật & Trải nghiệm**: Vô hiệu hóa tính năng tự động mở DevTools khi khởi động app và ẩn nút chuyển đổi DevTools trong giao diện chính (nhằm hạn chế can thiệp kỹ thuật F12 theo yêu cầu).
-- **Phân tích dữ liệu**: Xác định chính xác nguồn dữ liệu câu hỏi offline nằm tại `ontap-win/data/questions_db.json`.
+- **Báº£o máº­t & Tráº£i nghiá»‡m**: VÃ´ hiá»‡u hÃ³a tÃ­nh nÄƒng tá»± Ä‘á»™ng má»Ÿ DevTools khi khá»Ÿi Ä‘á»™ng app vÃ  áº©n nÃºt chuyá»ƒn Ä‘á»•i DevTools trong giao diá»‡n chÃ­nh (nháº±m háº¡n cháº¿ can thiá»‡p ká»¹ thuáº­t F12 theo yÃªu cáº§u).
+- **PhÃ¢n tÃ­ch dá»¯ liá»‡u**: XÃ¡c Ä‘á»‹nh chÃ­nh xÃ¡c nguá»“n dá»¯ liá»‡u cÃ¢u há»i offline náº±m táº¡i `ontap-win/data/questions_db.json`.
 
 ## [2026-03-29] - Android Optimization Phases
-- **Phase 04 (Visual)**: Đồng bộ màu sắc hệ thống Android (Indigo #4f46e5) và tối ưu hóa SplashScreen. Đã đồng bộ `colors.xml` trực tiếp vào dự án Android Studio.
+- **Phase 04 (Visual)**: Äá»“ng bá»™ mÃ u sáº¯c há»‡ thá»‘ng Android (Indigo #4f46e5) vÃ  tá»‘i Æ°u hÃ³a SplashScreen. ÄÃ£ Ä‘á»“ng bá»™ `colors.xml` trá»±c tiáº¿p vÃ o dá»± Ã¡n Android Studio.
 - **Phase 05 (Security & Core)**: 
-    - Tích hợp **Khóa Sinh trắc học (Fingerprint/FaceID)** bảo vệ ứng dụng ngay từ khi khởi động.
-    - Hệ thống **Thông báo Nhắc học (Daily Reminders)** giúp học viên không bỏ lỡ bài vở.
-    - `NativeSettingsModal`: Trung tâm quản lý các tính năng phần cứng thiết bị.
-- **Phase 06 (Assets)**: Tối ưu hóa toàn bộ tài nguyên hình ảnh. Giảm kích thước Icon (5.4MB -> ~100KB) và Splash Screen (8.3MB -> 2.7MB) giúp APK nhẹ hơn và khởi động nhanh hơn. Tái tạo bộ resource icon/splash đúng chuẩn Android.
+    - TÃ­ch há»£p **KhÃ³a Sinh tráº¯c há»c (Fingerprint/FaceID)** báº£o vá»‡ á»©ng dá»¥ng ngay tá»« khi khá»Ÿi Ä‘á»™ng.
+    - Há»‡ thá»‘ng **ThÃ´ng bÃ¡o Nháº¯c há»c (Daily Reminders)** giÃºp há»c viÃªn khÃ´ng bá» lá»¡ bÃ i vá»Ÿ.
+    - `NativeSettingsModal`: Trung tÃ¢m quáº£n lÃ½ cÃ¡c tÃ­nh nÄƒng pháº§n cá»©ng thiáº¿t bá»‹.
+- **Phase 06 (Assets)**: Tá»‘i Æ°u hÃ³a toÃ n bá»™ tÃ i nguyÃªn hÃ¬nh áº£nh. Giáº£m kÃ­ch thÆ°á»›c Icon (5.4MB -> ~100KB) vÃ  Splash Screen (8.3MB -> 2.7MB) giÃºp APK nháº¹ hÆ¡n vÃ  khá»Ÿi Ä‘á»™ng nhanh hÆ¡n. TÃ¡i táº¡o bá»™ resource icon/splash Ä‘Ãºng chuáº©n Android.
 
 ## [2026-03-15]
 ### Added
-- Tích hợp `@capacitor/haptics` và `@capacitor/app` cho phản hồi xúc giác (Haptics) và cấu hình điều hướng Nút Back vật lý cho Android.
-- Khởi tạo `utils/nativeUX.ts` quản lý logic trải nghiệm người dùng trên thiết bị di động (Native-like).
-- `verify_encryption.js` kịch bản kiểm thử độc lập cho hệ thống giải mã.
+- TÃ­ch há»£p `@capacitor/haptics` vÃ  `@capacitor/app` cho pháº£n há»“i xÃºc giÃ¡c (Haptics) vÃ  cáº¥u hÃ¬nh Ä‘iá»u hÆ°á»›ng NÃºt Back váº­t lÃ½ cho Android.
+- Khá»Ÿi táº¡o `utils/nativeUX.ts` quáº£n lÃ½ logic tráº£i nghiá»‡m ngÆ°á»i dÃ¹ng trÃªn thiáº¿t bá»‹ di Ä‘á»™ng (Native-like).
+- `verify_encryption.js` ká»‹ch báº£n kiá»ƒm thá»­ Ä‘á»™c láº­p cho há»‡ thá»‘ng giáº£i mÃ£.
 
 ### Changed
-- Refactor phương pháp lưu mật khẩu ở client: Chuyển đổi từ XOR plaintext sang **Web Crypto API (AES-GCM 256-bit)** với PBKDF2 Master Key, cường hóa đáng kể độ bảo mật dữ liệu lưu ở trình duyệt.
-- Tái cấu trúc logic gọi Gemini API: Dịch chuyển từ gọi trực tiếp ở frontend sang gọi qua **Proxy backend (`/api/ai/gemini`)** chặn hoàn toàn nguy cơ rò rỉ API Keys ra public.
+- Refactor phÆ°Æ¡ng phÃ¡p lÆ°u máº­t kháº©u á»Ÿ client: Chuyá»ƒn Ä‘á»•i tá»« XOR plaintext sang **Web Crypto API (AES-GCM 256-bit)** vá»›i PBKDF2 Master Key, cÆ°á»ng hÃ³a Ä‘Ã¡ng ká»ƒ Ä‘á»™ báº£o máº­t dá»¯ liá»‡u lÆ°u á»Ÿ trÃ¬nh duyá»‡t.
+- TÃ¡i cáº¥u trÃºc logic gá»i Gemini API: Dá»‹ch chuyá»ƒn tá»« gá»i trá»±c tiáº¿p á»Ÿ frontend sang gá»i qua **Proxy backend (`/api/ai/gemini`)** cháº·n hoÃ n toÃ n nguy cÆ¡ rÃ² rá»‰ API Keys ra public.
 
 ### Security
-- Khắc phục nguy cơ lộ Gemini API Key nghiêm trọng. Toàn bộ logic kiểm tra và generateContent hiện tại đã thực thi ngầm ở Node server thay vì client.
-- Xóa bỏ điểm yếu mã hóa XOR có thể dễ dàng bị bẻ khóa trong Local Storage đối với "Ghi nhớ tài khoản".
+- Kháº¯c phá»¥c nguy cÆ¡ lá»™ Gemini API Key nghiÃªm trá»ng. ToÃ n bá»™ logic kiá»ƒm tra vÃ  generateContent hiá»‡n táº¡i Ä‘Ã£ thá»±c thi ngáº§m á»Ÿ Node server thay vÃ¬ client.
+- XÃ³a bá» Ä‘iá»ƒm yáº¿u mÃ£ hÃ³a XOR cÃ³ thá»ƒ dá»… dÃ ng bá»‹ báº» khÃ³a trong Local Storage Ä‘á»‘i vá»›i "Ghi nhá»› tÃ i khoáº£n".
 ## [3.10.4] - 2026-06-25
-### Hệ Thống Bảo Trì 2 Tầng (Web & App Win)
-- **Tính năng 1:** Tích hợp chế độ bảo trì Mềm (Tầng 1) vào App Windows, đồng bộ trạng thái khóa màn hình với Web.
-- **Tính năng 2:** Thêm trang bảo trì Cứng (Tầng 2) dùng Vercel Edge Config cho Web.
-- **Sửa lỗi 1:** Sửa các cảnh báo bảo mật High severity (npm audit fix) cho Web.
-- **Bảo mật:** Cho phép role admin bypass màn hình bảo trì qua route /ontap/login-admin.
+### Há»‡ Thá»‘ng Báº£o TrÃ¬ 2 Táº§ng (Web & App Win)
+- **TÃ­nh nÄƒng 1:** TÃ­ch há»£p cháº¿ Ä‘á»™ báº£o trÃ¬ Má»m (Táº§ng 1) vÃ o App Windows, Ä‘á»“ng bá»™ tráº¡ng thÃ¡i khÃ³a mÃ n hÃ¬nh vá»›i Web.
+- **TÃ­nh nÄƒng 2:** ThÃªm trang báº£o trÃ¬ Cá»©ng (Táº§ng 2) dÃ¹ng Vercel Edge Config cho Web.
+- **Sá»­a lá»—i 1:** Sá»­a cÃ¡c cáº£nh bÃ¡o báº£o máº­t High severity (npm audit fix) cho Web.
+- **Báº£o máº­t:** Cho phÃ©p role admin bypass mÃ n hÃ¬nh báº£o trÃ¬ qua route /ontap/login-admin.
+
 

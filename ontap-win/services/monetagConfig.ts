@@ -15,16 +15,29 @@ export const MONETAG_CONFIG = {
     // Service Worker
     SW_URL: '/sw.js',
 
-    // Giới hạn tần suất
-    POPUNDER_COOLDOWN_MS: 30 * 60 * 1000, // 30 phút giữa 2 lần pop
-    DIRECT_LINK_COOLDOWN_MS: 30 * 60 * 1000, // 30 phút giữa 2 lần Direct Link
+    // Giới hạn tần suất mặc định
+    POPUNDER_COOLDOWN_MS: 30 * 60 * 1000, // 30 phút
+    DIRECT_LINK_COOLDOWN_MS: 30 * 60 * 1000, // 30 phút
 
-    // Session keys (sessionStorage)
+    // Session keys (sessionStorage / localStorage)
     SESSION_KEYS: {
         POPUNDER_FIRED: 'monetag_pop_fired',
         DIRECT_LINK_LAST: 'monetag_dl_last',
     },
 } as const;
+
+let currentPopunderCooldownMs = MONETAG_CONFIG.POPUNDER_COOLDOWN_MS;
+let currentDirectLinkCooldownMs = MONETAG_CONFIG.DIRECT_LINK_COOLDOWN_MS;
+
+export const setMonetagLimits = (popunderMins: number, directLinkMins: number) => {
+    currentPopunderCooldownMs = popunderMins * 60 * 1000;
+    currentDirectLinkCooldownMs = directLinkMins * 60 * 1000;
+};
+
+export const getMonetagLimits = () => ({
+    popunderCooldownMs: currentPopunderCooldownMs,
+    directLinkCooldownMs: currentDirectLinkCooldownMs
+});
 
 /**
  * Lấy Direct Link URL — ưu tiên URL động từ Firebase, fallback về mặc định

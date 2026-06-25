@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { MONETAG_CONFIG } from '../services/monetagConfig';
+import { MONETAG_CONFIG, getMonetagLimits } from '../services/monetagConfig';
 
 interface MonetagDirectLinkProps {
     children: React.ReactNode;
@@ -42,7 +42,8 @@ const MonetagDirectLink: React.FC<MonetagDirectLinkProps> = ({
         // Kiểm tra cooldown (30 phút)
         const lastTrigger = sessionStorage.getItem(MONETAG_CONFIG.SESSION_KEYS.DIRECT_LINK_LAST);
         const now = Date.now();
-        if (lastTrigger && now - parseInt(lastTrigger, 10) < MONETAG_CONFIG.DIRECT_LINK_COOLDOWN_MS) {
+        const limits = getMonetagLimits();
+        if (lastTrigger && now - parseInt(lastTrigger, 10) < limits.directLinkCooldownMs) {
             // Chưa hết cooldown → chạy hành động gốc luôn
             onOriginalAction();
             return;
