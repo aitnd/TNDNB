@@ -1,5 +1,10 @@
 # CHANGELOG — [ontap-win]
 
+## [3.11.0] - 2026-06-25 - Tích hợp và Tối ưu hóa Kiếm tiền Monetag
+- **Đồng bộ hóa Logic Quảng Cáo:** Triển khai Smart Tag (Vignette/Interstitial), Auto Popunder (giới hạn 1 lần/phiên), và Direct Link từ web sang Windows.
+- **Dynamic Config qua Firebase:** Cho phép thay đổi URL Direct Link động trực tiếp từ màn hình "Hệ thống" thay vì hardcode, phân bổ linh hoạt theo từng hạng tài khoản.
+- **Trải nghiệm chờ thông minh:** Bổ sung màn hình chờ `CountdownAdScreen` (5 giây) trước khi xem kết quả thi để tận dụng hiển thị quảng cáo toàn màn hình. (Lưu ý: Countdown bị tắt trong môi trường Electron để đảm bảo trải nghiệm app).
+
 ## [3.10.0] - 2026-06-25 - Thiết kế lại Admin Dashboard
 - **Đồng bộ hóa Giao diện (Phương án C "Hybrid Smart"):** 
   - Áp dụng cấu trúc Dashboard mới sang ứng dụng Windows/Electron: Thanh online slim realtime (`AdminStatsBar`) ở trên cùng.

@@ -1,5 +1,11 @@
 # CHANGELOG — [ontap-web]
 
+## [3.11.0] - 2026-06-25 - Tích hợp và Tối ưu hóa Kiếm tiền Monetag
+- **Chiến lược Quảng cáo Đa dạng:** Tích hợp Smart Tag (Vignette/Interstitial), Auto Popunder (giới hạn 1 lần/phiên), và Direct Link để tối ưu hóa doanh thu từ CPM/eCPM.
+- **Dynamic Config qua Firebase:** Cho phép Admin thay đổi URL Direct Link động trực tiếp từ màn hình "Hệ thống" thay vì hardcode, phân bổ linh hoạt theo từng hạng tài khoản (RoleConfig).
+- **Trải nghiệm chờ thông minh:** Bổ sung màn hình chờ `CountdownAdScreen` (5 giây) trước khi xem kết quả thi để tận dụng hiển thị quảng cáo toàn màn hình.
+- **Service Worker Anti-Adblock:** Tích hợp `sw.js` vào thư mục public nhằm giảm tỷ lệ quảng cáo bị chặn bởi các trình duyệt và extension adblocker.
+
 ## [3.10.0] - 2026-06-25 - Thiết kế lại Admin Dashboard
 - **AdminStatsBar:** Thanh hiển thị thông số online slim realtime trực quan ở trên cùng.
 - **Giao diện 2 cột thông minh:**

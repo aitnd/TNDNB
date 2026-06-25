@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUsageConfig, UsageConfig } from '../services/adminConfigService';
 import { getUserRoleConfig } from '../services/usageService';
+import { MONETAG_CONFIG, getDirectLinkUrl } from '../services/monetagConfig';
 
 interface AdSenseLoaderProps {
     userProfile: any | null;
@@ -10,12 +11,8 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
     const [shouldLoadAds, setShouldLoadAds] = useState(false);
 
     useEffect(() => {
-        // Skip AdSense in Electron
-        if (window.electron) {
-            setShouldLoadAds(false);
-            injectHideAdsStyle();
-            return;
-        }
+        let observer: IntersectionObserver | null = null;
+        let popunderHandler: ((e: MouseEvent) => void) | null = null;
 
         const checkConfig = async () => {
             try {
@@ -25,17 +22,39 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                 const showAdSense = param.showAdSense || false;
                 const showAdsterra = param.showAdsterra || false;
                 const showMonetag = param.showMonetag || false;
+                const showAutoPopunder = param.showAutoPopunder || false;
 
                 if (showAdSense || showAdsterra || showMonetag) {
-                    setShouldLoadAds(true);
-                    if (showAdSense) loadAdSenseScript();
-                    if (showAdsterra) loadAdsterraScript();
-                    if (showMonetag) loadMonetagScript();
-                    removeHideAdsStyle(); // Allow ads to show
+                    removeHideAdsStyle(); // Allow ads
+                    
+                    // Lazy load trigger: Phanh phui script khi cuộn đến vùng quảng cáo
+                    // Chúng ta quan sát body hoặc một thẻ cắm mốc
+                    observer = new IntersectionObserver((entries) => {
+                        if (entries[0].isIntersecting) {
+                            if (showAdSense) loadAdSenseScript();
+                            if (showAdsterra) loadAdsterraScript();
+                            if (showMonetag) loadMonetagScript();
+                            observer?.disconnect();
+                        }
+                    }, { rootMargin: '200px' }); // Load trước khi chạm 200px
+
+                    // Thử tìm các placeholder quảng cáo để quan sát
+                    const adPlaceholders = document.querySelectorAll('.adsbygoogle, #adsterra-placeholder');
+                    if (adPlaceholders.length > 0) {
+                        adPlaceholders.forEach(el => observer?.observe(el));
+                    } else {
+                        // Nếu không thấy placeholder cụ thể, quan sát body để load sau khi user cuộn một chút
+                        observer.observe(document.body);
+                    }
                 } else {
-                    setShouldLoadAds(false);
                     removeScripts();
-                    injectHideAdsStyle(); // Force hide any existing ads
+                    injectHideAdsStyle(); // Force hide
+                }
+
+                // 🖱️ Auto-click Popunder: Mở Direct Link khi user click lần đầu trên trang
+                if (showAutoPopunder && !(window as any).electron) {
+                    const directLinkUrl = getDirectLinkUrl(config.monetagDirectLinkUrl);
+                    popunderHandler = setupAutoPopunder(directLinkUrl);
                 }
             } catch (error) {
                 console.error("Error checking AdSense config:", error);
@@ -43,7 +62,35 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         };
 
         checkConfig();
+
+        return () => {
+            observer?.disconnect();
+            // Dọn dẹp popunder listener
+            if (popunderHandler) {
+                document.body.removeEventListener('click', popunderHandler);
+            }
+        };
     }, [userProfile]); // Re-check when user changes (e.g. login/logout)
+
+    // 🖱️ Auto Popunder: Gắn click listener, mở Direct Link 1 lần/phiên
+    const setupAutoPopunder = (directLinkUrl: string): ((e: MouseEvent) => void) => {
+        const handler = (e: MouseEvent) => {
+            const alreadyFired = sessionStorage.getItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED);
+            if (alreadyFired === 'true') return;
+
+            try {
+                window.open(directLinkUrl, '_blank');
+                sessionStorage.setItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED, 'true');
+            } catch {
+                // Popup bị chặn → bỏ qua
+            }
+            // Xóa listener sau khi đã fire 1 lần
+            document.body.removeEventListener('click', handler);
+        };
+
+        document.body.addEventListener('click', handler);
+        return handler;
+    };
 
     const loadAdSenseScript = () => {
         if (document.getElementById('adsense-script')) return;
@@ -70,8 +117,8 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         const script = document.createElement('script');
         script.id = 'monetag-script';
         script.async = true;
-        script.src = 'https://3nbf4.com/act/files/micro.tag.min.js?z=11198611';
-        script.setAttribute('data-z', '11198611');
+        script.src = MONETAG_CONFIG.SMART_TAG_URL;
+        script.setAttribute('data-z', MONETAG_CONFIG.ZONE_ID.toString());
         script.defer = true;
         document.body.appendChild(script);
     };
@@ -91,7 +138,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         const style = document.createElement('style');
         style.id = 'adsense-blocker-style';
         style.innerHTML = `
-            .adsbygoogle, .google-auto-placed, ins.adsbygoogle,
+            .adsbygoogle, .google-auto-placed, ins.adsbygoogle, 
             [id^="adsterra"], [class*="adsterra"],
             .at-social-bar, #pl28592472 {
                 display: none !important;

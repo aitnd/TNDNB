@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.11.0] - 2026-06-25
+### Tích hợp & Tối ưu hóa Kiếm tiền Monetag (Web & App Win)
+- **Chiến lược Quảng cáo Đa dạng:** Tích hợp Smart Tag (Vignette/Interstitial), Auto Popunder (giới hạn 1 lần/phiên), và Direct Link để tối ưu hóa doanh thu từ CPM/eCPM cho thị trường Việt Nam.
+- **Dynamic Config qua Firebase:** Cho phép Admin thay đổi URL Direct Link động trực tiếp từ màn hình "Hệ thống" thay vì hardcode.
+- **Phân bổ theo Vai trò (RoleConfig):** Cho phép bật/tắt riêng biệt các định dạng Popunder, Direct Link, Countdown Ad theo từng hạng tài khoản (Free, Verified, VIP).
+- **Trải nghiệm chờ thông minh:** Bổ sung màn hình chờ đếm ngược `CountdownAdScreen` (5 giây) trước khi xem kết quả thi để hiển thị quảng cáo Interstitial hiệu quả. (Tự động vô hiệu hóa trên môi trường Electron/Windows).
+- **Service Worker Anti-Adblock:** Tích hợp `sw.js` nhằm giảm tỷ lệ quảng cáo bị chặn bởi các trình duyệt và extension.
+
 ## [3.10.1] - 2026-06-25
 ### Tách biệt Module Quản lý Thành viên & Refactor Account Screen (Web & App Win)
 - **Trang Quản lý thành viên riêng biệt (`/ontap/usermanager`):**

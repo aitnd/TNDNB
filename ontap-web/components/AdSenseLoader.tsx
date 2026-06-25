@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUsageConfig, UsageConfig } from '../services/adminConfigService';
 import { getUserRoleConfig } from '../services/usageService';
+import { MONETAG_CONFIG, getDirectLinkUrl } from '../services/monetagConfig';
 
 interface AdSenseLoaderProps {
     userProfile: any | null;
@@ -11,6 +12,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
 
     useEffect(() => {
         let observer: IntersectionObserver | null = null;
+        let popunderHandler: ((e: MouseEvent) => void) | null = null;
 
         const checkConfig = async () => {
             try {
@@ -20,6 +22,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                 const showAdSense = param.showAdSense || false;
                 const showAdsterra = param.showAdsterra || false;
                 const showMonetag = param.showMonetag || false;
+                const showAutoPopunder = param.showAutoPopunder || false;
 
                 if (showAdSense || showAdsterra || showMonetag) {
                     removeHideAdsStyle(); // Allow ads
@@ -47,6 +50,12 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                     removeScripts();
                     injectHideAdsStyle(); // Force hide
                 }
+
+                // 🖱️ Auto-click Popunder: Mở Direct Link khi user click lần đầu trên trang
+                if (showAutoPopunder && !(window as any).electron) {
+                    const directLinkUrl = getDirectLinkUrl(config.monetagDirectLinkUrl);
+                    popunderHandler = setupAutoPopunder(directLinkUrl);
+                }
             } catch (error) {
                 console.error("Error checking AdSense config:", error);
             }
@@ -56,8 +65,32 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
 
         return () => {
             observer?.disconnect();
+            // Dọn dẹp popunder listener
+            if (popunderHandler) {
+                document.body.removeEventListener('click', popunderHandler);
+            }
         };
     }, [userProfile]); // Re-check when user changes (e.g. login/logout)
+
+    // 🖱️ Auto Popunder: Gắn click listener, mở Direct Link 1 lần/phiên
+    const setupAutoPopunder = (directLinkUrl: string): ((e: MouseEvent) => void) => {
+        const handler = (e: MouseEvent) => {
+            const alreadyFired = sessionStorage.getItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED);
+            if (alreadyFired === 'true') return;
+
+            try {
+                window.open(directLinkUrl, '_blank');
+                sessionStorage.setItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED, 'true');
+            } catch {
+                // Popup bị chặn → bỏ qua
+            }
+            // Xóa listener sau khi đã fire 1 lần
+            document.body.removeEventListener('click', handler);
+        };
+
+        document.body.addEventListener('click', handler);
+        return handler;
+    };
 
     const loadAdSenseScript = () => {
         if (document.getElementById('adsense-script')) return;
@@ -84,8 +117,8 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         const script = document.createElement('script');
         script.id = 'monetag-script';
         script.async = true;
-        script.src = 'https://3nbf4.com/act/files/micro.tag.min.js?z=11198611';
-        script.setAttribute('data-z', '11198611');
+        script.src = MONETAG_CONFIG.SMART_TAG_URL;
+        script.setAttribute('data-z', MONETAG_CONFIG.ZONE_ID.toString());
         script.defer = true;
         document.body.appendChild(script);
     };

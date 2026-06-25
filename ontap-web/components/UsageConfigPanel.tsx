@@ -577,6 +577,65 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                             </label>
                                         </div>
+
+                                        {/* 💰 Chiến lược Tối ưu Monetag */}
+                                        <div className="mt-4 pt-4 border-t border-dashed border-gray-200 dark:border-slate-600">
+                                            <h6 className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-3">💰 Tối ưu Monetag</h6>
+                                            
+                                            {/* Direct Link */}
+                                            <div className="flex items-center justify-between py-2">
+                                                <div>
+                                                    <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">🔗 Direct Link</h6>
+                                                    <p className="text-[10px] text-gray-500">Chèn link QC vào nút Download, Xem kết quả</p>
+                                                </div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={currentRoleConfig.showDirectLink || false}
+                                                        disabled={isReadOnly}
+                                                        onChange={(e) => updateRoleConfig(activeRole, 'showDirectLink', e.target.checked)}
+                                                        className="sr-only peer"
+                                                    />
+                                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                </label>
+                                            </div>
+                                            
+                                            {/* Auto Popunder */}
+                                            <div className="flex items-center justify-between py-2">
+                                                <div>
+                                                    <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">🖱️ Auto Popunder</h6>
+                                                    <p className="text-[10px] text-gray-500">Mở tab QC khi click lần đầu (1 lần/phiên)</p>
+                                                </div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={currentRoleConfig.showAutoPopunder || false}
+                                                        disabled={isReadOnly}
+                                                        onChange={(e) => updateRoleConfig(activeRole, 'showAutoPopunder', e.target.checked)}
+                                                        className="sr-only peer"
+                                                    />
+                                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                </label>
+                                            </div>
+                                            
+                                            {/* Countdown Ad */}
+                                            <div className="flex items-center justify-between py-2">
+                                                <div>
+                                                    <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">⏱️ Đếm ngược QC</h6>
+                                                    <p className="text-[10px] text-gray-500">Hiện trang đệm 5s trước khi xem kết quả</p>
+                                                </div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={currentRoleConfig.showCountdownAd || false}
+                                                        disabled={isReadOnly}
+                                                        onChange={(e) => updateRoleConfig(activeRole, 'showCountdownAd', e.target.checked)}
+                                                        className="sr-only peer"
+                                                    />
+                                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {/* 🏫 Phân quyền Tính Năng */}
@@ -1014,6 +1073,29 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             </span>
                                         </label>
                                     </div>
+                                </div>
+
+                                {/* 🔗 Monetag Direct Link URL */}
+                                <div className="p-6 bg-purple-50 dark:bg-slate-700/30 rounded-xl border border-purple-200 dark:border-slate-600 mb-6">
+                                    <h4 className="font-bold text-lg text-purple-800 dark:text-purple-400 flex items-center gap-2 mb-2">
+                                        🔗 Monetag Direct Link URL
+                                    </h4>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                                        Dán URL Direct Link từ <a href="https://publishers.monetag.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 underline">Monetag Dashboard</a> vào đây.
+                                        Dùng cho nút Download, Auto Popunder, và các vị trí quảng cáo Direct Link.
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={config.monetagDirectLinkUrl || ''}
+                                            onChange={(e) => setConfig({ ...config, monetagDirectLinkUrl: e.target.value })}
+                                            placeholder="VD: https://3nbf4.com/4/11198611"
+                                            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        />
+                                    </div>
+                                    {config.monetagDirectLinkUrl && (
+                                        <p className="text-xs text-green-600 dark:text-green-400 mt-2">✅ URL đã được cấu hình. Nhấn "Lưu cấu hình" để áp dụng.</p>
+                                    )}
                                 </div>
 
                                 <div className="p-6 bg-orange-50 dark:bg-slate-700/30 rounded-xl border border-orange-200 dark:border-slate-600">

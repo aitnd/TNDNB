@@ -21,6 +21,7 @@ import ModeSelectionScreen from './components/ModeSelectionScreen';
 import SubjectSelectionScreen from './components/SubjectSelectionScreen';
 import QuizScreen from './components/QuizScreen';
 import ExamQuizScreen2 from './components/ExamQuizScreen2';
+import CountdownAdScreen from './components/CountdownAdScreen';
 import ExamResultsScreen from './components/ExamResultsScreen';
 import ResultsScreen from './components/ResultsScreen';
 import Dashboard from './components/Dashboard';
@@ -788,6 +789,8 @@ const AppContent: React.FC = () => {
       setUserAnswers(answers);
 
       const isGK = location.pathname.startsWith('/ontap/giamkhao');
+      const currentRole = userProfile?.role || 'guest';
+      const showCountdownAd = usageConfig?.[currentRole]?.showCountdownAd ?? false;
 
       if (location.pathname === '/ontap/thithu' || location.pathname === '/ontap/giamkhao/thithu') {
         if (userProfile) {
@@ -817,7 +820,19 @@ const AppContent: React.FC = () => {
             0
           );
         }
-        navigate(isGK ? '/ontap/giamkhao/ketqua' : '/ontap/ketqua');
+        const targetPath = isGK ? '/ontap/giamkhao/ketqua' : '/ontap/ketqua';
+        // ⏱️ Redirect qua trang đếm ngược nếu config bật
+        if (showCountdownAd && !(window as any).electron) {
+          navigate('/ontap/ad-loading', {
+            state: {
+              redirectPath: targetPath,
+              seconds: 5,
+              message: 'Đang tải kết quả ôn tập...',
+            }
+          });
+        } else {
+          navigate(targetPath);
+        }
       }
     }
   };
@@ -1128,6 +1143,8 @@ const AppContent: React.FC = () => {
               />
             ) : <Navigate to="/ontap/chonchedo" replace />
           } />
+
+          <Route path="/ontap/ad-loading" element={<CountdownAdScreen />} />
 
           <Route path="/ontap/ketqua" element={
             currentQuiz ? (
