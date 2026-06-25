@@ -4,6 +4,9 @@ const config: CapacitorConfig = {
   appId: 'com.horizon.tnd',
   appName: 'Ôn thi đường thủy',
   webDir: 'public',
+  android: {
+    path: '../tnd-android'
+  },
   server: {
     url: 'https://daotaothuyenvien.com/ontap',
     cleartext: true,
