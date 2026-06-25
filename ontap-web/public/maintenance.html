@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Đang Bảo Trì | Ôn Tập</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Effects */
+        .bg-effect {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            animation: pulse 8s infinite alternate;
+        }
+        .bg-effect-1 {
+            top: -20%;
+            left: -10%;
+            background-color: rgba(37, 99, 235, 0.2);
+        }
+        .bg-effect-2 {
+            bottom: -20%;
+            right: -10%;
+            background-color: rgba(147, 51, 234, 0.2);
+            animation-delay: -4s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Floating Icon */
+        .icon-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            height: 100px;
+        }
+        .icon-core {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-core svg {
+            width: 48px;
+            height: 48px;
+            color: white;
+        }
+        
+        /* Spinners */
+        .spinner-1, .spinner-2 {
+            position: absolute;
+            color: rgba(96, 165, 250, 0.3);
+            animation: spin linear infinite;
+        }
+        .spinner-1 {
+            width: 90px;
+            height: 90px;
+            animation-duration: 8s;
+        }
+        .spinner-2 {
+            width: 60px;
+            height: 60px;
+            color: rgba(192, 132, 252, 0.4);
+            animation-duration: 12s;
+            animation-direction: reverse;
+            margin-left: 45px;
+            margin-bottom: 45px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #bfdbfe, #e9d5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @media (min-width: 768px) {
+            h1 { font-size: 2.5rem; }
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        /* Pills */
+        .pills {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+        @media (min-width: 600px) {
+            .pills { flex-direction: row; justify-content: center; }
+        }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: #e2e8f0;
+        }
+
+        .pill svg { width: 16px; height: 16px; }
+        .pill.blue svg { color: #60a5fa; }
+        .pill.purple svg { color: #c084fc; }
+
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover { color: #93c5fd; }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-effect bg-effect-1"></div>
+    <div class="bg-effect bg-effect-2"></div>
+
+    <div class="container">
+        <div class="icon-container">
+            <!-- Spinner 1 (Settings) -->
+            <svg class="spinner-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            
+            <!-- Spinner 2 (Settings) -->
+            <svg class="spinner-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+
+            <!-- Wrench Icon -->
+            <div class="icon-core">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            </div>
+        </div>
+
+        <h1>Hệ Thống Đang Bảo Trì Toàn Diện</h1>
+        
+        <p>Hệ thống đang được nâng cấp khẩn cấp để đảm bảo trải nghiệm tốt nhất và sửa các lỗi phát sinh. Vui lòng quay lại sau ít phút. Xin lỗi vì sự bất tiện này!</p>
+
+        <div class="pills">
+            <div class="pill blue">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>Thời gian: Sớm nhất có thể</span>
+            </div>
+            <div class="pill purple">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+                <span>Dữ liệu của bạn an toàn 100%</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            Cần hỗ trợ gấp? Liên hệ: <a href="mailto:contact@daotaothuyenvien.com">contact@daotaothuyenvien.com</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -43,6 +43,7 @@ import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
 import EntertainmentScreen from './components/EntertainmentScreen';
 import GiamKhaoSelectionScreen from './components/GiamKhaoSelectionScreen';
+import MaintenanceScreen from './components/MaintenanceScreen';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
@@ -903,6 +904,12 @@ const AppContent: React.FC = () => {
     );
   }
 
+  // --- MAINTENANCE MODE CHECK ---
+  const isMaintenanceBypassed = location.pathname === '/ontap/login-admin' || userProfile?.role === 'admin';
+  if (usageConfig?.isMaintenanceMode && !isMaintenanceBypassed) {
+    return <MaintenanceScreen message={usageConfig.maintenanceMessage} />;
+  }
+
   // --- STRICT WINDOWS APP LOGIC ---
   // @ts-ignore
   const isElectron = window.electron?.isElectron || window.location.protocol === 'file:' || navigator.userAgent.toLowerCase().includes('electron');
@@ -969,6 +976,7 @@ const AppContent: React.FC = () => {
           } />
 
           <Route path="/ontap/login" element={!userProfile ? <LoginScreen onBack={() => navigate('/')} /> : <Navigate to="/ontap/dashboard" />} />
+          <Route path="/ontap/login-admin" element={!userProfile ? <LoginScreen onBack={() => navigate('/')} /> : <Navigate to="/ontap/dashboard" />} />
           <Route path="/ontap/windows-login" element={!userProfile ? <WindowsLoginScreen /> : <Navigate to="/ontap/dashboard" />} />
           <Route path="/ontap/register" element={<RegisterScreen onBack={() => navigate('/')} onSuccess={() => navigate('/ontap/dashboard')} />} />
 

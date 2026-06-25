@@ -76,3 +76,10 @@
 
 ## [3.8.11] - 2026-01-18 - Góc giải trí VIP
 - **Feature**: Thêm "Góc Giải Trí" với kho trò chơi HTML5 (Contra, Đào Vàng...).
+## [3.10.4] - 2026-06-25
+### Hệ Thống Bảo Trì
+- **Tính năng 1:** Tích hợp chế độ bảo trì Mềm (Tầng 1) vào App Windows, đồng bộ trạng thái khóa màn hình với Web.
+- **Tính năng 2:** Thêm trang bảo trì Cứng (Tầng 2) dùng Vercel Edge Config cho Web.
+- **Sửa lỗi 1:** Sửa các cảnh báo bảo mật High severity (npm audit fix) cho Web.
+- **Bảo mật:** Cho phép role admin bypass màn hình bảo trì qua route /ontap/login-admin.
+

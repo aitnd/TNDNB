@@ -54,6 +54,8 @@ export interface UsageConfig {
     };
     showPortalAds?: boolean; // Bật/Tắt quảng cáo trên trang chủ tin tức (Next.js Portal)
     monetagDirectLinkUrl?: string; // 🔗 URL Direct Link Monetag (nhập từ Dashboard, lưu Firebase)
+    isMaintenanceMode?: boolean; // Tầng 1: Soft Maintenance
+    maintenanceMessage?: string; // Lời nhắn bảo trì
 }
 
 // Cấu hình GitHub cho Release Manager
@@ -295,12 +297,15 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 admin: { ...DEFAULT_CONFIG.admin, ...(data.admin || {}) },
                 app_links: data.app_links || DEFAULT_CONFIG.app_links, // Include app_links
                 showPortalAds: data.showPortalAds ?? true, // Mặc định bật quảng cáo trang tin tức
-                monetagDirectLinkUrl: data.monetagDirectLinkUrl || '' // URL Direct Link Monetag
+                monetagDirectLinkUrl: data.monetagDirectLinkUrl || '', // URL Direct Link Monetag
+                isMaintenanceMode: data.isMaintenanceMode || false,
+                maintenanceMessage: data.maintenanceMessage || 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!'
             };
         } else {
             // Initialize if not exists
-            await setDoc(docRef, DEFAULT_CONFIG);
-            return DEFAULT_CONFIG;
+            const initialConfig = { ...DEFAULT_CONFIG, isMaintenanceMode: false, maintenanceMessage: 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!' };
+            await setDoc(docRef, initialConfig);
+            return initialConfig;
         }
     } catch (error) {
         console.error('Error fetching usage config:', error);

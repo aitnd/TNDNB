@@ -1,7 +1,7 @@
 # TNDNB - Hệ thống Ôn tập & Thi nâng định hạng thuyền viên
 
 > **Cập nhật lần cuối:** 2026-06-25  
-> **Phiên bản hiện tại:** v3.11.0  
+> **Phiên bản hiện tại:** v3.10.4  
 > **Mục tiêu:** Hệ thống ôn tập, thi thử và quản lý học viên chuyên nghiệp dành cho thuyền viên, vận hành đồng bộ trên cả nền tảng Web và ứng dụng Desktop Windows.
 
 ---
@@ -35,9 +35,13 @@ Dự án là một monorepo bao gồm 3 thành phần chính:
 
 ---
 
-## 🚀 Tính Năng Nổi Bật Gần Đây (v3.11.0)
+## 🚀 Tính Năng Nổi Bật Gần Đây (v3.10.4)
 
-### 1. 💰 Chiến Lực Tối Ưu Hóa MMO & Mạng Quảng Cáo Monetag
+### 1. 🛡️ Hệ Thống Bảo Trì 2 Tầng (Web & App Win)
+- **Tầng 1 (Bảo Trì Mềm - Firebase):** Khóa giao diện qua cấu hình Firebase Realtime Database. App Windows và Web đều đồng bộ tức thời khóa màn hình với thông báo bảo trì, nhưng vẫn có route ẩn (`/ontap/login-admin`) dành riêng cho Admin để vượt rào (bypass) vào quản trị.
+- **Tầng 2 (Bảo Trì Cứng - Vercel Edge Config):** Chặn ở cấp độ Network (Vercel Edge Middleware). Khi hệ thống sập nặng hoặc trắng trang, yêu cầu truy cập sẽ bị chuyển hướng ngay sang trang bảo trì tĩnh (HTML) trên Edge network, tiết kiệm tài nguyên và bảo vệ server origin.
+
+### 2. 💰 Chiến Lực Tối Ưu Hóa MMO & Mạng Quảng Cáo Monetag
 - **Popunder & Direct Links:** Tích hợp cơ chế tự động mở tab Popunder ẩn khi người dùng tương tác lần đầu (giới hạn 1 lần/phiên) và chèn **Direct Link** vào các nút tải tài liệu/xem đáp án để tối ưu doanh thu click sạch.
 - **Trang Chờ Đếm Ngược:** Màn hình chờ đếm ngược 5 giây (`CountdownAdScreen`) trước khi xem kết quả thi để hiển thị quảng cáo chuyển tiếp (Interstitial) hiệu quả (tự động vô hiệu hóa trên app Windows).
 - **Cấu hình động qua Firestore:** Admin có thể thay đổi link quảng cáo Monetag động trực tiếp từ trang cấu hình hệ thống mà không cần chỉnh sửa source code.

@@ -1098,6 +1098,47 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                     )}
                                 </div>
 
+                                {/* 🛑 Cấu hình Bảo trì (Maintenance Mode) */}
+                                <div className="p-6 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-200 dark:border-red-800 mb-6">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <h4 className="font-bold text-lg text-red-800 dark:text-red-400 flex items-center gap-2">
+                                                🛑 Chế độ Bảo trì (Soft Maintenance)
+                                            </h4>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 mb-4">
+                                                Bật chế độ này sẽ chặn người dùng truy cập vào ứng dụng và hiển thị màn hình thông báo bảo trì. Admin vẫn có thể đăng nhập qua đường dẫn <code>/login-admin</code> để kiểm tra hệ thống.
+                                            </p>
+                                            
+                                            {config.isMaintenanceMode && (
+                                                <div className="animate-fade-in-up">
+                                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                        Thông báo Bảo trì (Tùy chọn)
+                                                    </label>
+                                                    <textarea
+                                                        value={config.maintenanceMessage || ''}
+                                                        onChange={(e) => setConfig({ ...config, maintenanceMessage: e.target.value })}
+                                                        placeholder="VD: Hệ thống đang được nâng cấp để phục vụ bạn tốt hơn. Vui lòng quay lại sau ít phút..."
+                                                        className="w-full px-4 py-3 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none h-24"
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-6 mt-1">
+                                            <input
+                                                type="checkbox"
+                                                checked={config.isMaintenanceMode ?? false}
+                                                onChange={(e) => setConfig({ ...config, isMaintenanceMode: e.target.checked })}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                            <span className="absolute top-8 right-0 text-xs font-bold text-red-600 dark:text-red-400 mt-1 whitespace-nowrap">
+                                                {(config.isMaintenanceMode ?? false) ? 'ĐANG BẬT' : 'Đang tắt'}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
                                 <div className="p-6 bg-orange-50 dark:bg-slate-700/30 rounded-xl border border-orange-200 dark:border-slate-600">
                                     <h4 className="font-bold text-lg mb-2 text-orange-800 dark:text-orange-400 flex items-center gap-2"><FaBroom /> Dọn dẹp dữ liệu rác</h4>
                                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">

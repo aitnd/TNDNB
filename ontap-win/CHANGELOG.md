@@ -53,3 +53,8 @@
 ## [3.9.0] - 2026-03-18 - Native Integration
 - Hỗ trợ phím tắt và thông báo hệ thống trên Windows.
 - Tự động kiểm tra bản cập nhật mỗi khi khởi động app.
+## [3.10.4] - 2026-06-25
+### Hệ Thống Bảo Trì
+- **Tính năng 1:** Tích hợp chế độ bảo trì Mềm (Tầng 1) vào App Windows, đồng bộ trạng thái khóa màn hình với Web.
+- **Bảo mật:** Cho phép role admin bypass màn hình bảo trì qua route /ontap/login-admin.
+
