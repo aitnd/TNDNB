@@ -19,8 +19,9 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
 
                 const showAdSense = param.showAdSense || false;
                 const showAdsterra = param.showAdsterra || false;
+                const showMonetag = param.showMonetag || false;
 
-                if (showAdSense || showAdsterra) {
+                if (showAdSense || showAdsterra || showMonetag) {
                     removeHideAdsStyle(); // Allow ads
                     
                     // Lazy load trigger: Phanh phui script khi cuộn đến vùng quảng cáo
@@ -29,6 +30,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                         if (entries[0].isIntersecting) {
                             if (showAdSense) loadAdSenseScript();
                             if (showAdsterra) loadAdsterraScript();
+                            if (showMonetag) loadMonetagScript();
                             observer?.disconnect();
                         }
                     }, { rootMargin: '200px' }); // Load trước khi chạm 200px
@@ -77,8 +79,19 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         document.head.appendChild(script);
     };
 
+    const loadMonetagScript = () => {
+        if (document.getElementById('monetag-script')) return;
+        const script = document.createElement('script');
+        script.id = 'monetag-script';
+        script.async = true;
+        script.src = 'https://3nbf4.com/act/files/micro.tag.min.js?z=11198611';
+        script.setAttribute('data-z', '11198611');
+        script.defer = true;
+        document.body.appendChild(script);
+    };
+
     const removeScripts = () => {
-        ['adsense-script', 'adsterra-script'].forEach(id => {
+        ['adsense-script', 'adsterra-script', 'monetag-script'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.remove();
         });
