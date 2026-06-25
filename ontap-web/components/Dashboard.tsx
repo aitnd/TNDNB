@@ -31,11 +31,13 @@ interface DashboardProps {
     onNotificationClick?: () => void;
     onStatsClick?: () => void;
     onSettingsClick?: () => void;
+    onUserManagerClick?: () => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
     userProfile, onStart, onHistoryClick, onClassClick,
-    onOnlineExamClick, onNotificationClick, onStatsClick, onSettingsClick
+    onOnlineExamClick, onNotificationClick, onStatsClick, onSettingsClick,
+    onUserManagerClick
 }) => {
     const { theme } = useTheme();
     const isMobileApp = useAppStore(state => state.isMobileApp);
@@ -56,6 +58,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         onNotificationClick,
         onStatsClick,
         onSettingsClick: onSettingsClick || (isMobileApp ? () => setIsNativeSettingsOpen(true) : undefined),
+        onUserManagerClick,
     });
 
     // === PREMIUM THEME — PHƯƠNG ÁN C "HYBRID SMART" ===

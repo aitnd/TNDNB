@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.10.1] - 2026-06-25
+### Tách biệt Module Quản lý Thành viên & Refactor Account Screen (Web & App Win)
+- **Trang Quản lý thành viên riêng biệt (`/ontap/usermanager`):**
+  - Tách toàn bộ bảng danh sách, bộ lọc, tìm kiếm và phân trang người dùng ra khỏi trang cá nhân thành một trang quản trị chuyên biệt mới.
+  - Tích hợp Slide-over Panel xem chi tiết và danh sách thiết bị/phiên đăng nhập để force logout từ xa.
+  - Thiết kế 3 thẻ KPI Stats tổng quan tài khoản (Học viên, nhân sự, bị khóa) hiển thị tĩnh ở đầu trang, tối ưu hóa Firestore Read Call.
+- **Refactor `AccountScreen` cá nhân:**
+  - Dọn dẹp hoàn toàn logic và giao diện quản trị thành viên cũ trong `AccountScreen.tsx` ở cả Web và Windows App (code giảm từ ~809 dòng xuống còn ~250 dòng).
+  - Tích hợp danh sách phiên đăng nhập hoạt động của chính cá nhân (`AdminSessionList`) hiển thị trực tiếp ở cuối trang hồ sơ để nâng cao trải nghiệm bảo mật tự phục vụ.
+- **Tích hợp Dashboard & Quick Actions:**
+  - Cập nhật `QuickActionsGrid.tsx` và `Dashboard.tsx` thêm nút **"Quản lý Thành viên"** vào Dashboard admin (Web & Windows).
+  - Đăng ký Route `/ontap/usermanager` và map điều hướng trong `App.tsx` ở cả 2 phân hệ.
+- **Kiểm thử & Build pass 100%:** Xác thực biên dịch TypeScript (`tsc --noEmit`) và đóng gói `npm run build` thành công trên cả phân hệ Web và Windows.
+
 ## [3.10.0] - 2026-06-25
 ### Tính năng Mới & Redesign Dashboard (Web & App Win)
 - **Thiết kế lại Admin Dashboard (Phương án C "Hybrid Smart"):**

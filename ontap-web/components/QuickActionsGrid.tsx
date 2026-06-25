@@ -29,6 +29,7 @@ interface QuickActionsGridProps {
     onNotificationClick?: () => void;
     onStatsClick?: () => void;
     onSettingsClick?: () => void;
+    onUserManagerClick?: () => void;
 }
 
 // === COMPONENT NÚT CHÍNH (CTA TO) ===
@@ -175,7 +176,15 @@ export const useQuickActions = (props: QuickActionsGridProps) => {
             onClick: props.onClassClick,
             variant: 'secondary',
         },
-    ];
+        isAdmin && props.onUserManagerClick ? {
+            id: 'usermanager',
+            label: '👤 Quản lý Thành viên',
+            icon: <Users size={16} />,
+            onClick: props.onUserManagerClick,
+            variant: 'secondary',
+            visibleFor: adminRoles,
+        } : null,
+    ].filter(Boolean) as QuickAction[];
 
     return { primaryAction, rightTiles, leftButtons };
 };

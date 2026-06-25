@@ -27,6 +27,7 @@ import HistoryScreen from './components/HistoryScreen';
 import MyClassScreen from './components/MyClassScreen';
 import ClassManagementScreen from './components/ClassManagementScreen';
 import AccountScreen from './components/AccountScreen';
+import UserManagerScreen from './components/UserManagerScreen';
 import TopNavbar from './components/TopNavbar';
 import MailboxScreen from './components/MailboxScreen';
 import AdSenseLoader from './components/AdSenseLoader';
@@ -660,6 +661,7 @@ const AppContent: React.FC = () => {
       case 'download_app': navigate('/ontap/download'); break;
       case 'analytics': navigate('/ontap/thongke'); break;
       case 'login_history': navigate('/ontap/lichsudangnhap'); break;
+      case 'usermanager': navigate('/ontap/usermanager'); break;
       default: navigate('/ontap/dashboard');
     }
   };
@@ -726,6 +728,7 @@ const AppContent: React.FC = () => {
                 onNotificationClick={() => navigate('/ontap/homthu')}
                 onStatsClick={() => navigate('/ontap/thongke')}
                 onSettingsClick={() => navigate('/ontap/taikhoan')}
+                onUserManagerClick={() => navigate('/ontap/usermanager')}
               />
             ) : (
               <WelcomeModal onStart={handleStart} onLoginClick={() => navigate('/ontap/dangnhap')} onRegisterClick={() => navigate('/ontap/dangky')} />
@@ -816,6 +819,7 @@ const AppContent: React.FC = () => {
            <Route path="/ontap/quanlylop" element={userProfile ? <ClassManagementScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
           <Route path="/ontap/quanlylop/:courseId" element={userProfile ? <ClassManagementScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" replace />} />
           <Route path="/ontap/taikhoan" element={userProfile ? <AccountScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/dangnhap" replace />} />
+          <Route path="/ontap/usermanager" element={userProfile ? <UserManagerScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/dangnhap" replace />} />
           <Route path="/ontap/cauhinh" element={userProfile ? <UsageConfigPanel userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/thongbao" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/dangnhap" />} />
           <Route path="/ontap/homthu" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/dangnhap" />} />

@@ -25,6 +25,7 @@ interface QuickActionsGridProps {
     onNotificationClick?: () => void;
     onStatsClick?: () => void;
     onSettingsClick?: () => void;
+    onUserManagerClick?: () => void;
 }
 
 // Nút CTA chính
@@ -124,7 +125,11 @@ const useQuickActions = (props: QuickActionsGridProps) => {
             id: 'class', label: isAdmin ? '👥 Quản lý Lớp' : '👥 Lớp của tôi',
             icon: <Users size={16} />, onClick: props.onClassClick, variant: 'secondary',
         },
-    ];
+        isAdmin && props.onUserManagerClick ? {
+            id: 'usermanager', label: '👤 Quản lý Thành viên', icon: <Users size={16} />,
+            onClick: props.onUserManagerClick, variant: 'secondary',
+        } : null,
+    ].filter(Boolean) as QuickAction[];
 
     return { primaryAction, rightTiles, leftButtons };
 };
