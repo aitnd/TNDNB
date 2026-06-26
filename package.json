@@ -3,7 +3,7 @@
   "version": "3.10.5",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "cd ontap-web && npm install && npm run build && cd .. && cd amthuc-web && npm install && npm run build && cd .. && next build",
     "start": "next start",
     "lint": "next lint"
