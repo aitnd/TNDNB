@@ -1,4 +1,5 @@
-'use client';
+'use client'
+import Image from 'next/image';
 
 import React, { useState, useEffect } from 'react';
 import {    FaUserTie, FaPlus, FaTrash, FaGraduationCap,    FaMailBulk, FaPhone} from 'react-icons/fa'; 
@@ -137,7 +138,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
 
                   <div className="flex items-center gap-5 mb-6">
                      <div className="relative">
-                        <img 
+                        <Image width={100} height={100} style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                           src={getAvatar(t)} 
                           alt="" 
                           className="w-16 h-16 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800"

@@ -3,6 +3,7 @@
 
 import ThemeSwitcher from './ThemeSwitcher'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { auth } from '../utils/firebaseClient'
@@ -31,10 +32,12 @@ export default function Navbar() {
     <header>
       {/* 🎄 ẢNH TRANG TRÍ (Chỉ hiện khi Theme Noel) 🎄 */}
       {theme === 'noel' && (
-        <img
+        <Image
           src="/assets/img/nav-light.png"
           alt=""
-          style={{ position: 'absolute', top: '60px', right: 0, width: '120px', pointerEvents: 'none', zIndex: 60 }}
+          width={120}
+          height={60}
+          style={{ position: 'absolute', top: '60px', right: 0, pointerEvents: 'none', zIndex: 60 }}
         />
       )}
 
@@ -45,9 +48,11 @@ export default function Navbar() {
           {/* 👇 KHU VỰC LOGO & TEXT ĐƯỢC CODE LẠI THEO YÊU CẦU 👇 */}
           <Link href="/" className={styles.brandArea}>
             {/* Logo Bánh lái tàu */}
-            <img
+            <Image
               src="/assets/img/logo.png"
               alt="Logo TĐNB"
+              width={60}
+              height={60}
               className={styles.logoImg}
             />
 

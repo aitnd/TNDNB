@@ -24,23 +24,23 @@ const getLicenseIcon = (license: License, theme: Theme): React.ReactNode => {
     const name = license.name.toLowerCase();
 
     if (theme === 'noel') {
-        if (name.includes('thuyền trưởng')) return <img src="/assets/img/hat.png" alt="Captain Hat" className={noelIconClass} />;
-        if (name.includes('máy trưởng')) return <img src="/assets/img/gift4.png" alt="Chief Engineer" className={noelIconClass} />;
-        if (name.includes('thủy thủ')) return <img src="/assets/img/bell.png" alt="Sailor" className={noelIconClass} />;
-        if (name.includes('lái phương tiện')) return <img src="/assets/img/tree.png" alt="Helm" className={noelIconClass} />;
-        if (name.includes('chứng chỉ')) return <img src="/assets/img/star-gold.png" alt="Certificate" className={noelIconClass} />;
-        return <img src="/assets/img/gift5.png" alt="Default" className={noelIconClass} />;
+        if (name.includes('thuyền trưởng')) return <img src="/assets/img/hat.png" alt="Captain Hat" className={noelIconClass} loading="lazy" />;
+        if (name.includes('máy trưởng')) return <img src="/assets/img/gift4.png" alt="Chief Engineer" className={noelIconClass} loading="lazy" />;
+        if (name.includes('thủy thủ')) return <img src="/assets/img/bell.png" alt="Sailor" className={noelIconClass} loading="lazy" />;
+        if (name.includes('lái phương tiện')) return <img src="/assets/img/tree.png" alt="Helm" className={noelIconClass} loading="lazy" />;
+        if (name.includes('chứng chỉ')) return <img src="/assets/img/star-gold.png" alt="Certificate" className={noelIconClass} loading="lazy" />;
+        return <img src="/assets/img/gift5.png" alt="Default" className={noelIconClass} loading="lazy" />;
     }
 
     if (theme === 'tri-an') {
         switch (license.id) {
             // === NEW BOOK ICONS for Thuyền trưởng ===
             case 'thuyentruong-h1':
-                return <img src="https://i.postimg.cc/Vs76y54F/8.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/Vs76y54F/8.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'thuyentruong-h2':
-                return <img src="https://i.postimg.cc/Pf6xGNK4/9.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/Pf6xGNK4/9.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'thuyentruong-h3':
-                return <img src="https://i.postimg.cc/Vs76y54W/7.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/Vs76y54W/7.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             
             // Original themed icons (transparent)
             case 'thuythu':
@@ -50,24 +50,24 @@ const getLicenseIcon = (license: License, theme: Theme): React.ReactNode => {
 
             // === IMAGES that need rounding ===
             case 'maytruong-h1':
-                return <img src="https://i.postimg.cc/zDpm90H6/undefined.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/zDpm90H6/undefined.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'maytruong-h2':
-                return <img src="https://i.postimg.cc/wMwSLjdc/Teachers-day-background-design-art-illustration.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/wMwSLjdc/Teachers-day-background-design-art-illustration.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'maytruong-h3':
-                return <img src="https://i.postimg.cc/NFdWmjwH/Hinh-thiep.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/NFdWmjwH/Hinh-thiep.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             
             case 'thomay':
-                return <img src="https://i.postimg.cc/cJYy2WQN/hinh-nen-3.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/cJYy2WQN/hinh-nen-3.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'caotoc':
-                return <img src="https://i.postimg.cc/dQWMQybn/5.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/dQWMQybn/5.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'ven-bien':
-                return <img src="https://i.postimg.cc/zDdmDgs0/6.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/zDdmDgs0/6.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'antoan-ven-bien':
-                return <img src="https://i.postimg.cc/ZYFWdtv0/BOARD.webp" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/ZYFWdtv0/BOARD.webp" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'antoan-xang-dau':
-                return <img src="https://i.postimg.cc/T2k82Dzc/4.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/T2k82Dzc/4.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
             case 'antoan-hoa-chat':
-                return <img src="https://i.postimg.cc/mZVx08Ff/World-Teacher-s-Day-Flowers-Border-Pink.jpg" alt={license.name} className={imageIconClass} />;
+                return <img src="https://i.postimg.cc/mZVx08Ff/World-Teacher-s-Day-Flowers-Border-Pink.jpg" alt={license.name} className={imageIconClass} loading="lazy" />;
 
             // Default for any other 'chứng chỉ' - use the original journal icon
             default:
@@ -101,7 +101,7 @@ const LicenseSelectionScreen: React.FC<LicenseSelectionScreenProps> = ({ license
             <ArrowLeftIcon3D className="h-10 w-10 text-primary" />
         </button>
         {theme === 'noel' ? (
-            <img src="/assets/img/tree.png" alt="Tree" className="h-20 w-20 mx-auto mb-4 object-contain drop-shadow-lg" />
+            <img src="/assets/img/tree.png" alt="Tree" className="h-20 w-20 mx-auto mb-4 object-contain drop-shadow-lg" loading="lazy" />
         ) : (
             <AnchorIcon3D className="h-20 w-20 mx-auto text-primary mb-4" />
         )}

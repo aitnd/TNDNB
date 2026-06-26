@@ -1,6 +1,8 @@
 // Đánh dấu đây là "Client Component"
 'use client'
 
+import Image from 'next/image'
+
 // 💖 1. THÊM "NÃO" 'useRef' 💖
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation' 
@@ -461,9 +463,12 @@ function EditPostForm() {
               {/* KHỐI XEM TRƯỚC VÀ NÚT XÓA ẢNH */}
               {thumbnailPreview && (
                 <div className={styles.thumbnailPreviewContainer}>
-                  <img 
+                  <Image 
                     src={thumbnailPreview} 
                     alt="Xem trước" 
+                    width={300}
+                    height={200}
+                    style={{ objectFit: 'cover' }}
                     className={styles.thumbnailPreview} 
                   />
                   <button

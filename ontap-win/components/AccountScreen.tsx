@@ -153,8 +153,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                             <img
                                 src={myInfo.photoURL || getDefaultAvatar(myInfo.role)}
                                 alt="Avatar"
-                                className="w-full h-full object-cover"
-                            />
+                                className="w-full h-full object-cover" loading="lazy" />
                             {uploadingAvatar && (
                                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                                     <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>

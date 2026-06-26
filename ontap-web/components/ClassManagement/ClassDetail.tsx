@@ -221,8 +221,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
                                         <img
                                             src={t.fullName ? (t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`) : (t.photoURL || `https://ui-avatars.com/api/?name=User`)}
                                             onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName || 'User')}`; }}
-                                            className="w-10 h-10 rounded-full border border-gray-200"
-                                        />
+                                            className="w-10 h-10 rounded-full border border-gray-200" loading="lazy" alt="" />
                                         {selectedCourse.headTeacherId === t.uid && <div className="absolute -top-1 -right-1 bg-yellow-400 text-white rounded-full p-0.5 border-2 border-white"><FaGraduationCap size={10} /></div>}
                                     </div>
                                     <div className="min-w-0 flex-1">
@@ -305,8 +304,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
                                                         src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName || s.full_name || 'Học viên')}&background=random`}
                                                         onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName || s.full_name || 'Học viên')}&background=random`; }}
                                                         alt={s.fullName || s.full_name}
-                                                        className="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm group-hover:border-blue-500 transition-colors"
-                                                    />
+                                                        className="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm group-hover:border-blue-500 transition-colors" loading="lazy" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <h4 className="font-bold text-gray-900 dark:text-gray-100 truncate group-hover:text-blue-600 transition-colors text-base flex items-center gap-1">
@@ -420,8 +418,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
                                                             <img
                                                                 src={s.fullName ? (s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`) : (s.photoURL || `https://ui-avatars.com/api/?name=User`)}
                                                                 onError={(e) => { e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName || 'User')}`; }}
-                                                                className="w-8 h-8 rounded-full border border-gray-100"
-                                                            />
+                                                                className="w-8 h-8 rounded-full border border-gray-100" loading="lazy" alt="" />
                                                             <div className="min-w-0">
                                                                 <p className="font-bold text-gray-900 dark:text-gray-100 truncate max-w-[150px]">{s.fullName}</p>
                                                                 <p className="text-[10px] text-gray-400 truncate max-w-[150px]">{s.email}</p>

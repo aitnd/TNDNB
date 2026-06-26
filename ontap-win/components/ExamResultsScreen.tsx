@@ -88,8 +88,7 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
                                             src={getLocalImageSrc(question) || question.image}
                                             alt="Câu hỏi"
                                             className="w-full h-auto object-cover max-h-80"
-                                            onError={(e) => handleImageError(e, question.image)}
-                                        />
+                                            onError={(e) => handleImageError(e, question.image)} loading="lazy" />
                                     </div>
                                 )}
                                 <div className="space-y-2">

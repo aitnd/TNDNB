@@ -364,7 +364,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="relative">
-                    <img src={getAvatar(st)} alt="" className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800" />
+                    <img src={getAvatar(st)} alt="" className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800" loading="lazy" />
                     {st.isVerified && (
                       <div className="absolute -top-1 -right-1 bg-teal-500 text-white p-0.5 rounded-full border-2 border-white dark:border-slate-900 shadow-sm">
                         <FaCheckCircle className="text-[10px]" />
@@ -426,7 +426,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                 <tr key={st.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" />
+                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" loading="lazy" />
                       <div>
                         <p className="text-sm font-bold text-gray-900 dark:text-white">{st.fullName || st.full_name}</p>
                         <p className="text-[10px] text-gray-400 truncate max-w-[200px]">{st.email}</p>

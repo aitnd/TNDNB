@@ -142,8 +142,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                             className="w-[100px] h-[130px] border border-gray-300 object-cover p-1 bg-white"
                             onError={(e) => {
                                 (e.target as HTMLImageElement).src = 'https://i.postimg.cc/8PDn1wfM/favicon.png';
-                            }}
-                        />
+                            }} loading="lazy" />
                         <div className="text-sm space-y-1">
                             <p className="font-bold text-blue-700 text-lg uppercase">{userProfile?.full_name || userProfile?.fullName || userName || 'Học viên'}</p>
                             <p>Số báo danh: <span className="font-semibold text-gray-800">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
@@ -180,8 +179,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                                     <img
                                         src={currentQuestion.image}
                                         alt="Hình ảnh câu hỏi"
-                                        className="max-w-full h-auto max-h-48 md:max-h-60 object-contain border border-gray-300 rounded-md"
-                                    />
+                                        className="max-w-full h-auto max-h-48 md:max-h-60 object-contain border border-gray-300 rounded-md" loading="lazy" />
                                 </div>
                             )}
 
@@ -305,7 +303,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                 </div>
 
                 <div className="mt-4 bg-[#005a9c] text-white p-4 rounded-b-md flex items-center gap-4 text-xs">
-                    <img src="https://i.postimg.cc/8PDn1wfM/favicon.png" alt="Logo" className="h-16 w-16 object-contain" />
+                    <img src="https://i.postimg.cc/8PDn1wfM/favicon.png" alt="Logo" className="h-16 w-16 object-contain" loading="lazy" />
                     <div>
                         <p className="font-bold">CÔNG TY CỔ PHẦN TƯ VẤN VÀ GIÁO DỤC NINH BÌNH</p>
                         <p>Địa chỉ: Đường Triệu Việt Vương, phường Hoa Lư, tỉnh Ninh Bình </p>

@@ -1,59 +1,49 @@
 {
-  "updated_at": "2026-06-15T16:53:00+07:00",
+  "updated_at": "2026-06-25T17:05:00+07:00",
   "working_on": {
-    "feature": "Đồng bộ và hoàn tất build v3.9.9 cho TNDNB",
-    "task": "Chạy QA Loop, vá bảo mật firebase-admin v11, sửa test suite client và build thành công portal",
+    "feature": "Vá bảo mật, tối ưu AdSense Shield và build bản v3.10.5",
+    "task": "Chạy QA Loop, nâng cấp version các package để vá lỗi npm audit, đổi overlay từ display: none sang pointer-events: none, build web và win app",
     "status": "completed",
-    "last_run": "2026-06-15T14:59:00+07:00",
+    "last_run": "2026-06-25T17:05:00+07:00",
     "last_run_url": "http://localhost:3000",
     "files": [
       "package.json",
       "CHANGELOG.md",
       "ontap-web/package.json",
-      "ontap-web/CHANGELOG.md",
-      "ontap-web/components/AccountScreen.test.tsx",
+      "ontap-web/services/adsenseConfig.ts",
       "ontap-win/package.json",
-      "ontap-win/CHANGELOG.md",
-      "ontap-win/components/AccountScreen.test.tsx"
+      "ontap-win/services/adsenseConfig.ts"
     ],
     "blockers": [],
-    "notes": "Chạy thành công QA loop và build tất cả các bản. Tách độc lập SheetJS và vá thành công firebase-admin@11.11.1 trên Next.js v14."
+    "notes": "Chạy thành công QA loop và build bản v3.10.5. Đã fix npm audit vulnerabilities thành công và nâng cấp logic chống click tặc AdSense để giữ Active View metrics."
   },
   "pending_tasks": [],
   "recent_changes": [
     {
-      "timestamp": "2026-06-15T16:53:00+07:00",
-      "type": "refactor",
-      "description": "Sửa lỗi môi trường testing library của client, bọc waitfor cho sự kiện act trong file test, nâng cấp firebase-admin lên v11 và đồng bộ phiên bản v3.9.9.",
+      "timestamp": "2026-06-25T17:05:00+07:00",
+      "type": "feature",
+      "description": "Thêm AdSense Shield dùng pointer-events:none thay cho display:none để bảo toàn Active View metrics. Nâng cấp versions các thư viện trong package.json để vá bảo mật (npm audit fix) và build v3.10.5.",
       "files": [
         "package.json",
+        "CHANGELOG.md",
         "ontap-web/package.json",
-        "ontap-web/components/AccountScreen.test.tsx",
+        "ontap-web/services/adsenseConfig.ts",
         "ontap-win/package.json",
-        "ontap-win/components/AccountScreen.test.tsx"
+        "ontap-win/services/adsenseConfig.ts"
       ]
     }
   ],
   "errors_encountered": [
     {
-      "error": "Lỗi biên dịch Turbopack và dynamic import ssr false khi nâng cấp Next.js v16",
-      "solution": "Rollback Next.js về v14.2.35 để đảm bảo tính ổn định và tương thích.",
-      "resolved": true
-    },
-    {
-      "error": "Lỗi thiếu module @testing-library/dom khi chạy test ở ontap-web",
-      "solution": "Cài đặt bổ sung devDependencies cho ontap-web.",
+      "error": "Có các lỗ hổng bảo mật báo cáo bởi npm audit ở mức độ critical/high",
+      "solution": "Nâng cấp version trong các package.json của root, web và win.",
       "resolved": true
     }
   ],
   "decisions_made": [
     {
-      "decision": "Rollback Next.js v16 về v14.2.35",
-      "reason": "Next.js 16 có nhiều breaking changes về Server Component Layout và CSS import không tương thích với cấu trúc hiện tại."
-    },
-    {
-      "decision": "Sử dụng firebase-admin v11.11.1 làm bản vá bảo mật",
-      "reason": "Firebase Admin v11 vá được lỗi bảo mật phụ thuộc mà vẫn tương thích hoàn toàn với Next.js v14."
+      "decision": "Sử dụng pointer-events: none thay cho display: none đối với AdSense Shield overlay",
+      "reason": "Điều này giúp trình duyệt và hệ thống của AdSense vẫn ghi nhận quảng cáo đang hiển thị trên view (Active View) mà không bị che giấu hoặc xem là invalid traffic, trong khi vẫn ngăn chặn được các click vô tình."
     }
   ]
 }

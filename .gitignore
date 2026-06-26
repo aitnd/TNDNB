@@ -80,3 +80,11 @@ tmp_*.sql
 insert_questions.sql
 tsc_errors*.log
 lint*_output.txt
+
+# Leaked old assets/files (untracked)
+/amthuc-web/old/
+/quan-ly.js
+/fix-components.js
+/fix-img.js
+/fix-use-client.js
+

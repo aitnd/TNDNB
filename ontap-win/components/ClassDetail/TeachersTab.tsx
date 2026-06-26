@@ -143,7 +143,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ course, canAssignMembers = tr
               >
                 <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-400 text-2xl font-bold shrink-0 overflow-hidden">
                   {teacher.photoURL ? (
-                    <img src={teacher.photoURL} alt="" className="w-full h-full object-cover" />
+                    <img src={teacher.photoURL} alt="" className="w-full h-full object-cover" loading="lazy" />
                   ) : (
                     (teacher.full_name || teacher.fullName)?.charAt(0) || <FaUserTie />
                   )}

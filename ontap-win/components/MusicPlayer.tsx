@@ -44,9 +44,9 @@ const MusicPlayer: React.FC = () => {
         title={isPlaying ? "Tắt nhạc Giáng sinh" : "Bật nhạc Giáng sinh"}
       >
         {isPlaying ? (
-          <img src="/assets/img/bell.png" alt="Playing" className="w-8 h-8 object-contain" />
+          <img src="/assets/img/bell.png" alt="Playing" className="w-8 h-8 object-contain" loading="lazy" />
         ) : (
-          <img src="/assets/img/MusicPlayer.png" alt="Muted" className="w-8 h-8 object-contain opacity-50 grayscale" />
+          <img src="/assets/img/MusicPlayer.png" alt="Muted" className="w-8 h-8 object-contain opacity-50 grayscale" loading="lazy" />
         )}
       </button>
     </div>

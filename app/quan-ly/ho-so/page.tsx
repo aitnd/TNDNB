@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../../context/AuthContext'
 import ProtectedRoute from '../../../components/ProtectedRoute'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FaCamera } from 'react-icons/fa'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../../utils/firebaseClient'
@@ -147,9 +148,11 @@ function HoSoCaNhan() {
           {/* 💖 AVATAR UPLOAD 💖 */}
           <div className={styles.avatarSection} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
             <div style={{ position: 'relative', width: '100px', height: '100px', marginBottom: '10px' }}>
-              <img
+              <Image
                 src={previewUrl || photoURL || 'https://via.placeholder.com/100'}
                 alt="Avatar"
+                width={100}
+                height={100}
                 style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', border: '2px solid #ddd' }}
               />
               <label htmlFor="avatarInput" style={{

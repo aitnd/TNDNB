@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react' // (Thêm "não")
 import { supabase } from '../../utils/supabaseClient' // (Triệu hồi kho)
 import { useAuth } from '../../context/AuthContext' // (Triệu hồi "bảo vệ")
 import Link from 'next/link'
+import Image from 'next/image'
 import styles from './page.module.css' // (Triệu hồi "trang điểm")
 import { FaTrash } from 'react-icons/fa' // (Triệu hồi Icon "Thùng rác")
 
@@ -209,10 +210,12 @@ export default function ThuVienPage() {
                         rel="noopener noreferrer"
                         className={styles.mediaItem}
                       >
-                        <img 
+                        <Image 
                           src={item.media_url} 
                           alt={`Ảnh của bài ${album.postTitle}`} 
-                          loading="lazy"
+                          width={300}
+                          height={200}
+                          style={{ objectFit: 'cover' }}
                         />
                       </a>
                     )}

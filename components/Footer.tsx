@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import styles from './Footer.module.css'
 
 export default function Footer() {
@@ -7,8 +8,8 @@ export default function Footer() {
     <footer className={styles.footer} style={{ position: 'relative', overflow: 'hidden' }}>
 
       {/* 🎄 ẢNH TRANG TRÍ NOEL (Class đã định nghĩa ở globals.css) 🎄 */}
-      <img src="/assets/img/footer1.png" alt="" className="decor-img decor-footer-left" />
-      <img src="/assets/img/footer2.png" alt="" className="decor-img decor-footer-right" />
+      <Image src="/assets/img/footer1.png" alt="" width={300} height={300} className="decor-img decor-footer-left" />
+      <Image src="/assets/img/footer2.png" alt="" width={300} height={300} className="decor-img decor-footer-right" />
 
       <div className={styles.container}>
         {/* Cột 1 */}

@@ -5,6 +5,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../utils/supabaseClient'
 import Link from 'next/link'
+import Image from 'next/image'
 // 💖💖💖 ĐÃ XÓA Sidebar ở đây 💖💖💖
 import styles from './page.module.css' // (Dùng CSS của chính nó)
 
@@ -105,9 +106,12 @@ function SearchResults() {
         <div className={styles.newsList}>
           {results.map((post) => (
             <div key={post.id} className={styles.newsItemLarge}>
-              <img
+              <Image
                 src={post.thumbnail_url || 'https://via.placeholder.com/150x100'}
                 alt={post.title}
+                width={150}
+                height={100}
+                style={{ objectFit: 'cover' }}
               />
               <div>
                 <h3>

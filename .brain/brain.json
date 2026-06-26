@@ -45,6 +45,10 @@
     {
       "rule": "Bật/Tắt Quảng Cáo Portal",
       "description": "Quảng cáo trang chủ Next.js Portal được điều khiển động qua cấu hình showPortalAds trong Firestore (settings/usage_config) thông qua component PortalAdLoader."
+    },
+    {
+      "rule": "Bảo vệ tài khoản AdSense (Anti-click)",
+      "description": "Sử dụng pointer-events: none thay cho display: none khi muốn chặn click quảng cáo. Điều này giữ quảng cáo vẫn nằm trong viewport, duy trì chỉ số Active View."
     }
   ],
   "features": [
@@ -57,6 +61,11 @@
       "name": "Portal Ad Dynamic Config",
       "status": "implemented",
       "details": "Bật/tắt động quảng cáo Adsterra trên Next.js Portal mà không ảnh hưởng tới trang ôn tập."
+    },
+    {
+      "name": "AdSense Shield (Active View Preserved)",
+      "status": "implemented",
+      "details": "Bảo vệ quảng cáo AdSense khỏi click tặc/click nhầm nhưng vẫn đảm bảo Active View cho nhà quảng cáo bằng pointer-events: none."
     }
   ],
   "knowledge_items": {

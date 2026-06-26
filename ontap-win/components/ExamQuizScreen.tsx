@@ -138,8 +138,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
                 src={getLocalImageSrc(currentQuestion) || currentQuestion.image}
                 alt="Câu hỏi"
                 className="w-full h-auto object-cover max-h-80"
-                onError={(e) => handleImageError(e, currentQuestion.image)}
-              />
+                onError={(e) => handleImageError(e, currentQuestion.image)} loading="lazy" />
             </div>
           )}
 

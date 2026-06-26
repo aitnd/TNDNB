@@ -28,6 +28,68 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { dateRange = '7d', realtime = false } = body;
 
+        const hasCredentials = fs.existsSync(keyFilePath) || (!!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL && !!process.env.GOOGLE_PRIVATE_KEY);
+        
+        if (!hasCredentials) {
+            if (realtime) {
+                return NextResponse.json({ activeUsers: Math.floor(Math.random() * 15) + 3, isMock: true });
+            }
+
+            const mockChartData = [];
+            const days = dateRange === 'today' ? 24 : (dateRange === '30d' ? 30 : 7);
+            const now = new Date();
+            for (let i = days - 1; i >= 0; i--) {
+                const d = new Date(now);
+                if (dateRange === 'today') {
+                    mockChartData.push({
+                        name: `${i}h`,
+                        visits: Math.floor(Math.random() * 50) + 10,
+                        users: Math.floor(Math.random() * 40) + 5
+                    });
+                } else {
+                    d.setDate(now.getDate() - i);
+                    const dayStr = String(d.getDate()).padStart(2, '0');
+                    const monthStr = String(d.getMonth() + 1).padStart(2, '0');
+                    mockChartData.push({
+                        name: `${dayStr}/${monthStr}`,
+                        visits: Math.floor(Math.random() * 200) + 50,
+                        users: Math.floor(Math.random() * 150) + 30
+                    });
+                }
+            }
+
+            const metrics = {
+                newUsers: dateRange === 'today' ? 45 : (dateRange === '30d' ? 850 : 210),
+                avgSessionDuration: 184, // 3m 4s
+                totalSessions: dateRange === 'today' ? 120 : (dateRange === '30d' ? 2400 : 640),
+                bounceRate: 42.5
+            };
+
+            const topPages = [
+                { name: "Trang chủ - Ôn thi đường thủy", value: dateRange === 'today' ? 150 : (dateRange === '30d' ? 3200 : 780) },
+                { name: "Thi thử lý thuyết máy trưởng", value: dateRange === 'today' ? 95 : (dateRange === '30d' ? 2100 : 540) },
+                { name: "Câu hỏi trắc nghiệm luật giao thông", value: dateRange === 'today' ? 70 : (dateRange === '30d' ? 1500 : 380) },
+                { name: "Quản lý lớp học ôn thi", value: dateRange === 'today' ? 40 : (dateRange === '30d' ? 800 : 210) },
+                { name: "Học phí và đăng ký khóa học", value: dateRange === 'today' ? 25 : (dateRange === '30d' ? 450 : 120) }
+            ];
+
+            const devices = [
+                { name: "Mobile", value: dateRange === 'today' ? 80 : (dateRange === '30d' ? 1680 : 420) },
+                { name: "Desktop", value: dateRange === 'today' ? 35 : (dateRange === '30d' ? 620 : 190) },
+                { name: "Tablet", value: dateRange === 'today' ? 5 : (dateRange === '30d' ? 100 : 30) }
+            ];
+
+            const cities = [
+                { name: "Hồ Chí Minh", value: dateRange === 'today' ? 45 : (dateRange === '30d' ? 920 : 240) },
+                { name: "Hà Nội", value: dateRange === 'today' ? 38 : (dateRange === '30d' ? 810 : 210) },
+                { name: "Hải Phòng", value: dateRange === 'today' ? 15 : (dateRange === '30d' ? 320 : 85) },
+                { name: "Cần Thơ", value: dateRange === 'today' ? 12 : (dateRange === '30d' ? 220 : 60) },
+                { name: "Đà Nẵng", value: dateRange === 'today' ? 10 : (dateRange === '30d' ? 130 : 45) }
+            ];
+
+            return NextResponse.json({ chart: mockChartData, metrics, topPages, devices, cities, isMock: true });
+        }
+
         // 0. Realtime Report (Active Users Right Now)
         if (realtime) {
             const [response] = await analyticsDataClient.runRealtimeReport({

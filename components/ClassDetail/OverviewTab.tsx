@@ -1,4 +1,5 @@
-'use client';
+'use client'
+import Image from 'next/image';
 
 import React, { useState, useEffect } from 'react';
 import { 
@@ -156,7 +157,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
                  {(classData.teacherIds || []).slice(0, 3).map((tid, idx) => (
                     <div key={tid} className="flex items-center gap-3">
                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 overflow-hidden border-2 border-white dark:border-slate-700">
-                          <img src={`https://ui-avatars.com/api/?name=Teacher&background=random`} alt="" className="w-full h-full object-cover" />
+                          <Image width={100} height={100} style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={`https://ui-avatars.com/api/?name=Teacher&background=random`} alt="" className="w-full h-full object-cover" />
                        </div>
                        <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-gray-900 dark:text-white truncate">Chưa cập nhật tên</p>
@@ -174,7 +175,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
               <FaQrcode className="text-4xl mx-auto text-teal-400" />
               <h4 className="font-black text-sm uppercase tracking-tight">QR Truy cập lớp</h4>
               <div className="w-32 h-32 bg-white p-2 rounded-2xl mx-auto shadow-inner border-4 border-slate-800">
-                 <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=class-${classData.id}`} alt="QR" className="w-full h-full" />
+                 <Image width={100} height={100} style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=class-${classData.id}`} alt="QR" className="w-full h-full" />
               </div>
               <p className="text-[10px] text-slate-400 font-medium px-4">Quét để đăng nhập nhanh học viên (Nếu được quyền)</p>
            </div>

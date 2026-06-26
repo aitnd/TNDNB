@@ -42,6 +42,7 @@ import UsageConfigPanel from './components/UsageConfigPanel';
 import LoginHistoryScreen from './components/LoginHistoryScreen';
 import EntertainmentScreen from './components/EntertainmentScreen';
 import MaintenanceScreen from './components/MaintenanceScreen';
+import WeatherWidget from './components/WeatherWidget';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
@@ -733,6 +734,12 @@ const AppContent: React.FC = () => {
           />
           <AlertMarquee />
         </>
+      )}
+
+      {userProfile && location.pathname === '/ontap/dashboard' && (
+        <div className="w-full max-w-7xl mx-auto px-4 pt-2">
+          <WeatherWidget />
+        </div>
       )}
 
       <AnimatePresence mode="wait">

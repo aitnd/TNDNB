@@ -112,7 +112,7 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
                                 </p>
                                 {question.image && (
                                     <div className="mb-4 rounded-lg overflow-hidden">
-                                        <img src={question.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" />
+                                        <img src={question.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
                                     </div>
                                 )}
                                 <div className="space-y-2">

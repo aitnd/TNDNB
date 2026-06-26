@@ -217,8 +217,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                         <img 
                             src={myInfo.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(myInfo.fullName || '')}`} 
                             className="w-28 h-28 rounded-full border-4 border-teal-500/10 object-cover shadow-lg transition-transform group-hover:scale-105"
-                            onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + (myInfo.fullName || ''); }}
-                        />
+                            onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + (myInfo.fullName || ''); }} loading="lazy" alt="" />
                         <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                             <FaCamera className="text-white text-xl" />
                         </div>

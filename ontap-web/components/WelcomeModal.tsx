@@ -81,7 +81,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ onStart, onLoginClick, onRe
     <div className="text-center p-4 animate-slide-in-right">
       <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-8 md:p-12 max-w-2xl mx-auto relative">
         {theme === 'tri-an' ? (
-          <img src="https://i.postimg.cc/MH9hVp8S/happy-techers-day.jpg" alt="Icon Chúc mừng Ngày Nhà giáo" className="h-24 w-24 mx-auto mb-4 rounded-full object-cover" />
+          <img src="https://i.postimg.cc/MH9hVp8S/happy-techers-day.jpg" alt="Icon Chúc mừng Ngày Nhà giáo" className="h-24 w-24 mx-auto mb-4 rounded-full object-cover" loading="lazy" />
         ) : theme === 'noel' ? (
           <HelmIcon3D className="h-24 w-24 mx-auto text-primary mb-4" />
         ) : (

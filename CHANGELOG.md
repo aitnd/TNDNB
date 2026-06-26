@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.10.6] - 2026-06-26
+### Tích hợp Widget Thời tiết & Tối ưu hóa hình ảnh (Web & App Win)
+- **Tính năng mới - Widget Thời tiết Thông minh:**
+  - Tự động định vị người dùng (Browser Geolocation) hoặc tự động fallback về Triệu Việt Vương, phường Hoa Lư, Ninh Bình nếu bị từ chối quyền định vị.
+  - Tích hợp API Next.js `/api/weather` (WeatherAPI với cơ chế Mock fallback) để lấy dữ liệu thời tiết thực tế.
+  - Hiển thị nhiệt độ, trạng thái thời tiết hiện tại kèm theo lời khuyên học tập, thi cử sinh động bằng tiếng Việt.
+  - Bổ sung nút mở rộng để xem dự báo thời tiết chi tiết trong ngày, ngày mai và dự báo 7 ngày.
+  - Đồng bộ giao diện widget thích ứng Mobile và hỗ trợ đầy đủ Light/Dark Mode trên cả Web và App Windows.
+- **Tối ưu hình ảnh Portal:** Thay thế thẻ `<img>` bằng component `<Image>` của Next.js để tăng tốc độ tải trang và giải quyết triệt để 22 cảnh báo linting.
+- **Tối ưu hình ảnh App Web & Win:** Bổ sung thuộc tính `loading="lazy"` và `alt` cho toàn bộ thẻ `<img>` trên ứng dụng Vite của cả Web và Windows.
+- **Sửa lỗi cú pháp:** Sửa lỗi trùng lặp thuộc tính `style` trong component `StudentClassView.tsx` phát sinh từ quá trình refactor trước đó.
+
+## [3.10.5] - 2026-06-25
+### Tối ưu Google AdSense & Bảo vệ IVT (Web & App Win)
+- **Tối ưu AdSense Shield:** Thay đổi cơ chế chặn click tặc. Thay vì ẩn toàn bộ quảng cáo (display: none), chuyển sang sử dụng pointer-events: none để chặn click chuột nhưng vẫn giữ 100% hiển thị (Active View) nhằm duy trì doanh thu Impression.
+- **Nâng cấp giới hạn AdSense:** Quản trị viên có thể tùy chỉnh giới hạn số click và thời gian phục hồi (Cooldown) trực tiếp từ màn hình "Hệ thống" thay vì hardcode.
+
 ## [3.11.0] - 2026-06-25
 ### Tích hợp & Tối ưu hóa Kiếm tiền Monetag (Web & App Win)
 - **Chiến lược Quảng cáo Đa dạng:** Tích hợp Smart Tag (Vignette/Interstitial), Auto Popunder (giới hạn 1 lần/phiên), và Direct Link để tối ưu hóa doanh thu từ CPM/eCPM cho thị trường Việt Nam.

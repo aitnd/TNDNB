@@ -523,8 +523,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                                                         src={u.photoURL}
                                                         alt={u.fullName}
                                                         className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 dark:border-slate-700 shadow-sm"
-                                                        onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + u.fullName; }}
-                                                    />
+                                                        onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + u.fullName; }} loading="lazy" />
                                                     <div className="flex flex-col">
                                                         <div className="flex items-center gap-1.5">
                                                             {u.role === 'hoc_vien' && (u.isVerified || u.courseId) ? (
@@ -719,8 +718,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                                 <img 
                                     src={selectedUser.photoURL} 
                                     className="w-24 h-24 rounded-full border-4 border-blue-500/10 object-cover shadow-md mb-3"
-                                    onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + selectedUser.fullName; }}
-                                />
+                                    onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + selectedUser.fullName; }} loading="lazy" alt="" />
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-1.5 justify-center">
                                     {selectedUser.fullName}
                                     {selectedUser.isVerified && <FaCheckCircle className="text-blue-500 text-base" />}

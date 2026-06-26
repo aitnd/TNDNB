@@ -133,8 +133,7 @@ const SnowEffect: React.FC = () => {
               <img
                 src={`/assets/img/${iconName}`}
                 alt=""
-                style={{ width: '25px', height: 'auto' }}
-              />
+                style={{ width: '25px', height: 'auto' }} loading="lazy" />
             </div>
           );
         })}

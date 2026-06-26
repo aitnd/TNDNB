@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 
 import React, { useState, useEffect } from 'react'
 import { db } from '../utils/firebaseClient'
@@ -136,7 +137,7 @@ export default function StudentClassView() {
                                     <div key={t.uid} className={styles.headTeacher} style={{ marginBottom: '15px', paddingBottom: '15px', borderBottom: '1px solid #f0f0f0' }}>
                                         <div className={styles.avatar}>
                                             {t.photoURL ? (
-                                                <img src={t.photoURL} alt={t.fullName} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                                <Image width={100} height={100} src={t.photoURL} alt={t.fullName} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
                                             ) : (
                                                 t.fullName ? t.fullName.charAt(0).toUpperCase() : '?'
                                             )}
@@ -182,7 +183,7 @@ export default function StudentClassView() {
                                 <div key={mate.uid} className={styles.classmateItem}>
                                     <div className={styles.miniAvatar}>
                                         {mate.photoURL ? (
-                                            <img src={mate.photoURL} alt={mate.fullName} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                                            <Image width={100} height={100} src={mate.photoURL} alt={mate.fullName} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
                                         ) : (
                                             mate.fullName ? mate.fullName.charAt(0).toUpperCase() : '?'
                                         )}

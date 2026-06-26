@@ -284,8 +284,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                                         <img
                                             src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}&background=random`}
                                             alt={t.fullName}
-                                            className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-slate-600 group-hover:scale-105 transition-transform"
-                                        />
+                                            className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-slate-600 group-hover:scale-105 transition-transform" loading="lazy" />
                                         {course.headTeacherId === t.uid && (
                                             <div className="absolute -top-1 -right-1 bg-yellow-400 text-white rounded-full p-0.5 border-2 border-white">
                                                 <FaGraduationCap size={10} />
@@ -349,8 +348,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                                                 <img
                                                     src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}&background=random`}
                                                     alt={s.fullName}
-                                                    className="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm group-hover:border-blue-500 transition-colors"
-                                                />
+                                                    className="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-slate-600 shadow-sm group-hover:border-blue-500 transition-colors" loading="lazy" />
                                                 <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></div>
                                             </div>
                                             <div className="flex-1 min-w-0">
@@ -398,8 +396,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                                                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                                         <img
                                                             src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`}
-                                                            className="w-8 h-8 rounded-full border border-gray-200"
-                                                        />
+                                                            className="w-8 h-8 rounded-full border border-gray-200" loading="lazy" alt="" />
                                                         <div>
                                                             <p>{s.fullName}</p>
                                                             {s.uid === userProfile.id && <span className="text-[10px] font-bold text-teal-600 border border-teal-100 bg-teal-50 px-1 rounded">Tôi</span>}

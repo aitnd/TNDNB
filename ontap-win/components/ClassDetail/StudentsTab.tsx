@@ -521,7 +521,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                       />
                     )}
                     <div className="relative">
-                      <img src={getAvatar(st)} alt="" className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800" />
+                      <img src={getAvatar(st)} alt="" className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800" loading="lazy" />
                     </div>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -626,7 +626,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                   )}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" />
+                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" loading="lazy" />
                       <div>
                         <div className="flex items-center gap-2">
                           <p className="text-sm font-bold text-gray-900 dark:text-white">{st.fullName || st.full_name}</p>

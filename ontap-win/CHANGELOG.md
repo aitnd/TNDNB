@@ -1,5 +1,10 @@
 # CHANGELOG — [ontap-win]
 
+## [3.10.6] - 2026-06-26
+- **Tích hợp Widget Thời tiết Thông minh:** Tự động định vị (Browser Geolocation), tự động fallback về Triệu Việt Vương, Ninh Bình, hiển thị thời tiết kèm lời khuyên tiếng Việt sinh động, hỗ trợ mở rộng xem chi tiết trong ngày, ngày mai và dự báo 7 ngày.
+- **Tối ưu hình ảnh:** Thêm thuộc tính `loading="lazy"` và `alt` vào toàn bộ thẻ `<img>` chưa tối ưu.
+- **Sửa lỗi cú pháp:** Sửa lỗi trùng thuộc tính `style` trong file `StudentClassView.tsx`.
+
 ## [3.11.0] - 2026-06-25 - Tích hợp và Tối ưu hóa Kiếm tiền Monetag
 - **Đồng bộ hóa Logic Quảng Cáo:** Triển khai Smart Tag (Vignette/Interstitial), Auto Popunder (giới hạn 1 lần/phiên), và Direct Link từ web sang Windows.
 - **Dynamic Config qua Firebase:** Cho phép thay đổi URL Direct Link động trực tiếp từ màn hình "Hệ thống" thay vì hardcode, phân bổ linh hoạt theo từng hạng tài khoản.

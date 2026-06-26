@@ -1,4 +1,5 @@
-'use client';
+'use client'
+import Image from 'next/image';
 
 import React from 'react';
 import { FaSchool, FaArrowLeft, FaBell, FaInfoCircle } from 'react-icons/fa';
@@ -24,7 +25,7 @@ const ClassHeader: React.FC<ClassHeaderProps> = ({ classData }) => {
           <div className="relative">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white shadow-lg shadow-teal-500/20 ring-4 ring-white dark:ring-slate-800 transition-transform hover:scale-105 duration-300 px-4">
               {classData.avatarUrl ? (
-                <img src={classData.avatarUrl} alt={classData.name} className="w-full h-full object-cover rounded-xl" />
+                <Image width={100} height={100} style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={classData.avatarUrl} alt={classData.name} className="w-full h-full object-cover rounded-xl" />
               ) : (
                 <FaSchool className="text-4xl sm:text-5xl" />
               )}

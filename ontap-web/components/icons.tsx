@@ -6,10 +6,10 @@ import { useTheme } from '../contexts/ThemeContext';
 export const ClipboardListIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/8PDn1wfM/favicon.png" alt="Online Exam Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/8PDn1wfM/favicon.png" alt="Online Exam Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/gift3.png" alt="Gift Icon" {...props as any} className="h-16 w-16 object-contain" />;
+        return <img src="/assets/img/gift3.png" alt="Gift Icon" {...props as any} className="h-16 w-16 object-contain" loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -38,7 +38,7 @@ export const CheckIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     if (theme === 'noel') {
          // Dùng ngôi sao vàng hoặc chuông nhỏ cho dấu check cũng được, nhưng để nguyên SVG hoặc dùng ball.png
          // Dùng ball.png cho lạ mắt
-         return <img src="/assets/img/ball.png" alt="Check" {...props as any} className={`${props.className} object-contain`} />;
+         return <img src="/assets/img/ball.png" alt="Check" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -74,10 +74,10 @@ export const ChevronRightIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (prop
 export const UserIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/J0JwWn5p/Mattahan-Buuf-One-of-those-ugly-pens-you-just-find-lying-around-128.png" alt="Pen Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/J0JwWn5p/Mattahan-Buuf-One-of-those-ugly-pens-you-just-find-lying-around-128.png" alt="Pen Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/celebrate.png" alt="Santa" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/celebrate.png" alt="Santa" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -96,10 +96,10 @@ export const ArrowPathIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) 
 export const HelmIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/xjbVmxDW/Oxygen-Icons-org-Oxygen-Categories-applications-education-university-256.png" alt="Graduation Cap Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/xjbVmxDW/Oxygen-Icons-org-Oxygen-Categories-applications-education-university-256.png" alt="Graduation Cap Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/home.png" alt="Home Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/home.png" alt="Home Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -112,10 +112,10 @@ export const HelmIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
 export const AnchorIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/66GxZjxN/school-114359.png" alt="School Bag Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/66GxZjxN/school-114359.png" alt="School Bag Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/bell.png" alt="Bell Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/bell.png" alt="Bell Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -128,10 +128,10 @@ export const AnchorIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => 
 export const EngineerIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/h47RmyWN/Mattahan-Buuf-They-reply-technosorcery-128.png" alt="Wrench Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/h47RmyWN/Mattahan-Buuf-They-reply-technosorcery-128.png" alt="Wrench Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/gift4.png" alt="Gift Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/gift4.png" alt="Gift Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -144,10 +144,10 @@ export const EngineerIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) =
 export const CaptainIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/zvWm1BFk/book-512x512-35977.png" alt="Book Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/zvWm1BFk/book-512x512-35977.png" alt="Book Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/hat.png" alt="Hat Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/hat.png" alt="Hat Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -160,10 +160,10 @@ export const CaptainIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) =>
 export const LifebuoyIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/2yvpf67d/Mattahan-Buuf-A-Proper-Journal-Icon-128.png" alt="Journal Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/2yvpf67d/Mattahan-Buuf-A-Proper-Journal-Icon-128.png" alt="Journal Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/gift5.png" alt="Gift Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/gift5.png" alt="Gift Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -176,10 +176,10 @@ export const LifebuoyIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) =
 export const CertificateIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/2yvpf67d/Mattahan-Buuf-A-Proper-Journal-Icon-128.png" alt="Journal Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/2yvpf67d/Mattahan-Buuf-A-Proper-Journal-Icon-128.png" alt="Journal Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/star-gold.png" alt="Star Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/star-gold.png" alt="Star Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -193,10 +193,10 @@ export const CertificateIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props
 export const TrophyIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/xjbVmxDW/Oxygen-Icons-org-Oxygen-Categories-applications-education-university-256.png" alt="Graduation Cap Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/xjbVmxDW/Oxygen-Icons-org-Oxygen-Categories-applications-education-university-256.png" alt="Graduation Cap Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/star-gold.png" alt="Gold Star Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/star-gold.png" alt="Gold Star Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -210,10 +210,10 @@ export const TrophyIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => 
 export const BookOpenIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/FFJXSWXv/study-learning-knowledge-education-book-notebook-icon-256768.png" alt="Book and Glasses Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/FFJXSWXv/study-learning-knowledge-education-book-notebook-icon-256768.png" alt="Book and Glasses Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/gift1.png" alt="Gift Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/gift1.png" alt="Gift Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -226,10 +226,10 @@ export const BookOpenIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) =
 export const PracticeIcon3D: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     const { theme } = useTheme();
     if (theme === 'tri-an') {
-        return <img src="https://i.postimg.cc/kG8rd4vv/Limpa-Curriculum-Vitae-Education-256.png" alt="Blackboard Icon" {...props as any} />;
+        return <img src="https://i.postimg.cc/kG8rd4vv/Limpa-Curriculum-Vitae-Education-256.png" alt="Blackboard Icon" {...props as any} loading="lazy" />;
     }
     if (theme === 'noel') {
-        return <img src="/assets/img/gift2.png" alt="Gift Icon" {...props as any} className={`${props.className} object-contain`} />;
+        return <img src="/assets/img/gift2.png" alt="Gift Icon" {...props as any} className={`${props.className} object-contain`} loading="lazy" />;
     }
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>

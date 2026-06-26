@@ -59,7 +59,7 @@ export const AddTeacherModal: React.FC<{
                     {filtered.map(t => (
                         <div key={t.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors">
                             <div className="flex items-center gap-3">
-                                <img src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`} className="w-10 h-10 rounded-full" />
+                                <img src={t.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.fullName)}`} className="w-10 h-10 rounded-full" loading="lazy" alt="" />
                                 <div>
                                     <p className="font-bold dark:text-white">{t.fullName}</p>
                                     <p className="text-xs text-gray-500">{t.email}</p>
@@ -104,7 +104,7 @@ export const AddStudentModal: React.FC<{
                     {filtered.map(s => (
                         <div key={s.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors">
                             <div className="flex items-center gap-3">
-                                <img src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`} className="w-10 h-10 rounded-full" />
+                                <img src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`} className="w-10 h-10 rounded-full" loading="lazy" alt="" />
                                 <div>
                                     <p className="font-bold dark:text-white">{s.fullName}</p>
                                     <p className="text-xs text-gray-500">{s.email || 'No email'}</p>
