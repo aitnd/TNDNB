@@ -297,7 +297,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={() => navigate('/dashboard')}
+                            onClick={() => navigate('/ontap/dashboard')}
                             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                         >
                             <FaArrowLeft className="text-gray-600 dark:text-gray-300" />
@@ -516,64 +516,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             </label>
                                         </div>
 
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <h4 className="font-bold text-purple-700 dark:text-purple-400">Monetag Ads</h4>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400">Quảng cáo Push Notifications / Vignette từ Monetag.</p>
-                                            </div>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={currentRoleConfig.showMonetag || false}
-                                                    disabled={isReadOnly}
-                                                    onChange={(e) => updateRoleConfig(activeRole, 'showMonetag', e.target.checked)}
-                                                    className="sr-only peer"
-                                                />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
-                                            </label>
                                         </div>
-
-                                        {/* 💰 Chiến lược Tối ưu Monetag */}
-                                        <div className="mt-4 pt-4 border-t border-dashed border-gray-200 dark:border-slate-600">
-                                            <h6 className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-widest mb-3">💰 Tối ưu Monetag</h6>
-                                            
-                                            {/* Direct Link */}
-                                            <div className="flex items-center justify-between py-2">
-                                                <div>
-                                                    <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">🔗 Direct Link</h6>
-                                                    <p className="text-[10px] text-gray-500">Chèn link QC vào nút Download, Xem kết quả</p>
-                                                </div>
-                                                <label className="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" checked={currentRoleConfig.showDirectLink || false} disabled={isReadOnly} onChange={(e) => updateRoleConfig(activeRole, 'showDirectLink', e.target.checked)} className="sr-only peer" />
-                                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
-                                                </label>
-                                            </div>
-                                            
-                                            {/* Auto Popunder */}
-                                            <div className="flex items-center justify-between py-2">
-                                                <div>
-                                                    <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">🖱️ Auto Popunder</h6>
-                                                    <p className="text-[10px] text-gray-500">Mở tab QC khi click lần đầu (1 lần/phiên)</p>
-                                                </div>
-                                                <label className="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" checked={currentRoleConfig.showAutoPopunder || false} disabled={isReadOnly} onChange={(e) => updateRoleConfig(activeRole, 'showAutoPopunder', e.target.checked)} className="sr-only peer" />
-                                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
-                                                </label>
-                                            </div>
-                                            
-                                            {/* Countdown Ad */}
-                                            <div className="flex items-center justify-between py-2">
-                                                <div>
-                                                    <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">⏱️ Đếm ngược QC</h6>
-                                                    <p className="text-[10px] text-gray-500">Hiện trang đệm 5s trước khi xem kết quả</p>
-                                                </div>
-                                                <label className="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" checked={currentRoleConfig.showCountdownAd || false} disabled={isReadOnly} onChange={(e) => updateRoleConfig(activeRole, 'showCountdownAd', e.target.checked)} className="sr-only peer" />
-                                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     {/* 🏫 Phân quyền Tính Năng */}
                                     <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600">
@@ -1080,6 +1023,45 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                         <div className="space-y-4">
                                             <h5 className="font-bold text-purple-600 dark:text-purple-400 border-b border-purple-200 dark:border-purple-800/50 pb-2">Monetag</h5>
                                             
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Direct Link (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagDirectLinkMaxPerSession ?? 0}
+                                                        onChange={(e) => setConfig({ ...config, monetagDirectLinkMaxPerSession: parseInt(e.target.value) || 0 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">lần (0 = tắt)</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Auto Popunder (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagPopunderMaxPerSession ?? 0}
+                                                        onChange={(e) => setConfig({ ...config, monetagPopunderMaxPerSession: parseInt(e.target.value) || 0 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">lần (0 = tắt)</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Countdown Ad (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagCountdownMaxPerSession ?? 0}
+                                                        onChange={(e) => setConfig({ ...config, monetagCountdownMaxPerSession: parseInt(e.target.value) || 0 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">lần (0 = tắt)</span>
+                                                </div>
+                                            </div>
+
                                             <div>
                                                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Popunder Cooldown</label>
                                                 <div className="flex items-center gap-2">

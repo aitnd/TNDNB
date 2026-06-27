@@ -1,49 +1,86 @@
 {
-  "updated_at": "2026-06-25T17:05:00+07:00",
+  "updated_at": "2026-06-27T02:48:00.000Z",
   "working_on": {
-    "feature": "Vá bảo mật, tối ưu AdSense Shield và build bản v3.10.5",
-    "task": "Chạy QA Loop, nâng cấp version các package để vá lỗi npm audit, đổi overlay từ display: none sang pointer-events: none, build web và win app",
+    "feature": "Vitest Optimization & Security Audit & Navigation Fixes",
+    "task": "Tối ưu hóa chạy Vitest tránh timeout trên Windows, vá lỗi bảo mật bằng overrides ở root, đồng bộ link điều hướng thông báo và cấu hình trên Dashboard.",
     "status": "completed",
-    "last_run": "2026-06-25T17:05:00+07:00",
-    "last_run_url": "http://localhost:3000",
     "files": [
-      "package.json",
-      "CHANGELOG.md",
-      "ontap-web/package.json",
-      "ontap-web/services/adsenseConfig.ts",
-      "ontap-win/package.json",
-      "ontap-win/services/adsenseConfig.ts"
+      "ontap-web/App.tsx",
+      "ontap-win/App.tsx",
+      "ontap-web/vitest.config.ts",
+      "ontap-win/vitest.config.ts",
+      "package.json"
     ],
     "blockers": [],
-    "notes": "Chạy thành công QA loop và build bản v3.10.5. Đã fix npm audit vulnerabilities thành công và nâng cấp logic chống click tặc AdSense để giữ Active View metrics."
+    "notes": "Đã hoàn thành tối ưu Vitest, vá bảo mật overrides và sửa link điều hướng Dashboard thành công."
   },
   "pending_tasks": [],
   "recent_changes": [
     {
-      "timestamp": "2026-06-25T17:05:00+07:00",
+      "timestamp": "2026-06-27T02:48:00.000Z",
+      "type": "optimization_security_feature",
+      "description": "Tối ưu cấu hình Vitest chạy không song song (fileParallelism: false) giúp giảm thời gian chạy test từ 70s xuống 4s và tránh lỗi timeout trên Windows. Áp dụng overrides trong package.json để vá hoàn toàn các lỗi bảo mật Critical & High (protobufjs, tar, uuid, postcss, fast-xml-parser, glob). Đồng bộ link nút Thông báo và Cấu hình trên Dashboard.",
+      "files": [
+        "ontap-web/App.tsx",
+        "ontap-win/App.tsx",
+        "ontap-web/vitest.config.ts",
+        "ontap-win/vitest.config.ts",
+        "package.json"
+      ]
+    },
+    {
+      "timestamp": "2026-06-26T10:30:51.652Z",
       "type": "feature",
-      "description": "Thêm AdSense Shield dùng pointer-events:none thay cho display:none để bảo toàn Active View metrics. Nâng cấp versions các thư viện trong package.json để vá bảo mật (npm audit fix) và build v3.10.5.",
+      "description": "Gộp cấu hình Monetag Popunder/DirectLink/Countdown vào tab Bảo vệ Quảng cáo (IVT Shield). Chuyển từ công tắc bật/tắt theo role sang nhập số (lần/phiên) chung cho toàn hệ thống. Cập nhật cho cả web và win. Sửa lỗi nút Cài đặt trên Dashboard trỏ nhầm sang /ontap/profile thay vì /ontap/settings.",
+      "files": [
+        "ontap-web/App.tsx",
+        "ontap-win/App.tsx",
+        "ontap-web/components/UsageConfigPanel.tsx",
+        "ontap-win/components/UsageConfigPanel.tsx"
+      ]
+    },
+    {
+      "timestamp": "2026-06-26T17:00:00+07:00",
+      "type": "security_and_feature",
+      "description": "Tích hợp tính năng Weather Widget (Weather API) tại top dashboard của web và win. Gỡ bỏ file credentials rò rỉ (serviceAccountKey.json) và thư mục cũ (amthuc-web/old/) khỏi Git cache. Sửa lỗi double-encoding (mojibake) font tiếng Việt trong CHANGELOG.md. Nâng cấp và build thành công v3.10.6.",
       "files": [
         "package.json",
         "CHANGELOG.md",
+        "app/api/weather/route.ts",
         "ontap-web/package.json",
-        "ontap-web/services/adsenseConfig.ts",
+        "ontap-web/components/WeatherWidget.tsx",
+        "ontap-web/App.tsx",
         "ontap-win/package.json",
-        "ontap-win/services/adsenseConfig.ts"
+        "ontap-win/components/WeatherWidget.tsx",
+        "ontap-win/App.tsx"
       ]
     }
   ],
   "errors_encountered": [
     {
-      "error": "Có các lỗ hổng bảo mật báo cáo bởi npm audit ở mức độ critical/high",
-      "solution": "Nâng cấp version trong các package.json của root, web và win.",
+      "error": "Lỗi double-encoding font chữ tiếng Việt ở các file CHANGELOG.md",
+      "solution": "Viết script fix-changelog-encoding.js đọc file bằng latin1 và ghi lại bằng utf-8 để khôi phục chính xác font chữ.",
+      "resolved": true
+    },
+    {
+      "error": "Lỗi git commit thất bại do index.lock bị chiếm dụng bởi GitHubDesktop.exe",
+      "solution": "Tạm dừng hoặc tắt GitHub Desktop để giải phóng lock index, sau đó tiến hành commit và push bình thường.",
+      "resolved": true
+    },
+    {
+      "error": "Rò rỉ private key Firebase của dự án trong ontap-win/server/serviceAccountKey.json",
+      "solution": "Chạy lệnh git rm --cached và xóa tệp tin khỏi git tracking, đưa vào .gitignore để đảm bảo bảo mật lâu dài.",
       "resolved": true
     }
   ],
   "decisions_made": [
     {
-      "decision": "Sử dụng pointer-events: none thay cho display: none đối với AdSense Shield overlay",
-      "reason": "Điều này giúp trình duyệt và hệ thống của AdSense vẫn ghi nhận quảng cáo đang hiển thị trên view (Active View) mà không bị che giấu hoặc xem là invalid traffic, trong khi vẫn ngăn chặn được các click vô tình."
+      "decision": "Dọn dẹp và giữ an toàn Firebase private credentials bằng .gitignore và git rm --cached",
+      "reason": "Ngăn chặn rò rỉ khoá bảo mật lên các repo công khai nhưng vẫn giữ cấu hình chạy cục bộ cho nhà phát triển."
+    },
+    {
+      "decision": "Bỏ qua việc nâng cấp phụ thuộc nặng gây breaking change cho Next.js portal đối với lỗ hổng audit của root",
+      "reason": "Việc chạy npm audit fix --force có nguy cơ gây lỗi nghiêm trọng (breaking change) đến cấu trúc Next.js hiện tại, do đó sẽ xử lý trong đợt refactor cấu trúc lớn tiếp theo."
     }
   ]
 }

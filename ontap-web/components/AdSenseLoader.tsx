@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUsageConfig, UsageConfig } from '../services/adminConfigService';
 import { getUserRoleConfig } from '../services/usageService';
-import { MONETAG_CONFIG, getDirectLinkUrl, setMonetagLimits, getMonetagLimits } from '../services/monetagConfig';
+import { MONETAG_CONFIG, getDirectLinkUrl, setMonetagLimits, getMonetagLimits, getSessionCount, incrementSessionCount } from '../services/monetagConfig';
 import { isAdSenseBlocked, incrementAdSenseClick, setAdSenseLimits } from '../services/adsenseConfig';
 
 interface AdSenseLoaderProps {
@@ -27,10 +27,10 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
 
                 const showAdSense = param.showAdSense || false;
                 const showAdsterra = param.showAdsterra || false;
-                const showMonetag = param.showMonetag || false;
-                const showAutoPopunder = param.showAutoPopunder || false;
 
-                if (showAdSense || showAdsterra || showMonetag) {
+                const maxPopunder = config.monetagPopunderMaxPerSession ?? 0;
+
+                if (showAdSense || showAdsterra) {
                     removeHideAdsStyle(); // Allow ads
                     
                     // Lazy load trigger: Phanh phui script khi cuộn đến vùng quảng cáo
@@ -46,7 +46,8 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                                 }
                             }
                             if (showAdsterra) loadAdsterraScript();
-                            if (showMonetag) loadMonetagScript();
+                            // Monetag Smart Tag (Push/Vignette) đã được gỡ theo yêu cầu chuyển sang global, 
+                            // hiện tại chỉ dùng DirectLink/Popunder/Countdown
                             observer?.disconnect();
                         }
                     }, { rootMargin: '200px' }); // Load trước khi chạm 200px
@@ -65,9 +66,9 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                 }
 
                 // 🖱️ Auto-click Popunder: Mở Direct Link khi user click lần đầu trên trang
-                if (showAutoPopunder && !(window as any).electron) {
+                if (maxPopunder > 0 && !(window as any).electron) {
                     const directLinkUrl = getDirectLinkUrl(config.monetagDirectLinkUrl);
-                    popunderHandler = setupAutoPopunder(directLinkUrl);
+                    popunderHandler = setupAutoPopunder(directLinkUrl, maxPopunder);
                 }
             } catch (error) {
                 console.error("Error checking AdSense config:", error);
@@ -122,22 +123,34 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
     }, []);
 
     // 🖱️ Auto Popunder: Gắn click listener, mở Direct Link dựa trên cooldown
-    const setupAutoPopunder = (directLinkUrl: string): ((e: MouseEvent) => void) => {
+    const setupAutoPopunder = (directLinkUrl: string, maxPerSession: number): ((e: MouseEvent) => void) => {
         const handler = (e: MouseEvent) => {
+            if (maxPerSession <= 0) return;
+
             const limits = getMonetagLimits();
             const lastFired = sessionStorage.getItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED);
             const now = Date.now();
             
             if (lastFired && now - parseInt(lastFired, 10) < limits.popunderCooldownMs) return;
 
+            const currentCount = getSessionCount(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_COUNT);
+            if (currentCount >= maxPerSession) {
+                document.body.removeEventListener('click', handler);
+                return;
+            }
+
             try {
                 window.open(directLinkUrl, '_blank');
                 sessionStorage.setItem(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_FIRED, now.toString());
+                incrementSessionCount(MONETAG_CONFIG.SESSION_KEYS.POPUNDER_COUNT);
             } catch {
                 // Popup bị chặn → bỏ qua
             }
-            // Xóa listener sau khi đã fire 1 lần
-            document.body.removeEventListener('click', handler);
+            
+            // Xóa listener nếu đã đạt max
+            if (currentCount + 1 >= maxPerSession) {
+                document.body.removeEventListener('click', handler);
+            }
         };
 
         document.body.addEventListener('click', handler);

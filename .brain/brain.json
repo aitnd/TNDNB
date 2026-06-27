@@ -1,7 +1,7 @@
 {
   "meta": {
     "schema_version": "1.1.0",
-    "awf_version": "3.3.0"
+    "awf_version": "4.0.2"
   },
   "project": {
     "name": "TNDNB",
@@ -25,12 +25,16 @@
     }
   },
   "database_schema": {
-    "summary": "Firebase with classes, students, exams, configs, and usage limit tracking. Local storage uses Dexie for caching and questions_db.json for offline quizzes."
+    "summary": "Firebase với thông tin lớp học, học sinh, đề thi, cấu hình và giới hạn lượt làm bài. Local storage sử dụng Dexie để cache và questions_db.json để làm bài offline."
   },
   "api_endpoints": [
     {
       "path": "/api/admin/reset-password",
       "explained": "Giao tiếp với Firebase Admin SDK để sửa Auth Password và cập nhật lại Firestore password map"
+    },
+    {
+      "path": "/api/weather",
+      "explained": "Nhận lat/lon từ client, gọi WeatherAPI để lấy thời tiết hiện tại và trả về lời khuyên ôn thi thông minh tiếng Việt (hoặc mock data nếu lỗi/thiếu key)."
     }
   ],
   "business_rules": [
@@ -66,6 +70,11 @@
       "name": "AdSense Shield (Active View Preserved)",
       "status": "implemented",
       "details": "Bảo vệ quảng cáo AdSense khỏi click tặc/click nhầm nhưng vẫn đảm bảo Active View cho nhà quảng cáo bằng pointer-events: none."
+    },
+    {
+      "name": "Weather Widget & Smart Advice",
+      "status": "implemented",
+      "details": "Tích hợp Widget thời tiết hiển thị tại Dashboard chính cho cả bản Web và Windows. Tự động lấy vị trí thực tế của người dùng và sinh lời khuyên học tập dựa trên nhiệt độ/thời tiết."
     }
   ],
   "knowledge_items": {
@@ -77,7 +86,10 @@
     "gotchas": [
       "Electron build uses ELECTRON_BUILD=true causing 'base: ./' in vite config to support file:// urls",
       "Missing icons in lucide-react result in silent ReferenceErrors causing White Screen crashes.",
-      "Lệch phiên bản eslint-config-next với NextJS (ví dụ dùng v16 trên Next v14) gây circular reference và crash next lint"
+      "Lệch phiên bản eslint-config-next với NextJS (ví dụ dùng v16 trên Next v14) gây circular reference và crash next lint",
+      "CHANGELOG.md dễ bị lỗi font (mojibake) do ghi đè encoding, cần dùng script convert latin1-to-utf8.",
+      "Git index.lock có thể bị lock bởi GitHub Desktop hoặc tiến trình khác, cần giải phóng lock trước khi chạy lệnh git.",
+      "Firebase Private Credentials có thể bị lưu trong Git cache dù đã có trong .gitignore. Cần chạy git rm --cached để dọn sạch hoàn toàn."
     ],
     "conventions": [
       "DevTools disabled in production builds (main.cjs and UI toggle both disabled)."

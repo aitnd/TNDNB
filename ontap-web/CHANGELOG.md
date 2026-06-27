@@ -1,5 +1,10 @@
 # CHANGELOG — [ontap-web]
 
+## [3.10.7] - 2026-06-27
+- **Tối ưu Vitest:** Thêm tùy chọn `fileParallelism: false` vào cấu hình Vitest giúp giảm thời gian chạy test từ ~67s xuống còn 4.62s và tránh lỗi timeout trên Windows.
+- **Sửa điều hướng Dashboard:** Sửa nút **Thông báo** dẫn đến trang quản lý thông báo `/ontap/notifications` thay vì hòm thư cũ `/ontap/mailbox`.
+- **Gộp cấu hình Monetag:** Gộp cấu hình hiển thị quảng cáo Monetag vào tab "Bảo vệ Quảng cáo (IVT Shield)", đổi từ bật/tắt theo role sang cấu hình chung (số lần/phiên) cho toàn bộ web.
+
 ## [3.10.6] - 2026-06-26
 - **Tích hợp Widget Thời tiết Thông minh:** Tự động định vị (Browser Geolocation), tự động fallback về Triệu Việt Vương, Ninh Bình, hiển thị thời tiết kèm lời khuyên tiếng Việt sinh động, hỗ trợ mở rộng xem chi tiết trong ngày, ngày mai và dự báo 7 ngày.
 - **Tối ưu hình ảnh:** Thêm thuộc tính `loading="lazy"` và `alt` vào toàn bộ thẻ `<img>` chưa tối ưu.

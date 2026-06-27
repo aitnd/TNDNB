@@ -23,6 +23,9 @@ export const MONETAG_CONFIG = {
     SESSION_KEYS: {
         POPUNDER_FIRED: 'monetag_pop_fired',
         DIRECT_LINK_LAST: 'monetag_dl_last',
+        POPUNDER_COUNT: 'monetag_pop_count',
+        DIRECT_LINK_COUNT: 'monetag_dl_count',
+        COUNTDOWN_COUNT: 'monetag_cd_count',
     },
 } as const;
 
@@ -45,4 +48,17 @@ export const getMonetagLimits = () => ({
  */
 export const getDirectLinkUrl = (firebaseUrl?: string): string => {
     return firebaseUrl?.trim() || MONETAG_CONFIG.DEFAULT_DIRECT_LINK_URL;
+};
+
+// --- Session Count Management ---
+
+export const getSessionCount = (key: string): number => {
+    if (typeof window === 'undefined') return 0;
+    return parseInt(sessionStorage.getItem(key) || '0', 10);
+};
+
+export const incrementSessionCount = (key: string): void => {
+    if (typeof window === 'undefined') return;
+    const current = getSessionCount(key);
+    sessionStorage.setItem(key, (current + 1).toString());
 };

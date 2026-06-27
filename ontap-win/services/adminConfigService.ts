@@ -11,10 +11,6 @@ export interface RoleConfig {
     showAds: boolean; // Control Google Adsense
     showAdSense: boolean;
     showAdsterra: boolean;
-    showMonetag?: boolean;
-    showDirectLink?: boolean;
-    showAutoPopunder?: boolean;
-    showCountdownAd?: boolean;
     message: string;
     preventCopy?: boolean; // 🔒 Bật/Tắt chặn bôi đen và Ctrl + C khi thi
 
@@ -62,6 +58,9 @@ export interface UsageConfig {
     adsenseCooldownHours?: number;
     monetagPopunderCooldownMinutes?: number;
     monetagDirectLinkCooldownMinutes?: number;
+    monetagDirectLinkMaxPerSession?: number;
+    monetagPopunderMaxPerSession?: number;
+    monetagCountdownMaxPerSession?: number;
 }
 
 // Cấu hình GitHub cho Release Manager
@@ -79,10 +78,6 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        showMonetag: false,
-        showDirectLink: true,
-        showAutoPopunder: true,
-        showCountdownAd: true,
         message: 'Bạn đã sử dụng hết {limit} lượt làm thử miễn phí trong ngày. Vui lòng đăng nhập để tiếp tục ôn tập! Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969',
         preventCopy: true,
         courseCreateDelete: 'none',
@@ -105,10 +100,6 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        showMonetag: false,
-        showDirectLink: true,
-        showAutoPopunder: true,
-        showCountdownAd: true,
         message: 'Bạn đã hết {limit} lượt làm bài miễn phí hôm nay. Hãy đăng ký lớp học để mở khóa toàn bộ tính năng và ôn tập không giới hạn. Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969',
         preventCopy: true,
         courseCreateDelete: 'none',
@@ -131,10 +122,6 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        showMonetag: false,
-        showDirectLink: true,
-        showAutoPopunder: false,
-        showCountdownAd: true,
         message: 'Tài khoản lớp của bạn đã đạt giới hạn {limit} lượt truy cập. Vui lòng liên hệ giáo viên hoặc admin để được hỗ trợ.',
         preventCopy: true,
         courseCreateDelete: 'none',
@@ -157,10 +144,6 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        showMonetag: false,
-        showDirectLink: false,
-        showAutoPopunder: false,
-        showCountdownAd: false,
         message: 'Tài khoản VIP của bạn đã hết {limit} lượt sử dụng. Vui lòng gia hạn hoặc liên hệ hỗ trợ.',
         preventCopy: true,
         courseCreateDelete: 'none',
@@ -183,10 +166,6 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        showMonetag: false,
-        showDirectLink: false,
-        showAutoPopunder: false,
-        showCountdownAd: false,
         message: 'Giới hạn giáo viên.',
         preventCopy: false,
         courseCreateDelete: 'none',
@@ -209,10 +188,6 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        showMonetag: false,
-        showDirectLink: false,
-        showAutoPopunder: false,
-        showCountdownAd: false,
         message: 'Giới hạn cán bộ quản lý.',
         preventCopy: false,
         courseCreateDelete: 'all',
@@ -235,10 +210,6 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        showMonetag: false,
-        showDirectLink: false,
-        showAutoPopunder: false,
-        showCountdownAd: false,
         message: 'Giới hạn Ban Lãnh Đạo.',
         preventCopy: false,
         courseCreateDelete: 'all',
@@ -261,10 +232,6 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
-        showMonetag: false,
-        showDirectLink: false,
-        showAutoPopunder: false,
-        showCountdownAd: false,
         message: 'Giới hạn Admin.',
         preventCopy: false,
         courseCreateDelete: 'all',

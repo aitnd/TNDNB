@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.10.7] - 2026-06-27
+### Tối ưu Vitest, vá bảo mật overrides & Đồng bộ điều hướng Dashboard (Web & App Win)
+- **Tối ưu hóa chạy Vitest:** Thêm tùy chọn `fileParallelism: false` vào cấu hình kiểm thử của cả bản Web và Windows để tránh lỗi treo/timeout worker pool trên Windows, giúp giảm thời gian chạy test từ ~70s xuống còn 4.5s.
+- **Vá bảo mật (Dependency Overrides):** Áp dụng cơ chế overrides ở root để vá hoàn toàn các lỗ hổng bảo mật Critical & High (protobufjs, protobufjs-cli, tar, uuid, fast-xml-parser, postcss, glob, @grpc/grpc-js).
+- **Đồng bộ điều hướng Dashboard:**
+  - Nút **Thông báo**: Chuyển hướng từ `/ontap/mailbox` sang trang quản lý thông báo `/ontap/notifications` (Web & Win).
+  - Nút **Cấu hình**: Chuyển hướng từ `/ontap/profile` sang trang cài đặt `/ontap/settings` (Win).
+- **Gộp cấu hình Monetag:** Gộp cấu hình hiển thị quảng cáo Monetag vào tab "Bảo vệ Quảng cáo (IVT Shield)", chuyển từ bật/tắt theo role sang cấu hình tần suất chung (số lần/phiên) trên toàn hệ thống.
+
 ## [3.10.6] - 2026-06-26
 ### Tích hợp Widget Thời tiết & Tối ưu hóa hình ảnh (Web & App Win)
 - **Tính năng mới - Widget Thời tiết Thông minh:**

@@ -791,8 +791,10 @@ const AppContent: React.FC = () => {
       setUserAnswers(answers);
 
       const isGK = location.pathname.startsWith('/ontap/giamkhao');
-      const currentRole = userProfile?.role || 'guest';
-      const showCountdownAd = usageConfig?.[currentRole]?.showCountdownAd ?? false;
+      
+      const maxCountdown = usageConfig?.monetagCountdownMaxPerSession ?? 0;
+      const currentCountdownCount = parseInt(sessionStorage.getItem('MONETAG_COUNTDOWN_COUNT') || '0', 10);
+      const showCountdownAd = maxCountdown > 0 && currentCountdownCount < maxCountdown;
 
       if (location.pathname === '/ontap/thithu' || location.pathname === '/ontap/giamkhao/thithu') {
         if (userProfile) {
@@ -825,6 +827,7 @@ const AppContent: React.FC = () => {
         const targetPath = isGK ? '/ontap/giamkhao/ketqua' : '/ontap/ketqua';
         // ⏱️ Redirect qua trang đếm ngược nếu config bật
         if (showCountdownAd && !(window as any).electron) {
+          sessionStorage.setItem('MONETAG_COUNTDOWN_COUNT', (currentCountdownCount + 1).toString());
           navigate('/ontap/ad-loading', {
             state: {
               redirectPath: targetPath,
@@ -972,9 +975,9 @@ const AppContent: React.FC = () => {
                 onHistoryClick={() => navigate('/ontap/history')}
                 onClassClick={() => handleTopNavNavigate((userProfile?.role === 'hoc_vien') ? 'my_class' : 'class_management')}
                 onOnlineExamClick={() => navigate('/ontap/exam-manager')}
-                onNotificationClick={() => navigate('/ontap/mailbox')}
+                onNotificationClick={() => navigate('/ontap/notifications')}
                 onStatsClick={() => navigate('/ontap/analytics')}
-                onSettingsClick={() => navigate('/ontap/profile')}
+                onSettingsClick={() => navigate('/ontap/settings')}
                 onUserManagerClick={() => navigate('/ontap/usermanager')}
               />
             ) : (
