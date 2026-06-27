@@ -102,11 +102,11 @@ const useQuickActions = (props: QuickActionsGridProps) => {
             id: 'exam', label: 'Quản lý Thi', icon: <ClipboardList size={18} />,
             onClick: props.onOnlineExamClick, variant: 'tile' as const,
         } : null,
-        props.onNotificationClick ? {
+        isAdmin && props.onNotificationClick ? {
             id: 'notification', label: 'Thông Báo', icon: <Bell size={18} />,
             onClick: props.onNotificationClick, variant: 'tile' as const, badge: 0,
         } : null,
-        props.onStatsClick ? {
+        isAdmin && props.onStatsClick ? {
             id: 'stats', label: 'Thống kê', icon: <BarChart3 size={18} />,
             onClick: props.onStatsClick, variant: 'tile' as const,
         } : null,

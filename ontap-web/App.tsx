@@ -1204,12 +1204,32 @@ const AppContent: React.FC = () => {
           <Route path="/ontap/profile" element={userProfile ? <AccountScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/login" replace />} />
           <Route path="/ontap/usermanager" element={userProfile ? <UserManagerScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/login" replace />} />
           <Route path="/ontap/settings" element={userProfile ? <UsageConfigPanel userProfile={userProfile} /> : <Navigate to="/ontap/login" />} />
-          <Route path="/ontap/notifications" element={userProfile ? <NotificationMgmtScreen userProfile={userProfile} /> : <Navigate to="/ontap/login" />} />
+          <Route path="/ontap/notifications" element={
+            userProfile ? (
+              ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role) ? (
+                <NotificationMgmtScreen userProfile={userProfile} />
+              ) : (
+                <Navigate to="/ontap/dashboard" replace />
+              )
+            ) : (
+              <Navigate to="/ontap/login" />
+            )
+          } />
           <Route path="/ontap/mailbox" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" />} />
           <Route path="/ontap/exam-manager" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" />} />
           <Route path="/ontap/online-exam" element={<ThiTrucTuyenPage />} />
           <Route path="/ontap/download" element={<DownloadAppPage />} />
-          <Route path="/ontap/analytics" element={<AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/analytics" element={
+            userProfile ? (
+              ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role) ? (
+                <AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />
+              ) : (
+                <Navigate to="/ontap/dashboard" replace />
+              )
+            ) : (
+              <Navigate to="/ontap/login" />
+            )
+          } />
           <Route path="/ontap/login-history" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
           <Route path="/ontap/games" element={<EntertainmentScreen onBack={() => navigate('/ontap/dashboard')} />} />
 

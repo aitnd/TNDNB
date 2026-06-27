@@ -133,7 +133,7 @@ export const useQuickActions = (props: QuickActionsGridProps) => {
             variant: 'tile' as const,
             visibleFor: adminRoles,
         } : null,
-        props.onNotificationClick ? {
+        isAdmin && props.onNotificationClick ? {
             id: 'notification',
             label: 'Thông Báo',
             icon: <Bell size={18} />,
@@ -142,13 +142,13 @@ export const useQuickActions = (props: QuickActionsGridProps) => {
             badge: 0, // Sẽ kết nối realtime sau
             visibleFor: adminRoles,
         } : null,
-        props.onStatsClick ? {
+        isAdmin && props.onStatsClick ? {
             id: 'stats',
             label: 'Thống kê',
             icon: <BarChart3 size={18} />,
             onClick: props.onStatsClick,
             variant: 'tile' as const,
-            visibleFor: adminOnlyRoles,
+            visibleFor: adminRoles,
         } : null,
         isAdminOnly && props.onSettingsClick ? {
             id: 'settings',
