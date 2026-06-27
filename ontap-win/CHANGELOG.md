@@ -3,6 +3,8 @@
 ## [3.10.8] - 2026-06-27
 - **Hoạt họa Gears lướt sóng cực đẹp:** Khắc phục lỗi ghi đè transform của Framer Motion bằng cách bọc thẻ bánh răng vào thẻ div tĩnh, đồng thời thêm hiệu ứng cờ lê lơ lửng và tự lắc lư (Wobble) cực sinh động.
 - **Cấu hình động từ Settings:** Thêm các ô cấu hình động Thời gian dự kiến, Thông tin dữ liệu và Liên hệ hỗ trợ tại trang `/ontap/settings`.
+- **Phân quyền Dashboard Học viên:** Ẩn các tile **Thông báo** và **Thống kê** trên Dashboard của học viên, đồng thời chặn quyền truy cập trực tiếp bằng URL của hai trang này trong cấu trúc định tuyến (redirect về Dashboard nếu role là học viên).
+- **Tối ưu hóa WeatherWidget hoạt động mọi nơi:** Chuyển đổi endpoint API sang domain production `https://daotaothuyenvien.com` khi chạy local/offline, kèm theo mock fallback tự phục hồi dữ liệu khi mất mạng hoặc API lỗi.
 
 ## [3.10.7] - 2026-06-27
 - **Tối ưu Vitest:** Thêm tùy chọn `fileParallelism: false` vào cấu hình Vitest giúp giảm thời gian chạy test từ ~70s xuống còn 4.55s và loại bỏ lỗi treo/timeout worker pool trên Windows/Electron.

@@ -1,10 +1,12 @@
 # Changelog
 
 ## [3.10.8] - 2026-06-27
-### Cải tiến Giao diện Bảo trì & Hỗ trợ Cấu hình Động (Web & App Win)
+### Cải tiến Giao diện Bảo trì, Phân quyền Dashboard Học Viên & Tối Ưu WeatherWidget (Web & App Win)
 - **Hoạt họa Gears lướt sóng cực đẹp:** Khắc phục triệt để lỗi ghi đè transform của Framer Motion bằng cách bọc thẻ bánh răng vào thẻ div tĩnh, đồng thời thêm hiệu ứng cờ lê lơ lửng và tự lắc lư (Wobble) cực sinh động.
 - **Cấu hình động 3 cột từ Settings:** Thêm các ô nhập liệu Thời gian dự kiến, Thông tin dữ liệu và Liên hệ hỗ trợ tại trang `/ontap/settings`.
 - **Nâng cấp trang bảo trì tĩnh:** Trang bảo trì tĩnh `maintenance.html` được nâng cấp với giao diện gears mới và script kéo cấu hình động trực tiếp từ Firestore REST API của dự án `thi-tnd`.
+- **Phân quyền Dashboard Học viên:** Ẩn các ô thao tác nhanh **Thông báo** và **Thống kê** trên Dashboard của học viên, đồng thời chặn quyền truy cập trực tiếp bằng URL đối với hai trang này (tự động chuyển hướng về Dashboard nếu học viên cố tình nhập URL).
+- **Tối ưu hóa WeatherWidget hoạt động mọi nơi:** Tự động sử dụng API production của domain `https://daotaothuyenvien.com` khi chạy local/dev/offline và bổ sung cơ chế nạp dữ liệu thời tiết giả lập (mock fallback) nếu API lỗi để widget luôn hiển thị ổn định.
 
 ## [3.10.7] - 2026-06-27
 ### Tối ưu Vitest, vá bảo mật overrides & Đồng bộ điều hướng Dashboard (Web & App Win)

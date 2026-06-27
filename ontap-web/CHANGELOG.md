@@ -4,6 +4,8 @@
 - **Hoạt họa Gears lướt sóng cực đẹp:** Khắc phục lỗi ghi đè transform của Framer Motion bằng cách bọc thẻ bánh răng vào thẻ div tĩnh, đồng thời thêm hiệu ứng cờ lê lơ lửng và tự lắc lư (Wobble) cực sinh động.
 - **Cấu hình động từ Settings:** Thêm các ô cấu hình động Thời gian dự kiến, Thông tin dữ liệu và Liên hệ hỗ trợ tại trang `/ontap/settings`.
 - **Nâng cấp trang bảo trì tĩnh:** Trang bảo trì tĩnh `maintenance.html` được nâng cấp với giao diện gears mới và script kéo cấu hình động trực tiếp từ Firestore REST API của dự án `thi-tnd`.
+- **Phân quyền Dashboard Học viên:** Ẩn các tile **Thông báo** và **Thống kê** trên Dashboard của học viên, đồng thời cấu hình Router chuyển hướng bảo vệ khi học viên truy cập trực tiếp bằng URL vào các đường dẫn `/ontap/notifications` và `/ontap/analytics`.
+- **Tối ưu hóa WeatherWidget hoạt động mọi nơi:** Chuyển đổi endpoint API sang domain production `https://daotaothuyenvien.com` khi chạy local/offline, kèm theo mock fallback tự phục hồi dữ liệu khi mất mạng hoặc API lỗi.
 
 ## [3.10.7] - 2026-06-27
 - **Tối ưu Vitest:** Thêm tùy chọn `fileParallelism: false` vào cấu hình Vitest giúp giảm thời gian chạy test từ ~67s xuống còn 4.62s và tránh lỗi timeout trên Windows.
