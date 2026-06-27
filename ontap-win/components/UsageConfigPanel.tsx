@@ -1103,16 +1103,44 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             </p>
                                             
                                             {config.isMaintenanceMode && (
-                                                <div className="animate-fade-in-up">
-                                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                                        Thông báo Bảo trì (Tùy chọn)
-                                                    </label>
-                                                    <textarea
-                                                        value={config.maintenanceMessage || ''}
-                                                        onChange={(e) => setConfig({ ...config, maintenanceMessage: e.target.value })}
-                                                        placeholder="VD: Hệ thống đang được nâng cấp để phục vụ bạn tốt hơn. Vui lòng quay lại sau ít phút..."
-                                                        className="w-full px-4 py-3 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none h-24"
-                                                    />
+                                                <div className="animate-fade-in-up space-y-4">
+                                                    <div>
+                                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                            Thông báo Bảo trì (Tùy chọn)
+                                                        </label>
+                                                        <textarea
+                                                            value={config.maintenanceMessage || ''}
+                                                            onChange={(e) => setConfig({ ...config, maintenanceMessage: e.target.value })}
+                                                            placeholder="VD: Hệ thống đang được nâng cấp để phục vụ bạn tốt hơn. Vui lòng quay lại sau ít phút..."
+                                                            className="w-full px-4 py-3 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none h-20"
+                                                        />
+                                                    </div>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                                Thời gian dự kiến (Tùy chọn)
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                value={config.maintenanceEstimatedTime || ''}
+                                                                onChange={(e) => setConfig({ ...config, maintenanceEstimatedTime: e.target.value })}
+                                                                placeholder="VD: Sớm nhất có thể, 2 tiếng..."
+                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                                Thông tin dữ liệu (Tùy chọn)
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                value={config.maintenanceSafetyInfo || ''}
+                                                                onChange={(e) => setConfig({ ...config, maintenanceSafetyInfo: e.target.value })}
+                                                                placeholder="VD: Dữ liệu của bạn an toàn 100%..."
+                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>

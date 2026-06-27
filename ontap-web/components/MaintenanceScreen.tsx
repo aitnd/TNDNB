@@ -4,9 +4,11 @@ import { Settings, Wrench, ShieldAlert, Clock, Mail } from 'lucide-react';
 
 interface MaintenanceScreenProps {
   message?: string;
+  estimatedTime?: string;
+  safetyInfo?: string;
 }
 
-const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message }) => {
+const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimatedTime, safetyInfo }) => {
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans">
       
@@ -26,20 +28,25 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message }) => {
         
         {/* Floating Icons Animation */}
         <div className="flex justify-center items-center mb-8 relative h-32">
+          {/* Bánh răng 1: Bên Trái/Dưới */}
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            className="absolute"
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            className="absolute -translate-x-12 -translate-y-4"
           >
-            <Settings className="w-24 h-24 text-blue-400/30" />
+            <Settings className="w-20 h-20 text-blue-400/25" />
           </motion.div>
+          
+          {/* Bánh răng 2: Bên Phải/Trên */}
           <motion.div
             animate={{ rotate: -360 }}
-            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-            className="absolute ml-12 mb-12"
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            className="absolute translate-x-12 translate-y-4"
           >
-            <Settings className="w-16 h-16 text-purple-400/40" />
+            <Settings className="w-14 h-14 text-purple-400/30" />
           </motion.div>
+
+          {/* Icon Wrench ở Giữa nổi bật */}
           <div className="relative z-10 bg-gradient-to-tr from-blue-500 to-purple-600 p-4 rounded-2xl shadow-lg shadow-purple-500/30">
             <Wrench className="w-12 h-12 text-white" />
           </div>
@@ -73,11 +80,15 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message }) => {
         >
           <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
             <Clock className="w-4 h-4 text-blue-400" />
-            <span className="text-sm text-slate-200">Thời gian dự kiến: Sớm nhất có thể</span>
+            <span className="text-sm text-slate-200">
+              {estimatedTime ? `Thời gian dự kiến: ${estimatedTime}` : 'Thời gian dự kiến: Sớm nhất có thể'}
+            </span>
           </div>
           <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
             <ShieldAlert className="w-4 h-4 text-purple-400" />
-            <span className="text-sm text-slate-200">Dữ liệu của bạn an toàn 100%</span>
+            <span className="text-sm text-slate-200">
+              {safetyInfo || 'Dữ liệu của bạn an toàn 100%'}
+            </span>
           </div>
         </motion.div>
 

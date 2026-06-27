@@ -911,7 +911,13 @@ const AppContent: React.FC = () => {
   // --- MAINTENANCE MODE CHECK ---
   const isMaintenanceBypassed = location.pathname === '/ontap/login-admin' || userProfile?.role === 'admin';
   if (usageConfig?.isMaintenanceMode && !isMaintenanceBypassed) {
-    return <MaintenanceScreen message={usageConfig.maintenanceMessage} />;
+    return (
+      <MaintenanceScreen 
+        message={usageConfig.maintenanceMessage} 
+        estimatedTime={usageConfig.maintenanceEstimatedTime}
+        safetyInfo={usageConfig.maintenanceSafetyInfo}
+      />
+    );
   }
 
   // --- STRICT WINDOWS APP LOGIC ---

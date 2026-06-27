@@ -97,22 +97,24 @@
         /* Spinners */
         .spinner-1, .spinner-2 {
             position: absolute;
-            color: rgba(96, 165, 250, 0.3);
+            color: rgba(96, 165, 250, 0.25);
             animation: spin linear infinite;
         }
         .spinner-1 {
-            width: 90px;
-            height: 90px;
-            animation-duration: 8s;
+            width: 80px;
+            height: 80px;
+            animation-duration: 10s;
+            left: calc(50% - 75px);
+            top: calc(50% - 40px);
         }
         .spinner-2 {
-            width: 60px;
-            height: 60px;
-            color: rgba(192, 132, 252, 0.4);
-            animation-duration: 12s;
+            width: 56px;
+            height: 56px;
+            color: rgba(192, 132, 252, 0.3);
+            animation-duration: 15s;
             animation-direction: reverse;
-            margin-left: 45px;
-            margin-bottom: 45px;
+            left: calc(50% + 20px);
+            top: calc(50% - 16px);
         }
 
         @keyframes spin {
@@ -223,6 +225,45 @@
             Cần hỗ trợ gấp? Liên hệ: <a href="mailto:contact@daotaothuyenvien.com">contact@daotaothuyenvien.com</a>
         </div>
     </div>
+
+    <script>
+        // Fetch dynamic maintenance config from Firestore REST API
+        const PROJECT_ID = 'thi-tnd';
+        const docUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/settings/usage_config`;
+
+        fetch(docUrl)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.fields) {
+                    const fields = data.fields;
+                    
+                    // 1. Lời nhắn bảo trì
+                    if (fields.maintenanceMessage && fields.maintenanceMessage.stringValue) {
+                        const msgPara = document.querySelector('.container p');
+                        if (msgPara) {
+                            msgPara.textContent = fields.maintenanceMessage.stringValue;
+                        }
+                    }
+
+                    // 2. Thời gian dự kiến
+                    if (fields.maintenanceEstimatedTime && fields.maintenanceEstimatedTime.stringValue) {
+                        const timePill = document.querySelector('.pill.blue span');
+                        if (timePill) {
+                            timePill.textContent = `Thời gian: ${fields.maintenanceEstimatedTime.stringValue}`;
+                        }
+                    }
+
+                    // 3. Dữ liệu an toàn
+                    if (fields.maintenanceSafetyInfo && fields.maintenanceSafetyInfo.stringValue) {
+                        const safetyPill = document.querySelector('.pill.purple span');
+                        if (safetyPill) {
+                            safetyPill.textContent = fields.maintenanceSafetyInfo.stringValue;
+                        }
+                    }
+                }
+            })
+            .catch(err => console.error('Error loading config:', err));
+    </script>
 
 </body>
 </html>

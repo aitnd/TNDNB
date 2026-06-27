@@ -52,6 +52,8 @@ export interface UsageConfig {
     monetagDirectLinkUrl?: string; // 🔗 URL Direct Link Monetag (nhập từ Dashboard, lưu Firebase)
     isMaintenanceMode?: boolean; // Tầng 1: Soft Maintenance
     maintenanceMessage?: string; // Lời nhắn bảo trì
+    maintenanceEstimatedTime?: string; // Thời gian dự kiến bảo trì
+    maintenanceSafetyInfo?: string; // Thông tin an toàn dữ liệu
     
     // 🛡️ Bảo Vệ Quảng Cáo (IVT Shield)
     adsenseMaxClicks?: number;
@@ -273,6 +275,8 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 monetagDirectLinkUrl: data.monetagDirectLinkUrl || '', // URL Direct Link Monetag
                 isMaintenanceMode: data.isMaintenanceMode || false,
                 maintenanceMessage: data.maintenanceMessage || 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!',
+                maintenanceEstimatedTime: data.maintenanceEstimatedTime || '',
+                maintenanceSafetyInfo: data.maintenanceSafetyInfo || '',
                 adsenseMaxClicks: data.adsenseMaxClicks ?? 2,
                 adsenseCooldownHours: data.adsenseCooldownHours ?? 24,
                 monetagPopunderCooldownMinutes: data.monetagPopunderCooldownMinutes ?? 30,
