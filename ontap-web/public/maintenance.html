@@ -222,7 +222,7 @@
         </div>
 
         <div class="footer">
-            Cần hỗ trợ gấp? Liên hệ: <a href="mailto:contact@daotaothuyenvien.com">contact@daotaothuyenvien.com</a>
+            Cần hỗ trợ gấp? Liên hệ: <a id="contact-link" href="mailto:contact@daotaothuyenvien.com">contact@daotaothuyenvien.com</a>
         </div>
     </div>
 
@@ -258,6 +258,16 @@
                         const safetyPill = document.querySelector('.pill.purple span');
                         if (safetyPill) {
                             safetyPill.textContent = fields.maintenanceSafetyInfo.stringValue;
+                        }
+                    }
+
+                    // 4. Thông tin liên hệ
+                    if (fields.maintenanceContact && fields.maintenanceContact.stringValue) {
+                        const contactLink = document.getElementById('contact-link');
+                        if (contactLink) {
+                            const val = fields.maintenanceContact.stringValue;
+                            contactLink.textContent = val;
+                            contactLink.href = val.includes('@') ? `mailto:${val}` : '#';
                         }
                     }
                 }

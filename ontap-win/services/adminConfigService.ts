@@ -54,6 +54,7 @@ export interface UsageConfig {
     maintenanceMessage?: string; // Lời nhắn bảo trì
     maintenanceEstimatedTime?: string; // Thời gian dự kiến bảo trì
     maintenanceSafetyInfo?: string; // Thông tin an toàn dữ liệu
+    maintenanceContact?: string; // Thông tin liên hệ bảo trì
     
     // 🛡️ Bảo Vệ Quảng Cáo (IVT Shield)
     adsenseMaxClicks?: number;
@@ -277,6 +278,7 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 maintenanceMessage: data.maintenanceMessage || 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!',
                 maintenanceEstimatedTime: data.maintenanceEstimatedTime || '',
                 maintenanceSafetyInfo: data.maintenanceSafetyInfo || '',
+                maintenanceContact: data.maintenanceContact || '',
                 adsenseMaxClicks: data.adsenseMaxClicks ?? 2,
                 adsenseCooldownHours: data.adsenseCooldownHours ?? 24,
                 monetagPopunderCooldownMinutes: data.monetagPopunderCooldownMinutes ?? 30,

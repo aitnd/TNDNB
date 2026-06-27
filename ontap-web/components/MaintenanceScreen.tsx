@@ -6,9 +6,10 @@ interface MaintenanceScreenProps {
   message?: string;
   estimatedTime?: string;
   safetyInfo?: string;
+  contactInfo?: string;
 }
 
-const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimatedTime, safetyInfo }) => {
+const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimatedTime, safetyInfo, contactInfo }) => {
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans">
       
@@ -116,7 +117,7 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimate
         >
           <p className="text-sm text-slate-400 flex items-center justify-center gap-2">
             <Mail className="w-4 h-4" />
-            Cần hỗ trợ gấp? Liên hệ: <a href="mailto:contact@daotaothuyenvien.com" className="text-blue-400 hover:text-blue-300 transition-colors">contact@daotaothuyenvien.com</a>
+            Cần hỗ trợ gấp? Liên hệ: <a href={contactInfo?.includes('@') ? `mailto:${contactInfo}` : '#'} className="text-blue-400 hover:text-blue-300 transition-colors">{contactInfo || 'contact@daotaothuyenvien.com'}</a>
           </p>
         </motion.div>
 

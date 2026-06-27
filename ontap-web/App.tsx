@@ -916,6 +916,7 @@ const AppContent: React.FC = () => {
         message={usageConfig.maintenanceMessage} 
         estimatedTime={usageConfig.maintenanceEstimatedTime}
         safetyInfo={usageConfig.maintenanceSafetyInfo}
+        contactInfo={usageConfig.maintenanceContact}
       />
     );
   }
