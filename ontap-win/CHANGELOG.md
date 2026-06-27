@@ -1,5 +1,9 @@
 # CHANGELOG — [ontap-win]
 
+## [3.10.8] - 2026-06-27
+- **Hoạt họa Gears lướt sóng cực đẹp:** Khắc phục lỗi ghi đè transform của Framer Motion bằng cách bọc thẻ bánh răng vào thẻ div tĩnh, đồng thời thêm hiệu ứng cờ lê lơ lửng và tự lắc lư (Wobble) cực sinh động.
+- **Cấu hình động từ Settings:** Thêm các ô cấu hình động Thời gian dự kiến, Thông tin dữ liệu và Liên hệ hỗ trợ tại trang `/ontap/settings`.
+
 ## [3.10.7] - 2026-06-27
 - **Tối ưu Vitest:** Thêm tùy chọn `fileParallelism: false` vào cấu hình Vitest giúp giảm thời gian chạy test từ ~70s xuống còn 4.55s và loại bỏ lỗi treo/timeout worker pool trên Windows/Electron.
 - **Sửa điều hướng Dashboard:** Sửa nút **Thông báo** dẫn đến `/ontap/notifications` và nút **Cấu hình** dẫn đến `/ontap/settings`.

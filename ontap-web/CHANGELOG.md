@@ -1,5 +1,10 @@
 # CHANGELOG — [ontap-web]
 
+## [3.10.8] - 2026-06-27
+- **Hoạt họa Gears lướt sóng cực đẹp:** Khắc phục lỗi ghi đè transform của Framer Motion bằng cách bọc thẻ bánh răng vào thẻ div tĩnh, đồng thời thêm hiệu ứng cờ lê lơ lửng và tự lắc lư (Wobble) cực sinh động.
+- **Cấu hình động từ Settings:** Thêm các ô cấu hình động Thời gian dự kiến, Thông tin dữ liệu và Liên hệ hỗ trợ tại trang `/ontap/settings`.
+- **Nâng cấp trang bảo trì tĩnh:** Trang bảo trì tĩnh `maintenance.html` được nâng cấp với giao diện gears mới và script kéo cấu hình động trực tiếp từ Firestore REST API của dự án `thi-tnd`.
+
 ## [3.10.7] - 2026-06-27
 - **Tối ưu Vitest:** Thêm tùy chọn `fileParallelism: false` vào cấu hình Vitest giúp giảm thời gian chạy test từ ~67s xuống còn 4.62s và tránh lỗi timeout trên Windows.
 - **Sửa điều hướng Dashboard:** Sửa nút **Thông báo** dẫn đến trang quản lý thông báo `/ontap/notifications` thay vì hòm thư cũ `/ontap/mailbox`.
