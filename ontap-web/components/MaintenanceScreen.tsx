@@ -28,28 +28,43 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimate
         
         {/* Floating Icons Animation */}
         <div className="flex justify-center items-center mb-8 relative h-32">
-          {/* Bánh răng 1: Bên Trái/Dưới */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            className="absolute -translate-x-12 -translate-y-4"
-          >
-            <Settings className="w-20 h-20 text-blue-400/25" />
-          </motion.div>
+          {/* Bánh răng 1: Bên Trái/Dưới (dùng wrapper div để tránh bị ghi đè translate) */}
+          <div className="absolute -translate-x-14 -translate-y-4">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+            >
+              <Settings className="w-20 h-20 text-blue-400/25" />
+            </motion.div>
+          </div>
           
           {/* Bánh răng 2: Bên Phải/Trên */}
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute translate-x-12 translate-y-4"
-          >
-            <Settings className="w-14 h-14 text-purple-400/30" />
-          </motion.div>
-
-          {/* Icon Wrench ở Giữa nổi bật */}
-          <div className="relative z-10 bg-gradient-to-tr from-blue-500 to-purple-600 p-4 rounded-2xl shadow-lg shadow-purple-500/30">
-            <Wrench className="w-12 h-12 text-white" />
+          <div className="absolute translate-x-14 translate-y-4">
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+            >
+              <Settings className="w-14 h-14 text-purple-400/30" />
+            </motion.div>
           </div>
+
+          {/* Icon Wrench ở Giữa lơ lửng & lắc nhẹ cực kỳ sinh động */}
+          <motion.div 
+            animate={{ 
+              y: [0, -8, 0],
+              rotate: [0, 5, -5, 0]
+            }}
+            transition={{ 
+              duration: 4, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            whileHover={{ scale: 1.1, rotate: 15 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative z-10 bg-gradient-to-tr from-blue-500 to-purple-600 p-4 rounded-2xl shadow-lg shadow-purple-500/30 cursor-pointer"
+          >
+            <Wrench className="w-12 h-12 text-white" />
+          </motion.div>
         </div>
 
         {/* Typography */}
