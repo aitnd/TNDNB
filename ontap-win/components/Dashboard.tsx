@@ -52,16 +52,12 @@ const Dashboard: React.FC<DashboardProps> = ({
     });
 
     return (
-        <div className="min-h-screen flex flex-col items-center p-4 pt-6 animate-slide-in-right">
-            {/* === Thanh Weather & Online Stats === */}
-            <div className="w-full max-w-4xl flex flex-col md:flex-row items-center justify-between gap-3 mb-4">
-                <div className="w-full md:flex-1">
-                    <WeatherWidget />
-                </div>
+        <div className="min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right">
+            {/* === Thanh Weather & Online Stats (Stacked Vertically) === */}
+            <div className="w-full max-w-4xl flex flex-col gap-2.5 mb-4">
+                <WeatherWidget />
                 {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
-                    <div className="w-full md:w-auto flex-shrink-0">
-                        <AdminStatsBar userRole={userRole} />
-                    </div>
+                    <AdminStatsBar userRole={userRole} />
                 )}
             </div>
 

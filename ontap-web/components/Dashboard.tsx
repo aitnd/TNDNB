@@ -65,7 +65,7 @@ const Dashboard: React.FC<DashboardProps> = ({
     // === PREMIUM THEME — PHƯƠNG ÁN C "HYBRID SMART" ===
     if (theme === 'premium') {
         return (
-            <div className="relative min-h-screen flex flex-col items-center p-4 pt-6 animate-slide-in-right overflow-hidden transition-colors duration-500">
+            <div className="relative min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right overflow-hidden transition-colors duration-500">
                 {/* Background Decorations */}
                 <div className="absolute inset-0 z-0 pointer-events-none">
                     <div className="absolute top-[20%] left-[-5%] w-[30%] h-[30%] bg-cyan-500/10 blur-[100px] rounded-full animate-pulse-slow" />
@@ -73,15 +73,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                 </div>
 
                 <div className="relative z-10 w-full max-w-6xl">
-                    {/* === ROW 1: Weather + Online Stats Slim Banner === */}
-                    <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-3 mb-4">
-                        <div className="w-full lg:flex-1">
-                            <WeatherWidget />
-                        </div>
+                    {/* === ROW 1: Weather & Online Stats Banner (Stacked Vertically) === */}
+                    <div className="w-full flex flex-col gap-2.5 mb-4">
+                        <WeatherWidget />
                         {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
-                            <div className="w-full lg:w-auto flex-shrink-0">
-                                <AdminStatsBar userRole={userRole} />
-                            </div>
+                            <AdminStatsBar userRole={userRole} />
                         )}
                     </div>
 
@@ -196,16 +192,12 @@ const Dashboard: React.FC<DashboardProps> = ({
 
     // === THEME CŨ (cũng áp dụng layout Phương án C nhưng đơn giản hơn) ===
     return (
-        <div className="min-h-screen flex flex-col items-center p-4 pt-6 animate-slide-in-right">
-            {/* Thanh Weather & Online Stats */}
-            <div className="w-full max-w-4xl flex flex-col md:flex-row items-center justify-between gap-3 mb-4">
-                <div className="w-full md:flex-1">
-                    <WeatherWidget />
-                </div>
+        <div className="min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right">
+            {/* Thanh Weather & Online Stats (Stacked Vertically) */}
+            <div className="w-full max-w-4xl flex flex-col gap-2.5 mb-4">
+                <WeatherWidget />
                 {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
-                    <div className="w-full md:w-auto flex-shrink-0">
-                        <AdminStatsBar userRole={userRole} />
-                    </div>
+                    <AdminStatsBar userRole={userRole} />
                 )}
             </div>
 

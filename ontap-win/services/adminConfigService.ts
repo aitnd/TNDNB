@@ -309,7 +309,10 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 adsenseMaxClicks: data.adsenseMaxClicks ?? 1,
                 adsenseCooldownMinutes: data.adsenseCooldownMinutes ?? 30,
                 monetagPopunderCooldownMinutes: data.monetagPopunderCooldownMinutes ?? 30,
-                monetagDirectLinkCooldownMinutes: data.monetagDirectLinkCooldownMinutes ?? 30
+                monetagDirectLinkCooldownMinutes: data.monetagDirectLinkCooldownMinutes ?? 30,
+                monetagDirectLinkMaxPerSession: data.monetagDirectLinkMaxPerSession ?? 0,
+                monetagPopunderMaxPerSession: data.monetagPopunderMaxPerSession ?? 0,
+                monetagCountdownMaxPerSession: data.monetagCountdownMaxPerSession ?? 0
             };
         } else {
             // Initialize if not exists
