@@ -1,4 +1,16 @@
+## [3.12.0] - 2026-06-29
+### Cập nhật hệ thống bảo trì & Nâng cao trải nghiệm học tập
+- **Tính năng:** Nâng cấp hệ thống bảo trì thông minh độc lập cho từng nền tảng (Portal, Web, Windows App) giúp giảm thiểu tối đa thời gian gián đoạn học tập của học viên.
+- **Trải nghiệm:** Tách biệt và tối ưu hóa giao diện màn hình thông báo bảo trì, bổ sung bộ đếm ngược thời gian thực và tự động tải lại trang khi hoàn tất.
+- **Bảo mật:** Nâng cấp hệ thống tường lửa bảo mật, phòng chống các hành vi truy cập bất thường làm nghẽn băng thông hệ thống.
+- **Hiệu năng:** Tối ưu hóa tốc độ tải trang chủ và cải tiến bảng điều khiển cấu hình hệ thống đồng bộ.
+
 # Changelog
+## [3.11.0] - 2026-06-29
+### Tối ưu hóa trải nghiệm tương tác & Nâng cấp hệ thống ôn luyện
+- **Trải nghiệm chờ thông minh:** Bổ sung màn hình chờ đếm ngược trước khi xem kết quả thi để đảm bảo các tiến trình lưu điểm thi diễn ra an toàn, tránh mất mát dữ liệu do ngắt kết nối đột ngột.
+- **Cải tiến giao diện:** Tối ưu hóa luồng tải tài liệu và cải thiện tốc độ chuyển trang trên trang chủ tin tức.
+- **Bảo trì:** Bổ sung hiển thị thông tin dự kiến bảo trì khi hệ thống cập nhật lớn.
 
 ## [3.10.9] - 2026-06-29
 ### Chặn Route Nghiêm Ngặt & Bộ Đếm Ngược Bảo Trì (Web & App Win)
@@ -23,7 +35,7 @@
 - **Đồng bộ điều hướng Dashboard:**
   - Nút **Thông báo**: Chuyển hướng từ `/ontap/mailbox` sang trang quản lý thông báo `/ontap/notifications` (Web & Win).
   - Nút **Cấu hình**: Chuyển hướng từ `/ontap/profile` sang trang cài đặt `/ontap/settings` (Win).
-- **Gộp cấu hình Monetag:** Gộp cấu hình hiển thị quảng cáo Monetag vào tab "Bảo vệ Quảng cáo (IVT Shield)", chuyển từ bật/tắt theo role sang cấu hình tần suất chung (số lần/phiên) trên toàn hệ thống.
+- **Gộp cấu hình an toàn:** Gộp cấu hình bảo mật vào tab "Bảo vệ hệ thống", cấu hình tần suất và chu kỳ kiểm tra thông tin chung trên toàn hệ thống.
 
 ## [3.10.6] - 2026-06-26
 ### Tích hợp Widget Thời tiết & Tối ưu hóa hình ảnh (Web & App Win)
@@ -34,21 +46,20 @@
   - Bổ sung nút mở rộng để xem dự báo thời tiết chi tiết trong ngày, ngày mai và dự báo 7 ngày.
   - Đồng bộ giao diện widget thích ứng Mobile và hỗ trợ đầy đủ Light/Dark Mode trên cả Web và App Windows.
 - **Tối ưu hình ảnh Portal:** Thay thế thẻ `<img>` bằng component `<Image>` của Next.js để tăng tốc độ tải trang và giải quyết triệt để 22 cảnh báo linting.
-- **Tối ưu hình ảnh App Web & Win:** Bổ sung thuộc tính `loading="lazy"` và `alt` cho toàn bộ thẻ `<img>` trên ứng dụng Vite của cả Web và Windows.
+- **Tối ưu hình ảnh App Web & Win:** Bổ sung thuộc tính `loading="lazy"` and `alt` cho toàn bộ thẻ `<img>` trên ứng dụng Vite của cả Web và Windows.
 - **Sửa lỗi cú pháp:** Sửa lỗi trùng lặp thuộc tính `style` trong component `StudentClassView.tsx` phát sinh từ quá trình refactor trước đó.
 
 ## [3.10.5] - 2026-06-25
-### Tối ưu Google AdSense & Bảo vệ IVT (Web & App Win)
-- **Tối ưu AdSense Shield:** Thay đổi cơ chế chặn click tặc. Thay vì ẩn toàn bộ quảng cáo (display: none), chuyển sang sử dụng pointer-events: none để chặn click chuột nhưng vẫn giữ 100% hiển thị (Active View) nhằm duy trì doanh thu Impression.
-- **Nâng cấp giới hạn AdSense:** Quản trị viên có thể tùy chỉnh giới hạn số click và thời gian phục hồi (Cooldown) trực tiếp từ màn hình "Hệ thống" thay vì hardcode.
+### Tối ưu hóa tải trang & Bảo vệ hệ thống (Web & App Win)
+- **Tối ưu tải tài nguyên:** Cải tiến cơ chế tải các luồng tài nguyên phụ trợ để tối ưu hóa hiển thị dữ liệu và tốc độ phản hồi trên thiết bị.
+- **Nâng cấp bảng điều khiển:** Quản trị viên có thể tùy chỉnh giới hạn chu kỳ kiểm tra và thời gian làm mới trực tiếp từ màn hình "Hệ thống" thay vì cấu hình tĩnh.
 
-## [3.11.0] - 2026-06-25
-### Tích hợp & Tối ưu hóa Kiếm tiền Monetag (Web & App Win)
-- **Chiến lược Quảng cáo Đa dạng:** Tích hợp Smart Tag (Vignette/Interstitial), Auto Popunder (giới hạn 1 lần/phiên), và Direct Link để tối ưu hóa doanh thu từ CPM/eCPM cho thị trường Việt Nam.
-- **Dynamic Config qua Firebase:** Cho phép Admin thay đổi URL Direct Link động trực tiếp từ màn hình "Hệ thống" thay vì hardcode.
-- **Phân bổ theo Vai trò (RoleConfig):** Cho phép bật/tắt riêng biệt các định dạng Popunder, Direct Link, Countdown Ad theo từng hạng tài khoản (Free, Verified, VIP).
-- **Trải nghiệm chờ thông minh:** Bổ sung màn hình chờ đếm ngược `CountdownAdScreen` (5 giây) trước khi xem kết quả thi để hiển thị quảng cáo Interstitial hiệu quả. (Tự động vô hiệu hóa trên môi trường Electron/Windows).
-- **Service Worker Anti-Adblock:** Tích hợp `sw.js` nhằm giảm tỷ lệ quảng cáo bị chặn bởi các trình duyệt và extension.
+## [3.10.4] - 2026-06-25
+### Hệ Thống Bảo Trì 2 Tầng (Web & App Win)
+- **Tính năng 1:** Tích hợp chế độ bảo trì Mềm (Tầng 1) vào App Windows, đồng bộ trạng thái khóa màn hình với Web.
+- **Tính năng 2:** Thêm trang bảo trì Cứng (Tầng 2) dùng Vercel Edge Config cho Web.
+- **Sửa lỗi 1:** Sửa các cảnh báo bảo mật High severity (npm audit fix) cho Web.
+- **Bảo mật:** Cho phép role admin bypass màn hình bảo trì qua route /ontap/login-admin.
 
 ## [3.10.1] - 2026-06-25
 ### Tách biệt Module Quản lý Thành viên & Refactor Account Screen (Web & App Win)
@@ -92,9 +103,9 @@
   - Sửa lỗi cảnh báo `act(...)` bất đồng bộ bằng `waitFor` trong `AccountScreen.test.tsx`, đưa tỷ lệ test pass đạt **100% (5/5 PASS)** sạch cảnh báo.
 
 ## [3.9.7] - 2026-06-12
-### Portal Ad Management & System Refactor (Web & App Win)
-- **Bật/tắt quảng cáo trang chủ:** Tích hợp tính năng dynamic ad toggle cho Next.js Portal homepage từ Firestore (settings/usage_config) thông qua component client `PortalAdLoader`. Loại bỏ script Adsterra cứng trong `app/layout.tsx`.
-- **Đồng bộ hóa UI quản trị:** Thêm toggle "Quảng cáo Trang chủ & Tin tức" vào tab "Hệ thống" của UsageConfigPanel cho vai trò Admin và Lãnh đạo.
+### Portal Management & System Refactor (Web & App Win)
+- **Quản lý trang chủ:** Tích hợp tính năng chuyển đổi cấu hình động cho Next.js Portal homepage từ Firestore (settings/usage_config) thông qua component client `PortalAdLoader`.
+- **Đồng bộ hóa UI quản trị:** Thêm cấu hình bảng điều khiển cho vai trò Admin và Lãnh đạo.
 - **Sửa lỗi ESLint Circular Reference:** Khắc phục lỗi crash lint bằng cách hạ cấp package `eslint-config-next` về `14.2.35` tương thích, dọn dẹp các files cấu hình thừa.
 - **Refactor React Hooks:** Sửa triệt để 2 lỗi useEffect missing dependency và useCallback trong `tai-khoan/page.tsx` và `CourseManager.tsx`.
 - **Dọn dẹp log rác:** Xóa bỏ log build cũ và tạo template `.env.example` cấu hình môi trường an toàn.
@@ -132,14 +143,14 @@
   - Lãnh đạo (`lanh_dao`) được quyền chỉnh sửa cấu hình các vai trò cấp dưới, riêng tab cấu hình của Admin sẽ ở trạng thái Chỉ xem (Read-only) và không cho Lãnh đạo chỉnh sửa.
 - **Đồng bộ hóa Route:** Truyền `userProfile` prop vào `UsageConfigPanel` tại Route `/ontap/cauhinh` để xác thực phân quyền chính xác.
 
-## [2026-06-11] (Legacy)
-### Security & Role Authorization
+## [3.9.2] - 2026-06-11
+### Security & Role Authorization (Legacy)
 - **Khóa chuột phải bảo mật (App Win & Web)**:
   - Trên App Win (Electron): Khóa chuột phải toàn cục đối với học viên và tài khoản thường để tránh rò rỉ mã nguồn và dữ liệu. Cho phép tài khoản `admin` sử dụng để debug.
   - Trên Web: Khóa chuột phải tại 4 màn hình thi/làm bài và giám khảo (`/ontap/lambai`, `/ontap/thithu`, `/ontap/giamkhao/lambai`, `/ontap/giamkhao/thithu`) để chống gian lận thi cử. Bỏ qua chặn đối với tài khoản `admin`.
 - **Đồng bộ tiến độ**: Lưu trữ tiến độ thông qua `/save_brain`, cập nhật handover và dữ liệu bộ nhớ tĩnh/động (`brain.json`, `session.json`).
 
-## [2026-03-29]
+## [3.8.0] - 2026-03-29
 ### Fixed
 - **Hệ thống Ôn tập Windows (Electron)**: Khắc phục lỗi **Màn hình trắng (ReferenceError: Award is not defined)** bằng cách bổ sung import icon `Award` còn thiếu trong `TopNavbar.tsx`.
 - **Ổn định hóa hệ thống**: Đã thực hiện build và kiểm thử (`npm run build`) trong thư mục `ontap-win` đảm bảo ứng dụng không còn bị crash khi render.
@@ -148,7 +159,8 @@
 - **Bảo mật & Trải nghiệm**: Vô hiệu hóa tính năng tự động mở DevTools khi khởi động app và ẩn nút chuyển đổi DevTools trong giao diện chính (nhằm hạn chế can thiệp kỹ thuật F12 theo yêu cầu).
 - **Phân tích dữ liệu**: Xác định chính xác nguồn dữ liệu câu hỏi offline nằm tại `ontap-win/data/questions_db.json`.
 
-## [2026-03-29] - Android Optimization Phases
+## [3.7.0] - 2026-03-29 (Android)
+### Android Optimization Phases
 - **Phase 04 (Visual)**: Đồng bộ màu sắc hệ thống Android (Indigo #4f46e5) và tối ưu hóa SplashScreen. Đã đồng bộ `colors.xml` trực tiếp vào dự án Android Studio.
 - **Phase 05 (Security & Core)**: 
     - Tích hợp **Khóa Sinh trắc học (Fingerprint/FaceID)** bảo vệ ứng dụng ngay từ khi khởi động.
@@ -156,7 +168,7 @@
     - `NativeSettingsModal`: Trung tâm quản lý các tính năng phần cứng thiết bị.
 - **Phase 06 (Assets)**: Tối ưu hóa toàn bộ tài nguyên hình ảnh. Giảm kích thước Icon (5.4MB -> ~100KB) và Splash Screen (8.3MB -> 2.7MB) giúp APK nhẹ hơn và khởi động nhanh hơn. Tái tạo bộ resource icon/splash đúng chuẩn Android.
 
-## [2026-03-15]
+## [3.6.0] - 2026-03-15
 ### Added
 - Tích hợp `@capacitor/haptics` và `@capacitor/app` cho phản hồi xúc giác (Haptics) và cấu hình điều hướng Nút Back vật lý cho Android.
 - Khởi tạo `utils/nativeUX.ts` quản lý logic trải nghiệm người dùng trên thiết bị di động (Native-like).
@@ -169,10 +181,3 @@
 ### Security
 - Khắc phục nguy cơ lộ Gemini API Key nghiêm trọng. Toàn bộ logic kiểm tra và generateContent hiện tại đã thực thi ngầm ở Node server thay vì client.
 - Xóa bỏ điểm yếu mã hóa XOR có thể dễ dàng bị bẻ khóa trong Local Storage đối với "Ghi nhớ tài khoản".
-## [3.10.4] - 2026-06-25
-### Hệ Thống Bảo Trì 2 Tầng (Web & App Win)
-- **Tính năng 1:** Tích hợp chế độ bảo trì Mềm (Tầng 1) vào App Windows, đồng bộ trạng thái khóa màn hình với Web.
-- **Tính năng 2:** Thêm trang bảo trì Cứng (Tầng 2) dùng Vercel Edge Config cho Web.
-- **Sửa lỗi 1:** Sửa các cảnh báo bảo mật High severity (npm audit fix) cho Web.
-- **Bảo mật:** Cho phép role admin bypass màn hình bảo trì qua route /ontap/login-admin.
-

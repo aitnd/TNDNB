@@ -16,6 +16,7 @@ const MobileBottomNav = dynamic(() => import('../components/MobileBottomNav'), {
 const CapacitorDetector = dynamic(() => import('./components/CapacitorDetector'), { ssr: false })
 const GlobalNotificationHandler = dynamic(() => import('./components/GlobalNotificationHandler'), { ssr: false })
 const PortalAdLoader = dynamic(() => import('./components/PortalAdLoader'), { ssr: false })
+const PortalMaintenanceWrapper = dynamic(() => import('../components/PortalMaintenanceWrapper'), { ssr: false })
 
 // Cấu hình font Rubik (Hỗ trợ tiếng Việt đầy đủ)
 const rubik = Rubik({
@@ -66,7 +67,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* ... (Phần dưới giữ nguyên) ... */}
 
             <main style={{ minHeight: '80vh', position: 'relative', paddingBottom: '64px' }}>
-              {children}
+              <PortalMaintenanceWrapper>
+                {children}
+              </PortalMaintenanceWrapper>
             </main>
 
             {/* Gắn nhạc nền Noel */}

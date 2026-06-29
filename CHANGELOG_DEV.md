@@ -1,16 +1,23 @@
+
 ## [3.12.0] - 2026-06-29
-### Cập nhật hệ thống bảo trì & Nâng cao trải nghiệm học tập
-- **Tính năng:** Nâng cấp hệ thống bảo trì thông minh độc lập cho từng nền tảng (Portal, Web, Windows App) giúp giảm thiểu tối đa thời gian gián đoạn học tập của học viên.
-- **Trải nghiệm:** Tách biệt và tối ưu hóa giao diện màn hình thông báo bảo trì, bổ sung bộ đếm ngược thời gian thực và tự động tải lại trang khi hoàn tất.
-- **Bảo mật:** Nâng cấp hệ thống tường lửa bảo mật, phòng chống các hành vi truy cập bất thường làm nghẽn băng thông hệ thống.
-- **Hiệu năng:** Tối ưu hóa tốc độ tải trang chủ và cải tiến bảng điều khiển cấu hình hệ thống đồng bộ.
+### Cập nhật hệ thống bảo trì & IVT Shield
+- **Tính năng:** Tách độc lập 3 công tắc bảo trì cho trang chính (Portal), Web và Win.
+- **Tính năng:** Thêm nút bật/tắt quảng cáo (AdSense, Adsterra, Monetag) cho trang chính Portal.
+- **Bảo mật:** Áp dụng giới hạn click AdSense (IVT Shield) để chống Invalid Traffic cho Portal.
+- **Tính năng:** Đổi đơn vị thời gian cooldown quảng cáo từ 'giờ' sang 'phút' trên toàn hệ thống.
+- **UI:** Cập nhật màn hình admin config đồng bộ cho Web và Win.
 
 # Changelog
 ## [3.11.0] - 2026-06-29
-### Tối ưu hóa trải nghiệm tương tác & Nâng cấp hệ thống ôn luyện
-- **Trải nghiệm chờ thông minh:** Bổ sung màn hình chờ đếm ngược trước khi xem kết quả thi để đảm bảo các tiến trình lưu điểm thi diễn ra an toàn, tránh mất mát dữ liệu do ngắt kết nối đột ngột.
-- **Cải tiến giao diện:** Tối ưu hóa luồng tải tài liệu và cải thiện tốc độ chuyển trang trên trang chủ tin tức.
-- **Bảo trì:** Bổ sung hiển thị thông tin dự kiến bảo trì khi hệ thống cập nhật lớn.
+### Tích hợp & Tối ưu hóa Kiếm tiền Monetag (Web & App Win)
+- **Chiến lược Quảng cáo Đa dạng:** Tích hợp Smart Tag (Vignette/Interstitial), Auto Popunder (giới hạn 1 lần/phiên), và Direct Link để tối ưu hóa doanh thu từ CPM/eCPM cho thị trường Việt Nam.
+- **Dynamic Config qua Firebase:** Cho phép Admin thay đổi URL Direct Link động trực tiếp từ màn hình "Hệ thống" thay vì hardcode.
+- **Phân bổ theo Vai trò (RoleConfig):** Cho phép bật/tắt riêng biệt các định dạng Popunder, Direct Link, Countdown Ad theo từng hạng tài khoản (Free, Verified, VIP).
+- **Trải nghiệm chờ thông minh:** Bổ sung màn hình chờ đếm ngược `CountdownAdScreen` (5 giây) trước khi xem kết quả thi để hiển thị quảng cáo Interstitial hiệu quả. (Tự động vô hiệu hóa trên môi trường Electron/Windows).
+- **Service Worker Anti-Adblock:** Tích hợp `sw.js` nhằm giảm tỷ lệ quảng cáo bị chặn bởi các trình duyệt và extension.
+- **Cấu hình Quảng cáo Tách biệt:** Tách riêng cấu hình bật tắt quảng cáo cho AdSense, Adsterra và Monetag trên trang chủ tin tức.
+- **Dự kiến hiển thị (Text fallback):** Bổ sung text fallback trong màn hình bảo trì khi Admin không cài giờ bảo trì cụ thể.
+
 
 ## [3.10.9] - 2026-06-29
 ### Chặn Route Nghiêm Ngặt & Bộ Đếm Ngược Bảo Trì (Web & App Win)
@@ -35,7 +42,7 @@
 - **Đồng bộ điều hướng Dashboard:**
   - Nút **Thông báo**: Chuyển hướng từ `/ontap/mailbox` sang trang quản lý thông báo `/ontap/notifications` (Web & Win).
   - Nút **Cấu hình**: Chuyển hướng từ `/ontap/profile` sang trang cài đặt `/ontap/settings` (Win).
-- **Gộp cấu hình an toàn:** Gộp cấu hình bảo mật vào tab "Bảo vệ hệ thống", cấu hình tần suất và chu kỳ kiểm tra thông tin chung trên toàn hệ thống.
+- **Gộp cấu hình Monetag:** Gộp cấu hình hiển thị quảng cáo Monetag vào tab "Bảo vệ Quảng cáo (IVT Shield)", chuyển từ bật/tắt theo role sang cấu hình tần suất chung (số lần/phiên) trên toàn hệ thống.
 
 ## [3.10.6] - 2026-06-26
 ### Tích hợp Widget Thời tiết & Tối ưu hóa hình ảnh (Web & App Win)
@@ -50,9 +57,9 @@
 - **Sửa lỗi cú pháp:** Sửa lỗi trùng lặp thuộc tính `style` trong component `StudentClassView.tsx` phát sinh từ quá trình refactor trước đó.
 
 ## [3.10.5] - 2026-06-25
-### Tối ưu hóa tải trang & Bảo vệ hệ thống (Web & App Win)
-- **Tối ưu tải tài nguyên:** Cải tiến cơ chế tải các luồng tài nguyên phụ trợ để tối ưu hóa hiển thị dữ liệu và tốc độ phản hồi trên thiết bị.
-- **Nâng cấp bảng điều khiển:** Quản trị viên có thể tùy chỉnh giới hạn chu kỳ kiểm tra và thời gian làm mới trực tiếp từ màn hình "Hệ thống" thay vì cấu hình tĩnh.
+### Tối ưu Google AdSense & Bảo vệ IVT (Web & App Win)
+- **Tối ưu AdSense Shield:** Thay đổi cơ chế chặn click tặc. Thay vì ẩn toàn bộ quảng cáo (display: none), chuyển sang sử dụng pointer-events: none để chặn click chuột nhưng vẫn giữ 100% hiển thị (Active View) nhằm duy trì doanh thu Impression.
+- **Nâng cấp giới hạn AdSense:** Quản trị viên có thể tùy chỉnh giới hạn số click và thời gian phục hồi (Cooldown) trực tiếp từ màn hình "Hệ thống" thay vì hardcode.
 
 ## [3.10.4] - 2026-06-25
 ### Hệ Thống Bảo Trì 2 Tầng (Web & App Win)
@@ -103,9 +110,9 @@
   - Sửa lỗi cảnh báo `act(...)` bất đồng bộ bằng `waitFor` trong `AccountScreen.test.tsx`, đưa tỷ lệ test pass đạt **100% (5/5 PASS)** sạch cảnh báo.
 
 ## [3.9.7] - 2026-06-12
-### Portal Management & System Refactor (Web & App Win)
-- **Quản lý trang chủ:** Tích hợp tính năng chuyển đổi cấu hình động cho Next.js Portal homepage từ Firestore (settings/usage_config) thông qua component client `PortalAdLoader`.
-- **Đồng bộ hóa UI quản trị:** Thêm cấu hình bảng điều khiển cho vai trò Admin và Lãnh đạo.
+### Portal Ad Management & System Refactor (Web & App Win)
+- **Bật/tắt quảng cáo trang chủ:** Tích hợp tính năng dynamic ad toggle cho Next.js Portal homepage từ Firestore (settings/usage_config) thông qua component client `PortalAdLoader`. Loại bỏ script Adsterra cứng trong `app/layout.tsx`.
+- **Đồng bộ hóa UI quản trị:** Thêm toggle "Quảng cáo Trang chủ & Tin tức" vào tab "Hệ thống" của UsageConfigPanel cho vai trò Admin và Lãnh đạo.
 - **Sửa lỗi ESLint Circular Reference:** Khắc phục lỗi crash lint bằng cách hạ cấp package `eslint-config-next` về `14.2.35` tương thích, dọn dẹp các files cấu hình thừa.
 - **Refactor React Hooks:** Sửa triệt để 2 lỗi useEffect missing dependency và useCallback trong `tai-khoan/page.tsx` và `CourseManager.tsx`.
 - **Dọn dẹp log rác:** Xóa bỏ log build cũ và tạo template `.env.example` cấu hình môi trường an toàn.
@@ -153,7 +160,7 @@
 ## [3.8.0] - 2026-03-29
 ### Fixed
 - **Hệ thống Ôn tập Windows (Electron)**: Khắc phục lỗi **Màn hình trắng (ReferenceError: Award is not defined)** bằng cách bổ sung import icon `Award` còn thiếu trong `TopNavbar.tsx`.
-- **Ổn định hóa hệ thống**: Đã thực hiện build và kiểm thử (`npm run build`) trong thư mục `ontap-win` đảm ứng dụng không còn bị crash khi render.
+- **Ổn định hóa hệ thống**: Đã thực hiện build và kiểm thử (`npm run build`) trong thư mục `ontap-win` đảm bảo ứng dụng không còn bị crash khi render.
 
 ### Changed
 - **Bảo mật & Trải nghiệm**: Vô hiệu hóa tính năng tự động mở DevTools khi khởi động app và ẩn nút chuyển đổi DevTools trong giao diện chính (nhằm hạn chế can thiệp kỹ thuật F12 theo yêu cầu).

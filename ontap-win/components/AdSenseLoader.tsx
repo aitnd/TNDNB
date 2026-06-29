@@ -20,15 +20,13 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                 const config: UsageConfig = await getUsageConfig();
                 
                 // Cập nhật giới hạn từ Firebase config vào state local
-                setAdSenseLimits(config.adsenseMaxClicks ?? 2, config.adsenseCooldownHours ?? 24);
+                setAdSenseLimits(config.adsenseMaxClicks ?? 2, config.adsenseCooldownMinutes ?? 30);
                 setMonetagLimits(config.monetagPopunderCooldownMinutes ?? 30, config.monetagDirectLinkCooldownMinutes ?? 30);
-
                 const { param } = getUserRoleConfig(config, userProfile);
-
                 const showAdSense = param.showAdSense || false;
                 const showAdsterra = param.showAdsterra || false;
-
-                const maxPopunder = config.monetagPopunderMaxPerSession ?? 0;
+                const showMonetag = param.showMonetag || false;
+                const maxPopunder = showMonetag ? (config.monetagPopunderMaxPerSession ?? 0) : 0;
 
                 if (showAdSense || showAdsterra) {
                     removeHideAdsStyle(); // Allow ads

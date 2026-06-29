@@ -33,6 +33,7 @@ import AccountScreen from './components/AccountScreen';
 import UserManagerScreen from './components/UserManagerScreen';
 import TopNavbar from './components/TopNavbar';
 import MailboxScreen from './components/MailboxScreen';
+import ChangelogScreen from './components/ChangelogScreen';
 import AdSenseLoader from './components/AdSenseLoader';
 import MobileBottomNav from './components/MobileBottomNav';
 import ThiTrucTuyenPage from './components/ThiTrucTuyenPage';
@@ -49,7 +50,7 @@ import WeatherWidget from './components/WeatherWidget';
 import { License, Subject, Quiz, UserAnswers, UserProfile } from './types';
 import { fetchLicenses } from './services/dataService';
 import { saveExamResult, getUserProfile } from './services/userService';
-import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
+import { checkUsage, incrementUsage, showLimitAlert, getUserRoleConfig } from './services/usageService';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -793,7 +794,9 @@ const AppContent: React.FC = () => {
 
       const isGK = location.pathname.startsWith('/ontap/giamkhao');
       
-      const maxCountdown = usageConfig?.monetagCountdownMaxPerSession ?? 0;
+      const { param } = getUserRoleConfig(usageConfig!, userProfile);
+      const showMonetag = param?.showMonetag || false;
+      const maxCountdown = showMonetag ? (usageConfig?.monetagCountdownMaxPerSession ?? 0) : 0;
       const currentCountdownCount = parseInt(sessionStorage.getItem('MONETAG_COUNTDOWN_COUNT') || '0', 10);
       const showCountdownAd = maxCountdown > 0 && currentCountdownCount < maxCountdown;
 
@@ -870,6 +873,7 @@ const AppContent: React.FC = () => {
       case 'analytics': navigate('/ontap/analytics'); break;
       case 'login_history': navigate('/ontap/login-history'); break;
       case 'giaitri': navigate('/ontap/games'); break;
+      case 'changelog': navigate('/ontap/changelog'); break;
       case 'giam_khao': navigate('/ontap/giamkhao'); break;
       default: navigate('/ontap/dashboard');
     }
@@ -911,7 +915,7 @@ const AppContent: React.FC = () => {
 
   // --- MAINTENANCE MODE CHECK ---
   const isMaintenanceBypassed = location.pathname === '/ontap/login-admin' || userProfile?.role === 'admin';
-  if (usageConfig?.isMaintenanceMode && !isMaintenanceBypassed) {
+  if (usageConfig?.isMaintenanceWeb && !isMaintenanceBypassed) {
     return (
       <MaintenanceScreen 
         message={usageConfig.maintenanceMessage} 
@@ -1242,6 +1246,9 @@ const AppContent: React.FC = () => {
           } />
           <Route path="/ontap/login-history" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
           <Route path="/ontap/games" element={<EntertainmentScreen onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/changelog" element={<ChangelogScreen onBack={() => navigate('/ontap/dashboard')} />} />
+          <Route path="/ontap/lichsucapnhat" element={<Navigate to="/ontap/changelog" replace />} />
+          <Route path="/ontap/lich-su-cap-nhat" element={<Navigate to="/ontap/changelog" replace />} />
 
           {/* Redirects từ URL cũ có dấu gạch ngang */}
           <Route path="/ontap/lam-bai" element={<Navigate to="/ontap/lambai" replace />} />

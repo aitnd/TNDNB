@@ -11,6 +11,7 @@ export interface RoleConfig {
     showAds: boolean; // Control Google Adsense
     showAdSense: boolean;
     showAdsterra: boolean;
+    showMonetag: boolean; // Bật/Tắt quảng cáo Monetag cho role này
     message: string;
     preventCopy?: boolean; // 🔒 Bật/Tắt chặn bôi đen và Ctrl + C khi thi
 
@@ -49,8 +50,14 @@ export interface UsageConfig {
         ios?: string;
     };
     showPortalAds?: boolean; // Bật/Tắt quảng cáo trên trang chủ tin tức (Next.js Portal)
+    showPortalAdSense?: boolean; // Bật/Tắt Google AdSense trên trang chính tin tức (Next.js Portal)
+    showPortalAdsterra?: boolean; // Bật/Tắt Adsterra trên trang chính tin tức (Next.js Portal)
+    showPortalMonetag?: boolean; // Bật/Tắt Monetag trên trang chính tin tức (Next.js Portal)
     monetagDirectLinkUrl?: string; // 🔗 URL Direct Link Monetag (nhập từ Dashboard, lưu Firebase)
-    isMaintenanceMode?: boolean; // Tầng 1: Soft Maintenance
+    isMaintenanceMode?: boolean; // (Legacy) Tầng 1: Soft Maintenance
+    isMaintenancePortal?: boolean; // Bảo trì Trang chính (Next.js)
+    isMaintenanceWeb?: boolean; // Bảo trì Web ôn thi
+    isMaintenanceWin?: boolean; // Bảo trì App Windows
     maintenanceMessage?: string; // Lời nhắn bảo trì
     maintenanceEstimatedTime?: string; // Thời gian dự kiến bảo trì
     maintenanceEndTime?: string; // Thời gian kết thúc bảo trì (đếm ngược)
@@ -59,7 +66,7 @@ export interface UsageConfig {
     
     // 🛡️ Bảo Vệ Quảng Cáo (IVT Shield)
     adsenseMaxClicks?: number;
-    adsenseCooldownHours?: number;
+    adsenseCooldownMinutes?: number;
     monetagPopunderCooldownMinutes?: number;
     monetagDirectLinkCooldownMinutes?: number;
     monetagDirectLinkMaxPerSession?: number;
@@ -82,6 +89,7 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
+        showMonetag: false,
         message: 'Bạn đã sử dụng hết {limit} lượt làm thử miễn phí trong ngày. Vui lòng đăng nhập để tiếp tục ôn tập! Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969',
         preventCopy: true,
         courseCreateDelete: 'none',
@@ -104,6 +112,7 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
+        showMonetag: false,
         message: 'Bạn đã hết {limit} lượt làm bài miễn phí hôm nay. Hãy đăng ký lớp học để mở khóa toàn bộ tính năng và ôn tập không giới hạn. Mọi chi tiết liên hệ phòng Đào tạo-Công ty CP Tư vấn và Giáo dục Ninh Bình. SĐT: 022 96 282 969',
         preventCopy: true,
         courseCreateDelete: 'none',
@@ -126,6 +135,7 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
+        showMonetag: false,
         message: 'Tài khoản lớp của bạn đã đạt giới hạn {limit} lượt truy cập. Vui lòng liên hệ giáo viên hoặc admin để được hỗ trợ.',
         preventCopy: true,
         courseCreateDelete: 'none',
@@ -148,6 +158,7 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
+        showMonetag: false,
         message: 'Tài khoản VIP của bạn đã hết {limit} lượt sử dụng. Vui lòng gia hạn hoặc liên hệ hỗ trợ.',
         preventCopy: true,
         courseCreateDelete: 'none',
@@ -170,6 +181,7 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
+        showMonetag: false,
         message: 'Giới hạn giáo viên.',
         preventCopy: false,
         courseCreateDelete: 'none',
@@ -192,6 +204,7 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
+        showMonetag: false,
         message: 'Giới hạn cán bộ quản lý.',
         preventCopy: false,
         courseCreateDelete: 'all',
@@ -214,6 +227,7 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
+        showMonetag: false,
         message: 'Giới hạn Ban Lãnh Đạo.',
         preventCopy: false,
         courseCreateDelete: 'all',
@@ -236,6 +250,7 @@ const DEFAULT_CONFIG: UsageConfig = {
         showAds: false,
         showAdSense: false,
         showAdsterra: false,
+        showMonetag: false,
         message: 'Giới hạn Admin.',
         preventCopy: false,
         courseCreateDelete: 'all',
@@ -250,7 +265,11 @@ const DEFAULT_CONFIG: UsageConfig = {
         userForceLogoutOthers: true,
         newsCreateEdit: 'all',
         newsDeleteOthers: true
-    }
+    },
+    showPortalAds: true,
+    showPortalAdSense: true,
+    showPortalAdsterra: true,
+    showPortalMonetag: false
 };
 
 // 1. Get Config (with default fallback)
@@ -274,21 +293,27 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 admin: { ...DEFAULT_CONFIG.admin, ...(data.admin || {}) },
                 app_links: data.app_links || DEFAULT_CONFIG.app_links, // Include app_links
                 showPortalAds: data.showPortalAds ?? true, // Mặc định bật quảng cáo trang tin tức
+                showPortalAdSense: data.showPortalAdSense ?? true,
+                showPortalAdsterra: data.showPortalAdsterra ?? true,
+                showPortalMonetag: data.showPortalMonetag ?? false,
                 monetagDirectLinkUrl: data.monetagDirectLinkUrl || '', // URL Direct Link Monetag
                 isMaintenanceMode: data.isMaintenanceMode || false,
+                isMaintenancePortal: data.isMaintenancePortal ?? (data.isMaintenanceMode || false),
+                isMaintenanceWeb: data.isMaintenanceWeb ?? (data.isMaintenanceMode || false),
+                isMaintenanceWin: data.isMaintenanceWin ?? (data.isMaintenanceMode || false),
                 maintenanceMessage: data.maintenanceMessage || 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!',
                 maintenanceEstimatedTime: data.maintenanceEstimatedTime || '',
                 maintenanceEndTime: data.maintenanceEndTime || '',
                 maintenanceSafetyInfo: data.maintenanceSafetyInfo || '',
                 maintenanceContact: data.maintenanceContact || '',
-                adsenseMaxClicks: data.adsenseMaxClicks ?? 2,
-                adsenseCooldownHours: data.adsenseCooldownHours ?? 24,
+                adsenseMaxClicks: data.adsenseMaxClicks ?? 1,
+                adsenseCooldownMinutes: data.adsenseCooldownMinutes ?? 30,
                 monetagPopunderCooldownMinutes: data.monetagPopunderCooldownMinutes ?? 30,
                 monetagDirectLinkCooldownMinutes: data.monetagDirectLinkCooldownMinutes ?? 30
             };
         } else {
             // Initialize if not exists
-            const initialConfig = { ...DEFAULT_CONFIG, isMaintenanceMode: false, maintenanceMessage: 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!' };
+            const initialConfig = { ...DEFAULT_CONFIG, isMaintenancePortal: false, isMaintenanceWeb: false, isMaintenanceWin: false, isMaintenanceMode: false, maintenanceMessage: 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!' };
             await setDoc(docRef, initialConfig);
             return initialConfig;
         }

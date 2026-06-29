@@ -12,9 +12,9 @@ export default async function middleware(request: Request) {
   try {
     // Đọc trạng thái bảo trì từ Vercel Edge Config
     // Trả về false nếu không kết nối được hoặc key không tồn tại
-    const isMaintenanceMode = await get('isMaintenanceMode');
+    const isMaintenanceWeb = await get('isMaintenanceWeb');
 
-    if (isMaintenanceMode) {
+    if (isMaintenanceWeb) {
       const url = new URL(request.url);
       
       // Cho phép bypass nếu truy cập trực tiếp vào /ontap/login-admin

@@ -561,6 +561,23 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             </label>
                                         </div>
 
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-purple-700 dark:text-purple-400">Monetag Ads</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Quảng cáo Popunder / Direct Link từ Monetag.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.showMonetag}
+                                                    disabled={isReadOnly}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'showMonetag', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                            </label>
+                                        </div>
+
                                     </div>
 
                                     {/* 🏫 Phân quyền Tính Năng */}
@@ -976,27 +993,70 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
 
                                 {/* 📰 Cấu hình Quảng cáo Trang chủ Tin tức */}
                                 <div className="p-6 bg-green-50 dark:bg-slate-700/30 rounded-xl border border-green-200 dark:border-slate-600 mb-6">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <h4 className="font-bold text-lg text-green-800 dark:text-green-400 flex items-center gap-2">
-                                                📰 Quảng cáo Trang chủ & Tin tức
-                                            </h4>
-                                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                                Bật/Tắt quảng cáo Adsterra trên toàn bộ trang chủ tin tức (Next.js Portal). Không ảnh hưởng đến quảng cáo trên trang Ôn tập.
-                                            </p>
+                                    <h4 className="font-bold text-lg text-green-800 dark:text-green-400 flex items-center gap-2 mb-4">
+                                        📰 Cấu hình Quảng cáo Trang chủ & Tin tức (Portal)
+                                    </h4>
+                                    
+                                    <div className="space-y-4">
+                                        {/* 1. Google AdSense Portal */}
+                                        <div className="flex items-center justify-between py-2 border-b border-green-200/50 dark:border-slate-600/50">
+                                            <div>
+                                                <h5 className="font-bold text-orange-700 dark:text-orange-400">Google AdSense trên Portal</h5>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Bật/Tắt quảng cáo Google AdSense trên trang chính tin tức.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.showPortalAdSense ?? true}
+                                                    onChange={(e) => setConfig({ ...config, showPortalAdSense: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    {(config.showPortalAdSense ?? true) ? 'Đang bật' : 'Đã tắt'}
+                                                </span>
+                                            </label>
                                         </div>
-                                        <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
-                                            <input
-                                                type="checkbox"
-                                                checked={config.showPortalAds ?? true}
-                                                onChange={(e) => setConfig({ ...config, showPortalAds: e.target.checked })}
-                                                className="sr-only peer"
-                                            />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
-                                            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                {(config.showPortalAds ?? true) ? 'Đang bật' : 'Đã tắt'}
-                                            </span>
-                                        </label>
+
+                                        {/* 2. Adsterra Portal */}
+                                        <div className="flex items-center justify-between py-2 border-b border-green-200/50 dark:border-slate-600/50">
+                                            <div>
+                                                <h5 className="font-bold text-blue-700 dark:text-blue-400">Adsterra trên Portal</h5>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Bật/Tắt quảng cáo Adsterra trên trang chính tin tức.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.showPortalAdsterra ?? true}
+                                                    onChange={(e) => setConfig({ ...config, showPortalAdsterra: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    {(config.showPortalAdsterra ?? true) ? 'Đang bật' : 'Đã tắt'}
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        {/* 3. Monetag Portal */}
+                                        <div className="flex items-center justify-between py-2">
+                                            <div>
+                                                <h5 className="font-bold text-purple-700 dark:text-purple-400">Monetag trên Portal</h5>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Bật/Tắt quảng cáo Monetag trên trang chính tin tức.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.showPortalMonetag ?? false}
+                                                    onChange={(e) => setConfig({ ...config, showPortalMonetag: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    {(config.showPortalMonetag ?? false) ? 'Đang bật' : 'Đã tắt'}
+                                                </span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1055,11 +1115,11 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                 <div className="flex items-center gap-2">
                                                     <input
                                                         type="number"
-                                                        value={config.adsenseCooldownHours ?? 24}
-                                                        onChange={(e) => setConfig({ ...config, adsenseCooldownHours: parseInt(e.target.value) || 24 })}
+                                                        value={config.adsenseCooldownMinutes ?? 30}
+                                                        onChange={(e) => setConfig({ ...config, adsenseCooldownMinutes: parseInt(e.target.value) || 30 })}
                                                         className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
                                                     />
-                                                    <span className="text-sm text-gray-500">giờ</span>
+                                                    <span className="text-sm text-gray-500">phút</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1147,7 +1207,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                 Bật chế độ này sẽ chặn người dùng truy cập vào ứng dụng và hiển thị màn hình thông báo bảo trì. Admin vẫn có thể đăng nhập qua đường dẫn <code>/login-admin</code> để kiểm tra hệ thống.
                                             </p>
                                             
-                                            {config.isMaintenanceMode && (
+                                            {(config.isMaintenancePortal || config.isMaintenanceWeb || config.isMaintenanceWin) && (
                                                 <div className="animate-fade-in-up space-y-4">
                                                     <div>
                                                         <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -1212,18 +1272,43 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                 </div>
                                             )}
                                         </div>
-                                        <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-6 mt-1">
-                                            <input
-                                                type="checkbox"
-                                                checked={config.isMaintenanceMode ?? false}
-                                                onChange={(e) => setConfig({ ...config, isMaintenanceMode: e.target.checked })}
-                                                className="sr-only peer"
-                                            />
-                                            <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
-                                            <span className="absolute top-8 right-0 text-xs font-bold text-red-600 dark:text-red-400 mt-1 whitespace-nowrap">
-                                                {(config.isMaintenanceMode ?? false) ? 'ĐANG BẬT' : 'Đang tắt'}
-                                            </span>
-                                        </label>
+                                        <div className="flex flex-col gap-3 ml-6 mt-1 items-end">
+                                            {/* Maint Portal */}
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">Trang Chính</span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.isMaintenancePortal ?? false}
+                                                    onChange={(e) => setConfig({ ...config, isMaintenancePortal: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                            </label>
+
+                                            {/* Maint Web */}
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">Web Ôn Thi</span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.isMaintenanceWeb ?? false}
+                                                    onChange={(e) => setConfig({ ...config, isMaintenanceWeb: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                            </label>
+
+                                            {/* Maint Win */}
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">App Windows</span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.isMaintenanceWin ?? false}
+                                                    onChange={(e) => setConfig({ ...config, isMaintenanceWin: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 

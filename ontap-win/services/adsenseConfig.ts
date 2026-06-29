@@ -8,9 +8,9 @@ export const ADSENSE_CONFIG = {
 let currentMaxClicks = ADSENSE_CONFIG.MAX_CLICKS_PER_DAY;
 let currentCooldownMs = ADSENSE_CONFIG.COOLDOWN_MS;
 
-export const setAdSenseLimits = (maxClicks: number, cooldownHours: number) => {
+export const setAdSenseLimits = (maxClicks: number, cooldownMinutes: number) => {
     currentMaxClicks = maxClicks;
-    currentCooldownMs = cooldownHours * 60 * 60 * 1000;
+    currentCooldownMs = cooldownMinutes * 60 * 1000;
 };
 
 interface AdSenseClickData {

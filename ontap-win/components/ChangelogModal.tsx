@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { X, Shield, Smartphone, Rocket, Zap, Monitor, Layout, Code, RefreshCw, Download, CheckCircle, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
 // @ts-ignore
 import changelogRaw from '../CHANGELOG.md?raw';
@@ -29,6 +30,7 @@ const isVersionLower = (v1: string, v2: string): boolean => {
 };
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
+  const navigate = useNavigate();
   const [currentVersion, setCurrentVersion] = React.useState<string>('...');
   const [updateStatus, setUpdateStatus] = React.useState<'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'error'>('idle');
   const [downloadProgress, setDownloadProgress] = React.useState<number>(0);
@@ -223,7 +225,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
           <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
             📋 Lịch sử cập nhật
           </h3>
-          {CHANGELOG_DATA.map((release, rIdx) => (
+          {CHANGELOG_DATA.slice(0, 1).map((release, rIdx) => (
             <div key={rIdx} className="relative">
               {/* Version Header */}
               <div className="flex items-center gap-3 mb-4">
@@ -270,11 +272,22 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-slate-900/50 flex justify-between items-center">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-slate-900/50 flex justify-between items-center w-full">
           <span className="text-xs text-gray-500 dark:text-gray-400">Cập nhật liên tục để phục vụ bạn tốt hơn ❤️</span>
-          <button onClick={onClose} className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-            Đóng
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                onClose();
+                navigate('/ontap/changelog');
+              }}
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 rounded-lg font-medium transition-colors border border-gray-200/50 dark:border-slate-750"
+            >
+              Xem tất cả
+            </button>
+            <button onClick={onClose} className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+              Đóng
+            </button>
+          </div>
         </div>
       </div>
     </div>

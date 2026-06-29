@@ -158,15 +158,25 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimate
           className="mb-8"
         >
           {countdown.isActive && !countdown.isOver ? (
-            /* Bộ đếm ngược Glassmorphic 4 ô */
-            <div className="flex items-start justify-center gap-1 sm:gap-2">
-              <CountdownBlock value={countdown.days} label="Ngày" />
-              <CountdownSeparator />
-              <CountdownBlock value={countdown.hours} label="Giờ" />
-              <CountdownSeparator />
-              <CountdownBlock value={countdown.minutes} label="Phút" />
-              <CountdownSeparator />
-              <CountdownBlock value={countdown.seconds} label="Giây" />
+            <div className="flex flex-col items-center gap-6">
+              {estimatedTime && (
+                <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full shadow-inner backdrop-blur-sm">
+                  <Clock className="w-4 h-4 text-blue-400" />
+                  <span className="text-sm text-slate-200 font-medium font-sans">
+                    Thời gian dự kiến: {estimatedTime}
+                  </span>
+                </div>
+              )}
+              {/* Bộ đếm ngược Glassmorphic 4 ô */}
+              <div className="flex items-start justify-center gap-1 sm:gap-2">
+                <CountdownBlock value={countdown.days} label="Ngày" />
+                <CountdownSeparator />
+                <CountdownBlock value={countdown.hours} label="Giờ" />
+                <CountdownSeparator />
+                <CountdownBlock value={countdown.minutes} label="Phút" />
+                <CountdownSeparator />
+                <CountdownBlock value={countdown.seconds} label="Giây" />
+              </div>
             </div>
           ) : countdown.isOver ? (
             /* Nút tải lại trang khi hết giờ */

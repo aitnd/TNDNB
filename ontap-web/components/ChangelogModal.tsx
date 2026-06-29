@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { X, Rocket, Loader2 } from 'lucide-react';       
+import { useNavigate } from 'react-router-dom';
 import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
 // @ts-ignore
 import changelogRaw from '../CHANGELOG.md?raw';
@@ -21,6 +22,7 @@ export const getLatestVersion = (): string => {
 };
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
+  const navigate = useNavigate();
   const [changelogData, setChangelogData] = useState<ChangelogVersion[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -88,7 +90,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
               <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Đang tải dữ liệu mới nhất...</p>
             </div>
           ) : (
-            changelogData.map((release, rIdx) => (
+            changelogData.slice(0, 1).map((release, rIdx) => (
               <div key={rIdx} className="relative">
                 {/* Version Header */}
                 <div className="flex items-center gap-4 mb-6">
@@ -140,16 +142,27 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <div className="p-6 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col md:flex-row gap-4 justify-between items-center w-full">
           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest text-center md:text-left">
             Phát triển bởi Horizon TND với tâm huyết ❤️
           </p>
-          <button
-            onClick={onClose}
-            className="w-full md:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-indigo-500/30 active:scale-95 transition-all"
-          >
-            Tuyệt vời!
-          </button>
+          <div className="flex gap-3 w-full md:w-auto">
+            <button
+              onClick={() => {
+                onClose();
+                navigate('/ontap/changelog');
+              }}
+              className="flex-1 md:flex-none px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-2xl font-black uppercase tracking-widest text-xs transition-all border border-slate-200/50 dark:border-slate-700/50 active:scale-95 text-center"
+            >
+              Xem tất cả
+            </button>
+            <button
+              onClick={onClose}
+              className="flex-1 md:flex-none px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-indigo-500/30 active:scale-95 transition-all"
+            >
+              Tuyệt vời!
+            </button>
+          </div>
         </div>
       </div>
     </div>
