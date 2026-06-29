@@ -1275,38 +1275,38 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                         <div className="flex flex-col gap-3 ml-6 mt-1 items-end">
                                             {/* Maint Portal */}
                                             <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">Trang Chính</span>
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Trang Chính</span>
                                                 <input
                                                     type="checkbox"
                                                     checked={config.isMaintenancePortal ?? false}
                                                     onChange={(e) => setConfig({ ...config, isMaintenancePortal: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
                                             </label>
 
                                             {/* Maint Web */}
                                             <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">Web Ôn Thi</span>
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Web Ôn Thi</span>
                                                 <input
                                                     type="checkbox"
                                                     checked={config.isMaintenanceWeb ?? false}
                                                     onChange={(e) => setConfig({ ...config, isMaintenanceWeb: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
                                             </label>
 
                                             {/* Maint Win */}
                                             <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">App Windows</span>
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">App Windows</span>
                                                 <input
                                                     type="checkbox"
                                                     checked={config.isMaintenanceWin ?? false}
                                                     onChange={(e) => setConfig({ ...config, isMaintenanceWin: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
                                             </label>
                                         </div>
                                     </div>
