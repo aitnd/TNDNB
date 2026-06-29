@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../utils/firebaseClient'
-import { collection, query, where, onSnapshot, Timestamp, doc, updateDoc, orderBy, deleteDoc } from 'firebase/firestore'
+import { collection, query, where, onSnapshot, Timestamp, doc, orderBy, deleteDoc } from 'firebase/firestore' 
 import styles from './TeacherRoomList.module.css'
 import Link from 'next/link'
 

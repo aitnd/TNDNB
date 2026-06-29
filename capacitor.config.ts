@@ -1,11 +1,14 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.onthi.duongthuy',
+  appId: 'com.horizon.tnd',
   appName: 'Ôn thi đường thủy',
   webDir: 'public',
+  android: {
+    path: '../tnd-android'
+  },
   server: {
-    url: 'https://daotaothuyenvien.com',
+    url: 'https://daotaothuyenvien.com/ontap',
     cleartext: true,
     allowNavigation: ['daotaothuyenvien.com', '*.daotaothuyenvien.com', 'daotaothuyenvien.com/*']
   },

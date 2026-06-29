@@ -47,8 +47,7 @@ const SavedAccountsList: React.FC<SavedAccountsListProps> = ({
                                 onError={(e) => {
                                     e.currentTarget.style.display = 'none';
                                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                                }}
-                            />
+                                }} loading="lazy" />
                         ) : null}
                         <FaUserCircle
                             className={`w-12 h-12 text-muted-foreground ${account.photoURL ? 'hidden' : ''}`}

@@ -57,7 +57,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onBack, onSuccess }) =>
                 createdAt: serverTimestamp()
             });
 
-            console.log('Registration successful');
             onSuccess(); // Navigate to Dashboard or Login
         } catch (err: any) {
             console.error("Registration failed:", err);

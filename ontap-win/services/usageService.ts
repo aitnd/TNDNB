@@ -94,7 +94,6 @@ export const checkUsage = async (userProfile: any | null): Promise<'ALLOWED' | '
         }
     }
 
-    console.log(`[Usage Check] ${storageKey} - Used: ${data.count}/${param.limit}`);
 
     if (data.count >= param.limit) {
         return 'BLOCKED';
@@ -126,7 +125,6 @@ export const incrementUsage = async (userProfile: any | null) => {
     }
 
     data.count++;
-    console.log(`[Usage] Incremented usage for ${storageKey}: ${data.count}`);
     localStorage.setItem(storageKey, JSON.stringify(data));
 };
 

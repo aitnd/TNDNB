@@ -7,18 +7,33 @@ import { collection, getDocs, doc, updateDoc, writeBatch, query, where } from 'f
 import { useNavigate } from 'react-router-dom';
 import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease } from '../services/githubService';
 
-const UsageConfigPanel: React.FC = () => {
+const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
     const navigate = useNavigate();
     const [config, setConfig] = useState<UsageConfig | null>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
+    // Kiểm tra quyền truy cập của người dùng
+    useEffect(() => {
+        if (userProfile) {
+            const role = userProfile.role;
+            if (!['admin', 'lanh_dao'].includes(role)) {
+                Swal.fire('Bị chặn', 'Bạn không có quyền truy cập trang cấu hình hệ thống!', 'error');
+                navigate('/ontap/dashboard');
+            }
+        }
+    }, [userProfile]);
+
     // Main Tabs: 'limits' | 'system' | 'app_links'
     const [activeMainTab, setActiveMainTab] = useState<'limits' | 'system' | 'app_links'>('limits');
 
     // Sub Tab for Roles (only used when activeMainTab === 'limits')
-    type RoleKey = Exclude<keyof UsageConfig, 'app_links'>;
+    type RoleKey = 'guest' | 'free_user' | 'verified_user' | 'vip_user' | 'teacher' | 'manager' | 'leader' | 'admin';
     const [activeRole, setActiveRole] = useState<RoleKey>('guest');
+
+    // Phân quyền sửa cấu hình vai trò Admin
+    const isLanhDao = userProfile?.role === 'lanh_dao';
+    const isReadOnly = isLanhDao && activeRole === 'admin';
 
     // --- SYSTEM UTILS ---
     const [orphanCount, setOrphanCount] = useState<number | null>(null);
@@ -268,8 +283,9 @@ const UsageConfigPanel: React.FC = () => {
         { id: 'verified_user', label: 'Học Viên Lớp', icon: FaUserShield, color: 'text-blue-500' },
         { id: 'vip_user', label: 'Thành Viên VIP', icon: FaUserSecret, color: 'text-yellow-500' },
         { id: 'teacher', label: 'Giáo Viên', icon: FaChalkboardTeacher, color: 'text-purple-500' },
-        { id: 'manager', label: 'Cán Bộ Quản Lý', icon: FaUserTie, color: 'text-red-500' },
-        { id: 'admin', label: 'Quản Trị Viên', icon: FaUserAstronaut, color: 'text-indigo-600' },
+        { id: 'manager', label: 'Quản Lý', icon: FaUserTie, color: 'text-red-500' },
+        { id: 'leader', label: 'Ban Lãnh Đạo', icon: FaUserAstronaut, color: 'text-teal-500' },
+        { id: 'admin', label: 'Quản Trị Viên', icon: FaUserShield, color: 'text-indigo-600' },
     ];
 
     const currentRoleConfig = config[activeRole] as RoleConfig;
@@ -281,7 +297,7 @@ const UsageConfigPanel: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={() => navigate('/dashboard')}
+                            onClick={() => navigate('/ontap/dashboard')}
                             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                         >
                             <FaArrowLeft className="text-gray-600 dark:text-gray-300" />
@@ -371,6 +387,12 @@ const UsageConfigPanel: React.FC = () => {
 
                                 {/* Config Form for Selected Role */}
                                 <div className="bg-gray-50 dark:bg-slate-700/30 rounded-xl p-6 border border-gray-100 dark:border-slate-700">
+                                    {isReadOnly && (
+                                        <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 rounded-xl text-sm font-medium border border-amber-200 dark:border-amber-700/50 flex items-center gap-2 animate-fade-in">
+                                            ⚠️ Bạn đang xem cấu hình của vai trò Quản trị viên (Admin). Chỉ tài khoản Admin mới có quyền chỉnh sửa cấu hình này.
+                                        </div>
+                                    )}
+
                                     <div className="flex items-center justify-between mb-6">
                                         <h3 className="text-lg font-bold flex items-center gap-2">
                                             {React.createElement(roles.find(r => r.id === activeRole)!.icon, { className: roles.find(r => r.id === activeRole)!.color })}
@@ -381,10 +403,11 @@ const UsageConfigPanel: React.FC = () => {
                                             <input
                                                 type="checkbox"
                                                 checked={currentRoleConfig.isEnabled}
+                                                disabled={isReadOnly}
                                                 onChange={(e) => updateRoleConfig(activeRole, 'isEnabled', e.target.checked)}
                                                 className="sr-only peer"
                                             />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                 {currentRoleConfig.isEnabled ? 'Đang bật giới hạn' : 'Không giới hạn (Tắt)'}
                                             </span>
@@ -399,16 +422,18 @@ const UsageConfigPanel: React.FC = () => {
                                                     <input
                                                         type="number"
                                                         value={currentRoleConfig.limit}
+                                                        disabled={isReadOnly}
                                                         onChange={(e) => updateRoleConfig(activeRole, 'limit', parseInt(e.target.value) || 0)}
-                                                        className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none"
+                                                        className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
                                                     />
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-bold mb-2 dark:text-gray-300">Chu kỳ reset</label>
                                                     <select
                                                         value={currentRoleConfig.period}
+                                                        disabled={isReadOnly}
                                                         onChange={(e) => updateRoleConfig(activeRole, 'period', e.target.value)}
-                                                        className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none"
+                                                        className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
                                                     >
                                                         <option value="daily">Hàng Ngày (00:00)</option>
                                                         <option value="weekly">Hàng Tuần (Thứ 2)</option>
@@ -421,8 +446,9 @@ const UsageConfigPanel: React.FC = () => {
                                                 <textarea
                                                     rows={3}
                                                     value={currentRoleConfig.message}
+                                                    disabled={isReadOnly}
                                                     onChange={(e) => updateRoleConfig(activeRole, 'message', e.target.value)}
-                                                    className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none"
+                                                    className="w-full p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
                                                     placeholder="Nhập tin nhắn..."
                                                 />
                                                 <p className="text-xs text-gray-500 mt-2">
@@ -437,21 +463,292 @@ const UsageConfigPanel: React.FC = () => {
                                         </div>
                                     )}
 
-                                    {/* AdSense Toggle */}
-                                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600 flex items-center justify-between">
-                                        <div>
-                                            <h4 className="font-bold text-orange-700 dark:text-orange-400">Hiển thị Quảng Cáo (Google Adsense)</h4>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">Bật để hiện quảng cáo cho nhóm này (Không phụ thuộc giới hạn).</p>
+                                    {/* Bảo mật & Quảng cáo Toggles */}
+                                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600 space-y-6">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-red-700 dark:text-red-400">Cấm sao chép & bôi đen đề thi</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Ngăn học viên bôi đen, copy và dùng chuột phải khi thi.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.preventCopy || false}
+                                                    disabled={isReadOnly}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'preventCopy', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600 disabled:opacity-50"></div>
+                                            </label>
                                         </div>
-                                        <label className="relative inline-flex items-center cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                checked={currentRoleConfig.showAds}
-                                                onChange={(e) => updateRoleConfig(activeRole, 'showAds', e.target.checked)}
-                                                className="sr-only peer"
-                                            />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500"></div>
-                                        </label>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-orange-700 dark:text-orange-400">Google AdSense</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Quảng cáo banner / tự động từ Google.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.showAdSense || false}
+                                                    disabled={isReadOnly}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'showAdSense', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500 disabled:opacity-50"></div>
+                                            </label>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-blue-700 dark:text-blue-400">Adsterra Ads</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Quảng cáo Social Bar / Native từ Adsterra.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.showAdsterra || false}
+                                                    disabled={isReadOnly}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'showAdsterra', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500 disabled:opacity-50"></div>
+                                            </label>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-bold text-purple-700 dark:text-purple-400">Monetag Ads</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Quảng cáo Popunder / Direct Link từ Monetag.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={currentRoleConfig.showMonetag || false}
+                                                    disabled={isReadOnly}
+                                                    onChange={(e) => updateRoleConfig(activeRole, 'showMonetag', e.target.checked)}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                            </label>
+                                        </div>
+
+                                        </div>
+
+                                    {/* 🏫 Phân quyền Tính Năng */}
+                                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600">
+                                        <h4 className="font-bold text-lg text-purple-700 dark:text-purple-400 mb-4 flex items-center gap-2">
+                                            <FaShieldAlt /> Phân Quyền Tính Năng Chi Tiết
+                                        </h4>
+                                        
+                                        <div className="space-y-6">
+                                            {/* Quyền Lớp học */}
+                                            <div className="p-4 bg-gray-50 dark:bg-slate-800/40 rounded-xl border dark:border-slate-700 space-y-4">
+                                                <h5 className="font-bold text-sm text-gray-700 dark:text-slate-300 border-b dark:border-slate-700 pb-1.5 uppercase tracking-wider">🏫 Quản lý lớp học</h5>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Xem danh sách lớp học</label>
+                                                        <select
+                                                            value={currentRoleConfig.courseViewList || 'none'}
+                                                            disabled={isReadOnly}
+                                                            onChange={(e) => updateRoleConfig(activeRole, 'courseViewList', e.target.value as any)}
+                                                            className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                        >
+                                                            <option value="all">Xem tất cả các lớp</option>
+                                                            <option value="managed">Chỉ xem lớp được quản lý (chủ nhiệm, dạy, tạo)</option>
+                                                            <option value="none">Không được xem</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Tạo / Xóa lớp học mới</label>
+                                                        <select
+                                                            value={currentRoleConfig.courseCreateDelete || 'none'}
+                                                            disabled={isReadOnly}
+                                                            onChange={(e) => updateRoleConfig(activeRole, 'courseCreateDelete', e.target.value as any)}
+                                                            className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                        >
+                                                            <option value="all">Được phép với tất cả các lớp</option>
+                                                            <option value="managed">Chỉ được phép với lớp quản lý (do mình tạo)</option>
+                                                            <option value="none">Không được phép</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Sửa thông tin cơ bản lớp học</label>
+                                                        <select
+                                                            value={currentRoleConfig.courseEdit || 'none'}
+                                                            disabled={isReadOnly}
+                                                            onChange={(e) => updateRoleConfig(activeRole, 'courseEdit', e.target.value as any)}
+                                                            className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                        >
+                                                            <option value="all">Sửa tất cả các lớp</option>
+                                                            <option value="managed">Chỉ sửa lớp quản lý (chủ nhiệm, dạy, tạo)</option>
+                                                            <option value="none">Không được sửa</option>
+                                                        </select>
+                                                    </div>
+
+                                                     <div>
+                                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Vô hiệu hóa tài khoản học viên</label>
+                                                         <select
+                                                             value={currentRoleConfig.courseDisableAccounts || 'none'}
+                                                             disabled={isReadOnly}
+                                                             onChange={(e) => updateRoleConfig(activeRole, 'courseDisableAccounts', e.target.value as any)}
+                                                             className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                         >
+                                                             <option value="all">Được phép với tất cả các lớp</option>
+                                                             <option value="managed">Chỉ lớp được quản lý (chủ nhiệm, dạy, tạo)</option>
+                                                             <option value="none">Không có quyền</option>
+                                                         </select>
+                                                     </div>
+
+                                                     <div>
+                                                         <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Kết thúc / Mở lại lớp học</label>
+                                                         <select
+                                                             value={currentRoleConfig.courseFinish || 'none'}
+                                                             disabled={isReadOnly}
+                                                             onChange={(e) => updateRoleConfig(activeRole, 'courseFinish', e.target.value as any)}
+                                                             className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                         >
+                                                             <option value="all">Được phép với tất cả các lớp</option>
+                                                             <option value="managed">Chỉ lớp được quản lý (chủ nhiệm, dạy, tạo)</option>
+                                                             <option value="none">Không có quyền</option>
+                                                         </select>
+                                                     </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Gán/Xóa Giáo viên & Học viên</h6>
+                                                            <p className="text-[10px] text-gray-500">Cho phép phân quyền thành viên vào lớp.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.courseAssignMembers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'courseAssignMembers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Quyền Quản lý Tài khoản */}
+                                            <div className="p-4 bg-gray-50 dark:bg-slate-800/40 rounded-xl border dark:border-slate-700 space-y-4">
+                                                <h5 className="font-bold text-sm text-gray-700 dark:text-slate-300 border-b dark:border-slate-700 pb-1.5 uppercase tracking-wider">👤 Quản lý người dùng</h5>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xem & Sửa tài khoản khác</h6>
+                                                            <p className="text-[10px] text-gray-500">Chỉ thao tác trên tài khoản cấp thấp hơn.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.userViewEditOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'userViewEditOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Thay đổi vai trò (Role)</h6>
+                                                            <p className="text-[10px] text-gray-500">Cho phép chuyển vai trò của tài khoản thấp hơn.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.userChangeRoleOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'userChangeRoleOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xóa vĩnh viễn tài khoản</h6>
+                                                            <p className="text-[10px] text-gray-500">Cho phép xóa tài khoản cấp thấp hơn (Xóa mềm).</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.userDeleteOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'userDeleteOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Đăng xuất từ xa / Thiết bị</h6>
+                                                            <p className="text-[10px] text-gray-500">Đăng xuất các thiết bị của tài khoản thấp hơn.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.userForceLogoutOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'userForceLogoutOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Quyền Tin tức */}
+                                            <div className="p-4 bg-gray-50 dark:bg-slate-800/40 rounded-xl border dark:border-slate-700 space-y-4">
+                                                <h5 className="font-bold text-sm text-gray-700 dark:text-slate-300 border-b dark:border-slate-700 pb-1.5 uppercase tracking-wider">📰 Tin tức & Bài viết</h5>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">Đăng / Sửa bài viết tin tức</label>
+                                                        <select
+                                                            value={currentRoleConfig.newsCreateEdit || 'none'}
+                                                            disabled={isReadOnly}
+                                                            onChange={(e) => updateRoleConfig(activeRole, 'newsCreateEdit', e.target.value as any)}
+                                                            className="w-full p-2 text-sm border rounded dark:bg-slate-800 dark:border-slate-600 focus:ring-2 focus:ring-purple-500 outline-none disabled:opacity-50"
+                                                        >
+                                                            <option value="all">Đăng và sửa tất cả các bài</option>
+                                                            <option value="own">Chỉ đăng và sửa bài của bản thân</option>
+                                                            <option value="none">Không được phép</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                        <div>
+                                                            <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xóa bài viết của người khác</h6>
+                                                            <p className="text-[10px] text-gray-500">Xóa bài viết do thành viên khác đăng.</p>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={currentRoleConfig.newsDeleteOthers || false}
+                                                                disabled={isReadOnly}
+                                                                onChange={(e) => updateRoleConfig(activeRole, 'newsDeleteOthers', e.target.checked)}
+                                                                className="sr-only peer"
+                                                            />
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -648,6 +945,327 @@ const UsageConfigPanel: React.FC = () => {
                                     <FaServer className="text-orange-600" />
                                     Công cụ Hệ thống
                                 </h2>
+
+                                {/* 📰 Cấu hình Quảng cáo Trang chủ Tin tức */}
+                                <div className="p-6 bg-green-50 dark:bg-slate-700/30 rounded-xl border border-green-200 dark:border-slate-600 mb-6">
+                                    <h4 className="font-bold text-lg text-green-800 dark:text-green-400 flex items-center gap-2 mb-4">
+                                        📰 Cấu hình Quảng cáo Trang chủ & Tin tức (Portal)
+                                    </h4>
+                                    
+                                    <div className="space-y-4">
+                                        {/* 1. Google AdSense Portal */}
+                                        <div className="flex items-center justify-between py-2 border-b border-green-200/50 dark:border-slate-600/50">
+                                            <div>
+                                                <h5 className="font-bold text-orange-700 dark:text-orange-400">Google AdSense trên Portal</h5>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Bật/Tắt quảng cáo Google AdSense trên trang chính tin tức.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.showPortalAdSense ?? true}
+                                                    onChange={(e) => setConfig({ ...config, showPortalAdSense: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    {(config.showPortalAdSense ?? true) ? 'Đang bật' : 'Đã tắt'}
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        {/* 2. Adsterra Portal */}
+                                        <div className="flex items-center justify-between py-2 border-b border-green-200/50 dark:border-slate-600/50">
+                                            <div>
+                                                <h5 className="font-bold text-blue-700 dark:text-blue-400">Adsterra trên Portal</h5>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Bật/Tắt quảng cáo Adsterra trên trang chính tin tức.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.showPortalAdsterra ?? true}
+                                                    onChange={(e) => setConfig({ ...config, showPortalAdsterra: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    {(config.showPortalAdsterra ?? true) ? 'Đang bật' : 'Đã tắt'}
+                                                </span>
+                                            </label>
+                                        </div>
+
+                                        {/* 3. Monetag Portal */}
+                                        <div className="flex items-center justify-between py-2">
+                                            <div>
+                                                <h5 className="font-bold text-purple-700 dark:text-purple-400">Monetag trên Portal</h5>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Bật/Tắt quảng cáo Monetag trên trang chính tin tức.</p>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.showPortalMonetag ?? false}
+                                                    onChange={(e) => setConfig({ ...config, showPortalMonetag: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    {(config.showPortalMonetag ?? false) ? 'Đang bật' : 'Đã tắt'}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 🔗 Monetag Direct Link URL */}
+                                <div className="p-6 bg-purple-50 dark:bg-slate-700/30 rounded-xl border border-purple-200 dark:border-slate-600 mb-6">
+                                    <h4 className="font-bold text-lg text-purple-800 dark:text-purple-400 flex items-center gap-2 mb-2">
+                                        🔗 Monetag Direct Link URL
+                                    </h4>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                                        Dán URL Direct Link từ <a href="https://publishers.monetag.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 underline">Monetag Dashboard</a> vào đây.
+                                        Dùng cho nút Download, Auto Popunder, và các vị trí quảng cáo Direct Link.
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={config.monetagDirectLinkUrl || ''}
+                                            onChange={(e) => setConfig({ ...config, monetagDirectLinkUrl: e.target.value })}
+                                            placeholder="VD: https://3nbf4.com/4/11198611"
+                                            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        />
+                                    </div>
+                                    {config.monetagDirectLinkUrl && (
+                                        <p className="text-xs text-green-600 dark:text-green-400 mt-2">✅ URL đã được cấu hình. Nhấn "Lưu cấu hình" để áp dụng.</p>
+                                    )}
+                                </div>
+
+                                {/* 🛡️ Bảo vệ Quảng cáo (IVT Shield) */}
+                                <div className="p-6 bg-yellow-50 dark:bg-yellow-900/10 rounded-xl border border-yellow-200 dark:border-yellow-800/50 mb-6">
+                                    <h4 className="font-bold text-lg text-yellow-800 dark:text-yellow-500 flex items-center gap-2 mb-2">
+                                        <FaShieldAlt /> Bảo vệ Quảng cáo (IVT Shield)
+                                    </h4>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                        Cấu hình giới hạn tần suất quảng cáo để chống Invalid Traffic và bảo vệ tài khoản quảng cáo.
+                                    </p>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* AdSense */}
+                                        <div className="space-y-4">
+                                            <h5 className="font-bold text-orange-600 dark:text-orange-400 border-b border-orange-200 dark:border-orange-800/50 pb-2">Google AdSense</h5>
+                                            
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Số click tối đa</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.adsenseMaxClicks ?? 2}
+                                                        onChange={(e) => setConfig({ ...config, adsenseMaxClicks: parseInt(e.target.value) || 2 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">lần / chu kỳ</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Thời gian chu kỳ (Cooldown)</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.adsenseCooldownMinutes ?? 30}
+                                                        onChange={(e) => setConfig({ ...config, adsenseCooldownMinutes: parseInt(e.target.value) || 30 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">phút</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Monetag */}
+                                        <div className="space-y-4">
+                                            <h5 className="font-bold text-purple-600 dark:text-purple-400 border-b border-purple-200 dark:border-purple-800/50 pb-2">Monetag</h5>
+                                            
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Direct Link (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagDirectLinkMaxPerSession ?? 0}
+                                                        onChange={(e) => setConfig({ ...config, monetagDirectLinkMaxPerSession: parseInt(e.target.value) || 0 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">lần (0 = tắt)</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Auto Popunder (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagPopunderMaxPerSession ?? 0}
+                                                        onChange={(e) => setConfig({ ...config, monetagPopunderMaxPerSession: parseInt(e.target.value) || 0 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">lần (0 = tắt)</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Countdown Ad (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagCountdownMaxPerSession ?? 0}
+                                                        onChange={(e) => setConfig({ ...config, monetagCountdownMaxPerSession: parseInt(e.target.value) || 0 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">lần (0 = tắt)</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Popunder Cooldown</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagPopunderCooldownMinutes ?? 30}
+                                                        onChange={(e) => setConfig({ ...config, monetagPopunderCooldownMinutes: parseInt(e.target.value) || 30 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">phút</span>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Direct Link Cooldown</label>
+                                                <div className="flex items-center gap-2">
+                                                    <input
+                                                        type="number"
+                                                        value={config.monetagDirectLinkCooldownMinutes ?? 30}
+                                                        onChange={(e) => setConfig({ ...config, monetagDirectLinkCooldownMinutes: parseInt(e.target.value) || 30 })}
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                    />
+                                                    <span className="text-sm text-gray-500">phút</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 🛑 Cấu hình Bảo trì (Maintenance Mode) */}
+                                <div className="p-6 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-200 dark:border-red-800 mb-6">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <h4 className="font-bold text-lg text-red-800 dark:text-red-400 flex items-center gap-2">
+                                                🛑 Chế độ Bảo trì (Soft Maintenance)
+                                            </h4>
+                                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 mb-4">
+                                                Bật chế độ này sẽ chặn người dùng truy cập vào ứng dụng và hiển thị màn hình thông báo bảo trì. Admin vẫn có thể đăng nhập qua đường dẫn <code>/login-admin</code> để kiểm tra hệ thống.
+                                            </p>
+                                            
+                                            {(config.isMaintenancePortal || config.isMaintenanceWeb || config.isMaintenanceWin) && (
+                                                <div className="animate-fade-in-up space-y-4">
+                                                    <div>
+                                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                            Thông báo Bảo trì (Tùy chọn)
+                                                        </label>
+                                                        <textarea
+                                                            value={config.maintenanceMessage || ''}
+                                                            onChange={(e) => setConfig({ ...config, maintenanceMessage: e.target.value })}
+                                                            placeholder="VD: Hệ thống đang được nâng cấp để phục vụ bạn tốt hơn. Vui lòng quay lại sau ít phút..."
+                                                            className="w-full px-4 py-3 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none h-20"
+                                                        />
+                                                    </div>
+                                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                                        <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                                Thời gian kết thúc (Đếm ngược)
+                                                            </label>
+                                                            <input
+                                                                type="datetime-local"
+                                                                value={config.maintenanceEndTime || ''}
+                                                                onChange={(e) => setConfig({ ...config, maintenanceEndTime: e.target.value })}
+                                                                className="w-full px-4 py-2 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                                Dự kiến hiển thị (Text fallback)
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                value={config.maintenanceEstimatedTime || ''}
+                                                                onChange={(e) => setConfig({ ...config, maintenanceEstimatedTime: e.target.value })}
+                                                                placeholder="VD: Sớm nhất có thể..."
+                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                                Thông tin dữ liệu (Tùy chọn)
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                value={config.maintenanceSafetyInfo || ''}
+                                                                onChange={(e) => setConfig({ ...config, maintenanceSafetyInfo: e.target.value })}
+                                                                placeholder="VD: Dữ liệu an toàn 100%..."
+                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                                Liên hệ hỗ trợ (Tùy chọn)
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                value={config.maintenanceContact || ''}
+                                                                onChange={(e) => setConfig({ ...config, maintenanceContact: e.target.value })}
+                                                                placeholder="VD: contact@daotaothuyenvien.com"
+                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col gap-3 ml-6 mt-1 items-end">
+                                            {/* Maint Portal */}
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">Trang Chính</span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.isMaintenancePortal ?? false}
+                                                    onChange={(e) => setConfig({ ...config, isMaintenancePortal: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                            </label>
+
+                                            {/* Maint Web */}
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">Web Ôn Thi</span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.isMaintenanceWeb ?? false}
+                                                    onChange={(e) => setConfig({ ...config, isMaintenanceWeb: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                            </label>
+
+                                            {/* Maint Win */}
+                                            <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                                <span className="mr-3 text-sm font-medium text-gray-700 dark:text-gray-300">App Windows</span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={config.isMaintenanceWin ?? false}
+                                                    onChange={(e) => setConfig({ ...config, isMaintenanceWin: e.target.checked })}
+                                                    className="sr-only peer"
+                                                />
+                                                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div className="p-6 bg-orange-50 dark:bg-slate-700/30 rounded-xl border border-orange-200 dark:border-slate-600">
                                     <h4 className="font-bold text-lg mb-2 text-orange-800 dark:text-orange-400 flex items-center gap-2"><FaBroom /> Dọn dẹp dữ liệu rác</h4>

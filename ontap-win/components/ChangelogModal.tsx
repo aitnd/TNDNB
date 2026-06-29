@@ -1,213 +1,16 @@
 import * as React from 'react';
 import { X, Shield, Smartphone, Rocket, Zap, Monitor, Layout, Code, RefreshCw, Download, CheckCircle, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
+// @ts-ignore
+import changelogRaw from '../CHANGELOG.md?raw';
 
 interface ChangelogModalProps {
   onClose: () => void;
 }
 
-// 💖 Dữ liệu changelog dạng cấu trúc
-const CHANGELOG_DATA = [
-  {
-    version: '3.9.0',
-    date: '15/03/2026',
-    isLatest: true,
-    sections: [
-      {
-        icon: Rocket,
-        title: 'Đại tu Giao diện (Premium v2)',
-        color: 'text-cyan-500',
-        bgColor: 'bg-cyan-100 dark:bg-cyan-900/30',
-        items: [
-          'Ra mắt Premium Theme v2.2: Phối màu Cyan-Navy nghệ thuật, hiệu ứng Glassmorphism đỉnh cao',
-          'Tinh chỉnh bảng màu cho toàn bộ 8 Themes: Tăng contrast, bố cục card chuyên nghiệp',
-          'Nâng cấp hiệu ứng Visual riêng biệt: Mỗi theme có đổ bóng (Shadow) và hiệu ứng Glow Card riêng',
-          'Đồng bộ hóa 100% màu sắc và tính năng giữa bản Web, Windows và Android'
-        ]
-      },
-      {
-        icon: Zap,
-        title: 'Cải tiến Kỹ thuật',
-        color: 'text-yellow-500',
-        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-        items: [
-          'Sử dụng font Inter hiện đại cho Premium theme',
-          'Tối ưu CSS Utility classes cho hiệu ứng kính mờ (Glass premium)',
-          'Khắc phục lỗi hiển thị nền gradient trên các phiên bản trình duyệt cũ'
-        ]
-      }
-    ]
-  },
-  {
-    version: '3.8.12',
-    date: '18/01/2026',
-    isLatest: false,
-    sections: [
-      {
-        icon: Zap,
-        title: 'Nâng cấp giao diện Thẻ',
-        color: 'text-yellow-500',
-        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-        items: [
-          'Thiết kế lại Thẻ Học viên/Giáo viên phong cách Premium Hologram v2.2',
-          'Sửa lỗi chính tả "THÈ" thành "THẺ" trên toàn hệ thống',
-          'Hiệu ứng tia sáng Hologram và Chip nhựa điện tử như thật'
-        ]
-      }
-    ]
-  },
-  {
-    version: '3.8.11',
-    date: '18/01/2026',
-    isLatest: false,
-    sections: [
-      {
-        icon: Zap,
-        title: 'Tính năng mới',
-        color: 'text-yellow-500',
-        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-        items: [
-          'Thêm "Góc Giải Trí" với kho trò chơi HTML5 & Retro huyền thoại (Contra, Đào Vàng, Subway Surfers...)',
-          'Hỗ trợ chế độ chơi game toàn màn hình để trải nghiệm tốt nhất',
-          'Giao diện Góc giải trí hiệu ứng Glassmorphism siêu đẹp và mượt mà'
-        ]
-      }
-    ]
-  },
-  {
-    version: '3.8.10',
-    date: '09/01/2026',
-    isLatest: false,
-    sections: [
-      {
-        icon: Zap,
-        title: 'Tính năng mới',
-        color: 'text-yellow-500',
-        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-        items: [
-          'Lưu tài khoản đăng nhập giống Facebook - đăng nhập nhanh chỉ 1 chạm',
-          'Hiển thị danh sách tài khoản đã lưu sau khi đăng xuất',
-          'Hỗ trợ xóa tài khoản khỏi danh sách lưu cục bộ'
-        ]
-      }
-    ]
-  },
-  {
-    version: '3.8.9',
-    date: '06/01/2026',
-    sections: [
-      {
-        icon: Zap,
-        title: 'Sửa lỗi',
-        color: 'text-yellow-500',
-        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-        items: [
-          'Sửa lỗi màn hình nháy nháy khi ôn tập môn Pháp luật (hạng Thủy thủ)',
-          'Khắc phục hình ảnh câu hỏi không load được từ câu 49 trở đi',
-          'Thêm cơ chế chống vòng lặp retry khi load ảnh thất bại'
-        ]
-      }
-    ]
-  },
-  {
-    version: '3.8.8',
-    date: '25/12/2025',
-    sections: [
-      {
-        icon: Shield,
-        title: 'Bảo mật & Quản lý phiên đăng nhập',
-        color: 'text-red-500',
-        bgColor: 'bg-red-100 dark:bg-red-900/30',
-        items: [
-          'Tự động gửi thông báo khi tài khoản đăng nhập từ thiết bị mới',
-          'Hiện địa chỉ (thành phố, quốc gia) thay vì chỉ IP trong thông báo',
-          'Admin có thể xem và đăng xuất phiên đăng nhập của học viên từ xa',
-          'Thêm trang xem lịch sử đăng nhập và thiết bị đang hoạt động'
-        ]
-      },
-      {
-        icon: Smartphone,
-        title: 'Cải thiện trang Tải App',
-        color: 'text-blue-500',
-        bgColor: 'bg-blue-100 dark:bg-blue-900/30',
-        items: [
-          'Hiển thị đầy đủ 3 phiên bản: Windows, Android, iOS',
-          'Tự động lấy link Windows từ GitHub Releases API',
-          'Khắc phục lỗi 404 khi tên file có dấu tiếng Việt'
-        ]
-      }
-    ]
-  },
-  {
-    version: '3.8.7',
-    date: '22/12/2025',
-    sections: [
-      {
-        icon: Monitor,
-        title: 'Tính năng mới (Windows App)',
-        color: 'text-purple-500',
-        bgColor: 'bg-purple-100 dark:bg-purple-900/30',
-        items: [
-          'Thêm tùy chọn "Tự khởi động cùng Windows" trong trang Tài khoản',
-          'Đồng bộ hóa phiên bản giữa bản Web và bản Windows'
-        ]
-      }
-    ]
-  },
-  {
-    version: '3.8.0',
-    date: '20/12/2025',
-    sections: [
-      {
-        icon: Zap,
-        title: 'Tính năng Mới & Đồng bộ',
-        color: 'text-yellow-500',
-        bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-        items: [
-          'Học viên đăng nhập 1 lần tại Trang chủ sẽ tự động đăng nhập vào App Ôn tập',
-          'Số phiên bản trên giao diện tự động cập nhật theo thời gian thực'
-        ]
-      },
-      {
-        icon: Layout,
-        title: 'Cải thiện Giao diện (UI/UX)',
-        color: 'text-green-500',
-        bgColor: 'bg-green-100 dark:bg-green-900/30',
-        items: [
-          'Thêm tiền tố A, B, C, D cho các đáp án dễ quan sát',
-          'Sửa lỗi không thoát được bài thi',
-          'Tối ưu Banner nhắc nhở "Làm tiếp bài cũ"'
-        ]
-      }
-    ]
-  },
-  {
-    version: '3.7.0',
-    date: '16/12/2025',
-    sections: [
-      {
-        icon: Rocket,
-        title: 'Hệ thống Thi Trực Tuyến',
-        color: 'text-orange-500',
-        bgColor: 'bg-orange-100 dark:bg-orange-900/30',
-        items: [
-          'Tích hợp hoàn toàn module Thi Trực Tuyến vào hệ thống',
-          'Thêm trang chờ thi với giao diện mới',
-          'Hỗ trợ học viên đăng nhập và tham gia phòng thi bằng mã phòng'
-        ]
-      },
-      {
-        icon: Code,
-        title: 'Kỹ thuật',
-        color: 'text-gray-500',
-        bgColor: 'bg-gray-100 dark:bg-gray-900/30',
-        items: [
-          'Cấu hình script build để hỗ trợ deploy đồng thời Next.js và React app',
-          'Dọn dẹp code quản lý thi cũ để tránh xung đột'
-        ]
-      }
-    ]
-  }
-];
+// 💖 Phân tích dữ liệu từ file MD
+const CHANGELOG_DATA: ChangelogVersion[] = parseChangelog(changelogRaw);
 
 export const getLatestVersion = () => {
   return CHANGELOG_DATA[0]?.version || '3.0.0';
@@ -227,6 +30,7 @@ const isVersionLower = (v1: string, v2: string): boolean => {
 };
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
+  const navigate = useNavigate();
   const [currentVersion, setCurrentVersion] = React.useState<string>('...');
   const [updateStatus, setUpdateStatus] = React.useState<'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'error'>('idle');
   const [downloadProgress, setDownloadProgress] = React.useState<number>(0);
@@ -421,7 +225,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
           <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
             📋 Lịch sử cập nhật
           </h3>
-          {CHANGELOG_DATA.map((release, rIdx) => (
+          {CHANGELOG_DATA.slice(0, 1).map((release, rIdx) => (
             <div key={rIdx} className="relative">
               {/* Version Header */}
               <div className="flex items-center gap-3 mb-4">
@@ -468,11 +272,22 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-slate-900/50 flex justify-between items-center">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-slate-900/50 flex justify-between items-center w-full">
           <span className="text-xs text-gray-500 dark:text-gray-400">Cập nhật liên tục để phục vụ bạn tốt hơn ❤️</span>
-          <button onClick={onClose} className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-            Đóng
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                onClose();
+                navigate('/ontap/changelog');
+              }}
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 rounded-lg font-medium transition-colors border border-gray-200/50 dark:border-slate-750"
+            >
+              Xem tất cả
+            </button>
+            <button onClick={onClose} className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+              Đóng
+            </button>
+          </div>
         </div>
       </div>
     </div>

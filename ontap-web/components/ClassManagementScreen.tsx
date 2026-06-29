@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../services/firebaseClient';
-import { collection, query, orderBy, onSnapshot, doc, getDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, where } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, getDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, where, getDocs } from 'firebase/firestore';
 import { Course, UserProfile } from '../types';
 import ClassDetailClient from './ClassDetail/ClassDetailClient';
 import ClassList from './ClassDetail/ClassList';
@@ -10,8 +10,21 @@ import { getExamHistory } from '../services/historyService';
 
 interface ClassManagementScreenProps {
     userProfile: UserProfile;
+    usageConfig?: any;
     onBack: () => void;
 }
+
+const getRoleWeight = (role: string) => {
+    switch (role) {
+        case 'admin': return 100;
+        case 'lanh_dao': return 80;
+        case 'quan_ly': return 60;
+        case 'giao_vien': return 40;
+        case 'hoc_vien': return 20;
+        case 'guest': return 0;
+        default: return 0;
+    }
+};
 
 const getRoleRank = (role: string) => {
     switch (role) {
@@ -23,7 +36,7 @@ const getRoleRank = (role: string) => {
     }
 };
 
-const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfile, onBack }) => {
+const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfile, usageConfig, onBack }) => {
     // --- STATE ---
     const { courseId } = useParams<{ courseId: string }>();
     const navigate = useNavigate();
@@ -51,7 +64,24 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [showAddEditModal, setShowAddEditModal] = useState(false);
     const [editingCourse, setEditingCourse] = useState<Course | null>(null);
 
-    const canCreateClass = getRoleRank(userProfile.role) >= 2;
+    const getRoleConfigKey = (role: string): string => {
+        if (role === 'admin') return 'admin';
+        if (role === 'lanh_dao') return 'leader';
+        if (role === 'quan_ly') return 'manager';
+        if (role === 'giao_vien') return 'teacher';
+        if (role === 'hoc_vien') return 'verified_user';
+        return 'guest';
+    };
+
+    const userRole = userProfile?.role || 'guest';
+    const roleConfig = usageConfig?.[getRoleConfigKey(userRole)] || {};
+
+    const viewListPermission = roleConfig.courseViewList || 'managed';
+    const createDeletePermission = roleConfig.courseCreateDelete || 'none';
+    const editPermission = roleConfig.courseEdit || 'none';
+    const canAssignMembers = roleConfig.courseAssignMembers || false;
+
+    const canCreateClass = createDeletePermission === 'all' || createDeletePermission === 'managed';
 
     // --- DATA FETCHING ---
     // Fetch Licenses
@@ -71,10 +101,22 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     useEffect(() => {
         const q = query(collection(db, 'courses'), orderBy('createdAt', 'desc'));
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const coursesData = snapshot.docs.map(doc => ({
+            let coursesData = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             })) as Course[];
+
+            // Lọc danh sách lớp dựa trên courseViewList
+            if (viewListPermission === 'managed') {
+                coursesData = coursesData.filter(c => 
+                    c.createdBy === userProfile.id || 
+                    c.headTeacherId === userProfile.id || 
+                    (c.teacherIds && c.teacherIds.includes(userProfile.id))
+                );
+            } else if (viewListPermission === 'none') {
+                coursesData = [];
+            }
+
             setCourses(coursesData);
             setLoadingCourses(false);
 
@@ -100,7 +142,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                                     role: data.role || 'user'
                                 };
                             }
-                        } catch(e) { console.log(e); }
+                        } catch(e) {  }
                     }));
                     setHeadTeacherNames(prev => ({...prev, ...names}));
                     setCreatorProfiles(prev => ({...prev, ...profiles}));
@@ -109,7 +151,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             }
         });
         return () => unsubscribe();
-    }, []);
+    }, [viewListPermission, userProfile.id]);
 
     // Fetch Stats when a course is selected
     useEffect(() => {
@@ -134,7 +176,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 });
                 setDeviceCounts(counts);
             }, (error) => {
-                console.log("Ignored sessions snapshot error (Permissions):", error.message);
             });
 
             // Listen for latest results
@@ -171,7 +212,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                 unsubSessions();
             };
         }, (error) => {
-            console.log("Ignored students snapshot error (Permissions):", error.message);
             setDeviceCounts({});
             setStudentLatestResults({});
         });
@@ -308,6 +348,21 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     };
 
     const handleDeleteCourse = async (courseId: string) => {
+        const course = courses.find(c => c.id === courseId);
+        if (!course) return;
+
+        // Kiểm tra quyền xóa
+        if (createDeletePermission === 'none') {
+            alert('Bạn không có quyền xóa lớp học!');
+            return;
+        }
+        if (createDeletePermission === 'managed') {
+            if (course.createdBy !== userProfile.id) {
+                alert('Bạn chỉ được phép xóa lớp học do chính mình tạo!');
+                return;
+            }
+        }
+
         if (!confirm('Bạn có chắc chắn muốn xóa lớp học này? Tất cả học viên sẽ bị đẩy ra khỏi lớp!')) return;
         try {
             // Logic to unassign students usually goes on the server side or triggered here
@@ -321,8 +376,87 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
     const openEditCourseModal = (course: Course, e: React.MouseEvent) => {
         e.stopPropagation();
+
+        // Kiểm tra quyền sửa
+        if (editPermission === 'none') {
+            alert('Bạn không có quyền sửa thông tin lớp học!');
+            return;
+        }
+        if (editPermission === 'managed') {
+            const isManager = course.createdBy === userProfile.id || course.headTeacherId === userProfile.id || (course.teacherIds && course.teacherIds.includes(userProfile.id));
+            if (!isManager) {
+                alert('Bạn chỉ được phép sửa lớp học do chính mình quản lý!');
+                return;
+            }
+        }
+
         setEditingCourse(course);
         setShowAddEditModal(true);
+    };
+
+    const canFinishClass = React.useMemo(() => {
+        const perm = roleConfig.courseFinish || 'none';
+        if (perm === 'all') return true;
+        if (perm === 'none') return false;
+        if (!selectedCourse) return false;
+        return selectedCourse.createdBy === userProfile.id || 
+               selectedCourse.headTeacherId === userProfile.id || 
+               (selectedCourse.teacherIds && selectedCourse.teacherIds.includes(userProfile.id));
+    }, [roleConfig.courseFinish, selectedCourse, userProfile.id]);
+
+    const canDisableAccounts = React.useMemo(() => {
+        const perm = roleConfig.courseDisableAccounts || 'none';
+        if (perm === 'all') return true;
+        if (perm === 'none') return false;
+        if (!selectedCourse) return false;
+        return selectedCourse.createdBy === userProfile.id || 
+               selectedCourse.headTeacherId === userProfile.id || 
+               (selectedCourse.teacherIds && selectedCourse.teacherIds.includes(userProfile.id));
+    }, [roleConfig.courseDisableAccounts, selectedCourse, userProfile.id]);
+
+    const handleFinishCourse = async (courseId: string) => {
+        try {
+            await updateDoc(doc(db, 'courses', courseId), {
+                status: 'finished',
+                updatedAt: serverTimestamp()
+            });
+
+            const q = query(collection(db, 'users'), where('courseId', '==', courseId), where('role', '==', 'hoc_vien'));
+            const querySnapshot = await getDocs(q);
+            
+            const { writeBatch } = await import('firebase/firestore');
+            const batch = writeBatch(db);
+            querySnapshot.forEach((userDoc) => {
+                batch.update(doc(db, 'users', userDoc.id), {
+                    status: 'disabled',
+                    updatedAt: Date.now()
+                });
+            });
+            await batch.commit();
+            
+            import('sweetalert2').then(({ default: Swal }) => {
+                Swal.fire('Thành công', 'Đã kết thúc lớp học và vô hiệu hóa tài khoản tất cả học viên.', 'success');
+            });
+        } catch (error) {
+            console.error("Error finishing course:", error);
+            alert("Có lỗi xảy ra khi kết thúc lớp.");
+        }
+    };
+
+    const handleReopenCourse = async (courseId: string) => {
+        try {
+            await updateDoc(doc(db, 'courses', courseId), {
+                status: 'active',
+                updatedAt: serverTimestamp()
+            });
+            
+            import('sweetalert2').then(({ default: Swal }) => {
+                Swal.fire('Thành công', 'Đã mở lại lớp học. Vui lòng kích hoạt thủ công tài khoản học viên nếu cần thiết.', 'success');
+            });
+        } catch (error) {
+            console.error("Error reopening course:", error);
+            alert("Có lỗi xảy ra khi mở lại lớp.");
+        }
     };
 
     // --- RENDER ---
@@ -334,7 +468,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                     loadingCourses={loadingCourses}
                     courseSearchTerm={courseSearchTerm}
                     setCourseSearchTerm={setCourseSearchTerm}
-                    onSelectCourse={(course) => navigate(`/ontap/quanlylop/${course.id}`)}
+                    onSelectCourse={(course) => navigate(`/ontap/class-manager/${course.id}`)}
                     onEditCourse={openEditCourseModal}
                     onDeleteCourse={handleDeleteCourse}
                     onAddCourse={() => { setEditingCourse(null); setShowAddEditModal(true); }}
@@ -362,12 +496,17 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     return (
         <ClassDetailClient 
             course={selectedCourse} 
-            onBack={() => navigate('/ontap/quanlylop')} 
+            onBack={() => navigate('/ontap/class-manager')} 
             userProfile={userProfile} 
             studentLatestResults={studentLatestResults}
             deviceCounts={deviceCounts}
             subjectStats={subjectStats}
             creatorProfiles={creatorProfiles}
+            canAssignMembers={canAssignMembers}
+            canFinishClass={canFinishClass}
+            canDisableAccounts={canDisableAccounts}
+            onFinishCourse={handleFinishCourse}
+            onReopenCourse={handleReopenCourse}
         />
     );
 };

@@ -73,6 +73,7 @@ export interface Course {
   licenseId?: string;
   avatarUrl?: string; // TNDNB uses avatarUrl
   expiryDate?: any;
+  status?: 'active' | 'finished'; // Trạng thái lớp học
 }
 
 export type AppState =
@@ -114,4 +115,5 @@ export interface UserProfile {
   offlineAccess?: boolean; // Quyền đăng nhập offline
   updatedAt?: number; // Dấu thời gian cập nhật cuối cùng
   createdAt?: any;
+  status?: 'active' | 'disabled'; // Trạng thái tài khoản, mặc định 'active'
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Marquee from 'react-fast-marquee';
 import { fetchActiveMarqueeNotifications, Notification } from '../services/notificationService';
-import { collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
+import { collection, query, where, onSnapshot} from 'firebase/firestore'; 
 import { db } from '../services/firebaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppStore } from '../stores/useAppStore';

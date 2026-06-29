@@ -1,6 +1,8 @@
 // Đánh dấu đây là "Client Component"
 'use client'
 
+import Image from 'next/image'
+
 // 💖 1. THÊM "NÃO" 'useRef' 💖
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation' 
@@ -13,6 +15,8 @@ import { useAuth } from '../../../../../context/AuthContext'
 import ProtectedRoute from '../../../../../components/ProtectedRoute' 
 import { supabase } from '../../../../../utils/supabaseClient' 
 import Link from 'next/link' 
+import { db } from '../../../../../utils/firebaseClient'
+import { doc, getDoc } from 'firebase/firestore'
 
 // 💖 2. "THUÊ" TINYMCE 💖
 import { Editor } from '@tinymce/tinymce-react';
@@ -34,9 +38,35 @@ type Attachment = {
 };
 
 function EditPostForm() {
+  const { user } = useAuth()
   const router = useRouter()
   const params = useParams() 
   const postId = params.postId as string 
+  const [usageConfig, setUsageConfig] = useState<any>(null)
+  const [authorId, setAuthorId] = useState<string | null>(null)
+
+  const getRoleConfigKey = (role: string) => {
+    if (role === 'admin') return 'admin';
+    if (role === 'lanh_dao') return 'leader';
+    if (role === 'quan_ly') return 'manager';
+    if (role === 'giao_vien') return 'teacher';
+    if (role === 'hoc_vien') return 'verified_user';
+    return 'guest';
+  };
+
+  useEffect(() => {
+    async function fetchUsageConfig() {
+      try {
+        const docSnap = await getDoc(doc(db, 'settings', 'usage_config'));
+        if (docSnap.exists()) {
+          setUsageConfig(docSnap.data());
+        }
+      } catch (err) {
+        console.error('Lỗi khi fetch usage_config:', err);
+      }
+    }
+    fetchUsageConfig();
+  }, []);
   
   // 💖 3. THÊM "NÃO" CHO EDITOR 💖
   const editorRef = useRef<any>(null);
@@ -103,11 +133,29 @@ function EditPostForm() {
         setIsFeatured(data.is_featured);
         setThumbnailPreview(data.thumbnail_url || null);
         setExistingAttachments(data.attachments || []); 
+        setAuthorId(data.author_id);
       }
       setIsLoadingPost(false);
     }
     fetchPostData();
   }, [postId]); 
+
+  // Kiểm tra quyền chỉnh sửa
+  useEffect(() => {
+    if (!authorId || !usageConfig || !user) return;
+
+    const isOwnPost = authorId === user.uid;
+    const userRoleKey = getRoleConfigKey(user.role);
+    const roleConfig = usageConfig[userRoleKey];
+
+    const canEdit = roleConfig
+      ? (roleConfig.newsCreateEdit === 'all' || (roleConfig.newsCreateEdit === 'own' && isOwnPost))
+      : isOwnPost;
+
+    if (!canEdit) {
+      setFormError('Anh không có quyền chỉnh sửa bài viết này của người khác!');
+    }
+  }, [authorId, usageConfig, user]);
 
   
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -249,6 +297,19 @@ function EditPostForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Kiểm tra quyền trước khi lưu thay đổi
+    const isOwnPost = authorId ? authorId === user?.uid : false;
+    const userRoleKey = user ? getRoleConfigKey(user.role) : 'guest';
+    const roleConfig = usageConfig ? usageConfig[userRoleKey] : null;
+    const canEdit = roleConfig
+      ? (roleConfig.newsCreateEdit === 'all' || (roleConfig.newsCreateEdit === 'own' && isOwnPost))
+      : isOwnPost;
+
+    if (!canEdit) {
+      setFormError('Anh không có quyền chỉnh sửa bài viết này!');
+      return;
+    }
+
     const editorContent = editorRef.current ? editorRef.current.getContent() : content;
 
     setIsSubmitting(true)
@@ -402,9 +463,12 @@ function EditPostForm() {
               {/* KHỐI XEM TRƯỚC VÀ NÚT XÓA ẢNH */}
               {thumbnailPreview && (
                 <div className={styles.thumbnailPreviewContainer}>
-                  <img 
+                  <Image 
                     src={thumbnailPreview} 
                     alt="Xem trước" 
+                    width={300}
+                    height={200}
+                    style={{ objectFit: 'cover' }}
                     className={styles.thumbnailPreview} 
                   />
                   <button

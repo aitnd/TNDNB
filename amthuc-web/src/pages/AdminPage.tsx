@@ -842,7 +842,7 @@ function MenuManager({ restaurants, menuItems, onRefresh }: MenuManagerProps) {
                             <input
                                 type="text"
                                 className="input"
-                                placeholder="VD: /amthuc/assets/menu/mon-an.jpg"
+                                placeholder="VD: /food/assets/menu/mon-an.jpg"
                                 value={formData.imageUrl}
                                 onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                             />

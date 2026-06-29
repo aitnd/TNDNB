@@ -148,7 +148,7 @@ const AddStudentModal: React.FC<AddStudentModalProps> = ({ isOpen, onClose, clas
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-400 font-bold overflow-hidden text-lg">
-                      {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <FaUserGraduate />}
+                      {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" loading="lazy" /> : <FaUserGraduate />}
                     </div>
                     <div className="text-left">
                       <div className="font-bold dark:text-white text-sm line-clamp-1">{user.full_name}</div>

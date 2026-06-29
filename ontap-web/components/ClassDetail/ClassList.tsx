@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { 
-    FaSchool, FaSearch, FaTimes, FaPlus, FaChalkboardTeacher, 
-    FaEdit, FaTrash, FaUserTie, FaArrowLeft, FaSort, FaSortAmountDown, FaSortAmountUp,
-    FaChevronLeft, FaChevronRight
-} from 'react-icons/fa';
+import {      FaSchool, FaSearch, FaTimes, FaPlus, FaChalkboardTeacher,      FaEdit, FaTrash, FaUserTie, FaArrowLeft, FaSortAmountDown, FaSortAmountUp,     FaChevronLeft, FaChevronRight } from 'react-icons/fa'; 
+
+
+
+
 import { Course, UserProfile } from '../../types';
 
 interface ClassListProps {
@@ -212,6 +212,13 @@ const ClassList: React.FC<ClassListProps> = ({
                                                 )}
                                                 <span className="text-[10px] font-bold text-white/80 bg-black/20 px-2 py-0.5 rounded-full">
                                                     ID: {course.id.slice(0, 8)}
+                                                </span>
+                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                                    course.status === 'finished' 
+                                                    ? 'bg-red-500/20 text-red-200 border border-red-500/30' 
+                                                    : 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/30'
+                                                }`}>
+                                                    {course.status === 'finished' ? '🔴 Đã kết thúc' : '🟢 Đang hoạt động'}
                                                 </span>
                                             </div>
                                         </div>

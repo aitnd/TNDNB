@@ -57,7 +57,6 @@ export const optimizeImage = (file: File, maxWidth = 1200, quality = 0.8): Promi
                             lastModified: Date.now(),
                         });
 
-                        console.log(`[ImageOptimizer] Đã tối ưu: ${file.name} (${(file.size / 1024).toFixed(2)}KB) -> ${newFileName} (${(optimizedFile.size / 1024).toFixed(2)}KB)`);
                         resolve(optimizedFile);
                     },
                     'image/webp',

@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 
 import React from 'react'
 import { useAuth } from '../context/AuthContext'
@@ -31,7 +32,7 @@ export default function StudentCard() {
                     {/* ẢNH 3x4 */}
                     <div className={styles.photoSection}>
                         <div className={styles.photoWrapper}>
-                            <img
+                            <Image width={100} height={100} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 src={user.photoURL || 'https://via.placeholder.com/150'}
                                 alt="Avatar"
                                 className={styles.avatar}

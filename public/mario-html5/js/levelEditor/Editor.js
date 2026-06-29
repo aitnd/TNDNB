@@ -286,7 +286,7 @@ function Editor() {
     storage.setItem(levelName, map);
     storage.setItem('levelCounter', levelCounter);
 
-    console.log(storage.getItem(levelName)); //for copying the generated map if required
+     //for copying the generated map if required
   };
 
   this.rightScroll = function() {

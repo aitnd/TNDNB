@@ -2,6 +2,7 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
+import Image from 'next/image'
 import styles from './page.module.css' 
 
 // 💖 2. DANH SÁCH GAME (ĐÃ CẬP NHẬT PIKACHU SOCVUI) 💖
@@ -214,11 +215,13 @@ export default function GiaiTriPage() {
                 onClick={() => handleSelectGame(game)}
               >
                 <div className={styles.cardImageWrapper}>
-                   <img 
+                   <Image 
                      src={game.image || '/on-tap.png'} 
                      alt={game.name} 
+                     width={200}
+                     height={200}
+                     style={{ objectFit: 'cover' }}
                      className={styles.cardImage}
-                     loading="lazy"
                    />
                 </div>
                 <div className={styles.cardContent}>

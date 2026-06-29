@@ -39,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/lien-he`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
 
     // 💖 4. THÊM LINK MỚI VÀO ĐÂY NÈ ANH 💖
-    { url: `${baseUrl}/ontap/thitructuyen`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${baseUrl}/ontap/online-exam`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${baseUrl}/tai-app`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/danh-muc/gioi-thieu-viec-lam`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
     { url: `${baseUrl}/danh-muc/tin-tuc-su-kien`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
@@ -48,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/giai-tri`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/ontap`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/tra-cuu-dia-chi`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${baseUrl}/amthuc`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${baseUrl}/food`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
 
     // 5. CHƯƠNG TRÌNH ĐÀO TẠO (Sub-pages)
     { url: `${baseUrl}/chuong-trinh-dao-tao/lai-phuong-tien`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },

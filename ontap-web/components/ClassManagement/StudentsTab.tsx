@@ -15,7 +15,7 @@ import {
 } from 'react-icons/fa';
 import { TbPlaneOff } from 'react-icons/tb';
 import { Course, UserProfile } from '../../types';
-import * as XLSX from 'xlsx';
+import * as XLSX from '@sheetjs/xlsx';
 import Swal from 'sweetalert2';
 import CreateStudentModal from '../CreateStudentModal';
 import ImportStudentModal from '../ImportStudentModal';
@@ -423,7 +423,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="relative">
-                    <img src={getAvatar(st)} alt="" className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800" />
+                    <img src={getAvatar(st)} alt="" className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800" loading="lazy" />
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => toggleOfflineAccess(st.id, !!st.offlineAccess)} className={`p-2 rounded-lg transition-colors ${st.offlineAccess ? 'text-green-500 hover:bg-green-50 dark:hover:bg-green-500/10' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'}`} title={st.offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}>{st.offlineAccess ? <FaWifi /> : <TbPlaneOff />}</button>
@@ -481,7 +481,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                 <tr key={st.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" />
+                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" loading="lazy" />
                       <div>
                         <p className="text-sm font-bold text-gray-900 dark:text-white">{st.fullName || st.full_name}</p>
                         <p className="text-[10px] text-gray-400 truncate max-w-[200px]">{st.email}</p>

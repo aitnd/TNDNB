@@ -1,6 +1,8 @@
 // Đánh dấu đây là "Client Component"
 'use client'
 
+import Image from 'next/image'
+
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { FaFilePdf, FaFileWord, FaFileArchive, FaFile } from 'react-icons/fa'
@@ -377,9 +379,12 @@ function CreatePostForm() {
               {/* KHỐI XEM TRƯỚC VÀ NÚT XÓA ẢNH */}
               {thumbnailPreview && (
                 <div className={styles.thumbnailPreviewContainer}>
-                  <img 
+                  <Image 
                     src={thumbnailPreview} 
                     alt="Xem trước" 
+                    width={300}
+                    height={200}
+                    style={{ objectFit: 'cover' }}
                     className={styles.thumbnailPreview} 
                   />
                   <button

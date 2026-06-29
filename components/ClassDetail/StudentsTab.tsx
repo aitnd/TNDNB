@@ -1,20 +1,21 @@
-'use client';
+'use client'
+import Image from 'next/image';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus, 
-  FaFileExcel, FaPlus, FaSortAmountDown, FaSortAmountUp,
-  FaCheckCircle, FaLaptop, FaPaperPlane, FaEdit, FaHistory,
-  FaTrash, FaChevronLeft, FaChevronRight, FaTimes
-} from 'react-icons/fa';
+import {    FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus,    FaFileExcel, FaPlus, FaSortAmountDown, FaSortAmountUp,   FaCheckCircle, FaLaptop, FaPaperPlane, FaEdit, FaHistory,   FaTrash, FaChevronLeft, FaChevronRight} from 'react-icons/fa'; 
+
+
+
+
+
 import { db } from '@/utils/firebaseClient';
-import { 
-  collection, query, where, onSnapshot, 
-  doc, updateDoc, deleteDoc, getDoc 
-} from 'firebase/firestore';
+import {    collection, query, where, onSnapshot, updateDoc, deleteDoc, getDoc, QuerySnapshot, DocumentData, QueryDocumentSnapshot  } from 'firebase/firestore'; 
+
+
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Course, UserProfile } from '@/types/classManagement';
-import * as XLSX from 'xlsx';
+import * as XLSX from '@sheetjs/xlsx';
 import CreateStudentModal from './CreateStudentModal';
 
 interface StudentStats {
@@ -58,8 +59,8 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
       where('role', '==', 'hoc_vien')
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const list = snapshot.docs.map(doc => ({
+    const unsubscribe = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
+      const list = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({
         id: doc.id,
         ...doc.data()
       })) as UserProfile[];
@@ -92,9 +93,9 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
       where('studentId', 'in', studentIds.slice(0, 30))
     );
 
-    const unsubDevices = onSnapshot(qDevices, (snapshot) => {
+    const unsubDevices = onSnapshot(qDevices, (snapshot: QuerySnapshot<DocumentData>) => {
       const deviceCounts: Record<string, number> = {};
-      snapshot.docs.forEach(doc => {
+      snapshot.docs.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
         const data = doc.data();
         deviceCounts[data.userId] = (deviceCounts[data.userId] || 0) + 1;
       });
@@ -109,9 +110,9 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
       });
     });
 
-    const unsubResults = onSnapshot(qResults, (snapshot) => {
+    const unsubResults = onSnapshot(qResults, (snapshot: QuerySnapshot<DocumentData>) => {
       const resultData: Record<string, { count: number, totalScore: number }> = {};
-      snapshot.docs.forEach(doc => {
+      snapshot.docs.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
         const data = doc.data();
         if (!resultData[data.studentId]) resultData[data.studentId] = { count: 0, totalScore: 0 };
         resultData[data.studentId].count++;
@@ -294,7 +295,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="relative">
-                    <img 
+                    <Image width={100} height={100} style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                       src={getAvatar(st)} 
                       alt="" 
                       className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800 group-hover:ring-teal-500/20 transition-all"
@@ -360,7 +361,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
                 <tr key={st.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" />
+                      <Image width={100} height={100} style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" />
                       <div>
                         <p className="text-sm font-bold text-gray-900 dark:text-white">{st.fullName || st.full_name}</p>
                         <p className="text-xs text-gray-400 truncate max-w-[150px]">{st.email}</p>

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../utils/firebaseClient';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs} from 'firebase/firestore'; 
 
 // Hàm xóa dấu tiếng Việt
 function removeVietnameseTones(str: string) {

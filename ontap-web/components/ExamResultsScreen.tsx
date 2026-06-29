@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { Quiz, UserAnswers } from '../types';
 import { CheckIcon3D, XIcon3D, TrophyIcon3D } from './icons';
+import { triggerHaptic } from '../utils/nativeUX';
 
 interface ExamResultsScreenProps {
     quiz: Quiz;
@@ -17,6 +18,14 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
 
     const totalQuestions = quiz.questions.length;
     const isPass = score >= 25; // Exam mode pass threshold
+
+    useEffect(() => {
+        if (isPass) {
+            triggerHaptic('success');
+        } else {
+            triggerHaptic('error');
+        }
+    }, [isPass]);
 
     const formattedDate = useMemo(() => {
         return new Intl.DateTimeFormat('vi-VN', {
@@ -37,35 +46,55 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
 
     return (
         <div className="w-full max-w-4xl mx-auto p-4 animate-slide-in-right font-quiz-default">
-            <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-8 text-center mb-8">
-                <TrophyIcon3D className="h-24 w-24 mx-auto text-yellow-400 mb-4" />
-                <h1 className="text-4xl font-bold text-foreground mb-2">Kết quả Thi thử</h1>
+            <div className={`rounded-3xl shadow-2xl p-6 md:p-10 text-center mb-8 overflow-hidden relative ${
+                isPass 
+                ? 'bg-gradient-to-br from-green-50 to-emerald-100 dark:from-emerald-950/20 dark:to-green-900/10' 
+                : 'bg-gradient-to-br from-red-50 to-rose-100 dark:from-rose-950/20 dark:to-red-900/10'
+            }`}>
+                <div className="relative z-10">
+                    {isPass ? (
+                        <TrophyIcon3D className="h-32 w-32 mx-auto text-yellow-500 mb-4 drop-shadow-xl animate-bounce" />
+                    ) : (
+                        <div className="h-32 w-32 mx-auto mb-4 flex items-center justify-center bg-red-100 dark:bg-red-900/30 rounded-full">
+                            <XIcon3D className="h-20 w-20 text-red-500" />
+                        </div>
+                    )}
+                    
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-2 uppercase tracking-tight">Kết quả Thi thử</h1>
 
-                <div className="my-4 text-muted-foreground">
-                    <p className="text-lg">Thí sinh: <span className="font-bold text-primary">{userName}</span></p>
-                    <p className="text-sm">Hoàn thành lúc: {formattedDate}</p>
-                </div>
+                    <div className="my-4 text-slate-600 dark:text-slate-400">
+                        <p className="text-lg">Thí sinh: <span className="font-bold text-slate-900 dark:text-white">{userName}</span></p>
+                        <p className="text-sm">Ngày thi: {formattedDate}</p>
+                    </div>
 
-                <p className={`text-2xl font-bold mb-6 ${isPass ? 'text-success' : 'text-destructive'}`}>
-                    {isPass ? 'Chúc mừng, anh/chị đã ĐẠT!' : 'Rất tiếc, anh/chị KHÔNG ĐẠT.'}
-                </p>
-                <div className={`inline-block p-6 rounded-xl border ${isPass ? 'bg-success/10 border-success/20' : 'bg-destructive/10 border-destructive/20'}`}>
-                    <p className={`text-5xl font-extrabold ${isPass ? 'text-success' : 'text-destructive'}`}>
-                        {score} / {totalQuestions}
+                    <p className={`text-2xl md:text-3xl font-black mb-6 drop-shadow-sm ${isPass ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                        {isPass ? 'CHÚC MỪNG, ANH/CHỊ ĐÃ ĐẠT!' : 'RẤT TIẾC, ANH/CHỊ KHÔNG ĐẠT.'}
                     </p>
-                    <p className="text-lg text-muted-foreground mt-1">Số câu đúng</p>
+                    
+                    <div className={`inline-flex flex-col items-center justify-center w-40 h-40 md:w-52 md:h-52 rounded-full border-8 bg-white dark:bg-slate-900 shadow-inner ${
+                        isPass ? 'border-green-500/30 text-green-600' : 'border-red-500/30 text-red-600'
+                    }`}>
+                        <p className="text-5xl md:text-6xl font-black">{score}</p>
+                        <p className="text-sm md:text-base font-bold opacity-70">/ {totalQuestions} CÂU</p>
+                    </div>
                 </div>
             </div>
 
             <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-8">
-                <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-foreground">Xem lại bài làm</h2>
-                    <div className="flex items-center gap-2 mt-4 sm:mt-0">
-                        <button onClick={() => setFilter('all')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors ${filter === 'all' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h2 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Chi tiết bài làm</h2>
+                    <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl w-full md:w-auto">
+                        <button 
+                            onClick={() => { triggerHaptic('light'); setFilter('all'); }} 
+                            className={`flex-1 md:flex-none px-6 py-2.5 text-sm font-bold rounded-xl transition-all ${filter === 'all' ? 'bg-white dark:bg-slate-700 text-blue-600 shadow-sm' : 'text-slate-500'}`}
+                        >
                             Tất cả
                         </button>
-                        <button onClick={() => setFilter('incorrect')} className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors ${filter === 'incorrect' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
-                            Chỉ câu sai ({quiz.questions.length - score})
+                        <button 
+                            onClick={() => { triggerHaptic('light'); setFilter('incorrect'); }} 
+                            className={`flex-1 md:flex-none px-6 py-2.5 text-sm font-bold rounded-xl transition-all ${filter === 'incorrect' ? 'bg-white dark:bg-slate-700 text-red-600 shadow-sm' : 'text-slate-500'}`}
+                        >
+                            Câu sai ({totalQuestions - score})
                         </button>
                     </div>
                 </div>
@@ -83,7 +112,7 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
                                 </p>
                                 {question.image && (
                                     <div className="mb-4 rounded-lg overflow-hidden">
-                                        <img src={question.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" />
+                                        <img src={question.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
                                     </div>
                                 )}
                                 <div className="space-y-2">
@@ -116,18 +145,20 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
                 </div>
             </div>
 
-            <div className="text-center mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+            <div className="mt-10 flex flex-col md:flex-row justify-center items-center gap-4">
                 <button
-                    onClick={onBack}
-                    className="w-full sm:w-auto bg-primary text-primary-foreground font-bold py-3 px-8 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-ring transition-all duration-300 transform hover:scale-105"
+                    onClick={() => { triggerHaptic('light'); onBack(); }}
+                    className="w-full md:w-auto px-10 py-4 bg-slate-800 dark:bg-slate-700 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-slate-900 active:scale-95 transition-all shadow-lg"
                 >
-                    Quay lại
+                    Về trang chủ
                 </button>
                 <button
-                    onClick={onRetry}
-                    className="w-full sm:w-auto bg-secondary text-secondary-foreground font-bold py-3 px-8 rounded-lg hover:bg-muted focus:outline-none focus:ring-4 focus:ring-ring transition-colors duration-300"
+                    onClick={() => { triggerHaptic('medium'); onRetry(); }}
+                    className={`w-full md:w-auto px-10 py-4 font-black uppercase tracking-widest rounded-2xl active:scale-95 transition-all shadow-lg ${
+                        isPass ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-red-600 text-white hover:bg-red-700'
+                    }`}
                 >
-                    Làm lại bài thi
+                    {isPass ? 'Thi lại' : 'Thi lại ngay'}
                 </button>
             </div>
         </div>

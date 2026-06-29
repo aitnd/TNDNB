@@ -7,7 +7,6 @@ export const syncData = async (userId: string) => {
     if (!navigator.onLine) return;
 
     try {
-        console.log('🔄 Starting sync...');
 
         // 1. Đồng bộ kết quả thi từ Offline lên Online
         const unsyncedResults = await getUnsyncedResults();
@@ -54,7 +53,6 @@ export const syncData = async (userId: string) => {
                 const localTime = localProfile.updatedAt || 0;
 
                 if (serverTime > localTime) {
-                    console.log('Sync: Server is newer. Updating local.');
                     await db_offline.users.update(userId, {
                         full_name: serverProfile.full_name,
                         role: serverProfile.role,
@@ -62,7 +60,6 @@ export const syncData = async (userId: string) => {
                         lastSynced: Date.now()
                     });
                 } else if (localTime > serverTime) {
-                    console.log('Sync: Local is newer. Pushing to server.');
                     // Nếu cho phép sửa offline, ta sẽ update lên server ở đây.
                     // Hiện tại app chưa cho sửa offline, nên trường hợp này hiếm khi xảy ra
                     // trừ khi đồng hồ máy tính sai lệch.
@@ -77,7 +74,6 @@ export const syncData = async (userId: string) => {
             }
         }
 
-        console.log('✅ Sync completed!');
     } catch (error) {
         console.error('❌ Sync failed:', error);
     }

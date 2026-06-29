@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useState } from 'react'
+
 import ThemeSwitcher from './ThemeSwitcher'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
 import { auth } from '../utils/firebaseClient'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 // Icon
-import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaPalette, FaChevronDown, FaSun, FaMoon, FaSnowflake, FaStar, FaUserCog, FaSignOutAlt, FaCloudDownloadAlt } from 'react-icons/fa'
+import { FaBookOpen, FaLaptop, FaGamepad, FaSearchLocation, FaStar, FaUserCog, FaSignOutAlt, FaCloudDownloadAlt } from 'react-icons/fa'     
 
 import styles from './Navbar.module.css'
 
@@ -31,10 +32,12 @@ export default function Navbar() {
     <header>
       {/* 🎄 ẢNH TRANG TRÍ (Chỉ hiện khi Theme Noel) 🎄 */}
       {theme === 'noel' && (
-        <img
+        <Image
           src="/assets/img/nav-light.png"
           alt=""
-          style={{ position: 'absolute', top: '60px', right: 0, width: '120px', pointerEvents: 'none', zIndex: 60 }}
+          width={120}
+          height={60}
+          style={{ position: 'absolute', top: '60px', right: 0, pointerEvents: 'none', zIndex: 60 }}
         />
       )}
 
@@ -45,9 +48,11 @@ export default function Navbar() {
           {/* 👇 KHU VỰC LOGO & TEXT ĐƯỢC CODE LẠI THEO YÊU CẦU 👇 */}
           <Link href="/" className={styles.brandArea}>
             {/* Logo Bánh lái tàu */}
-            <img
+            <Image
               src="/assets/img/logo.png"
               alt="Logo TĐNB"
+              width={60}
+              height={60}
               className={styles.logoImg}
             />
 
@@ -147,7 +152,7 @@ export default function Navbar() {
                 <Link href="/ontap" className={styles.hotLink}>
                   <FaBookOpen className={styles.hotIcon} /> Ôn tập
                 </Link>
-                <Link href="/ontap/thitructuyen" className={styles.hotLink}>
+                <Link href="/ontap/online-exam" className={styles.hotLink}>
                   <FaLaptop className={styles.hotIcon} /> Thi trực tuyến
                 </Link>
                 <Link href="/ontap/download" className={styles.hotLink}>

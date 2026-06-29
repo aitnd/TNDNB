@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Credentials & Secrets (NEVER commit)
+Github Release Token.txt
+thi-tnd-firebase-adminsdk-fbsvc-cef6c2f079.json

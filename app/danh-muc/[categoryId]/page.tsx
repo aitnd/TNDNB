@@ -22,9 +22,7 @@ type CategoryPageData = {
 
 // 2. "Phép thuật": LẤY DỮ LIỆU DANH MỤC (Chạy ở Máy chủ)
 async function getCategoryData(categoryId: string): Promise<CategoryPageData> {
-  console.log(`[Server] Đang lấy dữ liệu cho danh mục: ${categoryId}`)
-
-  // (Gọi "kho" 1: Lấy tên Danh mục)
+  // (Gọi "kho" 1: Lấy chi tiết danh mục)
   const { data: categoryData, error: categoryError } = await supabase
     .from('categories')
     .select('name')

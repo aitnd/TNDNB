@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaTimes, FaEnvelopeOpen, FaBell, FaTrash } from 'react-icons/fa';
-import { Notification, markNotificationAsRead, deleteNotificationForUser } from '../services/notificationService';
+import { Notification, deleteNotificationForUser } from '../services/notificationService'; 
 
 interface InboxModalProps {
     isOpen: boolean;

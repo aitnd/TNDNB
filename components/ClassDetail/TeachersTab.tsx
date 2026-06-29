@@ -1,15 +1,16 @@
-'use client';
+'use client'
+import Image from 'next/image';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  FaUserTie, FaPlus, FaTrash, FaGraduationCap, 
-  FaMailBulk, FaPhone, FaCheckCircle 
-} from 'react-icons/fa';
+import {    FaUserTie, FaPlus, FaTrash, FaGraduationCap,    FaMailBulk, FaPhone} from 'react-icons/fa'; 
+
+
+
 import { db } from '@/utils/firebaseClient';
-import { 
-  collection, query, where, documentId, 
-  getDocs, onSnapshot, doc, updateDoc, arrayRemove 
-} from 'firebase/firestore';
+import {    collection, query, where, documentId, onSnapshot, doc, updateDoc, arrayRemove, QuerySnapshot, DocumentData, QueryDocumentSnapshot, DocumentSnapshot  } from 'firebase/firestore'; 
+
+
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Course, UserProfile } from '@/types/classManagement';
 
@@ -25,7 +26,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
 
   // Sync current course data in real-time to get updated teacherIds
   useEffect(() => {
-    const unsubCourse = onSnapshot(doc(db, 'courses', classData.id), (docSnap) => {
+    const unsubCourse = onSnapshot(doc(db, 'courses', classData.id), (docSnap: DocumentSnapshot<DocumentData>) => {
       if (docSnap.exists()) {
         setCurrentCourse({ id: docSnap.id, ...docSnap.data() } as Course);
       }
@@ -49,8 +50,8 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
       where(documentId(), 'in', teacherIds.slice(0, 30)) 
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const list = snapshot.docs.map(doc => ({
+    const unsubscribe = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
+      const list = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({
         id: doc.id,
         ...doc.data()
       })) as UserProfile[];
@@ -137,7 +138,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
 
                   <div className="flex items-center gap-5 mb-6">
                      <div className="relative">
-                        <img 
+                        <Image width={100} height={100} style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                           src={getAvatar(t)} 
                           alt="" 
                           className="w-16 h-16 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800"
@@ -174,7 +175,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ classData, onAddTeacher }) =>
                        className="p-2.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-all"
                      >
                         <FaTrash size={14} />
-                     </button>
+                      </button>
                   </div>
                 </motion.div>
               );

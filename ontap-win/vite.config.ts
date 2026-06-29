@@ -20,10 +20,23 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(process.cwd(), '.'),
       }
     },
-    base: process.env.ELECTRON_BUILD === 'true' ? './' : '/', /* 💖 Base path: './' for Offline Build, '/' for Dev Server */
+    base: './', /* 💖 Force relative paths for Electron reliability */
     build: {
       outDir: 'dist',
       emptyOutDir: true,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('firebase')) return 'vendor-firebase';
+              if (id.includes('recharts')) return 'vendor-recharts';
+              if (id.includes('lucide-react')) return 'vendor-icons';
+              if (id.includes('xlsx') || id.includes('sheetjs') || id.includes('@sheetjs')) return 'vendor-xlsx';
+              return 'vendor';
+            }
+          }
+        }
+      }
     },
   };
 });

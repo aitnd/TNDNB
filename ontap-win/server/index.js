@@ -46,14 +46,12 @@ io.use(async (socket, next) => {
         // Cho phép kết nối ẩn danh (nếu cần) hoặc từ chối
         // next(new Error("Authentication error")); 
         // Tạm thời cho phép kết nối để test, nhưng khuyến khích gửi token
-        console.log("Anonymous connection:", socket.id);
         return next();
     }
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(token);
         socket.user = decodedToken;
-        console.log("Authenticated User:", decodedToken.email);
         next();
     } catch (error) {
         console.error("Auth Fail:", error.message);
@@ -101,7 +99,6 @@ app.post('/api/admin/reset-password', authenticateAPI, async (req, res) => {
             password: newPassword
         });
 
-        console.log(`Admin ${requesterUid} reset password for user ${targetUserId}`);
         res.json({ success: true, message: 'Password updated successfully' });
     } catch (error) {
         console.error("Error resetting password:", error);
@@ -237,13 +234,12 @@ io.on('connection', (socket) => {
     if (userId !== 'anonymous') {
         // Track Online User
         socket.join(userId);
-        console.log(`User ${userId} CONNECTED (${socket.id})`);
 
         // Update Firestore isOnline = true
         admin.firestore().collection('users').doc(userId).update({
             isOnline: true,
             lastSeen: admin.firestore.FieldValue.serverTimestamp()
-        }).catch(err => console.log("Error updating online status:", err.message));
+        }).catch(err => 
 
         // ADMIN SUPPORT: If user is admin/teacher, join 'admin_support'
         // Since we might not have role in token claims yet, let's allow client to join.
@@ -256,7 +252,6 @@ io.on('connection', (socket) => {
                 const data = doc.data();
                 if (['admin', 'quan_ly', 'giao_vien'].includes(data.role)) {
                     socket.join('admin_support');
-                    console.log(`User ${userId} joined admin_support`);
                 }
             }
         });
@@ -271,7 +266,7 @@ io.on('connection', (socket) => {
             admin.firestore().collection('users').doc(userId).update({
                 isOnline: false,
                 lastSeen: admin.firestore.FieldValue.serverTimestamp()
-            }).catch(err => console.log("Error updating offline status:", err.message));
+            }).catch(err => 
 
             io.emit('user_status_change', { userId, isOnline: false });
         }
@@ -361,7 +356,6 @@ io.on('connection', (socket) => {
 
             // Notify client to remove from UI
             socket.emit('delete_message_success', messageId);
-            console.log(`User ${userId} deleted message ${messageId}`);
 
         } catch (error) {
             console.error("Error deleting message:", error);
@@ -401,7 +395,6 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         if (userId !== 'anonymous') {
-            console.log(`User ${userId} DISCONNECTED`);
             // Broadcast Offline
             io.emit('user_status_change', { userId, isOnline: false });
         }
@@ -410,6 +403,4 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-    console.log(`SERVER RUNNING on port ${PORT}`);
-    console.log(`Firebase Admin Initialized for Project: ${serviceAccount.project_id}`);
 });

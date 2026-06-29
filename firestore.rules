@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function: lấy role từ collection users
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    // Kiểm tra xem user đăng nhập có role thuộc nhóm quản lý/giáo viên trở lên
+    function isAdmin() {
+      return request.auth != null && getUserRole() in ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'];
+    }
+    
+    // Kiểm tra xem user đăng nhập có role quản trị cấp cao (chỉ admin, quản lý, lãnh đạo)
+    function isAdminOnly() {
+      return request.auth != null && getUserRole() in ['admin', 'quan_ly', 'lanh_dao'];
+    }
+
+    // Collection: notifications (Thông báo)
+    match /notifications/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Collection: settings (Cấu hình hệ thống, bao gồm usage_config)
+    match /settings/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAdminOnly();
+    }
+
+    // Collection: users (Thông tin thành viên)
+    match /users/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow write: if request.auth != null && (request.auth.uid == userId || isAdminOnly());
+    }
+
+    // Collection: classes / courses (Quản lý lớp học)
+    match /classes/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+    match /courses/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // Collection: online_exams / exam_results (Quản lý thi & Kết quả)
+    match /online_exams/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+    match /exam_results/{docId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if isAdmin();
+    }
+
+    // Default fallback cho tất cả các collections khác
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

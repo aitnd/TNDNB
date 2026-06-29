@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  collection, query, where, onSnapshot, 
-  doc, updateDoc, getDocs, arrayUnion 
-} from 'firebase/firestore';
+import {    collection, query, where, onSnapshot,    doc, updateDoc, getDocs} from 'firebase/firestore'; 
+
+
+
 import { db, auth } from '../../services/firebaseClient';
-import { 
-  FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus, 
-  FaFileExcel, FaFileImport, FaPlus, FaCheckCircle, FaLaptop, 
-  FaPaperPlane, FaEdit, FaHistory, FaTrash, 
-  FaChevronLeft, FaChevronRight, FaUserClock, 
-  FaUserGraduate, FaKey, FaWifi,
-  FaSortUp, FaSortDown, FaSort
-} from 'react-icons/fa';
+import {    FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus,    FaFileExcel, FaFileImport, FaPlus, FaCheckCircle, FaLaptop,    FaPaperPlane, FaEdit, FaHistory, FaTrash,    FaChevronLeft, FaChevronRight, FaUserClock, FaKey, FaWifi,   FaSortUp, FaSortDown, FaSort, FaBan } from 'react-icons/fa'; 
+
+
+
+
+
+
+
 import { TbPlaneOff } from 'react-icons/tb';
 import { Course, UserProfile } from '../../types';
-import * as XLSX from 'xlsx';
+import * as XLSX from '@sheetjs/xlsx';
 import Swal from 'sweetalert2';
 import CreateStudentModal from '../CreateStudentModal';
 import ImportStudentModal from '../ImportStudentModal';
@@ -26,14 +26,19 @@ interface StudentsTabProps {
   course: Course;
   studentLatestResults?: Record<string, any>;
   deviceCounts?: Record<string, number>;
+  canAssignMembers?: boolean;
+  canDisableAccounts?: boolean;
 }
 
 const StudentsTab: React.FC<StudentsTabProps> = ({ 
   course, 
   studentLatestResults = {},
-  deviceCounts = {}
+  deviceCounts = {},
+  canAssignMembers = false,
+  canDisableAccounts = false
 }) => {
   const [students, setStudents] = useState<UserProfile[]>([]);
+  const [selectedStudentIds, setSelectedStudentIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
@@ -334,6 +339,73 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
     }
   };
 
+  const handleDisableStudent = async (studentId: string, studentName: string) => {
+    const result = await Swal.fire({
+      title: 'Vô hiệu hóa tài khoản?',
+      text: `Vô hiệu hóa tài khoản của học viên ${studentName}? Họ sẽ bị đăng xuất và không thể đăng nhập lại.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Vô hiệu hóa',
+      cancelButtonText: 'Hủy'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await updateDoc(doc(db, 'users', studentId), {
+          status: 'disabled',
+          updatedAt: Date.now()
+        });
+        Swal.fire('Thành công', 'Tài khoản đã bị vô hiệu hóa.', 'success');
+      } catch (e) {
+        Swal.fire('Lỗi', 'Không thể vô hiệu hóa tài khoản.', 'error');
+      }
+    }
+  };
+
+  const handleActivateStudent = async (studentId: string, studentName: string) => {
+    try {
+      await updateDoc(doc(db, 'users', studentId), {
+        status: 'active',
+        updatedAt: Date.now()
+      });
+      Swal.fire('Thành công', `Đã kích hoạt lại tài khoản của ${studentName}.`, 'success');
+    } catch (e) {
+      Swal.fire('Lỗi', 'Không thể kích hoạt lại tài khoản.', 'error');
+    }
+  };
+
+  const handleBatchDisableStudents = async () => {
+    if (selectedStudentIds.size === 0) return;
+    const result = await Swal.fire({
+      title: 'Vô hiệu hóa hàng loạt?',
+      text: `Vô hiệu hóa tài khoản của ${selectedStudentIds.size} học viên đã chọn?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Đồng ý',
+      cancelButtonText: 'Hủy'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const { writeBatch } = await import('firebase/firestore');
+        const batch = writeBatch(db);
+        selectedStudentIds.forEach(id => {
+          batch.update(doc(db, 'users', id), {
+            status: 'disabled',
+            updatedAt: Date.now()
+          });
+        });
+        await batch.commit();
+        setSelectedStudentIds(new Set());
+        Swal.fire('Thành công', 'Đã vô hiệu hóa các tài khoản đã chọn.', 'success');
+      } catch (e) {
+        Swal.fire('Lỗi', 'Không thể vô hiệu hóa hàng loạt.', 'error');
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Action Bar */}
@@ -370,30 +442,42 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-end">
+          {canDisableAccounts && selectedStudentIds.size > 0 && (
+            <button 
+              onClick={handleBatchDisableStudents}
+              className="flex items-center gap-2 px-4 py-2.5 bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-800 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-rose-100 transition-colors shadow-sm"
+            >
+              <FaBan /> Vô hiệu hóa hàng loạt ({selectedStudentIds.size})
+            </button>
+          )}
           <button 
             onClick={handleExportExcel}
             className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-emerald-100 transition-colors"
           >
             <FaFileExcel /> Xuất Excel
           </button>
-          <button 
-            onClick={() => setShowImportModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-green-100 transition-colors"
-          >
-            <FaFileImport /> Import Excel
-          </button>
-          <button 
-            onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-indigo-100 transition-colors"
-          >
-            <FaUserPlus /> Thêm mới
-          </button>
-          <button 
-            onClick={() => { setShowAddExistingModal(true); fetchAvailableStudents(); }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-black uppercase tracking-tight hover:bg-teal-700 shadow-lg shadow-teal-600/20 active:scale-95 transition-all"
-          >
-            <FaPlus /> Gán học viên
-          </button>
+          {canAssignMembers && (
+            <>
+              <button 
+                onClick={() => setShowImportModal(true)}
+                className="flex items-center gap-2 px-4 py-2.5 bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-green-100 transition-colors"
+              >
+                <FaFileImport /> Import Excel
+              </button>
+              <button 
+                onClick={() => setShowCreateModal(true)}
+                className="flex items-center gap-2 px-4 py-2.5 bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400 rounded-xl text-xs font-black uppercase tracking-tight hover:bg-indigo-100 transition-colors"
+              >
+                <FaUserPlus /> Thêm mới
+              </button>
+              <button 
+                onClick={() => { setShowAddExistingModal(true); fetchAvailableStudents(); }}
+                className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-black uppercase tracking-tight hover:bg-teal-700 shadow-lg shadow-teal-600/20 active:scale-95 transition-all"
+              >
+                <FaPlus /> Gán học viên
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -419,11 +503,26 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="group relative bg-white dark:bg-slate-900 rounded-3xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300"
+                className={`group relative bg-white dark:bg-slate-900 rounded-3xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 ${st.status === 'disabled' ? 'opacity-60 bg-gray-50/50 dark:bg-slate-950/20' : ''}`}
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
-                  <div className="relative">
-                    <img src={getAvatar(st)} alt="" className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800" />
+                  <div className="flex items-center gap-3">
+                    {canDisableAccounts && (
+                      <input 
+                        type="checkbox" 
+                        checked={selectedStudentIds.has(st.id)}
+                        onChange={(e) => {
+                          const next = new Set(selectedStudentIds);
+                          if (e.target.checked) next.add(st.id);
+                          else next.delete(st.id);
+                          setSelectedStudentIds(next);
+                        }}
+                        className="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-gray-300 cursor-pointer"
+                      />
+                    )}
+                    <div className="relative">
+                      <img src={getAvatar(st)} alt="" className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-slate-800" loading="lazy" />
+                    </div>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => toggleOfflineAccess(st.id, !!st.offlineAccess)} className={`p-2 rounded-lg transition-colors ${st.offlineAccess ? 'text-green-500 hover:bg-green-50 dark:hover:bg-green-500/10' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'}`} title={st.offlineAccess ? "Đã bật Offline" : "Chưa bật Offline"}>{st.offlineAccess ? <FaWifi /> : <TbPlaneOff />}</button>
@@ -431,11 +530,23 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                     <button onClick={() => handleViewHistory(st)} className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-500/10 rounded-lg transition-colors" title="Lịch sử thi"><FaHistory /></button>
                     <button onClick={() => handleViewSessions(st)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors" title="Lịch sử truy cập"><FaUserClock /></button>
                     <button onClick={() => handleEditStudent(st)} className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-500/10 rounded-lg transition-colors" title="Chỉnh sửa"><FaEdit /></button>
+                    {canDisableAccounts && (
+                      st.status === 'disabled' ? (
+                        <button onClick={() => handleActivateStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-500/10 rounded-lg transition-colors" title="Kích hoạt lại tài khoản"><FaCheckCircle /></button>
+                      ) : (
+                        <button onClick={() => handleDisableStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors" title="Vô hiệu hóa tài khoản"><FaBan /></button>
+                      )
+                    )}
                   </div>
                 </div>
 
                 <div className="space-y-1 mb-4 min-w-0">
-                  <h4 className="font-bold text-gray-900 dark:text-white truncate text-base">{st.fullName || st.full_name}</h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-bold text-gray-900 dark:text-white truncate text-base">{st.fullName || st.full_name}</h4>
+                    {st.status === 'disabled' && (
+                      <span className="text-[9px] font-bold text-red-600 bg-red-100 dark:bg-red-950/30 dark:text-red-400 px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Vô hiệu hóa</span>
+                    )}
+                  </div>
                   <p className="text-xs text-gray-400 dark:text-slate-500 truncate font-medium">{st.email || 'N/A'}</p>
                 </div>
 
@@ -454,12 +565,14 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                   </div>
                 </div>
                 
-                <button 
-                  onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')}
-                  className="absolute top-4 right-4 text-xs text-gray-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <FaTrash />
-                </button>
+                {canAssignMembers && (
+                  <button 
+                    onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')}
+                    className="absolute top-4 right-4 text-xs text-gray-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <FaTrash />
+                  </button>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>
@@ -469,6 +582,23 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-800">
+                {canDisableAccounts && (
+                  <th className="px-6 py-4 w-12">
+                    <input 
+                      type="checkbox"
+                      checked={paginatedStudents.length > 0 && paginatedStudents.every(st => selectedStudentIds.has(st.id))}
+                      onChange={(e) => {
+                        const next = new Set(selectedStudentIds);
+                        paginatedStudents.forEach(st => {
+                          if (e.target.checked) next.add(st.id);
+                          else next.delete(st.id);
+                        });
+                        setSelectedStudentIds(next);
+                      }}
+                      className="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-gray-300 cursor-pointer"
+                    />
+                  </th>
+                )}
                 <th onClick={() => handleSort('name')} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 cursor-pointer select-none hover:text-teal-500 transition-colors">Học viên <SortIcon column="name" /></th>
                 <th onClick={() => handleSort('type')} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden md:table-cell text-center cursor-pointer select-none hover:text-teal-500 transition-colors">Bài làm gần nhất <SortIcon column="type" /></th>
                 <th onClick={() => handleSort('time')} className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-400 hidden lg:table-cell text-center cursor-pointer select-none hover:text-teal-500 transition-colors">Thời gian <SortIcon column="time" /></th>
@@ -478,12 +608,32 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
               {paginatedStudents.map((st) => (
-                <tr key={st.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors group">
+                <tr key={st.id} className={`hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors group ${st.status === 'disabled' ? 'opacity-60 bg-gray-50/30 dark:bg-slate-900/10' : ''}`}>
+                  {canDisableAccounts && (
+                    <td className="px-6 py-4 w-12">
+                      <input 
+                        type="checkbox"
+                        checked={selectedStudentIds.has(st.id)}
+                        onChange={(e) => {
+                          const next = new Set(selectedStudentIds);
+                          if (e.target.checked) next.add(st.id);
+                          else next.delete(st.id);
+                          setSelectedStudentIds(next);
+                        }}
+                        className="w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-gray-300 cursor-pointer"
+                      />
+                    </td>
+                  )}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" />
+                      <img src={getAvatar(st)} alt="" className="w-10 h-10 rounded-xl object-cover" loading="lazy" />
                       <div>
-                        <p className="text-sm font-bold text-gray-900 dark:text-white">{st.fullName || st.full_name}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-bold text-gray-900 dark:text-white">{st.fullName || st.full_name}</p>
+                          {st.status === 'disabled' && (
+                            <span className="text-[9px] font-bold text-red-600 bg-red-100 dark:bg-red-950/30 dark:text-red-400 px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Vô hiệu hóa</span>
+                          )}
+                        </div>
                         <p className="text-[10px] text-gray-400 truncate max-w-[200px]">{st.email}</p>
                       </div>
                     </div>
@@ -509,7 +659,16 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                       <button onClick={() => handleViewHistory(st)} className="p-2 text-gray-400 hover:text-purple-600 rounded-lg" title="Lịch sử thi"><FaHistory size={14} /></button>
                       <button onClick={() => handleViewSessions(st)} className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg" title="Lịch sử truy cập"><FaUserClock size={14} /></button>
                       <button onClick={() => handleEditStudent(st)} className="p-2 text-gray-400 hover:text-teal-600 rounded-lg" title="Chỉnh sửa"><FaEdit size={14} /></button>
-                      <button onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-gray-400 hover:text-rose-600 rounded-lg" title="Gỡ học viên"><FaTrash size={14} /></button>
+                      {canDisableAccounts && (
+                        st.status === 'disabled' ? (
+                          <button onClick={() => handleActivateStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-green-600 hover:text-green-700 rounded-lg transition-colors" title="Kích hoạt lại tài khoản"><FaCheckCircle size={14} /></button>
+                        ) : (
+                          <button onClick={() => handleDisableStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-red-600 hover:text-red-700 rounded-lg transition-colors" title="Vô hiệu hóa tài khoản"><FaBan size={14} /></button>
+                        )
+                      )}
+                      {canAssignMembers && (
+                        <button onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-gray-400 hover:text-rose-600 rounded-lg" title="Gỡ học viên"><FaTrash size={14} /></button>
+                      )}
                     </div>
                   </td>
                 </tr>

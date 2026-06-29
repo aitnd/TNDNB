@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserProfile } from '../types';
 import StudentCard from './StudentCard';
 import { useTheme } from '../contexts/ThemeContext';
-import { HelmIcon3D, BookOpenIcon3D, ClipboardListIcon3D } from './icons';
+import { BookOpenIcon3D } from './icons';
 
-import { useState, useEffect } from 'react';
+// Component mới (Phương án C - Hybrid Smart)
+import AdminStatsBar from './AdminStatsBar';
+import WeatherWidget from './WeatherWidget';
+import WelcomeHeader from './WelcomeHeader';
+import { useQuickActions, PrimaryButton, ActionTile, SecondaryButton } from './QuickActionsGrid';
 
-import OnlineStatsWidget from './OnlineStatsWidget';
-import CustomAnalyticsWidget from './CustomAnalyticsWidget';
+// Lazy load GA Analytics widget (chỉ khi user bấm mở)
+const CustomAnalyticsWidget = React.lazy(() => import('./CustomAnalyticsWidget'));
+
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface DashboardProps {
     userProfile: UserProfile;
@@ -15,58 +21,104 @@ interface DashboardProps {
     onHistoryClick: () => void;
     onClassClick: () => void;
     onOnlineExamClick?: () => void;
+    onNotificationClick?: () => void;
+    onStatsClick?: () => void;
+    onSettingsClick?: () => void;
+    onUserManagerClick?: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ userProfile, onStart, onHistoryClick, onClassClick, onOnlineExamClick }) => {
+const Dashboard: React.FC<DashboardProps> = ({
+    userProfile, onStart, onHistoryClick, onClassClick,
+    onOnlineExamClick, onNotificationClick, onStatsClick, onSettingsClick,
+    onUserManagerClick
+}) => {
     const { theme } = useTheme();
+    const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+
+    const userRole = userProfile?.role || 'hoc_vien';
+    const isAdminOnly = ['admin', 'quan_ly', 'lanh_dao'].includes(userRole);
+
+    // Hook tính toán quick actions theo role
+    const { primaryAction, rightTiles, leftButtons } = useQuickActions({
+        userRole,
+        onStart,
+        onOnlineExamClick,
+        onHistoryClick,
+        onClassClick,
+        onNotificationClick,
+        onStatsClick,
+        onSettingsClick,
+        onUserManagerClick,
+    });
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-slide-in-right">
-            {/* Custom Analytics Widget */}
-            <CustomAnalyticsWidget userRole={userProfile?.role || 'hoc_vien'} />
+        <div className="min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right">
+            {/* === Thanh Weather & Online Stats (Stacked Vertically) === */}
+            <div className="w-full max-w-4xl flex flex-col gap-2.5 mb-4">
+                <WeatherWidget />
+                {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
+                    <AdminStatsBar userRole={userRole} />
+                )}
+            </div>
 
-            {/* Realtime Stats for Admin */}
-            <OnlineStatsWidget userRole={userProfile?.role || 'hoc_vien'} />
+            <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
-            <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-
-                {/* Left Column: Student Card */}
-                <div className="flex flex-col items-center">
+                {/* === Cột trái: StudentCard + nút phụ === */}
+                <div className="flex flex-col items-center gap-4">
                     <StudentCard user={userProfile} />
-                </div>
 
-                {/* Right Column: Actions */}
-                <div className="bg-card/90 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-border">
-                    <h1 className="text-3xl font-bold text-primary mb-6 text-center">
-                        Xin chào, {userProfile.full_name || 'Học viên'}!
-                    </h1>
-                    <p className="text-muted-foreground text-center mb-8">
-                        Chúc bạn có một buổi ôn tập hiệu quả và đạt kết quả cao.
-                    </p>
-
-                    <div className="space-y-4">
-                        <button
-                            onClick={onStart}
-                            className="w-full bg-primary text-primary-foreground font-bold text-lg py-4 px-6 rounded-xl hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-ring transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3 shadow-lg"
-                        >
-                            <BookOpenIcon3D className="w-8 h-8" />
-                            <span>Vào Ôn Tập / Thi Thử</span>
-                        </button>
-
-                        {/* Admin/Teacher Actions */}
-                        {['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile?.role || '') && (
-                            <button
-                                onClick={onOnlineExamClick}
-                                className="w-full bg-blue-600 text-white font-bold text-lg py-4 px-6 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3 shadow-lg"
-                            >
-                                <ClipboardListIcon3D className="w-8 h-8" />
-                                <span>Quản lý Thi Trực Tuyến</span>
-                            </button>
-                        )}
+                    {/* Nút phụ dưới thẻ */}
+                    <div className="w-full space-y-2">
+                        {leftButtons.map((action, idx) => (
+                            <SecondaryButton key={action.id} action={action} index={idx} />
+                        ))}
                     </div>
                 </div>
+
+                {/* === Cột phải: Welcome + CTA + Tiles === */}
+                <div className="bg-card/90 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-border">
+                    {/* Lời chào thông minh */}
+                    <WelcomeHeader
+                        userName={userProfile.full_name || 'Học viên'}
+                        userRole={userRole}
+                    />
+
+                    {/* Nút CTA chính */}
+                    <div className="mb-4">
+                        <PrimaryButton action={primaryAction} />
+                    </div>
+
+                    {/* Grid tiles cho admin */}
+                    {rightTiles.length > 0 && (
+                        <div className="grid grid-cols-2 gap-3 mt-4">
+                            {rightTiles.map((action, idx) => (
+                                <ActionTile key={action.id} action={action} index={idx} />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
-        </div >
+
+            {/* === GA Analytics thu gọn (chỉ admin) === */}
+            {isAdminOnly && (
+                <div className="w-full max-w-4xl mt-6">
+                    <button
+                        onClick={() => setIsAnalyticsOpen(!isAnalyticsOpen)}
+                        className="w-full flex items-center justify-between px-5 py-3 rounded-xl bg-card/90 border border-border hover:bg-card transition-all"
+                    >
+                        <span className="text-sm font-semibold text-muted-foreground">📊 Tổng quan truy cập</span>
+                        {isAnalyticsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                    </button>
+                    {isAnalyticsOpen && (
+                        <div className="mt-2">
+                            <React.Suspense fallback={<div className="text-center py-8 text-muted-foreground text-sm">Đang tải...</div>}>
+                                <CustomAnalyticsWidget userRole={userRole} />
+                            </React.Suspense>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
     );
 };
 

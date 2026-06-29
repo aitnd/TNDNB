@@ -10,6 +10,11 @@
       "DOM.Iterable"
     ],
     "skipLibCheck": true,
+    "types": [
+      "node",
+      "vite/client",
+      "vitest/globals"
+    ],
     "moduleResolution": "bundler",
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -32,6 +37,7 @@
   ],
   "exclude": [
     "node_modules",
-    "server"
+    "server",
+    "components/class-management"
   ]
 }

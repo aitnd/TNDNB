@@ -445,7 +445,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                                     className={`p-3 rounded-xl flex items-center gap-3 cursor-pointer transition-all mb-1 ${selectedUser?.id === u.id ? 'bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-gray-100 dark:hover:bg-zinc-800'}`}
                                 >
                                     <div className="relative">
-                                        <img src={u.photoURL} alt={u.name} className="w-12 h-12 rounded-full object-cover border border-gray-100 dark:border-gray-800" />
+                                        <img src={u.photoURL} alt={u.name} className="w-12 h-12 rounded-full object-cover border border-gray-100 dark:border-gray-800" loading="lazy" />
                                         {u.isOnline && <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-black rounded-full"></div>}
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -489,7 +489,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                                     <ChevronLeft size={24} className="text-blue-600" />
                                 </button>
                                 <div className="relative">
-                                    <img src={selectedUser.photoURL} alt="Avt" className="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 object-cover" />
+                                    <img src={selectedUser.photoURL} alt="Avt" className="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 object-cover" loading="lazy" />
                                     {selectedUser.isOnline && <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-black rounded-full"></div>}
                                 </div>
                                 <div>
@@ -545,7 +545,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                                             {!isMe && (
                                                 <div className="w-8 flex flex-col justify-end">
                                                     {showAvatar ? (
-                                                        <img src={selectedUser.photoURL} className="w-8 h-8 rounded-full border border-gray-200 object-cover" />
+                                                        <img src={selectedUser.photoURL} className="w-8 h-8 rounded-full border border-gray-200 object-cover" loading="lazy" alt="" />
                                                     ) : <div className="w-8" />}
                                                 </div>
                                             )}
@@ -600,7 +600,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
                                             {/* Placeholder Intro if at top */}
                                             {!loadingMore && !lastVisible && (
                                                 <div className="flex flex-col items-center mt-4 mb-8 opacity-60">
-                                                    <img src={selectedUser.photoURL} className="w-20 h-20 rounded-full mb-4 object-cover shadow-lg border-2 border-white" />
+                                                    <img src={selectedUser.photoURL} className="w-20 h-20 rounded-full mb-4 object-cover shadow-lg border-2 border-white" loading="lazy" alt="" />
                                                     <h3 className="text-xl font-bold text-gray-900 dark:text-white">{selectedUser.name}</h3>
                                                     <p className="text-sm text-gray-500">
                                                         {isAdmin ? 'Thông tin học viên / đồng nghiệp' : 'Ban Quản Trị Hệ Thống'}

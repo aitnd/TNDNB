@@ -111,7 +111,6 @@ class EJSCompression {
                         },
                         onRuntimeInitialized: function() {},
                         locateFile: function(file) {
-                            console.log("locateFile");
                             return "` + path + `";
                         }
                     };

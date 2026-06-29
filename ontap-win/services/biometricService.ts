@@ -30,7 +30,6 @@ export const saveCredentials = async (email: string, pass: string) => {
             key: CRED_KEY,
             value: JSON.stringify({ email, pass })
         });
-        console.log('Credentials saved for biometric login.');
     } catch (e) {
         console.error('Error saving credentials:', e);
     }

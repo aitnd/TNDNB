@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Notification, fetchAllGlobalNotifications, hardDeleteNotification, sendNotification } from '../services/notificationService';
-import { FaTrash, FaTimes, FaExclamationTriangle, FaInfoCircle, FaClock, FaPaperPlane, FaPlus } from 'react-icons/fa';
+import { FaTrash, FaTimes, FaExclamationTriangle, FaClock, FaPaperPlane, FaPlus } from 'react-icons/fa'; 
 
 interface NotificationManagerProps {
     onClose: () => void;

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { db } from '../utils/firebaseClient'
-import { collection, getDocs, query, orderBy, Timestamp, where, collectionGroup, doc, getDoc } from 'firebase/firestore'
+import { collection, getDocs, query, Timestamp, where, doc, getDoc } from 'firebase/firestore'  
 import { useAuth } from '../context/AuthContext'
 import styles from './StudentHistory.module.css'
 import { FaHistory } from 'react-icons/fa'

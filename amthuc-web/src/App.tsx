@@ -72,7 +72,7 @@ function App() {
     }
 
     return (
-        <BrowserRouter basename="/amthuc">
+        <BrowserRouter basename="/food">
             <div className="app">
                 <Header
                     searchQuery={searchQuery}

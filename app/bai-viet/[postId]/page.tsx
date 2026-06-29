@@ -1,5 +1,6 @@
 import { supabase } from '../../../utils/supabaseClient' // (Kho Supabase)
 import Link from 'next/link'
+import Image from 'next/image'
 import styles from './page.module.css' // (Triệu hồi CSS)
 import { adminDb } from '../../../utils/firebaseAdmin' // (Kho Firestore)
 
@@ -164,9 +165,12 @@ export default async function PostPage({ params }: { params: { postId: string } 
         </p>
 
         {post.thumbnail_url && (
-          <img
+          <Image
             src={post.thumbnail_url}
             alt={post.title}
+            width={800}
+            height={450}
+            style={{ objectFit: 'cover' }}
             className={styles.image}
           />
         )}
@@ -244,11 +248,13 @@ export default async function PostPage({ params }: { params: { postId: string } 
 
                   {/* (Link 1: Bọc cái ảnh) */}
                   <Link href={`/bai-viet/${relatedPost.id}`}>
-                    <img
+                    <Image
                       src={relatedPost.thumbnail_url || 'https://via.placeholder.com/300x150?text=TND+Ninh+Binh'}
                       alt={relatedPost.title}
+                      width={300}
+                      height={150}
+                      style={{ objectFit: 'cover' }}
                       className={styles.relatedImage}
-                      loading="lazy"
                     />
                   </Link>
 

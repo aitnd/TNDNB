@@ -11,8 +11,5 @@ const restaurants: Array<{
     ];
 
 // Hướng dẫn: Vào Dashboard, mở Console (F12), paste code này và nhấn Enter
-console.log('📋 Data quán đã sẵn sàng!');
-console.log('Tổng:', restaurants.length, 'quán,', restaurants.reduce((sum, r) => sum + r.menu.length, 0), 'món');
 restaurants.forEach((r, i) => {
-    console.log(`${i + 1}. ${r.info.name} - ${r.menu.length} món`);
 });

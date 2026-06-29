@@ -2,7 +2,7 @@
 // Đánh dấu đây là "Client Component"
 'use client'
 
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
+import React, { useState, useEffect, useCallback, ChangeEvent, FormEvent } from 'react'
 import { useAuth } from '../../../context/AuthContext'
 import ProtectedRoute from '../../../components/ProtectedRoute'
 import { db } from '../../../utils/firebaseClient'
@@ -483,7 +483,7 @@ const AdminSessionList: React.FC<{ userId: string, onUpdate: () => void }> = ({ 
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchSessions = async () => {
+  const fetchSessions = useCallback(async () => {
     setLoading(true);
     try {
       const data = await getActiveSessions(userId);
@@ -493,11 +493,11 @@ const AdminSessionList: React.FC<{ userId: string, onUpdate: () => void }> = ({ 
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     fetchSessions();
-  }, [userId]);
+  }, [fetchSessions]);
 
   const handleLogout = async (sid: string) => {
     if (!confirm('Đăng xuất thiết bị này?')) return;

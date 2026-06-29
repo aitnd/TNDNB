@@ -10,7 +10,7 @@ import { FaFacebook } from 'react-icons/fa'
 
 // (Triệu hồi kho Firestore)
 import { db } from '../../../utils/firebaseClient'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
 
 // (Import CSS Module - Mình mượn của trang Tài khoản)
 import styles from '../tai-khoan/page.module.css' 
@@ -37,6 +37,31 @@ function PostManagementDashboard() {
   const [posts, setPosts] = useState<Post[]>([]) 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [usageConfig, setUsageConfig] = useState<any>(null)
+
+  // Hàm ánh xạ role của user sang Firestore config key
+  const getRoleConfigKey = (role: string) => {
+    if (role === 'admin') return 'admin';
+    if (role === 'lanh_dao') return 'leader';
+    if (role === 'quan_ly') return 'manager';
+    if (role === 'giao_vien') return 'teacher';
+    if (role === 'hoc_vien') return 'verified_user';
+    return 'guest';
+  };
+
+  useEffect(() => {
+    async function fetchUsageConfig() {
+      try {
+        const docSnap = await getDoc(doc(db, 'settings', 'usage_config'));
+        if (docSnap.exists()) {
+          setUsageConfig(docSnap.data());
+        }
+      } catch (err) {
+        console.error('Lỗi khi fetch usage_config:', err);
+      }
+    }
+    fetchUsageConfig();
+  }, []);
 
   // (Link web - Giữ nguyên)
   const PRODUCTION_URL = 'https://tndnb.vercel.app';
@@ -92,8 +117,22 @@ function PostManagementDashboard() {
     fetchPostsAndAuthors(); 
   }, []); 
 
-  // (Hàm "Xóa Bài viết" - Giữ nguyên)
-  const handleDeletePost = async (postId: string, postTitle: string) => {
+  // (Hàm "Xóa Bài viết" - Kiểm tra quyền)
+  const handleDeletePost = async (postId: string, postTitle: string, authorId: string) => {
+    // Kiểm tra quyền xóa bài viết
+    const isOwnPost = user ? authorId === user.uid : false;
+    const userRoleKey = user ? getRoleConfigKey(user.role) : 'guest';
+    const roleConfig = usageConfig ? usageConfig[userRoleKey] : null;
+
+    const canDelete = isOwnPost
+      ? (roleConfig ? roleConfig.newsCreateEdit !== 'none' : true)
+      : (roleConfig ? roleConfig.newsDeleteOthers === true : false);
+
+    if (!canDelete) {
+      alert('Anh không có quyền xóa bài viết này của người khác!');
+      return;
+    }
+
     if (confirm(`Anh có chắc chắn muốn XÓA VĨNH VIỄN bài viết "${postTitle}" không?`)) {
       try {
         const { error } = await supabase
@@ -214,17 +253,39 @@ function PostManagementDashboard() {
                         </button>
                         
                         {/* (Nút Sửa) */}
-                        <Link href={`/quan-ly/dang-bai/sua/${post.id}`} className={styles.buttonEdit}>
-                          Sửa
-                        </Link>
+                        {(() => {
+                          const isOwnPost = user ? post.author_id === user.uid : false;
+                          const userRoleKey = user ? getRoleConfigKey(user.role) : 'guest';
+                          const roleConfig = usageConfig ? usageConfig[userRoleKey] : null;
+                          const canEdit = roleConfig
+                            ? (roleConfig.newsCreateEdit === 'all' || (roleConfig.newsCreateEdit === 'own' && isOwnPost))
+                            : isOwnPost;
+
+                          return canEdit ? (
+                            <Link href={`/quan-ly/dang-bai/sua/${post.id}`} className={styles.buttonEdit}>
+                              Sửa
+                            </Link>
+                          ) : null;
+                        })()}
                         
                         {/* (Nút Xóa) */}
-                        <button 
-                          className={styles.buttonDelete}
-                          onClick={() => handleDeletePost(post.id, post.title)}
-                        >
-                          Xóa
-                        </button>
+                        {(() => {
+                          const isOwnPost = user ? post.author_id === user.uid : false;
+                          const userRoleKey = user ? getRoleConfigKey(user.role) : 'guest';
+                          const roleConfig = usageConfig ? usageConfig[userRoleKey] : null;
+                          const canDelete = isOwnPost
+                            ? (roleConfig ? roleConfig.newsCreateEdit !== 'none' : true)
+                            : (roleConfig ? roleConfig.newsDeleteOthers === true : false);
+
+                          return canDelete ? (
+                            <button 
+                              className={styles.buttonDelete}
+                              onClick={() => handleDeletePost(post.id, post.title, post.author_id)}
+                            >
+                              Xóa
+                            </button>
+                          ) : null;
+                        })()}
                       </div>
                     </td>
                   </tr>

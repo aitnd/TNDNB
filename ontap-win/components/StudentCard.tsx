@@ -63,8 +63,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                                     target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name || 'User')}&background=random&size=150`;
                                 }}
                                 alt="Avatar"
-                                className={styles.avatar}
-                            />
+                                className={styles.avatar} loading="lazy" />
                         </div>
                     </div>
 

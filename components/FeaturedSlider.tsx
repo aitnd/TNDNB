@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '../utils/supabaseClient' 
-import { motion, AnimatePresence } from 'framer-motion'
+
 
 // "Triệu hồi" thư viện Slider
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination, EffectFade } from 'swiper/modules';
+import { Autoplay, Navigation, Pagination} from 'swiper/modules'; 
 
 // "Triệu hồi" CSS của Slider
 import 'swiper/css';

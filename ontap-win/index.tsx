@@ -6,7 +6,6 @@ import App from './App';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 
-console.log('🚀 [INDEX] Script Running...');
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

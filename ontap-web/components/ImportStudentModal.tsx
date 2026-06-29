@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { FaTimes, FaFileExcel, FaUpload, FaCheckCircle, FaExclamationTriangle, FaSpinner } from 'react-icons/fa';
-import * as XLSX from 'xlsx';
-import { initializeApp, getApp, getApps, deleteApp } from 'firebase/app';
+import * as XLSX from '@sheetjs/xlsx';
+import { initializeApp, getApp} from 'firebase/app';  
 import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { doc, setDoc, updateDoc, arrayUnion, serverTimestamp } from 'firebase/firestore';
 import { db, firebaseConfig } from '../services/firebaseClient';

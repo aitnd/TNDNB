@@ -1,4 +1,4 @@
 {
   "extends": "next/core-web-vitals",
-  "ignorePatterns": ["amthuc-web", "ontap-web", "ontap-win"]
+  "ignorePatterns": ["amthuc-web", "ontap-web", "ontap-win", "node_modules", ".next"]
 }
