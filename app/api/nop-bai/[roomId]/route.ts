@@ -6,7 +6,6 @@ import { adminDb, FieldValue } from '../../../../utils/firebaseAdmin'
 import { FieldPath } from 'firebase-admin/firestore' // (Import FieldPath của Admin)
 
 // (Định nghĩa "kiểu" - Giữ nguyên)
-type StudentAnswers = Record<string, string>
 type CorrectAnswer = { id: string; correct_answer_id: string }
 
 // --- HÀM API CHÍNH (POST) ---

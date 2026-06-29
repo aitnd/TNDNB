@@ -85,6 +85,11 @@
       "name": "Bộ Đếm Ngược Bảo Trì Real-time",
       "status": "implemented",
       "details": "Đếm ngược thời gian thực trên MaintenanceScreen thông qua hook useCountdown và input datetime picker trong UsageConfigPanel của admin."
+    },
+    {
+      "name": "Hệ thống Huy hiệu & Quản lý Huy hiệu (Badge Role & Admin Manager)",
+      "status": "implemented",
+      "details": "Hiển thị tự động Role Badge cho Hồ sơ cá nhân (Admin, Lãnh đạo, Giáo viên). Bổ sung màn hình quản lý cấp/thu hồi huy hiệu thành tích của học sinh cho Admin/Lãnh đạo trong danh sách lớp."
     }
   ],
   "knowledge_items": {

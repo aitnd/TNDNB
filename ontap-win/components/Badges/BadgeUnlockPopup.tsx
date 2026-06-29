@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BADGE_DEFINITIONS, BadgeDefinition } from '../../constants/badges';
-import { BadgeIcon } from './BadgeIcon';
+import { BadgeIcon3D } from './BadgeIcon3D';
+import { ConfettiCanvas } from './ConfettiCanvas';
 import { X } from 'lucide-react';
 
 interface BadgeUnlockPopupProps {
@@ -19,6 +20,9 @@ export const BadgeUnlockPopup: React.FC<BadgeUnlockPopupProps> = ({ badgeId, isO
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          {/* Confetti Fireworks Canvas */}
+          <ConfettiCanvas />
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -60,7 +64,15 @@ export const BadgeUnlockPopup: React.FC<BadgeUnlockPopupProps> = ({ badgeId, isO
                 animate={{ scale: 1, rotate: [0, -10, 10, -5, 5, 0] }}
                 transition={{ delay: 0.2, type: "spring" }}
               >
-                <BadgeIcon icon={badge.fallbackIcon} colorClass={badge.color} size="xl" />
+                <BadgeIcon3D 
+                  name={badge.name}
+                  description={badge.description}
+                  fallbackIcon={badge.fallbackIcon}
+                  colorClass={badge.color}
+                  level={badge.level}
+                  isUnlocked={true}
+                  size="xl"
+                />
               </motion.div>
             </div>
 

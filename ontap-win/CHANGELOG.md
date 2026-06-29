@@ -1,3 +1,9 @@
+## [3.14.0] - 2026-06-29
+### Hoàn thiện Hệ thống Huy hiệu & Tự động hóa
+- **Giao diện Quản lý Huy hiệu:** Tích hợp giao diện quản lý huy hiệu 3D chuyên nghiệp vào phần Quản lý Học viên và Quản lý Lớp (Web & App Win), cho phép Giáo viên và Lãnh đạo cấp/thu hồi huy hiệu dễ dàng.
+- **Tự động nhận huy hiệu:** Học viên tự động được theo dõi tiến độ và nhận huy hiệu ngay sau khi nộp bài Ôn tập và Thi thử thành công.
+- **Đồng bộ hóa 100%:** Đảm bảo hệ thống hoạt động thống nhất và ổn định trên cả phiên bản Web và ứng dụng Windows.
+
 ## [3.13.0] - 2026-06-29
 ### Tích hợp Hệ thống Huy hiệu & Tối ưu hóa Tạo/Import Học viên (Web & App Win)
 - **Hệ thống Huy hiệu (Badge System):** Ra mắt tính năng tích lũy huy hiệu danh dự khi hoàn thành xuất sắc các bài thi và ôn luyện trực tuyến. Bổ sung huy hiệu chức danh (Admin, Giáo viên, Học viên) hiển thị trên thanh điều hướng và Thẻ học viên.

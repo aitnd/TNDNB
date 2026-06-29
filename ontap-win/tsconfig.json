@@ -9,7 +9,7 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "skipLibCheck": true,
+    "skipLibCheck": true, "noUnusedLocals": true, "noUnusedParameters": true,
     "types": [
       "node",
       "vite/client",

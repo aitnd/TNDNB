@@ -35,6 +35,7 @@ import TopNavbar from './components/TopNavbar';
 import MailboxScreen from './components/MailboxScreen';
 import ChangelogScreen from './components/ChangelogScreen';
 import { BadgeListener } from './components/Badges/BadgeListener';
+import { BadgeService } from './services/badgeService';
 import AdSenseLoader from './components/AdSenseLoader';
 import MobileBottomNav from './components/MobileBottomNav';
 import ThiTrucTuyenPage from './components/ThiTrucTuyenPage';
@@ -814,6 +815,12 @@ const AppContent: React.FC = () => {
             currentQuiz.timeLimit! - 0
           );
         }
+        
+        // 🏅 Tăng tiến trình thi thử sau khi nộp bài
+        if (userProfile?.id) {
+          BadgeService.increaseMockTestProgress(userProfile.id, correctCount, 30).catch(console.error);
+        }
+
         navigate(isGK ? '/ontap/giamkhao/ketquathi' : '/ontap/ketquathi');
       } else {
         if (userProfile && selectedLicense) {
@@ -830,6 +837,12 @@ const AppContent: React.FC = () => {
           );
         }
         const targetPath = isGK ? '/ontap/giamkhao/ketqua' : '/ontap/ketqua';
+        
+        // 🏅 Tăng tiến trình huy hiệu sau khi nộp bài
+        if (userProfile?.id) {
+          BadgeService.increasePracticeProgress(userProfile.id, currentQuiz.questions.length).catch(console.error);
+        }
+
         // ⏱️ Redirect qua trang đếm ngược nếu config bật
         if (showCountdownAd && !(window as any).electron) {
           sessionStorage.setItem('MONETAG_COUNTDOWN_COUNT', (currentCountdownCount + 1).toString());

@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 import CreateStudentModal from '../CreateStudentModal';
 import ImportStudentModal from '../ImportStudentModal';
 import { EditStudentModal, HistoryModal, SessionModal, AddStudentModal } from './Modals';
+import { BadgeAdminModal } from '../Badges/BadgeAdminModal';
 import { getExamHistory } from '../../services/historyService';
 
 interface StudentsTabProps {
@@ -73,6 +74,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   const [loadingSessions, setLoadingSessions] = useState(false);
   const [availableStudents, setAvailableStudents] = useState<UserProfile[]>([]);
   const [loadingAvailable, setLoadingAvailable] = useState(false);
+  const [badgeUser, setBadgeUser] = useState<UserProfile | null>(null);
 
   // Real-time Fetch Students in Class
   useEffect(() => {
@@ -454,12 +456,22 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                   </div>
                 </div>
                 
-                <button 
-                  onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')}
-                  className="absolute top-4 right-4 text-xs text-gray-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <FaTrash />
-                </button>
+                <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button 
+                    onClick={() => setBadgeUser(st)}
+                    className="p-1 text-xs text-amber-500 hover:text-amber-600 bg-white/80 backdrop-blur rounded-md shadow-sm"
+                    title="Quản lý huy hiệu"
+                  >
+                    🏅
+                  </button>
+                  <button 
+                    onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')}
+                    className="p-1 text-xs text-gray-400 hover:text-rose-500 bg-white/80 backdrop-blur rounded-md shadow-sm"
+                    title="Gỡ học viên"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -508,6 +520,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                       <button className="p-2 text-gray-400 hover:text-blue-500 rounded-lg transition-colors" title="Nhắn tin"><FaPaperPlane size={14} /></button>
                       <button onClick={() => handleViewHistory(st)} className="p-2 text-gray-400 hover:text-purple-600 rounded-lg" title="Lịch sử thi"><FaHistory size={14} /></button>
                       <button onClick={() => handleViewSessions(st)} className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg" title="Lịch sử truy cập"><FaUserClock size={14} /></button>
+                      <button onClick={() => setBadgeUser(st)} className="p-2 text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-colors" title="Quản lý huy hiệu">🏅</button>
                       <button onClick={() => handleEditStudent(st)} className="p-2 text-gray-400 hover:text-teal-600 rounded-lg" title="Chỉnh sửa"><FaEdit size={14} /></button>
                       <button onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-gray-400 hover:text-rose-600 rounded-lg" title="Gỡ học viên"><FaTrash size={14} /></button>
                     </div>
@@ -578,6 +591,14 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
       {showSessionModal && selectedStudent && (
         <SessionModal student={selectedStudent} sessions={studentSessions} loading={loadingSessions} onClose={() => setShowSessionModal(false)} />
       )}
+
+      {/* Badge Admin Modal */}
+      <BadgeAdminModal
+          isOpen={!!badgeUser}
+          onClose={() => setBadgeUser(null)}
+          userId={badgeUser?.id || ''}
+          userName={badgeUser?.fullName || badgeUser?.full_name || ''}
+      />
     </div>
   );
 };

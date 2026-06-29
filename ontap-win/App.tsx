@@ -628,6 +628,12 @@ const AppContent: React.FC = () => {
             currentQuiz.timeLimit! - 0
           );
         }
+        
+        // 🏅 Tăng tiến trình thi thử sau khi nộp bài
+        if (userProfile?.id) {
+          BadgeService.increaseMockTestProgress(userProfile.id, correctCount, 30).catch(console.error);
+        }
+
         navigate('/ontap/ketquathi');
       } else {
         if (userProfile && selectedLicense) {
@@ -644,12 +650,9 @@ const AppContent: React.FC = () => {
           );
         }
         
-        // --- BADGE LOGIC ---
-        if (userProfile) {
-          BadgeService.unlockBadge(userProfile.id, 'achievement_1');
-          if (correctCount === currentQuiz.questions.length && currentQuiz.questions.length > 0) {
-            BadgeService.unlockBadge(userProfile.id, 'achievement_perfect');
-          }
+        // 🏅 Tăng tiến trình huy hiệu sau khi nộp bài
+        if (userProfile?.id) {
+          BadgeService.increasePracticeProgress(userProfile.id, currentQuiz.questions.length).catch(console.error);
         }
 
         const targetPath = '/ontap/ketqua';

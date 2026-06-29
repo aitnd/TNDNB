@@ -35,9 +35,9 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterRole, setFilterRole] = useState<'all' | 'verified' | 'unverified'>('all');
-  const [sortKey, setSortKey] = useState<'fullName' | 'createdAt'>('fullName');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [filterRole, _setFilterRole] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [sortKey, _setSortKey] = useState<'fullName' | 'createdAt'>('fullName');
+  const [sortOrder, _setSortOrder] = useState<'asc' | 'desc'>('asc');
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);

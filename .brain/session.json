@@ -1,64 +1,71 @@
 {
-  "updated_at": "2026-06-29T02:16:00.000Z",
+  "updated_at": "2026-06-29T16:53:00.000Z",
   "working_on": {
-    "feature": "Route Security Protection & Maintenance Countdown (v3.10.9)",
-    "task": "Triển khai component ProtectedRoute chặn hoàn toàn 6 route quản lý nhạy cảm cho học viên, nâng cấp MaintenanceScreen hiển thị bộ đếm ngược thời gian thực glassmorphism.",
+    "feature": "Badge Role Auto-Display & Admin Badge Management (v3.13.1)",
+    "task": "Tích hợp Badge hiển thị theo role, tạo modal quản lý Huy hiệu của học viên cho Admin/Lãnh đạo, đồng bộ sang Windows Desktop App (ontap-win) và chạy build QA Loop thành công.",
     "status": "completed",
     "files": [
-      "ontap-web/components/ProtectedRoute.tsx",
-      "ontap-win/components/ProtectedRoute.tsx",
-      "ontap-web/hooks/useCountdown.ts",
-      "ontap-win/hooks/useCountdown.ts",
-      "ontap-web/components/MaintenanceScreen.tsx",
-      "ontap-win/components/MaintenanceScreen.tsx",
-      "ontap-web/components/UsageConfigPanel.tsx",
-      "ontap-win/components/UsageConfigPanel.tsx",
-      "ontap-web/App.tsx",
-      "ontap-win/App.tsx",
-      "firestore.rules"
+      "ontap-web/components/Badges/BadgeList.tsx",
+      "ontap-win/components/Badges/BadgeList.tsx",
+      "ontap-web/components/Badges/AdminBadgeManager.tsx",
+      "ontap-win/components/Badges/AdminBadgeManager.tsx",
+      "ontap-web/services/badgeService.ts",
+      "ontap-win/services/badgeService.ts",
+      "ontap-web/components/AccountScreen.tsx",
+      "ontap-win/components/AccountScreen.tsx",
+      "ontap-web/components/ClassDetail/StudentsTab.tsx",
+      "ontap-win/components/ClassDetail/StudentsTab.tsx",
+      "ontap-web/components/ClassDetail/ClassDetailClient.tsx",
+      "ontap-win/components/ClassDetail/ClassDetailClient.tsx",
+      "CHANGELOG.md",
+      "ontap-web/CHANGELOG.md",
+      "ontap-win/CHANGELOG.md",
+      "CHANGELOG_DEV.md",
+      "package.json",
+      "ontap-web/package.json",
+      "ontap-win/package.json"
     ],
     "blockers": [],
-    "notes": "Đã hoàn thành triển khai bảo vệ route 2 lớp (Client Route Guards + Firestore Rules local) và bộ đếm ngược bảo trì hoạt động ổn định trên cả Web và Windows App."
+    "notes": "Đã hoàn thành đồng bộ toàn diện hệ thống Huy hiệu từ Web sang App Windows, kiểm tra build và QA 100% Pass."
   },
   "pending_tasks": [
     {
-      "task": "Deploy Next.js Web App lên production server để đồng bộ JS Bridge",
-      "status": "pending"
-    },
-    {
-      "task": "Chạy lại ứng dụng Android (tnd-android) trong Android Studio để xác thực lỗi trắng màn hình",
+      "task": "Deploy Next.js Web App lên production server",
       "status": "pending"
     }
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-29T02:16:00.000Z",
-      "type": "security_and_feature",
-      "description": "Vá hoàn toàn 6 route admin nhạy cảm (class-manager, usermanager, settings, exam-manager, notifications, analytics) bằng component ProtectedRoute mới. Cấu hình đếm ngược thời gian thực trên MaintenanceScreen thông qua hook useCountdown với giao diện Glassmorphism 4 ô (Ngày/Giờ/Phút/Giây). Thêm input datetime picker (ISO 8601) vào trang cài đặt của admin.",
+      "timestamp": "2026-06-29T16:53:00.000Z",
+      "type": "feature_and_sync",
+      "description": "Tích hợp hiển thị Badge Role (Admin, Lãnh đạo, Giáo viên) trên Hồ sơ cá nhân. Tạo modal AdminBadgeManager cho phép cấp/thu hồi huy hiệu trong giao diện StudentsTab. Đồng bộ hóa toàn bộ thay đổi từ Web sang Windows App và chạy thành công tiến trình build.",
       "files": [
-        "ontap-web/components/ProtectedRoute.tsx",
-        "ontap-win/components/ProtectedRoute.tsx",
-        "ontap-web/hooks/useCountdown.ts",
-        "ontap-win/hooks/useCountdown.ts",
-        "ontap-web/components/MaintenanceScreen.tsx",
-        "ontap-win/components/MaintenanceScreen.tsx",
-        "ontap-web/components/UsageConfigPanel.tsx",
-        "ontap-win/components/UsageConfigPanel.tsx",
-        "ontap-web/App.tsx",
-        "ontap-win/App.tsx",
-        "firestore.rules"
+        "ontap-web/components/Badges/BadgeList.tsx",
+        "ontap-win/components/Badges/BadgeList.tsx",
+        "ontap-web/components/Badges/AdminBadgeManager.tsx",
+        "ontap-win/components/Badges/AdminBadgeManager.tsx",
+        "ontap-web/services/badgeService.ts",
+        "ontap-win/services/badgeService.ts",
+        "ontap-web/components/AccountScreen.tsx",
+        "ontap-win/components/AccountScreen.tsx",
+        "ontap-web/components/ClassDetail/StudentsTab.tsx",
+        "ontap-win/components/ClassDetail/StudentsTab.tsx",
+        "ontap-web/components/ClassDetail/ClassDetailClient.tsx",
+        "ontap-win/components/ClassDetail/ClassDetailClient.tsx"
       ]
     }
   ],
-  "errors_encountered": [],
+  "errors_encountered": [
+    {
+      "error": "Lỗi 429 Resource Exhausted từ sub-agent trong lúc đồng bộ file sang ontap-win",
+      "solution": "Thực hiện đồng bộ thủ công và kiểm tra kỹ lưỡng các import path.",
+      "resolved": true
+    }
+  ],
   "decisions_made": [
     {
-      "decision": "Sử dụng component ProtectedRoute dùng chung",
-      "reason": "Bảo vệ nghiêm ngặt các route nhạy cảm phía Client, tránh lặp logic check role rải rác và tự động redirect học sinh không đủ quyền."
-    },
-    {
-      "decision": "Dùng input datetime-local cho admin",
-      "reason": "Admin có thể chọn thời gian kết thúc bảo trì dễ dàng dưới dạng ISO 8601, hỗ trợ bộ đếm ngược tính toán thời gian chênh lệch chính xác từng giây."
+      "decision": "Lọc hiển thị Badge Role và Achievement Badge riêng biệt",
+      "reason": "Tránh ghi đè hoặc ghi dữ liệu Role Badge vào DB, tăng tốc độ tải trang hồ sơ thông qua thông tin role có sẵn từ Auth."
     }
   ]
 }

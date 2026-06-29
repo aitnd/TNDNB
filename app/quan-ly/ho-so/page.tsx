@@ -89,7 +89,7 @@ function HoSoCaNhan() {
         const filePath = `${fileName}`; // Lưu thẳng vào root bucket hoặc folder tùy ý
 
         // Upload
-        const { data, error: uploadError } = await supabase
+        const { data: _data, error: uploadError } = await supabase
           .storage
           .from('avatars') // ⚠️ Đảm bảo bucket tên là 'avatars'
           .upload(filePath, optimizedFile);

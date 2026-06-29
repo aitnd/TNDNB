@@ -227,7 +227,7 @@ function EditPostForm() {
   };
 
   // ("Thợ" upload ảnh TinyMCE - Giữ nguyên)
-  const tinymceUploadHandler = (blobInfo: any, progress: (percent: number) => void): Promise<string> => {
+  const tinymceUploadHandler = (blobInfo: any, _progress: (percent: number) => void): Promise<string> => {
     return new Promise((resolve, reject) => {
       const file = blobInfo.blob();
       if (file.size > 5 * 1024 * 1024) {
@@ -604,7 +604,7 @@ function EditPostForm() {
                     apiKey='20m5wt4ebguc9anzt43drvz8gd06zeumm7srlb0ivrdq2m4t' 
                     
                     // (Khai báo 'any' cho 'onInit')
-                    onInit={(evt: any, editor: any) => {
+                    onInit={(_evt: any, editor: any) => {
                       editorRef.current = editor;
                       setEditorLoading(false); 
                     }}
@@ -613,7 +613,7 @@ function EditPostForm() {
                     initialValue={content} 
                     
                     // (Khai báo 'any' cho 'onEditorChange')
-                    onEditorChange={(newContent: any, editor: any) => {
+                    onEditorChange={(newContent: any, _editor: any) => {
                       setContent(newContent);
                     }}
                     

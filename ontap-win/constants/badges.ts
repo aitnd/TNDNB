@@ -1,5 +1,5 @@
 export type BadgeLevel = 'dong' | 'bac' | 'vang' | 'kim_cuong' | 'role';
-export type BadgeGroup = 'on_tap' | 'thi_thu' | 'role';
+export type BadgeGroup = 'on_tap' | 'thi_thu' | 'streak' | 'interaction' | 'special' | 'role';
 
 export interface BadgeDefinition {
   id: string;
@@ -15,7 +15,7 @@ export interface BadgeDefinition {
 }
 
 export const BADGE_DEFINITIONS: BadgeDefinition[] = [
-  // --- NHÓM 1: ÔN TẬP & HỌC TẬP ---
+  // --- NHÓM 1: ÔN TẬP & HỌC TẬP (6 huy hiệu) ---
   {
     id: 'tan_binh_tren_bo',
     name: 'Tân Binh Trên Bờ',
@@ -24,7 +24,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     group: 'on_tap',
     fallbackIcon: '🚢',
     targetValue: 1,
-    color: 'from-orange-400 to-amber-600',
+    color: 'from-amber-600 via-amber-500 to-amber-700',
   },
   {
     id: 'thuy_thu_cham_chi',
@@ -34,7 +34,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     group: 'on_tap',
     fallbackIcon: '📖',
     targetValue: 50,
-    color: 'from-slate-300 to-gray-400',
+    color: 'from-slate-300 via-slate-100 to-slate-400',
   },
   {
     id: 'hoa_tieu_kien_thuc',
@@ -44,16 +44,16 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     group: 'on_tap',
     fallbackIcon: '🧭',
     targetValue: 200,
-    color: 'from-yellow-300 to-amber-500',
+    color: 'from-yellow-400 via-amber-300 to-yellow-500',
   },
   {
     id: 'bach_khoa_hang_hai',
     name: 'Bách Khoa Hàng Hải',
-    description: 'Hoàn thành ôn tập ở tất cả các môn',
+    description: 'Hoàn thành ôn tập ở tất cả các môn học',
     level: 'kim_cuong',
     group: 'on_tap',
     fallbackIcon: '📚',
-    color: 'from-cyan-300 to-blue-500',
+    color: 'from-cyan-300 via-sky-200 to-blue-500',
   },
   {
     id: 'nguoi_khong_ngai_sai',
@@ -63,7 +63,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     group: 'on_tap',
     fallbackIcon: '💪',
     targetValue: 10,
-    color: 'from-slate-300 to-gray-400',
+    color: 'from-slate-300 via-slate-100 to-slate-400',
   },
   {
     id: 'bac_thay_on_luyen',
@@ -73,10 +73,10 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     group: 'on_tap',
     fallbackIcon: '🎯',
     targetValue: 1000,
-    color: 'from-cyan-300 to-blue-500',
+    color: 'from-cyan-300 via-sky-200 to-blue-500',
   },
 
-  // --- NHÓM 2: THI THỬ & THÀNH TÍCH ---
+  // --- NHÓM 2: THI THỬ & THÀNH TÍCH (5 huy hiệu) ---
   {
     id: 'lan_dau_ra_khoi',
     name: 'Lần Đầu Ra Khơi',
@@ -85,7 +85,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     group: 'thi_thu',
     fallbackIcon: '⛵',
     targetValue: 1,
-    color: 'from-orange-400 to-amber-600',
+    color: 'from-amber-600 via-amber-500 to-amber-700',
   },
   {
     id: 'vuot_song_thanh_cong',
@@ -94,7 +94,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     level: 'bac',
     group: 'thi_thu',
     fallbackIcon: '🌊',
-    color: 'from-slate-300 to-gray-400',
+    color: 'from-slate-300 via-slate-100 to-slate-400',
   },
   {
     id: 'thuyen_truong_xuat_sac',
@@ -103,7 +103,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     level: 'vang',
     group: 'thi_thu',
     fallbackIcon: '⭐',
-    color: 'from-yellow-300 to-amber-500',
+    color: 'from-yellow-400 via-amber-300 to-yellow-500',
   },
   {
     id: 'diem_tuyet_doi',
@@ -112,7 +112,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     level: 'kim_cuong',
     group: 'thi_thu',
     fallbackIcon: '💯',
-    color: 'from-cyan-300 to-blue-500',
+    color: 'from-cyan-300 via-sky-200 to-blue-500',
   },
   {
     id: 'chinh_phuc_bien_ca',
@@ -122,10 +122,121 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     group: 'thi_thu',
     fallbackIcon: '🏴‍☠️',
     targetValue: 10,
-    color: 'from-yellow-300 to-amber-500',
+    color: 'from-yellow-400 via-amber-300 to-yellow-500',
   },
 
-  // --- NHÓM 6: ROLE BADGES ---
+  // --- NHÓM 3: STREAK & KIÊN TRÌ (4 huy hiệu) ---
+  {
+    id: 'ngon_lua_nho',
+    name: 'Ngọn Lửa Nhỏ',
+    description: 'Học 3 ngày liên tiếp trên hệ thống',
+    level: 'dong',
+    group: 'streak',
+    fallbackIcon: '🔥',
+    targetValue: 3,
+    color: 'from-amber-600 via-amber-500 to-amber-700',
+  },
+  {
+    id: 'ngon_hai_dang',
+    name: 'Ngọn Hải Đăng',
+    description: 'Học 7 ngày liên tiếp trên hệ thống',
+    level: 'bac',
+    group: 'streak',
+    fallbackIcon: '🚨',
+    targetValue: 7,
+    color: 'from-slate-300 via-slate-100 to-slate-400',
+  },
+  {
+    id: 'thep_da_toi',
+    name: 'Thép Đã Tôi',
+    description: 'Học 30 ngày liên tiếp trên hệ thống',
+    level: 'vang',
+    group: 'streak',
+    fallbackIcon: '🧱',
+    targetValue: 30,
+    color: 'from-yellow-400 via-amber-300 to-yellow-500',
+  },
+  {
+    id: 'huyen_thoai_khong_nghi',
+    name: 'Huyền Thoại Không Nghỉ',
+    description: 'Học 100 ngày liên tiếp trên hệ thống',
+    level: 'kim_cuong',
+    group: 'streak',
+    fallbackIcon: '🏆',
+    targetValue: 100,
+    color: 'from-cyan-300 via-sky-200 to-blue-500',
+  },
+
+  // --- NHÓM 4: CỘNG ĐỒNG & TƯƠNG TÁC (4 huy hiệu) ---
+  {
+    id: 'nguoi_ban_dong_hanh',
+    name: 'Người Bạn Đồng Hành',
+    description: 'Tham gia lớp học đầu tiên',
+    level: 'dong',
+    group: 'interaction',
+    fallbackIcon: '🤝',
+    targetValue: 1,
+    color: 'from-amber-600 via-amber-500 to-amber-700',
+  },
+  {
+    id: 'ngoi_sao_lop_hoc',
+    name: 'Ngôi Sao Lớp Học',
+    description: 'Đứng Top 3 bảng xếp hạng lớp',
+    level: 'vang',
+    group: 'interaction',
+    fallbackIcon: '✨',
+    color: 'from-yellow-400 via-amber-300 to-yellow-500',
+  },
+  {
+    id: 'chien_binh_phong_thi',
+    name: 'Chiến Binh Phòng Thi',
+    description: 'Tham gia 5 phòng thi trực tuyến',
+    level: 'bac',
+    group: 'interaction',
+    fallbackIcon: '⚔️',
+    targetValue: 5,
+    color: 'from-slate-300 via-slate-100 to-slate-400',
+  },
+  {
+    id: 'vo_dich_phong_thi',
+    name: 'Vô Địch Phòng Thi',
+    description: 'Đạt hạng 1 trong 1 phòng thi trực tuyến',
+    level: 'vang',
+    group: 'interaction',
+    fallbackIcon: '👑',
+    color: 'from-yellow-400 via-amber-300 to-yellow-500',
+  },
+
+  // --- NHÓM 5: ĐẶC BIỆT & ẨN (3 huy hiệu) ---
+  {
+    id: 'cu_dem_hai_phong',
+    name: 'Cú Đêm Hải Phòng',
+    description: 'Hoàn thành một bài thi/ôn tập lúc 0h - 5h sáng',
+    level: 'bac',
+    group: 'special',
+    fallbackIcon: '🦉',
+    color: 'from-slate-300 via-slate-100 to-slate-400',
+  },
+  {
+    id: 'nguoi_tien_phong',
+    name: 'Người Tiên Phong',
+    description: 'Là 1 trong 50 người đầu tiên nhận huy hiệu trên hệ thống',
+    level: 'vang',
+    group: 'special',
+    fallbackIcon: '🚀',
+    color: 'from-yellow-400 via-amber-300 to-yellow-500',
+  },
+  {
+    id: 'nha_suu_tap',
+    name: 'Nhà Sưu Tập',
+    description: 'Mở khóa tất cả huy hiệu nhóm Ôn tập, Thi thử và Streak',
+    level: 'kim_cuong',
+    group: 'special',
+    fallbackIcon: '🎒',
+    color: 'from-cyan-300 via-sky-200 to-blue-500',
+  },
+
+  // --- NHÓM 6: HUY HIỆU ROLE ---
   {
     id: 'role_admin',
     name: 'Quản Trị Viên',
@@ -133,7 +244,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     level: 'role',
     group: 'role',
     fallbackIcon: '👑',
-    color: 'from-yellow-400 to-red-500',
+    color: 'from-yellow-400 via-red-500 to-pink-500',
     roleId: 'admin',
   },
   {
@@ -143,7 +254,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     level: 'role',
     group: 'role',
     fallbackIcon: '👑',
-    color: 'from-yellow-400 to-red-500',
+    color: 'from-yellow-400 via-red-500 to-pink-500',
     roleId: 'super_admin',
   },
   {
@@ -153,7 +264,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     level: 'role',
     group: 'role',
     fallbackIcon: '🦅',
-    color: 'from-amber-400 to-orange-600',
+    color: 'from-amber-400 via-orange-500 to-red-600',
     roleId: 'lanh_dao',
   },
   {
@@ -163,7 +274,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     level: 'role',
     group: 'role',
     fallbackIcon: '🛡️',
-    color: 'from-slate-300 to-blue-500',
+    color: 'from-blue-400 via-indigo-500 to-sky-600',
     roleId: 'quan_ly',
   },
   {
@@ -173,7 +284,17 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
     level: 'role',
     group: 'role',
     fallbackIcon: '👨‍🏫',
-    color: 'from-teal-300 to-emerald-500',
+    color: 'from-teal-300 via-emerald-400 to-cyan-500',
     roleId: 'giao_vien',
+  },
+  {
+    id: 'role_hoc_vien',
+    name: 'Học Viên',
+    description: 'Huy hiệu mặc quyền dành cho Học Viên',
+    level: 'role',
+    group: 'role',
+    fallbackIcon: '⚓',
+    color: 'from-gray-400 to-slate-500',
+    roleId: 'hoc_vien',
   },
 ];
