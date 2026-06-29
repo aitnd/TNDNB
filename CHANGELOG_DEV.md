@@ -1,4 +1,10 @@
 
+## [3.12.1] - 2026-06-29
+### Changelog Refactoring & Popup Limits (Web & App Win)
+- **Popup Version Limit**: Refactored `ChangelogModal.tsx` in both Web and Win to slice the changelog data array (`.slice(0, 1)`) showing only the latest release in the popup view.
+- **Legacy Header Alignment**: Aligned and replaced legacy date headers in `CHANGELOG.md`, `CHANGELOG_DEV.md`, `ontap-web/CHANGELOG.md`, and `ontap-win/CHANGELOG.md` with semantic versions (`[3.9.2]`, `[3.8.0]`, `[3.7.0]`, `[3.6.0]`).
+- **Workflow Updates**: Updated `/check-project` and `/tndnb-build` global workflows with double changelog verification rules and SemVer standards.
+
 ## [3.12.0] - 2026-06-29
 ### Cập nhật hệ thống bảo trì & IVT Shield
 - **Tính năng:** Tách độc lập 3 công tắc bảo trì cho trang chính (Portal), Web và Win.

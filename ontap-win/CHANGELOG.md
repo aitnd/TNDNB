@@ -1,3 +1,8 @@
+## [3.12.1] - 2026-06-29
+### Tối ưu hóa Lịch sử cập nhật (Web & App Win)
+- **Tập trung nội dung**: Cập nhật popup thông tin phiên bản chỉ hiển thị duy nhất nội dung của bản cập nhật mới nhất, giúp giao diện gọn gàng và dễ theo dõi hơn.
+- **Đồng bộ hóa các bản cũ**: Bổ sung số phiên bản chuẩn vào tất cả các đề mục cập nhật cũ trong quá khứ.
+
 ## [3.12.0] - 2026-06-29
 ### Cập nhật hệ thống bảo trì & Nâng cao trải nghiệm học tập
 - **Tính năng:** Nâng cấp hệ thống bảo trì thông minh độc lập cho từng nền tảng (Portal, Web, Windows App) giúp giảm thiểu tối đa thời gian gián đoạn học tập của học viên.
