@@ -1,86 +1,64 @@
 {
-  "updated_at": "2026-06-27T02:48:00.000Z",
+  "updated_at": "2026-06-29T02:16:00.000Z",
   "working_on": {
-    "feature": "Vitest Optimization & Security Audit & Navigation Fixes",
-    "task": "Tối ưu hóa chạy Vitest tránh timeout trên Windows, vá lỗi bảo mật bằng overrides ở root, đồng bộ link điều hướng thông báo và cấu hình trên Dashboard.",
+    "feature": "Route Security Protection & Maintenance Countdown (v3.10.9)",
+    "task": "Triển khai component ProtectedRoute chặn hoàn toàn 6 route quản lý nhạy cảm cho học viên, nâng cấp MaintenanceScreen hiển thị bộ đếm ngược thời gian thực glassmorphism.",
     "status": "completed",
     "files": [
+      "ontap-web/components/ProtectedRoute.tsx",
+      "ontap-win/components/ProtectedRoute.tsx",
+      "ontap-web/hooks/useCountdown.ts",
+      "ontap-win/hooks/useCountdown.ts",
+      "ontap-web/components/MaintenanceScreen.tsx",
+      "ontap-win/components/MaintenanceScreen.tsx",
+      "ontap-web/components/UsageConfigPanel.tsx",
+      "ontap-win/components/UsageConfigPanel.tsx",
       "ontap-web/App.tsx",
       "ontap-win/App.tsx",
-      "ontap-web/vitest.config.ts",
-      "ontap-win/vitest.config.ts",
-      "package.json"
+      "firestore.rules"
     ],
     "blockers": [],
-    "notes": "Đã hoàn thành tối ưu Vitest, vá bảo mật overrides và sửa link điều hướng Dashboard thành công."
+    "notes": "Đã hoàn thành triển khai bảo vệ route 2 lớp (Client Route Guards + Firestore Rules local) và bộ đếm ngược bảo trì hoạt động ổn định trên cả Web và Windows App."
   },
-  "pending_tasks": [],
+  "pending_tasks": [
+    {
+      "task": "Deploy Next.js Web App lên production server để đồng bộ JS Bridge",
+      "status": "pending"
+    },
+    {
+      "task": "Chạy lại ứng dụng Android (tnd-android) trong Android Studio để xác thực lỗi trắng màn hình",
+      "status": "pending"
+    }
+  ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-27T02:48:00.000Z",
-      "type": "optimization_security_feature",
-      "description": "Tối ưu cấu hình Vitest chạy không song song (fileParallelism: false) giúp giảm thời gian chạy test từ 70s xuống 4s và tránh lỗi timeout trên Windows. Áp dụng overrides trong package.json để vá hoàn toàn các lỗi bảo mật Critical & High (protobufjs, tar, uuid, postcss, fast-xml-parser, glob). Đồng bộ link nút Thông báo và Cấu hình trên Dashboard.",
-      "files": [
-        "ontap-web/App.tsx",
-        "ontap-win/App.tsx",
-        "ontap-web/vitest.config.ts",
-        "ontap-win/vitest.config.ts",
-        "package.json"
-      ]
-    },
-    {
-      "timestamp": "2026-06-26T10:30:51.652Z",
-      "type": "feature",
-      "description": "Gộp cấu hình Monetag Popunder/DirectLink/Countdown vào tab Bảo vệ Quảng cáo (IVT Shield). Chuyển từ công tắc bật/tắt theo role sang nhập số (lần/phiên) chung cho toàn hệ thống. Cập nhật cho cả web và win. Sửa lỗi nút Cài đặt trên Dashboard trỏ nhầm sang /ontap/profile thay vì /ontap/settings.",
-      "files": [
-        "ontap-web/App.tsx",
-        "ontap-win/App.tsx",
-        "ontap-web/components/UsageConfigPanel.tsx",
-        "ontap-win/components/UsageConfigPanel.tsx"
-      ]
-    },
-    {
-      "timestamp": "2026-06-26T17:00:00+07:00",
+      "timestamp": "2026-06-29T02:16:00.000Z",
       "type": "security_and_feature",
-      "description": "Tích hợp tính năng Weather Widget (Weather API) tại top dashboard của web và win. Gỡ bỏ file credentials rò rỉ (serviceAccountKey.json) và thư mục cũ (amthuc-web/old/) khỏi Git cache. Sửa lỗi double-encoding (mojibake) font tiếng Việt trong CHANGELOG.md. Nâng cấp và build thành công v3.10.6.",
+      "description": "Vá hoàn toàn 6 route admin nhạy cảm (class-manager, usermanager, settings, exam-manager, notifications, analytics) bằng component ProtectedRoute mới. Cấu hình đếm ngược thời gian thực trên MaintenanceScreen thông qua hook useCountdown với giao diện Glassmorphism 4 ô (Ngày/Giờ/Phút/Giây). Thêm input datetime picker (ISO 8601) vào trang cài đặt của admin.",
       "files": [
-        "package.json",
-        "CHANGELOG.md",
-        "app/api/weather/route.ts",
-        "ontap-web/package.json",
-        "ontap-web/components/WeatherWidget.tsx",
+        "ontap-web/components/ProtectedRoute.tsx",
+        "ontap-win/components/ProtectedRoute.tsx",
+        "ontap-web/hooks/useCountdown.ts",
+        "ontap-win/hooks/useCountdown.ts",
+        "ontap-web/components/MaintenanceScreen.tsx",
+        "ontap-win/components/MaintenanceScreen.tsx",
+        "ontap-web/components/UsageConfigPanel.tsx",
+        "ontap-win/components/UsageConfigPanel.tsx",
         "ontap-web/App.tsx",
-        "ontap-win/package.json",
-        "ontap-win/components/WeatherWidget.tsx",
-        "ontap-win/App.tsx"
+        "ontap-win/App.tsx",
+        "firestore.rules"
       ]
     }
   ],
-  "errors_encountered": [
-    {
-      "error": "Lỗi double-encoding font chữ tiếng Việt ở các file CHANGELOG.md",
-      "solution": "Viết script fix-changelog-encoding.js đọc file bằng latin1 và ghi lại bằng utf-8 để khôi phục chính xác font chữ.",
-      "resolved": true
-    },
-    {
-      "error": "Lỗi git commit thất bại do index.lock bị chiếm dụng bởi GitHubDesktop.exe",
-      "solution": "Tạm dừng hoặc tắt GitHub Desktop để giải phóng lock index, sau đó tiến hành commit và push bình thường.",
-      "resolved": true
-    },
-    {
-      "error": "Rò rỉ private key Firebase của dự án trong ontap-win/server/serviceAccountKey.json",
-      "solution": "Chạy lệnh git rm --cached và xóa tệp tin khỏi git tracking, đưa vào .gitignore để đảm bảo bảo mật lâu dài.",
-      "resolved": true
-    }
-  ],
+  "errors_encountered": [],
   "decisions_made": [
     {
-      "decision": "Dọn dẹp và giữ an toàn Firebase private credentials bằng .gitignore và git rm --cached",
-      "reason": "Ngăn chặn rò rỉ khoá bảo mật lên các repo công khai nhưng vẫn giữ cấu hình chạy cục bộ cho nhà phát triển."
+      "decision": "Sử dụng component ProtectedRoute dùng chung",
+      "reason": "Bảo vệ nghiêm ngặt các route nhạy cảm phía Client, tránh lặp logic check role rải rác và tự động redirect học sinh không đủ quyền."
     },
     {
-      "decision": "Bỏ qua việc nâng cấp phụ thuộc nặng gây breaking change cho Next.js portal đối với lỗ hổng audit của root",
-      "reason": "Việc chạy npm audit fix --force có nguy cơ gây lỗi nghiêm trọng (breaking change) đến cấu trúc Next.js hiện tại, do đó sẽ xử lý trong đợt refactor cấu trúc lớn tiếp theo."
+      "decision": "Dùng input datetime-local cho admin",
+      "reason": "Admin có thể chọn thời gian kết thúc bảo trì dễ dàng dưới dạng ISO 8601, hỗ trợ bộ đếm ngược tính toán thời gian chênh lệch chính xác từng giây."
     }
   ]
 }

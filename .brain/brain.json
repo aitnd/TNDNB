@@ -75,6 +75,16 @@
       "name": "Weather Widget & Smart Advice",
       "status": "implemented",
       "details": "Tích hợp Widget thời tiết hiển thị tại Dashboard chính cho cả bản Web và Windows. Tự động lấy vị trí thực tế của người dùng và sinh lời khuyên học tập dựa trên nhiệt độ/thời tiết."
+    },
+    {
+      "name": "Chặn Route Nghiêm Ngặt (Client Route Guards)",
+      "status": "implemented",
+      "details": "Sử dụng component ProtectedRoute để bảo vệ 6 route admin nhạy cảm nhầm chặn tuyệt đối học sinh tự ý truy cập URL trực tiếp."
+    },
+    {
+      "name": "Bộ Đếm Ngược Bảo Trì Real-time",
+      "status": "implemented",
+      "details": "Đếm ngược thời gian thực trên MaintenanceScreen thông qua hook useCountdown và input datetime picker trong UsageConfigPanel của admin."
     }
   ],
   "knowledge_items": {
