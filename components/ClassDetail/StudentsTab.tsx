@@ -2,14 +2,14 @@
 import Image from 'next/image';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import {    FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus,    FaFileExcel, FaPlus, FaSortAmountDown, FaSortAmountUp,   FaCheckCircle, FaLaptop, FaPaperPlane, FaEdit, FaHistory,   FaTrash, FaChevronLeft, FaChevronRight} from 'react-icons/fa'; 
+import {    FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus,    FaFileExcel, FaPlus,   FaCheckCircle, FaLaptop, FaPaperPlane, FaEdit,   FaTrash, FaChevronLeft, FaChevronRight} from 'react-icons/fa'; 
 
 
 
 
 
 import { db } from '@/utils/firebaseClient';
-import {    collection, query, where, onSnapshot, updateDoc, deleteDoc, getDoc, QuerySnapshot, DocumentData, QueryDocumentSnapshot  } from 'firebase/firestore'; 
+import {    collection, query, where, onSnapshot, QuerySnapshot, DocumentData, QueryDocumentSnapshot  } from 'firebase/firestore'; 
 
 
 

@@ -12,6 +12,8 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import WelcomeModal from './components/WelcomeModal';
 import LoginScreen from './components/LoginScreen';
+import { BadgeListener } from './components/Badges/BadgeListener';
+import { BadgeService } from './services/badgeService';
 import WindowsLoginScreen from './components/WindowsLoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import LicenseSelectionScreen from './components/LicenseSelectionScreen';
@@ -641,6 +643,15 @@ const AppContent: React.FC = () => {
             0
           );
         }
+        
+        // --- BADGE LOGIC ---
+        if (userProfile) {
+          BadgeService.unlockBadge(userProfile.id, 'achievement_1');
+          if (correctCount === currentQuiz.questions.length && currentQuiz.questions.length > 0) {
+            BadgeService.unlockBadge(userProfile.id, 'achievement_perfect');
+          }
+        }
+
         const targetPath = '/ontap/ketqua';
         // ⏱️ Redirect qua trang đếm ngược nếu config bật (không áp dụng trên Electron)
         if (showCountdownAd && !(window as any).electron) {
@@ -727,6 +738,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-16' : 'pt-16'}`}>
+      <BadgeListener />
       <SweetAlertPopup />
       <Toaster position="top-right" richColors expand={true} closeButton />
 

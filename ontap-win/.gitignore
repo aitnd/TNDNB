@@ -26,3 +26,4 @@ dist-ssr
 # Credentials & Secrets (NEVER commit)
 Github Release Token.txt
 thi-tnd-firebase-adminsdk-fbsvc-cef6c2f079.json
+.env*

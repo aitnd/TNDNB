@@ -1,5 +1,7 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { UserProfile } from '../types';
+import { useAppStore } from '../store';
+import { BadgeList } from './Badges/BadgeList';
 import { db } from '../services/firebaseClient';
 import { uploadAvatar } from '../services/userService';
 import { doc, updateDoc } from 'firebase/firestore'; 
@@ -302,6 +304,11 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                         </button>
                     </div>
                 </form>
+            </div>
+
+            {/* Badge List Section */}
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700 mb-6">
+                <BadgeList userId={userProfile.id} />
             </div>
 
             {/* Phiên hoạt động cá nhân */}

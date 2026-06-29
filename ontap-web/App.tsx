@@ -34,6 +34,7 @@ import UserManagerScreen from './components/UserManagerScreen';
 import TopNavbar from './components/TopNavbar';
 import MailboxScreen from './components/MailboxScreen';
 import ChangelogScreen from './components/ChangelogScreen';
+import { BadgeListener } from './components/Badges/BadgeListener';
 import AdSenseLoader from './components/AdSenseLoader';
 import MobileBottomNav from './components/MobileBottomNav';
 import ThiTrucTuyenPage from './components/ThiTrucTuyenPage';
@@ -954,7 +955,8 @@ const AppContent: React.FC = () => {
       )}
 
       <AdSenseLoader userProfile={userProfile} />
-
+      <BadgeListener />
+      
       {!isMobileApp && (
         <>
           <TopNavbar

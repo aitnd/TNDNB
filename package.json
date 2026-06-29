@@ -1,6 +1,6 @@
 {
   "name": "webtnd",
-  "version": "3.12.2",
+  "version": "3.13.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",

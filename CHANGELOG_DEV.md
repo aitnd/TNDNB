@@ -1,4 +1,12 @@
 
+## [3.13.0] - 2026-06-29
+### Gamification Engine & Smart Account Recycle (Web & App Win)
+- **Badge Engine Core:** Implemented `BadgeService` and `BadgeListener` side-effect wrapper to trigger and unlock achievements (`achievement_1`, `achievement_perfect`) dynamically on quiz and online exam submission.
+- **MiniRoleBadge Component:** Developed and integrated visual `<MiniRoleBadge />` displaying user privilege roles (`admin`, `giao_vien`, `hoc_vien`) in `TopNavbar` and `StudentCard`.
+- **Database Recycling Services:** Added `BadgeService.resetUserBadges(uid)` and `clearUserHistory(uid)` in `historyService.ts` to purge and clean sub-collections and exam logs when recycling student IDs.
+- **Conflict Resolution UI:** Upgraded `ImportStudentModal.tsx` and `CreateStudentModal.tsx` (Web & Win) with a pre-check verification step displaying conflict comparison tables and enforcing a double-confirmation prompt for active (unlocked) accounts before overwrite.
+- **Codebase Cleanups & Modularity:** Cleaned up unused imports/variables in `Navbar`, `StudentsTab`, `PortalMaintenanceWrapper`, `admin/page.tsx`, and `quan-ly/[roomId]/page.tsx`. Added `.env*` to `ontap-win/.gitignore`.
+
 ## [3.12.2] - 2026-06-29
 ### Refactor UI Header Layout & TopNavbar Consolidation (Web & App Win)
 - **Dashboard Row 1 Consolidation:** Integrated `<WeatherWidget />` and `<AdminStatsBar />` into a single responsive flex container (`flex flex-col lg:flex-row items-center justify-between gap-3 mb-4`) in both `Dashboard.tsx` (Web & Win).

@@ -1,3 +1,10 @@
+## [3.13.0] - 2026-06-29
+### Tích hợp Hệ thống Huy hiệu & Tối ưu hóa Tạo/Import Học viên (Web & App Win)
+- **Hệ thống Huy hiệu (Badge System):** Ra mắt tính năng tích lũy huy hiệu danh dự khi hoàn thành xuất sắc các bài thi và ôn luyện trực tuyến. Bổ sung huy hiệu chức danh (Admin, Giáo viên, Học viên) hiển thị trên thanh điều hướng và Thẻ học viên.
+- **Tái sử dụng tài khoản an toàn:** Hỗ trợ quy trình dọn dẹp sạch sẽ toàn bộ kết quả thi và huy hiệu cũ khi tái sử dụng SBD cũ cho học viên khóa mới, giúp tối ưu cơ sở dữ liệu.
+- **Import Excel thông minh:** Bổ sung giao diện kiểm tra trùng lặp trước khi import. Hiển thị bảng đối chiếu học viên cũ vs học viên mới kèm cảnh báo bảo mật 2 lớp khi ghi đè tài khoản đang hoạt động.
+- **Dọn dẹp code:** Sửa lỗi thiếu tệp bỏ qua bảo mật và xóa bỏ toàn bộ mã nguồn dư thừa nhằm tăng tốc độ tải trang.
+
 ## [3.12.2] - 2026-06-29
 ### Tối ưu hóa Giao diện Nửa Trên Dashboard & Thanh Điều Hướng TopNavbar (Web & App Win)
 - **Tối ưu không gian hiển thị:** Đưa thanh thông tin thời tiết và trạng thái hệ thống vào chung một hàng ngang (Slim Banner Header), thu gọn khoảng trắng đứng giúp các nút bấm chức năng chính hiển thị trọn vẹn ngay trong khung nhìn đầu tiên.

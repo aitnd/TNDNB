@@ -3,6 +3,7 @@ import { UserProfile } from '../types';
 import styles from './StudentCard.module.css';
 import { FaUniversity } from 'react-icons/fa';
 import { BadgeCheck, Calendar, MapPin, Building2, GraduationCap } from 'lucide-react';
+import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 
 interface StudentCardProps {
     user: UserProfile;
@@ -71,8 +72,9 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                     <div className={styles.infoSection}>
                         <div className={styles.infoRow}>
                             <span className={styles.label}>Họ tên:</span>
-                            <span className={`${styles.value} ${styles.valueHighlight}`}>
+                            <span className={`${styles.value} ${styles.valueHighlight} flex items-center flex-wrap gap-1`}>
                                 {user.full_name || user.fullName || '---'}
+                                {user.role && <MiniRoleBadge role={user.role} />}
                                 {user.isVerified && (
                                     <span className={styles.verifiedBadge}>
                                         <BadgeCheck size={10} style={{ marginRight: '2px' }} />
