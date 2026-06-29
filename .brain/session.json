@@ -1,32 +1,20 @@
 {
-  "updated_at": "2026-06-29T16:53:00.000Z",
+  "updated_at": "2026-06-29T20:25:00.000Z",
   "working_on": {
-    "feature": "Badge Role Auto-Display & Admin Badge Management (v3.13.1)",
-    "task": "Tích hợp Badge hiển thị theo role, tạo modal quản lý Huy hiệu của học viên cho Admin/Lãnh đạo, đồng bộ sang Windows Desktop App (ontap-win) và chạy build QA Loop thành công.",
+    "feature": "Gamification v2.0 & QA Fixes (v3.14.0)",
+    "task": "Hoàn tất Gamification 3D Badges, BadgeAdminModal, sửa lỗi font Markdown trong CHANGELOG, tối ưu type compliance (Rules of Hooks).",
     "status": "completed",
     "files": [
-      "ontap-web/components/Badges/BadgeList.tsx",
-      "ontap-win/components/Badges/BadgeList.tsx",
-      "ontap-web/components/Badges/AdminBadgeManager.tsx",
-      "ontap-win/components/Badges/AdminBadgeManager.tsx",
-      "ontap-web/services/badgeService.ts",
-      "ontap-win/services/badgeService.ts",
-      "ontap-web/components/AccountScreen.tsx",
-      "ontap-win/components/AccountScreen.tsx",
-      "ontap-web/components/ClassDetail/StudentsTab.tsx",
-      "ontap-win/components/ClassDetail/StudentsTab.tsx",
-      "ontap-web/components/ClassDetail/ClassDetailClient.tsx",
-      "ontap-win/components/ClassDetail/ClassDetailClient.tsx",
       "CHANGELOG.md",
-      "ontap-web/CHANGELOG.md",
-      "ontap-win/CHANGELOG.md",
       "CHANGELOG_DEV.md",
-      "package.json",
-      "ontap-web/package.json",
-      "ontap-win/package.json"
+      "project_qa_report.md",
+      "ontap-web/components/Badges/BadgeIcon3D.tsx",
+      "ontap-web/components/Badges/BadgeAdminModal.tsx",
+      "ontap-win/components/Badges/BadgeIcon3D.tsx",
+      "ontap-win/components/Badges/BadgeAdminModal.tsx"
     ],
     "blockers": [],
-    "notes": "Đã hoàn thành đồng bộ toàn diện hệ thống Huy hiệu từ Web sang App Windows, kiểm tra build và QA 100% Pass."
+    "notes": "Code đã được commit thành công (a0f76e75), sẵn sàng cho session tiếp theo."
   },
   "pending_tasks": [
     {
@@ -36,36 +24,27 @@
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-29T16:53:00.000Z",
-      "type": "feature_and_sync",
-      "description": "Tích hợp hiển thị Badge Role (Admin, Lãnh đạo, Giáo viên) trên Hồ sơ cá nhân. Tạo modal AdminBadgeManager cho phép cấp/thu hồi huy hiệu trong giao diện StudentsTab. Đồng bộ hóa toàn bộ thay đổi từ Web sang Windows App và chạy thành công tiến trình build.",
+      "timestamp": "2026-06-29T20:25:00.000Z",
+      "type": "feature",
+      "description": "Tích hợp hoàn chỉnh Gamification v2.0 với huy hiệu 3D, Admin quản lý danh hiệu. Sửa triệt để các lỗi Rules of Hooks, unused variables để Next build pass 100%. Sửa lỗi font chữ trong Markdown khi render changelog.",
       "files": [
-        "ontap-web/components/Badges/BadgeList.tsx",
-        "ontap-win/components/Badges/BadgeList.tsx",
-        "ontap-web/components/Badges/AdminBadgeManager.tsx",
-        "ontap-win/components/Badges/AdminBadgeManager.tsx",
-        "ontap-web/services/badgeService.ts",
-        "ontap-win/services/badgeService.ts",
-        "ontap-web/components/AccountScreen.tsx",
-        "ontap-win/components/AccountScreen.tsx",
-        "ontap-web/components/ClassDetail/StudentsTab.tsx",
-        "ontap-win/components/ClassDetail/StudentsTab.tsx",
-        "ontap-web/components/ClassDetail/ClassDetailClient.tsx",
-        "ontap-win/components/ClassDetail/ClassDetailClient.tsx"
+        "CHANGELOG_DEV.md",
+        "CHANGELOG.md",
+        "project_qa_report.md"
       ]
     }
   ],
   "errors_encountered": [
     {
-      "error": "Lỗi 429 Resource Exhausted từ sub-agent trong lúc đồng bộ file sang ontap-win",
-      "solution": "Thực hiện đồng bộ thủ công và kiểm tra kỹ lưỡng các import path.",
+      "error": "Lỗi hiển thị font chữ/tràn viền trong trình render Markdown của Changelog do thiếu dòng trống (\\n\\n) trước Heading.",
+      "solution": "Đã thêm newline, bổ sung bài học rút kinh nghiệm vào project_qa_report.md để tránh lặp lại.",
       "resolved": true
     }
   ],
   "decisions_made": [
     {
-      "decision": "Lọc hiển thị Badge Role và Achievement Badge riêng biệt",
-      "reason": "Tránh ghi đè hoặc ghi dữ liệu Role Badge vào DB, tăng tốc độ tải trang hồ sơ thông qua thông tin role có sẵn từ Auth."
+      "decision": "Quy định bắt buộc cách dòng (\\n\\n) trước thẻ Heading trong file md",
+      "reason": "Đảm bảo Markdown renderer (React Markdown) không merge Heading vào danh sách li liền trước đó."
     }
   ]
 }
