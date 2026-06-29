@@ -1,5 +1,11 @@
 # CHANGELOG — [ontap-win]
 
+## [3.10.9] - 2026-06-29
+- **Bảo vệ route 2 lớp nghiêm ngặt:** Tạo component `ProtectedRoute` bảo vệ các trang nhạy cảm phía Client. Vá hoàn toàn 4 route admin chưa được bảo vệ trước đây (class-manager, usermanager, settings, exam-manager) để ngăn học viên truy cập URL trực tiếp.
+- **Bộ đếm ngược thời gian bảo trì:** Tích hợp hook `useCountdown` cập nhật thời gian chênh lệch mỗi giây.
+- **Giao diện countdown Glassmorphic:** Thiết kế bộ đếm ngược 4 ô (Ngày/Giờ/Phút/Giây) hiển thị sống động trên màn hình bảo trì. Tự động hiện nút reload và tự động reload trang sau 10 giây khi hết giờ bảo trì.
+- **Cấu hình datetime picker:** Thêm trường input `maintenanceEndTime` (ISO 8601) vào trang cấu hình `UsageConfigPanel` của admin để cài đặt bộ đếm ngược chính xác, giữ fallback text dự kiến khi admin không nhập giờ cụ thể.
+
 ## [3.10.8] - 2026-06-27
 - **Hoạt họa Gears lướt sóng cực đẹp:** Khắc phục lỗi ghi đè transform của Framer Motion bằng cách bọc thẻ bánh răng vào thẻ div tĩnh, đồng thời thêm hiệu ứng cờ lê lơ lửng và tự lắc lư (Wobble) cực sinh động.
 - **Cấu hình động từ Settings:** Thêm các ô cấu hình động Thời gian dự kiến, Thông tin dữ liệu và Liên hệ hỗ trợ tại trang `/ontap/settings`.

@@ -7,6 +7,7 @@ import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
 import SweetAlertPopup from './components/SweetAlertPopup';
 import NotificationMgmtScreen from './components/NotificationMgmtScreen';
+import ProtectedRoute from './components/ProtectedRoute';
 import { useAppStore} from './stores/useAppStore'; 
 import { auth, db } from './services/firebaseClient';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -915,6 +916,7 @@ const AppContent: React.FC = () => {
       <MaintenanceScreen 
         message={usageConfig.maintenanceMessage} 
         estimatedTime={usageConfig.maintenanceEstimatedTime}
+        maintenanceEndTime={usageConfig.maintenanceEndTime}
         safetyInfo={usageConfig.maintenanceSafetyInfo}
         contactInfo={usageConfig.maintenanceContact}
       />
@@ -1199,36 +1201,44 @@ const AppContent: React.FC = () => {
 
           <Route path="/ontap/history" element={userProfile ? <HistoryScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" replace />} />
           <Route path="/ontap/my-class" element={userProfile ? <MyClassScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" replace />} />
-          <Route path="/ontap/class-manager" element={userProfile ? <ClassManagementScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" replace />} />
-          <Route path="/ontap/class-manager/:courseId" element={userProfile ? <ClassManagementScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" replace />} />
+          <Route path="/ontap/class-manager" element={
+            <ProtectedRoute roles={['admin', 'quan_ly', 'lanh_dao', 'giao_vien']} userProfile={userProfile}>
+              <ClassManagementScreen userProfile={userProfile!} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} />
+            </ProtectedRoute>
+          } />
+          <Route path="/ontap/class-manager/:courseId" element={
+            <ProtectedRoute roles={['admin', 'quan_ly', 'lanh_dao', 'giao_vien']} userProfile={userProfile}>
+              <ClassManagementScreen userProfile={userProfile!} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} />
+            </ProtectedRoute>
+          } />
           <Route path="/ontap/profile" element={userProfile ? <AccountScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/login" replace />} />
-          <Route path="/ontap/usermanager" element={userProfile ? <UserManagerScreen userProfile={userProfile} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} /> : <Navigate to="/ontap/login" replace />} />
-          <Route path="/ontap/settings" element={userProfile ? <UsageConfigPanel userProfile={userProfile} /> : <Navigate to="/ontap/login" />} />
+          <Route path="/ontap/usermanager" element={
+            <ProtectedRoute roles={['admin', 'quan_ly', 'lanh_dao', 'giao_vien']} userProfile={userProfile}>
+              <UserManagerScreen userProfile={userProfile!} usageConfig={usageConfig} onBack={() => navigate('/ontap/dashboard')} onNavigate={handleTopNavNavigate} />
+            </ProtectedRoute>
+          } />
+          <Route path="/ontap/settings" element={
+            <ProtectedRoute roles={['admin', 'quan_ly', 'lanh_dao']} userProfile={userProfile}>
+              <UsageConfigPanel userProfile={userProfile!} />
+            </ProtectedRoute>
+          } />
           <Route path="/ontap/notifications" element={
-            userProfile ? (
-              ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role) ? (
-                <NotificationMgmtScreen userProfile={userProfile} />
-              ) : (
-                <Navigate to="/ontap/dashboard" replace />
-              )
-            ) : (
-              <Navigate to="/ontap/login" />
-            )
+            <ProtectedRoute roles={['admin', 'quan_ly', 'lanh_dao', 'giao_vien']} userProfile={userProfile}>
+              <NotificationMgmtScreen userProfile={userProfile!} />
+            </ProtectedRoute>
           } />
           <Route path="/ontap/mailbox" element={userProfile ? <MailboxScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" />} />
-          <Route path="/ontap/exam-manager" element={userProfile ? <OnlineExamManagementScreen userProfile={userProfile} onBack={() => navigate('/ontap/dashboard')} /> : <Navigate to="/ontap/login" />} />
+          <Route path="/ontap/exam-manager" element={
+            <ProtectedRoute roles={['admin', 'quan_ly', 'lanh_dao', 'giao_vien']} userProfile={userProfile}>
+              <OnlineExamManagementScreen userProfile={userProfile!} onBack={() => navigate('/ontap/dashboard')} />
+            </ProtectedRoute>
+          } />
           <Route path="/ontap/online-exam" element={<ThiTrucTuyenPage />} />
           <Route path="/ontap/download" element={<DownloadAppPage />} />
           <Route path="/ontap/analytics" element={
-            userProfile ? (
-              ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userProfile.role) ? (
-                <AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />
-              ) : (
-                <Navigate to="/ontap/dashboard" replace />
-              )
-            ) : (
-              <Navigate to="/ontap/login" />
-            )
+            <ProtectedRoute roles={['admin', 'quan_ly', 'lanh_dao', 'giao_vien']} userProfile={userProfile}>
+              <AnalyticsPage onBack={() => navigate('/ontap/dashboard')} />
+            </ProtectedRoute>
           } />
           <Route path="/ontap/login-history" element={<LoginHistoryScreen onBack={() => navigate('/ontap/dashboard')} />} />
           <Route path="/ontap/games" element={<EntertainmentScreen onBack={() => navigate('/ontap/dashboard')} />} />

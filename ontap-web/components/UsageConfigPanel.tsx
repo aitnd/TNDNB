@@ -1160,10 +1160,21 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                             className="w-full px-4 py-3 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none h-20"
                                                         />
                                                     </div>
-                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                                         <div>
                                                             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                                                Thời gian dự kiến (Tùy chọn)
+                                                                Thời gian kết thúc (Đếm ngược)
+                                                            </label>
+                                                            <input
+                                                                type="datetime-local"
+                                                                value={config.maintenanceEndTime || ''}
+                                                                onChange={(e) => setConfig({ ...config, maintenanceEndTime: e.target.value })}
+                                                                className="w-full px-4 py-2 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                                                Dự kiến hiển thị (Text fallback)
                                                             </label>
                                                             <input
                                                                 type="text"

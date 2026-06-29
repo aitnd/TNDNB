@@ -53,6 +53,7 @@ export interface UsageConfig {
     isMaintenanceMode?: boolean; // Tầng 1: Soft Maintenance
     maintenanceMessage?: string; // Lời nhắn bảo trì
     maintenanceEstimatedTime?: string; // Thời gian dự kiến bảo trì
+    maintenanceEndTime?: string; // Thời gian kết thúc bảo trì (đếm ngược)
     maintenanceSafetyInfo?: string; // Thông tin an toàn dữ liệu
     maintenanceContact?: string; // Thông tin liên hệ bảo trì
     
@@ -277,6 +278,7 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 isMaintenanceMode: data.isMaintenanceMode || false,
                 maintenanceMessage: data.maintenanceMessage || 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!',
                 maintenanceEstimatedTime: data.maintenanceEstimatedTime || '',
+                maintenanceEndTime: data.maintenanceEndTime || '',
                 maintenanceSafetyInfo: data.maintenanceSafetyInfo || '',
                 maintenanceContact: data.maintenanceContact || '',
                 adsenseMaxClicks: data.adsenseMaxClicks ?? 2,

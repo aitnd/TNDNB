@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.10.9] - 2026-06-29
+### Chặn Route Nghiêm Ngặt & Bộ Đếm Ngược Bảo Trì (Web & App Win)
+- **Chặn route 2 lớp bảo mật:** Thêm component `ProtectedRoute` bọc các route nhạy cảm. Vá hoàn toàn 4 lỗ hổng bảo mật route admin (class-manager, usermanager, settings, exam-manager) hiện tại chỉ check đăng nhập mà không check vai trò.
+- **Security Rules Firestore:** Thiết kế và lưu trữ file `firestore.rules` tại thư mục root để quản trị, kiểm soát quyền truy cập collections ở tầng Server-side.
+- **Bộ đếm ngược thời gian thực (Real-time Maintenance Countdown):** Tích hợp custom hook `useCountdown` để tự động tính thời gian chênh lệch từng giây trên màn hình bảo trì `MaintenanceScreen` (Web & Win).
+- **Giao diện countdown Glassmorphism:** Hiển thị thời gian bảo trì còn lại trực quan dưới dạng 4 ô glassmorphic tinh tế (Ngày/Giờ/Phút/Giây) với hiệu ứng số chạy mượt mà, tự động chuyển đổi sang nút "Tải lại trang" và tự động reload trang sau 10 giây khi hoàn tất bảo trì.
+- **Cấu hình admin tiện ích:** Bổ sung input datetime picker `maintenanceEndTime` (ISO 8601) vào trang cài đặt hệ thống `UsageConfigPanel` của admin để cấu hình đếm ngược chính xác, giữ nguyên cơ chế text fallback nếu admin không cài đặt giờ cụ thể.
+
 ## [3.10.8] - 2026-06-27
 ### Cải tiến Giao diện Bảo trì, Phân quyền Dashboard Học Viên & Tối Ưu WeatherWidget (Web & App Win)
 - **Hoạt họa Gears lướt sóng cực đẹp:** Khắc phục triệt để lỗi ghi đè transform của Framer Motion bằng cách bọc thẻ bánh răng vào thẻ div tĩnh, đồng thời thêm hiệu ứng cờ lê lơ lửng và tự lắc lư (Wobble) cực sinh động.
