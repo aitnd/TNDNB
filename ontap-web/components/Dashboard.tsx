@@ -8,6 +8,7 @@ import { useAppStore } from '../stores/useAppStore';
 
 // Component mới (Phương án C - Hybrid Smart)
 import AdminStatsBar from './AdminStatsBar';
+import WeatherWidget from './WeatherWidget';
 import WelcomeHeader from './WelcomeHeader';
 import { useQuickActions, PrimaryButton, ActionTile, SecondaryButton } from './QuickActionsGrid';
 
@@ -72,8 +73,17 @@ const Dashboard: React.FC<DashboardProps> = ({
                 </div>
 
                 <div className="relative z-10 w-full max-w-6xl">
-                    {/* === ROW 1: Thanh Online Stats Slim === */}
-                    <AdminStatsBar userRole={userRole} />
+                    {/* === ROW 1: Weather + Online Stats Slim Banner === */}
+                    <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-3 mb-4">
+                        <div className="w-full lg:flex-1">
+                            <WeatherWidget />
+                        </div>
+                        {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
+                            <div className="w-full lg:w-auto flex-shrink-0">
+                                <AdminStatsBar userRole={userRole} />
+                            </div>
+                        )}
+                    </div>
 
                     {/* === ROW 2: Main Content (2 cột) === */}
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
@@ -187,8 +197,17 @@ const Dashboard: React.FC<DashboardProps> = ({
     // === THEME CŨ (cũng áp dụng layout Phương án C nhưng đơn giản hơn) ===
     return (
         <div className="min-h-screen flex flex-col items-center p-4 pt-6 animate-slide-in-right">
-            {/* Thanh Online Stats */}
-            <AdminStatsBar userRole={userRole} />
+            {/* Thanh Weather & Online Stats */}
+            <div className="w-full max-w-4xl flex flex-col md:flex-row items-center justify-between gap-3 mb-4">
+                <div className="w-full md:flex-1">
+                    <WeatherWidget />
+                </div>
+                {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
+                    <div className="w-full md:w-auto flex-shrink-0">
+                        <AdminStatsBar userRole={userRole} />
+                    </div>
+                )}
+            </div>
 
             <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 

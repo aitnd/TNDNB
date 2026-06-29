@@ -6,6 +6,7 @@ import { BookOpenIcon3D } from './icons';
 
 // Component mới (Phương án C - Hybrid Smart)
 import AdminStatsBar from './AdminStatsBar';
+import WeatherWidget from './WeatherWidget';
 import WelcomeHeader from './WelcomeHeader';
 import { useQuickActions, PrimaryButton, ActionTile, SecondaryButton } from './QuickActionsGrid';
 
@@ -52,8 +53,17 @@ const Dashboard: React.FC<DashboardProps> = ({
 
     return (
         <div className="min-h-screen flex flex-col items-center p-4 pt-6 animate-slide-in-right">
-            {/* === Thanh Online Stats Slim === */}
-            <AdminStatsBar userRole={userRole} />
+            {/* === Thanh Weather & Online Stats === */}
+            <div className="w-full max-w-4xl flex flex-col md:flex-row items-center justify-between gap-3 mb-4">
+                <div className="w-full md:flex-1">
+                    <WeatherWidget />
+                </div>
+                {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
+                    <div className="w-full md:w-auto flex-shrink-0">
+                        <AdminStatsBar userRole={userRole} />
+                    </div>
+                )}
+            </div>
 
             <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 

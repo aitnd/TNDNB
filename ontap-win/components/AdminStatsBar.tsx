@@ -71,9 +71,9 @@ const AdminStatsBar: React.FC<AdminStatsBarProps> = ({ userRole }) => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="w-full max-w-4xl mb-4"
+            className="w-full"
         >
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 px-4 py-2.5 rounded-xl bg-white/80 dark:bg-zinc-900/80 border border-gray-200 dark:border-zinc-800 shadow-sm">
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 px-3 py-1.5 rounded-2xl bg-white/80 dark:bg-zinc-900/80 border border-gray-200 dark:border-zinc-800 shadow-sm">
                 <div className="flex items-center gap-1.5 mr-1">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                     <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Live</span>
@@ -83,7 +83,7 @@ const AdminStatsBar: React.FC<AdminStatsBarProps> = ({ userRole }) => {
                     <div key={item.label} className="flex items-center gap-1.5">
                         <div className={`w-1.5 h-1.5 rounded-full ${item.dot}`} />
                         <span className="text-xs text-gray-500 dark:text-gray-400">{item.label}:</span>
-                        <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{item.value}</span>
+                        <span className="text-xs md:text-sm font-bold text-gray-700 dark:text-gray-200">{item.value}</span>
                         {idx < items.length - 1 && (
                             <div className="w-px h-3 bg-gray-200 dark:bg-zinc-700 ml-1 hidden sm:block" />
                         )}

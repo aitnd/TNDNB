@@ -751,12 +751,6 @@ const AppContent: React.FC = () => {
         </>
       )}
 
-      {userProfile && location.pathname === '/ontap/dashboard' && (
-        <div className="w-full max-w-7xl mx-auto px-4 pt-2">
-          <WeatherWidget />
-        </div>
-      )}
-
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Navigate to="/ontap/dashboard" replace />} />

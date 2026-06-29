@@ -1,4 +1,11 @@
 
+## [3.12.2] - 2026-06-29
+### Refactor UI Header Layout & TopNavbar Consolidation (Web & App Win)
+- **Dashboard Row 1 Consolidation:** Integrated `<WeatherWidget />` and `<AdminStatsBar />` into a single responsive flex container (`flex flex-col lg:flex-row items-center justify-between gap-3 mb-4`) in both `Dashboard.tsx` (Web & Win).
+- **Slim Weather & Stats Layout:** Reduced `WeatherWidget` padding to `py-2 px-3`, weather icon to `w-8 h-8`, and removed redundant `mb-6` margin from `AdminStatsBar.tsx`.
+- **TopNavbar Restructuring:** Consolidated individual management links (`Quản lý lớp`, `Thi trực tuyến`, `Giám khảo`, `Quản lý TB`, `Cấu hình`) into a unified `<ShieldCheck />` System dropdown menu (`setShowSystemDropdown`) for privileged roles (`['admin', 'lanh_dao', 'quan_ly', 'giao_vien']`).
+- **App.tsx Cleanup:** Removed redundant outer `<WeatherWidget />` renders from both `ontap-web/App.tsx` and `ontap-win/App.tsx`.
+
 ## [3.12.1] - 2026-06-29
 ### Changelog Refactoring & Popup Limits (Web & App Win)
 - **Popup Version Limit**: Refactored `ChangelogModal.tsx` in both Web and Win to slice the changelog data array (`.slice(0, 1)`) showing only the latest release in the popup view.

@@ -94,59 +94,59 @@ const WeatherWidget: React.FC = () => {
 
   const renderIcon = () => {
     if (weather.icon) {
-      return <img src={weather.icon} alt={weather.condition} className="w-10 h-10 md:w-12 md:h-12 drop-shadow-md" loading="lazy" />;
+      return <img src={weather.icon} alt={weather.condition} className="w-8 h-8 md:w-9 md:h-9 drop-shadow-md" loading="lazy" />;
     }
     const condition = weather.condition?.toLowerCase() || 'sun';
-    if (condition.includes('rain') || condition.includes('mưa')) return <CloudRain className="w-10 h-10 text-blue-500 drop-shadow-md" />;
-    if (condition.includes('cloud') || condition.includes('mây')) return <Cloud className="w-10 h-10 text-gray-400 drop-shadow-md" />;
-    return <Sun className="w-10 h-10 text-yellow-500 drop-shadow-md" />;
+    if (condition.includes('rain') || condition.includes('mưa')) return <CloudRain className="w-8 h-8 text-blue-500 drop-shadow-md" />;
+    if (condition.includes('cloud') || condition.includes('mây')) return <Cloud className="w-8 h-8 text-gray-400 drop-shadow-md" />;
+    return <Sun className="w-8 h-8 text-yellow-500 drop-shadow-md" />;
   };
 
   const bgClass = theme === 'dark' 
-    ? 'bg-gray-900/70 backdrop-blur-2xl border-gray-700/50 text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)]' 
-    : 'bg-white/80 backdrop-blur-2xl border-white/60 text-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)]';
+    ? 'bg-gray-900/70 backdrop-blur-2xl border-gray-700/50 text-white shadow-sm' 
+    : 'bg-white/80 backdrop-blur-2xl border-white/60 text-gray-800 shadow-sm';
 
   return (
-    <div className={`w-full max-w-7xl mx-auto rounded-3xl border transition-all duration-300 overflow-hidden ${bgClass}`}>
+    <div className={`w-full rounded-2xl border transition-all duration-300 overflow-hidden ${bgClass}`}>
       {/* Header Compact - Click to Expand */}
       <div 
         onClick={() => setIsExpanded(!isExpanded)}
-        className="p-3 md:p-4 cursor-pointer relative flex flex-col md:flex-row md:items-center justify-between group"
+        className="px-3 py-2 md:px-4 md:py-2 cursor-pointer relative flex flex-row items-center justify-between group gap-2"
       >
         <div className="flex items-center justify-between w-full md:w-auto">
-          <div className="flex items-center space-x-3 md:space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-3">
             {renderIcon()}
             <div className="flex flex-col">
-              <div className="flex items-baseline space-x-2">
-                <span className="text-3xl md:text-4xl font-black tracking-tighter">{weather.temp}°</span>
-                <span className="text-xs md:text-sm font-medium opacity-80 hidden sm:inline-block">{weather.condition}</span>
+              <div className="flex items-baseline space-x-1.5">
+                <span className="text-2xl md:text-3xl font-black tracking-tighter">{weather.temp}°</span>
+                <span className="text-xs font-semibold opacity-80 hidden sm:inline-block">{weather.condition}</span>
               </div>
-              <div className="flex items-center text-[11px] md:text-xs opacity-70 font-semibold uppercase tracking-wider mt-0.5">
-                <MapPin className="w-3 h-3 mr-1" />
-                <span className="truncate max-w-[150px] sm:max-w-xs">{weather.location}</span>
+              <div className="flex items-center text-[10px] md:text-xs opacity-70 font-medium uppercase tracking-wider">
+                <MapPin className="w-3 h-3 mr-0.5" />
+                <span className="truncate max-w-[130px] sm:max-w-xs">{weather.location}</span>
               </div>
             </div>
           </div>
           
           {/* Mobile Chevron */}
-          <div className="md:hidden flex items-center justify-center w-8 h-8 rounded-full bg-black/5 dark:bg-white/10">
+          <div className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-black/5 dark:bg-white/10">
             <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
-              <ChevronDown className="w-5 h-5 opacity-70" />
+              <ChevronDown className="w-4 h-4 opacity-70" />
             </motion.div>
           </div>
         </div>
         
-        {/* Advice Text */}
-        <div className="mt-3 md:mt-0 flex-1 md:px-8 flex items-center justify-start md:justify-end">
-          <div className={`text-sm font-medium italic ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'} border-l-2 md:border-l-0 md:border-r-2 ${theme === 'dark' ? 'border-blue-400/30' : 'border-blue-500/30'} pl-3 md:pl-0 md:pr-4 py-0.5 max-w-md`}>
+        {/* Advice Text - Truncated on desktop */}
+        <div className="hidden lg:flex flex-1 px-4 items-center justify-end">
+          <div className={`text-xs font-medium italic ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'} border-r-2 ${theme === 'dark' ? 'border-blue-400/30' : 'border-blue-500/30'} pr-3 py-0.5 truncate max-w-sm`}>
             {weather.advice}
           </div>
         </div>
 
         {/* Desktop Chevron */}
-        <div className="hidden md:flex items-center justify-center w-9 h-9 rounded-full bg-black/5 dark:bg-white/10 ml-2 group-hover:bg-black/10 dark:group-hover:bg-white/20 transition-colors">
+        <div className="hidden md:flex items-center justify-center w-7 h-7 rounded-full bg-black/5 dark:bg-white/10 ml-1 group-hover:bg-black/10 dark:group-hover:bg-white/20 transition-colors">
           <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
-            <ChevronDown className="w-5 h-5 opacity-70" />
+            <ChevronDown className="w-4 h-4 opacity-70" />
           </motion.div>
         </div>
       </div>

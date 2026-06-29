@@ -1,3 +1,8 @@
+## [3.12.2] - 2026-06-29
+### Tối ưu hóa Giao diện Nửa Trên Dashboard & Thanh Điều Hướng TopNavbar (Web & App Win)
+- **Tối ưu không gian hiển thị:** Đưa thanh thông tin thời tiết và trạng thái hệ thống vào chung một hàng ngang (Slim Banner Header), thu gọn khoảng trắng đứng giúp các nút bấm chức năng chính hiển thị trọn vẹn ngay trong khung nhìn đầu tiên.
+- **Tinh gọn thanh điều hướng:** Gom các nút chức năng quản lý trùng lặp trên TopNavbar vào menu thả xuống "Hệ thống" gọn gàng, mang lại trải nghiệm làm việc thông thoáng và chuyên nghiệp.
+
 ## [3.12.1] - 2026-06-29
 ### Tối ưu hóa Lịch sử cập nhật (Web & App Win)
 - **Tập trung nội dung**: Cập nhật popup thông tin phiên bản chỉ hiển thị duy nhất nội dung của bản cập nhật mới nhất, giúp giao diện gọn gàng và dễ theo dõi hơn.
