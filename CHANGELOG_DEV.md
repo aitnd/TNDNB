@@ -1,3 +1,11 @@
+## [3.15.0] - 2026-06-29
+### Feature: Modernized Class Management UI (Web & Win)
+- **ClassList Rewrite:** Rewrote `ClassList.tsx` to support both Grid and List view modes using Tailwind CSS.
+- **Smart Cards:** Replaced traditional list items with dynamic cards containing gradient headers, status indicators (Active/Finished), and quick action overlay buttons (Edit/Delete).
+- **Avatar Support:** Added `avatarUrl` rendering for head teachers fetching from `creatorProfiles` state map. Added avatarUrl input inside `AddEditCourseModal`.
+- **Insights Bar:** Implemented `getDocs(query(collection(db, 'thithu_results'), where('courseId', '==', id)))` in `ClassManagementScreen.tsx` to display real-time member count and mock test attempt totals.
+- **Environment Parity:** Synchronized changes from `ontap-web` to `ontap-win` to maintain codebase parity.
+
 ## [3.14.0] - 2026-06-29
 ### Gamification v2.0 - Complete Integration
 - **BadgeAdminModal:** Implemented 3D icon rendering and manual grant/revoke functions using BadgeService for Admins and Leaders.

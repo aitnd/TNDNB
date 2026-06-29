@@ -1,3 +1,10 @@
+## [3.15.0] - 2026-06-29
+### Nâng cấp Giao diện Quản lý Lớp học thông minh (Web & App Win)
+- **Giao diện thẻ thông minh (Smart Cards):** Thay đổi giao diện danh sách lớp học sang dạng thẻ hiện đại, hỗ trợ hiển thị ảnh đại diện (avatar) của giáo viên chủ nhiệm.
+- **Thanh thống kê (Insights Bar):** Bổ sung thanh thống kê trực quan hiển thị tổng quan số lượng học viên, số lượt thi thử và các chỉ số quan trọng khác trực tiếp trên màn hình quản lý.
+- **Bộ lọc nâng cao:** Thêm chức năng lọc nhanh lớp học theo trạng thái (Đang hoạt động / Đã kết thúc) và hỗ trợ chuyển đổi linh hoạt giữa chế độ xem Lưới và Danh sách.
+- **Đồng bộ hóa 100%:** Đảm bảo toàn bộ trải nghiệm giao diện quản lý lớp học mới hoạt động mượt mà trên cả nền tảng Web và ứng dụng Windows.
+
 ## [3.14.0] - 2026-06-29
 ### Hoàn thiện Hệ thống Huy hiệu & Tự động hóa
 - **Giao diện Quản lý Huy hiệu:** Tích hợp giao diện quản lý huy hiệu 3D chuyên nghiệp vào phần Quản lý Học viên và Quản lý Lớp (Web & App Win), cho phép Giáo viên và Lãnh đạo cấp/thu hồi huy hiệu dễ dàng.
