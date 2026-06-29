@@ -15,7 +15,7 @@ export default function PortalMaintenanceWrapper({ children }: { children: React
     const pathname = usePathname();
 
     useEffect(() => {
-        const unsub = onSnapshot(doc(db, 'settings', 'usageConfig'), (docSnap) => {
+        const unsub = onSnapshot(doc(db, 'settings', 'usage_config'), (docSnap) => {
             if (docSnap.exists()) {
                 setConfig(docSnap.data());
             }
@@ -29,7 +29,11 @@ export default function PortalMaintenanceWrapper({ children }: { children: React
     if (loading) return <>{children}</>;
 
     if (config?.isMaintenancePortal && !isBypassed) {
-        return <PortalMaintenanceScreen config={config} />;
+        return (
+            <div className="fixed inset-0 z-[9999] overflow-auto">
+                <PortalMaintenanceScreen config={config} />
+            </div>
+        );
     }
 
     return <>{children}</>;
