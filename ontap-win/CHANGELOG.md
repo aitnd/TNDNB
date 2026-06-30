@@ -1,5 +1,8 @@
 ## [3.15.1] - 2026-06-30
 ### Cập nhật hệ thống (Web & App Win)
+- **Thời tiết mở rộng:** Nâng cấp widget thời tiết hiển thị chi tiết 8 mốc thời gian (thay vì 5) dựa trên API thực tế hoặc giờ động của máy học viên.
+- **Giao diện thời tiết:** Tinh chỉnh bảng màu Zinc/Slate trung tính theo thiết kế mới, thay đổi thiết kế phần Lời khuyên (Advice) loại bỏ biểu tượng emoji thô sơ, thay bằng Banner Alert phối màu tinh tế tự động thích ứng với thời tiết.
+- **Hiệu ứng mượt mà:** Bổ sung hiệu ứng Spring Hover nhẹ cho các thẻ giờ và ẩn scrollbar ngang tối giản.
 - **Hạ tầng:** Tối ưu hóa và cập nhật hạ tầng để tăng tốc độ tải trang và độ ổn định của ứng dụng.
 
 ## [3.15.0] - 2026-06-29

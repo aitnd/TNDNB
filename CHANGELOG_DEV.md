@@ -3,6 +3,11 @@
 - **Multitag:** Cập nhật domain sang `quge5.com` và zone ID `254797`. Đổi attribute từ `data-z` sang `data-zone` và thêm `data-cfasync="false"` để tương thích với Cloudflare.
 - **Service Worker:** Cập nhật domain sang `5gvci.com` và zone ID `11218490` trong các file `sw.js` (root, ontap-web, ontap-win).
 
+### Cấu trúc thiết kế & Mở rộng thời tiết (Weather Redesign)
+- **DESIGN.md Integration:** Tạo file `DESIGN.md` ở root quy định màu sắc Zinc trung tính, typography Satoshi, layout logic và spring motion. Vượt qua kiểm tra contrast WCAG AA.
+- **Weather API Backend:** Sửa đổi API Next.js `/api/weather/route.ts` để slice dữ liệu forecast thực tế về 8 tiếng và refactor hàm giả lập `getDynamicMockWeather` sinh đủ 8 mốc động.
+- **WeatherWidget Web/Win:** Tích hợp `Sparkles` icon, dynamic Advice styles (`getAdviceStyle`, `getAdviceIcon`), lọc emoji bằng regex và spring-physics hover card (`whileHover` trong Framer Motion).
+
 ## [3.15.0] - 2026-06-29
 ### Feature: Modernized Class Management UI (Web & Win)
 - **ClassList Rewrite:** Rewrote `ClassList.tsx` to support both Grid and List view modes using Tailwind CSS.
