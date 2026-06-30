@@ -79,6 +79,50 @@ function formatIcon(icon: string) {
   return icon;
 }
 
+function getDynamicMockWeather(lat: number, lon: number) {
+  let mockLocation = MOCK_WEATHER.location;
+  let mockTemp = MOCK_WEATHER.temp;
+  let mockCondition = MOCK_WEATHER.condition;
+  let mockHumidity = MOCK_WEATHER.humidity;
+
+  if (Math.abs(lat - 21.0285) < 0.1 && Math.abs(lon - 105.8542) < 0.1) {
+    mockLocation = "Hà Nội (Mock)";
+    mockTemp = 33.0; 
+    mockCondition = "Trời nắng nóng";
+    mockHumidity = 60;
+  }
+
+  const advice = getWeatherAdvice(mockTemp, mockCondition);
+  
+  const currentHour = new Date().getHours();
+  const mockHourly = Array.from({ length: 8 }).map((_, i) => {
+    const hour = (currentHour + i) % 24;
+    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+    const isDay = hour >= 6 && hour <= 18;
+    return {
+      time: timeStr,
+      temp: mockTemp - i,
+      condition: isDay ? 'Nắng' : 'Trời trong',
+      icon: isDay ? 'https://cdn.weatherapi.com/weather/64x64/day/113.png' : 'https://cdn.weatherapi.com/weather/64x64/night/113.png',
+      rain_chance: i % 2 === 0 ? 0 : 10
+    };
+  });
+
+  return {
+    temp: mockTemp,
+    condition: mockCondition,
+    icon: MOCK_WEATHER.icon,
+    humidity: mockHumidity,
+    advice,
+    location: mockLocation,
+    isMock: true,
+    forecast: {
+      ...MOCK_WEATHER.forecast,
+      hourly: mockHourly
+    }
+  };
+}
+
 export async function POST(request: Request) {
   try {
     let lat = DEFAULT_LAT;
@@ -100,29 +144,7 @@ export async function POST(request: Request) {
     const apiKey = process.env.WEATHER_API_KEY;
 
     if (!apiKey || apiKey === 'your_weather_api_key_here') {
-      let mockLocation = MOCK_WEATHER.location;
-      let mockTemp = MOCK_WEATHER.temp;
-      let mockCondition = MOCK_WEATHER.condition;
-      let mockHumidity = MOCK_WEATHER.humidity;
-
-      if (Math.abs(lat - 21.0285) < 0.1 && Math.abs(lon - 105.8542) < 0.1) {
-        mockLocation = "Hà Nội (Mock)";
-        mockTemp = 33.0; 
-        mockCondition = "Trời nắng nóng";
-        mockHumidity = 60;
-      }
-
-      const advice = getWeatherAdvice(mockTemp, mockCondition);
-      return NextResponse.json({
-        temp: mockTemp,
-        condition: mockCondition,
-        icon: MOCK_WEATHER.icon,
-        humidity: mockHumidity,
-        advice,
-        location: mockLocation,
-        isMock: true,
-        forecast: MOCK_WEATHER.forecast
-      });
+      return NextResponse.json(getDynamicMockWeather(lat, lon));
     }
 
     try {
@@ -180,8 +202,8 @@ export async function POST(request: Request) {
         }
         
         const nowEpoch = Math.floor(Date.now() / 1000);
-        // Lấy 24 giờ tiếp theo
-        const futureHours = allHours.filter((h) => h.time_epoch >= nowEpoch).slice(0, 24);
+        // Lấy 8 giờ tiếp theo
+        const futureHours = allHours.filter((h) => h.time_epoch >= nowEpoch).slice(0, 8);
         
         hourly = futureHours.map((h) => {
           const tDate = new Date(h.time_epoch * 1000);
@@ -211,17 +233,11 @@ export async function POST(request: Request) {
 
     } catch (apiError) {
       console.error("Lỗi API Weather, sử dụng mock:", apiError);
-      return NextResponse.json({
-        ...MOCK_WEATHER,
-        advice: getWeatherAdvice(MOCK_WEATHER.temp, MOCK_WEATHER.condition)
-      });
+      return NextResponse.json(getDynamicMockWeather(lat, lon));
     }
 
   } catch (globalError: any) {
     console.error("Lỗi hệ thống API Weather:", globalError);
-    return NextResponse.json({
-      ...MOCK_WEATHER,
-      advice: getWeatherAdvice(MOCK_WEATHER.temp, MOCK_WEATHER.condition)
-    });
+    return NextResponse.json(getDynamicMockWeather(DEFAULT_LAT, DEFAULT_LON));
   }
 }

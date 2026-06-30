@@ -1,3 +1,7 @@
+## [3.15.1] - 2026-06-30
+### Cập nhật hệ thống (Web & App Win)
+- **Hạ tầng:** Tối ưu hóa và cập nhật hạ tầng để tăng tốc độ tải trang và độ ổn định của ứng dụng.
+
 ## [3.15.0] - 2026-06-29
 ### Nâng cấp Giao diện Quản lý Lớp học thông minh (Web & App Win)
 - **Giao diện thẻ thông minh (Smart Cards):** Thay đổi giao diện danh sách lớp học sang dạng thẻ hiện đại, hỗ trợ hiển thị ảnh đại diện (avatar) của giáo viên chủ nhiệm.

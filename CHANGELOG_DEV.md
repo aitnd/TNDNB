@@ -1,3 +1,8 @@
+## [3.15.1] - 2026-06-30
+### Cập nhật hệ thống quảng cáo Monetag (Web & App Win)
+- **Multitag:** Cập nhật domain sang `quge5.com` và zone ID `254797`. Đổi attribute từ `data-z` sang `data-zone` và thêm `data-cfasync="false"` để tương thích với Cloudflare.
+- **Service Worker:** Cập nhật domain sang `5gvci.com` và zone ID `11218490` trong các file `sw.js` (root, ontap-web, ontap-win).
+
 ## [3.15.0] - 2026-06-29
 ### Feature: Modernized Class Management UI (Web & Win)
 - **ClassList Rewrite:** Rewrote `ClassList.tsx` to support both Grid and List view modes using Tailwind CSS.

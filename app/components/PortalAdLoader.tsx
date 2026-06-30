@@ -216,8 +216,9 @@ const PortalAdLoader: React.FC = () => {
         const script = document.createElement('script');
         script.id = 'portal-monetag-script';
         script.async = true;
-        script.src = 'https://3nbf4.com/act/files/micro.tag.min.js?z=11198611';
-        script.setAttribute('data-z', '11198611');
+        script.src = 'https://quge5.com/88/tag.min.js';
+        script.setAttribute('data-zone', '254797');
+        script.setAttribute('data-cfasync', 'false');
         script.defer = true;
         document.body.appendChild(script);
     };
