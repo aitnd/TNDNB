@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { UserProfile } from '../types';
 import StudentCard from './StudentCard';
 import { useTheme } from '../contexts/ThemeContext';
-import { BookOpenIcon3D } from './icons';
 import { triggerHaptic } from '../utils/nativeUX';
 import { useAppStore } from '../stores/useAppStore';
 

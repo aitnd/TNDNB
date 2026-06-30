@@ -1,7 +1,9 @@
 ## [3.15.5] - 2026-06-30
-### Fix Timezone Offsets & UI Overflow Crop on Weather Widget (Web & Win)
+### Fix Timezone Offsets, Refactor App.tsx, & Clean TS Warnings (Web & Win)
 - **UTC-to-VN Time Conversion**: Fixed time drift by computing local hours with explicit `(new Date().getUTCHours() + 7) % 24` offset calculations inside `app/api/weather/route.ts` instead of relying on default server clock context.
 - **Tooltip Overflow & Indicator Size**: Removed parent level `overflow-hidden` class in `WeatherWidget.tsx` (web & win) which caused status indicators tooltips to crop when rendered absolutely. Retained `overflow-hidden` transition inside the animated `motion.div` component. Increased network status indicator size to `w-4 h-4` for better accessibility.
+- **App.tsx Refactoring (God Component Split)**: Extracted and isolated the client-side routing tree into `routes/AppRoutes.tsx`. Moved app initialization states, auth verification, database sync listeners, biometrics checks, and hardware back button listeners into a custom hook `hooks/useAppInitialization.ts`. Reduced `App.tsx` code size by 70%, keeping it purely as a coordinator.
+- **TypeScript strict compliance**: Cleaned up 59 compiler warnings (`noUnusedLocals` and `noUnusedParameters` rules) across the `ontap-web` codebase. Removed unused local variables/imports in `App.tsx`, `StudentsTab.tsx`, `Dashboard.tsx`, `vite.config.ts`, etc. Fixed syntax errors and leftover logging.
 
 ## [3.15.4] - 2026-06-30
 ### Sửa lỗi Git Tag Duplication & Nâng cấp Cấu hình Quảng cáo (Web & Win)

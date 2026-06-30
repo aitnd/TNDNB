@@ -20,7 +20,6 @@ const AppContent: React.FC = () => {
 
   const {
     isLocked,
-    setIsLocked,
     isBiometricChecking,
     handleBiometricUnlock,
     usageConfig,
@@ -35,11 +34,8 @@ const AppContent: React.FC = () => {
   const setSelectedSubject = useAppStore(state => state.setSelectedSubject);
   const currentQuiz = useAppStore(state => state.currentQuiz);
   const setCurrentQuiz = useAppStore(state => state.setCurrentQuiz);
-  const userAnswers = useAppStore(state => state.userAnswers);
   const setUserAnswers = useAppStore(state => state.setUserAnswers);
-  const score = useAppStore(state => state.score);
   const setScore = useAppStore(state => state.setScore);
-  const userName = useAppStore(state => state.userName);
   const setUserName = useAppStore(state => state.setUserName);
   const userProfile = useAppStore(state => state.userProfile);
   const resumeSessionAvailable = useAppStore(state => state.resumeSessionAvailable);
@@ -242,7 +238,10 @@ const AppContent: React.FC = () => {
 
       const isGK = location.pathname.startsWith('/ontap/giamkhao');
       
-      import('./services/usageService').then(({ getUserRoleConfig, saveExamResult }) => {
+      Promise.all([
+        import('./services/usageService'),
+        import('./services/userService')
+      ]).then(([{ getUserRoleConfig }, { saveExamResult }]) => {
         const { param } = getUserRoleConfig(usageConfig!, userProfile);
         const showMonetag = param?.showMonetag || false;
         const maxCountdown = showMonetag ? (usageConfig?.monetagCountdownMaxPerSession ?? 0) : 0;
@@ -416,9 +415,7 @@ const AppContent: React.FC = () => {
         handleQuizFinish={handleQuizFinish}
         handleRetry={handleRetry}
         persistSession={persistSession}
-        resumeSession={resumeSession}
         handleTopNavNavigate={handleTopNavNavigate}
-        handleLogout={handleLogout}
       />
     </div>
   );

@@ -5,13 +5,12 @@ import { auth, db } from '../services/firebaseClient';
 import { onAuthStateChanged } from 'firebase/auth';
 import { fetchLicenses } from '../services/dataService';
 import { getUserProfile } from '../services/userService';
-import { checkUsage, showLimitAlert } from '../services/usageService';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Preferences } from '@capacitor/preferences';
 import { NativeBiometric } from 'capacitor-native-biometric';
-import { UserProfile, License } from '../types';
+import { UserProfile } from '../types';
 
 export const useAppInitialization = () => {
   const navigate = useNavigate();
@@ -25,17 +24,14 @@ export const useAppInitialization = () => {
   const licenses = useAppStore(state => state.licenses);
   const setLicenses = useAppStore(state => state.setLicenses);
   const setSelectedLicense = useAppStore(state => state.setSelectedLicense);
-  const setSubjects = useAppStore(state => state.setSubjects);
   const setSelectedSubject = useAppStore(state => state.setSelectedSubject);
   const setCurrentQuiz = useAppStore(state => state.setCurrentQuiz);
   const setUserAnswers = useAppStore(state => state.setUserAnswers);
-  const setScore = useAppStore(state => state.setScore);
   const userName = useAppStore(state => state.userName);
   const setUserName = useAppStore(state => state.setUserName);
   const userProfile = useAppStore(state => state.userProfile);
   const setUserProfile = useAppStore(state => state.setUserProfile);
   const setResumeSessionAvailable = useAppStore(state => state.setResumeSessionAvailable);
-  const isMobileApp = useAppStore(state => state.isMobileApp);
   const setIsMobileApp = useAppStore(state => state.setIsMobileApp);
 
   // Lắng nghe cấu hình bảo mật realtime từ Firestore
@@ -265,7 +261,7 @@ export const useAppInitialization = () => {
       await auth.signOut();
       setUserProfile(null);
       setUserName('');
-      import('./sessionService').then(({ clearSession }) => clearSession());
+      import('../services/sessionService').then(({ clearSession }) => clearSession());
       setResumeSessionAvailable(false);
       navigate('/ontap/login');
     } catch (error) {
