@@ -5,7 +5,7 @@ import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, F
 import { db } from '../services/firebaseClient';
 import { collection, getDocs, doc, updateDoc, writeBatch, query, where } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease } from '../services/githubService';
+import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease, getReleaseByTag, deleteRelease, deleteTag } from '../services/githubService';
 
 const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
     const navigate = useNavigate();
@@ -106,11 +106,44 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
 
         setPublishing(true);
         setUploadProgress(0);
-
         try {
-            // 1. Tạo Release
+            // 0. Kiểm tra Token trước
+            const valid = await validateToken(githubConfig.token);
+            if (!valid) {
+                Swal.fire('Lỗi Token', 'Token GitHub của bạn không hợp lệ hoặc không có quyền ghi. Vui lòng kiểm tra lại.', 'error');
+                setPublishing(false);
+                return;
+            }
+
+            // 1. Kiểm tra xem Release đã tồn tại chưa
+            const tag = `v${releaseVersion}`;
+            const existingRelease = await getReleaseByTag(githubConfig.token, tag);
+
+            if (existingRelease) {
+                const result = await Swal.fire({
+                    title: 'Phiên bản đã tồn tại',
+                    text: `Phiên bản ${tag} đã có trên GitHub. Bạn có muốn xóa bản cũ để phát hành lại không?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Có, xóa và ghi đè',
+                    cancelButtonText: 'Không, để em xem lại',
+                    confirmButtonColor: '#d33'
+                });
+
+                if (!result.isConfirmed) {
+                    setPublishing(false);
+                    return;
+                }
+
+                // Xóa release và tag ref cũ
+                setUploadProgress(5);
+                await deleteRelease(githubConfig.token, existingRelease.id);
+                await deleteTag(githubConfig.token, tag);
+            }
+
+            // 2. Tạo Release mới
             const release = await createRelease(githubConfig.token, {
-                tag_name: `v${releaseVersion}`,
+                tag_name: tag,
                 name: `Version ${releaseVersion}`,
                 body: releaseNotes || `Phát hành phiên bản ${releaseVersion}`,
                 draft: false,

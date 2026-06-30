@@ -5,7 +5,7 @@ import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, F
 import { db } from '../services/firebaseClient';
 import { collection, getDocs, doc, writeBatch, query, where } from 'firebase/firestore'; 
 import { useNavigate } from 'react-router-dom';
-import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease, getReleaseByTag, deleteRelease } from '../services/githubService';
+import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease, getReleaseByTag, deleteRelease, deleteTag } from '../services/githubService';
 
 const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
     const navigate = useNavigate();
@@ -142,6 +142,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                 // Xóa release cũ
                 setUploadProgress(5);
                 await deleteRelease(githubConfig.token, existingRelease.id, githubConfig.owner, githubConfig.repo);
+                await deleteTag(githubConfig.token, tag, githubConfig.owner, githubConfig.repo);
             }
 
             // 1. Tạo Release mới
