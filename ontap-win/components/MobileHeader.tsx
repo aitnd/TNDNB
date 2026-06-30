@@ -11,9 +11,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ userProfile }) => {
       <div className="flex items-center justify-between px-4 h-14">
         {/* Logo and Title */}
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
-            TND
-          </div>
+          <img src="/assets/img/logo_viwa.png" alt="Logo" className="w-8 h-8 object-contain" />
           <span className="font-bold text-lg text-slate-900 dark:text-white tracking-tight">
             Ôn thi đường thủy
           </span>
