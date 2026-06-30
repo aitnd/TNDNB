@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {    collection, query, where, onSnapshot,    doc, updateDoc, getDocs} from 'firebase/firestore'; 
+import {    collection, query, where, onSnapshot,    doc, updateDoc} from 'firebase/firestore'; 
 
 
 
@@ -80,9 +80,6 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [studentSessions, setStudentSessions] = useState<any[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(false);
-  const [availableStudents, setAvailableStudents] = useState<UserProfile[]>([]);
-  const [loadingAvailable, setLoadingAvailable] = useState(false);
-
   // Real-time Fetch Students in Class
   useEffect(() => {
     if (!course.id) return;
@@ -315,33 +312,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
     }
   };
 
-  const fetchAvailableStudents = async () => {
-    setLoadingAvailable(true);
-    try {
-      const q = query(collection(db, 'users'), where('role', '==', 'hoc_vien'));
-      const snap = await getDocs(q);
-      const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as UserProfile));
-      const filtered = all.filter(s => s.courseId !== course.id);
-      setAvailableStudents(filtered);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoadingAvailable(false);
-    }
-  };
 
-  const handleAddExistingStudent = async (studentId: string) => {
-    try {
-      await updateDoc(doc(db, 'users', studentId), {
-        courseId: course.id,
-        courseName: course.name
-      });
-      Swal.fire('Thành công', 'Đã thêm học viên vào lớp.', 'success');
-      setShowAddExistingModal(false);
-    } catch (e) {
-      Swal.fire('Lỗi', 'Không thể thêm học viên.', 'error');
-    }
-  };
 
   const handleDisableStudent = async (studentId: string, studentName: string) => {
     const result = await Swal.fire({
@@ -475,7 +446,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                 <FaUserPlus /> Thêm mới
               </button>
               <button 
-                onClick={() => { setShowAddExistingModal(true); fetchAvailableStudents(); }}
+                onClick={() => { setShowAddExistingModal(true); }}
                 className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-black uppercase tracking-tight hover:bg-teal-700 shadow-lg shadow-teal-600/20 active:scale-95 transition-all"
               >
                 <FaPlus /> Gán học viên

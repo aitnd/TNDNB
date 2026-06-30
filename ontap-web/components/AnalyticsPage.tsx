@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaCalendarAlt, FaDesktop, FaMapMarkerAlt, FaFileAlt } from 'react-icons/fa';  
-import {     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,     PieChart, Pie, Cell, Bar, Legend } from 'recharts'; 
+import {     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,     PieChart, Pie, Cell, Legend } from 'recharts'; 
 
 
 
@@ -14,8 +14,6 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
     const [timeRange, setTimeRange] = useState<'7d' | '30d' | 'today'>('7d');
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -30,11 +28,11 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
                     const result = await response.json();
                     setData(result);
                 } else {
-                    setError("Failed to fetch data");
+                    // setError("Failed to fetch data");
                 }
             } catch (err) {
                 console.error(err);
-                setError("Error connecting to server");
+                // setError("Error connecting to server");
             } finally {
                 setLoading(false);
             }
@@ -172,7 +170,7 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
                                                 paddingAngle={5}
                                                 dataKey="value"
                                             >
-                                                {data.devices.map((entry: any, index: number) => (
+                                                {data.devices.map((_: any, index: number) => (
                                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                                 ))}
                                             </Pie>

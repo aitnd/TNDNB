@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BADGE_DEFINITIONS, BadgeDefinition, BadgeGroup } from '../../constants/badges';
+import { BADGE_DEFINITIONS, BadgeGroup } from '../../constants/badges';
 import { BadgeService, UserBadgeProgress } from '../../services/badgeService';
 import { BadgeIcon3D } from './BadgeIcon3D';
 import { X } from 'lucide-react';

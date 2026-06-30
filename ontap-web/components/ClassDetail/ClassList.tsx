@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import {      FaSchool, FaSearch, FaTimes, FaPlus, FaChalkboardTeacher,      FaEdit, FaTrash, FaUserTie, FaArrowLeft, FaSortAmountDown, FaSortAmountUp,     FaChevronLeft, FaChevronRight, FaUsers, FaThLarge, FaList, FaEllipsisV } from 'react-icons/fa'; 
+import {      FaSchool, FaSearch, FaTimes, FaPlus, FaChalkboardTeacher,      FaEdit, FaTrash, FaUserTie, FaArrowLeft, FaSortAmountDown, FaSortAmountUp,     FaChevronLeft, FaChevronRight, FaUsers, FaThLarge, FaList } from 'react-icons/fa'; 
 
 import { Course, UserProfile } from '../../types';
 

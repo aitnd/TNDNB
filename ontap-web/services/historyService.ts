@@ -1,5 +1,5 @@
 import { db } from './firebaseClient';
-import { collection, addDoc, query, where, getDocs, Timestamp, writeBatch, deleteDoc, doc } from 'firebase/firestore'; 
+import { collection, addDoc, query, where, getDocs, Timestamp, writeBatch } from 'firebase/firestore'; 
 import { Quiz, UserAnswers } from '../types';
 
 export interface ExamResult {

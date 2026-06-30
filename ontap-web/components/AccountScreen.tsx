@@ -1,6 +1,5 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { UserProfile } from '../types';
-import { useAppStore } from '../stores/useAppStore';
 import { BadgeList } from './Badges/BadgeList';
 import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 import { db } from '../services/firebaseClient';
@@ -81,7 +80,7 @@ const AdminSessionList: React.FC<{ userId: string }> = ({ userId }) => {
     );
 };
 
-const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNavigate, usageConfig }) => {
+const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNavigate }) => {
     // --- PERSONAL INFO STATE ---
     const [myInfo, setMyInfo] = useState<UserProfile>(userProfile);
     const [isSavingMyInfo, setIsSavingMyInfo] = useState(false);

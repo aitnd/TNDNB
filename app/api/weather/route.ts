@@ -94,7 +94,7 @@ function getDynamicMockWeather(lat: number, lon: number) {
 
   const advice = getWeatherAdvice(mockTemp, mockCondition);
   
-  const currentHour = new Date().getHours();
+  const currentHour = (new Date().getUTCHours() + 7) % 24;
   const mockHourly = Array.from({ length: 8 }).map((_, i) => {
     const hour = (currentHour + i) % 24;
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
@@ -206,9 +206,10 @@ export async function POST(request: Request) {
         const futureHours = allHours.filter((h) => h.time_epoch >= nowEpoch).slice(0, 8);
         
         hourly = futureHours.map((h) => {
-          const tDate = new Date(h.time_epoch * 1000);
+          const utcH = new Date(h.time_epoch * 1000).getUTCHours();
+          const localH = (utcH + 7) % 24;
           return {
-            time: `${tDate.getHours().toString().padStart(2, '0')}:00`,
+            time: `${localH.toString().padStart(2, '0')}:00`,
             temp: h.temp_c,
             condition: h.condition.text,
             icon: formatIcon(h.condition.icon),

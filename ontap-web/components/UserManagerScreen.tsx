@@ -3,7 +3,7 @@ import { UserProfile } from '../types';
 import { db, auth } from '../services/firebaseClient';
 import { getDefaultAvatar } from '../services/userService';
 import { collection, query, orderBy, getDocs, doc, updateDoc } from 'firebase/firestore'; 
-import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes, FaKey, FaHistory, FaLaptop, FaMobileAlt, FaSignOutAlt, FaUserCheck, FaUserSlash, FaUsers, FaUserPlus } from 'react-icons/fa';
+import { FaUser, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes, FaKey, FaHistory, FaLaptop, FaMobileAlt, FaSignOutAlt, FaUserCheck, FaUserSlash, FaUsers } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BadgeAdminModal } from './Badges/BadgeAdminModal';
 

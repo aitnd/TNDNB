@@ -59,7 +59,7 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
         }
     };
 
-    const handleFileUpload = (file: File) => {
+    const handleFileUpload = (_file: File) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const data = new Uint8Array(e.target?.result as ArrayBuffer);

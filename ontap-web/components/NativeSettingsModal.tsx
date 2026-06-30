@@ -14,8 +14,6 @@ interface NativeSettingsModalProps {
 const NativeSettingsModal: React.FC<NativeSettingsModalProps> = ({ isOpen, onClose }) => {
     const [biometricEnabled, setBiometricEnabled] = useState(false);
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-    const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         if (isOpen) {
             loadSettings();
@@ -32,7 +30,6 @@ const NativeSettingsModal: React.FC<NativeSettingsModalProps> = ({ isOpen, onClo
         } catch (e) {
             console.error('Lỗi load settings native:', e);
         } finally {
-            setLoading(false);
         }
     };
 

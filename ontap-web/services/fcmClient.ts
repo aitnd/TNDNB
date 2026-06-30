@@ -47,12 +47,12 @@ export const initializeFCM = async (userId: string) => {
     });
 
     // 5. Listen for Received Notifications (Foreground)
-    PushNotifications.addListener('pushNotificationReceived', (notification) => {
+    PushNotifications.addListener('pushNotificationReceived', () => {
         // Optional: Show a toast or update Badge
     });
 
     // 6. Listen for Notification Actions (Tap)
-    PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+    PushNotifications.addListener('pushNotificationActionPerformed', () => {
         // Navigate to specific screen if needed
         // e.g. window.location.href = '/notification-screen';
     });

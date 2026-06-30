@@ -1,3 +1,14 @@
+## [3.15.6] - 2026-06-30
+### T�i c?u tr�c m� ngu?n h? th?ng
+- **Refactor (App.tsx):** Split God Component App.tsx v�o outes/AppRoutes.tsx v� hooks/useAppInitialization.ts cho c? ontap-web v� ontap-win.
+- **Cleanup:** D?n d?p unused variables v� fix l?i TypeScript warning (TS6133) ? nhi?u files.
+## [3.15.5] - 2026-06-30
+### Fix Timezone Offsets, Refactor App.tsx, & Clean TS Warnings (Web & Win)
+- **UTC-to-VN Time Conversion**: Fixed time drift by computing local hours with explicit `(new Date().getUTCHours() + 7) % 24` offset calculations inside `app/api/weather/route.ts` instead of relying on default server clock context.
+- **Tooltip Overflow & Indicator Size**: Removed parent level `overflow-hidden` class in `WeatherWidget.tsx` (web & win) which caused status indicators tooltips to crop when rendered absolutely. Retained `overflow-hidden` transition inside the animated `motion.div` component. Increased network status indicator size to `w-4 h-4` for better accessibility.
+- **App.tsx Refactoring (God Component Split)**: Extracted and isolated the client-side routing tree into `routes/AppRoutes.tsx`. Moved app initialization states, auth verification, database sync listeners, biometrics checks, and hardware back button listeners into a custom hook `hooks/useAppInitialization.ts`. Reduced `App.tsx` code size by 70%, keeping it purely as a coordinator.
+- **TypeScript strict compliance**: Cleaned up 59 compiler warnings (`noUnusedLocals` and `noUnusedParameters` rules) across the `ontap-web` codebase. Removed unused local variables/imports in `App.tsx`, `StudentsTab.tsx`, `Dashboard.tsx`, `vite.config.ts`, etc. Fixed syntax errors and leftover logging.
+
 ## [3.15.4] - 2026-06-30
 ### Sửa lỗi Git Tag Duplication & Nâng cấp Cấu hình Quảng cáo (Web & Win)
 - **Git Tag Autodelete**: Bổ sung hàm `deleteTag` gọi GitHub REST API endpoint `DELETE /repos/{owner}/{repo}/git/refs/tags/{tag}`. Tích hợp lệnh gọi xoá tag tự động trước khi tạo mới release trong `UsageConfigPanel.tsx` của cả bản Web và Win, tránh lỗi 422 `Validation Failed`.
@@ -259,3 +270,4 @@
 ### Security
 - Khắc phục nguy cơ lộ Gemini API Key nghiêm trọng. Toàn bộ logic kiểm tra và generateContent hiện tại đã thực thi ngầm ở Node server thay vì client.
 - Xóa bỏ điểm yếu mã hóa XOR có thể dễ dàng bị bẻ khóa trong Local Storage đối với "Ghi nhớ tài khoản".
+

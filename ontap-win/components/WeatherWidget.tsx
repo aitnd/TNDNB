@@ -144,21 +144,21 @@ const WeatherWidget: React.FC = () => {
   const renderStatusIndicator = () => {
     const config = {
       'live': {
-        icon: <Signal className="w-3 h-3" />,
+        icon: <Signal className="w-4 h-4" />,
         color: 'text-emerald-500',
         pulse: true,
         label: 'Dữ liệu trực tiếp',
         detail: 'từ WeatherAPI'
       },
       'server-mock': {
-        icon: <SignalLow className="w-3 h-3" />,
+        icon: <SignalLow className="w-4 h-4" />,
         color: 'text-amber-500',
         pulse: false,
         label: 'Dữ liệu ước tính',
         detail: 'Hệ thống AI dự báo'
       },
       'offline': {
-        icon: <WifiOff className="w-3 h-3" />,
+        icon: <WifiOff className="w-4 h-4" />,
         color: 'text-red-500',
         pulse: false,
         label: 'Không kết nối',
@@ -170,7 +170,7 @@ const WeatherWidget: React.FC = () => {
       <div className="relative" onClick={(e) => { e.stopPropagation(); setShowTooltip(!showTooltip); }}
            onMouseEnter={() => setShowTooltip(true)}
            onMouseLeave={() => setShowTooltip(false)}>
-        <div className={`flex items-center justify-center bg-white/90 dark:bg-gray-800/90 rounded-full p-[3px] shadow-sm border border-gray-100 dark:border-gray-700 ${config.color} ${config.pulse ? 'animate-pulse' : ''}`}>
+        <div className={`flex items-center justify-center bg-white/90 dark:bg-gray-800/90 rounded-full p-1 shadow-sm border border-gray-100 dark:border-gray-700 ${config.color} ${config.pulse ? 'animate-pulse' : ''}`}>
           {config.icon}
         </div>
         <AnimatePresence>
@@ -197,7 +197,7 @@ const WeatherWidget: React.FC = () => {
     : 'bg-white/80 backdrop-blur-2xl border-white/60 text-gray-800 shadow-sm';
 
   return (
-    <div className={`w-full rounded-2xl border transition-all duration-300 overflow-hidden ${bgClass}`}>
+    <div className={`w-full rounded-2xl border transition-all duration-300 ${bgClass}`}>
       {/* Header Compact - Click to Expand */}
       <div 
         onClick={() => setIsExpanded(!isExpanded)}
@@ -254,7 +254,7 @@ const WeatherWidget: React.FC = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={`border-t ${theme === 'dark' ? 'border-zinc-800' : 'border-zinc-100'}`}
+            className={`border-t rounded-b-2xl overflow-hidden ${theme === 'dark' ? 'border-zinc-800' : 'border-zinc-100'}`}
           >
             <div className="p-4 md:p-6">
               {/* Lời khuyên thiết kế chuyên nghiệp không dùng emoji */}

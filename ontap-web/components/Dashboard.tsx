@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { UserProfile } from '../types';
 import StudentCard from './StudentCard';
 import { useTheme } from '../contexts/ThemeContext';
-import { BookOpenIcon3D } from './icons';
 import { triggerHaptic } from '../utils/nativeUX';
 import { useAppStore } from '../stores/useAppStore';
 
@@ -46,7 +45,6 @@ const Dashboard: React.FC<DashboardProps> = ({
     const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 
     const userRole = userProfile?.role || 'hoc_vien';
-    const isAdmin = ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(userRole);
     const isAdminOnly = ['admin', 'quan_ly', 'lanh_dao'].includes(userRole);
 
     // Hook tính toán quick actions theo role

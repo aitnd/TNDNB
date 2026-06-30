@@ -174,8 +174,6 @@ export const getDeviceCount = async (userId: string): Promise<number> => {
 };
 
 // --- Các role bị giới hạn chỉ đăng nhập 1 thiết bị ---
-const SINGLE_SESSION_ROLES = ['hoc_vien'];
-
 // Ngưỡng số thiết bị khác nhau trong 24h để cảnh báo
 const SUSPICIOUS_DEVICE_THRESHOLD = 3;
 
