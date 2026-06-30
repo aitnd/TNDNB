@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAppStore } from '../../stores/useAppStore';
-import { BadgeService, UserBadgeProgress } from '../../services/badgeService';
+import { BadgeService } from '../../services/badgeService';
 import { BadgeUnlockPopup } from './BadgeUnlockPopup';
 
 export const BadgeListener: React.FC = () => {

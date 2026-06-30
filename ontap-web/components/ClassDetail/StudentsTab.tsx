@@ -80,9 +80,6 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [studentSessions, setStudentSessions] = useState<any[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(false);
-  const [availableStudents, setAvailableStudents] = useState<UserProfile[]>([]);
-  const [loadingAvailable, setLoadingAvailable] = useState(false);
-
   // Real-time Fetch Students in Class
   useEffect(() => {
     if (!course.id) return;
@@ -316,17 +313,17 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   };
 
   const fetchAvailableStudents = async () => {
-    setLoadingAvailable(true);
+    // setLoadingAvailable(true);
     try {
       const q = query(collection(db, 'users'), where('role', '==', 'hoc_vien'));
       const snap = await getDocs(q);
       const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as UserProfile));
       const filtered = all.filter(s => s.courseId !== course.id);
-      setAvailableStudents(filtered);
+      // setAvailableStudents(filtered);
     } catch (e) {
       console.error(e);
     } finally {
-      setLoadingAvailable(false);
+      // setLoadingAvailable(false);
     }
   };
 

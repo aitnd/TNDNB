@@ -1,3 +1,8 @@
+## [3.15.5] - 2026-06-30
+### Fix Timezone Offsets & UI Overflow Crop on Weather Widget (Web & Win)
+- **UTC-to-VN Time Conversion**: Fixed time drift by computing local hours with explicit `(new Date().getUTCHours() + 7) % 24` offset calculations inside `app/api/weather/route.ts` instead of relying on default server clock context.
+- **Tooltip Overflow & Indicator Size**: Removed parent level `overflow-hidden` class in `WeatherWidget.tsx` (web & win) which caused status indicators tooltips to crop when rendered absolutely. Retained `overflow-hidden` transition inside the animated `motion.div` component. Increased network status indicator size to `w-4 h-4` for better accessibility.
+
 ## [3.15.4] - 2026-06-30
 ### Sửa lỗi Git Tag Duplication & Nâng cấp Cấu hình Quảng cáo (Web & Win)
 - **Git Tag Autodelete**: Bổ sung hàm `deleteTag` gọi GitHub REST API endpoint `DELETE /repos/{owner}/{repo}/git/refs/tags/{tag}`. Tích hợp lệnh gọi xoá tag tự động trước khi tạo mới release trong `UsageConfigPanel.tsx` của cả bản Web và Win, tránh lỗi 422 `Validation Failed`.

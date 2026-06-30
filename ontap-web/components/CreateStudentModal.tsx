@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaTimes, FaUserPlus, FaSpinner, FaExclamationTriangle, FaShieldAlt } from 'react-icons/fa'; 
+import { FaTimes, FaUserPlus, FaSpinner, FaExclamationTriangle } from 'react-icons/fa'; 
 import { initializeApp, getApp } from 'firebase/app'; 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { collection, query, where, getDocs, doc, setDoc, updateDoc, arrayUnion, serverTimestamp } from 'firebase/firestore';

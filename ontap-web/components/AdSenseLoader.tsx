@@ -9,8 +9,6 @@ interface AdSenseLoaderProps {
 }
 
 const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
-    const [shouldLoadAds, setShouldLoadAds] = useState(false);
-
     useEffect(() => {
         let observer: IntersectionObserver | null = null;
         let popunderHandler: ((e: MouseEvent) => void) | null = null;
@@ -122,7 +120,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
 
     // 🖱️ Auto Popunder: Gắn click listener, mở Direct Link dựa trên cooldown
     const setupAutoPopunder = (directLinkUrl: string, maxPerSession: number): ((e: MouseEvent) => void) => {
-        const handler = (e: MouseEvent) => {
+        const handler = () => {
             if (maxPerSession <= 0) return;
 
             const limits = getMonetagLimits();
@@ -173,18 +171,6 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         script.src = 'https://pl28592472.effectivegatecpm.com/40/38/4c/40384cc1f853bc02181ba010564ff378.js';
         script.crossOrigin = 'anonymous';
         document.head.appendChild(script);
-    };
-
-    const loadMonetagScript = () => {
-        if (document.getElementById('monetag-script')) return;
-        const script = document.createElement('script');
-        script.id = 'monetag-script';
-        script.async = true;
-        script.src = MONETAG_CONFIG.SMART_TAG_URL;
-        script.setAttribute('data-zone', MONETAG_CONFIG.ZONE_ID.toString());
-        script.setAttribute('data-cfasync', 'false');
-        script.defer = true;
-        document.body.appendChild(script);
     };
 
     const removeScripts = () => {

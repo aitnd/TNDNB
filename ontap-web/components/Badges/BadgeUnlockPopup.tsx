@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BADGE_DEFINITIONS, BadgeDefinition } from '../../constants/badges';
+import { BADGE_DEFINITIONS } from '../../constants/badges';
 import { BadgeIcon3D } from './BadgeIcon3D';
 import { ConfettiCanvas } from './ConfettiCanvas';
 import { X } from 'lucide-react';

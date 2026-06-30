@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { BADGE_DEFINITIONS, BadgeDefinition, BadgeGroup } from '../../constants/badges';
 import { BadgeService, UserBadgeProgress } from '../../services/badgeService';
 import { BadgeIcon3D } from './BadgeIcon3D';
-import { useAppStore } from '../../stores/useAppStore';
-
 interface BadgeListProps {
   userId: string;
   userRole?: string; // Role hiện tại của user để hiển thị Role Badge

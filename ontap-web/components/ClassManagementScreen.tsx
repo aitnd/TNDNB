@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../services/firebaseClient';
-import { collection, query, orderBy, onSnapshot, doc, getDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, where, getDocs, getCountFromServer } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, getDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, where, getDocs } from 'firebase/firestore';
 import { Course, UserProfile } from '../types';
 import ClassDetailClient from './ClassDetail/ClassDetailClient';
 import ClassList from './ClassDetail/ClassList';
@@ -14,28 +14,6 @@ interface ClassManagementScreenProps {
     onBack: () => void;
 }
 
-const getRoleWeight = (role: string) => {
-    switch (role) {
-        case 'admin': return 100;
-        case 'lanh_dao': return 80;
-        case 'quan_ly': return 60;
-        case 'giao_vien': return 40;
-        case 'hoc_vien': return 20;
-        case 'guest': return 0;
-        default: return 0;
-    }
-};
-
-const getRoleRank = (role: string) => {
-    switch (role) {
-        case 'admin': return 4;
-        case 'lanh_dao': return 3;
-        case 'quan_ly': return 2;
-        case 'giao_vien': return 1;
-        default: return 0;
-    }
-};
-
 const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfile, usageConfig, onBack }) => {
     // --- STATE ---
     const { courseId } = useParams<{ courseId: string }>();
@@ -45,8 +23,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const [loadingCourses, setLoadingCourses] = useState(true);
     const [headTeacherNames, setHeadTeacherNames] = useState<Record<string, string>>({});
     const [creatorProfiles, setCreatorProfiles] = useState<Record<string, {name: string, role: string}>>({});
-    const [classStats, setClassStats] = useState<Record<string, number>>({});
-
+    const [classStats] = useState<Record<string, number>>({});
+    
     const selectedCourse = React.useMemo(() => {
         if (!courseId) return null;
         return courses.find(c => c.id === courseId) || null;
@@ -176,7 +154,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                     counts[data.userId] = (counts[data.userId] || 0) + 1;
                 });
                 setDeviceCounts(counts);
-            }, (error) => {
+            }, () => {
             });
 
             // Listen for latest results
@@ -212,7 +190,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             return () => {
                 unsubSessions();
             };
-        }, (error) => {
+        }, () => {
             setDeviceCounts({});
             setStudentLatestResults({});
         });

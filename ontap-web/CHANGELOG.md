@@ -1,3 +1,8 @@
+## [3.15.5] - 2026-06-30
+### Khắc phục lỗi hiển thị thời tiết & Cải tiến giao diện Widget (Web & App Win)
+- **Thời tiết local**: Đồng bộ hóa múi giờ thực tế của học viên (+7) thay vì sử dụng múi giờ UTC của máy chủ, đảm bảo hiển thị đúng giờ Việt Nam tại mọi thời điểm trong ngày.
+- **Giao diện thời tiết**: Khắc phục lỗi ẩn tooltip trạng thái kết nối bằng cách loại bỏ giới hạn tràn (overflow) trên phần tử bao ngoài, đồng thời tăng kích thước biểu tượng trạng thái để tăng tính trực quan.
+
 ## [3.15.4] - 2026-06-30
 ### Cập nhật hệ thống Quản trị & Khắc phục lỗi Phát hành (Web & App Win)
 - **Tự động hóa phát hành**: Sửa lỗi gián đoạn khi phát hành ứng dụng trùng tên hoặc trùng thẻ phiên bản (hệ thống tự động đồng bộ hóa và dọn dẹp các thẻ Git Tag cũ trên GitHub).
