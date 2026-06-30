@@ -1,3 +1,6 @@
+## [3.15.6] - 2026-06-30
+### T?i uu ho� ?ng d?ng
+- **C?i thi?n d? ?n d?nh:** T?i uu ho� c?u tr�c h? th?ng gi�p ?ng d?ng ch?y nh? nh�ng v� ?n d?nh hon.
 ## [3.15.5] - 2026-06-30
 ### Khắc phục lỗi hiển thị thời tiết & Tối ưu hóa hệ thống (Web & App Win)
 - **Thời tiết local**: Đồng bộ hóa múi giờ thực tế của học viên (+7) thay vì sử dụng múi giờ UTC của máy chủ, đảm bảo hiển thị đúng giờ Việt Nam tại mọi thời điểm trong ngày.
@@ -244,3 +247,4 @@
 ### Security
 - Khắc phục nguy cơ lộ Gemini API Key nghiêm trọng. Toàn bộ logic kiểm tra và generateContent hiện tại đã thực thi ngầm ở Node server thay vì client.
 - Xóa bỏ điểm yếu mã hóa XOR có thể dễ dàng bị bẻ khóa trong Local Storage đối với "Ghi nhớ tài khoản".
+

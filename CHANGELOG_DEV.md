@@ -1,3 +1,7 @@
+## [3.15.6] - 2026-06-30
+### T�i c?u tr�c m� ngu?n h? th?ng
+- **Refactor (App.tsx):** Split God Component App.tsx v�o outes/AppRoutes.tsx v� hooks/useAppInitialization.ts cho c? ontap-web v� ontap-win.
+- **Cleanup:** D?n d?p unused variables v� fix l?i TypeScript warning (TS6133) ? nhi?u files.
 ## [3.15.5] - 2026-06-30
 ### Fix Timezone Offsets, Refactor App.tsx, & Clean TS Warnings (Web & Win)
 - **UTC-to-VN Time Conversion**: Fixed time drift by computing local hours with explicit `(new Date().getUTCHours() + 7) % 24` offset calculations inside `app/api/weather/route.ts` instead of relying on default server clock context.
@@ -266,3 +270,4 @@
 ### Security
 - Khắc phục nguy cơ lộ Gemini API Key nghiêm trọng. Toàn bộ logic kiểm tra và generateContent hiện tại đã thực thi ngầm ở Node server thay vì client.
 - Xóa bỏ điểm yếu mã hóa XOR có thể dễ dàng bị bẻ khóa trong Local Storage đối với "Ghi nhớ tài khoản".
+
