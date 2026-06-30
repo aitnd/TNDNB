@@ -1,3 +1,10 @@
+## [3.15.4] - 2026-06-30
+### Sửa lỗi Git Tag Duplication & Nâng cấp Cấu hình Quảng cáo (Web & Win)
+- **Git Tag Autodelete**: Bổ sung hàm `deleteTag` gọi GitHub REST API endpoint `DELETE /repos/{owner}/{repo}/git/refs/tags/{tag}`. Tích hợp lệnh gọi xoá tag tự động trước khi tạo mới release trong `UsageConfigPanel.tsx` của cả bản Web và Win, tránh lỗi 422 `Validation Failed`.
+- **Fix DirectLink Bug**: Cập nhật component `MonetagDirectLink` nhận thêm prop `maxPerSession` và kiểm tra giới hạn lượt hiển thị so với `sessionStorage` key `monetag_dl_count`. Nếu `maxPerSession <= 0` thì tắt hoàn toàn.
+- **Single Source of Truth**: Thêm hằng số `AD_DISABLED = 0` và helper `isAdTypeDisabled` vào `services/monetagConfig.ts`.
+- **UI Admin Panel Upgrade**: Cập nhật CSS trạng thái trong `UsageConfigPanel.tsx`, tự động đổi border thành `border-red-300` và gắn badge `🚫 Đã tắt` khi các ô input có giá trị `<= 0`.
+
 ## [3.15.3] - 2026-06-30
 ### Sửa lỗi hiển thị Huy hiệu Admin (MiniRoleBadge Opacity Bug)
 - **Framer Motion Fix:** Bổ sung `opacity: 1` vào animate object của premium roles (`admin`, `super_admin`, `lanh_dao`) trong file `MiniRoleBadge.tsx` của cả `ontap-web` và `ontap-win`. Khắc phục triệt để lỗi ẩn huy hiệu (do ban đầu set `initial={{ opacity: 0 }}`).

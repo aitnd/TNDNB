@@ -1,7 +1,7 @@
 {
   "name": "dao-tao-thuyen-vien",
   "private": true,
-  "version": "3.15.3",
+  "version": "3.15.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,13 +11,13 @@
     "test:run": "vitest run"
   },
   "dependencies": {
-    "@capacitor/app": "^8.0.1",
-    "@capacitor/core": "^8.1.0",
-    "@capacitor/haptics": "^8.0.1",
-    "@capacitor/local-notifications": "^8.0.1",
-    "@capacitor/preferences": "^8.0.1",
-    "@capacitor/push-notifications": "^8.0.1",
-    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/haptics": "^6.0.0",
+    "@capacitor/local-notifications": "^6.0.0",
+    "@capacitor/preferences": "^6.0.0",
+    "@capacitor/push-notifications": "^6.0.0",
+    "@capacitor/splash-screen": "^6.0.0",
     "@sheetjs/xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "@supabase/supabase-js": "2",
     "@vercel/analytics": "^2.0.1",

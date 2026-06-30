@@ -1,63 +1,46 @@
 {
-  "updated_at": "2026-06-30T04:45:00.000Z",
+  "updated_at": "2026-06-30T07:54:00.000Z",
   "working_on": {
-    "feature": "Admin Badge & Monetag Raw Script Injection (v3.15.3)",
-    "task": "Sửa lỗi opacity hiển thị của Admin/Lãnh đạo, thay thế next/script bằng script HTML thô trong head của layout.tsx, và sửa lỗi trùng Git Tag/Validation Failed khi phát hành lên GitHub.",
+    "feature": "Cấu hình quảng cáo 0 = Tắt & Fix DirectLink Bug",
+    "task": "Bổ sung kiểm tra giới hạn maxPerSession cho Monetag Direct Link (sửa bug bỏ qua giới hạn), thêm UI highlight trực quan và badge 🚫 Đã tắt khi cấu hình = 0 trong Admin Panel.",
     "status": "completed",
     "files": [
-      "ontap-web/components/Badges/MiniRoleBadge.tsx",
-      "ontap-win/components/Badges/MiniRoleBadge.tsx",
-      "app/layout.tsx",
-      "ontap-web/services/githubService.ts",
-      "ontap-win/services/githubService.ts",
+      "ontap-web/services/monetagConfig.ts",
+      "ontap-win/services/monetagConfig.ts",
+      "ontap-web/components/MonetagDirectLink.tsx",
+      "ontap-win/components/MonetagDirectLink.tsx",
       "ontap-web/components/UsageConfigPanel.tsx",
       "ontap-win/components/UsageConfigPanel.tsx"
     ],
     "blockers": [],
-    "notes": "Đã sửa thành công lỗi trùng Git Tag bằng cách tự động gọi API xoá Tag Ref của GitHub khi xoá Release cũ."
+    "notes": "Đã build test thành công 100% không phát sinh lỗi biên dịch."
   },
   "pending_tasks": [
     {
-      "task": "Push code lên GitHub và deploy lên Vercel",
-      "status": "pending"
-    },
-    {
-      "task": "Xác minh trạng thái cài đặt Monetag trên dashboard",
+      "task": "Deploy lên Vercel và release app",
       "status": "pending"
     }
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-30T04:45:00.000Z",
+      "timestamp": "2026-06-30T07:54:00.000Z",
       "type": "bugfix",
-      "description": "Nhúng thẻ script Monetag thô trong head, sửa lỗi opacity của MiniRoleBadge, và sửa lỗi Validation Failed khi phát hành release trùng tag.",
+      "description": "Fix bug DirectLink không tôn trọng config maxPerSession, cập nhật UI highlight đỏ + badge 🚫 Đã tắt khi max = 0.",
       "files": [
-        "ontap-web/components/Badges/MiniRoleBadge.tsx",
-        "ontap-win/components/Badges/MiniRoleBadge.tsx",
-        "app/layout.tsx",
-        "ontap-web/services/githubService.ts",
-        "ontap-win/services/githubService.ts",
+        "ontap-web/services/monetagConfig.ts",
+        "ontap-win/services/monetagConfig.ts",
+        "ontap-web/components/MonetagDirectLink.tsx",
+        "ontap-win/components/MonetagDirectLink.tsx",
         "ontap-web/components/UsageConfigPanel.tsx",
         "ontap-win/components/UsageConfigPanel.tsx"
       ]
     }
   ],
-  "errors_encountered": [
-    {
-      "error": "Monetag crawler check không nhận diện được Next.js Script component dynamic load.",
-      "solution": "Chuyển thành script thô HTML chèn trực tiếp trong thẻ head.",
-      "resolved": true
-    },
-    {
-      "error": "Lỗi Validation Failed (422) khi phát hành lại phiên bản trùng vì Git Tag cũ chưa được xoá trên GitHub.",
-      "solution": "Bổ sung API deleteTag tự động xoá Git Tag ref khi xoá release.",
-      "resolved": true
-    }
-  ],
+  "errors_encountered": [],
   "decisions_made": [
     {
-      "decision": "Bổ sung cơ chế tự động dọn dẹp Git Tag trùng khớp khi người dùng nhấn xác nhận ghi đè release.",
-      "reason": "Giải quyết triệt để lỗi Validation Failed của GitHub API mà không yêu cầu người dùng phải xoá tag thủ công."
+      "decision": "Đưa AD_DISABLED = 0 làm hằng số Single Source of Truth.",
+      "reason": "Giúp việc quản lý ngữ nghĩa của mã nguồn sạch sẽ, tránh magic number."
     }
   ]
 }

@@ -1,3 +1,8 @@
+## [3.15.4] - 2026-06-30
+### Cập nhật hệ thống Quản trị & Khắc phục lỗi Phát hành (Web & App Win)
+- **Tự động hóa phát hành**: Sửa lỗi gián đoạn khi phát hành ứng dụng trùng tên hoặc trùng thẻ phiên bản (hệ thống tự động đồng bộ hóa và dọn dẹp các thẻ Git Tag cũ trên GitHub).
+- **Trực quan hóa cài đặt**: Nâng cấp Giao diện Quản lý Hệ thống dành cho Admin, tích hợp chỉ báo màu sắc nổi bật và thẻ cảnh báo khi tắt các dịch vụ phụ trợ nhằm nâng cao trải nghiệm vận hành.
+
 ## [3.15.3] - 2026-06-30
 ### Sửa lỗi hiển thị Huy hiệu Admin & Tối ưu hóa xác thực Quảng cáo (Web & App Win)
 - **Huy hiệu Admin:** Khắc phục lỗi ẩn Huy hiệu đặc quyền (vương miện lấp lánh 👑) của Admin/Lãnh đạo trên Thẻ giáo viên, thanh TopNavbar góc phải và trang Hồ sơ cá nhân.

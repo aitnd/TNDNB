@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { getUsageConfig, saveUsageConfig, UsageConfig, RoleConfig, getGitHubConfig, saveGitHubConfig, GitHubConfig } from '../services/adminConfigService';
-import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, FaUser, FaChalkboardTeacher, FaUserAstronaut, FaTools, FaBroom, FaDownload, FaArrowLeft, FaShieldAlt, FaMobileAlt, FaServer, FaCheckCircle, FaRocket, FaGithub, FaKey, FaUpload, FaFileAlt } from 'react-icons/fa';
+import { FaCog, FaSave, FaUserSecret, FaUserGraduate, FaUserTie, FaUserShield, FaUser, FaChalkboardTeacher, FaUserAstronaut, FaBroom, FaArrowLeft, FaShieldAlt, FaMobileAlt, FaServer, FaCheckCircle, FaRocket, FaGithub, FaKey, FaUpload, FaFileAlt } from 'react-icons/fa';
 import { db } from '../services/firebaseClient';
-import { collection, getDocs, doc, updateDoc, writeBatch, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, writeBatch, query, where } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { createRelease, uploadReleaseAsset, getLatestRelease, validateToken, GitHubRelease, getReleaseByTag, deleteRelease, deleteTag } from '../services/githubService';
 
@@ -1117,39 +1117,72 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             <h5 className="font-bold text-purple-600 dark:text-purple-400 border-b border-purple-200 dark:border-purple-800/50 pb-2">Monetag</h5>
                                             
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Direct Link (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Direct Link (Max/Phiên)</label>
+                                                    {(config.monetagDirectLinkMaxPerSession ?? 0) <= 0 ? (
+                                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 flex items-center gap-0.5">
+                                                            🚫 Đã tắt
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 flex items-center gap-0.5">
+                                                            ✅ Đang bật
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <div className="flex items-center gap-2">
                                                     <input
                                                         type="number"
                                                         value={config.monetagDirectLinkMaxPerSession ?? 0}
                                                         onChange={(e) => setConfig({ ...config, monetagDirectLinkMaxPerSession: parseInt(e.target.value) || 0 })}
-                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagDirectLinkMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
                                                     />
                                                     <span className="text-sm text-gray-500">lần (0 = tắt)</span>
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Auto Popunder (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Auto Popunder (Max/Phiên)</label>
+                                                    {(config.monetagPopunderMaxPerSession ?? 0) <= 0 ? (
+                                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 flex items-center gap-0.5">
+                                                            🚫 Đã tắt
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 flex items-center gap-0.5">
+                                                            ✅ Đang bật
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <div className="flex items-center gap-2">
                                                     <input
                                                         type="number"
                                                         value={config.monetagPopunderMaxPerSession ?? 0}
                                                         onChange={(e) => setConfig({ ...config, monetagPopunderMaxPerSession: parseInt(e.target.value) || 0 })}
-                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagPopunderMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
                                                     />
                                                     <span className="text-sm text-gray-500">lần (0 = tắt)</span>
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Countdown Ad (Max/Phiên)</label>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Countdown Ad (Max/Phiên)</label>
+                                                    {(config.monetagCountdownMaxPerSession ?? 0) <= 0 ? (
+                                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 flex items-center gap-0.5">
+                                                            🚫 Đã tắt
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 flex items-center gap-0.5">
+                                                            ✅ Đang bật
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <div className="flex items-center gap-2">
                                                     <input
                                                         type="number"
                                                         value={config.monetagCountdownMaxPerSession ?? 0}
                                                         onChange={(e) => setConfig({ ...config, monetagCountdownMaxPerSession: parseInt(e.target.value) || 0 })}
-                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagCountdownMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
                                                     />
                                                     <span className="text-sm text-gray-500">lần (0 = tắt)</span>
                                                 </div>
