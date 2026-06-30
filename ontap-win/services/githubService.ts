@@ -87,6 +87,27 @@ export const getLatestRelease = async (token: string): Promise<GitHubRelease | n
 };
 
 /**
+ * Lấy release theo tag
+ */
+export const getReleaseByTag = async (token: string, tag: string): Promise<GitHubRelease | null> => {
+    try {
+        const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases/tags/${tag}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        });
+
+        if (response.status === 404) return null;
+        if (!response.ok) return null;
+        return response.json();
+    } catch {
+        return null;
+    }
+};
+
+/**
  * T\u1ea1o release m\u1edbi
  */
 export const createRelease = async (token: string, params: CreateReleaseParams): Promise<GitHubRelease> => {
@@ -108,8 +129,16 @@ export const createRelease = async (token: string, params: CreateReleaseParams):
     });
 
     if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to create release');
+        let errorMessage = 'Failed to create release';
+        try {
+            const error = await response.json();
+            errorMessage = error.message || errorMessage;
+            const hasAlreadyExists = error.errors?.some((err: any) => err.code === 'already_exists');
+            if (response.status === 422 && (errorMessage.toLowerCase().includes('already_exists') || hasAlreadyExists)) {
+                errorMessage = 'ALREADY_EXISTS';
+            }
+        } catch (e) {}
+        throw new Error(errorMessage);
     }
 
     return response.json();
@@ -192,6 +221,25 @@ export const deleteRelease = async (token: string, releaseId: number): Promise<v
     if (!response.ok && response.status !== 204) {
         const error = await response.json();
         throw new Error(error.message || 'Failed to delete release');
+    }
+};
+
+/**
+ * Xóa git tag
+ */
+export const deleteTag = async (token: string, tag: string): Promise<void> => {
+    const response = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/refs/tags/${tag}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    });
+
+    if (!response.ok && response.status !== 204 && response.status !== 404) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to delete git tag');
     }
 };
 

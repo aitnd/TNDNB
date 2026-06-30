@@ -9,3 +9,8 @@
 ## 2026-06-29
 ### Corrections
 - **Sub-agent API Quota Limit (429)**: Chạy song song quá nhiều sub-agent hoặc gọi các agent có prompt phức tạp liên tục dễ dẫn đến lỗi vượt hạn mức (Resource Exhausted 429). Khắc phục bằng cách thực hiện đồng bộ file thủ công (hoặc script PowerShell trực tiếp) và chia nhỏ tác vụ để tránh quá tải hạn mức.
+
+## 2026-06-30
+### Corrections
+- **Monetag Static Verification**: Thẻ `<Script>` động của Next.js không được bot quét tĩnh của Monetag nhận diện. Phải sử dụng thẻ `<script>` HTML tĩnh thô trực tiếp trong `<head>` của `layout.tsx` để hoàn tất cài đặt thành công.
+- **Framer Motion Opacity Bug**: Cấu hình `initial={{ opacity: 0 }}` mà không chỉ định `opacity: 1` trong animate object của motion components làm ẩn vĩnh viễn Huy hiệu Admin.

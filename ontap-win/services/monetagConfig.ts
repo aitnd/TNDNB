@@ -29,6 +29,15 @@ export const MONETAG_CONFIG = {
     },
 } as const;
 
+export const AD_DISABLED = 0;
+
+/**
+ * Kiểm tra xem loại quảng cáo có bị tắt hay không (maxPerSession <= 0)
+ */
+export const isAdTypeDisabled = (maxPerSession?: number): boolean => {
+    return maxPerSession === undefined || maxPerSession <= AD_DISABLED;
+};
+
 let currentPopunderCooldownMs = MONETAG_CONFIG.POPUNDER_COOLDOWN_MS;
 let currentDirectLinkCooldownMs = MONETAG_CONFIG.DIRECT_LINK_COOLDOWN_MS;
 

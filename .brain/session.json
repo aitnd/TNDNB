@@ -1,44 +1,46 @@
 {
-  "updated_at": "2026-06-30T03:08:00.000Z",
+  "updated_at": "2026-06-30T07:54:00.000Z",
   "working_on": {
-    "feature": "Admin Badge Visibility Hotfix (v3.15.2-hotfix)",
-    "task": "Sửa lỗi opacity trong MiniRoleBadge.tsx trên cả Web và Win, build và commit Git thành công.",
+    "feature": "Cấu hình quảng cáo 0 = Tắt & Fix DirectLink Bug",
+    "task": "Bổ sung kiểm tra giới hạn maxPerSession cho Monetag Direct Link (sửa bug bỏ qua giới hạn), thêm UI highlight trực quan và badge 🚫 Đã tắt khi cấu hình = 0 trong Admin Panel.",
     "status": "completed",
     "files": [
-      "ontap-web/components/Badges/MiniRoleBadge.tsx",
-      "ontap-win/components/Badges/MiniRoleBadge.tsx"
+      "ontap-web/services/monetagConfig.ts",
+      "ontap-win/services/monetagConfig.ts",
+      "ontap-web/components/MonetagDirectLink.tsx",
+      "ontap-win/components/MonetagDirectLink.tsx",
+      "ontap-web/components/UsageConfigPanel.tsx",
+      "ontap-win/components/UsageConfigPanel.tsx"
     ],
     "blockers": [],
-    "notes": "Lỗi opacity=0 khi chạy animate của premium roles đã được giải quyết. Build test Vite pass 100%."
+    "notes": "Đã build test thành công 100% không phát sinh lỗi biên dịch."
   },
   "pending_tasks": [
     {
-      "task": "Push code lên GitHub và deploy lên Vercel",
+      "task": "Deploy lên Vercel và release app",
       "status": "pending"
     }
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-30T03:08:00.000Z",
+      "timestamp": "2026-06-30T07:54:00.000Z",
       "type": "bugfix",
-      "description": "Sửa lỗi không hiển thị Huy hiệu đặc quyền (vương miện/lướt sóng/...) của Admin/Lãnh đạo bằng cách chèn opacity: 1 vào animate object của premium roles.",
+      "description": "Fix bug DirectLink không tôn trọng config maxPerSession, cập nhật UI highlight đỏ + badge 🚫 Đã tắt khi max = 0.",
       "files": [
-        "ontap-web/components/Badges/MiniRoleBadge.tsx",
-        "ontap-win/components/Badges/MiniRoleBadge.tsx"
+        "ontap-web/services/monetagConfig.ts",
+        "ontap-win/services/monetagConfig.ts",
+        "ontap-web/components/MonetagDirectLink.tsx",
+        "ontap-win/components/MonetagDirectLink.tsx",
+        "ontap-web/components/UsageConfigPanel.tsx",
+        "ontap-win/components/UsageConfigPanel.tsx"
       ]
     }
   ],
-  "errors_encountered": [
-    {
-      "error": "Lỗi opacity=0 trong motion.div của Framer Motion làm biến mất huy hiệu của Admin/Lãnh đạo.",
-      "solution": "Bổ sung opacity: 1 vào animate object.",
-      "resolved": true
-    }
-  ],
+  "errors_encountered": [],
   "decisions_made": [
     {
-      "decision": "Giữ nguyên cấu trúc animations spring và lấp lánh (pulsing border) và chỉ sửa opacity.",
-      "reason": "Bảo toàn hiệu ứng đẹp mắt vốn có cho các tài khoản Premium."
+      "decision": "Đưa AD_DISABLED = 0 làm hằng số Single Source of Truth.",
+      "reason": "Giúp việc quản lý ngữ nghĩa của mã nguồn sạch sẽ, tránh magic number."
     }
   ]
 }
