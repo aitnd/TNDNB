@@ -41,6 +41,7 @@ import { Toaster } from 'sonner';
 import TopNavbar from '../components/TopNavbar';
 import AlertMarquee from '../components/AlertMarquee';
 import MobileBottomNav from '../components/MobileBottomNav';
+import MobileHeader from '../components/MobileHeader';
 
 interface AppRoutesProps {
   usageConfig: any;
@@ -114,7 +115,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
   }
 
   return (
-    <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-16' : 'pt-16'}`}>
+    <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-24 pt-20' : 'pt-16'}`}>
       <BadgeListener />
       <SweetAlertPopup />
       <Toaster position="top-right" richColors expand={true} closeButton />
@@ -128,6 +129,10 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
       )}
 
       <AdSenseLoader userProfile={userProfile} />
+
+      {isMobileApp && (
+        <MobileHeader userProfile={userProfile} />
+      )}
 
       {!isMobileApp && (
         <>
@@ -335,16 +340,17 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
           <Route path="/ontap/lichsudangnhap" element={<Navigate to="/ontap/login-history" replace />} />
           <Route path="/ontap/giaitri" element={<Navigate to="/ontap/games" replace />} />
 
-          {isMobileApp && (
-            <MobileBottomNav
-              userProfile={userProfile}
-              currentScreen={location.pathname}
-              onNavigate={handleTopNavNavigate}
-              onLogout={handleLogout}
-            />
-          )}
         </Routes>
       </AnimatePresence>
+
+      {isMobileApp && (
+        <MobileBottomNav
+          userProfile={userProfile}
+          currentScreen={location.pathname}
+          onNavigate={handleTopNavNavigate}
+          onLogout={handleLogout}
+        />
+      )}
     </div>
   );
 };
