@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Cloud, Sun, CloudRain, Loader2, MapPin, ChevronDown, Droplets, Sparkles } from 'lucide-react';
+import { Cloud, Sun, CloudRain, Loader2, MapPin, ChevronDown, Droplets, Sparkles, Signal, SignalLow, WifiOff } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -9,6 +9,7 @@ interface WeatherData {
   advice?: string;
   condition?: string;
   icon?: string;
+  isMock?: boolean;
   forecast?: {
     hourly: Array<{ time: string, temp: number, condition: string, icon: string, rain_chance: number }>;
     daily: Array<{ date: string, minTemp: number, maxTemp: number, condition: string, icon: string, rain_chance: number }>;
@@ -19,6 +20,8 @@ const WeatherWidget: React.FC = () => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [dataSource, setDataSource] = useState<'live' | 'server-mock' | 'offline'>('live');
+  const [showTooltip, setShowTooltip] = useState(false);
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -38,6 +41,7 @@ const WeatherWidget: React.FC = () => {
         }
         const data = await response.json();
         setWeather(data);
+        setDataSource(data.isMock ? 'server-mock' : 'live');
       } catch (error) {
         console.warn('Failed to fetch weather, using mock fallback:', error);
         
@@ -61,6 +65,7 @@ const WeatherWidget: React.FC = () => {
           icon: "https://cdn.weatherapi.com/weather/64x64/day/116.png",
           advice: "Thời tiết đang mát mẻ, không mưa, bạn yên tâm học và ôn tập nhé! 🌸",
           location: "Triệu Việt Vương, Ninh Bình",
+          isMock: true,
           forecast: {
             hourly: mockHourly,
             daily: [
@@ -70,6 +75,7 @@ const WeatherWidget: React.FC = () => {
             ]
           }
         });
+        setDataSource('offline');
       } finally {
         setLoading(false);
       }
@@ -135,6 +141,57 @@ const WeatherWidget: React.FC = () => {
     return <Sun className="w-8 h-8 text-yellow-500 drop-shadow-md" />;
   };
 
+  const renderStatusIndicator = () => {
+    const config = {
+      'live': {
+        icon: <Signal className="w-3 h-3" />,
+        color: 'text-emerald-500',
+        pulse: true,
+        label: 'Dữ liệu trực tiếp',
+        detail: 'từ WeatherAPI'
+      },
+      'server-mock': {
+        icon: <SignalLow className="w-3 h-3" />,
+        color: 'text-amber-500',
+        pulse: false,
+        label: 'Dữ liệu ước tính',
+        detail: 'Hệ thống AI dự báo'
+      },
+      'offline': {
+        icon: <WifiOff className="w-3 h-3" />,
+        color: 'text-red-500',
+        pulse: false,
+        label: 'Không kết nối',
+        detail: 'Dữ liệu tạm thời'
+      }
+    }[dataSource];
+
+    return (
+      <div className="relative" onClick={(e) => { e.stopPropagation(); setShowTooltip(!showTooltip); }}
+           onMouseEnter={() => setShowTooltip(true)}
+           onMouseLeave={() => setShowTooltip(false)}>
+        <div className={`flex items-center justify-center bg-white/90 dark:bg-gray-800/90 rounded-full p-[3px] shadow-sm border border-gray-100 dark:border-gray-700 ${config.color} ${config.pulse ? 'animate-pulse' : ''}`}>
+          {config.icon}
+        </div>
+        <AnimatePresence>
+          {showTooltip && (
+            <motion.div
+              initial={{ opacity: 0, y: 4, scale: 0.95 }} 
+              animate={{ opacity: 1, y: 0, scale: 1 }} 
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-[60] w-[130px] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-xl rounded-lg p-2 flex flex-col items-center pointer-events-none"
+            >
+              <div className="text-[10px] font-bold text-gray-800 dark:text-gray-100 whitespace-nowrap">{config.label}</div>
+              <div className="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5 leading-tight text-center">{config.detail}</div>
+              {/* Triangle pointer */}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-white dark:border-t-gray-800"></div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
   const bgClass = theme === 'dark' 
     ? 'bg-gray-900/70 backdrop-blur-2xl border-gray-700/50 text-white shadow-sm' 
     : 'bg-white/80 backdrop-blur-2xl border-white/60 text-gray-800 shadow-sm';
@@ -148,7 +205,12 @@ const WeatherWidget: React.FC = () => {
       >
         <div className="flex items-center justify-between w-full md:w-auto">
           <div className="flex items-center space-x-2 md:space-x-3">
-            {renderIcon()}
+            <div className="relative">
+              {renderIcon()}
+              <div className="absolute -bottom-1 -right-1">
+                {renderStatusIndicator()}
+              </div>
+            </div>
             <div className="flex flex-col">
               <div className="flex items-baseline space-x-1.5">
                 <span className="text-2xl md:text-3xl font-black tracking-tighter">{weather.temp}°</span>

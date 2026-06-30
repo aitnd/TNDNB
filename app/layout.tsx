@@ -104,6 +104,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
+        
+        {/* === MONETAG MULTITAG === */}
+        <Script
+          id="monetag-multitag"
+          strategy="beforeInteractive"
+          src="https://quge5.com/88/tag.min.js"
+          data-zone="254797"
+          data-cfasync="false"
+        />
         <SpeedInsights />
       </body>
     </html>
