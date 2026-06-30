@@ -1,3 +1,8 @@
+## [3.15.3] - 2026-06-30
+### Sửa lỗi hiển thị Huy hiệu Admin & Tối ưu hóa xác thực Quảng cáo (Web & App Win)
+- **Huy hiệu Admin:** Khắc phục lỗi ẩn Huy hiệu đặc quyền (vương miện lấp lánh 👑) của Admin/Lãnh đạo trên Thẻ giáo viên, thanh TopNavbar góc phải và trang Hồ sơ cá nhân.
+- **Xác thực hệ thống:** Cải tiến kỹ thuật nhúng liên kết đối tác trên Portal Next.js dưới dạng thẻ script HTML tĩnh thô trực tiếp trong head, giúp hệ thống bên ngoài dễ dàng quét và xác minh.
+
 ## [3.15.2] - 2026-06-30
 ### Cập nhật hệ thống chỉ báo thời tiết & Tối ưu hóa hạ tầng (Web & App Win)
 - **Chỉ báo thời tiết:** Thêm icon chỉ báo động (Tín hiệu kết nối) và Tooltip chi tiết tại góc giao diện thời tiết để hiển thị rõ nguồn dữ liệu (Đang tải trực tiếp, Ước tính từ hệ thống, hoặc Mất kết nối tạm thời).

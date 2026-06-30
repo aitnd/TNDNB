@@ -1,3 +1,10 @@
+## [3.15.3] - 2026-06-30
+### Sửa lỗi hiển thị Huy hiệu Admin (MiniRoleBadge Opacity Bug)
+- **Framer Motion Fix:** Bổ sung `opacity: 1` vào animate object của premium roles (`admin`, `super_admin`, `lanh_dao`) trong file `MiniRoleBadge.tsx` của cả `ontap-web` và `ontap-win`. Khắc phục triệt để lỗi ẩn huy hiệu (do ban đầu set `initial={{ opacity: 0 }}`).
+
+### Tối ưu hóa xác thực Monetag qua Head Script tĩnh
+- **Portal Layout Update:** Thay thế Next.js `<Script>` component (vốn tự động biên dịch sang queue JS động) thành thẻ `<script>` HTML chuẩn thô nằm trong `<head>` tự định nghĩa của `app/layout.tsx`. Giải quyết lỗi **"Installation error"** trên dashboard Monetag do bot quét tĩnh của họ không đọc được JS dynamic inject.
+
 ## [3.15.2] - 2026-06-30
 ### Weather Status Indicator (Web & App Win)
 - **Weather Indicator UI:** Thêm indicator icon (`Signal`, `SignalLow`, `WifiOff`) và tooltip chi tiết thông qua state `dataSource` ('live' | 'server-mock' | 'offline') trên components `WeatherWidget.tsx` của cả `ontap-web` và `ontap-win`.

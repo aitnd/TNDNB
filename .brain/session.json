@@ -1,50 +1,44 @@
 {
-  "updated_at": "2026-06-29T20:25:00.000Z",
+  "updated_at": "2026-06-30T03:08:00.000Z",
   "working_on": {
-    "feature": "Gamification v2.0 & QA Fixes (v3.14.0)",
-    "task": "Hoàn tất Gamification 3D Badges, BadgeAdminModal, sửa lỗi font Markdown trong CHANGELOG, tối ưu type compliance (Rules of Hooks).",
+    "feature": "Admin Badge Visibility Hotfix (v3.15.2-hotfix)",
+    "task": "Sửa lỗi opacity trong MiniRoleBadge.tsx trên cả Web và Win, build và commit Git thành công.",
     "status": "completed",
     "files": [
-      "CHANGELOG.md",
-      "CHANGELOG_DEV.md",
-      "project_qa_report.md",
-      "ontap-web/components/Badges/BadgeIcon3D.tsx",
-      "ontap-web/components/Badges/BadgeAdminModal.tsx",
-      "ontap-win/components/Badges/BadgeIcon3D.tsx",
-      "ontap-win/components/Badges/BadgeAdminModal.tsx"
+      "ontap-web/components/Badges/MiniRoleBadge.tsx",
+      "ontap-win/components/Badges/MiniRoleBadge.tsx"
     ],
     "blockers": [],
-    "notes": "Code đã được commit thành công (a0f76e75), sẵn sàng cho session tiếp theo."
+    "notes": "Lỗi opacity=0 khi chạy animate của premium roles đã được giải quyết. Build test Vite pass 100%."
   },
   "pending_tasks": [
     {
-      "task": "Deploy Next.js Web App lên production server",
+      "task": "Push code lên GitHub và deploy lên Vercel",
       "status": "pending"
     }
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-29T20:25:00.000Z",
-      "type": "feature",
-      "description": "Tích hợp hoàn chỉnh Gamification v2.0 với huy hiệu 3D, Admin quản lý danh hiệu. Sửa triệt để các lỗi Rules of Hooks, unused variables để Next build pass 100%. Sửa lỗi font chữ trong Markdown khi render changelog.",
+      "timestamp": "2026-06-30T03:08:00.000Z",
+      "type": "bugfix",
+      "description": "Sửa lỗi không hiển thị Huy hiệu đặc quyền (vương miện/lướt sóng/...) của Admin/Lãnh đạo bằng cách chèn opacity: 1 vào animate object của premium roles.",
       "files": [
-        "CHANGELOG_DEV.md",
-        "CHANGELOG.md",
-        "project_qa_report.md"
+        "ontap-web/components/Badges/MiniRoleBadge.tsx",
+        "ontap-win/components/Badges/MiniRoleBadge.tsx"
       ]
     }
   ],
   "errors_encountered": [
     {
-      "error": "Lỗi hiển thị font chữ/tràn viền trong trình render Markdown của Changelog do thiếu dòng trống (\\n\\n) trước Heading.",
-      "solution": "Đã thêm newline, bổ sung bài học rút kinh nghiệm vào project_qa_report.md để tránh lặp lại.",
+      "error": "Lỗi opacity=0 trong motion.div của Framer Motion làm biến mất huy hiệu của Admin/Lãnh đạo.",
+      "solution": "Bổ sung opacity: 1 vào animate object.",
       "resolved": true
     }
   ],
   "decisions_made": [
     {
-      "decision": "Quy định bắt buộc cách dòng (\\n\\n) trước thẻ Heading trong file md",
-      "reason": "Đảm bảo Markdown renderer (React Markdown) không merge Heading vào danh sách li liền trước đó."
+      "decision": "Giữ nguyên cấu trúc animations spring và lấp lánh (pulsing border) và chỉ sửa opacity.",
+      "reason": "Bảo toàn hiệu ứng đẹp mắt vốn có cho các tài khoản Premium."
     }
   ]
 }

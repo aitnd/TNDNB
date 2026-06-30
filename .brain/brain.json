@@ -44,7 +44,7 @@
     },
     {
       "rule": "Phân tách vai trò Lãnh đạo và Quản lý",
-      "description": "Vai trò lanh_dao dùng key cấu hình leader, quan_ly dùng key manager để thiết lập quyền độc lập"
+      "description": "Vai trò lanh_dao dùng key cấu hình leader, quan_ly dùng key manager để thiết lập quyền độc làm"
     },
     {
       "rule": "Bật/Tắt Quảng Cáo Portal",
@@ -89,7 +89,17 @@
     {
       "name": "Hệ thống Gamification v2.0 & Huy hiệu 3D (Badge Role & Admin Manager)",
       "status": "implemented",
-      "details": "Hiển thị tự động Role Badge cho Hồ sơ cá nhân (Admin, Lãnh đạo, Giáo viên). Bổ sung màn hình quản lý cấp/thu hồi huy hiệu thành tích của học sinh cho Admin/Lãnh đạo trong danh sách lớp. Hỗ trợ hiển thị badge dạng icon 3D với hiệu ứng confetti."
+      "details": "Hiển thị tự động Role Badge cho Hồ sơ cá nhân (Admin, Lãnh đạo, Giáo viên). Bổ dung màn hình quản lý cấp/thu hồi huy hiệu thành tích của học sinh cho Admin/Lãnh đạo trong danh sách lớp. Hỗ trợ hiển thị badge dạng icon 3D với hiệu ứng confetti."
+    },
+    {
+      "name": "Chỉ báo kết nối Thời tiết (Weather Status Indicator)",
+      "status": "implemented",
+      "details": "Chỉ báo trực quan trạng thái dữ liệu (Live/Mock/Offline) với Signal/WifiOff icon và tooltip trên WeatherWidget."
+    },
+    {
+      "name": "Tích hợp script Monetag SSR",
+      "status": "implemented",
+      "details": "Nhúng script Monetag trực tiếp vào layout HTML static thông qua Next.js Script strategy=\"beforeInteractive\" để vượt qua bước verify của nhà quảng cáo."
     }
   ],
   "knowledge_items": {
@@ -105,7 +115,8 @@
       "CHANGELOG.md dễ bị lỗi font (mojibake) do ghi đè encoding, cần dùng script convert latin1-to-utf8.",
       "Git index.lock có thể bị lock bởi GitHub Desktop hoặc tiến trình khác, cần giải phóng lock trước khi chạy lệnh git.",
       "Firebase Private Credentials có thể bị lưu trong Git cache dù đã có trong .gitignore. Cần chạy git rm --cached để dọn sạch hoàn toàn.",
-      "Lỗi font (Typography broken) trong React Markdown khi render CHANGELOG.md do thiếu khoảng trắng (\\n\\n) trước các block heading (ví dụ ## [3.14.0]). Luôn ngắt dòng trước thẻ Heading."
+      "Lỗi font (Typography broken) trong React Markdown khi render CHANGELOG.md do thiếu khoảng trắng (\\n\\n) trước các block heading (ví dụ ## [3.14.0]). Luôn ngắt dòng trước thẻ Heading.",
+      "Monetag yêu cầu crawler check trực tiếp HTML tĩnh để verify mã cài đặt, do đó bắt buộc dùng strategy beforeInteractive trong Next.js."
     ],
     "conventions": [
       "DevTools disabled in production builds (main.cjs and UI toggle both disabled)."
