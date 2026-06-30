@@ -7,6 +7,7 @@ import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, addDoc,
 import { ref, set, update, onDisconnect, serverTimestamp as rtdbTimestamp } from 'firebase/database';
 import ExamQuizScreen2 from './ExamQuizScreen2';
 import { toast } from 'sonner';
+import { BadgeService } from '../services/badgeService';
 
 const ThiTrucTuyenPage: React.FC = () => {
     const { user } = useAuth();

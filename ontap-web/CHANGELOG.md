@@ -1,3 +1,8 @@
+## [3.15.2] - 2026-06-30
+### Cập nhật hệ thống chỉ báo thời tiết & Tối ưu hóa hạ tầng (Web & App Win)
+- **Chỉ báo thời tiết:** Thêm icon chỉ báo động (Tín hiệu kết nối) và Tooltip chi tiết tại góc giao diện thời tiết để hiển thị rõ nguồn dữ liệu (Đang tải trực tiếp, Ước tính từ hệ thống, hoặc Mất kết nối tạm thời).
+- **Hạ tầng:** Tối ưu hóa luồng tải mã nguồn và cải thiện tốc độ kết nối hệ thống.
+
 ## [3.15.1] - 2026-06-30
 ### Cập nhật hệ thống (Web & App Win)
 - **Thời tiết mở rộng:** Nâng cấp widget thời tiết hiển thị chi tiết 8 mốc thời gian (thay vì 5) dựa trên API thực tế hoặc giờ động của máy học viên.

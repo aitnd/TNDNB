@@ -1,3 +1,10 @@
+## [3.15.2] - 2026-06-30
+### Weather Status Indicator (Web & App Win)
+- **Weather Indicator UI:** Thêm indicator icon (`Signal`, `SignalLow`, `WifiOff`) và tooltip chi tiết thông qua state `dataSource` ('live' | 'server-mock' | 'offline') trên components `WeatherWidget.tsx` của cả `ontap-web` và `ontap-win`.
+
+### Fix Monetag Ads Installation (Portal Head Script Injection)
+- **Monetag Integration:** Đưa thẻ `<Script>` Monetag tĩnh vào file `app/layout.tsx` của Next.js với option `strategy="beforeInteractive"` để render thẳng trong HTML source của Head, vượt qua cơ chế quét mã cài đặt (Crawler check) của Monetag.
+
 ## [3.15.1] - 2026-06-30
 ### Cập nhật hệ thống quảng cáo Monetag (Web & App Win)
 - **Multitag:** Cập nhật domain sang `quge5.com` và zone ID `254797`. Đổi attribute từ `data-z` sang `data-zone` và thêm `data-cfasync="false"` để tương thích với Cloudflare.

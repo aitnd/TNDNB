@@ -1,6 +1,6 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { UserProfile } from '../types';
-import { useAppStore } from '../store';
+import { useAppStore } from '../stores/useAppStore';
 import { BadgeList } from './Badges/BadgeList';
 import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 import { db } from '../services/firebaseClient';
