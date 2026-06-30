@@ -8,6 +8,7 @@
 ✅ ĐÃ XONG:
    - Sửa lỗi hiển thị Huy hiệu đặc quyền (vương miện 👑) cho các vai trò Admin/Lãnh đạo bằng cách cấu hình `opacity: 1` cho animation trong `MiniRoleBadge.tsx`.
    - Nhúng script Monetag dưới dạng thẻ `<script>` tĩnh HTML thô đặt trong `<head>` tự định nghĩa của `app/layout.tsx` (thay thế Next.js `<Script>` component) để vượt qua bộ quét tĩnh (static crawler check) của Monetag.
+   - Sửa lỗi **Validation Failed (422)** khi phát hành phiên bản trùng tag trên GitHub: Bổ sung API `deleteTag` tự động dọn dẹp Git Tag cũ trên repository khi xoá release, tránh xung đột tạo tag mới. Sửa lỗi parse mảng errors của GitHub API để nhận diện `already_exists` chính xác.
    - Xoá cache `.next` và build thành công 100% dự án Next.js Portal và `ontap-web` (phiên bản `3.15.3`).
    - Kiểm thử QA thành công (5/5 unit tests passed, lint passed, dev runner stable).
    - Commit Git thành công lên nhánh `backup/upgrade-security-complete-2026-06-13`.
@@ -19,7 +20,7 @@
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
    - Trực tiếp nhúng thẻ `<script>` chuẩn HTML trong `<head>` thay vì dùng next/script, giúp các bot quét tĩnh (không chạy JS) đọc và xác nhận mã cài đặt quảng cáo ngay lập tức.
-   - Nâng cấp phiên bản toàn hệ thống đồng bộ lên v3.15.3.
+   - Tự động xoá Git Tag tương ứng khi xoá Release cũ để tránh lỗi Validation Failed của GitHub API.
 
 ⚠️ LƯU Ý CHO SESSION SAU:
    - Khi deploy xong, kiểm tra lại bằng F12/Source Page của `www.daotaothuyenvien.com` để xem thẻ script Monetag đã xuất hiện ở phần đầu trang chưa.
