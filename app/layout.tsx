@@ -55,6 +55,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi">
+      <head>
+        {/* Nhúng script thô Monetag để bot dễ dàng phát hiện khi xác thực */}
+        <script 
+          src="https://quge5.com/88/tag.min.js" 
+          data-zone="254797" 
+          async 
+          data-cfasync="false"
+        ></script>
+      </head>
       <body className={rubik.className} suppressHydrationWarning={true}>
         <AuthProvider>
           <ThemeProvider>
@@ -103,15 +112,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               gtag('config', '${AW_TRACKING_ID}');
             `,
           }}
-        />
-        
-        {/* === MONETAG MULTITAG === */}
-        <Script
-          id="monetag-multitag"
-          strategy="beforeInteractive"
-          src="https://quge5.com/88/tag.min.js"
-          data-zone="254797"
-          data-cfasync="false"
         />
         <SpeedInsights />
       </body>

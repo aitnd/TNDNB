@@ -23,6 +23,7 @@ export const MiniRoleBadge: React.FC<MiniRoleBadgeProps> = ({ role, className = 
       initial={{ scale: 0.8, opacity: 0 }}
       animate={isPremiumRole ? {
         scale: [1, 1.1, 1],
+        opacity: 1,
         boxShadow: [
           '0 0 2px rgba(234, 179, 8, 0.4)',
           '0 0 8px rgba(239, 68, 68, 0.7)',
