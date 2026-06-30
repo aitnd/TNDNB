@@ -99,7 +99,7 @@
     {
       "name": "Tích hợp script Monetag SSR",
       "status": "implemented",
-      "details": "Nhúng script Monetag trực tiếp vào layout HTML static thông qua Next.js Script strategy=\"beforeInteractive\" để vượt qua bước verify của nhà quảng cáo."
+      "details": "Nhúng script Monetag trực tiếp vào layout HTML static bằng thẻ <script> thô chèn trong head của layout.tsx để vượt qua bước verify của nhà quảng cáo."
     }
   ],
   "knowledge_items": {
@@ -116,7 +116,8 @@
       "Git index.lock có thể bị lock bởi GitHub Desktop hoặc tiến trình khác, cần giải phóng lock trước khi chạy lệnh git.",
       "Firebase Private Credentials có thể bị lưu trong Git cache dù đã có trong .gitignore. Cần chạy git rm --cached để dọn sạch hoàn toàn.",
       "Lỗi font (Typography broken) trong React Markdown khi render CHANGELOG.md do thiếu khoảng trắng (\\n\\n) trước các block heading (ví dụ ## [3.14.0]). Luôn ngắt dòng trước thẻ Heading.",
-      "Monetag yêu cầu crawler check trực tiếp HTML tĩnh để verify mã cài đặt, do đó bắt buộc dùng strategy beforeInteractive trong Next.js."
+      "Monetag yêu cầu crawler check trực tiếp HTML tĩnh để verify mã cài đặt, do đó bắt buộc chèn script HTML thô trực tiếp trong thẻ head của layout.tsx.",
+      "Khi xóa Release trên GitHub, GitHub API không tự động xóa Tag tương ứng, dẫn tới lỗi Validation Failed (422) khi tạo lại release trùng tag. Phải gọi API xóa Tag Ref thủ công hoặc tự động trước."
     ],
     "conventions": [
       "DevTools disabled in production builds (main.cjs and UI toggle both disabled)."
