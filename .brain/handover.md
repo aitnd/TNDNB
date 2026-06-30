@@ -2,33 +2,33 @@
 📋 HANDOVER DOCUMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📍 Đang làm: Weather Status Indicator & Monetag Installation Fix (v3.15.2)
-🔢 Đến bước: Phase 4 (Build & QA Complete, Git Committed)
+📍 Đang làm: Admin Badge Display Fix & Monetag Raw Script Head Injection (v3.15.3)
+🔢 Đến bước: Phase 6 (Build & QA Complete, Git Committed)
 
 ✅ ĐÃ XONG:
-   - Sửa đổi components WeatherWidget trên cả ontap-web và ontap-win để hiển thị chỉ báo thời tiết (Signal/WifiOff + tooltip).
-   - Nhúng script Monetag multitag tĩnh bằng strategy beforeInteractive vào layout.tsx để đáp ứng crawler check.
-   - Sửa lỗi import store sai đường dẫn và thiếu import BadgeService trên ontap-web.
-   - Build thành công Next.js portal & ontap-web.
-   - Commit Git với mã release v3.15.2 thành công.
+   - Sửa lỗi hiển thị Huy hiệu đặc quyền (vương miện 👑) cho các vai trò Admin/Lãnh đạo bằng cách cấu hình `opacity: 1` cho animation trong `MiniRoleBadge.tsx`.
+   - Nhúng script Monetag dưới dạng thẻ `<script>` tĩnh HTML thô đặt trong `<head>` tự định nghĩa của `app/layout.tsx` (thay thế Next.js `<Script>` component) để vượt qua bộ quét tĩnh (static crawler check) của Monetag.
+   - Xoá cache `.next` và build thành công 100% dự án Next.js Portal và `ontap-web` (phiên bản `3.15.3`).
+   - Kiểm thử QA thành công (5/5 unit tests passed, lint passed, dev runner stable).
+   - Commit Git thành công lên nhánh `backup/upgrade-security-complete-2026-06-13`.
 
 ⏳ CÒN LẠI:
-   - Push code lên GitHub.
-   - Deploy Next.js Web App lên production server và chạy verify check Monetag trên dashboard.
-   - Chạy check-project để verify tính ổn định tổng thể.
+   - Push code lên GitHub (`git push`).
+   - Chạy `/deploy` để cập nhật lên Vercel.
+   - Xác thực Monetag: Chạy cài đặt lại trên dashboard của Monetag để xác thực tên miền thành công.
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-   - Sử dụng strategy="beforeInteractive" của Next.js Script để đảm bảo mã nhúng Monetag được ghi thẳng vào HTML head tĩnh lúc render SSR/SSG.
-   - Tự động fallback sang offline mode khi fetch API thời tiết lỗi hoặc mất mạng.
+   - Trực tiếp nhúng thẻ `<script>` chuẩn HTML trong `<head>` thay vì dùng next/script, giúp các bot quét tĩnh (không chạy JS) đọc và xác nhận mã cài đặt quảng cáo ngay lập tức.
+   - Nâng cấp phiên bản toàn hệ thống đồng bộ lên v3.15.3.
 
 ⚠️ LƯU Ý CHO SESSION SAU:
-   - Đảm bảo kiểm tra check-project đầy đủ sau khi deploy.
-   - Theo dõi trạng thái crawler check trong Monetag dashboard để đảm bảo pass verification.
+   - Khi deploy xong, kiểm tra lại bằng F12/Source Page của `www.daotaothuyenvien.com` để xem thẻ script Monetag đã xuất hiện ở phần đầu trang chưa.
+   - Nhấp vào "Run the installation check again" trên Monetag dashboard.
 
 📁 FILES QUAN TRỌNG:
    - d:\Antigravity\TNDNB\.brain\brain.json (static knowledge)
    - d:\Antigravity\TNDNB\.brain\session.json (progress)
-   - C:\Users\HorizonServers\.gemini\antigravity\brain\6b711a17-f47b-402b-903c-c657f24805f1\build_report.md (chi tiết build)
+   - C:\Users\HorizonServers\.gemini\antigravity\brain\6b711a17-f47b-402b-903c-c657f24805f1\build_report.md (chi tiết build v1.1)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 Đã lưu! Để tiếp tục: Gõ /recap

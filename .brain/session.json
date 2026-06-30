@@ -1,44 +1,50 @@
 {
-  "updated_at": "2026-06-30T03:08:00.000Z",
+  "updated_at": "2026-06-30T03:50:00.000Z",
   "working_on": {
-    "feature": "Admin Badge Visibility Hotfix (v3.15.2-hotfix)",
-    "task": "Sửa lỗi opacity trong MiniRoleBadge.tsx trên cả Web và Win, build và commit Git thành công.",
+    "feature": "Admin Badge & Monetag Raw Script Injection (v3.15.3)",
+    "task": "Sửa lỗi opacity hiển thị của Admin/Lãnh đạo và thay thế next/script bằng script HTML thô trong head của layout.tsx, chạy thành công quy trình build và QA v1.1 mới.",
     "status": "completed",
     "files": [
       "ontap-web/components/Badges/MiniRoleBadge.tsx",
-      "ontap-win/components/Badges/MiniRoleBadge.tsx"
+      "ontap-win/components/Badges/MiniRoleBadge.tsx",
+      "app/layout.tsx"
     ],
     "blockers": [],
-    "notes": "Lỗi opacity=0 khi chạy animate của premium roles đã được giải quyết. Build test Vite pass 100%."
+    "notes": "Đã chạy lại quy trình build & QA sạch 100% không lỗi."
   },
   "pending_tasks": [
     {
       "task": "Push code lên GitHub và deploy lên Vercel",
       "status": "pending"
+    },
+    {
+      "task": "Xác minh trạng thái cài đặt Monetag trên dashboard",
+      "status": "pending"
     }
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-30T03:08:00.000Z",
+      "timestamp": "2026-06-30T03:50:00.000Z",
       "type": "bugfix",
-      "description": "Sửa lỗi không hiển thị Huy hiệu đặc quyền (vương miện/lướt sóng/...) của Admin/Lãnh đạo bằng cách chèn opacity: 1 vào animate object của premium roles.",
+      "description": "Nhúng thẻ script Monetag thô trong head và sửa lỗi opacity của MiniRoleBadge.",
       "files": [
         "ontap-web/components/Badges/MiniRoleBadge.tsx",
-        "ontap-win/components/Badges/MiniRoleBadge.tsx"
+        "ontap-win/components/Badges/MiniRoleBadge.tsx",
+        "app/layout.tsx"
       ]
     }
   ],
   "errors_encountered": [
     {
-      "error": "Lỗi opacity=0 trong motion.div của Framer Motion làm biến mất huy hiệu của Admin/Lãnh đạo.",
-      "solution": "Bổ sung opacity: 1 vào animate object.",
+      "error": "Monetag crawler check không nhận diện được Next.js Script component dynamic load.",
+      "solution": "Chuyển thành script thô HTML chèn trực tiếp trong thẻ head.",
       "resolved": true
     }
   ],
   "decisions_made": [
     {
-      "decision": "Giữ nguyên cấu trúc animations spring và lấp lánh (pulsing border) và chỉ sửa opacity.",
-      "reason": "Bảo toàn hiệu ứng đẹp mắt vốn có cho các tài khoản Premium."
+      "decision": "Nâng cấp version toàn bộ lên v3.15.3 và chạy lại build & QA loop theo workflow v1.1.",
+      "reason": "Xác thực mã nguồn đóng gói thành công trước khi test."
     }
   ]
 }
