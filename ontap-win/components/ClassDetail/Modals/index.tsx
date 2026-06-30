@@ -203,6 +203,7 @@ export const AddEditCourseModal: React.FC<{
     const [name, setName] = useState(course?.name || '');
     const [desc, setDesc] = useState(course?.description || '');
     const [licenseId, setLicenseId] = useState(course?.licenseId || '');
+    const [avatarUrl, setAvatarUrl] = useState(course?.avatarUrl || '');
 
     return (
         <ModalWrapper title={course ? "Chỉnh sửa Lớp học" : "Tạo Lớp học mới"} onClose={onClose}>
@@ -224,8 +225,17 @@ export const AddEditCourseModal: React.FC<{
                         ))}
                     </select>
                 </div>
+                <div>
+                    <label className="block text-sm font-bold mb-1 dark:text-gray-300 text-slate-700">URL Ảnh Bìa (Tuỳ chọn)</label>
+                    <input type="text" value={avatarUrl} onChange={e => setAvatarUrl(e.target.value)} className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600 dark:text-white" placeholder="https://example.com/image.jpg" />
+                    {avatarUrl && (
+                        <div className="mt-2 w-full h-32 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-600">
+                            <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" onError={(e) => { (e.target as any).style.display = 'none'; }} />
+                        </div>
+                    )}
+                </div>
                 <button 
-                    onClick={() => onSave({ name, description: desc, licenseId })} 
+                    onClick={() => onSave({ name, description: desc, licenseId, avatarUrl })} 
                     className="w-full bg-teal-600 text-white py-2.5 rounded-xl font-bold mt-4 hover:bg-teal-700 shadow-lg shadow-teal-500/20 transition-all"
                 >
                     {course ? 'Cập Nhật' : 'Tạo Lớp'}

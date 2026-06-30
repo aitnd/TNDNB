@@ -1,5 +1,5 @@
 import { db } from './firebaseClient';
-import { collection, addDoc, query, where, getDocs, orderBy, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, Timestamp, writeBatch, deleteDoc, doc } from 'firebase/firestore'; 
 import { Quiz, UserAnswers } from '../types';
 
 export interface ExamResult {
@@ -69,5 +69,22 @@ export const getExamHistory = async (userId: string): Promise<ExamResult[]> => {
     } catch (error) {
         console.error("Error fetching exam history:", error);
         return [];
+    }
+};
+
+export const clearUserHistory = async (userId: string): Promise<void> => {
+    try {
+        const q1 = query(collection(db, 'exam_results'), where('studentId', '==', userId));
+        const snap1 = await getDocs(q1);
+        const batch = writeBatch(db);
+        snap1.docs.forEach(docSnap => batch.delete(docSnap.ref));
+
+        const q2 = query(collection(db, 'exam_results'), where('userId', '==', userId));
+        const snap2 = await getDocs(q2);
+        snap2.docs.forEach(docSnap => batch.delete(docSnap.ref));
+
+        await batch.commit();
+    } catch (error) {
+        console.error("Error clearing user history:", error);
     }
 };

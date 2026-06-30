@@ -5,6 +5,7 @@ import { getDefaultAvatar } from '../services/userService';
 import { collection, query, orderBy, getDocs, doc, updateDoc } from 'firebase/firestore'; 
 import { FaUser, FaSave, FaSearch, FaEdit, FaTrash, FaCheckCircle, FaArrowLeft, FaSort, FaSortUp, FaSortDown, FaFilter, FaInfoCircle, FaArrowRight, FaTimes, FaKey, FaHistory, FaLaptop, FaMobileAlt, FaSignOutAlt, FaUserCheck, FaUserSlash, FaUsers, FaUserPlus } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BadgeAdminModal } from './Badges/BadgeAdminModal';
 
 interface UserManagerScreenProps {
     userProfile: UserProfile;
@@ -115,6 +116,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UserAccount | null>(null);
     const [showDetailPanel, setShowDetailPanel] = useState(false);
+    const [badgeUser, setBadgeUser] = useState<UserAccount | null>(null);
 
     // --- Sorting & Pagination ---
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -351,6 +353,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
     const roleName = (r: string) => allRoles.find(x => x.id === r)?.name || r;
 
     return (
+        <>
         <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 p-4 md:p-6 pb-20">
             {/* Header */}
             <div className="flex items-center gap-3 mb-6">
@@ -618,6 +621,14 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                                                             <button onClick={() => handleDeleteUser(u.id)} className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition" title="Khóa tài khoản"><FaTrash size={14} /></button>
                                                         )
                                                     )}
+                                                    {/* Nút quản lý huy hiệu */}
+                                                    {(canViewEditOthers && hasHierarchy) && (
+                                                        <button
+                                                            onClick={() => setBadgeUser(u)}
+                                                            className="p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg transition"
+                                                            title="Quản lý huy hiệu"
+                                                        >🏅</button>
+                                                    )}
                                                 </div>
                                             </td>
                                         </tr>
@@ -846,7 +857,18 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                 </div>
             )}
         </div>
+
+        {/* Badge Admin Modal */}
+        <BadgeAdminModal
+            isOpen={!!badgeUser}
+            onClose={() => setBadgeUser(null)}
+            userId={badgeUser?.id || ''}
+            userName={badgeUser?.fullName || ''}
+        />
+        </>
     );
 };
 
 export default UserManagerScreen;
+
+// BadgeAdminModal được render ở cuối component chính, xem dòng badgeUser

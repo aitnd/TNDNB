@@ -3,6 +3,7 @@ import { UserProfile } from '../types';
 import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, ChevronDown, Utensils, Gamepad2, Award , Compass, ShieldCheck, FileEdit} from 'lucide-react'; 
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
+import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 
 // declare const __APP_VERSION__: string; // Removed in favor of dynamic version
 
@@ -183,6 +184,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                         }`}>
                                         {userProfile.full_name || userProfile.fullName || '---'}
                                         {userProfile?.role === 'hoc_vien' && (userProfile.isVerified || userProfile.courseId) && <CheckCircle size={14} className="text-green-500" />}
+                                        {userProfile?.role && <MiniRoleBadge role={userProfile.role} className="ml-1" />}
                                     </span>
                                 </span>
                             </button>

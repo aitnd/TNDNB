@@ -1,64 +1,50 @@
 {
-  "updated_at": "2026-06-29T02:16:00.000Z",
+  "updated_at": "2026-06-29T20:25:00.000Z",
   "working_on": {
-    "feature": "Route Security Protection & Maintenance Countdown (v3.10.9)",
-    "task": "Triển khai component ProtectedRoute chặn hoàn toàn 6 route quản lý nhạy cảm cho học viên, nâng cấp MaintenanceScreen hiển thị bộ đếm ngược thời gian thực glassmorphism.",
+    "feature": "Gamification v2.0 & QA Fixes (v3.14.0)",
+    "task": "Hoàn tất Gamification 3D Badges, BadgeAdminModal, sửa lỗi font Markdown trong CHANGELOG, tối ưu type compliance (Rules of Hooks).",
     "status": "completed",
     "files": [
-      "ontap-web/components/ProtectedRoute.tsx",
-      "ontap-win/components/ProtectedRoute.tsx",
-      "ontap-web/hooks/useCountdown.ts",
-      "ontap-win/hooks/useCountdown.ts",
-      "ontap-web/components/MaintenanceScreen.tsx",
-      "ontap-win/components/MaintenanceScreen.tsx",
-      "ontap-web/components/UsageConfigPanel.tsx",
-      "ontap-win/components/UsageConfigPanel.tsx",
-      "ontap-web/App.tsx",
-      "ontap-win/App.tsx",
-      "firestore.rules"
+      "CHANGELOG.md",
+      "CHANGELOG_DEV.md",
+      "project_qa_report.md",
+      "ontap-web/components/Badges/BadgeIcon3D.tsx",
+      "ontap-web/components/Badges/BadgeAdminModal.tsx",
+      "ontap-win/components/Badges/BadgeIcon3D.tsx",
+      "ontap-win/components/Badges/BadgeAdminModal.tsx"
     ],
     "blockers": [],
-    "notes": "Đã hoàn thành triển khai bảo vệ route 2 lớp (Client Route Guards + Firestore Rules local) và bộ đếm ngược bảo trì hoạt động ổn định trên cả Web và Windows App."
+    "notes": "Code đã được commit thành công (a0f76e75), sẵn sàng cho session tiếp theo."
   },
   "pending_tasks": [
     {
-      "task": "Deploy Next.js Web App lên production server để đồng bộ JS Bridge",
-      "status": "pending"
-    },
-    {
-      "task": "Chạy lại ứng dụng Android (tnd-android) trong Android Studio để xác thực lỗi trắng màn hình",
+      "task": "Deploy Next.js Web App lên production server",
       "status": "pending"
     }
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-29T02:16:00.000Z",
-      "type": "security_and_feature",
-      "description": "Vá hoàn toàn 6 route admin nhạy cảm (class-manager, usermanager, settings, exam-manager, notifications, analytics) bằng component ProtectedRoute mới. Cấu hình đếm ngược thời gian thực trên MaintenanceScreen thông qua hook useCountdown với giao diện Glassmorphism 4 ô (Ngày/Giờ/Phút/Giây). Thêm input datetime picker (ISO 8601) vào trang cài đặt của admin.",
+      "timestamp": "2026-06-29T20:25:00.000Z",
+      "type": "feature",
+      "description": "Tích hợp hoàn chỉnh Gamification v2.0 với huy hiệu 3D, Admin quản lý danh hiệu. Sửa triệt để các lỗi Rules of Hooks, unused variables để Next build pass 100%. Sửa lỗi font chữ trong Markdown khi render changelog.",
       "files": [
-        "ontap-web/components/ProtectedRoute.tsx",
-        "ontap-win/components/ProtectedRoute.tsx",
-        "ontap-web/hooks/useCountdown.ts",
-        "ontap-win/hooks/useCountdown.ts",
-        "ontap-web/components/MaintenanceScreen.tsx",
-        "ontap-win/components/MaintenanceScreen.tsx",
-        "ontap-web/components/UsageConfigPanel.tsx",
-        "ontap-win/components/UsageConfigPanel.tsx",
-        "ontap-web/App.tsx",
-        "ontap-win/App.tsx",
-        "firestore.rules"
+        "CHANGELOG_DEV.md",
+        "CHANGELOG.md",
+        "project_qa_report.md"
       ]
     }
   ],
-  "errors_encountered": [],
+  "errors_encountered": [
+    {
+      "error": "Lỗi hiển thị font chữ/tràn viền trong trình render Markdown của Changelog do thiếu dòng trống (\\n\\n) trước Heading.",
+      "solution": "Đã thêm newline, bổ sung bài học rút kinh nghiệm vào project_qa_report.md để tránh lặp lại.",
+      "resolved": true
+    }
+  ],
   "decisions_made": [
     {
-      "decision": "Sử dụng component ProtectedRoute dùng chung",
-      "reason": "Bảo vệ nghiêm ngặt các route nhạy cảm phía Client, tránh lặp logic check role rải rác và tự động redirect học sinh không đủ quyền."
-    },
-    {
-      "decision": "Dùng input datetime-local cho admin",
-      "reason": "Admin có thể chọn thời gian kết thúc bảo trì dễ dàng dưới dạng ISO 8601, hỗ trợ bộ đếm ngược tính toán thời gian chênh lệch chính xác từng giây."
+      "decision": "Quy định bắt buộc cách dòng (\\n\\n) trước thẻ Heading trong file md",
+      "reason": "Đảm bảo Markdown renderer (React Markdown) không merge Heading vào danh sách li liền trước đó."
     }
   ]
 }

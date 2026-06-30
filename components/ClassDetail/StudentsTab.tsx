@@ -2,14 +2,14 @@
 import Image from 'next/image';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import {    FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus,    FaFileExcel, FaPlus, FaSortAmountDown, FaSortAmountUp,   FaCheckCircle, FaLaptop, FaPaperPlane, FaEdit, FaHistory,   FaTrash, FaChevronLeft, FaChevronRight} from 'react-icons/fa'; 
+import {    FaUsers, FaThLarge, FaList, FaSearch, FaUserPlus,    FaFileExcel, FaPlus,   FaCheckCircle, FaLaptop, FaPaperPlane, FaEdit,   FaTrash, FaChevronLeft, FaChevronRight} from 'react-icons/fa'; 
 
 
 
 
 
 import { db } from '@/utils/firebaseClient';
-import {    collection, query, where, onSnapshot, updateDoc, deleteDoc, getDoc, QuerySnapshot, DocumentData, QueryDocumentSnapshot  } from 'firebase/firestore'; 
+import {    collection, query, where, onSnapshot, QuerySnapshot, DocumentData, QueryDocumentSnapshot  } from 'firebase/firestore'; 
 
 
 
@@ -35,9 +35,9 @@ const StudentsTab: React.FC<StudentsTabProps> = ({ classData, onAddStudent }) =>
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterRole, setFilterRole] = useState<'all' | 'verified' | 'unverified'>('all');
-  const [sortKey, setSortKey] = useState<'fullName' | 'createdAt'>('fullName');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [filterRole, _setFilterRole] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [sortKey, _setSortKey] = useState<'fullName' | 'createdAt'>('fullName');
+  const [sortOrder, _setSortOrder] = useState<'asc' | 'desc'>('asc');
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);

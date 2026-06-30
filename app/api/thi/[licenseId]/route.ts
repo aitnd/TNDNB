@@ -5,10 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '../../../../utils/supabaseClient'
 
 // --- CÔNG THỨC TRỘN ĐỀ (Giữ nguyên) ---
-const CONG_THUC_TRON_DE: Record<string, number> = {
-  'default_so_cau_moi_mon': 5,
-  'maytruong-h1': 3,
-};
+
 
 // Hàm "xáo" bài (Giữ nguyên)
 function xaoTronBai(array: any[]) {

@@ -22,13 +22,12 @@ interface OnlineStats {
 }
 
 const AdminStatsBar: React.FC<AdminStatsBarProps> = ({ userRole }) => {
-    // Chỉ hiện cho Admin/Quản lý/Lãnh đạo
-    if (!['admin', 'quan_ly', 'lanh_dao'].includes(userRole)) return null;
+    const isAdmin = ['admin', 'quan_ly', 'lanh_dao'].includes(userRole);
 
     const [stats, setStats] = useState<OnlineStats>({ total: 0, guests: 0, students: 0, teachers: 0, admins: 0 });
 
     useEffect(() => {
-        if (!rtdb) return;
+        if (!isAdmin || !rtdb) return;
         const statusRef = ref(rtdb, 'status');
 
         const unsubscribe = onValue(statusRef, (snapshot) => {
@@ -57,6 +56,8 @@ const AdminStatsBar: React.FC<AdminStatsBarProps> = ({ userRole }) => {
 
         return () => unsubscribe();
     }, []);
+
+    if (!isAdmin) return null;
 
     const items = [
         { label: 'Trực tuyến', value: stats.total, dot: 'bg-green-500' },

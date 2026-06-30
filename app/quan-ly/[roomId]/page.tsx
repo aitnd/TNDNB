@@ -3,7 +3,6 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useAuth } from '../../../context/AuthContext'
 import { db } from '../../../utils/firebaseClient'
 import { doc, onSnapshot, updateDoc, collection, writeBatch, serverTimestamp} from 'firebase/firestore'  
 import styles from './page.module.css'
@@ -40,7 +39,6 @@ interface ExamRoom {
 }
 
 export default function TeacherRoomPage() {
-  const { user } = useAuth()
   const params = useParams()
   const router = useRouter()
   const roomId = params.roomId as string
@@ -224,7 +222,6 @@ export default function TeacherRoomPage() {
 
     try {
       const batch = writeBatch(db);
-      const now = new Date(); // Lấy thời gian client làm mốc (hoặc serverTimestamp tốt hơn nhưng cần tính toán)
 
       selectedIds.forEach(pid => {
         const p = participants.find(x => x.id === pid);

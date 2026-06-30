@@ -5,6 +5,8 @@ import { getDefaultAvatar, uploadAvatar } from '../services/userService';
 import { doc, updateDoc } from 'firebase/firestore';
 import { FaUser, FaSave, FaArrowLeft, FaCamera, FaLock, FaHistory } from 'react-icons/fa';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import { BadgeList } from './Badges/BadgeList';
+import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 
 interface AccountScreenProps {
     userProfile: UserProfile;
@@ -172,6 +174,10 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                         />
                     </div>
                     <p className="text-sm text-gray-400 mt-2">Chạm để đổi ảnh đại diện</p>
+                    <h2 className="text-xl font-bold mt-3 dark:text-white flex items-center gap-2 justify-center">
+                        {myInfo.full_name || myInfo.fullName}
+                        {myInfo.role && <MiniRoleBadge role={myInfo.role} />}
+                    </h2>
                 </div>
 
                 <form onSubmit={handleSaveMyInfo} className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -244,6 +250,11 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                         </button>
                     </div>
                 </form>
+            </div>
+
+            {/* Badge List Section */}
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700 mb-6 mt-6">
+                <BadgeList userId={userProfile.id} userRole={userProfile.role} />
             </div>
 
             {/* MODAL ĐỔI MẬT KHẨU */}

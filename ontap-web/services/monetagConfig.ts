@@ -3,14 +3,14 @@
 
 export const MONETAG_CONFIG = {
     // Zone & Domain
-    ZONE_ID: 11198611,
-    DOMAIN: '3nbf4.com',
+    ZONE_ID: 254797,
+    DOMAIN: 'quge5.com',
 
     // Script URLs
-    SMART_TAG_URL: 'https://3nbf4.com/act/files/micro.tag.min.js?z=11198611',
+    SMART_TAG_URL: 'https://quge5.com/88/tag.min.js',
 
     // Fallback Direct Link URL (dùng khi chưa cấu hình trong Firebase)
-    DEFAULT_DIRECT_LINK_URL: 'https://3nbf4.com/4/11198611',
+    DEFAULT_DIRECT_LINK_URL: 'https://quge5.com/4/254797',
 
     // Service Worker
     SW_URL: '/sw.js',

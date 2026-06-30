@@ -2,9 +2,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { useAuth } from '../../context/AuthContext'
 import ProtectedRoute from '../../components/ProtectedRoute'
 import { supabase } from '../../utils/supabaseClient'
 
@@ -26,9 +24,6 @@ type Category = {
 
 // --- Component "Nội dung" (Bên trong "Lính gác") ---
 function AdminDashboard() {
-  const { user } = useAuth()
-  const router = useRouter()
-
   // (Não trạng thái - Giữ nguyên)
   const [categories, setCategories] = useState<Category[]>([])
   const [loadingCategories, setLoadingCategories] = useState(true)

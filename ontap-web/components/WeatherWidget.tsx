@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Cloud, Sun, CloudRain, Loader2, MapPin, ChevronDown, Droplets } from 'lucide-react';
+import { Cloud, Sun, CloudRain, Loader2, MapPin, ChevronDown, Droplets, Sparkles } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -40,6 +40,21 @@ const WeatherWidget: React.FC = () => {
         setWeather(data);
       } catch (error) {
         console.warn('Failed to fetch weather, using mock fallback:', error);
+        
+        const currentHour = new Date().getHours();
+        const mockHourly = Array.from({ length: 8 }).map((_, i) => {
+          const hour = (currentHour + i) % 24;
+          const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+          const isDay = hour >= 6 && hour <= 18;
+          return {
+            time: timeStr,
+            temp: 29 - i,
+            condition: isDay ? 'Nắng' : 'Trời trong',
+            icon: isDay ? 'https://cdn.weatherapi.com/weather/64x64/day/113.png' : 'https://cdn.weatherapi.com/weather/64x64/night/113.png',
+            rain_chance: i % 2 === 0 ? 0 : 10
+          };
+        });
+
         setWeather({
           temp: 28,
           condition: "Nắng nhẹ",
@@ -47,13 +62,7 @@ const WeatherWidget: React.FC = () => {
           advice: "Thời tiết đang mát mẻ, không mưa, bạn yên tâm học và ôn tập nhé! 🌸",
           location: "Triệu Việt Vương, Ninh Bình",
           forecast: {
-            hourly: [
-              { time: '17:00', temp: 29, condition: 'Nắng', icon: 'https://cdn.weatherapi.com/weather/64x64/day/113.png', rain_chance: 0 },
-              { time: '18:00', temp: 28, condition: 'Có mây', icon: 'https://cdn.weatherapi.com/weather/64x64/day/116.png', rain_chance: 10 },
-              { time: '19:00', temp: 27, condition: 'Trời trong', icon: 'https://cdn.weatherapi.com/weather/64x64/night/113.png', rain_chance: 0 },
-              { time: '20:00', temp: 26, condition: 'Trời trong', icon: 'https://cdn.weatherapi.com/weather/64x64/night/113.png', rain_chance: 0 },
-              { time: '21:00', temp: 25, condition: 'Có mây', icon: 'https://cdn.weatherapi.com/weather/64x64/night/116.png', rain_chance: 5 }
-            ],
+            hourly: mockHourly,
             daily: [
               { date: 'Hôm nay', minTemp: 25, maxTemp: 32, condition: 'Nắng nhẹ', icon: 'https://cdn.weatherapi.com/weather/64x64/day/116.png', rain_chance: 10 },
               { date: 'Ngày mai', minTemp: 26, maxTemp: 34, condition: 'Mưa dông', icon: 'https://cdn.weatherapi.com/weather/64x64/day/386.png', rain_chance: 80 },
@@ -91,6 +100,30 @@ const WeatherWidget: React.FC = () => {
   }
 
   if (!weather) return null;
+
+  const getAdviceIcon = () => {
+    const text = weather.advice?.toLowerCase() || '';
+    if (text.includes('mưa') || text.includes('rain')) return <CloudRain className="w-5 h-5 flex-shrink-0 text-blue-500" />;
+    if (text.includes('nắng') || text.includes('sun')) return <Sun className="w-5 h-5 flex-shrink-0 text-amber-500" />;
+    return <Sparkles className="w-5 h-5 flex-shrink-0 text-sky-500" />;
+  };
+
+  const getAdviceStyle = () => {
+    const text = weather.advice?.toLowerCase() || '';
+    if (text.includes('mưa') || text.includes('rain')) {
+      return theme === 'dark'
+        ? 'bg-blue-950/20 border-blue-900/30 text-blue-200'
+        : 'bg-blue-50/60 border-blue-100 text-blue-800';
+    }
+    if (text.includes('nắng') || text.includes('sun')) {
+      return theme === 'dark'
+        ? 'bg-amber-950/20 border-amber-900/30 text-amber-200'
+        : 'bg-amber-50/60 border-amber-100 text-amber-800';
+    }
+    return theme === 'dark'
+      ? 'bg-zinc-800/40 border-zinc-700/30 text-zinc-200'
+      : 'bg-zinc-50 border-zinc-100 text-zinc-800';
+  };
 
   const renderIcon = () => {
     if (weather.icon) {
@@ -159,33 +192,53 @@ const WeatherWidget: React.FC = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={`border-t ${theme === 'dark' ? 'border-gray-800' : 'border-gray-100'}`}
+            className={`border-t ${theme === 'dark' ? 'border-zinc-800' : 'border-zinc-100'}`}
           >
-            <div className="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-              
-              {/* Hourly Forecast */}
-              <div className="lg:col-span-2">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider opacity-50">Dự báo 24 giờ tới</h4>
+            <div className="p-4 md:p-6">
+              {/* Lời khuyên thiết kế chuyên nghiệp không dùng emoji */}
+              {weather.advice && (
+                <div className={`mb-6 p-4 rounded-2xl flex items-center space-x-3 border ${getAdviceStyle()}`}>
+                  {getAdviceIcon()}
+                  <span className="text-xs md:text-sm font-medium leading-relaxed">
+                    {weather.advice.replace(/[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, '').trim()}
+                  </span>
                 </div>
-                <div className="flex overflow-x-auto space-x-3 pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                  {weather.forecast.hourly.map((hour, idx) => (
-                    <div key={idx} className={`flex flex-col items-center justify-center p-3 rounded-2xl min-w-[76px] transition-all ${theme === 'dark' ? 'bg-gray-800/60 hover:bg-gray-700/80' : 'bg-gray-50 hover:bg-gray-100'} border ${theme === 'dark' ? 'border-gray-700/30' : 'border-gray-200/50'}`}>
-                      <span className="text-xs font-semibold opacity-70 mb-2">{hour.time}</span>
-                      <img src={hour.icon} className="w-8 h-8 drop-shadow-sm" alt="icon" loading="lazy" />
-                      <span className="text-base font-black mt-2">{Math.round(hour.temp)}°</span>
-                      {hour.rain_chance > 0 ? (
-                        <span className="text-[10px] text-blue-500 font-bold mt-1.5 flex items-center bg-blue-500/10 px-1.5 py-0.5 rounded-md">
-                          <Droplets className="w-2.5 h-2.5 mr-0.5" />
-                          {hour.rain_chance}%
-                        </span>
-                      ) : (
-                        <span className="h-5 mt-1.5"></span>
-                      )}
-                    </div>
-                  ))}
+              )}
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+                
+                {/* Hourly Forecast */}
+                <div className="lg:col-span-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-xs font-bold uppercase tracking-wider opacity-50">Dự báo 24 giờ tới</h4>
+                  </div>
+                  <div className="flex overflow-x-auto space-x-3 pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                    {weather.forecast.hourly.map((hour, idx) => (
+                      <motion.div 
+                        key={idx} 
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        className={`flex flex-col items-center justify-center p-3 rounded-2xl min-w-[78px] transition-colors ${
+                          theme === 'dark' 
+                            ? 'bg-zinc-800/40 hover:bg-zinc-800/70 border-zinc-700/30 text-zinc-100' 
+                            : 'bg-zinc-50 hover:bg-zinc-100/80 border-zinc-200/50 text-zinc-800'
+                        } border`}
+                      >
+                        <span className="text-xs font-semibold opacity-60 mb-2 font-mono">{hour.time}</span>
+                        <img src={hour.icon} className="w-8 h-8 drop-shadow-sm" alt="icon" loading="lazy" />
+                        <span className="text-base font-black mt-2 tracking-tighter">{Math.round(hour.temp)}°</span>
+                        {hour.rain_chance > 0 ? (
+                          <span className="text-[10px] text-sky-600 dark:text-sky-400 font-bold mt-1.5 flex items-center bg-sky-500/10 px-1.5 py-0.5 rounded-md">
+                            <Droplets className="w-2.5 h-2.5 mr-0.5" />
+                            {hour.rain_chance}%
+                          </span>
+                        ) : (
+                          <span className="h-5 mt-1.5"></span>
+                        )}
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
               {/* Daily Forecast */}
               <div className={`rounded-3xl p-5 ${theme === 'dark' ? 'bg-gray-800/40' : 'bg-gray-50'}`}>
@@ -217,7 +270,8 @@ const WeatherWidget: React.FC = () => {
               </div>
 
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
         )}
       </AnimatePresence>
     </div>

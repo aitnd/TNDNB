@@ -1,3 +1,30 @@
+## [3.15.1] - 2026-06-30
+### Cập nhật hệ thống (Web & App Win)
+- **Thời tiết mở rộng:** Nâng cấp widget thời tiết hiển thị chi tiết 8 mốc thời gian (thay vì 5) dựa trên API thực tế hoặc giờ động của máy học viên.
+- **Giao diện thời tiết:** Tinh chỉnh bảng màu Zinc/Slate trung tính theo thiết kế mới, thay đổi thiết kế phần Lời khuyên (Advice) loại bỏ biểu tượng emoji thô sơ, thay bằng Banner Alert phối màu tinh tế tự động thích ứng với thời tiết.
+- **Hiệu ứng mượt mà:** Bổ sung hiệu ứng Spring Hover nhẹ cho các thẻ giờ và ẩn scrollbar ngang tối giản.
+- **Hạ tầng:** Tối ưu hóa và cập nhật hạ tầng để tăng tốc độ tải trang và độ ổn định của ứng dụng.
+
+## [3.15.0] - 2026-06-29
+### Nâng cấp Giao diện Quản lý Lớp học thông minh (Web & App Win)
+- **Giao diện thẻ thông minh (Smart Cards):** Thay đổi giao diện danh sách lớp học sang dạng thẻ hiện đại, hỗ trợ hiển thị ảnh đại diện (avatar) của giáo viên chủ nhiệm.
+- **Thanh thống kê (Insights Bar):** Bổ sung thanh thống kê trực quan hiển thị tổng quan số lượng học viên, số lượt thi thử và các chỉ số quan trọng khác trực tiếp trên màn hình quản lý.
+- **Bộ lọc nâng cao:** Thêm chức năng lọc nhanh lớp học theo trạng thái (Đang hoạt động / Đã kết thúc) và hỗ trợ chuyển đổi linh hoạt giữa chế độ xem Lưới và Danh sách.
+- **Đồng bộ hóa 100%:** Đảm bảo toàn bộ trải nghiệm giao diện quản lý lớp học mới hoạt động mượt mà trên cả nền tảng Web và ứng dụng Windows.
+
+## [3.14.0] - 2026-06-29
+### Hoàn thiện Hệ thống Huy hiệu & Tự động hóa
+- **Giao diện Quản lý Huy hiệu:** Tích hợp giao diện quản lý huy hiệu 3D chuyên nghiệp vào phần Quản lý Học viên và Quản lý Lớp (Web & App Win), cho phép Giáo viên và Lãnh đạo cấp/thu hồi huy hiệu dễ dàng.
+- **Tự động nhận huy hiệu:** Học viên tự động được theo dõi tiến độ và nhận huy hiệu ngay sau khi nộp bài Ôn tập và Thi thử thành công.
+- **Đồng bộ hóa 100%:** Đảm bảo hệ thống hoạt động thống nhất và ổn định trên cả phiên bản Web và ứng dụng Windows.
+
+## [3.13.0] - 2026-06-29
+### Tích hợp Hệ thống Huy hiệu & Tối ưu hóa Tạo/Import Học viên (Web & App Win)
+- **Hệ thống Huy hiệu (Badge System):** Ra mắt tính năng tích lũy huy hiệu danh dự khi hoàn thành xuất sắc các bài thi và ôn luyện trực tuyến. Bổ sung huy hiệu chức danh (Admin, Giáo viên, Học viên) hiển thị trên thanh điều hướng và Thẻ học viên.
+- **Tái sử dụng tài khoản an toàn:** Hỗ trợ quy trình dọn dẹp sạch sẽ toàn bộ kết quả thi và huy hiệu cũ khi tái sử dụng SBD cũ cho học viên khóa mới, giúp tối ưu cơ sở dữ liệu.
+- **Import Excel thông minh:** Bổ sung giao diện kiểm tra trùng lặp trước khi import. Hiển thị bảng đối chiếu học viên cũ vs học viên mới kèm cảnh báo bảo mật 2 lớp khi ghi đè tài khoản đang hoạt động.
+- **Dọn dẹp code:** Sửa lỗi thiếu tệp bỏ qua bảo mật và xóa bỏ toàn bộ mã nguồn dư thừa nhằm tăng tốc độ tải trang.
+
 ## [3.12.2] - 2026-06-29
 ### Tối ưu hóa Giao diện Nửa Trên Dashboard & Thanh Điều Hướng TopNavbar (Web & App Win)
 - **Tối ưu không gian hiển thị:** Đưa thanh thông tin thời tiết và trạng thái hệ thống vào chung một hàng ngang (Slim Banner Header), thu gọn khoảng trắng đứng giúp các nút bấm chức năng chính hiển thị trọn vẹn ngay trong khung nhìn đầu tiên.

@@ -4,9 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../utils/firebaseClient';
-import { Settings, Wrench, ShieldAlert, Clock, Mail, RefreshCw } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-
 import PortalMaintenanceScreen from './PortalMaintenanceScreen';
 
 export default function PortalMaintenanceWrapper({ children }: { children: React.ReactNode }) {

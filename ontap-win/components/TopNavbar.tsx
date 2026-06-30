@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
+import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils, Gamepad2 , Compass, ShieldCheck, FileEdit, Award } from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';

@@ -181,7 +181,8 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         script.id = 'monetag-script';
         script.async = true;
         script.src = MONETAG_CONFIG.SMART_TAG_URL;
-        script.setAttribute('data-z', MONETAG_CONFIG.ZONE_ID.toString());
+        script.setAttribute('data-zone', MONETAG_CONFIG.ZONE_ID.toString());
+        script.setAttribute('data-cfasync', 'false');
         script.defer = true;
         document.body.appendChild(script);
     };

@@ -85,6 +85,11 @@
       "name": "Bộ Đếm Ngược Bảo Trì Real-time",
       "status": "implemented",
       "details": "Đếm ngược thời gian thực trên MaintenanceScreen thông qua hook useCountdown và input datetime picker trong UsageConfigPanel của admin."
+    },
+    {
+      "name": "Hệ thống Gamification v2.0 & Huy hiệu 3D (Badge Role & Admin Manager)",
+      "status": "implemented",
+      "details": "Hiển thị tự động Role Badge cho Hồ sơ cá nhân (Admin, Lãnh đạo, Giáo viên). Bổ sung màn hình quản lý cấp/thu hồi huy hiệu thành tích của học sinh cho Admin/Lãnh đạo trong danh sách lớp. Hỗ trợ hiển thị badge dạng icon 3D với hiệu ứng confetti."
     }
   ],
   "knowledge_items": {
@@ -99,7 +104,8 @@
       "Lệch phiên bản eslint-config-next với NextJS (ví dụ dùng v16 trên Next v14) gây circular reference và crash next lint",
       "CHANGELOG.md dễ bị lỗi font (mojibake) do ghi đè encoding, cần dùng script convert latin1-to-utf8.",
       "Git index.lock có thể bị lock bởi GitHub Desktop hoặc tiến trình khác, cần giải phóng lock trước khi chạy lệnh git.",
-      "Firebase Private Credentials có thể bị lưu trong Git cache dù đã có trong .gitignore. Cần chạy git rm --cached để dọn sạch hoàn toàn."
+      "Firebase Private Credentials có thể bị lưu trong Git cache dù đã có trong .gitignore. Cần chạy git rm --cached để dọn sạch hoàn toàn.",
+      "Lỗi font (Typography broken) trong React Markdown khi render CHANGELOG.md do thiếu khoảng trắng (\\n\\n) trước các block heading (ví dụ ## [3.14.0]). Luôn ngắt dòng trước thẻ Heading."
     ],
     "conventions": [
       "DevTools disabled in production builds (main.cjs and UI toggle both disabled)."

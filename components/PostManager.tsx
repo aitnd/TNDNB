@@ -33,7 +33,7 @@ type AuthorMap = {
 
 // (NỘI DUNG COMPONENT)
 export default function PostManager() {
-    const { user } = useAuth()
+    const { user: _user } = useAuth()
     const [posts, setPosts] = useState<Post[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)

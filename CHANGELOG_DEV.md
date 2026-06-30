@@ -1,3 +1,40 @@
+## [3.15.1] - 2026-06-30
+### Cập nhật hệ thống quảng cáo Monetag (Web & App Win)
+- **Multitag:** Cập nhật domain sang `quge5.com` và zone ID `254797`. Đổi attribute từ `data-z` sang `data-zone` và thêm `data-cfasync="false"` để tương thích với Cloudflare.
+- **Service Worker:** Cập nhật domain sang `5gvci.com` và zone ID `11218490` trong các file `sw.js` (root, ontap-web, ontap-win).
+
+### Cấu trúc thiết kế & Mở rộng thời tiết (Weather Redesign)
+- **DESIGN.md Integration:** Tạo file `DESIGN.md` ở root quy định màu sắc Zinc trung tính, typography Satoshi, layout logic và spring motion. Vượt qua kiểm tra contrast WCAG AA.
+- **Weather API Backend:** Sửa đổi API Next.js `/api/weather/route.ts` để slice dữ liệu forecast thực tế về 8 tiếng và refactor hàm giả lập `getDynamicMockWeather` sinh đủ 8 mốc động.
+- **WeatherWidget Web/Win:** Tích hợp `Sparkles` icon, dynamic Advice styles (`getAdviceStyle`, `getAdviceIcon`), lọc emoji bằng regex và spring-physics hover card (`whileHover` trong Framer Motion).
+
+## [3.15.0] - 2026-06-29
+### Feature: Modernized Class Management UI (Web & Win)
+- **ClassList Rewrite:** Rewrote `ClassList.tsx` to support both Grid and List view modes using Tailwind CSS.
+- **Smart Cards:** Replaced traditional list items with dynamic cards containing gradient headers, status indicators (Active/Finished), and quick action overlay buttons (Edit/Delete).
+- **Avatar Support:** Added `avatarUrl` rendering for head teachers fetching from `creatorProfiles` state map. Added avatarUrl input inside `AddEditCourseModal`.
+- **Insights Bar:** Implemented `getDocs(query(collection(db, 'thithu_results'), where('courseId', '==', id)))` in `ClassManagementScreen.tsx` to display real-time member count and mock test attempt totals.
+- **Environment Parity:** Synchronized changes from `ontap-web` to `ontap-win` to maintain codebase parity.
+
+## [3.14.0] - 2026-06-29
+### Gamification v2.0 - Complete Integration
+- **BadgeAdminModal:** Implemented 3D icon rendering and manual grant/revoke functions using BadgeService for Admins and Leaders.
+- **App.tsx Triggers:** Integrated `increasePracticeProgress` and `increaseMockTestProgress` into `saveExamResult` flows on both Web and Win platforms.
+- **Fragment Fix:** Fixed React Fragment errors in UserManagerScreen.tsx on both platforms.
+- **Constants Sync:** Synced `badges.ts` definitions for unified mock test and practice progress.
+
+### QA Fixes
+- **TypeScript Strict Compliance:** Fixed unused variables (`StudentAnswers`, `CONG_THUC_TRON_DE`, `loading`, `filterRole`, `sortKey`, `sortOrder`, `headTeacher`, `router`) across various components and API routes (`nop-bai`, `thi`, `dang-bai/sua`, `dang-bai/tao-moi`, `ho-so`, `ClassDetail`, `PostManager`, `StudentClassView`, `TeacherRoomList`) to successfully pass the Next.js `next build` process.
+- **Rules of Hooks:** Refactored early returns in `AdminStatsBar.tsx` and `QuizScreen.tsx` to strictly occur after hook declarations, preventing React state mismatch errors across `ontap-web` and `ontap-win`.
+- **Markdown Formatting & Font Issue:** Diagnosed recurring "lỗi font" in changelog rendering. Root cause: Missing newline (\n\n) before markdown headings (## [Version]) caused parsers to merge headings with previous list items, breaking UI typography and font scaling. Preventive measure: Always ensure strict double-newline separation between changelog blocks.
+
+## [3.13.0] - 2026-06-29
+### Gamification Engine & Smart Account Recycle (Web & App Win)
+- **Badge Engine Core:** Implemented `BadgeService` and `BadgeListener` side-effect wrapper to trigger and unlock achievements (`achievement_1`, `achievement_perfect`) dynamically on quiz and online exam submission.
+- **MiniRoleBadge Component:** Developed and integrated visual `<MiniRoleBadge />` displaying user privilege roles (`admin`, `giao_vien`, `hoc_vien`) in `TopNavbar` and `StudentCard`.
+- **Database Recycling Services:** Added `BadgeService.resetUserBadges(uid)` and `clearUserHistory(uid)` in `historyService.ts` to purge and clean sub-collections and exam logs when recycling student IDs.
+- **Conflict Resolution UI:** Upgraded `ImportStudentModal.tsx` and `CreateStudentModal.tsx` (Web & Win) with a pre-check verification step displaying conflict comparison tables and enforcing a double-confirmation prompt for active (unlocked) accounts before overwrite.
+- **Codebase Cleanups & Modularity:** Cleaned up unused imports/variables in `Navbar`, `StudentsTab`, `PortalMaintenanceWrapper`, `admin/page.tsx`, and `quan-ly/[roomId]/page.tsx`. Added `.env*` to `ontap-win/.gitignore`.
 
 ## [3.12.2] - 2026-06-29
 ### Refactor UI Header Layout & TopNavbar Consolidation (Web & App Win)
