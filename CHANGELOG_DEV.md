@@ -1,7 +1,16 @@
+## [3.15.7] - 2026-06-30
+### Mobile UI Enhancement & Navigation Architecture Refactoring (Web & Win)
+- **New Mobile Header Component:** Integrated `MobileHeader` to render brand logo and user avatar dynamically based on `UserProfile` props on mobile layout.
+- **Mobile Navigation Refactoring:** Overhauled `MobileBottomNav` component. Replaced legacy primary items (News, Practice, Account) with more functional routing keys: `dashboard` (Trang chủ), `history` (Lịch sử), and dynamic `class` (Lớp học) which toggles `FaSchool` or `FaUserGraduate` based on teacher/student role checking.
+- **Expanded Secondary Drawer Menu:** Moved `Account` navigation to the sliding drawer. Integrated `Mailbox` (Hộp thư), `Download App` (Tải App), and `Config` (Cấu hình, restricted to `role === 'admin'`) in the bottom navigation menu items.
+- **Safe Area Insets Adjustment:** Applied CSS padding-bottom using standard `env(safe-area-inset-bottom)` to avoid layout overlapping on modern borderless mobile devices.
+- **Unified Layout Entry Integration:** Bound `MobileHeader` and `MobileBottomNav` layout renderers inside `AppContent` component for `ontap-web` (`App.tsx`) and `AppRoutes` wrapper for `ontap-win` (`AppRoutes.tsx`).
+
 ## [3.15.6] - 2026-06-30
-### T�i c?u tr�c m� ngu?n h? th?ng
-- **Refactor (App.tsx):** Split God Component App.tsx v�o outes/AppRoutes.tsx v� hooks/useAppInitialization.ts cho c? ontap-web v� ontap-win.
-- **Cleanup:** D?n d?p unused variables v� fix l?i TypeScript warning (TS6133) ? nhi?u files.
+### Tái cấu trúc mã nguồn hệ thống
+- **Refactor (App.tsx):** Split God Component App.tsx vào routes/AppRoutes.tsx và hooks/useAppInitialization.ts cho cả ontap-web và ontap-win.
+- **Cleanup:** Dọn dẹp unused variables và fix lỗi TypeScript warning (TS6133) ở nhiều files.
+
 ## [3.15.5] - 2026-06-30
 ### Fix Timezone Offsets, Refactor App.tsx, & Clean TS Warnings (Web & Win)
 - **UTC-to-VN Time Conversion**: Fixed time drift by computing local hours with explicit `(new Date().getUTCHours() + 7) % 24` offset calculations inside `app/api/weather/route.ts` instead of relying on default server clock context.

@@ -7,6 +7,8 @@ import SnowEffect from './components/SnowEffect';
 import SweetAlertPopup from './components/SweetAlertPopup';
 import TopNavbar from './components/TopNavbar';
 import AlertMarquee from './components/AlertMarquee';
+import MobileHeader from './components/MobileHeader';
+import MobileBottomNav from './components/MobileBottomNav';
 import { useAppStore } from './stores/useAppStore'; 
 import { useAppInitialization } from './hooks/useAppInitialization';
 import { AppRoutes } from './routes/AppRoutes';
@@ -404,6 +406,10 @@ const AppContent: React.FC = () => {
         </>
       )}
 
+      {isMobileApp && (
+        <MobileHeader userProfile={userProfile} />
+      )}
+
       <AppRoutes
         usageConfig={usageConfig}
         handleStart={handleStart}
@@ -417,6 +423,15 @@ const AppContent: React.FC = () => {
         persistSession={persistSession}
         handleTopNavNavigate={handleTopNavNavigate}
       />
+
+      {isMobileApp && (
+        <MobileBottomNav 
+          userProfile={userProfile}
+          currentScreen={location.pathname.replace('/ontap/', '')}
+          onNavigate={handleTopNavNavigate}
+          onLogout={handleLogout}
+        />
+      )}
     </div>
   );
 };

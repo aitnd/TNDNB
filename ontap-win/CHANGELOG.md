@@ -1,6 +1,14 @@
+## [3.15.7] - 2026-06-30
+### Nâng cấp giao diện Mobile & Thiết kế điều hướng mới (Web & App Win)
+- **Mobile Header:** Thêm mới thanh tiêu đề `MobileHeader` hiển thị logo TND và thông tin cá nhân/avatar của học viên khi chạy trên các thiết bị di động.
+- **Điều hướng thông minh:** Tái thiết kế thanh điều hướng dưới cùng `MobileBottomNav` với 3 nút chính trực quan hơn gồm **Trang chủ**, **Lịch sử**, **Lớp học** (tự động thay đổi biểu tượng theo vai trò Giáo viên/Học sinh).
+- **Mở rộng Menu phụ:** Tích hợp các nút chức năng nâng cao vào menu phụ gồm Hộp thư, Cấu hình (cho quản trị viên) và liên kết Tải App.
+- **Tối ưu hiển thị:** Nhúng trực tiếp Header/Bottom Nav vào luồng ứng dụng chính, đảm bảo căn lề an toàn (safe-area) trên các thiết bị di động tai thỏ/tràn viền.
+
 ## [3.15.6] - 2026-06-30
-### T?i uu ho� ?ng d?ng
-- **C?i thi?n d? ?n d?nh:** T?i uu ho� c?u tr�c h? th?ng gi�p ?ng d?ng ch?y nh? nh�ng v� ?n d?nh hon.
+### Tối ưu hóa ứng dụng
+- **Cải thiện độ ổn định:** Tối ưu hóa cấu trúc hệ thống giúp ứng dụng chạy nhẹ nhàng và ổn định hơn.
+
 ## [3.15.5] - 2026-06-30
 ### Khắc phục lỗi hiển thị thời tiết & Tối ưu hóa hệ thống (Web & App Win)
 - **Thời tiết local**: Đồng bộ hóa múi giờ thực tế của học viên (+7) thay vì sử dụng múi giờ UTC của máy chủ, đảm bảo hiển thị đúng giờ Việt Nam tại mọi thời điểm trong ngày.
