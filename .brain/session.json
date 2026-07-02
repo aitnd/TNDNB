@@ -1,19 +1,18 @@
 {
-  "updated_at": "2026-06-30T07:54:00.000Z",
+  "updated_at": "2026-07-02T10:13:00.000Z",
   "working_on": {
-    "feature": "Cấu hình quảng cáo 0 = Tắt & Fix DirectLink Bug",
-    "task": "Bổ sung kiểm tra giới hạn maxPerSession cho Monetag Direct Link (sửa bug bỏ qua giới hạn), thêm UI highlight trực quan và badge 🚫 Đã tắt khi cấu hình = 0 trong Admin Panel.",
+    "feature": "Chặn click chọn lọc AdSense (Phương án 2)",
+    "task": "Triển khai CSS 2 tầng bảo vệ In-page ads và mở khóa Overlay ads (Anchor, Vignette) trên cả Web, Portal, và Win App.",
     "status": "completed",
     "files": [
-      "ontap-web/services/monetagConfig.ts",
-      "ontap-win/services/monetagConfig.ts",
-      "ontap-web/components/MonetagDirectLink.tsx",
-      "ontap-win/components/MonetagDirectLink.tsx",
-      "ontap-web/components/UsageConfigPanel.tsx",
-      "ontap-win/components/UsageConfigPanel.tsx"
+      "ontap-web/services/adBlockerStyles.ts",
+      "ontap-web/components/AdSenseLoader.tsx",
+      "app/components/PortalAdLoader.tsx",
+      "ontap-win/services/adBlockerStyles.ts",
+      "ontap-win/components/AdSenseLoader.tsx"
     ],
     "blockers": [],
-    "notes": "Đã build test thành công 100% không phát sinh lỗi biên dịch."
+    "notes": "Đã triển khai xong, chạy QA Loop thành công và build verify PASS."
   },
   "pending_tasks": [
     {
@@ -23,24 +22,36 @@
   ],
   "recent_changes": [
     {
-      "timestamp": "2026-06-30T07:54:00.000Z",
-      "type": "bugfix",
-      "description": "Fix bug DirectLink không tôn trọng config maxPerSession, cập nhật UI highlight đỏ + badge 🚫 Đã tắt khi max = 0.",
+      "timestamp": "2026-07-02T10:13:00.000Z",
+      "type": "feature",
+      "description": "Chặn click chọn lọc cho AdSense: chỉ khóa In-page ads, bỏ qua Overlay ads để tránh liệt nút Close/Ẩn. Áp dụng cho cả web, portal và win app.",
       "files": [
-        "ontap-web/services/monetagConfig.ts",
-        "ontap-win/services/monetagConfig.ts",
-        "ontap-web/components/MonetagDirectLink.tsx",
-        "ontap-win/components/MonetagDirectLink.tsx",
-        "ontap-web/components/UsageConfigPanel.tsx",
-        "ontap-win/components/UsageConfigPanel.tsx"
+        "ontap-web/services/adBlockerStyles.ts",
+        "ontap-web/components/AdSenseLoader.tsx",
+        "app/components/PortalAdLoader.tsx",
+        "ontap-win/services/adBlockerStyles.ts",
+        "ontap-win/components/AdSenseLoader.tsx"
+      ]
+    },
+    {
+      "timestamp": "2026-07-02T04:32:00.000Z",
+      "type": "bugfix",
+      "description": "Sửa lỗi crash import Excel trên Web do gọi biến state file thay vì parameter, xóa bỏ state variable file thừa để hết lỗi compile TS.",
+      "files": [
+        "ontap-web/components/ImportStudentModal.tsx",
+        "ontap-win/components/ImportStudentModal.tsx"
       ]
     }
   ],
   "errors_encountered": [],
   "decisions_made": [
     {
-      "decision": "Đưa AD_DISABLED = 0 làm hằng số Single Source of Truth.",
-      "reason": "Giúp việc quản lý ngữ nghĩa của mã nguồn sạch sẽ, tránh magic number."
+      "decision": "Chuyển Portal sang pointer-events: none thay vì display: none khi block ads",
+      "reason": "Vẫn giữ quảng cáo hiển thị để kiếm tiền hiển thị (Impression) nhưng khóa click để chống click tặc, đồng bộ hành vi với bản Web."
+    },
+    {
+      "decision": "Loại bỏ biến state file và setFile khỏi ImportStudentModal",
+      "reason": "Vì file chỉ được dùng tức thời qua tham số của handleFileUpload, việc lưu vào React state là dư thừa và dễ gây lỗi bất đồng bộ khi đọc."
     }
   ]
 }

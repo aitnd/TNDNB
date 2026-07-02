@@ -3,6 +3,7 @@ import { getUsageConfig, UsageConfig } from '../services/adminConfigService';
 import { getUserRoleConfig } from '../services/usageService';
 import { MONETAG_CONFIG, getDirectLinkUrl, setMonetagLimits, getMonetagLimits, getSessionCount, incrementSessionCount } from '../services/monetagConfig';
 import { isAdSenseBlocked, incrementAdSenseClick, setAdSenseLimits } from '../services/adsenseConfig';
+import { ADSENSE_SELECTIVE_BLOCK_CSS } from '../services/adBlockerStyles';
 
 interface AdSenseLoaderProps {
     userProfile: any | null;
@@ -194,22 +195,14 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         });
     };
 
-    // NUCLEAR OPTION: CSS Hiding/Blocking
-    // Thay vì ẩn hoàn toàn (làm mất doanh thu hiển thị - Impression),
-    // chúng ta chỉ khóa khả năng click chuột (pointer-events: none).
-    // Quảng cáo vẫn hiện rành rành trên màn hình, vẫn được Google tính Viewability, nhưng không thể click được nữa.
+    // 🛡️ Chặn click CHỌN LỌC: Chỉ khóa In-page ads, mở khóa Overlay (Anchor/Vignette)
+    // để user vẫn bấm Close/Ẩn bình thường. Quảng cáo In-page vẫn hiện → giữ Impression.
     const injectHideAdsStyle = () => {
         if (document.getElementById('adsense-blocker-style')) return;
 
         const style = document.createElement('style');
         style.id = 'adsense-blocker-style';
-        style.innerHTML = `
-            .adsbygoogle, .google-auto-placed, ins.adsbygoogle {
-                /* Khóa click hoàn toàn, mọi click chuột / cảm ứng sẽ xuyên qua quảng cáo */
-                pointer-events: none !important;
-                /* Không ẩn, không giảm opacity để đảm bảo ActiveView của Google vẫn tính 100% Viewable */
-            }
-        `;
+        style.innerHTML = ADSENSE_SELECTIVE_BLOCK_CSS;
         document.head.appendChild(style);
     };
 

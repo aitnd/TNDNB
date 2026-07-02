@@ -1,3 +1,7 @@
+## [3.15.9] - 2026-07-02
+### Tối ưu hóa điều hướng và hiển thị trên thiết bị di động (Web & App Win)
+- **Tối ưu hóa tương tác:** Cải thiện khả năng phản hồi của các nút đóng, ẩn bảng tin, và các thanh neo điều hướng cố định trên màn hình thiết bị di động, đảm bảo người dùng luôn tương tác mượt mà trong mọi tình huống.
+
 ## [3.15.8] - 2026-07-02
 ### Sửa lỗi Import Học viên từ Excel (Web)
 - **Sửa lỗi Excel Import:** Khắc phục lỗi crash ứng dụng khi tải lên file Excel để tạo hàng loạt tài khoản học viên trên trình duyệt Web (do lỗi bất đồng bộ khi đọc file). Bản ứng dụng Windows và các tính năng khác hoạt động bình thường.

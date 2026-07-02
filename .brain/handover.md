@@ -1,36 +1,30 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 HANDOVER DOCUMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📍 Đang làm: Admin Badge Display Fix & Monetag Raw Script Head Injection (v3.15.3)
-🔢 Đến bước: Phase 6 (Build & QA Complete, Git Committed)
+📍 Đang làm: Chặn click chọn lọc AdSense (Phương án 2)
+🔢 Đến bước: Đóng gói và Release (v3.15.9) - Đã build và commit thành công.
 
 ✅ ĐÃ XONG:
-   - Sửa lỗi hiển thị Huy hiệu đặc quyền (vương miện 👑) cho các vai trò Admin/Lãnh đạo bằng cách cấu hình `opacity: 1` cho animation trong `MiniRoleBadge.tsx`.
-   - Nhúng script Monetag dưới dạng thẻ `<script>` tĩnh HTML thô đặt trong `<head>` tự định nghĩa của `app/layout.tsx` (thay thế Next.js `<Script>` component) để vượt qua bộ quét tĩnh (static crawler check) của Monetag.
-   - Sửa lỗi **Validation Failed (422)** khi phát hành phiên bản trùng tag trên GitHub: Bổ sung API `deleteTag` tự động dọn dẹp Git Tag cũ trên repository khi xoá release, tránh xung đột tạo tag mới. Sửa lỗi parse mảng errors của GitHub API để nhận diện `already_exists` chính xác.
-   - Xoá cache `.next` và build thành công 100% dự án Next.js Portal và `ontap-web` (phiên bản `3.15.3`).
-   - Kiểm thử QA thành công (5/5 unit tests passed, lint passed, dev runner stable).
-   - Commit Git thành công lên nhánh `backup/upgrade-security-complete-2026-06-13`.
+   - Tạo CSS shared `adBlockerStyles.ts` cho web và win app.
+   - Cập nhật `AdSenseLoader.tsx` trên Web và App Win.
+   - Cập nhật `PortalAdLoader.tsx` trên Portal (Next.js) chuyển sang dùng pointer-events: none.
+   - Chạy QA Loop thành công (10/10 tests passed, dev server test pass).
+   - Build thành công cả 3 phiên bản: ontap-web, ontap-win, Next.js portal.
+   - Commit Git thành công (v3.15.9).
 
 ⏳ CÒN LẠI:
-   - Push code lên GitHub (`git push`).
-   - Chạy `/deploy` để cập nhật lên Vercel.
-   - Xác thực Monetag: Chạy cài đặt lại trên dashboard của Monetag để xác thực tên miền thành công.
+   - Deploy lên Vercel và release app (khi user sẵn sàng).
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-   - Trực tiếp nhúng thẻ `<script>` chuẩn HTML trong `<head>` thay vì dùng next/script, giúp các bot quét tĩnh (không chạy JS) đọc và xác nhận mã cài đặt quảng cáo ngay lập tức.
-   - Tự động xoá Git Tag tương ứng khi xoá Release cũ để tránh lỗi Validation Failed của GitHub API.
+   - Chuyển Next.js Portal sang pointer-events: none thay vì display: none khi block ads để giữ tiền Impression.
+   - Giữ nguyên CSS selector mở rộng thay vì dùng MutationObserver để tránh phức tạp hóa code không cần thiết.
 
 ⚠️ LƯU Ý CHO SESSION SAU:
-   - Khi deploy xong, kiểm tra lại bằng F12/Source Page của `www.daotaothuyenvien.com` để xem thẻ script Monetag đã xuất hiện ở phần đầu trang chưa.
-   - Nhấp vào "Run the installation check again" trên Monetag dashboard.
+   - Phát hiện Next.js root có 1 High Vulnerability bảo mật (DoS/SSRF). Khuyến cáo chạy thử nghiệm nâng cấp lên Next 16 trên branch riêng.
 
 📁 FILES QUAN TRỌNG:
-   - d:\Antigravity\TNDNB\.brain\brain.json (static knowledge)
-   - d:\Antigravity\TNDNB\.brain\session.json (progress)
-   - C:\Users\HorizonServers\.gemini\antigravity\brain\6b711a17-f47b-402b-903c-c657f24805f1\build_report.md (chi tiết build v1.1)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Đã lưu! Để tiếp tục: Gõ /recap
+   - ontap-web/services/adBlockerStyles.ts
+   - ontap-win/services/adBlockerStyles.ts
+   - .brain/session.json
+   - C:\Users\HorizonServers\.gemini\antigravity\brain\2d5cf540-ac0c-48fd-afac-18d0f9c5876f\build_report.md
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
