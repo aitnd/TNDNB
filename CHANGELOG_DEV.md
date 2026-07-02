@@ -1,3 +1,7 @@
+## [3.15.8] - 2026-07-02
+### Fix FileReader parameter shadowing bug in Excel Import (Web)
+- **ImportStudentModal Bugfix:** Fixed a `TypeError` on `FileReader.readAsArrayBuffer` inside `handleFileUpload` where the file parameter was renamed to `_file` in `ontap-web` (to prevent a compiler warning) but the call remained referencing `file` (the outer state variable, which is still `null` due to React's asynchronous setState). Restored the parameter name to `file` to shadow the state correctly.
+
 ## [3.15.7] - 2026-06-30
 ### Mobile UI Enhancement & Navigation Architecture Refactoring (Web & Win)
 - **New Mobile Header Component:** Integrated `MobileHeader` to render brand logo and user avatar dynamically based on `UserProfile` props on mobile layout.
