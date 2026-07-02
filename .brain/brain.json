@@ -51,8 +51,8 @@
       "description": "Quảng cáo trang chủ Next.js Portal được điều khiển động qua cấu hình showPortalAds trong Firestore (settings/usage_config) thông qua component PortalAdLoader."
     },
     {
-      "rule": "Bảo vệ tài khoản AdSense (Anti-click)",
-      "description": "Sử dụng pointer-events: none thay cho display: none khi muốn chặn click quảng cáo. Điều này giữ quảng cáo vẫn nằm trong viewport, duy trì chỉ số Active View."
+      "rule": "Bảo vệ tài khoản AdSense (Anti-click chọn lọc)",
+      "description": "Sử dụng pointer-events: none cho In-page ads (giữ hiển thị để lấy Impression) và pointer-events: auto cho Overlay ads (Vignette, Anchor) để user tắt/ẩn được bình thường."
     }
   ],
   "features": [
@@ -67,9 +67,9 @@
       "details": "Bật/tắt động quảng cáo Adsterra trên Next.js Portal mà không ảnh hưởng tới trang ôn tập."
     },
     {
-      "name": "AdSense Shield (Active View Preserved)",
+      "name": "AdSense Shield (Selective Click Blocker)",
       "status": "implemented",
-      "details": "Bảo vệ quảng cáo AdSense khỏi click tặc/click nhầm nhưng vẫn đảm bảo Active View cho nhà quảng cáo bằng pointer-events: none."
+      "details": "Chặn click chọn lọc (in-page vs overlay) bằng cách tiêm CSS 2 tầng qua adBlockerStyles.ts chung. Mở khóa pointer-events cho các element fixed để tránh liệt nút Close/Ẩn."
     },
     {
       "name": "Weather Widget & Smart Advice",
@@ -117,7 +117,8 @@
       "Firebase Private Credentials có thể bị lưu trong Git cache dù đã có trong .gitignore. Cần chạy git rm --cached để dọn sạch hoàn toàn.",
       "Lỗi font (Typography broken) trong React Markdown khi render CHANGELOG.md do thiếu khoảng trắng (\\n\\n) trước các block heading (ví dụ ## [3.14.0]). Luôn ngắt dòng trước thẻ Heading.",
       "Monetag yêu cầu crawler check trực tiếp HTML tĩnh để verify mã cài đặt, do đó bắt buộc chèn script HTML thô trực tiếp trong thẻ head của layout.tsx.",
-      "Khi xóa Release trên GitHub, GitHub API không tự động xóa Tag tương ứng, dẫn tới lỗi Validation Failed (422) khi tạo lại release trùng tag. Phải gọi API xóa Tag Ref thủ công hoặc tự động trước."
+      "Khi xóa Release trên GitHub, GitHub API không tự động xóa Tag tương ứng, dẫn tới lỗi Validation Failed (422) khi tạo lại release trùng tag. Phải gọi API xóa Tag Ref thủ công hoặc tự động trước.",
+      "Trong ImportStudentModal.tsx, đổi tên tham số thành _file để tránh unused warning nhưng bên trong vẫn dùng biến state file gây crash do bất đồng bộ (React async state). Hãy xóa hẳn state variable nếu không dùng."
     ],
     "conventions": [
       "DevTools disabled in production builds (main.cjs and UI toggle both disabled)."

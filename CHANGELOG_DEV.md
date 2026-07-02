@@ -1,3 +1,9 @@
+## [3.15.9] - 2026-07-02
+### Selective AdBlocker (AdSense pointer-events: none / auto)
+- **Shared Style:** Added `adBlockerStyles.ts` to export common styling definitions: `ADSENSE_SELECTIVE_BLOCK_CSS` and `ADSENSE_HIDE_ALL_CSS`.
+- **AdSenseLoader:** Sourced `ADSENSE_SELECTIVE_BLOCK_CSS` in `AdSenseLoader.tsx` to apply selective pointer-events blocking.
+- **PortalAdLoader:** Integrated `ADSENSE_SELECTIVE_BLOCK_CSS` in `PortalAdLoader.tsx`, removing legacy `display: none` layout concealment for AdSense, thereby enabling active viewability while retaining interaction safety.
+
 ## [3.15.8] - 2026-07-02
 ### Fix FileReader parameter shadowing bug in Excel Import (Web)
 - **ImportStudentModal Bugfix:** Fixed a `TypeError` on `FileReader.readAsArrayBuffer` inside `handleFileUpload` where the file parameter was renamed to `_file` in `ontap-web` (to prevent a compiler warning) but the call remained referencing `file` (the outer state variable, which is still `null` due to React's asynchronous setState). Restored the parameter name to `file` to shadow the state correctly.

@@ -14,3 +14,8 @@
 ### Corrections
 - **Monetag Static Verification**: Thẻ `<Script>` động của Next.js không được bot quét tĩnh của Monetag nhận diện. Phải sử dụng thẻ `<script>` HTML tĩnh thô trực tiếp trong `<head>` của `layout.tsx` để hoàn tất cài đặt thành công.
 - **Framer Motion Opacity Bug**: Cấu hình `initial={{ opacity: 0 }}` mà không chỉ định `opacity: 1` trong animate object của motion components làm ẩn vĩnh viễn Huy hiệu Admin.
+
+## 2026-07-02
+### Corrections
+- **React Async State Parameter Shadowing**: Trong `ImportStudentModal.tsx`, tham số hàm `handleFileUpload` bị đổi tên thành `_file` để tránh warning, nhưng bên trong vẫn gọi biến state `file`. Vì `setFile(selectedFile)` là hàm bất đồng bộ nên `file` lúc này vẫn là `null`, gây crash `TypeError: parameter 1 is not of type 'Blob'` khi chạy. Khắc phục bằng cách hoàn tác tên tham số về `file` để shadow biến state, và xóa hẳn biến state `file` do không sử dụng ở nơi nào khác trong JSX.
+

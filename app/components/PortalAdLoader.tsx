@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../services/firebaseClient';
+import { ADSENSE_SELECTIVE_BLOCK_CSS } from '../../ontap-web/services/adBlockerStyles';
 
 /**
  * PortalAdLoader - Tải quảng cáo động cho trang chủ tin tức (Next.js Portal).
@@ -228,21 +229,13 @@ const PortalAdLoader: React.FC = () => {
         if (el) el.remove();
     };
 
-    /** --- CSS Hiding Helpers --- */
-
+    // 🛡️ Chặn click CHỌN LỌC: Chỉ khóa In-page ads, mở khóa Overlay (Anchor/Vignette)
+    // để user vẫn bấm Close/Ẩn bình thường. Quảng cáo In-page vẫn hiện → giữ Impression.
     const injectHideAdSenseStyle = () => {
         if (document.getElementById('portal-adsense-blocker-style')) return;
         const style = document.createElement('style');
         style.id = 'portal-adsense-blocker-style';
-        style.innerHTML = `
-            .adsbygoogle, ins.adsbygoogle, .google-auto-placed {
-                display: none !important;
-                visibility: hidden !important;
-                height: 0 !important;
-                width: 0 !important;
-                pointer-events: none !important;
-            }
-        `;
+        style.innerHTML = ADSENSE_SELECTIVE_BLOCK_CSS;
         document.head.appendChild(style);
     };
 
