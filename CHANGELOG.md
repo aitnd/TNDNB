@@ -1,3 +1,7 @@
+## [3.15.8] - 2026-07-02
+### Sửa lỗi Import Học viên từ Excel (Web)
+- **Sửa lỗi Excel Import:** Khắc phục lỗi crash ứng dụng khi tải lên file Excel để tạo hàng loạt tài khoản học viên trên trình duyệt Web (do lỗi bất đồng bộ khi đọc file). Bản ứng dụng Windows và các tính năng khác hoạt động bình thường.
+
 ## [3.15.7] - 2026-06-30
 ### Nâng cấp giao diện Mobile & Thiết kế điều hướng mới (Web & App Win)
 - **Mobile Header:** Thêm mới thanh tiêu đề `MobileHeader` hiển thị logo TND và thông tin cá nhân/avatar của học viên khi chạy trên các thiết bị di động.

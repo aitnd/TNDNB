@@ -40,7 +40,6 @@ interface ConflictItem {
 }
 
 const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, courseName, licenseId, onClose, onSuccess }) => {
-    const [file, setFile] = useState<File | null>(null);
     const [parsedData, setParsedData] = useState<ParsedStudent[]>([]);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0);
@@ -54,12 +53,11 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const selectedFile = e.target.files[0];
-            setFile(selectedFile);
             handleFileUpload(selectedFile);
         }
     };
 
-    const handleFileUpload = (_file: File) => {
+    const handleFileUpload = (file: File) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             const data = new Uint8Array(e.target?.result as ArrayBuffer);
