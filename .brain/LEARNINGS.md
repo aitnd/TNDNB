@@ -17,5 +17,7 @@
 
 ## 2026-07-02
 ### Corrections
-- **React Async State Parameter Shadowing**: Trong `ImportStudentModal.tsx`, tham số hàm `handleFileUpload` bị đổi tên thành `_file` để tránh warning, nhưng bên trong vẫn gọi biến state `file`. Vì `setFile(selectedFile)` là hàm bất đồng bộ nên `file` lúc này vẫn là `null`, gây crash `TypeError: parameter 1 is not of type 'Blob'` khi chạy. Khắc phục bằng cách hoàn tác tên tham số về `file` để shadow biến state, và xóa hẳn biến state `file` do không sử dụng ở nơi nào khác trong JSX.
+- **React Async State Parameter Shadowing**: Trong `ImportStudentModal.tsx`, tham số hàm `handleFileUpload` bị đổi tên thành `_file` để tránh warning, nhưng bên trong vẫn dùng biến state `file` (bị `null` do bất đồng bộ). Khắc phục bằng cách đổi lại tên tham số là `file` để shadowing chính xác, đồng thời loại bỏ React state `file` thừa.
+- **Google Auto Ads close button freeze**: Sử dụng pointer-events: none toàn diện cho `.adsbygoogle` gây liệt nút đóng/ẩn quảng cáo của các loại quảng cáo Overlay (Anchor, Vignette). Khắc phục bằng cách áp dụng CSS 2 tầng (chặn in-page ads, mở khóa cho fixed-overlay ads).
+- **Vite Cross-Directory Build Warning**: Import file Styles trực tiếp từ `ontap-web` sang dự án Vite `ontap-win` dễ gây cảnh báo/lỗi bundler do nằm ngoài root workspace. Khắc phục bằng cách duy trì file styles cục bộ trong từng dự án Vite độc lập.
 
