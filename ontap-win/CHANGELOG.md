@@ -1,3 +1,8 @@
+## [3.15.10] - 2026-07-06
+### Hoàn thiện bảo vệ quảng cáo & Tối ưu giao diện thi thử (Web & App Win)
+- **Tối ưu hiển thị thi thử:** Nâng cấp tính năng tự động co giãn giao diện (Responsive) trên màn hình thi thử. Các nút đáp án và thiết kế bảng điền sẽ tự động chuyển đổi thông minh, hiển thị đẹp mắt và đầy đủ tính năng dù học viên đang mở trên máy tính (PC) hay điện thoại.
+- **Bảo vệ hệ thống & Bật tắt tính năng:** Nâng cấp cơ chế chặn spam và bảo vệ người dùng, đồng thời tối ưu hệ thống bật tắt các thông báo/quảng cáo để không ảnh hưởng đến trải nghiệm thao tác trên màn hình.
+
 ## [3.15.9] - 2026-07-02
 ### Tối ưu hóa điều hướng và hiển thị trên thiết bị di động (Web & App Win)
 - **Tối ưu hóa tương tác:** Cải thiện khả năng phản hồi của các nút đóng, ẩn bảng tin, và các thanh neo điều hướng cố định trên màn hình thiết bị di động, đảm bảo người dùng luôn tương tác mượt mà trong mọi tình huống.

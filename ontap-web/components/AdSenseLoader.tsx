@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { getUsageConfig, UsageConfig } from '../services/adminConfigService';
 import { getUserRoleConfig } from '../services/usageService';
 import { MONETAG_CONFIG, getDirectLinkUrl, setMonetagLimits, getMonetagLimits, getSessionCount, incrementSessionCount } from '../services/monetagConfig';
 import { isAdSenseBlocked, incrementAdSenseClick, setAdSenseLimits } from '../services/adsenseConfig';
-import { ADSENSE_SELECTIVE_BLOCK_CSS } from '../services/adBlockerStyles';
+import { ADSENSE_SELECTIVE_BLOCK_CSS, ADSENSE_HIDE_ALL_CSS } from '../services/adBlockerStyles';
 
 interface AdSenseLoaderProps {
     userProfile: any | null;
@@ -28,7 +28,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                 const maxPopunder = showMonetag ? (config.monetagPopunderMaxPerSession ?? 0) : 0;
 
                 if (showAdSense || showAdsterra) {
-                    removeHideAdsStyle(); // Allow ads
+                    removeAllAdSenseStyles(); // Gỡ style chặn trước khi load quảng cáo
                     
                     // Lazy load trigger: Phanh phui script khi cuộn đến vùng quảng cáo
                     // Chúng ta quan sát body hoặc một thẻ cắm mốc
@@ -36,8 +36,8 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                         if (entries[0].isIntersecting) {
                             if (showAdSense) {
                                 if (isAdSenseBlocked()) {
-                                    console.log('AdSense is blocked due to invalid traffic protection');
-                                    injectHideAdsStyle();
+                                    console.log('🛡️ [AdSenseLoader] AdSense bị chặn click do bảo vệ IVT');
+                                    injectSelectiveBlockStyle();
                                 } else {
                                     loadAdSenseScript();
                                 }
@@ -59,7 +59,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                     }
                 } else {
                     removeScripts();
-                    injectHideAdsStyle(); // Force hide
+                    injectHideAdsCompletely(); // Admin TẮT → ẩn hoàn toàn
                 }
 
                 // 🖱️ Auto-click Popunder: Mở Direct Link khi user click lần đầu trên trang
@@ -80,43 +80,42 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
             if (popunderHandler) {
                 document.body.removeEventListener('click', popunderHandler);
             }
-            window.removeEventListener('blur', blurHandler);
+            // blur handler được quản lý bởi effect riêng bên dưới
         };
     }, [userProfile]); // Re-check when user changes (e.g. login/logout)
 
-    // Blur listener for AdSense clicks
-    const [isMouseOverAd, setIsMouseOverAd] = useState(false);
-
+    // 🛡️ Phát hiện click quảng cáo AdSense bằng document.activeElement
+    // Khi user click vào iframe quảng cáo → window mất focus (blur)
+    // → Kiểm tra document.activeElement có phải iframe Google Ads không
     useEffect(() => {
+        const blurHandler = () => {
+            // setTimeout(0) để đảm bảo document.activeElement đã cập nhật
+            setTimeout(() => {
+                const activeEl = document.activeElement;
+                if (activeEl && activeEl.tagName === 'IFRAME') {
+                    const iframe = activeEl as HTMLIFrameElement;
+                    // Nhận diện iframe Google Ads bằng nhiều dấu hiệu
+                    const isGoogleAd =
+                        iframe.closest('.adsbygoogle') !== null ||
+                        iframe.closest('ins.adsbygoogle') !== null ||
+                        (iframe.id && (iframe.id.includes('google_ads') || iframe.id.includes('aswift'))) ||
+                        (iframe.src && (iframe.src.includes('googlesyndication') || iframe.src.includes('doubleclick')));
+
+                    if (isGoogleAd) {
+                        console.log('🛡️ [AdSenseLoader] Phát hiện click vào quảng cáo AdSense!');
+                        incrementAdSenseClick();
+                        if (isAdSenseBlocked()) {
+                            injectSelectiveBlockStyle();
+                        }
+                        // Re-focus trang chính để tiếp tục phát hiện click tiếp theo
+                        setTimeout(() => window.focus(), 150);
+                    }
+                }
+            }, 0);
+        };
+
         window.addEventListener('blur', blurHandler);
-        return () => {
-            window.removeEventListener('blur', blurHandler);
-        };
-    }, [isMouseOverAd]);
-
-    const blurHandler = () => {
-        if (isMouseOverAd) {
-            incrementAdSenseClick();
-            if (isAdSenseBlocked()) {
-                injectHideAdsStyle();
-            }
-        }
-    };
-
-    // Global mouse tracker for AdSense (since it's an iframe)
-    useEffect(() => {
-        const mouseMoveHandler = (e: MouseEvent) => {
-            // Find if mouse is over an element with class adsbygoogle or ins
-            const target = e.target as HTMLElement;
-            if (target && (target.classList.contains('adsbygoogle') || target.closest('.adsbygoogle') || target.tagName.toLowerCase() === 'ins')) {
-                setIsMouseOverAd(true);
-            } else {
-                setIsMouseOverAd(false);
-            }
-        };
-
-        window.addEventListener('mousemove', mouseMoveHandler);
-        return () => window.removeEventListener('mousemove', mouseMoveHandler);
+        return () => window.removeEventListener('blur', blurHandler);
     }, []);
 
     // 🖱️ Auto Popunder: Gắn click listener, mở Direct Link dựa trên cooldown
@@ -181,22 +180,34 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         });
     };
 
-    // 🛡️ Chặn click CHỌN LỌC: Chỉ khóa In-page ads, mở khóa Overlay (Anchor/Vignette)
-    // để user vẫn bấm Close/Ẩn bình thường. Quảng cáo In-page vẫn hiện → giữ Impression.
-    const injectHideAdsStyle = () => {
-        if (document.getElementById('adsense-blocker-style')) return;
+    // === QUẢN LÝ STYLE ADSENSE ===
 
+    /** 🛡️ IVT Shield CHẶN → pointer-events: none (quảng cáo vẫn hiện, giữ Impression) */
+    const injectSelectiveBlockStyle = () => {
+        if (document.getElementById('adsense-blocker-style')) return;
+        removeAllAdSenseStyles();
         const style = document.createElement('style');
         style.id = 'adsense-blocker-style';
         style.innerHTML = ADSENSE_SELECTIVE_BLOCK_CSS;
         document.head.appendChild(style);
     };
 
-    const removeHideAdsStyle = () => {
-        const style = document.getElementById('adsense-blocker-style');
-        if (style) {
-            style.remove();
-        }
+    /** 🚫 Admin TẮT quảng cáo → display: none (ẩn hoàn toàn, không Impression) */
+    const injectHideAdsCompletely = () => {
+        if (document.getElementById('adsense-hide-style')) return;
+        removeAllAdSenseStyles();
+        const style = document.createElement('style');
+        style.id = 'adsense-hide-style';
+        style.innerHTML = ADSENSE_HIDE_ALL_CSS;
+        document.head.appendChild(style);
+    };
+
+    /** Gỡ tất cả style liên quan AdSense (dọn dẹp trước khi inject mới) */
+    const removeAllAdSenseStyles = () => {
+        ['adsense-blocker-style', 'adsense-hide-style'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        });
     };
 
     return null; // This component handles logic only, no UI
