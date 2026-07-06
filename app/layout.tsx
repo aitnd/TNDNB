@@ -55,15 +55,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi">
-      <head>
-        {/* Nhúng script thô Monetag để bot dễ dàng phát hiện khi xác thực */}
-        <script 
-          src="https://quge5.com/88/tag.min.js" 
-          data-zone="254797" 
-          async 
-          data-cfasync="false"
-        ></script>
-      </head>
+      <head />
       <body className={rubik.className} suppressHydrationWarning={true}>
         <AuthProvider>
           <ThemeProvider>

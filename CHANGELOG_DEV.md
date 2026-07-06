@@ -1,3 +1,8 @@
+## [3.15.10] - 2026-07-06
+### AdSense IVT Shield & Web Responsive Fix (Web & App Win)
+- **AdSense IVT Shield:** Khắc phục lỗi bảo vệ click chéo (cross-origin iframe) trên Google AdSense bằng cách chuyển từ sự kiện mousemove sang kiểm tra lur + document.activeElement. Phân tách cơ chế pointer-events: none cho IVT Shield và display: none cho Admin Toggle để tối ưu số lần hiển thị (Impressions) mà vẫn chống click tặc.
+- **Tailwind Responsive ExamQuizScreen2:** Loại bỏ hoàn toàn sự phụ thuộc vào logic state isMobileApp để kiểm soát bố cục. Áp dụng các lớp tiện ích CSS thuần túy của Tailwind (hidden md:flex, lex md:hidden) giúp tự động hiển thị lưới nút đáp án trên mobile web browser, ngăn ngừa tình trạng biến dạng bảng giao diện PC trên màn hình nhỏ.
+
 ## [3.15.9] - 2026-07-02
 ### Selective AdBlocker (AdSense pointer-events: none / auto)
 - **Shared Style:** Added `adBlockerStyles.ts` to export common styling definitions: `ADSENSE_SELECTIVE_BLOCK_CSS` and `ADSENSE_HIDE_ALL_CSS`.
