@@ -29,17 +29,17 @@ export default function HocPhiPage() {
           <tr>
             <td>1</td>
             <td>Giấy CNKNCM Thuyền trưởng hạng nhất (T1)</td>
-            <td>9.000.000</td>
+            <td>10.000.000</td>
           </tr>
           <tr>
             <td>2</td>
             <td>Giấy CNKNCM Thuyền trưởng hạng nhì (T2)</td>
-            <td>7.500.000</td>
+            <td>8.000.000</td>
           </tr>
           <tr>
             <td>3</td>
             <td>Giấy CNKNCM Thuyền trưởng hạng ba (T3)</td>
-            <td>5.500.000</td>
+            <td>6.500.000</td>
           </tr>
           <tr>
             <td>4</td>
@@ -49,12 +49,12 @@ export default function HocPhiPage() {
           <tr>
             <td>5</td>
             <td>Giấy CNKNCM Máy trưởng hạng nhì (M2)</td>
-            <td>5.500.000</td>
+            <td>6.000.000</td>
           </tr>
           <tr>
             <td>6</td>
             <td>Giấy CNKNCM Máy trưởng hạng ba (M3)</td>
-            <td>4.500.000</td>
+            <td>5.500.000</td>
           </tr>
           
           {/* Mục II */}
@@ -65,22 +65,22 @@ export default function HocPhiPage() {
           <tr>
             <td>1</td>
             <td>Chứng chỉ thủy thủ (TT)</td>
-            <td>3.500.000</td>
+            <td>4.000.000</td>
           </tr>
           <tr>
             <td>2</td>
             <td>Chứng chỉ thợ máy (TM)</td>
-            <td>3.500.000</td>
+            <td>4.000.000</td>
           </tr>
           <tr>
             <td>3</td>
             <td>Chứng chỉ lái phương tiện (LPT)</td>
-            <td>4.000.000</td>
+            <td>6.000.000</td>
           </tr>
           <tr>
             <td>4</td>
             <td>Chứng chỉ An toàn làm việc trên phương tiện đi ven biển (ATVB)</td>
-            <td>2.500.000</td>
+            <td>3.000.000</td>
           </tr>
           <tr>
             <td>5</td>
@@ -90,19 +90,24 @@ export default function HocPhiPage() {
           <tr>
             <td>6</td>
             <td>Chứng chỉ An toàn làm việc trên phương tiện chở Hoá chất (ATHC)</td>
-            <td>3.000.000</td>
+            <td>5.000.000</td>
           </tr>
           <tr>
             <td>7</td>
             <td>Chứng chỉ An toàn làm việc trên phương tiện chở Khí (ATKHL)</td>
-            <td>3.000.000</td>
+            <td>5.000.000</td>
           </tr>
           <tr>
             <td>8</td>
             <td>Chứng chỉ điều khiển phương tiện tốc độ cao (ĐKCT)</td>
-            <td>3.500.000</td>
+            <td>4.000.000</td>
           </tr>
-          
+          <tr>
+            <td>9</td>
+            <td>Chứng chỉ điều khiển phương tiện đi ven biển (ĐKVB)</td>
+            <td>7.000.000</td>
+          </tr>
+
           {/* Mục III */}
           <tr className={styles.sectionHeader}>
             <td>III</td>
@@ -110,34 +115,15 @@ export default function HocPhiPage() {
           </tr>
           <tr>
             <td>1</td>
-            <td>Dự thi, sát hạch lại thuyền, máy trưởng hạng ba (2 môn)</td>
-            <td>1.500.000</td>
+            <td>Dự thi, sát hạch lại thuyền trưởng</td>
+            <td>3.000.000</td>
           </tr>
           <tr>
             <td>2</td>
-            <td>Dự thi, sát hạch lại thuyền trưởng hạng ba (3 môn)</td>
-            <td>2.000.000</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Dự thi, sát hạch lại thuyền, máy trưởng hạng nhì (2 môn)</td>
-            <td>2.000.000</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Dự thi, sát hạch lại thuyền trưởng hạng nhì (3 môn)</td>
+            <td>Dự thi, sát hạch lại máy trưởng</td>
             <td>2.500.000</td>
           </tr>
-          <tr>
-            <td>5</td>
-            <td>Dự thi, sát hạch lại thuyền, máy trưởng hạng nhất (2 môn)</td>
-            <td>2.000.000</td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>Dự thi, sát hạch lại thuyền trưởng hạng nhất (3 môn)</td>
-            <td>2.500.000</td>
-          </tr>
+          
                  </tbody>
       </table>
 
