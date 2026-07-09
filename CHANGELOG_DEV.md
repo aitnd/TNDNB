@@ -1,3 +1,9 @@
+## [3.16.0] - 2026-07-09
+### Decouple `amthuc-web` module & Build Environment Cleanup
+- **Project Decoupling:** Successfully extracted and removed the `amthuc-web` module from the TNDNB monorepo to its own independent domain (`thodia.hlstudio.top`).
+- **Navigation Update:** Updated `Sidebar` and `TopNavbar` components across both Web and Win applications to point to the new external domain.
+- **Build Optimization:** Cleaned up sitemap generation logic (`generate-sitemap.js`) and removed legacy build assets associated with the food/restaurant module to streamline the build process.
+
 ## [3.15.10] - 2026-07-06
 ### AdSense IVT Shield & Web Responsive Fix (Web & App Win)
 - **AdSense IVT Shield:** Khắc phục lỗi bảo vệ click chéo (cross-origin iframe) trên Google AdSense bằng cách chuyển từ sự kiện mousemove sang kiểm tra lur + document.activeElement. Phân tách cơ chế pointer-events: none cho IVT Shield và display: none cho Admin Toggle để tối ưu số lần hiển thị (Impressions) mà vẫn chống click tặc.

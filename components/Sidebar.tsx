@@ -143,9 +143,9 @@ export default async function Sidebar() {
             </Link>
           </li>
           <li>
-            <Link href="/food">
-              <i className="fas fa-utensils" style={{ color: '#ff6b6b' }}></i> Ẩm thực Ninh Bình
-            </Link>
+            <a href="https://thodia.hlstudio.top" target="_blank" rel="noopener noreferrer">
+              <i className="fas fa-utensils" style={{ color: '#ff6b6b' }}></i> Thổ Địa Ninh Bình
+            </a>
           </li>
         </ul>
       </div>
