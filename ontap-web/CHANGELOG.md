@@ -1,3 +1,9 @@
+## [3.16.0] - 2026-07-09
+### Tách phân hệ Ẩm thực & Tối ưu hóa điều hướng (Web & App Win)
+- **Cập nhật hệ thống:** Hoàn thành việc tách phân hệ Ẩm thực (Food & Attraction) sang ứng dụng riêng biệt `thodia.hlstudio.top` để tối ưu tài nguyên và tốc độ của hệ thống ôn tập.
+- **Tối ưu điều hướng:** Cập nhật lại các liên kết trên thanh điều hướng, chuyển hướng chính xác người dùng sang trang web Ẩm thực mới.
+- **Dọn dẹp mã nguồn:** Xóa bỏ sitemap và các thành phần build cũ không còn sử dụng của phân hệ Ẩm thực, giúp hệ thống nhẹ và ổn định hơn.
+
 ## [3.15.10] - 2026-07-06
 ### Hoàn thiện bảo vệ quảng cáo & Tối ưu giao diện thi thử (Web & App Win)
 - **Tối ưu hiển thị thi thử:** Nâng cấp tính năng tự động co giãn giao diện (Responsive) trên màn hình thi thử. Các nút đáp án và thiết kế bảng điền sẽ tự động chuyển đổi thông minh, hiển thị đẹp mắt và đầy đủ tính năng dù học viên đang mở trên máy tính (PC) hay điện thoại.
