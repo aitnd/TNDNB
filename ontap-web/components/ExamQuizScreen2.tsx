@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import type { Quiz, UserAnswers, License, UserProfile } from '../types';
 import { triggerHaptic } from '../utils/nativeUX';
 import { useAppStore } from '../stores/useAppStore';
+import { useFontScale } from '../hooks/useFontScale';
+import { ZoomBar } from './ZoomBar';
 
 interface ExamQuizScreen2Props {
     quiz: Quiz;
@@ -62,6 +64,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
     const [userAnswers, setUserAnswers] = useState<UserAnswers>(initialAnswers);
     // Use initialTime if provided, else quiz limit, else default 3600
     const [timeLeft, setTimeLeft] = useState(initialTime !== undefined ? initialTime : (quiz.timeLimit ?? 3600));
+    const { scale, setScale, increase, decrease } = useFontScale();
 
     const currentQuestion = useMemo(() => quiz.questions[currentQuestionIndex], [quiz.questions, currentQuestionIndex]);
 
@@ -130,8 +133,23 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
         setUserAnswers(prev => ({ ...prev, [questionId]: answerId }));
     };
 
+    // Safety: đề thi rỗng hoặc index vượt bounds (chống trắng trang khi data lỗi)
+    if (!quiz.questions || quiz.questions.length === 0 || !currentQuestion) {
+        return (
+            <div className="w-full max-w-7xl mx-auto p-4 text-center">
+                <h2 className="text-xl font-bold mb-4">Chưa có câu hỏi nào trong đề thi này.</h2>
+                <button
+                    onClick={onBack}
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-4 rounded-lg"
+                >
+                    Quay lại
+                </button>
+            </div>
+        );
+    }
+
     return (
-        <div className="w-full max-w-7xl mx-auto font-sans text-black shadow-lg animate-slide-in-right rounded-md">
+        <div className="w-full max-w-7xl mx-auto font-sans text-black shadow-lg animate-slide-in-right rounded-md" style={{ '--content-scale': scale } as React.CSSProperties}>
             <div className="h-3 bg-yellow-700 rounded-t-md border-b-2 border-yellow-900"></div>
             <div className="bg-white p-4">
                 <div className="flex justify-between items-start pb-4 border-b border-gray-300">
@@ -172,7 +190,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                                 <span className={`text-blue-600 ${isMobileApp ? 'block' : 'block md:hidden'}`}>Câu {currentQuestionIndex + 1}/{quiz.questions.length}</span>
                             </p>
                             <p className={`font-bold text-red-600 mb-2 ${isMobileApp ? 'hidden' : 'hidden md:block'}`}>Câu :{currentQuestionIndex + 1}</p>
-                            <p className="mb-4 font-semibold text-lg">{currentQuestion.text}</p>
+                            <p className="mb-4 font-semibold" style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}>{currentQuestion.text}</p>
 
                             {currentQuestion.image && (
                                 <div className="mb-4 flex justify-center">
@@ -204,7 +222,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                                             }`}>
                                                 {String.fromCharCode(65 + index)}
                                             </div>
-                                            <p className={`text-base ${isSelected ? 'font-bold text-blue-700' : 'text-gray-800'}`}>{answer.text}</p>
+                                            <p className={`${isSelected ? 'font-bold text-blue-700' : 'text-gray-800'}`} style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{answer.text}</p>
                                         </div>
                                     );
                                 })}
@@ -308,6 +326,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                     </div>
                 </div>
             </div>
+            <ZoomBar scale={scale} setScale={setScale} increase={increase} decrease={decrease} />
         </div>
     );
 };

@@ -5,6 +5,7 @@ import { getOfflineUser, saveUserOffline } from '../services/offlineService';
 import { doc, getDoc } from 'firebase/firestore';
 import { UserProfile } from '../types';
 import { useAppStore } from '../stores/useAppStore';
+import { timeoutWrapper } from '../utils/authTimeout';
 
 // Import Saved Accounts
 import SavedAccountsList from './SavedAccountsList';
@@ -53,7 +54,7 @@ const WindowsLoginScreen: React.FC = () => {
 
             if (savedPassword) {
                 // Có mật khẩu đã lưu -> đăng nhập tự động
-                await performLogin(savedAcc.email, savedPassword, true);
+                await timeoutWrapper(performLogin(savedAcc.email, savedPassword, true), 15000);
                 updateLastLogin(savedAcc.email);
             } else {
                 // Không có mật khẩu -> điền email và yêu cầu nhập password
@@ -158,7 +159,7 @@ const WindowsLoginScreen: React.FC = () => {
                 email = `${email}@daotaothuyenvien.com`;
             }
 
-            await performLogin(email, password);
+            await timeoutWrapper(performLogin(email, password), 15000);
         } catch (err: any) {
             console.error("Login Error:", err);
             let msg = 'Đăng nhập thất bại.';
@@ -172,6 +173,8 @@ const WindowsLoginScreen: React.FC = () => {
                 msg = 'Tài khoản chưa từng đăng nhập Online trên máy này hoặc chưa được cấp quyền Offline.';
             } else if (err.code === 'auth/offline-failed') {
                 msg = 'Lỗi đăng nhập Offline.';
+            } else if (err.message === 'timeout') {
+                msg = 'Kết nối quá chậm. Vui lòng kiểm tra mạng và thử lại.';
             } else {
                 msg = `Lỗi: ${err.message || err.code}`;
             }

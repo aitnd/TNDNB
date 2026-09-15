@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import type { Quiz, UserAnswers } from '../types';
 import { ClockIcon3D, ArrowLeftIcon3D } from './icons';
 import { triggerHaptic } from '../utils/nativeUX';
+import { useFontScale } from '../hooks/useFontScale';
+import { ZoomBar } from './ZoomBar';
 
 interface ExamQuizScreenProps {
   quiz: Quiz;
@@ -19,6 +21,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
   const [timeLeft, setTimeLeft] = useState(quiz.timeLimit);
+  const { scale, setScale, increase, decrease } = useFontScale();
 
   const currentQuestion = useMemo(() => quiz.questions[currentQuestionIndex], [quiz.questions, currentQuestionIndex]);
 
@@ -75,8 +78,23 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
 
   const examProgress = (Object.keys(userAnswers).length / quiz.questions.length) * 100;
 
+  // Safety: đề thi rỗng hoặc index vượt bounds (chống trắng trang khi data lỗi)
+  if (!quiz.questions || quiz.questions.length === 0 || !currentQuestion) {
+    return (
+      <div className="w-full max-w-3xl mx-auto p-4 text-center">
+        <h2 className="text-xl font-bold mb-4">Chưa có câu hỏi nào trong đề thi này.</h2>
+        <button
+          onClick={onBack}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-4 rounded-lg"
+        >
+          Quay lại
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full max-w-3xl mx-auto p-4 md:p-6 animate-slide-in-right font-quiz-default">
+    <div className="w-full max-w-3xl mx-auto p-4 md:p-6 animate-slide-in-right font-quiz-default" style={{ '--content-scale': scale } as React.CSSProperties}>
       <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-6 md:p-8">
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4 relative">
@@ -136,7 +154,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
         </div>
 
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-5 text-foreground">{currentQuestion.text}</h2>
+          <h2 className="font-bold mb-5 text-foreground" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>{currentQuestion.text}</h2>
           {currentQuestion.image && (
             <div className="mb-6 rounded-lg overflow-hidden">
               <img src={currentQuestion.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
@@ -147,7 +165,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
             {currentQuestion.answers.map((answer, index) => {
               const isSelected = userAnswers[currentQuestion.id] === answer.id;
               // Removed justify-between since we have a single child div handling layout
-              let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all duration-300 flex items-center text-lg';
+              let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all duration-300 flex items-center';
 
               if (isSelected) {
                 buttonClass += ' bg-primary/10 border-primary ring-2 ring-primary text-foreground';
@@ -160,6 +178,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
                   key={answer.id}
                   onClick={() => handleAnswerSelect(answer.id)}
                   className={buttonClass}
+                  style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}
                 >
                   <div className="flex items-start w-full">
                     <span className="font-bold mr-2 min-w-[20px]">{String.fromCharCode(65 + index)}.</span>
@@ -204,6 +223,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack 
           </div>
         </div>
       </div>
+      <ZoomBar scale={scale} setScale={setScale} increase={increase} decrease={decrease} />
     </div>
   );
 };
