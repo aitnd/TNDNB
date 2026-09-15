@@ -1,9 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import { 
-    FaSchool, FaSearch, FaTimes, FaPlus, FaChalkboardTeacher, 
-    FaEdit, FaTrash, FaUserTie, FaArrowLeft, FaSort, FaSortAmountDown, FaSortAmountUp,
-    FaChevronLeft, FaChevronRight
-} from 'react-icons/fa';
+import React, { useState, useMemo, useEffect } from 'react';
+import {      FaSchool, FaSearch, FaTimes, FaPlus, FaChalkboardTeacher,      FaEdit, FaTrash, FaUserTie, FaArrowLeft, FaSortAmountDown, FaSortAmountUp,     FaChevronLeft, FaChevronRight, FaUsers, FaThLarge, FaList, FaEllipsisV } from 'react-icons/fa'; 
+
 import { Course, UserProfile } from '../../types';
 
 interface ClassListProps {
@@ -21,6 +18,7 @@ interface ClassListProps {
     creatorProfiles?: Record<string, {name: string, role: string}>;
     licenses: any[];
     canCreateClass: boolean;
+    classStats?: Record<string, number>;
 }
 
 const safeLower = (s: string | undefined | null) => (s || '').toLowerCase();
@@ -39,19 +37,35 @@ const ClassList: React.FC<ClassListProps> = ({
     headTeacherNames,
     creatorProfiles = {},
     licenses,
-    canCreateClass
+    canCreateClass,
+    classStats = {}
 }) => {
     // Local state for sorting and pagination
     const [sortKey, setSortKey] = useState<'name' | 'createdAt'>('name');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(9);
+    
+    // New state for filters and views
+    const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'finished'>('all');
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>(() => {
+        const saved = localStorage.getItem('classManagerViewMode');
+        return (saved as 'grid' | 'list') || 'grid';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('classManagerViewMode', viewMode);
+    }, [viewMode]);
 
     const filteredAndSortedCourses = useMemo(() => {
         let result = courses.filter(c => 
             safeLower(c.name).includes(safeLower(courseSearchTerm)) || 
             safeLower(c.description).includes(safeLower(courseSearchTerm))
         );
+
+        if (statusFilter !== 'all') {
+            result = result.filter(c => (c.status || 'active') === statusFilter);
+        }
 
         result.sort((a, b) => {
             const valA = (a as any)[sortKey] || '';
@@ -62,7 +76,7 @@ const ClassList: React.FC<ClassListProps> = ({
         });
 
         return result;
-    }, [courses, courseSearchTerm, sortKey, sortOrder]);
+    }, [courses, courseSearchTerm, sortKey, sortOrder, statusFilter]);
 
     const totalPages = Math.ceil(filteredAndSortedCourses.length / itemsPerPage);
     const paginatedCourses = filteredAndSortedCourses.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -75,6 +89,10 @@ const ClassList: React.FC<ClassListProps> = ({
             setSortOrder('asc');
         }
     };
+
+    // Insights Calculations
+    const activeClassesCount = courses.filter(c => (c.status || 'active') === 'active').length;
+    const totalStudents = Object.values(classStats).reduce((a, b) => a + b, 0);
 
     return (
         <div className="w-full max-w-7xl mx-auto p-4 animate-slide-in-right relative">
@@ -90,15 +108,49 @@ const ClassList: React.FC<ClassListProps> = ({
                 </button>
             </div>
 
+            {/* Insights Bar */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl">
+                        <FaSchool />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500 font-medium">Tổng số lớp học</p>
+                        <p className="text-2xl font-bold text-gray-800 dark:text-white">{courses.length}</p>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
+                        <FaUsers />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500 font-medium">Tổng số học viên</p>
+                        <p className="text-2xl font-bold text-gray-800 dark:text-white">{totalStudents}</p>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
+                        <div className="relative">
+                            <FaSchool />
+                            <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500 font-medium">Đang hoạt động</p>
+                        <p className="text-2xl font-bold text-gray-800 dark:text-white">{activeClassesCount}</p>
+                    </div>
+                </div>
+            </div>
+
             {/* Filter Bar */}
-            <div className="flex flex-col md:flex-row gap-4 mb-8 items-end md:items-center">
+            <div className="flex flex-col xl:flex-row gap-4 mb-8 items-stretch xl:items-center">
                 <div className="relative flex-1 group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <FaSearch className="text-gray-400 group-focus-within:text-teal-500 text-lg transition-colors duration-300" />
                     </div>
                     <input
                         type="text"
-                        className="w-full pl-12 pr-10 py-3.5 bg-white dark:bg-slate-800 border-2 border-transparent focus:border-teal-500 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none transition-all duration-300"
+                        className="w-full pl-12 pr-10 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 focus:border-teal-500 rounded-xl shadow-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none transition-all duration-300"
                         placeholder="Tìm kiếm lớp học theo tên hoặc mô tả..."
                         value={courseSearchTerm}
                         onChange={(e) => {setCourseSearchTerm(e.target.value); setCurrentPage(1);}}
@@ -113,20 +165,47 @@ const ClassList: React.FC<ClassListProps> = ({
                     )}
                 </div>
 
-                <div className="flex gap-2 items-center">
-                    <span className="text-sm font-medium text-gray-500 hidden sm:block">Sắp xếp:</span>
+                <div className="flex flex-wrap gap-2 items-center">
+                    {/* Status Filters */}
+                    <div className="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
+                        {(['all', 'active', 'finished'] as const).map(status => (
+                            <button
+                                key={status}
+                                onClick={() => {setStatusFilter(status); setCurrentPage(1);}}
+                                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${statusFilter === status ? 'bg-white dark:bg-slate-700 text-teal-600 dark:text-teal-400 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
+                            >
+                                {status === 'all' ? 'Tất cả' : status === 'active' ? 'Hoạt động' : 'Đã kết thúc'}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="w-px h-8 bg-gray-200 dark:bg-slate-700 mx-2 hidden sm:block"></div>
+
                     <button 
                         onClick={() => handleSort('name')}
-                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${sortKey === 'name' ? 'bg-teal-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 text-gray-600 hover:bg-gray-50 border border-gray-200 dark:border-slate-700'}`}
+                        className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${sortKey === 'name' ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800' : 'bg-white dark:bg-slate-800 text-gray-600 border border-gray-200 dark:border-slate-700'}`}
                     >
                         Tên {sortKey === 'name' && (sortOrder === 'asc' ? <FaSortAmountDown /> : <FaSortAmountUp />)}
                     </button>
                     <button 
                         onClick={() => handleSort('createdAt')}
-                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${sortKey === 'createdAt' ? 'bg-teal-600 text-white shadow-md' : 'bg-white dark:bg-slate-800 text-gray-600 hover:bg-gray-50 border border-gray-200 dark:border-slate-700'}`}
+                        className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${sortKey === 'createdAt' ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800' : 'bg-white dark:bg-slate-800 text-gray-600 border border-gray-200 dark:border-slate-700'}`}
                     >
                         Mới nhất {sortKey === 'createdAt' && (sortOrder === 'asc' ? <FaSortAmountDown /> : <FaSortAmountUp />)}
                     </button>
+
+                    <div className="w-px h-8 bg-gray-200 dark:bg-slate-700 mx-2 hidden sm:block"></div>
+
+                    {/* View Toggle */}
+                    <div className="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
+                        <button onClick={() => setViewMode('grid')} className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`} title="Grid View">
+                            <FaThLarge />
+                        </button>
+                        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`} title="List View">
+                            <FaList />
+                        </button>
+                    </div>
+
                     {canCreateClass && (
                         <button 
                             onClick={onAddCourse} 
@@ -150,7 +229,7 @@ const ClassList: React.FC<ClassListProps> = ({
                         <FaSchool className="w-12 h-12 text-gray-300" />
                     </div>
                     <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Chưa tìm thấy lớp học nào</h3>
-                    <p className="text-gray-500 dark:text-gray-400 mb-8">Hãy thử thay đổi từ khóa tìm kiếm hoặc tạo lớp học mới.</p>
+                    <p className="text-gray-500 dark:text-gray-400 mb-8">Hãy thử thay đổi từ khóa hoặc bộ lọc, hoặc tạo lớp học mới.</p>
                     {canCreateClass && (
                         <button 
                             onClick={onAddCourse} 
@@ -162,12 +241,52 @@ const ClassList: React.FC<ClassListProps> = ({
                 </div>
             ) : (
                 <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
                         {paginatedCourses.map((course, idx) => {
                             const currentRole = userProfile?.role || 'hoc_vien';
                             const canEditThis = ['admin', 'quan_ly', 'lanh_dao'].includes(currentRole) || 
                                               (currentRole === 'giao_vien' && (course.headTeacherId === userProfile?.id || (course.teacherIds || []).includes(userProfile?.id)));
                             const canDeleteThis = ['admin', 'quan_ly', 'lanh_dao'].includes(currentRole);
+
+                            if (viewMode === 'list') {
+                                return (
+                                    <div
+                                        key={course.id}
+                                        onClick={() => onSelectCourse(course)}
+                                        className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-700 overflow-hidden cursor-pointer transition-all duration-200 flex items-center p-4 gap-4 animate-fade-in group"
+                                        style={{ animationDelay: `${idx * 0.05}s` }}
+                                    >
+                                        <div className="w-20 h-20 rounded-xl flex-shrink-0 bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center relative overflow-hidden">
+                                            {course.avatarUrl ? (
+                                                <img src={course.avatarUrl} alt={course.name} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <FaChalkboardTeacher className="text-white/30 text-3xl" />
+                                            )}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex justify-between items-start">
+                                                <h3 className="font-bold text-lg text-gray-800 dark:text-white truncate">{course.name}</h3>
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${course.status === 'finished' ? 'bg-red-50 text-red-600 dark:bg-red-900/30' : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30'}`}>
+                                                        {course.status === 'finished' ? 'Đã kết thúc' : 'Hoạt động'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <p className="text-sm text-gray-500 truncate mt-1">{course.description || 'Chưa có mô tả'}</p>
+                                            <div className="flex items-center gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
+                                                <div className="flex items-center gap-1.5"><FaUserTie className="text-blue-500"/> <span className="truncate max-w-[150px]">{course.headTeacherId ? (headTeacherNames[course.headTeacherId] || '...') : 'Chưa phân công'}</span></div>
+                                                <div className="flex items-center gap-1.5"><FaUsers className="text-teal-500"/> {classStats[course.id] || 0} học viên</div>
+                                            </div>
+                                        </div>
+                                        {(canEditThis || canDeleteThis) && (
+                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                {canEditThis && <button onClick={(e) => {e.stopPropagation(); onEditCourse(course, e);}} className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg"><FaEdit/></button>}
+                                                {canDeleteThis && <button onClick={(e) => {e.stopPropagation(); onDeleteCourse(course.id);}} className="p-2 text-red-500 hover:bg-red-50 rounded-lg"><FaTrash/></button>}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            }
 
                             return (
                                 <div
@@ -199,24 +318,27 @@ const ClassList: React.FC<ClassListProps> = ({
                                         </div>
                                     )}
                                     <div className="h-40 bg-gradient-to-br from-teal-500 to-emerald-600 relative flex items-center justify-center overflow-hidden">
-                                        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
-                                        <FaChalkboardTeacher className="text-white/20 w-28 h-28 transform -rotate-12 group-hover:scale-110 group-hover:rotate-0 transition-all duration-700" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                        {course.avatarUrl ? (
+                                            <img src={course.avatarUrl} alt={course.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                        ) : (
+                                            <FaChalkboardTeacher className="text-white/20 w-28 h-28 transform -rotate-12 group-hover:scale-110 group-hover:rotate-0 transition-all duration-700" />
+                                        )}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                        <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-sm rounded-lg px-2.5 py-1 flex items-center gap-1.5 text-white text-xs font-medium">
+                                            <FaUsers /> {classStats[course.id] || 0} học viên
+                                        </div>
                                         <div className="absolute bottom-4 left-4 right-4">
                                             <h3 className="font-bold text-xl text-white truncate drop-shadow-md">{course.name}</h3>
-                                            <div className="flex items-center gap-2 mt-1">
+                                            <div className="flex items-center gap-2 mt-2">
                                                 {course.licenseId && (
                                                     <span className="text-[10px] font-bold text-teal-100 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full uppercase tracking-wider">
                                                         {licenses.find(l => l.id === course.licenseId)?.name || course.licenseId}
                                                     </span>
                                                 )}
-                                                <span className="text-[10px] font-bold text-white/80 bg-black/20 px-2 py-0.5 rounded-full">
-                                                    ID: {course.id.slice(0, 8)}
-                                                </span>
                                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                                                     course.status === 'finished' 
-                                                    ? 'bg-red-500/20 text-red-200 border border-red-500/30' 
-                                                    : 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/30'
+                                                    ? 'bg-red-500/80 text-white border border-red-400/50' 
+                                                    : 'bg-emerald-500/80 text-white border border-emerald-400/50'
                                                 }`}>
                                                     {course.status === 'finished' ? '🔴 Đã kết thúc' : '🟢 Đang hoạt động'}
                                                 </span>
@@ -242,16 +364,6 @@ const ClassList: React.FC<ClassListProps> = ({
                                                             <span className="text-[9px] text-gray-400 uppercase font-bold">Người tạo:</span>
                                                             <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 truncate max-w-[80px]" title={creatorProfiles[course.createdBy].name}>
                                                               {creatorProfiles[course.createdBy].name}
-                                                            </span>
-                                                            <span className={`px-1.5 py-[1px] border rounded text-[8px] font-bold ${
-                                                              creatorProfiles[course.createdBy].role === 'admin' ? 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800' :
-                                                              creatorProfiles[course.createdBy].role === 'lanh_dao' ? 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800' :
-                                                              creatorProfiles[course.createdBy].role === 'quan_ly' ? 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800' :
-                                                              'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800'
-                                                            }`}>
-                                                              {creatorProfiles[course.createdBy].role === 'admin' ? 'Admin' :
-                                                               creatorProfiles[course.createdBy].role === 'lanh_dao' ? 'Lãnh đạo' :
-                                                               creatorProfiles[course.createdBy].role === 'quan_ly' ? 'Quản lý' : 'Giáo viên'}
                                                             </span>
                                                         </div>
                                                     )}

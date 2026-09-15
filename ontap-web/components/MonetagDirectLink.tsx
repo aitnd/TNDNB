@@ -6,6 +6,7 @@ interface MonetagDirectLinkProps {
     onOriginalAction: () => void;
     enabled: boolean;
     directLinkUrl: string;  // URL động từ Firebase config
+    maxPerSession?: number; // Thêm prop này
     className?: string;
 }
 
@@ -17,13 +18,15 @@ interface MonetagDirectLinkProps {
  * 1. User click nút → mở Direct Link ở tab mới
  * 2. Sau 300ms → gọi hành động gốc (navigate, submit, etc.)
  * 3. Giới hạn 1 lần / 30 phút (lưu timestamp vào sessionStorage)
- * 4. Tự disable trên Electron (Windows App)
+ * 4. Giới hạn tối đa số lần click mỗi phiên theo maxPerSession (0 = tắt)
+ * 5. Tự disable trên Electron (Windows App)
  */
 const MonetagDirectLink: React.FC<MonetagDirectLinkProps> = ({
     children,
     onOriginalAction,
     enabled,
     directLinkUrl,
+    maxPerSession = 0,
     className,
 }) => {
     const handleClick = useCallback(() => {
@@ -35,6 +38,19 @@ const MonetagDirectLink: React.FC<MonetagDirectLinkProps> = ({
 
         // Kiểm tra xem tính năng có bật không hoặc URL rỗng
         if (!enabled || !directLinkUrl) {
+            onOriginalAction();
+            return;
+        }
+
+        // Kiểm tra maxPerSession <= 0 (tắt hoàn toàn)
+        if (maxPerSession <= 0) {
+            onOriginalAction();
+            return;
+        }
+
+        // Kiểm tra số lần đã trigger trong session
+        const currentCount = parseInt(sessionStorage.getItem(MONETAG_CONFIG.SESSION_KEYS.DIRECT_LINK_COUNT) || '0', 10);
+        if (currentCount >= maxPerSession) {
             onOriginalAction();
             return;
         }
@@ -53,6 +69,7 @@ const MonetagDirectLink: React.FC<MonetagDirectLinkProps> = ({
         try {
             window.open(directLinkUrl, '_blank');
             sessionStorage.setItem(MONETAG_CONFIG.SESSION_KEYS.DIRECT_LINK_LAST, now.toString());
+            sessionStorage.setItem(MONETAG_CONFIG.SESSION_KEYS.DIRECT_LINK_COUNT, (currentCount + 1).toString());
         } catch {
             // Nếu popup bị chặn → bỏ qua, chạy hành động gốc
         }
@@ -61,7 +78,7 @@ const MonetagDirectLink: React.FC<MonetagDirectLinkProps> = ({
         setTimeout(() => {
             onOriginalAction();
         }, 300);
-    }, [enabled, directLinkUrl, onOriginalAction]);
+    }, [enabled, directLinkUrl, maxPerSession, onOriginalAction]);
 
     return (
         <div onClick={handleClick} className={className} style={{ cursor: 'pointer' }}>

@@ -1,3 +1,102 @@
+## [3.16.0] - 2026-07-09
+### Decouple `amthuc-web` module & Build Environment Cleanup
+- **Project Decoupling:** Successfully extracted and removed the `amthuc-web` module from the TNDNB monorepo to its own independent domain (`thodia.hlstudio.top`).
+- **Navigation Update:** Updated `Sidebar` and `TopNavbar` components across both Web and Win applications to point to the new external domain.
+- **Build Optimization:** Cleaned up sitemap generation logic (`generate-sitemap.js`) and removed legacy build assets associated with the food/restaurant module to streamline the build process.
+
+## [3.15.10] - 2026-07-06
+### AdSense IVT Shield & Web Responsive Fix (Web & App Win)
+- **AdSense IVT Shield:** Khắc phục lỗi bảo vệ click chéo (cross-origin iframe) trên Google AdSense bằng cách chuyển từ sự kiện mousemove sang kiểm tra lur + document.activeElement. Phân tách cơ chế pointer-events: none cho IVT Shield và display: none cho Admin Toggle để tối ưu số lần hiển thị (Impressions) mà vẫn chống click tặc.
+- **Tailwind Responsive ExamQuizScreen2:** Loại bỏ hoàn toàn sự phụ thuộc vào logic state isMobileApp để kiểm soát bố cục. Áp dụng các lớp tiện ích CSS thuần túy của Tailwind (hidden md:flex, lex md:hidden) giúp tự động hiển thị lưới nút đáp án trên mobile web browser, ngăn ngừa tình trạng biến dạng bảng giao diện PC trên màn hình nhỏ.
+
+## [3.15.9] - 2026-07-02
+### Selective AdBlocker (AdSense pointer-events: none / auto)
+- **Shared Style:** Added `adBlockerStyles.ts` to export common styling definitions: `ADSENSE_SELECTIVE_BLOCK_CSS` and `ADSENSE_HIDE_ALL_CSS`.
+- **AdSenseLoader:** Sourced `ADSENSE_SELECTIVE_BLOCK_CSS` in `AdSenseLoader.tsx` to apply selective pointer-events blocking.
+- **PortalAdLoader:** Integrated `ADSENSE_SELECTIVE_BLOCK_CSS` in `PortalAdLoader.tsx`, removing legacy `display: none` layout concealment for AdSense, thereby enabling active viewability while retaining interaction safety.
+
+## [3.15.8] - 2026-07-02
+### Fix FileReader parameter shadowing bug in Excel Import (Web)
+- **ImportStudentModal Bugfix:** Fixed a `TypeError` on `FileReader.readAsArrayBuffer` inside `handleFileUpload` where the file parameter was renamed to `_file` in `ontap-web` (to prevent a compiler warning) but the call remained referencing `file` (the outer state variable, which is still `null` due to React's asynchronous setState). Restored the parameter name to `file` to shadow the state correctly.
+
+## [3.15.7] - 2026-06-30
+### Mobile UI Enhancement & Navigation Architecture Refactoring (Web & Win)
+- **New Mobile Header Component:** Integrated `MobileHeader` to render brand logo and user avatar dynamically based on `UserProfile` props on mobile layout.
+- **Mobile Navigation Refactoring:** Overhauled `MobileBottomNav` component. Replaced legacy primary items (News, Practice, Account) with more functional routing keys: `dashboard` (Trang chủ), `history` (Lịch sử), and dynamic `class` (Lớp học) which toggles `FaSchool` or `FaUserGraduate` based on teacher/student role checking.
+- **Expanded Secondary Drawer Menu:** Moved `Account` navigation to the sliding drawer. Integrated `Mailbox` (Hộp thư), `Download App` (Tải App), and `Config` (Cấu hình, restricted to `role === 'admin'`) in the bottom navigation menu items.
+- **Safe Area Insets Adjustment:** Applied CSS padding-bottom using standard `env(safe-area-inset-bottom)` to avoid layout overlapping on modern borderless mobile devices.
+- **Unified Layout Entry Integration:** Bound `MobileHeader` and `MobileBottomNav` layout renderers inside `AppContent` component for `ontap-web` (`App.tsx`) and `AppRoutes` wrapper for `ontap-win` (`AppRoutes.tsx`).
+
+## [3.15.6] - 2026-06-30
+### Tái cấu trúc mã nguồn hệ thống
+- **Refactor (App.tsx):** Split God Component App.tsx vào routes/AppRoutes.tsx và hooks/useAppInitialization.ts cho cả ontap-web và ontap-win.
+- **Cleanup:** Dọn dẹp unused variables và fix lỗi TypeScript warning (TS6133) ở nhiều files.
+
+## [3.15.5] - 2026-06-30
+### Fix Timezone Offsets, Refactor App.tsx, & Clean TS Warnings (Web & Win)
+- **UTC-to-VN Time Conversion**: Fixed time drift by computing local hours with explicit `(new Date().getUTCHours() + 7) % 24` offset calculations inside `app/api/weather/route.ts` instead of relying on default server clock context.
+- **Tooltip Overflow & Indicator Size**: Removed parent level `overflow-hidden` class in `WeatherWidget.tsx` (web & win) which caused status indicators tooltips to crop when rendered absolutely. Retained `overflow-hidden` transition inside the animated `motion.div` component. Increased network status indicator size to `w-4 h-4` for better accessibility.
+- **App.tsx Refactoring (God Component Split)**: Extracted and isolated the client-side routing tree into `routes/AppRoutes.tsx`. Moved app initialization states, auth verification, database sync listeners, biometrics checks, and hardware back button listeners into a custom hook `hooks/useAppInitialization.ts`. Reduced `App.tsx` code size by 70%, keeping it purely as a coordinator.
+- **TypeScript strict compliance**: Cleaned up 59 compiler warnings (`noUnusedLocals` and `noUnusedParameters` rules) across the `ontap-web` codebase. Removed unused local variables/imports in `App.tsx`, `StudentsTab.tsx`, `Dashboard.tsx`, `vite.config.ts`, etc. Fixed syntax errors and leftover logging.
+
+## [3.15.4] - 2026-06-30
+### Sửa lỗi Git Tag Duplication & Nâng cấp Cấu hình Quảng cáo (Web & Win)
+- **Git Tag Autodelete**: Bổ sung hàm `deleteTag` gọi GitHub REST API endpoint `DELETE /repos/{owner}/{repo}/git/refs/tags/{tag}`. Tích hợp lệnh gọi xoá tag tự động trước khi tạo mới release trong `UsageConfigPanel.tsx` của cả bản Web và Win, tránh lỗi 422 `Validation Failed`.
+- **Fix DirectLink Bug**: Cập nhật component `MonetagDirectLink` nhận thêm prop `maxPerSession` và kiểm tra giới hạn lượt hiển thị so với `sessionStorage` key `monetag_dl_count`. Nếu `maxPerSession <= 0` thì tắt hoàn toàn.
+- **Single Source of Truth**: Thêm hằng số `AD_DISABLED = 0` và helper `isAdTypeDisabled` vào `services/monetagConfig.ts`.
+- **UI Admin Panel Upgrade**: Cập nhật CSS trạng thái trong `UsageConfigPanel.tsx`, tự động đổi border thành `border-red-300` và gắn badge `🚫 Đã tắt` khi các ô input có giá trị `<= 0`.
+
+## [3.15.3] - 2026-06-30
+### Sửa lỗi hiển thị Huy hiệu Admin (MiniRoleBadge Opacity Bug)
+- **Framer Motion Fix:** Bổ sung `opacity: 1` vào animate object của premium roles (`admin`, `super_admin`, `lanh_dao`) trong file `MiniRoleBadge.tsx` của cả `ontap-web` và `ontap-win`. Khắc phục triệt để lỗi ẩn huy hiệu (do ban đầu set `initial={{ opacity: 0 }}`).
+
+### Tối ưu hóa xác thực Monetag qua Head Script tĩnh
+- **Portal Layout Update:** Thay thế Next.js `<Script>` component (vốn tự động biên dịch sang queue JS động) thành thẻ `<script>` HTML chuẩn thô nằm trong `<head>` tự định nghĩa của `app/layout.tsx`. Giải quyết lỗi **"Installation error"** trên dashboard Monetag do bot quét tĩnh của họ không đọc được JS dynamic inject.
+
+## [3.15.2] - 2026-06-30
+### Weather Status Indicator (Web & App Win)
+- **Weather Indicator UI:** Thêm indicator icon (`Signal`, `SignalLow`, `WifiOff`) và tooltip chi tiết thông qua state `dataSource` ('live' | 'server-mock' | 'offline') trên components `WeatherWidget.tsx` của cả `ontap-web` và `ontap-win`.
+
+### Fix Monetag Ads Installation (Portal Head Script Injection)
+- **Monetag Integration:** Đưa thẻ `<Script>` Monetag tĩnh vào file `app/layout.tsx` của Next.js với option `strategy="beforeInteractive"` để render thẳng trong HTML source của Head, vượt qua cơ chế quét mã cài đặt (Crawler check) của Monetag.
+
+## [3.15.1] - 2026-06-30
+### Cập nhật hệ thống quảng cáo Monetag (Web & App Win)
+- **Multitag:** Cập nhật domain sang `quge5.com` và zone ID `254797`. Đổi attribute từ `data-z` sang `data-zone` và thêm `data-cfasync="false"` để tương thích với Cloudflare.
+- **Service Worker:** Cập nhật domain sang `5gvci.com` và zone ID `11218490` trong các file `sw.js` (root, ontap-web, ontap-win).
+
+### Cấu trúc thiết kế & Mở rộng thời tiết (Weather Redesign)
+- **DESIGN.md Integration:** Tạo file `DESIGN.md` ở root quy định màu sắc Zinc trung tính, typography Satoshi, layout logic và spring motion. Vượt qua kiểm tra contrast WCAG AA.
+- **Weather API Backend:** Sửa đổi API Next.js `/api/weather/route.ts` để slice dữ liệu forecast thực tế về 8 tiếng và refactor hàm giả lập `getDynamicMockWeather` sinh đủ 8 mốc động.
+- **WeatherWidget Web/Win:** Tích hợp `Sparkles` icon, dynamic Advice styles (`getAdviceStyle`, `getAdviceIcon`), lọc emoji bằng regex và spring-physics hover card (`whileHover` trong Framer Motion).
+
+## [3.15.0] - 2026-06-29
+### Feature: Modernized Class Management UI (Web & Win)
+- **ClassList Rewrite:** Rewrote `ClassList.tsx` to support both Grid and List view modes using Tailwind CSS.
+- **Smart Cards:** Replaced traditional list items with dynamic cards containing gradient headers, status indicators (Active/Finished), and quick action overlay buttons (Edit/Delete).
+- **Avatar Support:** Added `avatarUrl` rendering for head teachers fetching from `creatorProfiles` state map. Added avatarUrl input inside `AddEditCourseModal`.
+- **Insights Bar:** Implemented `getDocs(query(collection(db, 'thithu_results'), where('courseId', '==', id)))` in `ClassManagementScreen.tsx` to display real-time member count and mock test attempt totals.
+- **Environment Parity:** Synchronized changes from `ontap-web` to `ontap-win` to maintain codebase parity.
+
+## [3.14.0] - 2026-06-29
+### Gamification v2.0 - Complete Integration
+- **BadgeAdminModal:** Implemented 3D icon rendering and manual grant/revoke functions using BadgeService for Admins and Leaders.
+- **App.tsx Triggers:** Integrated `increasePracticeProgress` and `increaseMockTestProgress` into `saveExamResult` flows on both Web and Win platforms.
+- **Fragment Fix:** Fixed React Fragment errors in UserManagerScreen.tsx on both platforms.
+- **Constants Sync:** Synced `badges.ts` definitions for unified mock test and practice progress.
+
+### QA Fixes
+- **TypeScript Strict Compliance:** Fixed unused variables (`StudentAnswers`, `CONG_THUC_TRON_DE`, `loading`, `filterRole`, `sortKey`, `sortOrder`, `headTeacher`, `router`) across various components and API routes (`nop-bai`, `thi`, `dang-bai/sua`, `dang-bai/tao-moi`, `ho-so`, `ClassDetail`, `PostManager`, `StudentClassView`, `TeacherRoomList`) to successfully pass the Next.js `next build` process.
+- **Rules of Hooks:** Refactored early returns in `AdminStatsBar.tsx` and `QuizScreen.tsx` to strictly occur after hook declarations, preventing React state mismatch errors across `ontap-web` and `ontap-win`.
+- **Markdown Formatting & Font Issue:** Diagnosed recurring "lỗi font" in changelog rendering. Root cause: Missing newline (\n\n) before markdown headings (## [Version]) caused parsers to merge headings with previous list items, breaking UI typography and font scaling. Preventive measure: Always ensure strict double-newline separation between changelog blocks.
+
+## [3.13.0] - 2026-06-29
+### Gamification Engine & Smart Account Recycle (Web & App Win)
+- **Badge Engine Core:** Implemented `BadgeService` and `BadgeListener` side-effect wrapper to trigger and unlock achievements (`achievement_1`, `achievement_perfect`) dynamically on quiz and online exam submission.
+- **MiniRoleBadge Component:** Developed and integrated visual `<MiniRoleBadge />` displaying user privilege roles (`admin`, `giao_vien`, `hoc_vien`) in `TopNavbar` and `StudentCard`.
+- **Database Recycling Services:** Added `BadgeService.resetUserBadges(uid)` and `clearUserHistory(uid)` in `historyService.ts` to purge and clean sub-collections and exam logs when recycling student IDs.
+- **Conflict Resolution UI:** Upgraded `ImportStudentModal.tsx` and `CreateStudentModal.tsx` (Web & Win) with a pre-check verification step displaying conflict comparison tables and enforcing a double-confirmation prompt for active (unlocked) accounts before overwrite.
+- **Codebase Cleanups & Modularity:** Cleaned up unused imports/variables in `Navbar`, `StudentsTab`, `PortalMaintenanceWrapper`, `admin/page.tsx`, and `quan-ly/[roomId]/page.tsx`. Added `.env*` to `ontap-win/.gitignore`.
 
 ## [3.12.2] - 2026-06-29
 ### Refactor UI Header Layout & TopNavbar Consolidation (Web & App Win)
@@ -201,3 +300,4 @@
 ### Security
 - Khắc phục nguy cơ lộ Gemini API Key nghiêm trọng. Toàn bộ logic kiểm tra và generateContent hiện tại đã thực thi ngầm ở Node server thay vì client.
 - Xóa bỏ điểm yếu mã hóa XOR có thể dễ dàng bị bẻ khóa trong Local Storage đối với "Ghi nhớ tài khoản".
+

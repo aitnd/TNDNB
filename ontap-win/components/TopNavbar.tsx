@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
+import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils, Gamepad2 , Compass, ShieldCheck, FileEdit, Award } from 'lucide-react';
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
@@ -126,9 +127,9 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                     <span className="font-medium text-sm">Tải App học offline</span>
                                 </button>
                                 {/* Ẩm thực */}
-                                <a href="https://daotaothuyenvien.com/food" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                <a href="https://thodia.hlstudio.top" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
                                         <Utensils size={18} className="text-orange-500" />
-                                        <span className="font-medium text-sm">Ẩm thực Ninh Bình</span>
+                                        <span className="font-medium text-sm">Thổ Địa Ninh Bình</span>
                                     </a>
                             </div>
                         )}

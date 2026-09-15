@@ -85,7 +85,6 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
         if (n.expiryDate) {
             // Format for datetime-local: YYYY-MM-DDTHH:mm
             const d = new Date(n.expiryDate.seconds * 1000);
-            const iso = d.toISOString().slice(0, 16);
             // Adjust for timezone offset if needed, but simple ISO slice is UTC. 
             // Better:
             const offset = d.getTimezoneOffset() * 60000;
@@ -215,7 +214,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                                 if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ thông báo trong hộp thư riêng của TẤT CẢ học viên.\nChỉ giữ lại thông báo chung (Toàn hệ thống).\nBạn có chắc chắn muốn dọn dẹp không?')) {
                                     setLoading(true);
                                     try {
-                                        const { collection, getDocs, deleteDoc, writeBatch, doc } = await import('firebase/firestore');
+                                        const { collection, getDocs, writeBatch } = await import('firebase/firestore');
                                         const { db } = await import('../services/firebaseClient');
 
                                         // 1. Get all users

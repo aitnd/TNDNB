@@ -47,9 +47,7 @@ export const hasSavedCredentials = async (): Promise<boolean> => {
 export const performBiometricLogin = async (): Promise<Credentials | null> => {
     try {
         // 1. Verify Biometric
-        const simplified = true; // Use simple verify (no crypto object)
-
-        // Check availability first
+// Check availability first
         const available = await isBiometricAvailable();
         if (!available) throw new Error('Biometric not available');
 

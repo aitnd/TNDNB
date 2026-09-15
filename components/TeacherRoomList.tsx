@@ -3,7 +3,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../utils/firebaseClient'
 import { collection, query, where, onSnapshot, Timestamp, doc, orderBy, deleteDoc } from 'firebase/firestore' 
@@ -25,7 +25,7 @@ interface ExamRoom {
 
 export default function TeacherRoomList() {
   const { user } = useAuth()
-  const router = useRouter()
+  // const _router = useRouter()
 
   // "Não" trạng thái
   const [rooms, setRooms] = useState<ExamRoom[]>([])
@@ -105,9 +105,9 @@ export default function TeacherRoomList() {
   }
 
   // 3. HÀM (Vào xem phòng chi tiết)
-  const handleViewRoom = (roomId: string) => {
-    router.push(`/quan-ly/${roomId}`)
-  }
+  // const _handleViewRoom = (roomId: string) => {
+  //   router.push(`/quan-ly/${roomId}`)
+  // }
 
   // 4. GIAO DIỆN (Dashboard)
   return (

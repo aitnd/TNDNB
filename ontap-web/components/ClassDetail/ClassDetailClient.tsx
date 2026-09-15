@@ -195,6 +195,7 @@ const ClassDetailClient: React.FC<ClassDetailClientProps> = ({
                 deviceCounts={deviceCounts}
                 canAssignMembers={canAssignMembers}
                 canDisableAccounts={canDisableAccounts}
+                currentUserRole={userProfile?.role || ''}
               />
             )}
 

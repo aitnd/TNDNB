@@ -163,15 +163,15 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                     </div>
                 </div>
 
-                <div className={`flex mt-4 gap-4 ${isMobileApp ? 'flex-col' : 'flex-row'}`}>
+                <div className={`flex mt-4 gap-4 ${isMobileApp ? 'flex-col' : 'flex-col md:flex-row'}`}>
                     {/* Left Column: Question Content */}
                     <div className="flex-1 border border-gray-400 rounded-md p-4 flex flex-col justify-between min-h-[400px] md:min-h-[500px]">
                         <div>
                             <p className="font-bold mb-4 border-b border-dashed border-gray-400 pb-2 flex justify-between">
                                 <span>Nội dung câu hỏi</span>
-                                {isMobileApp && <span className="text-blue-600">Câu {currentQuestionIndex + 1}/{quiz.questions.length}</span>}
+                                <span className={`text-blue-600 ${isMobileApp ? 'block' : 'block md:hidden'}`}>Câu {currentQuestionIndex + 1}/{quiz.questions.length}</span>
                             </p>
-                            {!isMobileApp && <p className="font-bold text-red-600 mb-2">Câu :{currentQuestionIndex + 1}</p>}
+                            <p className={`font-bold text-red-600 mb-2 ${isMobileApp ? 'hidden' : 'hidden md:block'}`}>Câu :{currentQuestionIndex + 1}</p>
                             <p className="mb-4 font-semibold text-lg">{currentQuestion.text}</p>
 
                             {currentQuestion.image && (
@@ -241,10 +241,9 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                     </div>
 
                     {/* Right Column (Hide Table on Mobile if too crowded, or show as grid) */}
-                    {!isMobileApp ? (
-                        <div className="w-[200px] flex-none flex flex-col">
-                            <div className="border border-gray-300 rounded-md overflow-hidden">
-                                <table className="w-full border-collapse text-xs">
+                    <div className={`w-[200px] flex-none flex-col ${isMobileApp ? 'hidden' : 'hidden md:flex'}`}>
+                        <div className="border border-gray-300 rounded-md overflow-hidden">
+                            <table className="w-full border-collapse text-xs">
                                     <thead className="sticky top-0 bg-[#f0ad4e] z-10">
                                         <tr>
                                             <th className="border border-gray-400 p-2">Câu</th>
@@ -279,10 +278,10 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                             <div className="text-center mt-4 pt-2 border-t border-gray-200">
                                 <button onClick={handleFinishQuiz} className="bg-[#337ab7] text-white px-8 py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors w-full">Nộp bài</button>
                             </div>
-                        </div>
-                    ) : (
-                        <div className="flex flex-wrap gap-2 justify-center p-2 bg-gray-50 rounded-xl border border-gray-200">
-                             {quiz.questions.map((q, index) => {
+                    </div>
+
+                    <div className={`flex-wrap gap-2 justify-center p-2 bg-gray-50 rounded-xl border border-gray-200 ${isMobileApp ? 'flex' : 'flex md:hidden'}`}>
+                         {quiz.questions.map((q, index) => {
                                  const isAnswered = !!userAnswers[q.id];
                                  const isCurrent = currentQuestionIndex === index;
                                  return (
@@ -298,8 +297,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
                                      </button>
                                  );
                              })}
-                        </div>
-                    )}
+                    </div>
                 </div>
 
                 <div className="mt-4 bg-[#005a9c] text-white p-4 rounded-b-md flex items-center gap-4 text-xs">

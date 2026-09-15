@@ -69,7 +69,6 @@ export const sendNotification = async (
             if (!courseSnapByName.empty) {
                 realCourseId = courseSnapByName.docs[0].id;
             } else {
-                const courseDocRef = doc(db, 'courses', targetId);
                 const courseDocSnap = await getDocs(query(collection(db, 'courses'), where(documentId(), '==', targetId)));
                 if (!courseDocSnap.empty) {
                     realCourseId = targetId;
@@ -105,7 +104,7 @@ export const sendNotification = async (
     }
 };
 
-export const fetchNotifications = async (userId: string, classId?: string, userRole?: string): Promise<Notification[]> => {
+export const fetchNotifications = async (userId: string, _classId?: string, userRole?: string): Promise<Notification[]> => {
     try {
         const notifs: Notification[] = [];
 

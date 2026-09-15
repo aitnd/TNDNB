@@ -1,26 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../services/firebaseClient';
-import { 
-    collection, 
-    query, 
-    orderBy, 
-    onSnapshot, 
-    doc, 
-    updateDoc, 
-    deleteDoc, 
-    addDoc, 
-    serverTimestamp, 
-    where,
-    QuerySnapshot,
-    DocumentData,
-    QueryDocumentSnapshot,
-    Unsubscribe,
-    getDocs
-} from 'firebase/firestore';
-import { FaUserGraduate, FaChalkboardTeacher, FaSchool, FaPlus, FaSearch, FaTrash, FaEdit, FaTimes, FaArrowLeft, FaUserTie } from 'react-icons/fa';
-import { createPortal } from 'react-dom';
+import { collection, query, orderBy, onSnapshot, doc, getDoc, updateDoc, deleteDoc, addDoc, serverTimestamp, where, getDocs, getCountFromServer } from 'firebase/firestore';
 import { Course, UserProfile } from '../types';
 import ClassDetailClient from './ClassDetail/ClassDetailClient';
+import ClassList from './ClassDetail/ClassList';
+import { AddEditCourseModal } from './ClassDetail/Modals';
+import { getExamHistory } from '../services/historyService';
 
 interface ClassManagementScreenProps {
     userProfile: UserProfile;
@@ -50,34 +36,34 @@ const getRoleRank = (role: string) => {
     }
 };
 
-const safeLower = (s: string | undefined | null) => (s || '').toLowerCase();
-
 const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfile, usageConfig, onBack }) => {
     // --- STATE ---
+    const { courseId } = useParams<{ courseId: string }>();
+    const navigate = useNavigate();
+
     const [courses, setCourses] = useState<Course[]>([]);
-    const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
     const [loadingCourses, setLoadingCourses] = useState(true);
     const [headTeacherNames, setHeadTeacherNames] = useState<Record<string, string>>({});
+    const [creatorProfiles, setCreatorProfiles] = useState<Record<string, {name: string, role: string}>>({});
+    const [classStats, setClassStats] = useState<Record<string, number>>({});
+
+    const selectedCourse = React.useMemo(() => {
+        if (!courseId) return null;
+        return courses.find(c => c.id === courseId) || null;
+    }, [courseId, courses]);
 
     const [studentLatestResults, setStudentLatestResults] = useState<Record<string, any>>({});
     const [deviceCounts, setDeviceCounts] = useState<Record<string, number>>({});
+    const [subjectStats, setSubjectStats] = useState<any[]>([]);
+    const [allClassHistories, setAllClassHistories] = useState<any[]>([]);
 
     // Course Search State
     const [courseSearchTerm, setCourseSearchTerm] = useState('');
-
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [newCourseName, setNewCourseName] = useState('');
-    const [newCourseDesc, setNewCourseDesc] = useState('');
-    const [newCourseLicenseId, setNewCourseLicenseId] = useState('');
-
     const [licenses, setLicenses] = useState<any[]>([]);
 
-    // Edit Course State
-    const [showEditCourseModal, setShowEditCourseModal] = useState(false);
+    // Modal States
+    const [showAddEditModal, setShowAddEditModal] = useState(false);
     const [editingCourse, setEditingCourse] = useState<Course | null>(null);
-    const [editCourseName, setEditCourseName] = useState('');
-    const [editCourseDesc, setEditCourseDesc] = useState('');
-    const [editCourseLicenseId, setEditCourseLicenseId] = useState('');
 
     const getRoleConfigKey = (role: string): string => {
         if (role === 'admin') return 'admin';
@@ -103,8 +89,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     useEffect(() => {
         const fetchLicenses = async () => {
             const q = query(collection(db, 'licenses'));
-            const unsub = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
-                setLicenses(snapshot.docs.map((d: QueryDocumentSnapshot<DocumentData>) => ({ id: d.id, ...d.data() })));
+            const unsub = onSnapshot(q, (snapshot) => {
+                setLicenses(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
             });
             return unsub;
         };
@@ -115,8 +101,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     // Course List Listener
     useEffect(() => {
         const q = query(collection(db, 'courses'), orderBy('createdAt', 'desc'));
-        const unsubscribe = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
-            let coursesData = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => ({
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            let coursesData = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             })) as Course[];
@@ -135,20 +121,34 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
             setCourses(coursesData);
             setLoadingCourses(false);
 
-            // Fetch head teacher names
-            const headTeacherIds = [...new Set(coursesData.map(c => c.headTeacherId).filter(Boolean))] as string[];
-            if (headTeacherIds.length > 0) {
-                const teachersQ = query(collection(db, 'users'), where('role', '==', 'giao_vien'));
-                onSnapshot(teachersQ, (teacherSnap: QuerySnapshot<DocumentData>) => {
+            // Fetch head teacher & creator profiles
+            const relevantUserIds = [...new Set([
+                ...coursesData.map(c => c.headTeacherId),
+                ...coursesData.map(c => c.createdBy)
+            ].filter(Boolean))] as string[];
+
+            if (relevantUserIds.length > 0) {
+                const fetchUsers = async () => {
                     const names: Record<string, string> = {};
-                    teacherSnap.forEach((tDoc: QueryDocumentSnapshot<DocumentData>) => {
-                        const data = tDoc.data();
-                        if (headTeacherIds.includes(tDoc.id)) {
-                            names[tDoc.id] = data.full_name || data.fullName || 'Chưa cập nhật';
-                        }
-                    });
-                    setHeadTeacherNames(names);
-                });
+                    const profiles: Record<string, any> = {};
+                    
+                    await Promise.all(relevantUserIds.map(async (uid) => {
+                        try {
+                            const udoc = await getDoc(doc(db, 'users', uid));
+                            if (udoc.exists()) {
+                                const data = udoc.data();
+                                names[uid] = data.full_name || data.fullName || 'Chưa cập nhật';
+                                profiles[uid] = {
+                                    name: data.full_name || data.fullName || 'Không tên',
+                                    role: data.role || 'user'
+                                };
+                            }
+                        } catch(e) {  }
+                    }));
+                    setHeadTeacherNames(prev => ({...prev, ...names}));
+                    setCreatorProfiles(prev => ({...prev, ...profiles}));
+                };
+                fetchUsers();
             }
         });
         return () => unsubscribe();
@@ -159,79 +159,192 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         if (!selectedCourse) return;
 
         const qStudents = query(collection(db, 'users'), where('courseId', '==', selectedCourse.id), where('role', '==', 'hoc_vien'));
-        let unsubSessions: Unsubscribe | undefined;
-        let unsubResults: Unsubscribe | undefined;
-
-        const unsubscribeStudents = onSnapshot(qStudents, (snapshot: QuerySnapshot<DocumentData>) => {
-            const studentIds = snapshot.docs.map((d: QueryDocumentSnapshot<DocumentData>) => d.id);
+        const unsubscribeStudents = onSnapshot(qStudents, (snapshot) => {
+            const studentIds = snapshot.docs.map(d => d.id);
             if (studentIds.length === 0) {
                 setDeviceCounts({});
                 setStudentLatestResults({});
                 return;
             }
 
-            // Cleanup previous sub-listeners before re-subscribing
-            if (unsubSessions) unsubSessions();
-            if (unsubResults) unsubResults();
-
             // Listen for active sessions (devices)
             const qSessions = query(collection(db, 'login_sessions'), where('userId', 'in', studentIds.slice(0, 30)), where('status', '==', 'active'));
-            unsubSessions = onSnapshot(qSessions, (snap: QuerySnapshot<DocumentData>) => {
+            const unsubSessions = onSnapshot(qSessions, (snap) => {
                 const counts: Record<string, number> = {};
-                snap.docs.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+                snap.docs.forEach(doc => {
                     const data = doc.data();
                     counts[data.userId] = (counts[data.userId] || 0) + 1;
                 });
                 setDeviceCounts(counts);
+            }, (error) => {
             });
 
             // Listen for latest results
-            const qResults = query(collection(db, 'exam_results'), where('studentId', 'in', studentIds.slice(0, 30)), orderBy('createdAt', 'desc'));
-            unsubResults = onSnapshot(qResults, (snap: QuerySnapshot<DocumentData>) => {
-                const latest: Record<string, any> = {};
-                snap.docs.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
-                    const data = doc.data();
-                    if (!latest[data.studentId]) {
-                        latest[data.studentId] = {
-                            score: data.score,
-                            time: data.createdAt?.toDate() ? data.createdAt.toDate().toLocaleDateString('vi-VN') : '---',
-                            type: data.type || 'Thi thử'
-                        };
+            const fetchLatestResults = async () => {
+                const resultsMap: Record<string, any> = {};
+                const allHistories: any[] = [];
+
+                await Promise.all(studentIds.map(async (uid) => {
+                    try {
+                        const history = await getExamHistory(uid);
+                        if (history && history.length > 0) {
+                            allHistories.push(...history.map((h: any) => ({ ...h, uid })));
+                            const latest = history[0];
+                            resultsMap[uid] = {
+                                type: latest.quizTitle || latest.type || 'Bài thi',
+                                time: latest.completedAt ? latest.completedAt.toLocaleString('vi-VN') : '---',
+                                score: `${latest.score}/${latest.totalQuestions} câu`
+                            };
+                        } else {
+                            resultsMap[uid] = { type: '--', time: '--', score: '--' };
+                        }
+                    } catch (e) {
+                        console.error(`Error fetching history for ${uid}`, e);
+                        resultsMap[uid] = { type: 'Lỗi', time: '--', score: '--' };
                     }
-                });
-                setStudentLatestResults(latest);
+                }));
+                setStudentLatestResults(resultsMap);
+                setAllClassHistories(allHistories);
+            };
+            
+            fetchLatestResults();
+
+            return () => {
+                unsubSessions();
+            };
+        }, (error) => {
+            setDeviceCounts({});
+            setStudentLatestResults({});
+        });
+
+        return () => unsubscribeStudents();
+    }, [selectedCourse]);
+
+    // Recalculate Subject Stats when histories, licenses, or selectedCourse changes
+    useEffect(() => {
+        if (!selectedCourse) {
+            setSubjectStats([]);
+            return;
+        }
+
+        const license = licenses.find((l: any) => l.id === selectedCourse.licenseId || l.code === selectedCourse.licenseId || l.name === selectedCourse.licenseId);
+        const subjects = license?.subjects || [];
+        
+        const statsMap: Record<string, { scores: number[], userMaxScores: Record<string, {max: number, total: number}> }> = {};
+        
+        allClassHistories.forEach(h => {
+            const title = h.quizTitle || h.type || '';
+            if (!statsMap[title]) statsMap[title] = { scores: [], userMaxScores: {} };
+            
+            statsMap[title].scores.push(h.score || 0);
+
+            const uid = h.uid || 'unknown';
+            const currentMax = statsMap[title].userMaxScores[uid]?.max || -1;
+            if ((h.score || 0) > currentMax) {
+                statsMap[title].userMaxScores[uid] = {
+                    max: h.score || 0,
+                    total: h.totalQuestions || 0
+                };
+            }
+        });
+
+        const isMockTest = (title: string) => title.toLowerCase().includes('thi thử') || title.toLowerCase().includes('tổng hợp');
+
+        const buildStat = (title: string) => {
+             const data = statsMap[title] || { scores: [], userMaxScores: {} };
+             const scores = data.scores;
+             const userIds = Object.keys(data.userMaxScores);
+             const studentsCount = userIds.length;
+             
+             let passedCount = 0;
+             userIds.forEach(uid => {
+                 const best = data.userMaxScores[uid];
+                 if (isMockTest(title)) {
+                     if (best.max >= 25) passedCount++;
+                 } else {
+                     if (best.max === best.total && best.total > 0) passedCount++;
+                 }
+             });
+
+             if (scores.length === 0) return { name: title, highest: null, lowest: null, average: null, count: 0, studentsCount: 0, passedCount: 0 };
+             
+             return {
+                 name: title,
+                 highest: Math.max(...scores),
+                 lowest: Math.min(...scores),
+                 average: (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1),
+                 count: scores.length,
+                 studentsCount,
+                 passedCount
+             };
+        };
+
+        const historyTitles = Object.keys(statsMap).filter(k => !isMockTest(k));
+        const allSubjects = Array.from(new Set([ ...subjects.map((s: any) => s.name), ...historyTitles ]));
+
+        const newSubjectStats = allSubjects.map(name => buildStat(name));
+        
+        // Add Thi Thu (mock test) stats matching keywords
+        const keys = Object.keys(statsMap).filter(k => isMockTest(k));
+        let mockScores: number[] = [];
+        let mockUserMax: Record<string, {max: number, total: number}> = {};
+
+        keys.forEach(k => {
+            mockScores.push(...statsMap[k].scores);
+            // Merge user max scores
+            Object.keys(statsMap[k].userMaxScores).forEach(uid => {
+                 const m1 = statsMap[k].userMaxScores[uid];
+                 const m2 = mockUserMax[uid] || { max: -1, total: 0 };
+                 if (m1.max > m2.max) mockUserMax[uid] = m1;
             });
         });
 
-        return () => {
-            unsubscribeStudents();
-            if (unsubSessions) unsubSessions();
-            if (unsubResults) unsubResults();
-        };
-    }, [selectedCourse]);
+        const mockStudentsCount = Object.keys(mockUserMax).length;
+        let mockPassedCount = 0;
+        Object.keys(mockUserMax).forEach(uid => {
+             const best = mockUserMax[uid];
+             if (best.max >= 25) mockPassedCount++;
+        });
+
+        const finalMockStat = mockScores.length > 0 ? {
+             name: 'Thi thử (Tổng hợp)',
+             highest: Math.max(...mockScores),
+             lowest: Math.min(...mockScores),
+             average: (mockScores.reduce((a, b) => a + b, 0) / mockScores.length).toFixed(1),
+             count: mockScores.length,
+             studentsCount: mockStudentsCount,
+             passedCount: mockPassedCount
+        } : { name: 'Thi thử (Tổng hợp)', highest: null, lowest: null, average: null, count: 0, studentsCount: 0, passedCount: 0 };
+
+        setSubjectStats([...newSubjectStats, finalMockStat]);
+    }, [selectedCourse, licenses, allClassHistories]);
 
 
     // --- HANDLERS ---
-    const handleCreateClass = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSaveCourse = async (data: any) => {
         try {
-            await addDoc(collection(db, 'courses'), {
-                name: newCourseName,
-                description: newCourseDesc,
-                licenseId: newCourseLicenseId || null,
-                createdAt: serverTimestamp(),
-                createdBy: userProfile.id,
-                headTeacherId: userProfile.role === 'giao_vien' ? userProfile.id : null, 
-                teacherIds: userProfile.role === 'giao_vien' ? [userProfile.id] : [],
-                status: 'active'
-            });
-            setShowCreateModal(false);
-            setNewCourseName('');
-            setNewCourseDesc('');
-            setNewCourseLicenseId('');
+            if (editingCourse) {
+                // Update
+                await updateDoc(doc(db, 'courses', editingCourse.id), {
+                    ...data,
+                    updatedAt: serverTimestamp()
+                });
+            } else {
+                // Create
+                await addDoc(collection(db, 'courses'), {
+                    ...data,
+                    createdAt: serverTimestamp(),
+                    createdBy: userProfile.id,
+                    headTeacherId: userProfile.role === 'giao_vien' ? userProfile.id : null, 
+                    teacherIds: userProfile.role === 'giao_vien' ? [userProfile.id] : [],
+                    status: 'active'
+                });
+            }
+            setShowAddEditModal(false);
+            setEditingCourse(null);
         } catch (error) {
-            console.error("Error creating class:", error);
-            alert("Có lỗi xảy ra khi tạo lớp.");
+            console.error("Error saving course:", error);
+            alert("Có lỗi xảy ra khi lưu thông tin lớp.");
         }
     };
 
@@ -253,13 +366,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
         if (!confirm('Bạn có chắc chắn muốn xóa lớp học này? Tất cả học viên sẽ bị đẩy ra khỏi lớp!')) return;
         try {
-            // Unassign all students
-            const q = query(collection(db, 'users'), where('courseId', '==', courseId));
-            onSnapshot(q, async (snap: QuerySnapshot<DocumentData>) => {
-                const updates = snap.docs.map((d: QueryDocumentSnapshot<DocumentData>) => updateDoc(doc(db, 'users', d.id), { courseId: null, courseName: null }));
-                await Promise.all(updates);
-            });
-
+            // Logic to unassign students usually goes on the server side or triggered here
+            // For now, keep it simple as the previous implementation
             await deleteDoc(doc(db, 'courses', courseId));
         } catch (error) {
             console.error("Error deleting class:", error);
@@ -284,30 +392,8 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         }
 
         setEditingCourse(course);
-        setEditCourseName(course.name);
-        setEditCourseDesc(course.description || '');
-        setEditCourseLicenseId(course.licenseId || '');
-        setShowEditCourseModal(true);
+        setShowAddEditModal(true);
     };
-
-    const handleUpdateCourse = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!editingCourse) return;
-        try {
-            await updateDoc(doc(db, 'courses', editingCourse.id), {
-                name: editCourseName,
-                description: editCourseDesc,
-                licenseId: editCourseLicenseId || null,
-                updatedAt: serverTimestamp()
-            });
-            setShowEditCourseModal(false);
-            setEditingCourse(null);
-        } catch (error) {
-            console.error("Error updating course", error);
-            alert("Cập nhật thất bại.");
-        }
-    };
-
 
     const canFinishClass = React.useMemo(() => {
         const perm = roleConfig.courseFinish || 'none';
@@ -377,185 +463,34 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     // --- RENDER ---
     if (!selectedCourse) {
         return (
-            <div className="w-full max-w-6xl mx-auto p-4 animate-slide-in-right relative">
-                {/* Create Modal */}
-                {showCreateModal && createPortal(
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
-                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
-                            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Tạo Lớp Học Mới</h2>
-                            <form onSubmit={handleCreateClass} className="space-y-4">
-                                <input className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white" placeholder="Tên lớp" value={newCourseName} onChange={e => setNewCourseName(e.target.value)} required />
-                                <div className="mb-2">
-                                    <label className="block text-sm font-medium mb-1 dark:text-gray-300">Hạng bằng (Mặc định)</label>
-                                    <select className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white" value={newCourseLicenseId} onChange={e => setNewCourseLicenseId(e.target.value)}>
-                                        <option value="">-- Chọn hạng bằng --</option>
-                                        {licenses.map((l: any) => (
-                                            <option key={l.id} value={l.id}>{l.name}</option>
-                                        ))}
-                                    </select>
-                                    <p className="text-xs text-gray-500 mt-1">Học viên sẽ tự động được gán hạng bằng này khi ôn tập.</p>
-                                </div>
-                                <textarea className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white" placeholder="Mô tả" value={newCourseDesc} onChange={e => setNewCourseDesc(e.target.value)} />
-                                <div className="flex justify-end gap-2">
-                                    <button type="button" onClick={() => setShowCreateModal(false)} className="px-4 py-2 bg-gray-200 rounded">Hủy</button>
-                                    <button type="submit" className="px-4 py-2 bg-teal-600 text-white rounded">Tạo</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>,
-                    document.body
-                )}
+            <>
+                <ClassList 
+                    courses={courses}
+                    loadingCourses={loadingCourses}
+                    courseSearchTerm={courseSearchTerm}
+                    setCourseSearchTerm={setCourseSearchTerm}
+                    onSelectCourse={(course) => navigate(`/ontap/class-manager/${course.id}`)}
+                    onEditCourse={openEditCourseModal}
+                    onDeleteCourse={handleDeleteCourse}
+                    onAddCourse={() => { setEditingCourse(null); setShowAddEditModal(true); }}
+                    onBack={onBack}
+                    userProfile={userProfile}
+                    headTeacherNames={headTeacherNames}
+                    creatorProfiles={creatorProfiles}
+                    licenses={licenses}
+                    canCreateClass={canCreateClass}
+                    classStats={classStats}
+                />
 
-                {/* Edit Course Modal */}
-                {
-                    showEditCourseModal && editingCourse && createPortal(
-                        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
-                            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
-                                <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Chỉnh Sửa Lớp Học</h2>
-                                <form onSubmit={handleUpdateCourse} className="space-y-4">
-                                    <input className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white" placeholder="Tên lớp" value={editCourseName} onChange={e => setEditCourseName(e.target.value)} required />
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1 dark:text-gray-300">Hạng bằng mặc định</label>
-                                        <select className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white" value={editCourseLicenseId} onChange={e => setEditCourseLicenseId(e.target.value)}>
-                                            <option value="">-- Không chọn --</option>
-                                            {licenses.map((l: any) => (
-                                                <option key={l.id} value={l.id}>{l.name}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <textarea className="w-full p-2 border rounded dark:bg-slate-700 dark:text-white" placeholder="Mô tả" value={editCourseDesc} onChange={e => setEditCourseDesc(e.target.value)} />
-                                    <div className="flex justify-end gap-2">
-                                        <button type="button" onClick={() => setShowEditCourseModal(false)} className="px-4 py-2 bg-gray-200 rounded">Hủy</button>
-                                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Lưu Thay Đổi</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>,
-                        document.body
-                    )
-                }
-
-                <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-3xl font-bold flex items-center gap-3 bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-emerald-600">
-                        <FaSchool className="text-teal-600" /> Quản lý Lớp học
-                    </h1>
-                    <button onClick={onBack} className="bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors shadow-sm">
-                        Back Dashboard
-                    </button>
-                </div>
-
-                {/* Search Bar */}
-                <div className="mb-8 relative max-w-xl group animate-slide-in-right" style={{animationDelay: '0.1s'}}>
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <FaSearch className="text-gray-400 group-focus-within:text-teal-500 text-lg transition-colors duration-300" />
-                    </div>
-                    <input
-                        type="text"
-                        className="w-full pl-12 pr-10 py-3.5 bg-white dark:bg-slate-800 border-2 border-transparent focus:border-teal-500 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 transition-all duration-300 hover:-translate-y-0.5"
-                        placeholder="Tìm kiếm lớp học..."
-                        value={courseSearchTerm}
-                        onChange={(e) => setCourseSearchTerm(e.target.value)}
+                {showAddEditModal && (
+                    <AddEditCourseModal 
+                        course={editingCourse}
+                        licenses={licenses}
+                        onClose={() => setShowAddEditModal(false)}
+                        onSave={handleSaveCourse}
                     />
-                    {courseSearchTerm && (
-                        <button 
-                            onClick={() => setCourseSearchTerm('')}
-                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-red-500 transition-colors"
-                        >
-                            <FaTimes />
-                        </button>
-                    )}
-                </div>
-
-                {/* Course List */}
-                {
-                    loadingCourses ? (
-                        <div className="p-20 text-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto"></div></div>
-                    ) : courses.length === 0 ? (
-                        <div className="text-center p-12 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
-                            <FaSchool className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-gray-700 dark:text-gray-200 mb-2">Chưa có lớp học nào</h3>
-                            {canCreateClass && <button onClick={() => setShowCreateModal(true)} className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition">Tạo Lớp Ngay</button>}
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {canCreateClass && (
-                                <div onClick={() => setShowCreateModal(true)} className="bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl shadow-lg p-6 flex flex-col justify-center items-center text-white cursor-pointer hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group">
-                                    <div className="bg-white/20 p-4 rounded-full mb-3 group-hover:bg-white/30 transition-colors"><FaPlus className="w-8 h-8" /></div>
-                                    <h3 className="font-bold text-lg">Thêm Lớp Mới</h3>
-                                </div>
-                            )}
-                            {courses
-                                .filter((c: Course) => safeLower(c.name).includes(safeLower(courseSearchTerm)) || safeLower(c.description).includes(safeLower(courseSearchTerm)))
-                                .map((course: Course) => {
-                                // Permission Check
-                                const canEditThis = editPermission === 'all' || (editPermission === 'managed' && (course.createdBy === userProfile.id || course.headTeacherId === userProfile.id || (course.teacherIds || []).includes(userProfile.id)));
-                                const canDeleteThis = createDeletePermission === 'all' || (createDeletePermission === 'managed' && course.createdBy === userProfile.id);
-
-                                return (
-                                    <div
-                                        key={course.id}
-                                        onClick={() => setSelectedCourse(course)}
-                                        className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col relative"
-                                    >
-                                        {(canEditThis || canDeleteThis) && (
-                                            <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                {canEditThis && (
-                                                    <button
-                                                        onClick={(e) => openEditCourseModal(course, e)}
-                                                        className="p-2 bg-white/90 text-blue-600 rounded-full shadow-sm hover:bg-blue-50"
-                                                        title="Sửa lớp"
-                                                    >
-                                                        <FaEdit />
-                                                    </button>
-                                                )}
-                                                {canDeleteThis && (
-                                                    <button
-                                                        onClick={(e) => { e.stopPropagation(); handleDeleteCourse(course.id); }}
-                                                        className="p-2 bg-white/90 text-red-600 rounded-full shadow-sm hover:bg-red-50"
-                                                        title="Xóa lớp"
-                                                    >
-                                                        <FaTrash />
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
-                                        <div className="h-32 bg-gradient-to-r from-blue-600 to-cyan-500 relative flex items-center justify-center overflow-hidden">
-                                            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
-                                            <FaChalkboardTeacher className="text-white/30 w-20 h-20 transform -rotate-12 group-hover:scale-110 transition-transform duration-500" />
-                                            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                                                <h3 className="font-bold text-xl text-white truncate">{course.name}</h3>
-                                                {course.licenseId && (
-                                                    <span className="text-xs text-yellow-300 font-mono bg-black/30 px-1 rounded ml-2">
-                                                        {licenses.find((l: any) => l.id === course.licenseId)?.name || course.licenseId}
-                                                    </span>
-                                                )}
-                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ml-2 ${
-                                                    course.status === 'finished' 
-                                                    ? 'bg-red-500/20 text-red-200 border border-red-500/30' 
-                                                    : 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/30'
-                                                }`}>
-                                                    {course.status === 'finished' ? '🔴 Đã kết thúc' : '🟢 Đang hoạt động'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="p-5 flex-1 flex flex-col">
-                                            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">
-                                                {course.description || 'Chưa có mô tả khóa học.'}
-                                            </p>
-                                            <div className="flex justify-between items-center text-sm font-medium pt-4 border-t border-gray-100 dark:border-slate-700">
-                                                <span className={`flex items-center gap-1 ${course.headTeacherId ? 'text-blue-600 font-bold' : 'text-gray-500'}`}>
-                                                    <FaUserTie /> GVCN: {course.headTeacherId ? (headTeacherNames[course.headTeacherId] || '...') : 'Chưa có'}
-                                                </span>
-                                                <span className="text-blue-600 group-hover:underline flex items-center gap-1">Chi tiết <FaArrowLeft className="rotate-180" /></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )
-                }
-            </div >
+                )}
+            </>
         );
     }
 
@@ -563,10 +498,12 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     return (
         <ClassDetailClient 
             course={selectedCourse} 
-            onBack={() => setSelectedCourse(null)} 
+            onBack={() => navigate('/ontap/class-manager')} 
             userProfile={userProfile} 
             studentLatestResults={studentLatestResults}
             deviceCounts={deviceCounts}
+            subjectStats={subjectStats}
+            creatorProfiles={creatorProfiles}
             canAssignMembers={canAssignMembers}
             canFinishClass={canFinishClass}
             canDisableAccounts={canDisableAccounts}

@@ -1,3 +1,82 @@
+## [3.16.0] - 2026-07-09
+### Tách phân hệ Ẩm thực & Tối ưu hóa điều hướng (Web & App Win)
+- **Cập nhật hệ thống:** Hoàn thành việc tách phân hệ Ẩm thực (Food & Attraction) sang ứng dụng riêng biệt `thodia.hlstudio.top` để tối ưu tài nguyên và tốc độ của hệ thống ôn tập.
+- **Tối ưu điều hướng:** Cập nhật lại các liên kết trên thanh điều hướng, chuyển hướng chính xác người dùng sang trang web Ẩm thực mới.
+- **Dọn dẹp mã nguồn:** Xóa bỏ sitemap và các thành phần build cũ không còn sử dụng của phân hệ Ẩm thực, giúp hệ thống nhẹ và ổn định hơn.
+
+## [3.15.10] - 2026-07-06
+### Hoàn thiện bảo vệ quảng cáo & Tối ưu giao diện thi thử (Web & App Win)
+- **Tối ưu hiển thị thi thử:** Nâng cấp tính năng tự động co giãn giao diện (Responsive) trên màn hình thi thử. Các nút đáp án và thiết kế bảng điền sẽ tự động chuyển đổi thông minh, hiển thị đẹp mắt và đầy đủ tính năng dù học viên đang mở trên máy tính (PC) hay điện thoại.
+- **Bảo vệ hệ thống & Bật tắt tính năng:** Nâng cấp cơ chế chặn spam và bảo vệ người dùng, đồng thời tối ưu hệ thống bật tắt các thông báo/quảng cáo để không ảnh hưởng đến trải nghiệm thao tác trên màn hình.
+
+## [3.15.9] - 2026-07-02
+### Tối ưu hóa điều hướng và hiển thị trên thiết bị di động (Web & App Win)
+- **Tối ưu hóa tương tác:** Cải thiện khả năng phản hồi của các nút đóng, ẩn bảng tin, và các thanh neo điều hướng cố định trên màn hình thiết bị di động, đảm bảo người dùng luôn tương tác mượt mà trong mọi tình huống.
+
+## [3.15.8] - 2026-07-02
+### Sửa lỗi Import Học viên từ Excel (Web)
+- **Sửa lỗi Excel Import:** Khắc phục lỗi crash ứng dụng khi tải lên file Excel để tạo hàng loạt tài khoản học viên trên trình duyệt Web (do lỗi bất đồng bộ khi đọc file). Bản ứng dụng Windows và các tính năng khác hoạt động bình thường.
+
+## [3.15.7] - 2026-06-30
+### Nâng cấp giao diện Mobile & Thiết kế điều hướng mới (Web & App Win)
+- **Mobile Header:** Thêm mới thanh tiêu đề `MobileHeader` hiển thị logo TND và thông tin cá nhân/avatar của học viên khi chạy trên các thiết bị di động.
+- **Điều hướng thông minh:** Tái thiết kế thanh điều hướng dưới cùng `MobileBottomNav` với 3 nút chính trực quan hơn gồm **Trang chủ**, **Lịch sử**, **Lớp học** (tự động thay đổi biểu tượng theo vai trò Giáo viên/Học sinh).
+- **Mở rộng Menu phụ:** Tích hợp các nút chức năng nâng cao vào menu phụ gồm Hộp thư, Cấu hình (cho quản trị viên) và liên kết Tải App.
+- **Tối ưu hiển thị:** Nhúng trực tiếp Header/Bottom Nav vào luồng ứng dụng chính, đảm bảo căn lề an toàn (safe-area) trên các thiết bị di động tai thỏ/tràn viền.
+
+## [3.15.6] - 2026-06-30
+### Tối ưu hóa ứng dụng
+- **Cải thiện độ ổn định:** Tối ưu hóa cấu trúc hệ thống giúp ứng dụng chạy nhẹ nhàng và ổn định hơn.
+
+## [3.15.5] - 2026-06-30
+### Khắc phục lỗi hiển thị thời tiết & Tối ưu hóa hệ thống (Web & App Win)
+- **Thời tiết local**: Đồng bộ hóa múi giờ thực tế của học viên (+7) thay vì sử dụng múi giờ UTC của máy chủ, đảm bảo hiển thị đúng giờ Việt Nam tại mọi thời điểm trong ngày.
+- **Giao diện thời tiết**: Khắc phục lỗi ẩn tooltip trạng thái kết nối bằng cách loại bỏ giới hạn tràn (overflow) trên phần tử bao ngoài, đồng thời tăng kích thước biểu tượng trạng thái để tăng tính trực quan.
+- **Tối ưu hiệu năng**: Tái cấu trúc luồng tải và điều hướng ứng dụng giúp khởi động nhanh hơn, tiết kiệm bộ nhớ và hoạt động ổn định trên mọi thiết bị.
+- **Độ ổn định hệ thống**: Khắc phục triệt để các xung đột ngầm và dọn dẹp mã nguồn dư thừa.
+
+## [3.15.4] - 2026-06-30
+### Cập nhật hệ thống Quản trị & Khắc phục lỗi Phát hành (Web & App Win)
+- **Tự động hóa phát hành**: Sửa lỗi gián đoạn khi phát hành ứng dụng trùng tên hoặc trùng thẻ phiên bản (hệ thống tự động đồng bộ hóa và dọn dẹp các thẻ Git Tag cũ trên GitHub).
+- **Trực quan hóa cài đặt**: Nâng cấp Giao diện Quản lý Hệ thống dành cho Admin, tích hợp chỉ báo màu sắc nổi bật và thẻ cảnh báo khi tắt các dịch vụ phụ trợ nhằm nâng cao trải nghiệm vận hành.
+
+## [3.15.3] - 2026-06-30
+### Sửa lỗi hiển thị Huy hiệu Admin & Tối ưu hóa xác thực Quảng cáo (Web & App Win)
+- **Huy hiệu Admin:** Khắc phục lỗi ẩn Huy hiệu đặc quyền (vương miện lấp lánh 👑) của Admin/Lãnh đạo trên Thẻ giáo viên, thanh TopNavbar góc phải và trang Hồ sơ cá nhân.
+- **Xác thực hệ thống:** Cải tiến kỹ thuật nhúng liên kết đối tác trên Portal Next.js dưới dạng thẻ script HTML tĩnh thô trực tiếp trong head, giúp hệ thống bên ngoài dễ dàng quét và xác minh.
+
+## [3.15.2] - 2026-06-30
+### Cập nhật hệ thống chỉ báo thời tiết & Tối ưu hóa hạ tầng (Web & App Win)
+- **Chỉ báo thời tiết:** Thêm icon chỉ báo động (Tín hiệu kết nối) và Tooltip chi tiết tại góc giao diện thời tiết để hiển thị rõ nguồn dữ liệu (Đang tải trực tiếp, Ước tính từ hệ thống, hoặc Mất kết nối tạm thời).
+- **Hạ tầng:** Tối ưu hóa luồng tải mã nguồn và cải thiện tốc độ kết nối hệ thống.
+
+## [3.15.1] - 2026-06-30
+### Cập nhật hệ thống (Web & App Win)
+- **Thời tiết mở rộng:** Nâng cấp widget thời tiết hiển thị chi tiết 8 mốc thời gian (thay vì 5) dựa trên API thực tế hoặc giờ động của máy học viên.
+- **Giao diện thời tiết:** Tinh chỉnh bảng màu Zinc/Slate trung tính theo thiết kế mới, thay đổi thiết kế phần Lời khuyên (Advice) loại bỏ biểu tượng emoji thô sơ, thay bằng Banner Alert phối màu tinh tế tự động thích ứng với thời tiết.
+- **Hiệu ứng mượt mà:** Bổ sung hiệu ứng Spring Hover nhẹ cho các thẻ giờ và ẩn scrollbar ngang tối giản.
+- **Hạ tầng:** Tối ưu hóa và cập nhật hạ tầng để tăng tốc độ tải trang và độ ổn định của ứng dụng.
+
+## [3.15.0] - 2026-06-29
+### Nâng cấp Giao diện Quản lý Lớp học thông minh (Web & App Win)
+- **Giao diện thẻ thông minh (Smart Cards):** Thay đổi giao diện danh sách lớp học sang dạng thẻ hiện đại, hỗ trợ hiển thị ảnh đại diện (avatar) của giáo viên chủ nhiệm.
+- **Thanh thống kê (Insights Bar):** Bổ sung thanh thống kê trực quan hiển thị tổng quan số lượng học viên, số lượt thi thử và các chỉ số quan trọng khác trực tiếp trên màn hình quản lý.
+- **Bộ lọc nâng cao:** Thêm chức năng lọc nhanh lớp học theo trạng thái (Đang hoạt động / Đã kết thúc) và hỗ trợ chuyển đổi linh hoạt giữa chế độ xem Lưới và Danh sách.
+- **Đồng bộ hóa 100%:** Đảm bảo toàn bộ trải nghiệm giao diện quản lý lớp học mới hoạt động mượt mà trên cả nền tảng Web và ứng dụng Windows.
+
+## [3.14.0] - 2026-06-29
+### Hoàn thiện Hệ thống Huy hiệu & Tự động hóa
+- **Giao diện Quản lý Huy hiệu:** Tích hợp giao diện quản lý huy hiệu 3D chuyên nghiệp vào phần Quản lý Học viên và Quản lý Lớp (Web & App Win), cho phép Giáo viên và Lãnh đạo cấp/thu hồi huy hiệu dễ dàng.
+- **Tự động nhận huy hiệu:** Học viên tự động được theo dõi tiến độ và nhận huy hiệu ngay sau khi nộp bài Ôn tập và Thi thử thành công.
+- **Đồng bộ hóa 100%:** Đảm bảo hệ thống hoạt động thống nhất và ổn định trên cả phiên bản Web và ứng dụng Windows.
+
+## [3.13.0] - 2026-06-29
+### Tích hợp Hệ thống Huy hiệu & Tối ưu hóa Tạo/Import Học viên (Web & App Win)
+- **Hệ thống Huy hiệu (Badge System):** Ra mắt tính năng tích lũy huy hiệu danh dự khi hoàn thành xuất sắc các bài thi và ôn luyện trực tuyến. Bổ sung huy hiệu chức danh (Admin, Giáo viên, Học viên) hiển thị trên thanh điều hướng và Thẻ học viên.
+- **Tái sử dụng tài khoản an toàn:** Hỗ trợ quy trình dọn dẹp sạch sẽ toàn bộ kết quả thi và huy hiệu cũ khi tái sử dụng SBD cũ cho học viên khóa mới, giúp tối ưu cơ sở dữ liệu.
+- **Import Excel thông minh:** Bổ sung giao diện kiểm tra trùng lặp trước khi import. Hiển thị bảng đối chiếu học viên cũ vs học viên mới kèm cảnh báo bảo mật 2 lớp khi ghi đè tài khoản đang hoạt động.
+- **Dọn dẹp code:** Sửa lỗi thiếu tệp bỏ qua bảo mật và xóa bỏ toàn bộ mã nguồn dư thừa nhằm tăng tốc độ tải trang.
+
 ## [3.12.2] - 2026-06-29
 ### Tối ưu hóa Giao diện Nửa Trên Dashboard & Thanh Điều Hướng TopNavbar (Web & App Win)
 - **Tối ưu không gian hiển thị:** Đưa thanh thông tin thời tiết và trạng thái hệ thống vào chung một hàng ngang (Slim Banner Header), thu gọn khoảng trắng đứng giúp các nút bấm chức năng chính hiển thị trọn vẹn ngay trong khung nhìn đầu tiên.
@@ -191,3 +270,4 @@
 ### Security
 - Khắc phục nguy cơ lộ Gemini API Key nghiêm trọng. Toàn bộ logic kiểm tra và generateContent hiện tại đã thực thi ngầm ở Node server thay vì client.
 - Xóa bỏ điểm yếu mã hóa XOR có thể dễ dàng bị bẻ khóa trong Local Storage đối với "Ghi nhớ tài khoản".
+

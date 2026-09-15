@@ -3,14 +3,14 @@
 
 export const MONETAG_CONFIG = {
     // Zone & Domain
-    ZONE_ID: 11198611,
-    DOMAIN: '3nbf4.com',
+    ZONE_ID: 254797,
+    DOMAIN: 'quge5.com',
 
     // Script URLs
-    SMART_TAG_URL: 'https://3nbf4.com/act/files/micro.tag.min.js?z=11198611',
+    SMART_TAG_URL: 'https://quge5.com/88/tag.min.js',
 
     // Fallback Direct Link URL (dùng khi chưa cấu hình trong Firebase)
-    DEFAULT_DIRECT_LINK_URL: 'https://3nbf4.com/4/11198611',
+    DEFAULT_DIRECT_LINK_URL: 'https://quge5.com/4/254797',
 
     // Service Worker
     SW_URL: '/sw.js',
@@ -28,6 +28,15 @@ export const MONETAG_CONFIG = {
         COUNTDOWN_COUNT: 'monetag_cd_count',
     },
 } as const;
+
+export const AD_DISABLED = 0;
+
+/**
+ * Kiểm tra xem loại quảng cáo có bị tắt hay không (maxPerSession <= 0)
+ */
+export const isAdTypeDisabled = (maxPerSession?: number): boolean => {
+    return maxPerSession === undefined || maxPerSession <= AD_DISABLED;
+};
 
 let currentPopunderCooldownMs = MONETAG_CONFIG.POPUNDER_COOLDOWN_MS;
 let currentDirectLinkCooldownMs = MONETAG_CONFIG.DIRECT_LINK_COOLDOWN_MS;

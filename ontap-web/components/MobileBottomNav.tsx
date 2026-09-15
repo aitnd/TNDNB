@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaHome, FaBookOpen, FaUserCog, FaBars, FaHistory, FaSchool, FaUserGraduate, FaExclamationTriangle, FaSignOutAlt, FaTimes, FaDownload, FaEnvelope, FaCog } from 'react-icons/fa';
+import { FaHome, FaUserCog, FaBars, FaHistory, FaSchool, FaUserGraduate, FaExclamationTriangle, FaSignOutAlt, FaTimes, FaDownload, FaEnvelope, FaCog } from 'react-icons/fa';
 
 import { UserProfile } from '../types';
 import { triggerHaptic } from '../utils/nativeUX';
@@ -26,9 +26,12 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    const isTeacher = ['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile?.role || '');
+
     const isActive = (key: string) => {
         if (key === 'dashboard' && (currentScreen === 'dashboard' || currentScreen.startsWith('in_'))) return true;
-        if (key === 'account' && currentScreen === 'account') return true;
+        if (key === 'history' && currentScreen === 'history') return true;
+        if (key === 'class' && (currentScreen === 'class_management' || currentScreen === 'my_class')) return true;
         return false;
     };
 
@@ -41,25 +44,25 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
     // --- MAIN ITEMS (3 Common Buttons) ---
     const primaryItems = [
         {
-            name: 'Tin tức',
+            name: 'Trang chủ',
             icon: FaHome,
-            action: () => handleNavigate('dashboard'),
-            active: isActive('dashboard'),
-            key: 'news'
-        },
-        {
-            name: 'Ôn tập',
-            icon: FaBookOpen,
             action: () => handleNavigate('dashboard'),
             active: isActive('dashboard'),
             key: 'dashboard'
         },
         {
-            name: 'Tài khoản',
-            icon: FaUserCog,
-            action: () => handleNavigate('account'),
-            active: isActive('account'),
-            key: 'account'
+            name: 'Lịch sử',
+            icon: FaHistory,
+            action: () => handleNavigate('history'),
+            active: isActive('history'),
+            key: 'history'
+        },
+        {
+            name: 'Lớp học',
+            icon: isTeacher ? FaSchool : FaUserGraduate,
+            action: () => handleNavigate(isTeacher ? 'class_management' : 'my_class'),
+            active: isActive('class'),
+            key: 'class'
         }
     ];
 
@@ -67,12 +70,12 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
     const menuItems = [];
 
     if (userProfile) {
-        // 1. History
+        // 1. Tài khoản
         menuItems.push({
-            name: 'Lịch sử thi',
-            icon: FaHistory,
-            action: () => handleNavigate('history'),
-            color: 'text-purple-600'
+            name: 'Tài khoản',
+            icon: FaUserCog,
+            action: () => handleNavigate('account'),
+            color: 'text-blue-600'
         });
 
         // 2. Hộp thư
@@ -83,14 +86,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
             color: 'text-pink-600'
         });
 
-        // 3. Class Management (Role based)
-        if (['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile?.role || '')) {
-            menuItems.push({
-                name: 'Quản lý lớp',
-                icon: FaSchool,
-                action: () => handleNavigate('class_management'),
-                color: 'text-indigo-600'
-            });
+        // 3. Extra Management (Role based)
+        if (isTeacher) {
             // Notification Mgmt
             menuItems.push({
                 name: 'Quản lý TB',
@@ -107,13 +104,6 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                     color: 'text-purple-600'
                 });
             }
-        } else {
-            menuItems.push({
-                name: 'Lớp của tôi',
-                icon: FaUserGraduate,
-                action: () => handleNavigate('my_class'),
-                color: 'text-green-600'
-            });
         }
 
         // 4. Tải App (cho tất cả)
@@ -195,7 +185,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
             </div>
 
             {/* BOTTOM NAVBAR */}
-            <div className="fixed bottom-4 left-4 right-4 z-[9999] md:hidden animate-fade-in-up">
+            <div className="fixed bottom-4 left-4 right-4 z-[9999] md:hidden animate-fade-in-up" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
                 {/* Glassmorphism Container */}
                 <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-2 flex justify-between items-center relative overflow-hidden">
                     {/* Shine Effect */}

@@ -4,9 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../utils/firebaseClient';
-import { Settings, Wrench, ShieldAlert, Clock, Mail, RefreshCw } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-
 import PortalMaintenanceScreen from './PortalMaintenanceScreen';
 
 export default function PortalMaintenanceWrapper({ children }: { children: React.ReactNode }) {
@@ -15,7 +12,7 @@ export default function PortalMaintenanceWrapper({ children }: { children: React
     const pathname = usePathname();
 
     useEffect(() => {
-        const unsub = onSnapshot(doc(db, 'settings', 'usageConfig'), (docSnap) => {
+        const unsub = onSnapshot(doc(db, 'settings', 'usage_config'), (docSnap) => {
             if (docSnap.exists()) {
                 setConfig(docSnap.data());
             }
@@ -29,7 +26,11 @@ export default function PortalMaintenanceWrapper({ children }: { children: React
     if (loading) return <>{children}</>;
 
     if (config?.isMaintenancePortal && !isBypassed) {
-        return <PortalMaintenanceScreen config={config} />;
+        return (
+            <div className="fixed inset-0 z-[9999] overflow-auto">
+                <PortalMaintenanceScreen config={config} />
+            </div>
+        );
     }
 
     return <>{children}</>;

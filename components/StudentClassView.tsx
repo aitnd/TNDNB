@@ -7,7 +7,7 @@ import { collection, query, where, onSnapshot, doc, getDoc, documentId } from 'f
 import { useAuth } from '../context/AuthContext'
 import styles from './StudentClassView.module.css'
 import { FaUserTie, FaUsers} from 'react-icons/fa' 
-import UserName from './UserName' // 💖 IMPORT USER NAME 💖 
+// 💖 IMPORT USER NAME 💖 
 
 interface Course {
     id: string
@@ -31,7 +31,7 @@ interface UserData {
 export default function StudentClassView() {
     const { user } = useAuth()
     const [course, setCourse] = useState<Course | null>(null)
-    const [headTeacher, setHeadTeacher] = useState<UserData | null>(null)
+    const [_headTeacher, setHeadTeacher] = useState<UserData | null>(null)
     const [classmates, setClassmates] = useState<UserData[]>([])
     const [loading, setLoading] = useState(true)
 

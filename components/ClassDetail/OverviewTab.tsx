@@ -22,7 +22,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ classData }) => {
     unverifiedStudents: 0,
     activeDevices: 0
   });
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Real-time listener for basic stats

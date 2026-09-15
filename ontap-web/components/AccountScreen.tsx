@@ -1,5 +1,7 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { UserProfile } from '../types';
+import { BadgeList } from './Badges/BadgeList';
+import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 import { db } from '../services/firebaseClient';
 import { uploadAvatar } from '../services/userService';
 import { doc, updateDoc } from 'firebase/firestore'; 
@@ -78,7 +80,7 @@ const AdminSessionList: React.FC<{ userId: string }> = ({ userId }) => {
     );
 };
 
-const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNavigate, usageConfig }) => {
+const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNavigate }) => {
     // --- PERSONAL INFO STATE ---
     const [myInfo, setMyInfo] = useState<UserProfile>(userProfile);
     const [isSavingMyInfo, setIsSavingMyInfo] = useState(false);
@@ -228,7 +230,10 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                         )}
                     </div>
                     <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-                    <h2 className="text-xl font-bold mt-4 dark:text-white">{myInfo.fullName}</h2>
+                    <h2 className="text-xl font-bold mt-4 dark:text-white flex items-center gap-2 justify-center">
+                        {myInfo.fullName}
+                        {myInfo.role && <MiniRoleBadge role={myInfo.role} />}
+                    </h2>
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mt-1">{allRoles.find(r => r.id === myInfo.role)?.name || myInfo.role}</p>
                 </div>
 
@@ -302,6 +307,11 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                         </button>
                     </div>
                 </form>
+            </div>
+
+            {/* Badge List Section */}
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700 mb-6">
+                <BadgeList userId={userProfile.id} userRole={userProfile.role} />
             </div>
 
             {/* Phiên hoạt động cá nhân */}

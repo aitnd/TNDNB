@@ -58,7 +58,7 @@ interface MailboxScreenProps {
 }
 
 
-const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) => {
+const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile }) => {
     // const { socket, isConnected } = useSocket(); // Removed
     const isConnected = true;
     const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
@@ -74,10 +74,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
     const [usersList, setUsersList] = useState<ChatUser[]>([]);
     const [filteredUsers, setFilteredUsers] = useState<ChatUser[]>([]); // Displayed list
     const [loadingUsers, setLoadingUsers] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
     useEffect(() => {
         setIsAdmin(['admin', 'quan_ly', 'giao_vien'].includes(userProfile?.role || ''));
     }, [userProfile?.role]);
@@ -685,11 +682,5 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile, onBack }) =>
         </div>
     );
 };
-
-const PlusIconBtn = ({ icon, onClick }: { icon: React.ReactNode, onClick: () => void }) => (
-    <button onClick={onClick} className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-blue-600">
-        {icon}
-    </button>
-);
 
 export default MailboxScreen;

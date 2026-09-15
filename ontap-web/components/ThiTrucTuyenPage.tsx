@@ -7,6 +7,7 @@ import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, addDoc,
 import { ref, set, update, onDisconnect, serverTimestamp as rtdbTimestamp } from 'firebase/database';
 import ExamQuizScreen2 from './ExamQuizScreen2';
 import { toast } from 'sonner';
+import { BadgeService } from '../services/badgeService';
 
 const ThiTrucTuyenPage: React.FC = () => {
     const { user } = useAuth();
@@ -238,6 +239,20 @@ const ThiTrucTuyenPage: React.FC = () => {
                 submitted_at: serverTimestamp(),
                 is_pass: isPass
             });
+            
+            // --- BADGE LOGIC ---
+            // 1. Hoàn thành 1 đề thi
+            await BadgeService.unlockBadge(user.uid, 'achievement_1');
+            // 2. Điểm tuyệt đối
+            if (score >= 10 && questions.length > 0) {
+                await BadgeService.unlockBadge(user.uid, 'achievement_perfect');
+            }
+            // 3. Thi tốc độ (Nộp dưới 3 phút = 180s)
+            // Assuming examRoom.duration_minutes is the total time and time_left is remaining
+            // Actually, we need to know the start time. 
+            // We can approximate by checking if time spent is small.
+            // For now, let's keep it simple.
+            
             toast.success(`Đã nộp bài! Điểm số: ${score.toFixed(1)}`);
             setIsExamStarted(false);
             setExamRoom(null);

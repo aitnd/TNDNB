@@ -3,6 +3,7 @@ import { UserProfile } from '../types';
 import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, ChevronDown, Utensils, Gamepad2, Award , Compass, ShieldCheck, FileEdit} from 'lucide-react'; 
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
+import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 
 // declare const __APP_VERSION__: string; // Removed in favor of dynamic version
 
@@ -126,9 +127,9 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                     <span className="font-medium text-sm">Tải App học offline</span>
                                 </button>
                                 {/* Ẩm thực */}
-                                <a href="/food" className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                <a href="https://thodia.hlstudio.top" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
                                         <Utensils size={18} className="text-orange-500" />
-                                        <span className="font-medium text-sm">Ẩm thực Ninh Bình</span>
+                                        <span className="font-medium text-sm">Thổ Địa Ninh Bình</span>
                                     </a>
                             </div>
                         )}
@@ -183,6 +184,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                         }`}>
                                         {userProfile.full_name || userProfile.fullName || '---'}
                                         {userProfile?.role === 'hoc_vien' && (userProfile.isVerified || userProfile.courseId) && <CheckCircle size={14} className="text-green-500" />}
+                                        {userProfile?.role && <MiniRoleBadge role={userProfile.role} className="ml-1" />}
                                     </span>
                                 </span>
                             </button>

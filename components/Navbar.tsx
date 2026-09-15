@@ -16,7 +16,7 @@ import styles from './Navbar.module.css'
 
 export default function Navbar() {
   const { user } = useAuth()
-  const { theme, toggleTheme } = useTheme()
+  const { theme } = useTheme()
   const router = useRouter()
 
   const handleLogout = async () => {

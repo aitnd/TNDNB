@@ -23,6 +23,19 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialIndex);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>(initialAnswers);
 
+  const currentQuestion = useMemo(() => quiz.questions?.[currentQuestionIndex], [quiz.questions, currentQuestionIndex]);
+  const currentQuestionId = currentQuestion?.id;
+
+  const isAnswered = useMemo(() => currentQuestionId ? userAnswers[currentQuestionId] !== undefined : false, [userAnswers, currentQuestionId]);
+  const selectedAnswer = useMemo(() => currentQuestionId ? userAnswers[currentQuestionId] || null : null, [userAnswers, currentQuestionId]);
+
+  // Auto-save logic
+  useEffect(() => {
+    if (onProgressUpdate) {
+      onProgressUpdate(currentQuestionIndex, 0, userAnswers);
+    }
+  }, [currentQuestionIndex, userAnswers, onProgressUpdate]);
+
   // Safety Check
   if (!quiz.questions || quiz.questions.length === 0) {
     return (
@@ -38,8 +51,6 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
     );
   }
 
-  const currentQuestion = useMemo(() => quiz.questions[currentQuestionIndex], [quiz.questions, currentQuestionIndex]);
-
   // Safety check for out of bounds index
   if (!currentQuestion) {
     return (
@@ -49,15 +60,6 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
       </div>
     )
   }
-
-  const isAnswered = useMemo(() => userAnswers[currentQuestion.id] !== undefined, [userAnswers, currentQuestion.id]);
-  const selectedAnswer = useMemo(() => userAnswers[currentQuestion.id] || null, [userAnswers, currentQuestion.id]);
-
-  // Auto-save logic
-  useEffect(() => {
-    onProgressUpdate?.(currentQuestionIndex, 0, userAnswers);
-  }, [currentQuestionIndex, userAnswers]);
-
 
   const handleFinishQuiz = () => {
     onFinish(userAnswers);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {    collection, query, where, onSnapshot,    doc, updateDoc, getDocs} from 'firebase/firestore'; 
+import {    collection, query, where, onSnapshot,    doc, updateDoc} from 'firebase/firestore'; 
 
 
 
@@ -21,6 +21,7 @@ import CreateStudentModal from '../CreateStudentModal';
 import ImportStudentModal from '../ImportStudentModal';
 import { EditStudentModal, HistoryModal, SessionModal, AddStudentModal } from './Modals';
 import { getExamHistory } from '../../services/historyService';
+import { AdminBadgeManager } from '../Badges/AdminBadgeManager';
 
 interface StudentsTabProps {
   course: Course;
@@ -28,6 +29,7 @@ interface StudentsTabProps {
   deviceCounts?: Record<string, number>;
   canAssignMembers?: boolean;
   canDisableAccounts?: boolean;
+  currentUserRole?: string;
 }
 
 const StudentsTab: React.FC<StudentsTabProps> = ({ 
@@ -35,7 +37,8 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   studentLatestResults = {},
   deviceCounts = {},
   canAssignMembers = false,
-  canDisableAccounts = false
+  canDisableAccounts = false,
+  currentUserRole = ''
 }) => {
   const [students, setStudents] = useState<UserProfile[]>([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState<Set<string>>(new Set());
@@ -70,15 +73,13 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [showAddExistingModal, setShowAddExistingModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showBadgeManager, setShowBadgeManager] = useState(false);
   
   const [selectedStudent, setSelectedStudent] = useState<UserProfile | null>(null);
   const [studentHistory, setStudentHistory] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [studentSessions, setStudentSessions] = useState<any[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(false);
-  const [availableStudents, setAvailableStudents] = useState<UserProfile[]>([]);
-  const [loadingAvailable, setLoadingAvailable] = useState(false);
-
   // Real-time Fetch Students in Class
   useEffect(() => {
     if (!course.id) return;
@@ -311,33 +312,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
     }
   };
 
-  const fetchAvailableStudents = async () => {
-    setLoadingAvailable(true);
-    try {
-      const q = query(collection(db, 'users'), where('role', '==', 'hoc_vien'));
-      const snap = await getDocs(q);
-      const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as UserProfile));
-      const filtered = all.filter(s => s.courseId !== course.id);
-      setAvailableStudents(filtered);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoadingAvailable(false);
-    }
-  };
 
-  const handleAddExistingStudent = async (studentId: string) => {
-    try {
-      await updateDoc(doc(db, 'users', studentId), {
-        courseId: course.id,
-        courseName: course.name
-      });
-      Swal.fire('Thành công', 'Đã thêm học viên vào lớp.', 'success');
-      setShowAddExistingModal(false);
-    } catch (e) {
-      Swal.fire('Lỗi', 'Không thể thêm học viên.', 'error');
-    }
-  };
 
   const handleDisableStudent = async (studentId: string, studentName: string) => {
     const result = await Swal.fire({
@@ -471,7 +446,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                 <FaUserPlus /> Thêm mới
               </button>
               <button 
-                onClick={() => { setShowAddExistingModal(true); fetchAvailableStudents(); }}
+                onClick={() => { setShowAddExistingModal(true); }}
                 className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 text-white rounded-xl text-xs font-black uppercase tracking-tight hover:bg-teal-700 shadow-lg shadow-teal-600/20 active:scale-95 transition-all"
               >
                 <FaPlus /> Gán học viên
@@ -530,6 +505,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                     <button onClick={() => handleViewHistory(st)} className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-500/10 rounded-lg transition-colors" title="Lịch sử thi"><FaHistory /></button>
                     <button onClick={() => handleViewSessions(st)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors" title="Lịch sử truy cập"><FaUserClock /></button>
                     <button onClick={() => handleEditStudent(st)} className="p-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-500/10 rounded-lg transition-colors" title="Chỉnh sửa"><FaEdit /></button>
+                    <button onClick={() => { setSelectedStudent(st); setShowBadgeManager(true); }} className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-500/10 rounded-lg transition-colors" title="Huy hiệu">🏅</button>
                     {canDisableAccounts && (
                       st.status === 'disabled' ? (
                         <button onClick={() => handleActivateStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-500/10 rounded-lg transition-colors" title="Kích hoạt lại tài khoản"><FaCheckCircle /></button>
@@ -659,6 +635,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                       <button onClick={() => handleViewHistory(st)} className="p-2 text-gray-400 hover:text-purple-600 rounded-lg" title="Lịch sử thi"><FaHistory size={14} /></button>
                       <button onClick={() => handleViewSessions(st)} className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg" title="Lịch sử truy cập"><FaUserClock size={14} /></button>
                       <button onClick={() => handleEditStudent(st)} className="p-2 text-gray-400 hover:text-teal-600 rounded-lg" title="Chỉnh sửa"><FaEdit size={14} /></button>
+                      <button onClick={() => { setSelectedStudent(st); setShowBadgeManager(true); }} className="p-2 text-gray-400 hover:text-amber-600 rounded-lg" title="Huy hiệu"><span className="text-sm">🏅</span></button>
                       {canDisableAccounts && (
                         st.status === 'disabled' ? (
                           <button onClick={() => handleActivateStudent(st.id, st.fullName || st.full_name || '')} className="p-2 text-green-600 hover:text-green-700 rounded-lg transition-colors" title="Kích hoạt lại tài khoản"><FaCheckCircle size={14} /></button>
@@ -736,6 +713,16 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
 
       {showSessionModal && selectedStudent && (
         <SessionModal student={selectedStudent} sessions={studentSessions} loading={loadingSessions} onClose={() => setShowSessionModal(false)} />
+      )}
+
+      {showBadgeManager && selectedStudent && (
+        <AdminBadgeManager
+          userId={selectedStudent.id}
+          userName={selectedStudent.fullName || selectedStudent.full_name || '---'}
+          userRole={selectedStudent.role || 'hoc_vien'}
+          currentUserRole={currentUserRole}
+          onClose={() => setShowBadgeManager(false)}
+        />
       )}
     </div>
   );

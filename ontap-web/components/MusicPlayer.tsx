@@ -6,19 +6,7 @@ const MusicPlayer: React.FC = () => {
 
   useEffect(() => {
     // Tự động phát nhạc khi component được mount
-    const playMusic = async () => {
-      if (audioRef.current) {
-        try {
-          audioRef.current.volume = 0.05; // Âm lượng 5/100
-          await audioRef.current.play();
-          setIsPlaying(true);
-        } catch (err) {
-          setIsPlaying(false);
-        }
-      }
-    };
-
-    // playMusic();
+// playMusic();
   }, []);
 
   const toggleMusic = () => {
