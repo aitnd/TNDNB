@@ -9,6 +9,16 @@ export interface DeviceInfo {
 }
 
 export const getDeviceInfo = async (): Promise<DeviceInfo> => {
+    // Guard SSR: hàm chỉ chạy được ở browser (dùng navigator/window)
+    if (typeof window === 'undefined') {
+        return {
+            deviceName: 'Server',
+            browser: 'SSR',
+            ip: 'Không xác định',
+            userAgent: '',
+            platform: 'web',
+        };
+    };
     let ip = 'Đang lấy...';
     try {
         const response = await fetch('https://api.ipify.org?format=json');

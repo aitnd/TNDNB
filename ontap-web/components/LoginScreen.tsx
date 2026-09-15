@@ -5,6 +5,7 @@ import { ArrowLeftIcon3D, HelmIcon3D } from './icons';
 import { FaFingerprint, FaCheckSquare, FaSquare, FaKey } from 'react-icons/fa';
 import { saveCredentials, performBiometricLogin, hasSavedCredentials } from '../services/biometricService';
 import { resolveEmailFromUsername } from '../services/authService';
+import { timeoutWrapper } from '../utils/authTimeout';
 
 // Import Saved Accounts
 import SavedAccountsList from './SavedAccountsList';
@@ -72,7 +73,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
       if (savedPassword) {
         // Có mật khẩu đã lưu -> đăng nhập tự động
         await setPersistence(auth, browserLocalPersistence);
-        await signInWithEmailAndPassword(auth, savedAcc.email, savedPassword);
+        await timeoutWrapper(signInWithEmailAndPassword(auth, savedAcc.email, savedPassword), 15000);
         updateLastLogin(savedAcc.email);
         // Success handled by App.tsx
       } else {
@@ -98,7 +99,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     if (creds) {
       try {
         await setPersistence(auth, browserLocalPersistence);
-        await signInWithEmailAndPassword(auth, creds.email, creds.pass);
+        await timeoutWrapper(signInWithEmailAndPassword(auth, creds.email, creds.pass), 15000);
       } catch (err: any) {
         setLoading(false);
         console.error("Bio login failed:", err);
@@ -125,7 +126,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
         await setPersistence(auth, browserSessionPersistence);
       }
 
-      await signInWithEmailAndPassword(auth, loginEmail, password);
+      await timeoutWrapper(signInWithEmailAndPassword(auth, loginEmail, password), 15000);
 
       // Save credentials for Biometric if "Remember Me" is checked
       if (rememberMe) {
@@ -151,11 +152,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
         setError('Tên đăng nhập hoặc email không hợp lệ.');
       } else if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
         setError('Tài khoản hoặc mật khẩu không chính xác.');
+      } else if (err.message === 'timeout') {
+        setError('Kết nối quá chậm. Vui lòng kiểm tra mạng và thử lại.');
       } else {
         setError('Đăng nhập thất bại. Vui lòng thử lại.');
       }
     } finally {
-      if (!auth.currentUser) setLoading(false);
+      setLoading(false);
     }
   };
 

@@ -10,6 +10,9 @@
     "preview": "vite preview",
     "electron": "concurrently \"cross-env BROWSER=none ELECTRON_MODE=true npm run dev\" \"wait-on http://127.0.0.1:5173 && cross-env ELECTRON_MODE=true electron .\"",
     "electron:build": "cross-env ELECTRON_BUILD=true vite build && electron-builder",
+    "electron:build:x64": "cross-env ELECTRON_BUILD=true vite build && electron-builder --win --x64",
+    "electron:build:ia32": "cross-env ELECTRON_BUILD=true vite build && electron-builder --win --ia32",
+    "electron:build:all": "cross-env ELECTRON_BUILD=true vite build && electron-builder --win --x64 --ia32",
     "test": "vitest",
     "test:run": "vitest run"
   },
@@ -68,7 +71,7 @@
   "build": {
     "appId": "com.horizon.daotaothuyenvien",
     "productName": "Ôn thi đường thủy",
-    "artifactName": "Onthi-${version}-Setup.${ext}",
+    "artifactName": "Onthi-${version}-${arch}-Setup.${ext}",
     "directories": {
       "output": "release"
     },
@@ -110,8 +113,7 @@
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "include": "electron/installer.nsh"
+      "createDesktopShortcut": true
     },
     "publish": {
       "provider": "github",
