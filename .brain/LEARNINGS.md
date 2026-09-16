@@ -15,9 +15,11 @@
 - **Monetag Static Verification**: Thẻ `<Script>` động của Next.js không được bot quét tĩnh của Monetag nhận diện. Phải sử dụng thẻ `<script>` HTML tĩnh thô trực tiếp trong `<head>` của `layout.tsx` để hoàn tất cài đặt thành công.
 - **Framer Motion Opacity Bug**: Cấu hình `initial={{ opacity: 0 }}` mà không chỉ định `opacity: 1` trong animate object của motion components làm ẩn vĩnh viễn Huy hiệu Admin.
 
-## 2026-07-02
+## 2026-09-15
 ### Corrections
-- **React Async State Parameter Shadowing**: Trong `ImportStudentModal.tsx`, tham số hàm `handleFileUpload` bị đổi tên thành `_file` để tránh warning, nhưng bên trong vẫn dùng biến state `file` (bị `null` do bất đồng bộ). Khắc phục bằng cách đổi lại tên tham số là `file` để shadowing chính xác, đồng thời loại bỏ React state `file` thừa.
-- **Google Auto Ads close button freeze**: Sử dụng pointer-events: none toàn diện cho `.adsbygoogle` gây liệt nút đóng/ẩn quảng cáo của các loại quảng cáo Overlay (Anchor, Vignette). Khắc phục bằng cách áp dụng CSS 2 tầng (chặn in-page ads, mở khóa cho fixed-overlay ads).
-- **Vite Cross-Directory Build Warning**: Import file Styles trực tiếp từ `ontap-web` sang dự án Vite `ontap-win` dễ gây cảnh báo/lỗi bundler do nằm ngoài root workspace. Khắc phục bằng cách duy trì file styles cục bộ trong từng dự án Vite độc lập.
+- **Login Hang Root Cause:** Nút đăng nhập kẹt không phải do thiếu `finally` mà do (1) `finally` có điều kiện `if (!auth.currentUser)` và (2) promise Firebase treo vĩnh viễn khi mạng chập chờn (`navigator.onLine` vẫn true nên không rơi vào nhánh offline). Fix = `finally` vô điều kiện + `timeoutWrapper` 15s bọc TẤT CẢ call site (mỗi LoginScreen có 3: handleLogin/saved/biometric; WindowsLoginScreen 2 qua performLogin).
+- **Scoped Font Zoom:** Quiz/Exam screens dùng class Tailwind rem cố định (`text-2xl`, `text-lg`) nên CSS variable không tự ăn — phải override tường minh `fontSize: calc(<base>rem * var(--content-scale, 1))` giữ đúng base từng phần tử. ExamQuizScreen2 web/win khác base nhau (1.125rem vs 1rem), phải đọc code từng file.
+- **electron-builder arch:** `win.target.arch: [x64, ia32]` trong config đè CLI `--x64/--ia32` — 3 scripts cho output giống hệt nhau (x64 + ia32 + universal). `latest.yml` duy nhất liệt kê cả 3, updater tự chọn theo arch (không cần latest-ia32.yml).
+- **npm audit --omit=dev che vuln:** tar/fast-uri/shell-quote/undici nằm ở chuỗi dev, audit thiếu flag tưởng đã hết. Luôn audit full khi review bảo mật.
+- **Subagent Read-Only Block:** Khi subagent bị policy read-only từ chối ghi, main agent tự áp patch đã verify (ghi log rõ) thay vì stall — đúng tinh thần "Rulings, not Stalls".
 

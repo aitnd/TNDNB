@@ -25,6 +25,7 @@
 .DS_Store
 *.pem
 desktop.ini
+*.bak
 
 # debug
 npm-debug.log*
@@ -87,4 +88,11 @@ lint*_output.txt
 /fix-components.js
 /fix-img.js
 /fix-use-client.js
+
+# Volatile local session state (keep handover/LEARNINGS.md/brain.json tracked)
+.brain/session.json
+
+# QA/Build reports (local only, regenerated each run)
+project_qa_report.md
+build_report.md
 

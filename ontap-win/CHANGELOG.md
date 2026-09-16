@@ -1,3 +1,10 @@
+## [3.17.0] - 2026-09-16
+### Sửa lỗi đăng nhập, thêm thanh zoom đề thi, tách bản cài x64/x32 (App Win)
+- **Hết kẹt màn hình đăng nhập:** Trước đây đăng nhập sai hoặc mất mạng thì nút quay mãi, phải tắt app mở lại. Nay sau tối đa 15 giây sẽ báo lỗi rõ ràng và cho đăng nhập lại ngay.
+- **Thanh zoom kiểu Word:** Thêm thanh thu/phóng cỡ chữ (50%–200%) dưới mỗi màn hình làm bài và thi, chỉ phóng to nội dung câu hỏi và đáp án, không làm vỡ giao diện.
+- **Bản cài riêng x64/x32:** Máy Windows 32-bit nay có file cài đặt riêng, không còn bị ghi đè; cập nhật tự động vẫn hoạt động bình thường.
+- **Bảo mật:** Vá các lỗ hổng thư viện của bản Windows.
+
 ## [3.16.0] - 2026-07-09
 ### Tách phân hệ Ẩm thực & Tối ưu hóa điều hướng (Web & App Win)
 - **Cập nhật hệ thống:** Hoàn thành việc tách phân hệ Ẩm thực (Food & Attraction) sang ứng dụng riêng biệt `thodia.hlstudio.top` để tối ưu tài nguyên và tốc độ của hệ thống ôn tập.

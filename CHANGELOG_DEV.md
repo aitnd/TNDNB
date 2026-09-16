@@ -1,3 +1,11 @@
+## [3.17.0] - 2026-09-16
+### Login Timeout, Scoped Quiz Zoom, x64/ia32 Split, Audit Cleanup (Web & Win)
+- **Login Timeout (`authTimeout.ts` mới, mỗi project 1 bản):** `timeoutWrapper(promise, 15000)` bọc mọi call site Firebase treo được — mỗi `LoginScreen` 3 chỗ (handleLogin/saved/biometric), `WindowsLoginScreen` 2 chỗ qua `performLogin`; `finally` vô điều kiện; unit test Vitest 2/2 xanh.
+- **Scoped Zoom (`useFontScale` + `ZoomBar`, mỗi project 1 bản):** `--content-scale` + override `fontSize: calc(<base>rem * var(...))` (h2 1.5rem, đáp án 1.125rem, Exam2 1rem/1.125rem); 6 màn Quiz/Exam/Exam2 × web/win; persist localStorage `quiz-font-scale`.
+- **Build Split:** `artifactName` thêm `${arch}`; xóa `installer.nsh` rác; scripts `electron:build:x64/ia32/all`; output x64+ia32+universal, 1 `latest.yml` updater tự chọn arch.
+- **Audit:** web 15→2 moderate, win 25→2 moderate (patch semver-safe, giữ cặp react-router breaking); guard đề rỗng 4 màn exam + SSR guards.
+- **QA:** vitest 14/14, tsc sạch, vite build pass, Electron build OK.
+
 ## [3.16.0] - 2026-07-09
 ### Decouple `amthuc-web` module & Build Environment Cleanup
 - **Project Decoupling:** Successfully extracted and removed the `amthuc-web` module from the TNDNB monorepo to its own independent domain (`thodia.hlstudio.top`).
