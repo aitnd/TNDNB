@@ -1,3 +1,7 @@
+## [3.18.0] - 2026-09-16
+### Phóng to toàn màn hình bằng phím tắt (Web)
+- **Zoom cả giao diện:** Giữ phím `Ctrl` rồi lăn chuột (hoặc `Ctrl + dấu cộng/trừ`, `Ctrl + số 0` để về cỡ chuẩn) để phóng to hoặc thu nhỏ toàn bộ màn hình. Mức zoom được nhớ cho lần mở sau.
+
 ## [3.17.0] - 2026-09-16
 ### Sửa lỗi đăng nhập, thêm thanh zoom đề thi (Web)
 - **Hết kẹt màn hình đăng nhập:** Trước đây đăng nhập sai hoặc mất mạng thì nút quay mãi, phải tải lại trang. Nay sau tối đa 15 giây sẽ báo lỗi rõ ràng và cho đăng nhập lại ngay.

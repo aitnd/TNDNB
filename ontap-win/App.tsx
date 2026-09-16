@@ -4,6 +4,7 @@ import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
 import { useAppStore } from './stores/useAppStore';
 import { useAppInitialization } from './hooks/useAppInitialization';
+import { useUiZoom } from './hooks/useUiZoom';
 import { AppRoutes } from './routes/AppRoutes';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { checkUsage, incrementUsage, showLimitAlert, getUserRoleConfig } from './services/usageService';
@@ -14,6 +15,7 @@ import { License, Subject, Quiz, UserAnswers } from './types';
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  useUiZoom(); // Zoom toàn giao diện kiểu trình duyệt (Ctrl + lăn chuột)
 
   const {
     usageConfig,

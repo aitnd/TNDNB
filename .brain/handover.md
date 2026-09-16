@@ -1,30 +1,36 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 HANDOVER DOCUMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Đang làm: Chặn click chọn lọc AdSense (Phương án 2)
-🔢 Đến bước: Đóng gói và Release (v3.15.9) - Đã build và commit thành công.
+📍 Đang làm: TNDNB v3.17.0 (Zoom + Login timeout + x64/ia32 + audit fix)
+🔢 Đến bước: ĐÃ RELEASE — merge lên main (e8e1e58d), commit release (db8b2070), push xong.
 
 ✅ ĐÃ XONG:
-   - Tạo CSS shared `adBlockerStyles.ts` cho web và win app.
-   - Cập nhật `AdSenseLoader.tsx` trên Web và App Win.
-   - Cập nhật `PortalAdLoader.tsx` trên Portal (Next.js) chuyển sang dùng pointer-events: none.
-   - Chạy QA Loop thành công (10/10 tests passed, dev server test pass).
-   - Build thành công cả 3 phiên bản: ontap-web, ontap-win, Next.js portal.
-   - Commit Git thành công (v3.15.9).
+   - Login timeout 15s mọi luồng Firebase (3 file), finally vô điều kiện, vitest 2/2 × 2 project
+   - Zoom kiểu Word 50–200% trên 6 màn thi (hook + ZoomBar riêng mỗi nền tảng)
+   - Tách build x64/ia32 (+universal), 1 latest.yml, updater tự chọn arch
+   - Audit web 15→2 moderate, win 25→2 moderate (giữ cặp react-router breaking)
+   - QA: 14/14 tests, tsc sạch, build pass 3 nơi; guard đề rỗng + SSR guards
+   - Dọn gitignore (untrack 15 file rác, session.json, reports)
+   - Brain đã lưu local (session.json giờ ignored, không commit)
 
 ⏳ CÒN LẠI:
-   - Deploy lên Vercel và release app (khi user sẵn sàng).
+   - Ma trận manual: tắt WiFi, kéo slider bằng mắt, cài thử 2 exe
+   - Migrate react-router v6→v7 (xóa 2 moderate cuối)
+   - Nợ root portal 3C/7H (cần duyệt riêng)
+   - Tìm file bang_so_sanh_backend.md biến mất (không phải agent xóa)
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-   - Chuyển Next.js Portal sang pointer-events: none thay vì display: none khi block ads để giữ tiền Impression.
-   - Giữ nguyên CSS selector mở rộng thay vì dùng MutationObserver để tránh phức tạp hóa code không cần thiết.
+   - Chấp nhận build universal kèm (không tách thật) — updater vẫn đúng arch
+   - Gộp 2 đợt thành release 3.17.0 duy nhất
+   - Không tạo nút "Thử lại" riêng — ấn lại Đăng nhập
 
 ⚠️ LƯU Ý CHO SESSION SAU:
-   - Phát hiện Next.js root có 1 High Vulnerability bảo mật (DoS/SSRF). Khuyến cáo chạy thử nghiệm nâng cấp lên Next 16 trên branch riêng.
+   - KHÔNG dùng PowerShell Get/Set-Content cho file UTF-8 tiếng Việt (đã gây mojibake productName 1 lần)
+   - Subagent có thể bị read-only-block → main tự áp patch đã verify
+   - Có actor khác hoạt động song song trong repo (reflog lạ, file bang biến mất) — kiểm tra git log trước khi làm
 
 📁 FILES QUAN TRỌNG:
-   - ontap-web/services/adBlockerStyles.ts
-   - ontap-win/services/adBlockerStyles.ts
-   - .brain/session.json
-   - C:\Users\HorizonServers\.gemini\antigravity\brain\2d5cf540-ac0c-48fd-afac-18d0f9c5876f\build_report.md
+   - docs/plans/260915-1430-tndnb-updates/ + docs/plans/260915-1730-npm-audit-fix/
+   - build_report.md, project_qa_report.md (local, ignored)
+   - .brain/session.json (local, ignored)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

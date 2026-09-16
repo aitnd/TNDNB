@@ -1,3 +1,7 @@
+## [3.18.0] - 2026-09-16
+### Global UI Zoom via useUiZoom (Web & Win)
+- **New hook `hooks/useUiZoom.ts` (1 bản mỗi project, copy logic):** Ctrl+wheel / Ctrl+=/-/0, range 50–200% step 10%, persist localStorage `ui-zoom-scale`, áp dụng CSS `zoom` trên documentElement (scale toàn layout, độc lập với `useFontScale` zoom chữ). Chặn zoom native (`passive: false`) chống double-zoom. Gọi 1 dòng trong `AppContent` (`App.tsx` 2 bên).
+
 ## [3.17.0] - 2026-09-16
 ### Login Timeout, Scoped Quiz Zoom, x64/ia32 Split, Audit Cleanup (Web & Win)
 - **Login Timeout (`authTimeout.ts` mới, mỗi project 1 bản):** `timeoutWrapper(promise, 15000)` bọc mọi call site Firebase treo được — mỗi `LoginScreen` 3 chỗ (handleLogin/saved/biometric), `WindowsLoginScreen` 2 chỗ qua `performLogin`; `finally` vô điều kiện; unit test Vitest 2/2 xanh.
