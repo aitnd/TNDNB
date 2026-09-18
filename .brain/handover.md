@@ -1,36 +1,30 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 HANDOVER DOCUMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Đang làm: TNDNB v3.17.0 (Zoom + Login timeout + x64/ia32 + audit fix)
-🔢 Đến bước: ĐÃ RELEASE — merge lên main (e8e1e58d), commit release (db8b2070), push xong.
+📍 Đang làm: TNDNB v3.18.0 + Zoom toàn giao diện (useUiZoom)
+🔢 Đến bước: v3.18.0 committed local (e6c19fea, CHƯA push). useUiZoom code xong, chờ user chốt giữ/chỉnh/revert.
 
-✅ ĐÃ XONG:
-   - Login timeout 15s mọi luồng Firebase (3 file), finally vô điều kiện, vitest 2/2 × 2 project
-   - Zoom kiểu Word 50–200% trên 6 màn thi (hook + ZoomBar riêng mỗi nền tảng)
-   - Tách build x64/ia32 (+universal), 1 latest.yml, updater tự chọn arch
-   - Audit web 15→2 moderate, win 25→2 moderate (giữ cặp react-router breaking)
-   - QA: 14/14 tests, tsc sạch, build pass 3 nơi; guard đề rỗng + SSR guards
-   - Dọn gitignore (untrack 15 file rác, session.json, reports)
-   - Brain đã lưu local (session.json giờ ignored, không commit)
+✅ ĐÃ XONG (17/09):
+   - Exe 3.18.0 built đủ 3 file (x64/ia32/universal, 7:47)
+   - useUiZoom: hook riêng mỗi project + 1 dòng gọi trong AppContent, tsc sạch, build pass
+   - Brainstorm tính năng mới → docs/plans/bao-cao-tinh-nang-moi.md (18 tính năng)
+   - Save-brain: LEARNINGS + global lessons + Global Plan (TNDNB) + brain.json
 
 ⏳ CÒN LẠI:
-   - Ma trận manual: tắt WiFi, kéo slider bằng mắt, cài thử 2 exe
-   - Migrate react-router v6→v7 (xóa 2 moderate cuối)
-   - Nợ root portal 3C/7H (cần duyệt riêng)
-   - Tìm file bang_so_sanh_backend.md biến mất (không phải agent xóa)
+   - Chốt useUiZoom (giữ/chỉnh/revert) rồi commit + push e6c19fea + code zoom
+   - Ma trận manual, migrate react-router v7, nợ root 3C/7H
+   - File bang_so_sanh_backend.md mất tích (không phải agent xóa)
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-   - Chấp nhận build universal kèm (không tách thật) — updater vẫn đúng arch
-   - Gộp 2 đợt thành release 3.17.0 duy nhất
-   - Không tạo nút "Thử lại" riêng — ấn lại Đăng nhập
+   - PowerShell output chữ Việt KHÔNG đáng tin (file vẫn sạch) — kiểm chứng bằng tool Read
+   - Repo có actor khác hoạt động song song — fetch + đối chiếu trước việc lớn
 
 ⚠️ LƯU Ý CHO SESSION SAU:
-   - KHÔNG dùng PowerShell Get/Set-Content cho file UTF-8 tiếng Việt (đã gây mojibake productName 1 lần)
-   - Subagent có thể bị read-only-block → main tự áp patch đã verify
-   - Có actor khác hoạt động song song trong repo (reflog lạ, file bang biến mất) — kiểm tra git log trước khi làm
+   - Báo cáo brainstorm của user phải đầy đủ chi tiết A/B trước khi hỏi duyệt (user đã nhắc 2 lần)
+   - Mọi edit file phải giải thích TRƯỚC khi sửa (user đã nhắc 1 lần)
 
 📁 FILES QUAN TRỌNG:
-   - docs/plans/260915-1430-tndnb-updates/ + docs/plans/260915-1730-npm-audit-fix/
-   - build_report.md, project_qa_report.md (local, ignored)
+   - ontap-web/hooks/useUiZoom.ts, ontap-win/hooks/useUiZoom.ts (mới, chưa commit)
+   - docs/plans/bao-cao-tinh-nang-moi.md (mới)
    - .brain/session.json (local, ignored)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

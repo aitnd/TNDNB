@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import type { Quiz, UserAnswers } from '../types';
 import { CheckIcon3D, XIcon3D, TrophyIcon3D } from './icons';
 import { getLocalImageSrc, handleImageError } from '../utils/imageHelper';
+import { calculateIsPass } from '../utils/examUtils';
 
 interface ExamResultsScreenProps {
     quiz: Quiz;
@@ -10,14 +11,16 @@ interface ExamResultsScreenProps {
     onRetry: () => void;
     onBack: () => void;
     userName: string;
+    examType: 'Ôn tập' | 'Thi thử';
 }
 
-const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers, score, onRetry, onBack, userName }) => {
+const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers, score, onRetry, onBack, userName, examType }) => {
     const [filter, setFilter] = useState<'all' | 'incorrect'>('all');
     const [completionDate] = useState(() => new Date());
 
     const totalQuestions = quiz.questions.length;
-    const isPass = score >= 25; // Exam mode pass threshold
+    const isPass = calculateIsPass(score, totalQuestions, examType);
+    const displayName = userName?.trim() ? userName : 'Học viên ẩn danh';
 
     const formattedDate = useMemo(() => {
         return new Intl.DateTimeFormat('vi-VN', {
@@ -43,7 +46,7 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
                 <h1 className="text-4xl font-bold text-foreground mb-2">Kết quả Thi thử</h1>
 
                 <div className="my-4 text-muted-foreground">
-                    <p className="text-lg">Thí sinh: <span className="font-bold text-primary">{userName}</span></p>
+                    <p className="text-lg">Thí sinh: <span className="font-bold text-primary">{displayName}</span></p>
                     <p className="text-sm">Hoàn thành lúc: {formattedDate}</p>
                 </div>
 

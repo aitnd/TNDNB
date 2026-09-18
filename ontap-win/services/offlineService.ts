@@ -23,6 +23,7 @@ export interface OfflineResult {
     timeSpent: number;
     createdAt: number;
     isSynced: number; // 0: No, 1: Yes
+    isPassed?: boolean;
 }
 
 export class OnTapDatabase extends Dexie {

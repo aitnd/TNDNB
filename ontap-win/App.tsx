@@ -1,7 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { Toaster } from 'sonner';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
+import SweetAlertPopup from './components/SweetAlertPopup';
+import TopNavbar from './components/TopNavbar';
+import AlertMarquee from './components/AlertMarquee';
+import MobileHeader from './components/MobileHeader';
+import MobileBottomNav from './components/MobileBottomNav';
 import { useAppStore } from './stores/useAppStore';
 import { useAppInitialization } from './hooks/useAppInitialization';
 import { useUiZoom } from './hooks/useUiZoom';
@@ -11,11 +17,32 @@ import { checkUsage, incrementUsage, showLimitAlert, getUserRoleConfig } from '.
 import { saveExamResult } from './services/userService';
 import { BadgeService } from './services/badgeService';
 import { License, Subject, Quiz, UserAnswers } from './types';
+import { scheduleLocalReminder } from './utils/reminder';
+
+const isElectron = typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron');
 
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   useUiZoom(); // Zoom toàn giao diện kiểu trình duyệt (Ctrl + lăn chuột)
+
+  useEffect(() => {
+    useAppStore.getState().updateStreak();
+    const boot = async () => {
+      if ('Notification' in window && Notification.permission === 'default') {
+        await Notification.requestPermission();
+      }
+      const saved = localStorage.getItem('reminderTime');
+      if (saved) scheduleLocalReminder(saved, () => {});
+    };
+    boot();
+
+    import('./services/dataService').then(({ shouldUpdateQuestions }) => {
+      shouldUpdateQuestions().then(needsUpdate => {
+        localStorage.setItem('questions_has_update', needsUpdate ? '1' : '0');
+      });
+    });
+  }, []);
 
   const {
     usageConfig,

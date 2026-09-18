@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaClock, FaHistory } from 'react-icons/fa';
 import { UserProfile } from '../../../types';
+import { calculateIsPass } from '../../../utils/examUtils';
 
 interface HistoryModalProps {
     isOpen: boolean;
@@ -63,7 +64,7 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, student, history, l
                                                     ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20' 
                                                     : 'bg-rose-50 text-rose-600 border border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20'
                                                 }`}>
-                                                {h.isPassed ? 'ĐẠT' : 'KHÔNG ĐẠT'}
+                                                {(h.isPassed ?? calculateIsPass(h.score, h.totalQuestions || 1, h.type || 'Ôn tập')) ? 'ĐẠT' : 'KHÔNG ĐẠT'}
                                             </span>
                                         </div>
                                     </div>

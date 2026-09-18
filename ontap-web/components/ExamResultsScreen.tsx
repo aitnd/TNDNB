@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import type { Quiz, UserAnswers } from '../types';
 import { CheckIcon3D, XIcon3D, TrophyIcon3D } from './icons';
 import { triggerHaptic } from '../utils/nativeUX';
+import { calculateIsPass } from '../utils/examUtils';
 
 interface ExamResultsScreenProps {
     quiz: Quiz;
@@ -10,14 +11,16 @@ interface ExamResultsScreenProps {
     onRetry: () => void;
     onBack: () => void;
     userName: string;
+    examType: 'Ôn tập' | 'Thi thử';
 }
 
-const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers, score, onRetry, onBack, userName }) => {
+const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers, score, onRetry, onBack, userName, examType }) => {
     const [filter, setFilter] = useState<'all' | 'incorrect'>('all');
     const [completionDate] = useState(() => new Date());
 
     const totalQuestions = quiz.questions.length;
-    const isPass = score >= 25; // Exam mode pass threshold
+    const isPass = calculateIsPass(score, totalQuestions, examType);
+    const displayName = userName?.trim() ? userName : 'Học viên ẩn danh';
 
     useEffect(() => {
         if (isPass) {
@@ -63,7 +66,7 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
                     <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-2 uppercase tracking-tight">Kết quả Thi thử</h1>
 
                     <div className="my-4 text-slate-600 dark:text-slate-400">
-                        <p className="text-lg">Thí sinh: <span className="font-bold text-slate-900 dark:text-white">{userName}</span></p>
+                        <p className="text-lg">Thí sinh: <span className="font-bold text-slate-900 dark:text-white">{displayName}</span></p>
                         <p className="text-sm">Ngày thi: {formattedDate}</p>
                     </div>
 

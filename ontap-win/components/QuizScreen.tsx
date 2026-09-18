@@ -1,9 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import type { Quiz, UserAnswers } from '../types';
 import { CheckIcon3D, XIcon3D, ArrowLeftIcon3D } from './icons';
-import { getLocalImageSrc, handleImageError } from '../utils/imageHelper';
+import { triggerHaptic } from '../utils/nativeUX';
 import { useFontScale } from '../hooks/useFontScale';
 import { ZoomBar } from './ZoomBar';
+import { useAppStore } from '../stores/useAppStore';
 
 interface QuizScreenProps {
   quiz: Quiz;
@@ -64,12 +65,31 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
     )
   }
 
+  const removeIncorrectQuestion = useAppStore(state => state.removeIncorrectQuestion);
+  const isPracticeMode = quiz.id === 'incorrect_practice';
+
+  const addIncorrectQuestions = useAppStore(state => state.addIncorrectQuestions);
+
   const handleFinishQuiz = () => {
+    const incorrectIds = quiz.questions
+      .filter(q => userAnswers[q.id] !== undefined && userAnswers[q.id] !== q.correctAnswerId)
+      .map(q => q.id);
+    if (incorrectIds.length > 0) {
+      addIncorrectQuestions(incorrectIds);
+    }
+    
+    triggerHaptic('medium');
     onFinish(userAnswers);
   };
 
   const handleAnswerSelect = (answerId: string) => {
-    if (isAnswered) return;
+    if (isAnswered && (!isPracticeMode || selectedAnswer === currentQuestion.correctAnswerId)) return;
+    
+    if (isPracticeMode && answerId === currentQuestion.correctAnswerId) {
+      removeIncorrectQuestion(currentQuestion.id);
+    }
+    
+    triggerHaptic('light');
     setUserAnswers(prev => ({ ...prev, [currentQuestion.id]: answerId }));
   };
 
@@ -79,6 +99,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
     if (isLastQuestion) {
       handleFinishQuiz();
     } else {
+      triggerHaptic('light');
       setCurrentQuestionIndex(prev => prev + 1);
     }
   };
@@ -117,11 +138,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
           <h2 className="font-bold mb-5 text-foreground" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>{currentQuestion.text}</h2>
           {currentQuestion.image && (
             <div className="mb-6 rounded-lg overflow-hidden">
-              <img
-                src={getLocalImageSrc(currentQuestion) || currentQuestion.image}
-                alt="Câu hỏi"
-                className="w-full h-auto object-cover max-h-80"
-                onError={(e) => handleImageError(e, currentQuestion.image)} loading="lazy" />
+              <img src={currentQuestion.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
             </div>
           )}
 
@@ -131,7 +148,9 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
               let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-between';
 
               const isCorrect = answer.id === currentQuestion.correctAnswerId;
-              if (isAnswered) {
+              const showReveal = isAnswered && (!isPracticeMode || isSelected);
+
+              if (showReveal) {
                 if (isCorrect) {
                   buttonClass += ' bg-success/10 border-success text-success';
                 } else if (isSelected && !isCorrect) {
@@ -151,12 +170,12 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
                 <button
                   key={answer.id}
                   onClick={() => handleAnswerSelect(answer.id)}
-                  disabled={isAnswered}
+                  disabled={isAnswered && (!isPracticeMode || selectedAnswer === currentQuestion.correctAnswerId)}
                   className={buttonClass}
                   style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}
                 >
                   <span className="flex-grow"><span className='font-bold mr-2'>{String.fromCharCode(65 + index)}. </span>{answer.text}</span>
-                  {isAnswered && (
+                  {showReveal && (
                     <>
                       {isCorrect && <CheckIcon3D className="h-6 w-6 text-success ml-3" />}
                       {isSelected && !isCorrect && <XIcon3D className="h-6 w-6 text-destructive ml-3" />}

@@ -26,3 +26,25 @@ export const fetchLicenses = async (): Promise<License[]> => {
   const data = (await import('../data/questions_db.json')).default;
   return data as any as License[];
 };
+
+export const shouldUpdateQuestions = async (): Promise<boolean> => {
+  try {
+    const { data, error } = await supabase
+      .from('questions')
+      .select('created_at')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+    
+    if (error || !data) {
+      const { count } = await supabase.from('questions').select('*', { count: 'exact', head: true });
+      const localCount = parseInt(localStorage.getItem('questions_last_count') || '0', 10);
+      return (count || 0) > localCount;
+    }
+    
+    const serverTs = new Date(data.created_at).getTime();
+    const localTs = parseInt(localStorage.getItem('questions_last_sync') || '0', 10);
+    
+    return serverTs > localTs;
+  } catch { return false; }
+};

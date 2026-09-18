@@ -1,5 +1,12 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Tray, Menu, nativeImage, globalShortcut } = require('electron');
 const path = require('path');
+
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+}
+
+let tray = null;
+let win = null;
 const log = require('electron-log');
 // TODO: Thêm require Honeygain SDK sau khi được duyệt
 
@@ -173,6 +180,30 @@ function createWindow() {
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         }
     );
+
+    win = mainWindow;
+    createTray(mainWindow);
+    return mainWindow;
+}
+
+function createTray(mainWindow) {
+    const iconPath = path.join(__dirname, '../public/assets/img/logo1.ico');
+    tray = new Tray(nativeImage.createFromPath(iconPath));
+    const contextMenu = Menu.buildFromTemplate([
+      { label: 'Mở ứng dụng', click: () => mainWindow.show() },
+      { label: 'Thoát', click: () => { app.isQuitting = true; app.quit(); } }
+    ]);
+    tray.setToolTip('TNDNB - Ôn Thi');
+    tray.setContextMenu(contextMenu);
+    tray.on('click', () => mainWindow.show());
+    
+    // Thu nhỏ xuống khay thay vì tắt
+    mainWindow.on('close', (e) => {
+      if (!app.isQuitting) {
+        e.preventDefault();
+        mainWindow.hide();
+      }
+    });
 }
 
 app.whenReady().then(() => {
@@ -181,6 +212,19 @@ app.whenReady().then(() => {
 
     setupAutoLaunch();
     createWindow();
+
+    ipcMain.handle('toggle-fullscreen', (event) => {
+      const bw = BrowserWindow.fromWebContents(event.sender);
+      if (bw) {
+        bw.setFullScreen(!bw.isFullScreen());
+      }
+    });
+
+    globalShortcut.register('CommandOrControl+Alt+T', () => {
+      if (!win) return;
+      if (win.isVisible()) win.hide();
+      else { win.show(); win.focus(); }
+    });
 
     // Tự động kiểm tra update sau 3 giây (để app load xong trước)
     if (autoUpdater) {
@@ -195,6 +239,14 @@ app.whenReady().then(() => {
     app.on('activate', function () {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
+});
+
+app.on('second-instance', () => {
+  if (win) { win.show(); win.focus(); }
+});
+
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
 });
 
 app.on('window-all-closed', function () {

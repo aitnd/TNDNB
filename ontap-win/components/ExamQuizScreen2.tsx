@@ -3,6 +3,8 @@ import type { Quiz, UserAnswers, License, UserProfile } from '../types';
 import { getLocalImageSrc, handleImageError } from '../utils/imageHelper';
 import { useFontScale } from '../hooks/useFontScale';
 import { ZoomBar } from './ZoomBar';
+import { useExamKeyboard } from '../hooks/useExamKeyboard';
+import { useAppStore } from '../stores/useAppStore';
 
 interface ExamQuizScreen2Props {
     quiz: Quiz;
@@ -96,6 +98,7 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
         }
     };
 
+    const addIncorrectQuestions = useAppStore(state => state.addIncorrectQuestions);
     const handleFinishQuiz = useCallback(() => {
         const finalAnswers = latestAnswers.current;
         const unansweredCount = quiz.questions.length - Object.keys(finalAnswers).length;
@@ -104,9 +107,15 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
             : 'Anh/chị đã hoàn thành tất cả các câu hỏi. Anh/chị có muốn nộp bài không?';
 
         if (window.confirm(confirmationMessage)) {
+            const incorrectIds = quiz.questions
+                .filter(q => finalAnswers[q.id] !== undefined && finalAnswers[q.id] !== q.correctAnswerId)
+                .map(q => q.id);
+            if (incorrectIds.length > 0) {
+                addIncorrectQuestions(incorrectIds);
+            }
             onFinish(finalAnswers);
         }
-    }, [quiz.questions.length, onFinish]);
+    }, [quiz.questions, onFinish, addIncorrectQuestions]);
 
     const stableOnFinish = useRef(onFinish);
     useEffect(() => {
@@ -130,6 +139,13 @@ const ExamQuizScreen2: React.FC<ExamQuizScreen2Props> = ({
     const handleAnswerSelect = (questionId: string, answerId: string) => {
         setUserAnswers(prev => ({ ...prev, [questionId]: answerId }));
     };
+
+    useExamKeyboard(
+        () => setCurrentQuestionIndex(prev => Math.min(prev + 1, quiz.questions.length - 1)),
+        () => setCurrentQuestionIndex(prev => Math.max(prev - 1, 0)),
+        (answerId) => { if (currentQuestion) handleAnswerSelect(currentQuestion.id, answerId); },
+        currentQuestion
+    );
 
     // Safety: đề thi rỗng hoặc index vượt bounds (chống trắng trang khi data lỗi)
     if (!quiz.questions || quiz.questions.length === 0 || !currentQuestion) {

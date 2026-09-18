@@ -1,6 +1,10 @@
 import type { Subject, UserProgressData } from '../types';
 import { ArrowLeftIcon3D, ChevronRightIcon3D, BookOpenIcon3D } from './icons';
 import { triggerHaptic } from '../utils/nativeUX';
+import { useAppStore } from '../stores/useAppStore';
+import { useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { searchQuestions } from '../utils/searchUtils';
 
 interface SubjectSelectionScreenProps {
   subjects: Subject[];
@@ -20,6 +24,40 @@ const formatDate = (timestamp: number | null): string => {
 };
 
 const SubjectSelectionScreen: React.FC<SubjectSelectionScreenProps> = ({ subjects, progress, onSelect, onBack }) => {
+  const licenses = useAppStore(state => state.licenses);
+  const incorrectQuestionIds = useAppStore(state => state.incorrectQuestionIds);
+  const setCurrentQuiz = useAppStore(state => state.setCurrentQuiz);
+  const navigate = useNavigate();
+  
+  const allQuestions = useMemo(() => 
+    licenses.flatMap(l => l.subjects?.flatMap(s => s.questions || []) || []), 
+  [licenses]);
+  
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredQs = useMemo(() => searchQuestions(allQuestions, searchTerm), [allQuestions, searchTerm]);
+
+  const handlePracticeIncorrect = () => {
+    const incorrectQs = allQuestions.filter(q => incorrectQuestionIds.includes(q.id));
+    if (incorrectQs.length === 0) return alert("Tuyệt vời, bạn không có câu sai nào!");
+    
+    setCurrentQuiz({
+      id: 'incorrect_practice',
+      title: `Luyện tập câu sai (${incorrectQs.length} câu)`,
+      questions: incorrectQs,
+    });
+    navigate('/ontap/lambai');
+  };
+
+  const handleSearchPractice = () => {
+    if (filteredQs.length === 0) return alert("Không tìm thấy câu hỏi nào!");
+    setCurrentQuiz({
+      id: 'search_practice',
+      title: `Kết quả tìm kiếm (${filteredQs.length} câu)`,
+      questions: filteredQs,
+    });
+    navigate('/ontap/lambai');
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto p-4 animate-slide-in-right pb-24">
       <div className="relative text-center mb-10 pt-4">
@@ -35,6 +73,33 @@ const SubjectSelectionScreen: React.FC<SubjectSelectionScreenProps> = ({ subject
         </div>
         <h1 className="text-3xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Chọn Môn học</h1>
         <p className="text-base text-slate-500 mt-2">Chọn một môn để bắt đầu ôn tập.</p>
+      </div>
+
+      <div className="mb-4">
+        <input 
+          type="text" 
+          placeholder="Tìm kiếm câu hỏi..." 
+          value={searchTerm} 
+          onChange={e => setSearchTerm(e.target.value)}
+          className="w-full p-4 rounded-2xl border border-slate-200 shadow-sm focus:outline-none focus:border-blue-500"
+        />
+        {searchTerm && (
+          <button 
+            onClick={handleSearchPractice}
+            className="w-full mt-2 bg-blue-500 text-white font-bold p-3 rounded-xl"
+          >
+            Luyện tập {filteredQs.length} câu tìm được
+          </button>
+        )}
+      </div>
+
+      <div className="flex justify-between items-center mb-4 gap-4">
+        <button
+            onClick={handlePracticeIncorrect}
+            className="flex-1 bg-red-100 text-red-600 font-bold p-4 rounded-2xl shadow-sm active:scale-95 transition-all text-center border border-red-200"
+        >
+            Luyện câu sai ({incorrectQuestionIds.length})
+        </button>
       </div>
 
       <div className="space-y-4">

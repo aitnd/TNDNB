@@ -4,6 +4,7 @@ import { UserProfile } from '../types';
 import { FaHistory, FaCheckCircle, FaExclamationCircle, FaBook, FaGlobe, FaClock, FaCalendarAlt } from 'react-icons/fa';
 import { triggerHaptic } from '../utils/nativeUX';
 import { ArrowLeftIcon3D } from './icons';
+import { calculateIsPass } from '../utils/examUtils';
 
 interface HistoryScreenProps {
     userProfile: UserProfile;
@@ -99,7 +100,8 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ userProfile, onBack }) =>
             <div className="space-y-4">
                 {history.map((item) => {
                     const type = getExamType(item);
-                    const isPass = item.score / (item.totalQuestions || 1) >= 0.7; // Basic pass visual
+                    const examType = item.type === 'Thi thử' ? 'Thi thử' : 'Ôn tập';
+                    const isPass = calculateIsPass(item.score, item.totalQuestions || 1, examType);
                     
                     return (
                         <div key={item.id} className="relative overflow-hidden bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl p-5 active:scale-[0.98] transition-all">

@@ -64,11 +64,32 @@ interface AppStore {
     isMobileApp: boolean;
     setIsMobileApp: (isMobile: boolean) => void;
 
+    // Phase 03 Features
+    incorrectQuestionIds: string[];
+    addIncorrectQuestions: (ids: string[]) => void;
+    removeIncorrectQuestion: (id: string) => void;
+
+    streakCount: number;
+    lastActiveDate: string;
+    updateStreak: () => void;
+
     // Actions (Complex logic can move here later)
     resetQuizState: () => void;
 }
 
-export const useAppStore = create<AppStore>((set) => ({
+const safeParseList = (v: string | null): string[] => {
+    try {
+        const parsed = JSON.parse(v || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+    } catch { return []; }
+};
+
+const safeParseCount = (v: string | null): number => {
+    const n = parseInt(v || '0', 10);
+    return isNaN(n) ? 0 : n;
+};
+
+export const useAppStore = create<AppStore>((set, get) => ({
     // Initial Values
     appState: AppState.WELCOME,
     licenses: [],
@@ -103,4 +124,34 @@ export const useAppStore = create<AppStore>((set) => ({
         userAnswers: {},
         score: 0
     }),
+
+    // Phase 03 Features Implementation
+    incorrectQuestionIds: safeParseList(localStorage.getItem('incorrectQuestionIds')),
+    addIncorrectQuestions: (ids: string[]) => set((state) => {
+        const newIds = Array.from(new Set([...state.incorrectQuestionIds, ...ids]));
+        localStorage.setItem('incorrectQuestionIds', JSON.stringify(newIds));
+        return { incorrectQuestionIds: newIds };
+    }),
+    removeIncorrectQuestion: (id: string) => set((state) => {
+        const newIds = state.incorrectQuestionIds.filter(qId => qId !== id);
+        localStorage.setItem('incorrectQuestionIds', JSON.stringify(newIds));
+        return { incorrectQuestionIds: newIds };
+    }),
+
+    streakCount: safeParseCount(localStorage.getItem('streakCount')),
+    lastActiveDate: localStorage.getItem('lastActiveDate') || '',
+    updateStreak: () => {
+        const dayStr = (d: Date): string =>
+            `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const today = dayStr(new Date());
+        const { lastActiveDate, streakCount } = get();
+        if (lastActiveDate === today) return;
+        
+        const yesterday = dayStr(new Date(Date.now() - 86400000));
+        const newStreak = lastActiveDate === yesterday ? streakCount + 1 : 1;
+        
+        localStorage.setItem('streakCount', newStreak.toString());
+        localStorage.setItem('lastActiveDate', today);
+        set({ streakCount: newStreak, lastActiveDate: today });
+    },
 }));

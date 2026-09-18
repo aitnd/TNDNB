@@ -40,6 +40,8 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ quiz, userAnswers, score,
         return quiz.questions;
     }, [filter, quiz.questions, userAnswers]);
 
+    const displayName = userName?.trim() ? userName : 'Học viên ẩn danh';
+
     return (
         <div className="w-full max-w-4xl mx-auto p-4 animate-slide-in-right font-quiz-default">
             <div className="bg-gradient-to-br from-indigo-50 to-blue-100 dark:from-indigo-950/20 dark:to-blue-900/10 rounded-3xl shadow-xl p-8 md:p-12 text-center mb-8 relative overflow-hidden">
@@ -48,7 +50,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ quiz, userAnswers, score,
                     <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-2 uppercase tracking-tight">Kết quả Ôn tập</h1>
 
                     <div className="my-4 text-slate-600 dark:text-slate-400">
-                        <p className="text-lg">Học viên: <span className="font-bold text-indigo-600 dark:text-indigo-400">{userName}</span></p>
+                        <p className="text-lg">Học viên: <span className="font-bold text-indigo-600 dark:text-indigo-400">{displayName}</span></p>
                         <p className="text-sm">Hoàn thành lúc: {formattedDate}</p>
                     </div>
 

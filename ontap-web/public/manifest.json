@@ -1,0 +1,12 @@
+{
+  "name": "TNDNB Ôn Thi",
+  "short_name": "TNDNB",
+  "start_url": "/ontap/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    { "src": "/ontap/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/ontap/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

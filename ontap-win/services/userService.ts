@@ -139,6 +139,8 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
     }
 };
 
+import { calculateIsPass } from '../utils/examUtils';
+
 export const saveExamResult = async (
     userId: string,
     licenseId: string,
@@ -157,6 +159,8 @@ export const saveExamResult = async (
             title = `${licenseName} (Thi thử)`;
         }
 
+        const isPassed = calculateIsPass(score, totalQuestions, examType);
+
         if (navigator.onLine) {
             await addDoc(collection(db, 'exam_results'), {
                 studentId: userId,
@@ -166,7 +170,8 @@ export const saveExamResult = async (
                 timeTaken: timeTaken,
                 completedAt: serverTimestamp(),
                 type: examType,
-                quizTitle: title
+                quizTitle: title,
+                isPassed: isPassed
             });
         } else {
             // Lưu offline
@@ -179,13 +184,15 @@ export const saveExamResult = async (
                 score,
                 totalQuestions,
                 timeSpent: timeTaken,
-                createdAt: Date.now()
+                createdAt: Date.now(),
+                isPassed
             });
         }
     } catch (error) {
         console.error('Error saving exam result:', error);
         // Fallback lưu offline nếu lỗi mạng đột ngột
         try {
+            const isPassed = calculateIsPass(score, totalQuestions, examType);
             await saveResultOffline({
                 userId,
                 licenseId,
@@ -195,7 +202,8 @@ export const saveExamResult = async (
                 score,
                 totalQuestions,
                 timeSpent: timeTaken,
-                createdAt: Date.now()
+                createdAt: Date.now(),
+                isPassed
             });
         } catch (e) {
             console.error('Critical: Failed to save result even offline', e);

@@ -19,6 +19,10 @@ import NativeSettingsModal from './NativeSettingsModal';
 import { Settings, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { ProgressDashboard } from './ProgressDashboard';
+import { getExamHistory } from '../services/historyService';
+import type { ExamResult } from '../services/historyService';
+
 // Lazy load GA Analytics widget (chỉ khi user bấm mở)
 const CustomAnalyticsWidget = React.lazy(() => import('./CustomAnalyticsWidget'));
 
@@ -43,6 +47,10 @@ const Dashboard: React.FC<DashboardProps> = ({
     const isMobileApp = useAppStore(state => state.isMobileApp);
     const [isNativeSettingsOpen, setIsNativeSettingsOpen] = useState(false);
     const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+
+    const userId = useAppStore(s => s.userProfile?.id ?? 'guest');
+    const [history, setHistory] = React.useState<ExamResult[]>([]);
+    React.useEffect(() => { getExamHistory(userId).then(setHistory); }, [userId]);
 
     const userRole = userProfile?.role || 'hoc_vien';
     const isAdminOnly = ['admin', 'quan_ly', 'lanh_dao'].includes(userRole);
@@ -97,6 +105,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                                 {leftButtons.map((action, idx) => (
                                     <SecondaryButton key={action.id} action={action} index={idx} />
                                 ))}
+                            </div>
+
+                            <div className="w-full bg-white/40 dark:bg-zinc-800/40 backdrop-blur-md rounded-2xl p-4 border border-gray-200/30 dark:border-zinc-700/30">
+                                <h3 className="font-bold text-slate-700 dark:text-slate-200 mb-2">Tiến bộ học tập</h3>
+                                <ProgressDashboard history={history} />
                             </div>
                         </div>
 
@@ -190,7 +203,7 @@ const Dashboard: React.FC<DashboardProps> = ({
 
     // === THEME CŨ (cũng áp dụng layout Phương án C nhưng đơn giản hơn) ===
     return (
-        <div className="min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right">
+        <div className="min-h-screen flex flex-col items-center px-4 pt-24 pb-6 animate-slide-in-right">
             {/* Thanh Weather & Online Stats (Stacked Vertically) */}
             <div className="w-full max-w-4xl flex flex-col gap-2.5 mb-4">
                 <WeatherWidget />
@@ -210,6 +223,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                         {leftButtons.map((action, idx) => (
                             <SecondaryButton key={action.id} action={action} index={idx} />
                         ))}
+                    </div>
+
+                    <div className="w-full bg-card p-4 rounded-xl shadow-md border border-border">
+                        <h3 className="font-bold mb-2">Tiến bộ học tập</h3>
+                        <ProgressDashboard history={history} />
                     </div>
                 </div>
 

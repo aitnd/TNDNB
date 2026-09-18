@@ -2,6 +2,43 @@ import { auth, db } from './firebaseClient';
 import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db_offline, getUnsyncedResults, markResultAsSynced, saveLicensesOffline } from './offlineService';
 import { fetchLicenses } from './dataService';
+import { supabase } from './supabaseClient';
+import type { License } from '../types';
+
+interface AnswerRow { id: string; text: string }
+interface QuestionRow { id: string; text: string; image?: string | null; correct_answer_id: string; answers?: AnswerRow[] | null }
+interface SubjectRow { id: string; name: string; questions?: QuestionRow[] | null }
+interface LicenseRow { id: string; name: string; subjects?: SubjectRow[] | null }
+
+export const fetchAndSaveQuestions = async (): Promise<boolean> => {
+  if (!navigator.onLine) return false;
+  try {
+    const { data } = await supabase
+      .from('licenses')
+      .select(`id, name, display_order, subjects (id, name, display_order, questions (*, answers (id, text)))`)
+      .order('display_order', { ascending: true });
+
+    if (data) {
+      const licenses: License[] = (data as LicenseRow[]).map((license) => ({
+        id: license.id, name: license.name,
+        subjects: (license.subjects || []).map((s) => ({
+          id: s.id, name: s.name,
+          questions: (s.questions || []).map((q) => ({
+            id: q.id, text: q.text, image: q.image ?? undefined,
+            correctAnswerId: q.correct_answer_id,
+            answers: (q.answers || []).map((a) => ({ id: a.id, text: a.text })),
+          })),
+        })),
+      }));
+      await saveLicensesOffline(licenses);
+      
+      localStorage.setItem('questions_last_sync', Date.now().toString());
+      localStorage.setItem('questions_last_count', licenses.flatMap(l => l.subjects.flatMap(s => s.questions)).length.toString());
+      return true;
+    }
+    return false;
+  } catch { return false; }
+};
 
 export const syncData = async (userId: string) => {
     if (!navigator.onLine) return;
@@ -28,6 +65,7 @@ export const syncData = async (userId: string) => {
                     completedAt: serverTimestamp(),
                     type: res.examType,
                     quizTitle: title,
+                    isPassed: res.isPassed,
                     offlineCreatedAt: res.createdAt // Giữ lại thời gian làm bài thực tế
                 });
                 if (res.id) await markResultAsSynced(res.id);

@@ -15,10 +15,14 @@ export interface ExamResult {
     answers: UserAnswers;
     roomId?: string;
     type?: string;
+    isPassed?: boolean;
 }
+
+import { calculateIsPass } from '../utils/examUtils';
 
 export const saveExamResult = async (userId: string, quiz: Quiz, score: number, answers: UserAnswers, timeTaken: number) => {
     try {
+        const isPassed = calculateIsPass(score, quiz.questions.length, quiz.id === 'exam-quiz' || quiz.id === 'thithu2' || quiz.title.includes('Thi thử') ? 'Thi thử' : 'Ôn tập');
         const result = {
             studentId: userId, // Use studentId to match main app
             quizId: quiz.id,
@@ -27,7 +31,8 @@ export const saveExamResult = async (userId: string, quiz: Quiz, score: number, 
             totalQuestions: quiz.questions.length,
             timeTaken,
             completedAt: new Date(),
-            answers
+            answers,
+            isPassed
         };
 
         await addDoc(collection(db, 'exam_results'), {

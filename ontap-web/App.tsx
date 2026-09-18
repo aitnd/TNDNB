@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Toaster } from 'sonner';
@@ -16,11 +16,30 @@ import { AppRoutes } from './routes/AppRoutes';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
 import { Quiz, License, Subject, UserAnswers } from './types';
+import { scheduleLocalReminder } from './utils/reminder';
 
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   useUiZoom(); // Zoom toàn giao diện kiểu trình duyệt (Ctrl + lăn chuột)
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/ontap/sw-pwa.js').catch(() => {});
+    }
+  }, []);
+
+  useEffect(() => {
+    useAppStore.getState().updateStreak();
+    const boot = async () => {
+      if ('Notification' in window && Notification.permission === 'default') {
+        await Notification.requestPermission();
+      }
+      const saved = localStorage.getItem('reminderTime');
+      if (saved) scheduleLocalReminder(saved, () => {});
+    };
+    boot();
+  }, []);
 
   const {
     isLocked,

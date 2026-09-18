@@ -77,6 +77,7 @@ export const AddTeacherModal: React.FC<{
 
 // --- ADD STUDENT MODAL ---
 import AddStudentModal from './AddStudentModal';
+import { calculateIsPass } from '../../../utils/examUtils';
 export { AddStudentModal };
 
 // --- HISTORY MODAL ---
@@ -101,8 +102,8 @@ export const HistoryModal: React.FC<{
                         </div>
                         <div className="text-right">
                             <p className="text-lg font-black text-gray-800 dark:text-white">{h.score}/{h.totalQuestions}</p>
-                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${h.isPassed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                {h.isPassed ? 'ĐẠT' : 'KHÔNG ĐẠT'}
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${(h.isPassed ?? calculateIsPass(h.score, h.totalQuestions || 1, h.type || 'Ôn tập')) ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {(h.isPassed ?? calculateIsPass(h.score, h.totalQuestions || 1, h.type || 'Ôn tập')) ? 'ĐẠT' : 'KHÔNG ĐẠT'}
                             </span>
                         </div>
                     </div>

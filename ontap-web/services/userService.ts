@@ -138,6 +138,8 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
     }
 };
 
+import { calculateIsPass } from '../utils/examUtils';
+
 export const saveExamResult = async (
     userId: string,
     licenseId: string,
@@ -156,6 +158,8 @@ export const saveExamResult = async (
             title = `${licenseName} (Thi thử)`;
         }
 
+        const isPassed = calculateIsPass(score, totalQuestions, examType);
+
         await addDoc(collection(db, 'exam_results'), {
             studentId: userId,
             licenseId: licenseId,
@@ -164,7 +168,8 @@ export const saveExamResult = async (
             timeTaken: timeTaken,
             completedAt: serverTimestamp(),
             type: examType,
-            quizTitle: title
+            quizTitle: title,
+            isPassed: isPassed
         });
     } catch (error) {
         console.error('Error saving exam result to Firestore:', error);

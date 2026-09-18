@@ -82,6 +82,15 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
   const userName = useAppStore(state => state.userName);
   const userProfile = useAppStore(state => state.userProfile);
 
+  React.useEffect(() => {
+    if (userProfile && !userName) {
+      const finalUserName = userProfile.full_name || (userProfile as any).fullName || userProfile.email?.split('@')[0];
+      if (finalUserName) {
+        useAppStore.getState().setUserName(finalUserName);
+      }
+    }
+  }, [userProfile, userName]);
+
   const maintenanceMode = usageConfig?.isMaintenanceWeb ?? false;
   const isMaintenanceBypassed = location.pathname === '/ontap/login-admin' || userProfile?.role === 'admin';
 
@@ -251,6 +260,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
               onRetry={() => navigate('/ontap/giamkhao')}
               onBack={() => navigate('/ontap/giamkhao')}
               userName={userName}
+              examType="Thi thử"
             />
           ) : <Navigate to="/ontap/giamkhao" replace />
         } />
@@ -341,6 +351,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
               onRetry={handleRetry}
               onBack={() => navigate('/ontap/chonchedo')}
               userName={userName}
+              examType="Thi thử"
             />
           ) : <Navigate to="/ontap/chonchedo" replace />
         } />

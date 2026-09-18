@@ -100,6 +100,11 @@
       "name": "Tích hợp script Monetag SSR",
       "status": "implemented",
       "details": "Nhúng script Monetag trực tiếp vào layout HTML static bằng thẻ <script> thô chèn trong head của layout.tsx để vượt qua bước verify của nhà quảng cáo."
+    },
+    {
+      "name": "Zoom toàn giao diện (UI Zoom)",
+      "status": "implemented",
+      "details": "Hook useUiZoom riêng mỗi project (Ctrl + lăn chuột / Ctrl + +/-/0, 50-200%, persist ui-zoom-scale), áp CSS zoom lên documentElement, độc lập với zoom chữ quiz. Gọi 1 dòng trong AppContent."
     }
   ],
   "knowledge_items": {

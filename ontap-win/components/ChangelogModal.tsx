@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { X, Shield, Smartphone, Rocket, Zap, Monitor, Layout, Code, RefreshCw, Download, CheckCircle, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
+import { shouldUpdateQuestions } from '../services/dataService';
+import { fetchAndSaveQuestions } from '../services/syncService';
 // @ts-ignore
 import changelogRaw from '../CHANGELOG.md?raw';
 
@@ -35,6 +38,33 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const [updateStatus, setUpdateStatus] = React.useState<'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'error'>('idle');
   const [downloadProgress, setDownloadProgress] = React.useState<number>(0);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
+  const [dataSyncStatus, setDataSyncStatus] = React.useState<'idle' | 'checking' | 'has_update' | 'updating' | 'latest' | 'error'>(
+    localStorage.getItem('questions_has_update') === '1' ? 'has_update' : 'idle'
+  );
+
+  const handleCheckDataUpdate = async () => {
+    setDataSyncStatus('checking');
+    const needsUpdate = await shouldUpdateQuestions();
+    setDataSyncStatus(needsUpdate ? 'has_update' : 'latest');
+  };
+
+  const handleUpdateData = () => {
+    setDataSyncStatus('updating');
+    toast.promise(fetchAndSaveQuestions(), {
+      loading: 'Đang tải dữ liệu câu hỏi mới (chạy ngầm)...',
+      success: (success) => {
+        if (success) {
+          localStorage.setItem('questions_has_update', '0');
+          setDataSyncStatus('latest');
+          return 'Tải dữ liệu câu hỏi hoàn tất!';
+        } else {
+          setDataSyncStatus('error');
+          throw new Error('Cập nhật thất bại');
+        }
+      },
+      error: 'Tải dữ liệu thất bại. Vui lòng kiểm tra mạng và thử lại.',
+    });
+  };
 
   const latestVersion = getLatestVersion();
 
@@ -218,6 +248,40 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
               ✅ Bạn đang sử dụng phiên bản mới nhất!
             </p>
           )}
+
+          {/* Data Update Block */}
+          <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-gray-800 dark:text-white">🔄 Cập nhật Gói Đề Thi</h3>
+            <div className="flex gap-4">
+              <div className="flex-1 bg-gray-100 dark:bg-slate-700/50 p-4 rounded-lg">
+                <div className="text-gray-500 dark:text-slate-400 text-sm">Lần cập nhật trước</div>
+                <div className="font-mono mt-1 text-gray-800 dark:text-white">
+                  {localStorage.getItem('questions_last_sync') 
+                    ? new Date(parseInt(localStorage.getItem('questions_last_sync')!)).toLocaleDateString('vi-VN') 
+                    : 'Chưa từng đồng bộ'}
+                </div>
+              </div>
+              <button 
+                onClick={dataSyncStatus === 'has_update' ? handleUpdateData : handleCheckDataUpdate}
+                disabled={dataSyncStatus === 'checking' || dataSyncStatus === 'updating' || dataSyncStatus === 'latest'}
+                className="px-6 rounded-lg font-medium transition-colors bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white"
+              >
+                {dataSyncStatus === 'checking' ? 'Đang kiểm tra...' : 
+                 dataSyncStatus === 'has_update' ? 'Tải ngay' : 
+                 dataSyncStatus === 'updating' ? 'Đang tải ngầm...' : 'Kiểm tra'}
+              </button>
+            </div>
+            {dataSyncStatus === 'updating' && (
+              <span className="text-xs text-gray-500 dark:text-gray-400 mt-2 block">
+                Bạn có thể đóng cửa sổ này. Quá trình tải sẽ tiếp tục chạy ngầm.
+              </span>
+            )}
+            <div className="text-sm mt-2">
+              {dataSyncStatus === 'latest' && <span className="text-green-600 dark:text-green-400">✅ Dữ liệu câu hỏi đã mới nhất!</span>}
+              {dataSyncStatus === 'has_update' && <span className="text-amber-600 dark:text-amber-400">⚠️ Có gói câu hỏi mới. Vui lòng tải về.</span>}
+              {dataSyncStatus === 'error' && <span className="text-red-600 dark:text-red-400">❌ Cập nhật thất bại. Vui lòng thử lại.</span>}
+            </div>
+          </div>
         </div>
 
         {/* Changelog Content */}
