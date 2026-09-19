@@ -128,6 +128,16 @@
 - **Legacy Header Alignment**: Aligned and replaced legacy date headers in `CHANGELOG.md`, `CHANGELOG_DEV.md`, `ontap-web/CHANGELOG.md`, and `ontap-win/CHANGELOG.md` with semantic versions (`[3.9.2]`, `[3.8.0]`, `[3.7.0]`, `[3.6.0]`).
 - **Workflow Updates**: Updated `/check-project` and `/tndnb-build` global workflows with double changelog verification rules and SemVer standards.
 
+## [3.19.0] - 2026-09-19
+### Phase 3 (Core Features) & Phase 4 (Platform Integrations) completed
+- **Feature (Zustand):** Implement wrongQuestions tracking in useAppStore.
+- **Feature (Components):** Update ProgressDashboard with echarts.
+- **Feature (Search):** Implement searchUtils.
+- **Feature (Hooks):** Implement useExamKeyboard hook.
+- **Feature (Electron):** Implement Tray icon and globalShortcut (Ctrl+Alt+T).
+- **Feature (PWA):** PWA manifest.json added.
+- **Fix (UI):** Add pt-20 to HistoryScreen.tsx.
+- **Fix (Sync):** dataService prioritizes IndexedDB, ChangelogModal forces reload after sync.
 ## [3.12.0] - 2026-06-29
 ### Cáº­p nháº­t há»‡ thá»‘ng báº£o trÃ¬ & IVT Shield
 - **TÃ­nh nÄƒng:** TÃ¡ch Ä‘á»™c láº­p 3 cÃ´ng táº¯c báº£o trÃ¬ cho trang chÃ­nh (Portal), Web vÃ  Win.
@@ -137,6 +147,16 @@
 - **UI:** Cáº­p nháº­t mÃ n hÃ¬nh admin config Ä‘á»“ng bá»™ cho Web vÃ  Win.
 
 # Changelog
+## [3.19.0] - 2026-09-19
+### Phase 3 (Core Features) & Phase 4 (Platform Integrations) completed
+- **Feature (Zustand):** Implement wrongQuestions tracking in useAppStore.
+- **Feature (Components):** Update ProgressDashboard with echarts.
+- **Feature (Search):** Implement searchUtils.
+- **Feature (Hooks):** Implement useExamKeyboard hook.
+- **Feature (Electron):** Implement Tray icon and globalShortcut (Ctrl+Alt+T).
+- **Feature (PWA):** PWA manifest.json added.
+- **Fix (UI):** Add pt-20 to HistoryScreen.tsx.
+- **Fix (Sync):** dataService prioritizes IndexedDB, ChangelogModal forces reload after sync.
 ## [3.11.0] - 2026-06-29
 ### TÃ­ch há»£p & Tá»‘i Æ°u hÃ³a Kiáº¿m tiá»n Monetag (Web & App Win)
 - **Chiáº¿n lÆ°á»£c Quáº£ng cÃ¡o Äa dáº¡ng:** TÃ­ch há»£p Smart Tag (Vignette/Interstitial), Auto Popunder (giá»›i háº¡n 1 láº§n/phiÃªn), vÃ  Direct Link Ä‘á»ƒ tá»‘i Æ°u hÃ³a doanh thu tá»« CPM/eCPM cho thá»‹ trÆ°á»ng Viá»‡t Nam.
@@ -317,4 +337,5 @@
 ### Security
 - Kháº¯c phá»¥c nguy cÆ¡ lá»™ Gemini API Key nghiÃªm trá»ng. ToÃ n bá»™ logic kiá»ƒm tra vÃ  generateContent hiá»‡n táº¡i Ä‘Ã£ thá»±c thi ngáº§m á»Ÿ Node server thay vÃ¬ client.
 - XÃ³a bá» Ä‘iá»ƒm yáº¿u mÃ£ hÃ³a XOR cÃ³ thá»ƒ dá»… dÃ ng bá»‹ báº» khÃ³a trong Local Storage Ä‘á»‘i vá»›i "Ghi nhá»› tÃ i khoáº£n".
+
 

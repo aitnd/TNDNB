@@ -72,7 +72,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ userProfile, onBack }) =>
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto p-4 animate-slide-in-right pb-24">
+        <div className="w-full max-w-4xl mx-auto p-4 animate-slide-in-right pb-24 pt-20">
             <div className="relative text-center mb-8 pt-4">
                 <button 
                   onClick={() => { triggerHaptic('light'); onBack(); }} 

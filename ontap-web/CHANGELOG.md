@@ -110,6 +110,15 @@
 - **Hiá»‡u nÄƒng:** Tá»‘i Æ°u hÃ³a tá»‘c Ä‘á»™ táº£i trang chá»§ vÃ  cáº£i tiáº¿n báº£ng Ä‘iá»u khiá»ƒn cáº¥u hÃ¬nh há»‡ thá»‘ng Ä‘á»“ng bá»™.
 
 # Changelog
+## [3.19.0] - 2026-09-19
+### Hoàn thiện Nhóm Tính Năng Cốt Lõi & Trải Nghiệm Mới (Web & App Win)
+- **Luyện lại câu sai:** Tự động lưu lại các câu làm sai để luyện tập riêng, xóa khỏi danh sách khi trả lời đúng.
+- **Báo cáo tiến bộ:** Thêm biểu đồ cột theo dõi thành tích học tập trực quan tại màn hình chính.
+- **Tìm kiếm câu hỏi:** Hỗ trợ tìm kiếm đề thi/câu hỏi theo từ khoá nhanh chóng.
+- **Nhắc học mỗi ngày & Streak:** Hiển thị chuỗi ngày học liên tục và nhận thông báo nhắc nhở.
+- **Phím tắt làm bài:** Hỗ trợ dùng phím A,B,C,D (1,2,3,4) và Enter/Mũi tên để thao tác cực nhanh trong phòng thi.
+- **Tối ưu App & Nền tảng:** Hỗ trợ cài đặt PWA (Web), thu nhỏ xuống Khay hệ thống, Phím tắt đóng/mở nhanh (Ctrl+Alt+T) trên Win, và đồng bộ đề ngầm.
+- **Sửa lỗi UI:** Giao diện Thống kê/Nhật ký không còn bị thanh Navbar che khuất.
 ## [3.11.0] - 2026-06-29
 ### Tá»‘i Æ°u hÃ³a tráº£i nghiá»‡m tÆ°Æ¡ng tÃ¡c & NÃ¢ng cáº¥p há»‡ thá»‘ng Ã´n luyá»‡n
 - **Tráº£i nghiá»‡m chá» thÃ´ng minh:** Bá»• sung mÃ n hÃ¬nh chá» Ä‘áº¿m ngÆ°á»£c trÆ°á»›c khi xem káº¿t quáº£ thi Ä‘á»ƒ Ä‘áº£m báº£o cÃ¡c tiáº¿n trÃ¬nh lÆ°u Ä‘iá»ƒm thi diá»…n ra an toÃ n, trÃ¡nh máº¥t mÃ¡t dá»¯ liá»‡u do ngáº¯t káº¿t ná»‘i Ä‘á»™t ngá»™t.
@@ -285,4 +294,5 @@
 ### Security
 - Kháº¯c phá»¥c nguy cÆ¡ lá»™ Gemini API Key nghiÃªm trá»ng. ToÃ n bá»™ logic kiá»ƒm tra vÃ  generateContent hiá»‡n táº¡i Ä‘Ã£ thá»±c thi ngáº§m á»Ÿ Node server thay vÃ¬ client.
 - XÃ³a bá» Ä‘iá»ƒm yáº¿u mÃ£ hÃ³a XOR cÃ³ thá»ƒ dá»… dÃ ng bá»‹ báº» khÃ³a trong Local Storage Ä‘á»‘i vá»›i "Ghi nhá»› tÃ i khoáº£n".
+
 
