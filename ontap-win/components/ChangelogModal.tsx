@@ -56,7 +56,8 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
         if (success) {
           localStorage.setItem('questions_has_update', '0');
           setDataSyncStatus('latest');
-          return 'Tải dữ liệu câu hỏi hoàn tất!';
+          setTimeout(() => window.location.reload(), 1500);
+          return 'Tải dữ liệu câu hỏi hoàn tất! Đang làm mới...';
         } else {
           setDataSyncStatus('error');
           throw new Error('Cập nhật thất bại');

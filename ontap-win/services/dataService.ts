@@ -11,20 +11,25 @@ const naturalSortQuestions = (a: { id: string }, b: { id: string }): number => {
   return getNum(a.id) - getNum(b.id);
 };
 
-// This function fetches all data and transforms it into the nested structure the app uses.
-// This function fetches all data and transforms it into the nested structure the app uses.
-// GHI CHÚ: Bản Offline (ontap-win) chỉ dùng data JSON.
-export const fetchLicenses = async (): Promise<License[]> => {
-  // Import offlineData here to ensure it's available. 
-  // Ideally it should be imported at top, but let's assume it is or add it.
-  // Wait, I need to check if 'offlineData' is imported. The previous file view showed it wasn't there?
-  // Let me check the file content again. It showed supabase import and types only.
-  // I need to ADD the import.
+import { getLicensesOffline, saveLicensesOffline } from './offlineService';
 
-  // Since I can't add import here easily without ensure it exists, I'll rewrite the file or use multi_replace.
-  // Let's assume I need to add import.
+// This function fetches all data and transforms it into the nested structure the app uses.
+// GHI CHÚ: Bản Offline (ontap-win) ưu tiên dùng IndexedDB (nếu đã đồng bộ), fallback sang file JSON tĩnh.
+export const fetchLicenses = async (): Promise<License[]> => {
+  // 1. Cố gắng đọc từ IndexedDB trước (dữ liệu mới nhất đã sync)
+  const localLicenses = await getLicensesOffline();
+  if (localLicenses && localLicenses.length > 0) {
+    return localLicenses;
+  }
+
+  // 2. Nếu IndexedDB chưa có gì, đọc từ file JSON tĩnh làm dữ liệu khởi tạo
   const data = (await import('../data/questions_db.json')).default;
-  return data as any as License[];
+  const initialLicenses = data as any as License[];
+  
+  // Lưu vào IndexedDB cho lần sau
+  await saveLicensesOffline(initialLicenses);
+
+  return initialLicenses;
 };
 
 export const shouldUpdateQuestions = async (): Promise<boolean> => {

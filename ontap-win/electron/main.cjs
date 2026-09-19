@@ -49,16 +49,23 @@ function setupAutoLaunch() {
 
 function createWindow() {
     // Create the browser window.
+    const getIconPath = () => {
+      const isDevEnv = process.env.ELECTRON_MODE === 'true';
+      return isDevEnv 
+        ? path.join(__dirname, '../public/assets/img/logo1.ico')
+        : path.join(__dirname, '../dist/assets/img/logo1.ico');
+    };
+
     const mainWindow = new BrowserWindow({
-        width: 1280,
+        width: 1200,
         height: 800,
         webPreferences: {
             preload: path.join(__dirname, 'preload.cjs'),
-            nodeIntegration: true,
+            nodeIntegration: true, // Not recommended for production, but kept if app relies on it
             contextIsolation: false, // For easier IPC in this specific legacy app structure
             webSecurity: false // Often needed for local file access in simple apps, though less secure
         },
-        icon: path.join(__dirname, '../public/assets/img/logo1.ico')
+        icon: getIconPath()
     });
 
     // Remove menu bar
@@ -187,7 +194,11 @@ function createWindow() {
 }
 
 function createTray(mainWindow) {
-    const iconPath = path.join(__dirname, '../public/assets/img/logo1.ico');
+    const isDevEnv = process.env.ELECTRON_MODE === 'true';
+    const iconPath = isDevEnv 
+      ? path.join(__dirname, '../public/assets/img/logo1.ico')
+      : path.join(__dirname, '../dist/assets/img/logo1.ico');
+
     tray = new Tray(nativeImage.createFromPath(iconPath));
     const contextMenu = Menu.buildFromTemplate([
       { label: 'Mở ứng dụng', click: () => mainWindow.show() },
