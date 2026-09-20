@@ -16,30 +16,19 @@
 
 ## 2. Các Bước Thực Hiện (TDD Bite-Sized Tasks)
 
-### Task 3.1: Đồng bộ kích thước icon trong manifest.json
+### Task 3.1: Tạo icon chuẩn cho PWA (192x192 & 512x512)
 **1. Verify (Trạng thái hiện tại):**
 - Console báo lỗi lệch kích thước: `Manifest: property 'src' does not match size '192x192' (actual size 64x64)`.
+- Việc hạ `sizes` về 64x64 sẽ làm giảm điểm installability của PWA.
 
 **2. Implement (GREEN):**
-Cập nhật thuộc tính `sizes` thành `64x64` trong 2 file:
-- `ontap-web/public/manifest.json`
-- `public/ontap/manifest.json`
-```diff
---- a/ontap-web/public/manifest.json
-+++ b/ontap-web/public/manifest.json
-@@ -7,6 +7,6 @@
-   "theme_color": "#3b82f6",
-   "icons": [
--    { "src": "/ontap/icon-192.png", "sizes": "192x192", "type": "image/png" },
--    { "src": "/ontap/icon-512.png", "sizes": "512x512", "type": "image/png" }
-+    { "src": "/ontap/icon-192.png", "sizes": "64x64", "type": "image/png" },
-+    { "src": "/ontap/icon-512.png", "sizes": "64x64", "type": "image/png" }
-   ]
- }
-```
+Sử dụng script ImageMagick hoặc các công cụ resize để tạo ảnh chuẩn:
+- Tạo `ontap-web/public/icon-192.png` (thực sự là 192x192)
+- Tạo `ontap-web/public/icon-512.png` (thực sự là 512x512)
+- Không cần sửa `public/ontap/` vì đó là thư mục build output.
 
 **3. Verify PASS:**
-- Load lại trang, check tab Application -> Manifest trong DevTools. Không còn cảnh báo.
+- Load lại trang, check tab Application -> Manifest trong DevTools. Không còn cảnh báo. Điểm Lighthouse PWA Installable đạt tối đa.
 
 ### Task 3.2: Cấu hình Tailwind v4 vào build pipeline
 **1. Verify:**
@@ -47,6 +36,14 @@ Cập nhật thuộc tính `sizes` thành `64x64` trong 2 file:
 - Ứng dụng đang phụ thuộc 100% vào CDN runtime.
 
 **2. Implement (GREEN):**
+- Cài đặt plugin: `cd ontap-web && npm install -D @tailwindcss/vite tailwindcss`
+- Bổ sung cấu hình plugin trong `ontap-web/vite.config.ts`:
+  ```ts
+  import tailwindcss from '@tailwindcss/vite'
+  export default defineConfig({
+    plugins: [react(), tailwindcss()],
+  })
+  ```
 Sửa file `ontap-web/theme.css`, chèn ở đầu:
 ```css
 @import "tailwindcss";
@@ -100,8 +97,10 @@ import './theme.css';
 **3. Verify PASS:**
 - Chạy `npm run build`, bundle CSS chứa các class tailwind (file size tăng).
 
-### Task 3.3: Gỡ bỏ Tailwind CDN script trong index.html
-**1. Verify:** File `index.html` chứa `<script src="https://cdn.tailwindcss.com"></script>` và config inline dài. Chỉ thực hiện khi Task 3.2 pass.
+### Task 3.3: Gỡ bỏ Tailwind CDN script và inline config trong index.html
+**1. Verify:**
+- Build thành công `theme.css`.
+- Chụp ảnh màn hình (baseline) của trang để kiểm tra thiết kế trước khi gỡ CDN.
 
 **2. Implement (GREEN):**
 Sửa file `ontap-web/index.html`:
