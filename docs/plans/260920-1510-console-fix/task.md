@@ -33,17 +33,17 @@ Tài liệu: [phase-01-topnavbar-fix.md](../../../docs/plans/260920-1510-console
 ### Phase 2: Nâng Cao Khả Năng Chịu Lỗi Của AlertMarquee & Chính Sách Firestore
 Tài liệu: [phase-02-marquee-resilience.md](../../../docs/plans/260920-1510-console-fix/phase-02-marquee-resilience.md)
 
-- [ ] **Task 2.1: Bọc try/catch cho hàm loadAlerts trong AlertMarquee**
-  - [ ] Bọc nội dung hàm `loadAlerts` bằng khối `try/catch`.
-  - [ ] Xử lý fallback `setAlerts([])` khi bắt lỗi.
-- [ ] **Task 2.2: Bổ sung error handler cho onSnapshot listener**
-  - [ ] Thêm callback xử lý lỗi cho `onSnapshot` global.
-  - [ ] Thêm callback xử lý lỗi cho `onSnapshot` personal.
-  - [ ] Chạy ẩn danh vào trang `/ontap/` kiểm tra sạch lỗi đỏ.
-- [ ] **Task 2.3: Đánh giá và bảo toàn chính sách bảo mật Firestore Rules**
-  - [ ] Xác nhận không thay đổi `firestore.rules`.
-- [ ] **Task 2.4: Commit Phase 2**
-  - [ ] Thực thi lệnh: `git commit -m "fix: add error handling for AlertMarquee Firestore calls"`
+- [x] **Task 2.1: Bọc try/catch cho hàm loadAlerts trong AlertMarquee**
+  - [x] Bọc nội dung hàm `loadAlerts` bằng khối `try/catch`.
+  - [x] Xử lý fallback `setAlerts([])` khi bắt lỗi.
+- [x] **Task 2.2: Bổ sung error handler cho onSnapshot listener**
+  - [x] Thêm callback xử lý lỗi cho `onSnapshot` global.
+  - [x] Thêm callback xử lý lỗi cho `onSnapshot` personal.
+  - [x] Chạy ẩn danh vào trang `/ontap/` kiểm tra sạch lỗi đỏ.
+- [x] **Task 2.3: Đánh giá và bảo toàn chính sách bảo mật Firestore Rules**
+  - [x] Xác nhận không thay đổi `firestore.rules`.
+- [x] **Task 2.4: Commit Phase 2**
+  - [x] Thực thi lệnh: `git commit -m "fix: add error handling for AlertMarquee Firestore calls"`
 
 ---
 
@@ -69,7 +69,26 @@ Tài liệu: [phase-03-cleanup.md](../../../docs/plans/260920-1510-console-fix/p
 
 ---
 
-### Phase 4: Kiểm Thử Toàn Diện & Nghiệm Thu Chất Lượng
-- [ ] **Task 4.1: Kiểm tra lỗi kiểu tĩnh với TypeScript** (`npx tsc --noEmit`)
-- [ ] **Task 4.2: Đóng gói kiểm tra bản dựng Production** (`npm run build`)
-- [ ] **Task 4.3: Kiểm thử runtime trên trình duyệt với DevTools** (`npm run preview`)
+### Phase 4: Nâng Cao Độ Ổn Định Cho Bản Electron (Win)
+Tài liệu: [phase-04-win-resilience.md](../../../docs/plans/260920-1510-console-fix/phase-04-win-resilience.md)
+
+- [ ] **Task 4.1: Kế thừa ErrorBoundary cho bản Win**
+  - [ ] Copy `ErrorBoundary.tsx` sang `ontap-win/src/components/` (nếu cần) hoặc tái sử dụng từ web.
+  - [ ] Import và bọc `<ErrorBoundary>` quanh `TopNavbar` và `AlertMarquee` trong `ontap-win/src/App.tsx` (tương tự như web).
+- [ ] **Task 4.2: Thêm try/catch và error callback cho AlertMarquee của bản win**
+  - [ ] Mở file `ontap-win/src/components/AlertMarquee.tsx`.
+  - [ ] Bọc `try/catch` cho hàm `loadAlerts` (bắt lỗi set state về mảng rỗng).
+  - [ ] Thêm error callback cho `onSnapshot`.
+- [ ] **Task 4.3: Dọn dẹp log và sửa lỗi hiển thị version trong main/preload**
+  - [ ] Mở file `ontap-win/main.cjs`, thay `console.log` bằng `log.info` (hoặc dọn dẹp log thừa).
+  - [ ] Mở file `ontap-win/preload.cjs`, thay `console.log` bằng `log.info`.
+  - [ ] Ở `ontap-win/preload.cjs` dòng 4, sửa logic để khắc phục lỗi hiển thị `0.0.0`.
+- [ ] **Task 4.4: Commit chung Phase 4**
+  - [ ] Thực thi lệnh: `git commit -m "fix: win electron resilience, error boundary, and console logs"`
+
+---
+
+### Phase 5: Kiểm Thử Toàn Diện & Nghiệm Thu Chất Lượng
+- [ ] **Task 5.1: Kiểm tra lỗi kiểu tĩnh với TypeScript** (`npx tsc --noEmit`)
+- [ ] **Task 5.2: Đóng gói kiểm tra bản dựng Production** (`npm run build`)
+- [ ] **Task 5.3: Kiểm thử runtime trên trình duyệt với DevTools** (`npm run preview`)
