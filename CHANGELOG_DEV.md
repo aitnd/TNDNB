@@ -1,9 +1,9 @@
-## [3.19.2] - 2026-09-20
+﻿## [3.19.2] - 2026-09-20
 ### Phase 1-4 UI/UX Refinements & GitHub Release Architecture (Web & Win)
-- **UI & Layout Fixes:** Resolved overlapping Navbar on Web/Win by fixing padding configurations. Removed nested `overflow-y-auto` scrollbars on `ResultsScreen` and `ExamResultsScreen`.
-- **Exam UI Rewrite & Cleanup:** Replaced legacy `ExamQuizScreen` with `ExamQuizScreen2`, renamed it globally, and removed dead v1 code. Restored the 5-column answer grid and `pointer-events-none` for desktop, while allowing text-clicking for mobile Web. Added `a11y` roles and keyboard handlers to `SquareCheckbox`.
-- **System Tray (Win):** Extended `createTray` in Electron with context menu: toggle "Kh?i d?ng c�ng Windows" and manual "Ki?m tra c?p nh?t".
-- **Update Architecture & Security:** Completely reverted from Supabase `app_releases` storage to native GitHub Releases. `UpdateService` (Win) and `releaseService` (Web) now use GitHub API `uploadReleaseAsset` and `getReleases`. Moved all hardcoded Supabase keys to `.env` variables (`NEXT_PUBLIC_`, `VITE_`, `process.env`). Cleaned up unused tests.
+- **UI & Layout Fixes:** Resolved overlapping Navbar on Web/Win by fixing padding configurations. Removed nested overflow-y-auto scrollbars on ResultsScreen and ExamResultsScreen.
+- **Exam UI Rewrite & Cleanup:** Replaced legacy ExamQuizScreen with ExamQuizScreen2, renamed it globally, and removed dead v1 code. Restored the 5-column answer grid and pointer-events-none for desktop, while allowing text-clicking for mobile Web. Added 11y roles and keyboard handlers to SquareCheckbox.
+- **System Tray (Win):** Extended createTray in Electron with context menu: toggle "Khởi động cùng Windows" and manual "Kiểm tra cập nhật".
+- **Update Architecture & Security:** Completely reverted from Supabase pp_releases storage to native GitHub Releases. UpdateService (Win) and eleaseService (Web) now use GitHub API uploadReleaseAsset and getReleases. Moved all hardcoded Supabase keys to .env variables (NEXT_PUBLIC_, VITE_, process.env). Cleaned up unused tests.
 
 ## [3.18.1] - 2026-09-18
 ### UI/UX & Sync Improvements (Web & Win)
@@ -138,7 +138,8 @@
 ## [3.19.0] - 2026-09-19
 ### Phase 3 (Core Features) & Phase 4 (Platform Integrations) completed
 - **Feature (Zustand):** Implement wrongQuestions tracking in useAppStore.
-- **Feature (Components):** Update ProgressDashboard with echarts.
+- **Feature (Components):** Update ProgressDashboard with 
+echarts.
 - **Feature (Search):** Implement searchUtils.
 - **Feature (Hooks):** Implement useExamKeyboard hook.
 - **Feature (Electron):** Implement Tray icon and globalShortcut (Ctrl+Alt+T).
@@ -157,7 +158,8 @@
 ## [3.19.0] - 2026-09-19
 ### Phase 3 (Core Features) & Phase 4 (Platform Integrations) completed
 - **Feature (Zustand):** Implement wrongQuestions tracking in useAppStore.
-- **Feature (Components):** Update ProgressDashboard with echarts.
+- **Feature (Components):** Update ProgressDashboard with 
+echarts.
 - **Feature (Search):** Implement searchUtils.
 - **Feature (Hooks):** Implement useExamKeyboard hook.
 - **Feature (Electron):** Implement Tray icon and globalShortcut (Ctrl+Alt+T).

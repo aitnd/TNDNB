@@ -1,13 +1,13 @@
-## [3.19.2] - 2026-09-20
-### T?i uu Hi?n th? & N�ng c?p H? th?ng (Web & App Win)
-- **S?a l?i giao di?n:** Kh?c ph?c l?i thanh di?u hu?ng che khu?t n?i dung, lo?i b? thanh cu?n th?a ? trang k?t qu? gi�p xem mu?t m� hon.
-- **T?i uu B?ng d�p �n:** B?ng ch?n d�p �n �n t?p & Thi th? du?c tinh ch?nh d? d? nh�n hon, t?i uu tuong t�c tr�n c? m�y t�nh v� di?n tho?i.
-- **Ti?n �ch h? th?ng (Win):** B? sung menu chu?t ph?i (Tray Icon) cho ph�p b?t t?t "Kh?i d?ng c�ng Windows" v� ki?m tra c?p nh?t nhanh.
-- **C?p nh?t nhanh & An to�n hon:** Co ch? ki?m tra phi�n b?n m?i du?c t?i uu ho�, d?m b?o ngu?i d�ng lu�n nh?n b?n c?p nh?t ?n d?nh nh?t.
+﻿## [3.19.2] - 2026-09-20
+### Tối ưu Hiển thị & Nâng cấp Hệ thống (Web & App Win)
+- **Sửa lỗi giao diện:** Khắc phục lỗi thanh điều hướng che khuất nội dung, loại bỏ thanh cuộn thừa ở trang kết quả giúp xem mượt mà hơn.
+- **Tối ưu Bảng đáp án:** Bảng chọn đáp án Ôn tập & Thi thử được tinh chỉnh để dễ nhìn hơn, tối ưu tương tác trên cả máy tính và điện thoại.
+- **Tiện ích hệ thống (Win):** Bổ sung menu chuột phải (Tray Icon) cho phép bật tắt "Khởi động cùng Windows" và kiểm tra cập nhật nhanh.
+- **Cập nhật nhanh & An toàn hơn:** Cơ chế kiểm tra phiên bản mới được tối ưu hoá, đảm bảo người dùng luôn nhận bản cập nhật ổn định nhất.
 
 ## [3.19.1] - 2026-09-19
 ### Kh?c ph?c C?p nh?t (Web & App Win)
-- **Check Update T?c Th�:** Kh?c ph?c l?i hi?n th? sai phi�n b?n m?i nh?t. ?ng d?ng nay l?y d? li?u c?p nh?t tr?c ti?p t? M�y ch? ��m m�y (Supabase) thay v� d?c file tinh c?c b?.
-- **Admin K�o Th?:** Ra m?t c�ng c? K�o-Th? qu?n l� ?ng d?ng cho Admin, gi�p d�ng g�i v� ph�t h�nh d? d�ng hon bao gi? h?t.
+- **Check Update T?c Th�:** Kh?c ph?c l?i hi?n th? sai phi�n b?n m?i nh?t. ?ng d?ng nay l?y d? li?u c?p nh?t tr?c ti?p t? M�y ch? ��m m�y (Supabase) thay v� d?c file tinh c?c b?.
+- **Admin K�o Th?:** Ra m?t c�ng c? K�o-Th? qu?n l� ?ng d?ng cho Admin, gi�p d�ng g�i v� ph�t h�nh d? d�ng hon bao gi? h?t.
 
 
