@@ -2,112 +2,52 @@
 
 - **Mã kế hoạch**: 260920-1510-console-fix
 - **Kế hoạch tổng thể**: [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/plan.md)
-- **Tập tin công việc**: [	ask.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/task.md)
+- **Tập tin công việc**: [task.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/task.md)
 - **Độ ưu tiên tổng thể**: 🟡 **Medium** / 🟡 **Low**
 
 ---
 
 ## 1. Mục Tiêu & Giá Trị Mang Lại
-
-### 1.1. Mục tiêu
-1. Chuẩn hóa PWA Manifest: Xóa bỏ cảnh báo lệch kích thước icon giữa khai báo JSON và kích thước thực tế của ảnh.
-2. Tối ưu hóa tải trang & Build Pipeline: Gỡ bỏ Tailwind CSS CDN runtime compilation trong môi trường production, đảm bảo toàn bộ CSS được build tĩnh (static build-time) mà **không làm vỡ bất kỳ thành phần giao diện nào**.
-3. Dọn dẹp Service Worker: Xóa fetch event listener rỗng gây lãng phí tài nguyên CPU của trình duyệt.
-4. Đạt chuẩn **0 Cảnh báo (Zero Warnings)** trên tab Console và tab Application của Chrome DevTools.
-
-### 1.2. Giá trị sản phẩm (Product Value)
-- **Tốc độ tải trang nhanh hơn**: Loại bỏ file script CDN 300KB+ và tiến trình parse CSS lúc runtime giúp trang hiển thị ngay lập tức, triệt tiêu hiện tượng nhấp nháy giao diện (FOUC).
-- **Trải nghiệm PWA chuẩn mực**: Ứng dụng đủ điều kiện cài đặt PWA hoàn hảo, đạt điểm tối đa trong đánh giá Google Lighthouse.
+1. Chuẩn hóa PWA Manifest: Khớp kích thước ảnh với khai báo.
+2. Tối ưu hóa tải trang & Build Pipeline: Gỡ Tailwind CDN, cấu hình Tailwind v4 tĩnh (build-time).
+3. Dọn dẹp Service Worker: Xóa fetch event listener rỗng.
 
 ---
 
-## 2. Bug 4: Khắc Phục Sai Lệch Kích Thước Icon Manifest (🟡 Medium)
+## 2. Các Bước Thực Hiện (TDD Bite-Sized Tasks)
 
-### 2.1. Phân tích nguyên nhân
-- **Tập tin**:
-  - [ontap-web/public/manifest.json](file:///d:/Antigravity/TNDNB/ontap-web/public/manifest.json#L8-L11)
-  - [public/ontap/manifest.json](file:///d:/Antigravity/TNDNB/public/ontap/manifest.json#L8-L11)
-- **Hiện tượng**:
-  Cả hai file manifest.json hiện tại đang khai báo:
-  `json
-  icons: [
-    { src: /ontap/icon-192.png, sizes: 192x192, type: image/png },
-    { src: /ontap/icon-512.png, sizes: 512x512, type: image/png }
-  ]
-  `
-  Tuy nhiên, khi kiểm tra kích thước vật lý của hai file ảnh [icon-192.png](file:///d:/Antigravity/TNDNB/ontap-web/public/icon-192.png) và [icon-512.png](file:///d:/Antigravity/TNDNB/ontap-web/public/icon-512.png), dung lượng của cả hai đều là 3.948 bytes với kích thước ảnh thực tế là **64x64 pixel**.
-  Điều này khiến Chrome hiển thị cảnh báo:
-  Manifest: property 'src' does not match size '192x192' (actual size 64x64)
+### Task 3.1: Đồng bộ kích thước icon trong manifest.json
+**1. Verify (Trạng thái hiện tại):**
+- Console báo lỗi lệch kích thước: `Manifest: property 'src' does not match size '192x192' (actual size 64x64)`.
 
-### 2.2. Giải pháp thực hiện
-Cập nhật thuộc tính sizes trong cả 2 tập tin manifest để khớp với kích thước thực tế:
-`diff
+**2. Implement (GREEN):**
+Cập nhật thuộc tính `sizes` thành `64x64` trong 2 file:
+- `ontap-web/public/manifest.json`
+- `public/ontap/manifest.json`
+```diff
 --- a/ontap-web/public/manifest.json
 +++ b/ontap-web/public/manifest.json
 @@ -7,6 +7,6 @@
-   theme_color: #3b82f6,
-   icons: [
--    { src: /ontap/icon-192.png, sizes: 192x192, type: image/png },
--    { src: /ontap/icon-512.png, sizes: 512x512, type: image/png }
-+    { src: /ontap/icon-192.png, sizes: 64x64, type: image/png },
-+    { src: /ontap/icon-512.png, sizes: 64x64, type: image/png }
+   "theme_color": "#3b82f6",
+   "icons": [
+-    { "src": "/ontap/icon-192.png", "sizes": "192x192", "type": "image/png" },
+-    { "src": "/ontap/icon-512.png", "sizes": "512x512", "type": "image/png" }
++    { "src": "/ontap/icon-192.png", "sizes": "64x64", "type": "image/png" },
++    { "src": "/ontap/icon-512.png", "sizes": "64x64", "type": "image/png" }
    ]
  }
-`
-*(Thực hiện tương tự cho public/ontap/manifest.json).*
-
----
-
-## 3. Bug 5: Gỡ Bỏ Tailwind CDN Trong Production (🟡 Medium)
-
-### 3.1. Phân tích nguyên nhân & Cảnh báo rủi ro cao (⚠️ HIGH RISK)
-- **Tập tin**: [ontap-web/index.html](file:///d:/Antigravity/TNDNB/ontap-web/index.html) (Dòng 11 và dòng 29-98)
-- **Hiện tượng**:
-  - Dòng 11 nạp trực tiếp script CDN:
-    <script src=https://cdn.tailwindcss.com></script>
-  - Dòng 29-98 định nghĩa cấu hình inline 	ailwind.config = { theme: { extend: { colors: { ... } } } }.
-  - Chrome Console đưa ra cảnh báo:
-    cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use Tailwind CLI.
-- **CẢNH BÁO RỦI RO ĐẶC BIỆT**:
-  Khi kiểm tra [ontap-web/postcss.config.cjs](file:///d:/Antigravity/TNDNB/ontap-web/postcss.config.cjs), tập tin này hiện tại **CHỈ CÓ**:
-  `javascript
-  module.exports = {
-      plugins: {
-          autoprefixer: {},
-      },
-  }
-  `
-  Plugin 	ailwindcss **hoàn toàn chưa được kích hoạt** trong PostCSS!
-  Nếu lập trình viên vội vã xóa dòng CDN <script src=https://cdn.tailwindcss.com></script> trong index.html, toàn bộ các class tiện ích Tailwind của ứng dụng (hàng ngàn class như lex, hidden, 	ext-gray-500,  g-white,...) sẽ **không được biên dịch**, dẫn đến việc **vỡ nát toàn bộ giao diện website**!
-
-### 3.2. Quy trình chuyển đổi an toàn 3 bước (Safe Migration Process)
-
-> ⚠️ **PHÁT HIỆN QUAN TRỌNG (đã xác minh 20/09/2026):**
-> - `postcss.config.cjs` hiện **CHỈ CÓ** `autoprefixer`, **KHÔNG CÓ** `tailwindcss` plugin.
-> - `theme.css` **KHÔNG CÓ** `@import "tailwindcss"` hay `@tailwind` directive.
-> - `index.tsx` **KHÔNG import** bất kỳ file CSS nào.
-> - Dự án chỉ có 2 file CSS: `theme.css` (biến màu) và `StudentCard.module.css`.
-> - **KẾT LUẬN:** App đang phụ thuộc 100% vào CDN runtime. Xóa CDN mà không cấu hình build pipeline = VỠ TOÀN BỘ UI.
-> - Tailwind đã cài: `tailwindcss: ^4.2.1` (v4 dùng CSS-first config, khác v3).
-
-#### Bước 1: Cấu hình Tailwind v4 vào build pipeline
-Tailwind v4 sử dụng CSS import thay vì postcss plugin. Thêm vào đầu file `theme.css`:
-```css
-@import "tailwindcss";
-```
-Và import `theme.css` vào `index.tsx`:
-```tsx
-import './theme.css';
 ```
 
-#### Bước 2: Chuyển cấu hình theme mở rộng từ inline script sang CSS
-Khối `tailwind.config = { theme: { extend: { ... } } }` trong `index.html` (dòng 29-98) chứa:
-- **Colors** (border, input, ring, background, foreground, primary, secondary, destructive, success, muted, accent, popover, card) → Đã có sẵn trong `theme.css` qua CSS variables. Tailwind v4 tự nhận CSS variables nếu dùng `@theme`.
-- **borderRadius** → Thêm vào `theme.css` bằng `@theme { --radius: ... }`.
-- **Animations** (fadeInUp, shine) → Thêm `@keyframes` vào `theme.css`.
-- **fontFamily** → Đã có trong `theme.css` qua `--font-sans`.
+**3. Verify PASS:**
+- Load lại trang, check tab Application -> Manifest trong DevTools. Không còn cảnh báo.
 
-Tạo block `@theme` trong `theme.css` (sau `@import "tailwindcss"`):
+### Task 3.2: Cấu hình Tailwind v4 vào build pipeline
+**1. Verify:**
+- `theme.css` thiếu `@import "tailwindcss"`. `index.tsx` chưa import file css nào.
+- Ứng dụng đang phụ thuộc 100% vào CDN runtime.
+
+**2. Implement (GREEN):**
+Sửa file `ontap-web/theme.css`, chèn ở đầu:
 ```css
 @import "tailwindcss";
 
@@ -152,92 +92,39 @@ Tạo block `@theme` trong `theme.css` (sau `@import "tailwindcss"`):
 }
 ```
 
-#### Bước 3: Build thử → So sánh UI → Xóa CDN
-1. Chạy `npm run build` — kiểm tra bundle CSS có chứa các utility class.
-2. Chạy `npm run preview` — so sánh giao diện trước/sau.
-3. Nếu OK → Xóa dòng 11 (CDN script) + block dòng 29-98 (inline config) trong `index.html`.
-4. Nếu UI vỡ → Rollback, giữ CDN tạm, debug tiếp.
+Sửa file `ontap-web/index.tsx`, thêm import:
+```tsx
+import './theme.css';
+```
 
-#### Bước 3: Gỡ bỏ CDN script & Kiểm tra hồi quy giao diện
-Sau khi bản dựng build tạo ra bundle CSS đầy đủ (kích thước file CSS tăng lên phản ánh toàn bộ utility classes đã được compile), tiến hành xóa dòng 11 và khối script dòng 29-98 trong [index.html](file:///d:/Antigravity/TNDNB/ontap-web/index.html):
-`diff
---- a/ontap-web/index.html
-+++ b/ontap-web/index.html
-@@ -10,3 +10,0 @@
--
--  <script src=https://cdn.tailwindcss.com></script>
--  <link rel=preconnect href=https://fonts.googleapis.com>
-@@ -28,71 +25,0 @@
--  <script>
--    tailwind.config = {
--      theme: {
--        extend: {
--          fontFamily: {
--...
--          }
--        }
--      }
--    }
--  </script>
-`
+**3. Verify PASS:**
+- Chạy `npm run build`, bundle CSS chứa các class tailwind (file size tăng).
 
----
+### Task 3.3: Gỡ bỏ Tailwind CDN script trong index.html
+**1. Verify:** File `index.html` chứa `<script src="https://cdn.tailwindcss.com"></script>` và config inline dài. Chỉ thực hiện khi Task 3.2 pass.
 
-## 4. Bug 6: Xóa Fetch Event Listener Rỗng Trong Service Worker (🟡 Low)
+**2. Implement (GREEN):**
+Sửa file `ontap-web/index.html`:
+- Xóa dòng 11: `<script src="https://cdn.tailwindcss.com"></script>`
+- Xóa block từ dòng `<script>` chứa `tailwind.config = { ... }` đến `</script>`.
 
-### 4.1. Phân tích nguyên nhân
-- **Tập tin**:
-  - [ontap-web/public/sw-pwa.js](file:///d:/Antigravity/TNDNB/ontap-web/public/sw-pwa.js) (Dòng 3)
-  - [public/ontap/sw-pwa.js](file:///d:/Antigravity/TNDNB/public/ontap/sw-pwa.js) (Dòng 3)
-- **Hiện tượng**:
-  Đoạn mã hiện tại:
-  `javascript
-  self.addEventListener('install', (e) => self.skipWaiting());
-  self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
-  self.addEventListener('fetch', (e) => { /* passthrough mặc định, không cache */ });
-  `
-  Listener etch rỗng không thực hiện bất kỳ tác vụ lưu cache nào. Tuy nhiên, việc đăng ký một listener etch buộc trình duyệt phải khởi động thread của Service Worker cho mỗi một yêu cầu mạng, gây chậm trễ vi mô và Chrome DevTools đưa ra cảnh báo về hiệu năng.
+**3. Verify PASS:**
+- Chạy `npm run preview`. Giao diện giữ nguyên, không vỡ.
+- Cảnh báo "cdn.tailwindcss.com should not be used in production" biến mất.
 
-### 4.2. Giải pháp thực hiện
-Xóa dòng số 3 trong cả 2 file sw-pwa.js:
-`diff
---- a/ontap-web/public/sw-pwa.js
-+++ b/ontap-web/public/sw-pwa.js
-@@ -1,4 +1,3 @@
- self.addEventListener('install', (e) => self.skipWaiting());
- self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
--self.addEventListener('fetch', (e) => { /* passthrough mặc định, không cache */ });
-`
-*(Thực hiện tương tự cho public/ontap/sw-pwa.js).*
+### Task 3.4: Xóa fetch event listener rỗng trong Service Worker
+**1. Verify:** Có fetch listener rỗng `self.addEventListener('fetch', (e) => { ... });` trong 2 file `sw-pwa.js`.
 
----
+**2. Implement (GREEN):**
+Xóa dòng `self.addEventListener('fetch', ...)` trong:
+- `ontap-web/public/sw-pwa.js`
+- `public/ontap/sw-pwa.js`
 
-## 5. Kế Hoạch Kiểm Thử & Nghiệm Thu Phase 3
+**3. Verify PASS:**
+- Mở DevTools -> Application -> Service Workers. Không còn cảnh báo fetch listener rỗng.
 
-1. **Kiểm tra bản dựng build**:
-   `ash
-   cd d:\Antigravity\TNDNB\ontap-web
-   npm run build
-   `
-   *Yêu cầu*: Build thành công, file CSS được bundle tĩnh không lỗi.
-
-2. **Kiểm tra trực quan (Visual Regression Test)**:
-   - Mở bản preview: 
-pm run preview.
-   - Kiểm tra các màn hình: Trang chủ Dashboard, Thi trắc nghiệm, Quản lý tài khoản, Hộp thư.
-   - *Yêu cầu*: Màu sắc, nút bấm, modal, icon và layout hiển thị chuẩn xác 100%, không mất style.
-
-3. **Kiểm tra DevTools Console & PWA**:
-   - Mở tab Console: Không còn cảnh báo cdn.tailwindcss.com should not be used in production.
-   - Mở tab Application -> Service Workers: Không có cảnh báo về fetch listener rỗng.
-   - Mở tab Application -> Manifest: Không có cảnh báo lệch kích thước icon.
-
----
-
-## 6. Danh Sách Tập Tin Tác Động Trong Phase 3
-- [ontap-web/public/manifest.json](file:///d:/Antigravity/TNDNB/ontap-web/public/manifest.json)
-- [public/ontap/manifest.json](file:///d:/Antigravity/TNDNB/public/ontap/manifest.json)
-- [ontap-web/postcss.config.cjs](file:///d:/Antigravity/TNDNB/ontap-web/postcss.config.cjs)
-- [ontap-web/index.html](file:///d:/Antigravity/TNDNB/ontap-web/index.html)
-- [ontap-web/public/sw-pwa.js](file:///d:/Antigravity/TNDNB/ontap-web/public/sw-pwa.js)
-- [public/ontap/sw-pwa.js](file:///d:/Antigravity/TNDNB/public/ontap/sw-pwa.js)
+### Task 3.5: Commit chung Phase 3
+```bash
+git add ontap-web/public/manifest.json public/ontap/manifest.json ontap-web/theme.css ontap-web/index.tsx ontap-web/index.html ontap-web/public/sw-pwa.js public/ontap/sw-pwa.js
+git commit -m "fix: cleanup manifest icons, migrate Tailwind to build-time, remove no-op SW fetch"
+```
