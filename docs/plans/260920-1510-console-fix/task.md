@@ -13,20 +13,20 @@
 ### Phase 1: Ổn Định Điều Hướng & Bọc Lỗi Giao Diện (TopNavbar & ErrorBoundary)
 Tài liệu: [phase-01-topnavbar-fix.md](../../../docs/plans/260920-1510-console-fix/phase-01-topnavbar-fix.md)
 
-- [ ] **Task 1.1: Khắc phục lỗi hiển thị Promise trong TopNavbar**
-  - [ ] Khởi tạo state `latestVersion`.
-  - [ ] Thêm `useEffect` để fetch version và gán vào state.
-  - [ ] Cập nhật hiển thị thành `{latestVersion}`.
-  - [ ] Kiểm tra lỗi: Không còn hiện `[object Promise]`.
-- [ ] **Task 1.2: Tạo mới component ErrorBoundary**
-  - [ ] Tạo file `ErrorBoundary.tsx`.
-  - [ ] Định nghĩa class component `ErrorBoundary`.
-- [ ] **Task 1.3: Tích hợp ErrorBoundary bọc TopNavbar và AlertMarquee**
-  - [ ] Import `ErrorBoundary` vào `App.tsx`.
-  - [ ] Bọc `TopNavbar` và `AlertMarquee` với `ErrorBoundary`.
-  - [ ] Chạy `npx tsc --noEmit` xác nhận pass.
-- [ ] **Task 1.4: Commit chung Phase 1**
-  - [ ] Thực thi lệnh: `git commit -m "fix: resolve async JSX in TopNavbar, add ErrorBoundary"`
+- [x] **Task 1.1: Khắc phục lỗi hiển thị Promise trong TopNavbar**
+  - [x] Khởi tạo state `latestVersion`.
+  - [x] Thêm `useEffect` để fetch version và gán vào state.
+  - [x] Cập nhật hiển thị thành `{latestVersion}`.
+  - [x] Kiểm tra lỗi: Không còn hiện `[object Promise]`.
+- [x] **Task 1.2: Tạo mới component ErrorBoundary**
+  - [x] Tạo file `ErrorBoundary.tsx`.
+  - [x] Định nghĩa class component `ErrorBoundary`.
+- [x] **Task 1.3: Tích hợp ErrorBoundary bọc TopNavbar và AlertMarquee**
+  - [x] Import `ErrorBoundary` vào `App.tsx`.
+  - [x] Bọc `TopNavbar` và `AlertMarquee` với `ErrorBoundary`.
+  - [x] Chạy `cd ontap-web && npx tsc --noEmit` xác nhận pass.
+- [x] **Task 1.4: Commit chung Phase 1**
+  - [x] Thực thi lệnh: `git commit -m "fix: resolve async JSX in TopNavbar, add ErrorBoundary"`
 
 ---
 

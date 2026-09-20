@@ -1,132 +1,19 @@
 {
-  "meta": {
-    "schema_version": "1.1.0",
-    "awf_version": "4.0.2"
-  },
-  "project": {
-    "name": "TNDNB",
-    "type": "Monorepo (Next.js + Electron)",
-    "status": "active"
-  },
-  "tech_stack": {
-    "frontend": {
-      "framework": "React / Vite / Tailwind",
-      "routing": "react-router-dom",
-      "state_management": "zustand"
-    },
-    "backend": {
-      "database": "Firebase Firestore & Realtime DB",
-      "auth": "Firebase Auth",
-      "offline_data": "questions_db.json (1.6MB JSON local file)"
-    },
-    "mobile_desktop": {
-      "desktop": "Electron",
-      "mobile": "Capacitor"
-    }
-  },
-  "database_schema": {
-    "summary": "Firebase với thông tin lớp học, học sinh, đề thi, cấu hình và giới hạn lượt làm bài. Local storage sử dụng Dexie để cache và questions_db.json để làm bài offline."
-  },
-  "api_endpoints": [
-    {
-      "path": "/api/admin/reset-password",
-      "explained": "Giao tiếp với Firebase Admin SDK để sửa Auth Password và cập nhật lại Firestore password map"
-    },
-    {
-      "path": "/api/weather",
-      "explained": "Nhận lat/lon từ client, gọi WeatherAPI để lấy thời tiết hiện tại và trả về lời khuyên ôn thi thông minh tiếng Việt (hoặc mock data nếu lỗi/thiếu key)."
-    }
-  ],
-  "business_rules": [
-    {
-      "rule": "Offline support requires explicit toggle per student",
-      "description": "Cột sóng icon in ClassManagement"
-    },
-    {
-      "rule": "Phân tách vai trò Lãnh đạo và Quản lý",
-      "description": "Vai trò lanh_dao dùng key cấu hình leader, quan_ly dùng key manager để thiết lập quyền độc làm"
-    },
-    {
-      "rule": "Bật/Tắt Quảng Cáo Portal",
-      "description": "Quảng cáo trang chủ Next.js Portal được điều khiển động qua cấu hình showPortalAds trong Firestore (settings/usage_config) thông qua component PortalAdLoader."
-    },
-    {
-      "rule": "Bảo vệ tài khoản AdSense (Anti-click chọn lọc)",
-      "description": "Sử dụng pointer-events: none cho In-page ads (giữ hiển thị để lấy Impression) và pointer-events: auto cho Overlay ads (Vignette, Anchor) để user tắt/ẩn được bình thường."
-    }
-  ],
-  "features": [
-    {
-      "name": "Hệ thống Ôn tập Windows (Electron)",
-      "status": "implemented",
-      "details": "Chế độ ôn tập offline hoàn toàn dùng JSON local. Hỗ trợ đồng bộ kết quả thi về Firebase khi có mạng."
-    },
-    {
-      "name": "Portal Ad Dynamic Config",
-      "status": "implemented",
-      "details": "Bật/tắt động quảng cáo Adsterra trên Next.js Portal mà không ảnh hưởng tới trang ôn tập."
-    },
-    {
-      "name": "AdSense Shield (Selective Click Blocker)",
-      "status": "implemented",
-      "details": "Chặn click chọn lọc (in-page vs overlay) bằng cách tiêm CSS 2 tầng qua adBlockerStyles.ts chung. Mở khóa pointer-events cho các element fixed để tránh liệt nút Close/Ẩn."
-    },
-    {
-      "name": "Weather Widget & Smart Advice",
-      "status": "implemented",
-      "details": "Tích hợp Widget thời tiết hiển thị tại Dashboard chính cho cả bản Web và Windows. Tự động lấy vị trí thực tế của người dùng và sinh lời khuyên học tập dựa trên nhiệt độ/thời tiết."
-    },
-    {
-      "name": "Chặn Route Nghiêm Ngặt (Client Route Guards)",
-      "status": "implemented",
-      "details": "Sử dụng component ProtectedRoute để bảo vệ 6 route admin nhạy cảm nhầm chặn tuyệt đối học sinh tự ý truy cập URL trực tiếp."
-    },
-    {
-      "name": "Bộ Đếm Ngược Bảo Trì Real-time",
-      "status": "implemented",
-      "details": "Đếm ngược thời gian thực trên MaintenanceScreen thông qua hook useCountdown và input datetime picker trong UsageConfigPanel của admin."
-    },
-    {
-      "name": "Hệ thống Gamification v2.0 & Huy hiệu 3D (Badge Role & Admin Manager)",
-      "status": "implemented",
-      "details": "Hiển thị tự động Role Badge cho Hồ sơ cá nhân (Admin, Lãnh đạo, Giáo viên). Bổ dung màn hình quản lý cấp/thu hồi huy hiệu thành tích của học sinh cho Admin/Lãnh đạo trong danh sách lớp. Hỗ trợ hiển thị badge dạng icon 3D với hiệu ứng confetti."
-    },
-    {
-      "name": "Chỉ báo kết nối Thời tiết (Weather Status Indicator)",
-      "status": "implemented",
-      "details": "Chỉ báo trực quan trạng thái dữ liệu (Live/Mock/Offline) với Signal/WifiOff icon và tooltip trên WeatherWidget."
-    },
-    {
-      "name": "Tích hợp script Monetag SSR",
-      "status": "implemented",
-      "details": "Nhúng script Monetag trực tiếp vào layout HTML static bằng thẻ <script> thô chèn trong head của layout.tsx để vượt qua bước verify của nhà quảng cáo."
-    },
-    {
-      "name": "Zoom toàn giao diện (UI Zoom)",
-      "status": "implemented",
-      "details": "Hook useUiZoom riêng mỗi project (Ctrl + lăn chuột / Ctrl + +/-/0, 50-200%, persist ui-zoom-scale), áp CSS zoom lên documentElement, độc lập với zoom chữ quiz. Gọi 1 dòng trong AppContent."
-    }
-  ],
-  "knowledge_items": {
-    "patterns": [
-      "Shared components between ontap-web and ontap-win",
-      "Lucide-react for iconography",
-      "Tách biệt state update của view screen khỏi Firestore listeners để tránh loop subscriptions"
-    ],
-    "gotchas": [
-      "Electron build uses ELECTRON_BUILD=true causing 'base: ./' in vite config to support file:// urls",
-      "Missing icons in lucide-react result in silent ReferenceErrors causing White Screen crashes.",
-      "Lệch phiên bản eslint-config-next với NextJS (ví dụ dùng v16 trên Next v14) gây circular reference và crash next lint",
-      "CHANGELOG.md dễ bị lỗi font (mojibake) do ghi đè encoding, cần dùng script convert latin1-to-utf8.",
-      "Git index.lock có thể bị lock bởi GitHub Desktop hoặc tiến trình khác, cần giải phóng lock trước khi chạy lệnh git.",
-      "Firebase Private Credentials có thể bị lưu trong Git cache dù đã có trong .gitignore. Cần chạy git rm --cached để dọn sạch hoàn toàn.",
-      "Lỗi font (Typography broken) trong React Markdown khi render CHANGELOG.md do thiếu khoảng trắng (\\n\\n) trước các block heading (ví dụ ## [3.14.0]). Luôn ngắt dòng trước thẻ Heading.",
-      "Monetag yêu cầu crawler check trực tiếp HTML tĩnh để verify mã cài đặt, do đó bắt buộc chèn script HTML thô trực tiếp trong thẻ head của layout.tsx.",
-      "Khi xóa Release trên GitHub, GitHub API không tự động xóa Tag tương ứng, dẫn tới lỗi Validation Failed (422) khi tạo lại release trùng tag. Phải gọi API xóa Tag Ref thủ công hoặc tự động trước.",
-      "Trong ImportStudentModal.tsx, đổi tên tham số thành _file để tránh unused warning nhưng bên trong vẫn dùng biến state file gây crash do bất đồng bộ (React async state). Hãy xóa hẳn state variable nếu không dùng."
-    ],
-    "conventions": [
-      "DevTools disabled in production builds (main.cjs and UI toggle both disabled)."
-    ]
-  }
+    "features":  [
+                     "Authentication",
+                     "Quiz System",
+                     "Class Management",
+                     "GitHub Releases Auto-Update"
+                 ],
+    "project":  "TNDNB",
+    "architecture":  "Monorepo with Root Portal (Next.js), Web App (Vite), Desktop App (Electron+Vite)",
+    "tech_stack":  [
+                       "Next.js",
+                       "Vite",
+                       "React",
+                       "Electron",
+                       "TailwindCSS",
+                       "Supabase",
+                       "Firebase"
+                   ]
 }
