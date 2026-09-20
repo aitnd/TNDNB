@@ -1,8 +1,8 @@
 # Phase 2: Nâng Cao Khả Năng Chịu Lỗi Của AlertMarquee & Chính Sách Firestore Rules
 
 - **Mã kế hoạch**: 260920-1510-console-fix
-- **Kế hoạch tổng thể**: [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/plan.md)
-- **Tập tin công việc**: [task.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/task.md)
+- **Kế hoạch tổng thể**: [plan.md](../../../docs/plans/260920-1510-console-fix/plan.md)
+- **Tập tin công việc**: [task.md](../../../docs/plans/260920-1510-console-fix/task.md)
 - **Độ ưu tiên tổng thể**: 🟠 **High**
 
 ---

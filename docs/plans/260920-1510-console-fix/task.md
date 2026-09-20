@@ -1,7 +1,7 @@
 # Danh Sách Công Việc Chi Tiết (Living Task File)
 
 - **Mã kế hoạch**: 260920-1510-console-fix
-- **Kế hoạch tổng thể**: [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/plan.md)
+- **Kế hoạch tổng thể**: [plan.md](../../../docs/plans/260920-1510-console-fix/plan.md)
 - **Dự án**: TNDNB Ôn Thi (ontap-web)
 - **Ngày khởi tạo**: 20/09/2026
 - **Trạng thái**: Đang chờ thực thi (Pending)
@@ -11,7 +11,7 @@
 ## Danh Mục Công Việc Theo Phase
 
 ### Phase 1: Ổn Định Điều Hướng & Bọc Lỗi Giao Diện (TopNavbar & ErrorBoundary)
-Tài liệu: [phase-01-topnavbar-fix.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/phase-01-topnavbar-fix.md)
+Tài liệu: [phase-01-topnavbar-fix.md](../../../docs/plans/260920-1510-console-fix/phase-01-topnavbar-fix.md)
 
 - [ ] **Task 1.1: Khắc phục lỗi hiển thị Promise trong TopNavbar**
   - [ ] Khởi tạo state `latestVersion`.
@@ -31,7 +31,7 @@ Tài liệu: [phase-01-topnavbar-fix.md](file:///d:/Antigravity/TNDNB/docs/plans
 ---
 
 ### Phase 2: Nâng Cao Khả Năng Chịu Lỗi Của AlertMarquee & Chính Sách Firestore
-Tài liệu: [phase-02-marquee-resilience.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/phase-02-marquee-resilience.md)
+Tài liệu: [phase-02-marquee-resilience.md](../../../docs/plans/260920-1510-console-fix/phase-02-marquee-resilience.md)
 
 - [ ] **Task 2.1: Bọc try/catch cho hàm loadAlerts trong AlertMarquee**
   - [ ] Bọc nội dung hàm `loadAlerts` bằng khối `try/catch`.
@@ -48,7 +48,7 @@ Tài liệu: [phase-02-marquee-resilience.md](file:///d:/Antigravity/TNDNB/docs/
 ---
 
 ### Phase 3: Dọn Dẹp Cảnh Báo Môi Trường & Chuẩn Hóa PWA / Build
-Tài liệu: [phase-03-cleanup.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/phase-03-cleanup.md)
+Tài liệu: [phase-03-cleanup.md](../../../docs/plans/260920-1510-console-fix/phase-03-cleanup.md)
 
 - [ ] **Task 3.1: Đồng bộ kích thước icon trong manifest.json**
   - [ ] Đổi kích thước thành `64x64` trong `ontap-web/public/manifest.json`.

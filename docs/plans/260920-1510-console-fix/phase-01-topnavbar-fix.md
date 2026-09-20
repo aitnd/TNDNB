@@ -1,8 +1,8 @@
 # Phase 1: Khắc Phục Lỗi Async JSX Trong TopNavbar & Triển Khai ErrorBoundary
 
 - **Mã kế hoạch**: 260920-1510-console-fix
-- **Kế hoạch tổng thể**: [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/plan.md)
-- **Tập tin công việc**: [task.md](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/task.md)
+- **Kế hoạch tổng thể**: [plan.md](../../../docs/plans/260920-1510-console-fix/plan.md)
+- **Tập tin công việc**: [task.md](../../../docs/plans/260920-1510-console-fix/task.md)
 - **Độ ưu tiên tổng thể**: 🔴 **Critical** / 🟠 **High**
 
 ---
