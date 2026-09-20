@@ -42,6 +42,7 @@ import TopNavbar from '../components/TopNavbar';
 import AlertMarquee from '../components/AlertMarquee';
 import MobileBottomNav from '../components/MobileBottomNav';
 import MobileHeader from '../components/MobileHeader';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 interface AppRoutesProps {
   usageConfig: any;
@@ -144,14 +145,14 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
       )}
 
       {!isMobileApp && (
-        <>
+        <ErrorBoundary name="TopNavAndMarquee">
           <TopNavbar
             userProfile={userProfile}
             onNavigate={handleTopNavNavigate}
             onLogout={handleLogout}
           />
           <AlertMarquee />
-        </>
+        </ErrorBoundary>
       )}
 
       <AnimatePresence mode="wait">

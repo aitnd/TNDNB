@@ -1,7 +1,13 @@
 // preload.js
 const { ipcRenderer } = require('electron');
+const log = require('electron-log');
 
-let appVersion = '0.0.0'; // Fallback
+let appVersion = ''; 
+try {
+    appVersion = ipcRenderer.sendSync('get-app-version-sync');
+} catch (e) {
+    log.error('Failed to get app version synchronously', e);
+}
 
 ipcRenderer.invoke('get-app-version').then(v => {
     appVersion = v;
@@ -37,11 +43,11 @@ window.electron = {
 
 
 window.addEventListener('error', (event) => {
-    console.error('Renderer error:', event.error);
+    log.error('Renderer error:', event.error);
 });
 
 window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason);
+    log.error('Unhandled promise rejection:', event.reason);
 });
 
-console.log('Preload script loaded');
+log.info('Preload script loaded');

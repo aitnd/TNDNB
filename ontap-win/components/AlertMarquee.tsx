@@ -14,8 +14,13 @@ const AlertMarquee: React.FC = () => {
     const { userProfile } = useAppStore(state => state); // Need to import useAppStore
 
     const loadAlerts = async () => {
-        const data = await fetchActiveMarqueeNotifications(user?.uid, userProfile?.role);
-        setAlerts(data);
+        try {
+            const data = await fetchActiveMarqueeNotifications(user?.uid, userProfile?.role);
+            setAlerts(data);
+        } catch (error) {
+            console.error('Failed to load alerts in Marquee:', error);
+            setAlerts([]);
+        }
     };
 
     useEffect(() => {
@@ -36,6 +41,8 @@ const AlertMarquee: React.FC = () => {
 
         const unsubGlobal = onSnapshot(qGlobal, () => {
             loadAlerts(); // Reload all alerts (including personal) when global changes
+        }, (error) => {
+            console.error('AlertMarquee global onSnapshot error:', error);
         });
 
         // Realtime Listener for Personal Alerts (if user exists)
@@ -47,6 +54,8 @@ const AlertMarquee: React.FC = () => {
             );
             unsubPersonal = onSnapshot(qPersonal, () => {
                 loadAlerts();
+            }, (error) => {
+                console.error('AlertMarquee personal onSnapshot error:', error);
             });
         }
 
