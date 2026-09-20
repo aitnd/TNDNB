@@ -11,32 +11,32 @@ Dependencies: Phase 1, Phase 2, Phase 3
 ## Implementation Steps
 
 ### Task 4.1: Xóa dead code (Web & Win)
-- [ ] **Step 4.1.1:** Xóa `ontap-web/components/ExamQuizScreen.tsx` (~305 dòng).
-- [ ] **Step 4.1.2:** Xóa `ontap-win/components/ExamQuizScreen.tsx` (~224 dòng).
-- [ ] **Step 4.1.3:** Verify grep: `ExamQuizScreen(?!2)` = 0 import hits trong `ontap-web/` và `ontap-win/` (dùng `--include='*.tsx' --include='*.ts' --include='*.mjs'`, loại trừ `docs/`).
+- [x] **Step 4.1.1:** Xóa `ontap-web/components/ExamQuizScreen.tsx` (~305 dòng).
+- [x] **Step 4.1.2:** Xóa `ontap-win/components/ExamQuizScreen.tsx` (~224 dòng).
+- [x] **Step 4.1.3:** Verify grep: `ExamQuizScreen(?!2)` = 0 import hits trong `ontap-web/` và `ontap-win/` (dùng `--include='*.tsx' --include='*.ts' --include='*.mjs'`, loại trừ `docs/`).
 
 ### Task 4.2: Rename `ExamQuizScreen2` → `ExamQuizScreen` (Web & Win)
-- [ ] **Step 4.2.1:** Đổi tên file `ExamQuizScreen2.tsx` → `ExamQuizScreen.tsx` trong `ontap-web/components/` (359 dòng) VÀ `ontap-win/components/` (293 dòng).
-- [ ] **Step 4.2.2:** Sửa code bên trong cả 2 file: 
+- [x] **Step 4.2.1:** Đổi tên file `ExamQuizScreen2.tsx` → `ExamQuizScreen.tsx` trong `ontap-web/components/` (359 dòng) VÀ `ontap-win/components/` (293 dòng).
+- [x] **Step 4.2.2:** Sửa code bên trong cả 2 file: 
   - `ExamQuizScreen2Props` → `ExamQuizScreenProps`
   - Component name + `export default`
-- [ ] **Step 4.2.3:** Cập nhật imports bên Web:
+- [x] **Step 4.2.3:** Cập nhật imports bên Web:
   - `AppRoutes.tsx:14,215,317`
   - `ThiTrucTuyenPage.tsx`
-- [ ] **Step 4.2.4:** Cập nhật imports Win:
+- [x] **Step 4.2.4:** Cập nhật imports Win:
   - `AppRoutes.tsx:15,221`
   - `ThiTrucTuyenPage.tsx:8,264`
   - `ontap-win/refactor.mjs:62` — ⚠️ Nằm trong template string generator, sửa literal không đủ. Nên **archive** file này (đã hết nhiệm vụ) hoặc xóa nếu không còn dùng.
-- [ ] **Step 4.2.5:** Grep `ExamQuizScreen2` trong `ontap-web/` và `ontap-win/` (`--include='*.tsx' --include='*.ts' --include='*.mjs'`) = 0 kết quả. Loại trừ `docs/` (có ~63 hits lịch sử là bình thường).
+- [x] **Step 4.2.5:** Grep `ExamQuizScreen2` trong `ontap-web/` và `ontap-win/` (`--include='*.tsx' --include='*.ts' --include='*.mjs'`) = 0 kết quả. Loại trừ `docs/` (có ~63 hits lịch sử là bình thường).
 
 ### Task 4.3: Fix `QuizScreen.tsx` (Ôn tập) — Supersede Phase 2.6
-- [ ] **Step 4.3.1:** **Xóa bảng checkbox (Web Only).** Ở Web `QuizScreen.tsx:224-276`. Win `QuizScreen` (~210 dòng) **không có bảng checkbox**, không cần sửa.
-- [ ] **Step 4.3.2:** **Khôi phục `onClick` an toàn.** Tại text đáp án (dòng `:191`), thêm lại hàm `handleAnswerSelect`. Tuyệt đối không xóa các class Tailwind đang phụ trách việc highlight (màu xanh cho câu đúng, màu đỏ cho câu sai khi `showReveal` = true).
-- [ ] **Step 4.3.3:** **Thêm grid điều hướng.** Copy grid nút câu hỏi từ Web `ExamQuizScreen2:326-343` (KHÔNG phải 282-320 — đó là bảng table). Win không có grid này. Ràng buộc nút chỉ gọi `setCurrentQuestionIndex`, không làm thay đổi đáp án.
+- [x] **Step 4.3.1:** **Xóa bảng checkbox (Web Only).** Ở Web `QuizScreen.tsx:224-276`. Win `QuizScreen` (~210 dòng) **không có bảng checkbox**, không cần sửa.
+- [x] **Step 4.3.2:** **Khôi phục `onClick` an toàn.** Tại text đáp án (dòng `:191`), thêm lại hàm `handleAnswerSelect`. Tuyệt đối không xóa các class Tailwind đang phụ trách việc highlight (màu xanh cho câu đúng, màu đỏ cho câu sai khi `showReveal` = true).
+- [x] **Step 4.3.3:** **Thêm grid điều hướng.** Copy grid nút câu hỏi từ Web `ExamQuizScreen2:326-343` (KHÔNG phải 282-320 — đó là bảng table). Win không có grid này. Ràng buộc nút chỉ gọi `setCurrentQuestionIndex`, không làm thay đổi đáp án.
 
 ### Task 4.4: Mobile Option A (Web Only)
-- [ ] **Step 4.4.1:** Trong `ExamQuizScreen` Web, code hiện tại **đã dùng `isMobileApp`** ở 5 chỗ (dòng 72, 208, 214, 216, 282, 326) cho Capacitor native app. Bổ sung thêm CSS `md:pointer-events-none` trên text đáp án để **mobile browser** (nơi `isMobileApp=false`) cũng click được. Hai cơ chế bổ trợ nhau: native app dùng `isMobileApp`, mobile browser dùng `md:` breakpoint.
-- [ ] **Step 4.4.2:** Desktop Win: Giữ nguyên (luôn hiện bảng, text read-only, không có responsive).
+- [x] **Step 4.4.1:** Trong `ExamQuizScreen` Web, code hiện tại **đã dùng `isMobileApp`** ở 5 chỗ (dòng 72, 208, 214, 216, 282, 326) cho Capacitor native app. Bổ sung thêm CSS `md:pointer-events-none` trên text đáp án để **mobile browser** (nơi `isMobileApp=false`) cũng click được. Hai cơ chế bổ trợ nhau: native app dùng `isMobileApp`, mobile browser dùng `md:` breakpoint.
+- [x] **Step 4.4.2:** Desktop Win: Giữ nguyên (luôn hiện bảng, text read-only, không có responsive).
 
 ## Manual QA Checklist
 1. **Grep & Build:** 

@@ -22,10 +22,10 @@
 - [x] **2.5** Manual Check: Kết quả → chỉ 1 scrollbar, danh sách câu hỏi expand tự nhiên
 
 ### Web Answer Sheet Redesign
-- [ ] **2.6** [`QuizScreen.tsx:170-184`](file:///d:/Antigravity/TNDNB/ontap-web/components/QuizScreen.tsx#L170-L184): ~~Tách text → div read-only, thêm bảng 5 cột checkbox~~ — ⚠️ **Superseded by 4.3** (xóa bảng, khôi phục onClick)
+- [x] **2.6** [`QuizScreen.tsx:170-184`](file:///d:/Antigravity/TNDNB/ontap-web/components/QuizScreen.tsx#L170-L184): ~~Tách text → div read-only, thêm bảng 5 cột checkbox~~ — ⚠️ **Superseded by 4.3** (xóa bảng, khôi phục onClick)
 - [x] **2.7** [`ExamQuizScreen.tsx:176-188`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx#L176-L188): Refactor tương tự 2.6 (Fixed Bug 2) — file sẽ bị xóa ở 4.1
-- [ ] **2.8** [`ExamQuizScreen2.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen2.tsx): ~~Disable `onClick` trên text~~ — ⚠️ **Superseded by 4.4** (mobile cho phép click text)
-- [ ] **2.9** ~~Click text → KHÔNG phản hồi~~ — ⚠️ **Superseded by 4.3/4.4** (click text SẼ phản hồi trên Ôn tập + Mobile)
+- [x] **2.8** [`ExamQuizScreen2.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen2.tsx): ~~Disable `onClick` trên text~~ — ⚠️ **Superseded by 4.4** (mobile cho phép click text)
+- [x] **2.9** ~~Click text → KHÔNG phản hồi~~ — ⚠️ **Superseded by 4.3/4.4** (click text SẼ phản hồi trên Ôn tập + Mobile)
 
 ### Tray Context Menu (Electron)
 - [x] **2.10** [`main.cjs:196-218`](file:///d:/Antigravity/TNDNB/ontap-win/electron/main.cjs#L196-L218): Mở rộng `createTray()`
@@ -47,7 +47,7 @@
 - [x] **3.2.2** Fail-fast & Rollback: Nếu lỗi bất kỳ file nào -> `deleteRelease`/`deleteTag`, không lưu `app_links`. Nếu thành công 100% -> `saveUsageConfig`.
 
 ### 3.3 Security Audit & Cleanup
-- [x] **3.3.1** Chuyển keys sang ENV (Web dùng `NEXT_PUBLIC_`, Node dùng `process.env`). Cập nhật `supabaseClient.ts`, `fetchData.js`, `download-question-images.mjs`, `verify_upload.cjs`, `upload_giamkhao.cjs`.
+- [x] **3.3.1** Chuyển keys sang ENV (Web dùng `VITE_`, Node dùng `process.env`). Cập nhật `supabaseClient.ts`, `fetchData.js`, `download-question-images.mjs`, `verify_upload.cjs`, `upload_giamkhao.cjs`.
 - [x] **3.3.2** Verify grep hardcode = 0 (loại trừ `.env`, `docs/`, `.env.example`, `.vscode/`, `assets/`).
 - [x] **3.3.3** Rotate anonKey trên Supabase và cấu hình RLS TND bucket (Read public, Write admin).
 
@@ -82,6 +82,6 @@
 
 ## Phase 5: Release v3.19.2 (via `/tndnb-build`)
 - [x] **5.1** Preconditions: Token GitHub hợp lệ, source tree sạch, Phase 1-4 PASS.
-- [ ] **5.2** Chạy workflow `/tndnb-build` — Tự động: bump version, ghi changelog, build 3 project, QA Loop 4 agents, commit.
-- [ ] **5.3** Đảm bảo GitHub Release đã Publish (không phải Draft) và đủ 3 file (exe, blockmap, yml).
-- [ ] **5.4** Verify: App cũ (v3.19.1) nhận thông báo cập nhật v3.19.2 từ GitHub (chờ `latest.yml` khớp version).
+- [x] **5.2** Chạy workflow `/tndnb-build` — Tự động: bump version, ghi changelog, build 3 project, QA Loop 4 agents, commit.
+- [x] **5.3** Đảm bảo GitHub Release đã Publish (không phải Draft) và đủ 3 file (exe, blockmap, yml).
+- [x] **5.4** Verify: App cũ (v3.19.1) nhận thông báo cập nhật v3.19.2 từ GitHub (chờ `latest.yml` khớp version).

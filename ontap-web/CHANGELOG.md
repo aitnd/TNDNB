@@ -1,5 +1,13 @@
-ï»¿## [3.19.1] - 2026-09-19
-### Kháº¯c phá»¥c Cáº­p nháº­t (Web & App Win)
-- **Check Update Tá»©c ThÃ¬:** Kháº¯c phá»¥c lá»—i hiá»ƒn thá»‹ sai phiÃªn báº£n má»›i nháº¥t. á»¨ng dá»¥ng nay láº¥y dá»¯ liá»‡u cáº­p nháº­t trá»±c tiáº¿p tá»« MÃ¡y chá»§ ÄÃ¡m mÃ¢y (Supabase) thay vÃ¬ Ä‘á»c file tÄ©nh cá»¥c bá»™.
-- **Admin KÃ©o Tháº£:** Ra máº¯t cÃ´ng cá»¥ KÃ©o-Tháº£ quáº£n lÃ½ á»©ng dá»¥ng cho Admin, giÃºp Ä‘Ã³ng gÃ³i vÃ  phÃ¡t hÃ nh dá»… dÃ ng hÆ¡n bao giá» háº¿t.
+## [3.19.2] - 2026-09-20
+### T?i uu Hi?n th? & Nâng c?p H? th?ng (Web & App Win)
+- **S?a l?i giao di?n:** Kh?c ph?c l?i thanh di?u hu?ng che khu?t n?i dung, lo?i b? thanh cu?n th?a ? trang k?t qu? giúp xem mu?t mà hon.
+- **T?i uu B?ng dáp án:** B?ng ch?n dáp án Ôn t?p & Thi th? du?c tinh ch?nh d? d? nhìn hon, t?i uu tuong tác trên c? máy tính và di?n tho?i.
+- **Ti?n ích h? th?ng (Win):** B? sung menu chu?t ph?i (Tray Icon) cho phép b?t t?t "Kh?i d?ng cùng Windows" và ki?m tra c?p nh?t nhanh.
+- **C?p nh?t nhanh & An toàn hon:** Co ch? ki?m tra phiên b?n m?i du?c t?i uu hoá, d?m b?o ngu?i dùng luôn nh?n b?n c?p nh?t ?n d?nh nh?t.
+
+## [3.19.1] - 2026-09-19
+### Kh?c ph?c C?p nh?t (Web & App Win)
+- **Check Update T?c Thì:** Kh?c ph?c l?i hi?n th? sai phiên b?n m?i nh?t. ?ng d?ng nay l?y d? li?u c?p nh?t tr?c ti?p t? Máy ch? Ğám mây (Supabase) thay vì d?c file tinh c?c b?.
+- **Admin Kéo Th?:** Ra m?t công c? Kéo-Th? qu?n lı ?ng d?ng cho Admin, giúp dóng gói và phát hành d? dàng hon bao gi? h?t.
+
 
