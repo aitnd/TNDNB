@@ -17,6 +17,13 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
     const [showChangelog, setShowChangelog] = React.useState(false);
     const [showLinksDropdown, setShowLinksDropdown] = React.useState(false);
     const [showSystemDropdown, setShowSystemDropdown] = React.useState(false);
+    const [latestVersion, setLatestVersion] = React.useState<string>('...');
+
+    React.useEffect(() => {
+        getLatestVersion()
+            .then((ver) => setLatestVersion(ver))
+            .catch(() => setLatestVersion('3.19.2'));
+    }, []);
 
     return (
         <>
@@ -165,7 +172,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                     onClick={() => setShowChangelog(true)}
                                     className="text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors"
                                 >
-                                    v{getLatestVersion()}
+                                    v{latestVersion}
                                 </button>
                             </div>
 
