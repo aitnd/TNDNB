@@ -9,8 +9,8 @@
 
 | Phase | Tên Phase | Trạng thái |
 |---|---|---|
-| Phase 1 | Ổn Định Điều Hướng & Bọc Lỗi Giao Diện | Đang chờ |
-| Phase 2 | Nâng Cao Khả Năng Chịu Lỗi AlertMarquee | Đang chờ |
-| Phase 3 | Dọn Dẹp Cảnh Báo Môi Trường & Chuẩn Hóa | Đang chờ |
-| Phase 4 | Nâng Cao Độ Ổn Định Cho Bản Electron (Win) | Đang chờ |
-| Phase 5 | Kiểm Thử Toàn Diện & Nghiệm Thu | Đang chờ |
+| Phase 1 | Ổn Định Điều Hướng & Bọc Lỗi Giao Diện | Hoàn thành |
+| Phase 2 | Nâng Cao Khả Năng Chịu Lỗi AlertMarquee | Hoàn thành |
+| Phase 3 | Dọn Dẹp Cảnh Báo Môi Trường & Chuẩn Hóa | Hoàn thành |
+| Phase 4 | Nâng Cao Độ Ổn Định Cho Bản Electron (Win) | Hoàn thành |
+| Phase 5 | Kiểm Thử Toàn Diện & Nghiệm Thu | Hoàn thành |

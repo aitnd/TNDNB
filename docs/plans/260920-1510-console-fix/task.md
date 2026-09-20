@@ -4,7 +4,7 @@
 - **Kế hoạch tổng thể**: [plan.md](../../../docs/plans/260920-1510-console-fix/plan.md)
 - **Dự án**: TNDNB Ôn Thi (ontap-web)
 - **Ngày khởi tạo**: 20/09/2026
-- **Trạng thái**: Đang chờ thực thi (Pending)
+- **Trạng thái**: Hoàn thành (Completed)
 
 ---
 
@@ -92,3 +92,4 @@ Tài liệu: [phase-04-win-resilience.md](../../../docs/plans/260920-1510-consol
 - [x] **Task 5.1: Kiểm tra lỗi kiểu tĩnh với TypeScript** (`npx tsc --noEmit`)
 - [x] **Task 5.2: Đóng gói kiểm tra bản dựng Production** (`npm run build`)
 - [x] **Task 5.3: Kiểm thử runtime trên trình duyệt với DevTools** (`npm run preview`)
+- [x] **Task 5.4: Cập nhật tài liệu & Evidence** (Đã tạo `build_report.md`)
