@@ -50,22 +50,22 @@ Tài liệu: [phase-02-marquee-resilience.md](../../../docs/plans/260920-1510-co
 ### Phase 3: Dọn Dẹp Cảnh Báo Môi Trường & Chuẩn Hóa PWA / Build
 Tài liệu: [phase-03-cleanup.md](../../../docs/plans/260920-1510-console-fix/phase-03-cleanup.md)
 
-- [ ] **Task 3.1: Đồng bộ kích thước icon trong manifest.json**
-  - [ ] Đổi kích thước thành `64x64` trong `ontap-web/public/manifest.json`.
-  - [ ] Đổi kích thước thành `64x64` trong `public/ontap/manifest.json`.
-- [ ] **Task 3.2: Cấu hình Tailwind v4 vào build pipeline**
-  - [ ] Thêm `@import "tailwindcss";` và `@theme` block vào `theme.css`.
-  - [ ] Thêm `import './theme.css';` vào `index.tsx`.
-- [ ] **Task 3.3: Gỡ bỏ Tailwind CDN script và inline config trong index.html**
-  - [ ] Xác nhận Task 3.2 build thành công.
-  - [ ] Xóa script CDN ở dòng 11 của `index.html`.
-  - [ ] Xóa block cấu hình `tailwind.config` trong `index.html`.
-  - [ ] Kiểm tra layout không bị vỡ.
-- [ ] **Task 3.4: Xóa fetch event listener rỗng trong Service Worker**
-  - [ ] Xóa event fetch trong `ontap-web/public/sw-pwa.js`.
-  - [ ] Xóa event fetch trong `public/ontap/sw-pwa.js`.
-- [ ] **Task 3.5: Commit Phase 3**
-  - [ ] Thực thi lệnh: `git commit -m "fix: cleanup manifest icons, migrate Tailwind to build-time, remove no-op SW fetch"`
+- [x] **Task 3.1: Tạo icon chuẩn cho PWA (192x192 & 512x512)**
+  - [x] Resize `icon-192.png` về đúng 192x192.
+  - [x] Resize `icon-512.png` về đúng 512x512.
+- [x] **Task 3.2: Cấu hình Tailwind v4 vào build pipeline**
+  - [x] Thêm `@import "tailwindcss";` và `@theme` block vào `theme.css`.
+  - [x] Thêm `import './theme.css';` vào `index.tsx`.
+- [x] **Task 3.3: Gỡ bỏ Tailwind CDN script và inline config trong index.html**
+  - [x] Xác nhận Task 3.2 build thành công.
+  - [x] Xóa script CDN ở dòng 11 của `index.html`.
+  - [x] Xóa block cấu hình `tailwind.config` trong `index.html`.
+  - [x] Kiểm tra layout không bị vỡ.
+- [x] **Task 3.4: Xóa fetch event listener rỗng trong Service Worker**
+  - [x] Xóa event fetch trong `ontap-web/public/sw-pwa.js`.
+  - [x] Xóa event fetch trong `public/ontap/sw-pwa.js`.
+- [x] **Task 3.5: Commit Phase 3**
+  - [x] Thực thi lệnh: `git commit -m "fix: migrate Tailwind to build-time, remove no-op SW fetch"`
 
 ---
 
