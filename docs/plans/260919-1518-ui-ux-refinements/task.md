@@ -10,7 +10,7 @@
 - [x] **1.3** Verify MobileHeader spacing (Fixed Bug 1)
   - [x] Win: Kiểm tra `MobileHeader.tsx` (chiều cao tự động + safe-area). `pt-20` có thể bị thiếu nếu `AlertMarquee` hiển thị, cần tính thêm chiều cao của Marquee.
   - [x] Web: kiểm tra MobileHeader có `fixed top-0` → cần tương ứng padding
-- [ ] **1.4** Manual Check: Mở Dashboard, Quiz, Results trên cả Web/Win — nội dung không bị che
+- [x] **1.4** Manual Check: Mở Dashboard, Quiz, Results trên cả Web/Win — nội dung không bị che
 
 ## Phase 2: Implement UI (Scroll, Answer Sheet, Tray)
 
@@ -76,12 +76,12 @@
 
 ### 4.5 Manual Check & QA
 - [x] **4.5.1** Build test: `npm run build` Web pass. Win build check riêng.
-- [ ] **4.5.2** Ôn tập: Ấn text chọn đáp án, báo xanh/đỏ đúng logic, grid chuyển câu hoạt động.
-- [ ] **4.5.3** Thi thử Desktop (Win + Web ≥768px): Text read-only (pointer-events-none), tick bảng hoạt động.
-- [ ] **4.5.4** Thi thử Web Mobile (<768px): Ấn text chọn được, bảng checkbox bị ẩn.
+- [x] **4.5.2** Ôn tập: Ấn text chọn đáp án, báo xanh/đỏ đúng logic, grid chuyển câu hoạt động.
+- [x] **4.5.3** Thi thử Desktop (Win + Web ≥768px): Text read-only (pointer-events-none), tick bảng hoạt động.
+- [x] **4.5.4** Thi thử Web Mobile (<768px): Ấn text chọn được, bảng checkbox bị ẩn.
 
 ## Phase 5: Release v3.19.2 (via `/tndnb-build`)
-- [ ] **5.1** Preconditions: Token GitHub hợp lệ, source tree sạch, Phase 1-4 PASS.
+- [x] **5.1** Preconditions: Token GitHub hợp lệ, source tree sạch, Phase 1-4 PASS.
 - [ ] **5.2** Chạy workflow `/tndnb-build` — Tự động: bump version, ghi changelog, build 3 project, QA Loop 4 agents, commit.
 - [ ] **5.3** Đảm bảo GitHub Release đã Publish (không phải Draft) và đủ 3 file (exe, blockmap, yml).
 - [ ] **5.4** Verify: App cũ (v3.19.1) nhận thông báo cập nhật v3.19.2 từ GitHub (chờ `latest.yml` khớp version).
