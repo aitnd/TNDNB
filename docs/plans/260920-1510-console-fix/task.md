@@ -89,6 +89,6 @@ Tài liệu: [phase-04-win-resilience.md](../../../docs/plans/260920-1510-consol
 ---
 
 ### Phase 5: Kiểm Thử Toàn Diện & Nghiệm Thu Chất Lượng
-- [ ] **Task 5.1: Kiểm tra lỗi kiểu tĩnh với TypeScript** (`npx tsc --noEmit`)
-- [ ] **Task 5.2: Đóng gói kiểm tra bản dựng Production** (`npm run build`)
-- [ ] **Task 5.3: Kiểm thử runtime trên trình duyệt với DevTools** (`npm run preview`)
+- [x] **Task 5.1: Kiểm tra lỗi kiểu tĩnh với TypeScript** (`npx tsc --noEmit`)
+- [x] **Task 5.2: Đóng gói kiểm tra bản dựng Production** (`npm run build`)
+- [x] **Task 5.3: Kiểm thử runtime trên trình duyệt với DevTools** (`npm run preview`)
