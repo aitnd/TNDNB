@@ -43,6 +43,7 @@ const AlertMarquee: React.FC = () => {
             loadAlerts(); // Reload all alerts (including personal) when global changes
         }, (error) => {
             console.error('AlertMarquee global onSnapshot error:', error);
+            setAlerts([]);
         });
 
         // Realtime Listener for Personal Alerts (if user exists)
@@ -56,6 +57,7 @@ const AlertMarquee: React.FC = () => {
                 loadAlerts();
             }, (error) => {
                 console.error('AlertMarquee personal onSnapshot error:', error);
+                setAlerts([]);
             });
         }
 

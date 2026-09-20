@@ -1,4 +1,4 @@
-﻿# Kế hoạch tổng thể: Sửa lỗi Console & Code Quality (260920-1510)
+# Kế hoạch tổng thể: Sửa lỗi Console & Code Quality (260920-1510)
 
 ## Thông tin chung
 - **Mã kế hoạch**: 260920-1510-console-fix

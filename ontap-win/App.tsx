@@ -6,7 +6,6 @@ import SnowEffect from './components/SnowEffect';
 import SweetAlertPopup from './components/SweetAlertPopup';
 import TopNavbar from './components/TopNavbar';
 import AlertMarquee from './components/AlertMarquee';
-import ErrorBoundary from './components/ErrorBoundary';
 import MobileHeader from './components/MobileHeader';
 import MobileBottomNav from './components/MobileBottomNav';
 import { useAppStore } from './stores/useAppStore';
