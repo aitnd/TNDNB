@@ -72,19 +72,19 @@ Tài liệu: [phase-03-cleanup.md](../../../docs/plans/260920-1510-console-fix/p
 ### Phase 4: Nâng Cao Độ Ổn Định Cho Bản Electron (Win)
 Tài liệu: [phase-04-win-resilience.md](../../../docs/plans/260920-1510-console-fix/phase-04-win-resilience.md)
 
-- [ ] **Task 4.1: Kế thừa ErrorBoundary cho bản Win**
-  - [ ] Copy `ErrorBoundary.tsx` sang `ontap-win/src/components/` (nếu cần) hoặc tái sử dụng từ web.
-  - [ ] Import và bọc `<ErrorBoundary>` quanh `TopNavbar` và `AlertMarquee` trong `ontap-win/src/App.tsx` (tương tự như web).
-- [ ] **Task 4.2: Thêm try/catch và error callback cho AlertMarquee của bản win**
-  - [ ] Mở file `ontap-win/src/components/AlertMarquee.tsx`.
-  - [ ] Bọc `try/catch` cho hàm `loadAlerts` (bắt lỗi set state về mảng rỗng).
-  - [ ] Thêm error callback cho `onSnapshot`.
-- [ ] **Task 4.3: Dọn dẹp log và sửa lỗi hiển thị version trong main/preload**
-  - [ ] Mở file `ontap-win/main.cjs`, thay `console.log` bằng `log.info` (hoặc dọn dẹp log thừa).
-  - [ ] Mở file `ontap-win/preload.cjs`, thay `console.log` bằng `log.info`.
-  - [ ] Ở `ontap-win/preload.cjs` dòng 4, sửa logic để khắc phục lỗi hiển thị `0.0.0`.
-- [ ] **Task 4.4: Commit chung Phase 4**
-  - [ ] Thực thi lệnh: `git commit -m "fix: win electron resilience, error boundary, and console logs"`
+- [x] **Task 4.1: Tích hợp ErrorBoundary vào ontap-win**
+  - [x] Copy file `ErrorBoundary.tsx` sang `ontap-win`.
+  - [x] Bọc `ErrorBoundary` cho `TopNavbar` và `AlertMarquee` trong `App.tsx` (hoặc `AppRoutes.tsx`).
+- [x] **Task 4.2: Thêm try/catch & error fallback cho AlertMarquee (Win)**
+  - [x] Thêm `try/catch` bọc hàm `loadAlerts`, gọi `setAlerts([])` khi lỗi.
+  - [x] Thêm error callback cho `onSnapshot` global.
+  - [x] Thêm error callback cho `onSnapshot` personal.
+- [x] **Task 4.3: Chuẩn hóa logging trong main.cjs và preload.cjs**
+  - [x] Sửa `console.log`/`console.error` thành `log.info`/`log.error` trong `main.cjs`.
+  - [x] Sửa `console.log` thành `log.info` trong `preload.cjs`.
+  - [x] Sửa lỗi fallback `0.0.0` hiện thoáng qua ở `preload.cjs`.
+- [x] **Task 4.4: Commit chung Phase 4**
+  - [x] Thực thi lệnh: `git commit -m "fix(win): add ErrorBoundary, secure AlertMarquee, standardize electron logging"`
 
 ---
 
