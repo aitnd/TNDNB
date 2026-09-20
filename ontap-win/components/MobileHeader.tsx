@@ -7,8 +7,8 @@ interface MobileHeaderProps {
 
 const MobileHeader: React.FC<MobileHeaderProps> = ({ userProfile }) => {
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-      <div className="flex items-center justify-between px-4 h-14">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+      <div className="flex items-center justify-between px-4 h-[calc(3.5rem+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)]">
         {/* Logo and Title */}
         <div className="flex items-center gap-2">
           <img src="/assets/img/logo_viwa.png" alt="Logo" className="w-8 h-8 object-contain" />

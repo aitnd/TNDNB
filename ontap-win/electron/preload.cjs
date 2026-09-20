@@ -1,7 +1,7 @@
 // preload.js
 const { ipcRenderer } = require('electron');
 
-let appVersion = '3.8.7'; // Fallback
+let appVersion = '0.0.0'; // Fallback
 
 ipcRenderer.invoke('get-app-version').then(v => {
     appVersion = v;

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { UserProfile } from '../types';
 import { MiniRoleBadge } from './Badges/MiniRoleBadge';
 import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, Wifi, WifiOff, ChevronDown, Link2, Utensils, Gamepad2 , Compass, ShieldCheck, FileEdit, Award } from 'lucide-react';
-import ChangelogModal, { getLatestVersion } from './ChangelogModal';
+import ChangelogModal from './ChangelogModal';
 import NotificationBell from './NotificationBell';
+import { getLatestAppRelease } from '../services/UpdateService';
 
 // declare const __APP_VERSION__: string; // Removed in favor of dynamic version
 
@@ -17,6 +18,13 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
     const [showChangelog, setShowChangelog] = React.useState(false);
     const [showLinksDropdown, setShowLinksDropdown] = React.useState(false);
     const [showSystemDropdown, setShowSystemDropdown] = React.useState(false);
+    const [latestVersion, setLatestVersion] = React.useState<string>('...');
+
+    React.useEffect(() => {
+        getLatestAppRelease().then(release => {
+            if (release) setLatestVersion(release.version);
+        });
+    }, []);
 
     return (
         <>
@@ -169,9 +177,11 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                             <div className="hidden md:flex flex-col items-end mr-2">
                                 <button
                                     onClick={() => setShowChangelog(true)}
-                                    className="text-xs font-medium text-gray-500 hover:text-blue-600 transition-colors"
+                                    className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
                                 >
-                                    v{getLatestVersion()}
+                                    <span className="text-xs font-semibold">
+                                        v{latestVersion}
+                                    </span>
                                 </button>
                             </div>
 

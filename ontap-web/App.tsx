@@ -403,7 +403,7 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 ${isMobileApp ? 'pb-32' : 'pt-16'}`}>
+    <div className={`min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 ${isMobileApp ? 'pb-32 pt-[calc(3.5rem+env(safe-area-inset-top))]' : 'pt-16'}`}>
       <SweetAlertPopup />
       <Toaster position="top-right" richColors expand closeButton />
 
@@ -423,7 +423,6 @@ const AppContent: React.FC = () => {
             onLogout={handleLogout}
           />
           <AlertMarquee />
-          <div className="pt-16" />
         </>
       )}
 

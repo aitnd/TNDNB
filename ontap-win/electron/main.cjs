@@ -200,20 +200,54 @@ function createTray(mainWindow) {
       : path.join(__dirname, '../dist/assets/img/logo1.ico');
 
     tray = new Tray(nativeImage.createFromPath(iconPath));
-    const contextMenu = Menu.buildFromTemplate([
-      { label: 'Mở ứng dụng', click: () => mainWindow.show() },
-      { label: 'Thoát', click: () => { app.isQuitting = true; app.quit(); } }
-    ]);
+
+    const buildContextMenu = () => {
+        const loginSettings = app.getLoginItemSettings();
+        const isAutoStart = loginSettings.openAtLogin;
+
+        return Menu.buildFromTemplate([
+            { label: 'Mở ứng dụng', click: () => { mainWindow.show(); mainWindow.focus(); } },
+            { type: 'separator' },
+            {
+                label: `Khởi động cùng Windows (${isAutoStart ? 'Bật' : 'Tắt'})`,
+                click: () => {
+                    app.setLoginItemSettings({
+                        openAtLogin: !isAutoStart,
+                        path: app.getPath('exe')
+                    });
+                    tray.setContextMenu(buildContextMenu());
+                }
+            },
+            {
+                label: 'Kiểm tra cập nhật',
+                click: () => {
+                    if (autoUpdater) {
+                        autoUpdater.checkForUpdates().catch(err => {
+                            log.error('Manual update check failed:', err);
+                        });
+                    } else {
+                        dialog.showMessageBox(mainWindow, {
+                            type: 'info',
+                            title: 'Cập nhật',
+                            message: 'Không thể kiểm tra cập nhật trong chế độ phát triển.'
+                        });
+                    }
+                }
+            },
+            { type: 'separator' },
+            { label: 'Thoát', click: () => { app.isQuitting = true; app.quit(); } }
+        ]);
+    };
+
     tray.setToolTip('TNDNB - Ôn Thi');
-    tray.setContextMenu(contextMenu);
-    tray.on('click', () => mainWindow.show());
-    
-    // Thu nhỏ xuống khay thay vì tắt
+    tray.setContextMenu(buildContextMenu());
+    tray.on('click', () => { mainWindow.show(); mainWindow.focus(); });
+
     mainWindow.on('close', (e) => {
-      if (!app.isQuitting) {
-        e.preventDefault();
-        mainWindow.hide();
-      }
+        if (!app.isQuitting) {
+            e.preventDefault();
+            mainWindow.hide();
+        }
     });
 }
 

@@ -2,39 +2,20 @@ import * as React from 'react';
 import { X, Shield, Smartphone, Rocket, Zap, Monitor, Layout, Code, RefreshCw, Download, CheckCircle, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
 import { shouldUpdateQuestions } from '../services/dataService';
 import { fetchAndSaveQuestions } from '../services/syncService';
-// @ts-ignore
-import changelogRaw from '../CHANGELOG.md?raw';
+import { getGitHubReleases } from '../services/UpdateService';
+import { isVersionLower } from '../utils/versionUtils';
 
 interface ChangelogModalProps {
   onClose: () => void;
 }
 
-// 💖 Phân tích dữ liệu từ file MD
-const CHANGELOG_DATA: ChangelogVersion[] = parseChangelog(changelogRaw);
-
-export const getLatestVersion = () => {
-  return CHANGELOG_DATA[0]?.version || '3.0.0';
-};
-
-// So sánh version (trả về true nếu v1 < v2)
-const isVersionLower = (v1: string, v2: string): boolean => {
-  const parts1 = v1.split('.').map(Number);
-  const parts2 = v2.split('.').map(Number);
-  for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
-    const p1 = parts1[i] || 0;
-    const p2 = parts2[i] || 0;
-    if (p1 < p2) return true;
-    if (p1 > p2) return false;
-  }
-  return false;
-};
-
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const [currentVersion, setCurrentVersion] = React.useState<string>('...');
+  const [latestVersion, setLatestVersion] = React.useState<string>('...');
+  const [appReleases, setAppReleases] = React.useState<any[]>([]);
   const [updateStatus, setUpdateStatus] = React.useState<'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'error'>('idle');
   const [downloadProgress, setDownloadProgress] = React.useState<number>(0);
   const [errorMessage, setErrorMessage] = React.useState<string>('');
@@ -67,8 +48,28 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
     });
   };
 
-  const latestVersion = getLatestVersion();
-
+  React.useEffect(() => {
+    getGitHubReleases().then(releases => {
+      if (releases.length > 0) {
+        setLatestVersion(releases[0].version);
+        const parsed = releases.map((rel, index) => ({
+          version: rel.version,
+          date: new Date(rel.created_at || Date.now()).toLocaleDateString('vi-VN'),
+          isLatest: index === 0,
+          sections: [
+            {
+              icon: Rocket,
+              title: 'Cập nhật',
+              color: 'text-blue-500',
+              bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+              items: rel.release_notes ? rel.release_notes.split('\n') : ['Cập nhật hiệu suất và vá lỗi']
+            }
+          ]
+        }));
+        setAppReleases(parsed);
+      }
+    });
+  }, []);
   // Lấy version hiện tại của app từ Electron
   React.useEffect(() => {
     const getVersion = async () => {
@@ -290,7 +291,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
           <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
             📋 Lịch sử cập nhật
           </h3>
-          {CHANGELOG_DATA.slice(0, 1).map((release, rIdx) => (
+          {appReleases.slice(0, 1).map((release, rIdx) => (
             <div key={rIdx} className="relative">
               {/* Version Header */}
               <div className="flex items-center gap-3 mb-4">
@@ -329,7 +330,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
               </div>
 
               {/* Divider */}
-              {rIdx < CHANGELOG_DATA.length - 1 && (
+              {rIdx < appReleases.length - 1 && (
                 <div className="border-t border-dashed border-gray-200 dark:border-slate-700 mt-6"></div>
               )}
             </div>

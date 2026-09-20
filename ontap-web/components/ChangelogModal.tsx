@@ -1,56 +1,54 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { X, Rocket, Loader2 } from 'lucide-react';       
 import { useNavigate } from 'react-router-dom';
-import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
-// @ts-ignore
-import changelogRaw from '../CHANGELOG.md?raw';
+import { getGitHubReleases } from '../services/releaseService';
+import { Rocket, Loader2, X } from 'lucide-react';
 
 interface ChangelogModalProps {
   onClose: () => void;
 }
 
-
 // 💥 Hàm lấy phiên bản mới nhất từ Changelog để hiển thị trên Navbar
-export const getLatestVersion = (): string => {
+export const getLatestVersion = async (): Promise<string> => {
   try {
-    const parsed = parseChangelog(changelogRaw);
-    return parsed[0]?.version || "3.9.2";
+    const releases = await getGitHubReleases();
+    return releases.length > 0 ? releases[0].version : "0.0.0";
   } catch (e) {
-    return "3.9.2";
+    return "0.0.0";
   }
 };
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
-  const [changelogData, setChangelogData] = useState<ChangelogVersion[]>([]);
+  const [changelogData, setChangelogData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchChangelog = async () => {
       try {
-        // 💖 Thử tải từ server để có dữ liệu mới nhất
-        const response = await fetch('https://daotaothuyenvien.com/ontap/CHANGELOG.md', {
-          cache: 'no-cache'
-        });
-        
-        if (response.ok) {
-          const text = await response.text();
-          const parsed = parseChangelog(text);
-          if (parsed.length > 0) {
-            setChangelogData(parsed);
-            setLoading(false);
-            return;
-          }
+        const releases = await getGitHubReleases();
+        if (releases.length > 0) {
+          const formatted = releases.map((rel: any, index: number) => ({
+            version: rel.version,
+            date: new Date(rel.created_at || Date.now()).toLocaleDateString('vi-VN'),
+            isLatest: index === 0,
+            sections: [
+              {
+                icon: Rocket,
+                title: 'Cập nhật',
+                color: 'text-indigo-500',
+                bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
+                items: rel.release_notes ? rel.release_notes.split('\n').filter((i: string) => i.trim()) : ['Cập nhật hiệu suất và vá lỗi']
+              }
+            ]
+          }));
+          setChangelogData(formatted);
         }
       } catch (error) {
-        console.error('Lỗi khi tải Changelog từ remote:', error);
+        console.error('Lỗi khi tải Changelog:', error);
+      } finally {
+        setLoading(false);
       }
-
-      // 💖 Fallback: Dùng bản đính kèm trong app nếu không có mạng
-      const localData = parseChangelog(changelogRaw);
-      setChangelogData(localData);
-      setLoading(false);
     };
 
     fetchChangelog();

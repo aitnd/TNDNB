@@ -10,9 +10,18 @@ import https from 'https';
 import http from 'http';
 import { fileURLToPath } from 'url';
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 // Cấu hình Supabase
-const supabaseUrl = 'https://hykypgxaegmufdothwbv.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5a3lwZ3hhZWdtdWZkb3Rod2J2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1NTE3NzMsImV4cCI6MjA3NzEyNzc3M30.Euzl2vfhHrxhgN-tfg2XftMaX9hEiJOorSJq16n2CRY';
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Missing SUPABASE_URL or SUPABASE_ANON_KEY in environment variables.');
+    process.exit(1);
+}
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

@@ -134,70 +134,95 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
           </div>
         </div>
 
-        <div>
-          <h2 className="font-bold mb-5 text-foreground" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>{currentQuestion.text}</h2>
-          {currentQuestion.image && (
-            <div className="mb-6 rounded-lg overflow-hidden">
-              <img src={currentQuestion.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex-1">
+            <h2 className="font-bold mb-5 text-foreground" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>{currentQuestion.text}</h2>
+            {currentQuestion.image && (
+              <div className="mb-6 rounded-lg overflow-hidden">
+                <img src={currentQuestion.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
+              </div>
+            )}
+
+            <div className="space-y-3">
+              {currentQuestion.answers.map((answer, index) => {
+                const isSelected = selectedAnswer === answer.id;
+                let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-between';
+
+                const isCorrect = answer.id === currentQuestion.correctAnswerId;
+                const showReveal = isAnswered && (!isPracticeMode || isSelected);
+
+                if (showReveal) {
+                  if (isCorrect) {
+                    buttonClass += ' bg-success/10 border-success text-success';
+                  } else if (isSelected && !isCorrect) {
+                    buttonClass += ' bg-destructive/10 border-destructive text-destructive';
+                  } else {
+                    buttonClass += ' border-border text-muted-foreground';
+                  }
+                } else {
+                  if (isSelected) {
+                    buttonClass += ' bg-primary/10 border-primary ring-2 ring-primary text-primary-foreground';
+                  } else {
+                    buttonClass += ' bg-background hover:bg-muted border-border text-foreground';
+                  }
+                }
+
+                return (
+                  <button
+                    key={answer.id}
+                    onClick={() => handleAnswerSelect(answer.id)}
+                    disabled={isAnswered && (!isPracticeMode || selectedAnswer === currentQuestion.correctAnswerId)}
+                    className={buttonClass}
+                    style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}
+                  >
+                    <span className="flex-grow"><span className='font-bold mr-2'>{String.fromCharCode(65 + index)}. </span>{answer.text}</span>
+                    {showReveal && (
+                      <>
+                        {isCorrect && <CheckIcon3D className="h-6 w-6 text-success ml-3" />}
+                        {isSelected && !isCorrect && <XIcon3D className="h-6 w-6 text-destructive ml-3" />}
+                      </>
+                    )}
+                  </button>
+                );
+              })}
             </div>
-          )}
 
-          <div className="space-y-3">
-            {currentQuestion.answers.map((answer, index) => {
-              const isSelected = selectedAnswer === answer.id;
-              let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-between';
-
-              const isCorrect = answer.id === currentQuestion.correctAnswerId;
-              const showReveal = isAnswered && (!isPracticeMode || isSelected);
-
-              if (showReveal) {
-                if (isCorrect) {
-                  buttonClass += ' bg-success/10 border-success text-success';
-                } else if (isSelected && !isCorrect) {
-                  buttonClass += ' bg-destructive/10 border-destructive text-destructive';
-                } else {
-                  buttonClass += ' border-border text-muted-foreground';
-                }
-              } else {
-                if (isSelected) {
-                  buttonClass += ' bg-primary/10 border-primary ring-2 ring-primary text-primary-foreground';
-                } else {
-                  buttonClass += ' bg-background hover:bg-muted border-border text-foreground';
-                }
-              }
-
-              return (
-                <button
-                  key={answer.id}
-                  onClick={() => handleAnswerSelect(answer.id)}
-                  disabled={isAnswered && (!isPracticeMode || selectedAnswer === currentQuestion.correctAnswerId)}
-                  className={buttonClass}
-                  style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}
-                >
-                  <span className="flex-grow"><span className='font-bold mr-2'>{String.fromCharCode(65 + index)}. </span>{answer.text}</span>
-                  {showReveal && (
-                    <>
-                      {isCorrect && <CheckIcon3D className="h-6 w-6 text-success ml-3" />}
-                      {isSelected && !isCorrect && <XIcon3D className="h-6 w-6 text-destructive ml-3" />}
-                    </>
-                  )}
-                </button>
-              );
-            })}
+            <div className="mt-8">
+              <div className="text-right">
+                {isAnswered ? (
+                  <button
+                    onClick={handleNext}
+                    className="bg-success text-success-foreground font-bold py-3 px-8 rounded-lg hover:bg-success/90 transition-all duration-300 animate-slide-in-right"
+                  >
+                    {currentQuestionIndex === quiz.questions.length - 1 ? 'Hoàn thành' : 'Câu tiếp theo'}
+                  </button>
+                ) : (
+                  <div className="h-[48px]"></div> // Placeholder to prevent layout jump
+                )}
+              </div>
+            </div>
           </div>
 
-          <div className="mt-8">
-            <div className="text-right">
-              {isAnswered ? (
-                <button
-                  onClick={handleNext}
-                  className="bg-success text-success-foreground font-bold py-3 px-8 rounded-lg hover:bg-success/90 transition-all duration-300 animate-slide-in-right"
-                >
-                  {currentQuestionIndex === quiz.questions.length - 1 ? 'Hoàn thành' : 'Câu tiếp theo'}
-                </button>
-              ) : (
-                <div className="h-[48px]"></div> // Placeholder to prevent layout jump
-              )}
+          {/* Question Navigation Grid */}
+          <div className="w-full md:w-[220px] flex-none">
+            <div className="flex-wrap gap-2 justify-center p-2 bg-gray-50 rounded-xl border border-gray-200 flex">
+                 {quiz.questions.map((q, index) => {
+                         const hasAnswered = !!userAnswers[q.id];
+                         const isCorrect = userAnswers[q.id] === q.correctAnswerId;
+                         const isCurrent = currentQuestionIndex === index;
+                         return (
+                             <button
+                                key={q.id}
+                                onClick={() => { triggerHaptic('light'); setCurrentQuestionIndex(index); }}
+                                className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs transition-all ${
+                                    isCurrent ? 'bg-blue-600 text-white ring-2 ring-blue-300 scale-110' :
+                                    hasAnswered ? (isCorrect ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300') : 'bg-white text-gray-500 border border-gray-200'
+                                }`}
+                             >
+                                 {index + 1}
+                             </button>
+                         );
+                     })}
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ import NameInputScreen from '../components/NameInputScreen';
 import ModeSelectionScreen from '../components/ModeSelectionScreen';
 import SubjectSelectionScreen from '../components/SubjectSelectionScreen';
 import QuizScreen from '../components/QuizScreen';
-import ExamQuizScreen2 from '../components/ExamQuizScreen2';
+import ExamQuizScreen from '../components/ExamQuizScreen';
 import ExamResultsScreen from '../components/ExamResultsScreen';
 import ResultsScreen from '../components/ResultsScreen';
 import CountdownAdScreen from '../components/CountdownAdScreen';
@@ -124,7 +124,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
   }
 
   return (
-    <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-24 pt-20' : 'pt-16'}`}>
+    <div className={`min-h-screen bg-background text-foreground font-sans transition-colors duration-300 ${isMobileApp ? 'pb-24 pt-[calc(3.5rem+env(safe-area-inset-top))]' : 'pt-16'}`}>
       <BadgeListener />
       <SweetAlertPopup />
       <Toaster position="top-right" richColors expand={true} closeButton />
@@ -218,7 +218,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
 
           <Route path="/ontap/thithu" element={
             currentQuiz ? (
-              <ExamQuizScreen2
+              <ExamQuizScreen
                 quiz={currentQuiz}
                 onFinish={handleQuizFinish}
                 onBack={() => navigate('/ontap/chonchedo')}

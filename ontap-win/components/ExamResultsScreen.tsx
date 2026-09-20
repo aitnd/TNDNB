@@ -74,7 +74,7 @@ const ExamResultsScreen: React.FC<ExamResultsScreenProps> = ({ quiz, userAnswers
                     </div>
                 </div>
 
-                <div className="space-y-6 max-h-[50vh] overflow-y-auto pr-2">
+                <div className="space-y-6 pr-2">
                     {filteredQuestions.length > 0 ? filteredQuestions.map((question, index) => {
                         const userAnswerId = userAnswers[question.id];
                         const correctAnswerId = question.correctAnswerId;

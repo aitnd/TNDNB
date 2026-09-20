@@ -5,7 +5,7 @@ import { auth, db, rtdb } from '../services/firebaseClient';
 import { supabase } from '../services/supabaseClient';
 import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, set, update, onDisconnect, serverTimestamp as rtdbTimestamp } from 'firebase/database';
-import ExamQuizScreen2 from './ExamQuizScreen2';
+import ExamQuizScreen from './ExamQuizScreen';
 import { toast } from 'sonner';
 import { BadgeService } from '../services/badgeService';
 
@@ -261,7 +261,7 @@ const ThiTrucTuyenPage: React.FC = () => {
     if (isExamStarted && examRoom && questions.length > 0) {
         return (
             <div className="min-h-screen bg-gray-100 p-4">
-                <ExamQuizScreen2
+                <ExamQuizScreen
                     quiz={{
                         id: examRoom.id,
                         title: examRoom.name,

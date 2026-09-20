@@ -1,224 +1,302 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import type { Quiz, UserAnswers } from '../types';
-import { ClockIcon3D, ArrowLeftIcon3D } from './icons';
+import type { Quiz, UserAnswers, License, UserProfile } from '../types';
 import { getLocalImageSrc, handleImageError } from '../utils/imageHelper';
 import { useFontScale } from '../hooks/useFontScale';
 import { ZoomBar } from './ZoomBar';
+import { useExamKeyboard } from '../hooks/useExamKeyboard';
+import { useAppStore } from '../stores/useAppStore';
 
 interface ExamQuizScreenProps {
-  quiz: Quiz;
-  onFinish: (answers: UserAnswers) => void;
-  onBack: () => void;
+    quiz: Quiz;
+    onFinish: (answers: UserAnswers) => void;
+    onBack: () => void;
+    userName: string;
+    userProfile: UserProfile | null;
+    selectedLicense: License | null;
+    initialIndex?: number;
+    initialAnswers?: UserAnswers;
+    initialTime?: number;
+    onProgressUpdate?: (index: number, timeLeft: number, answers: UserAnswers) => void;
 }
 
 const formatTime = (seconds: number): string => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
-const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({ quiz, onFinish, onBack }) => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
-  const [timeLeft, setTimeLeft] = useState(quiz.timeLimit);
-  const { scale, setScale, increase, decrease } = useFontScale();
-
-  const currentQuestion = useMemo(() => quiz.questions[currentQuestionIndex], [quiz.questions, currentQuestionIndex]);
-
-  // Use a ref to hold the latest userAnswers for callbacks,
-  // preventing stale state issues in closures.
-  const latestAnswers = useRef(userAnswers);
-  useEffect(() => {
-    latestAnswers.current = userAnswers;
-  }, [userAnswers]);
-
-  const handleFinishQuiz = useCallback(() => {
-    const finalAnswers = latestAnswers.current; // Use the ref to get the latest answers
-    const unansweredCount = quiz.questions.length - Object.keys(finalAnswers).length;
-    const confirmationMessage = unansweredCount > 0
-      ? `Anh/chị vẫn còn ${unansweredCount} câu chưa trả lời. Anh/chị có chắc chắn muốn nộp bài không?`
-      : 'Anh/chị đã hoàn thành tất cả các câu hỏi. Anh/chị có muốn nộp bài không?';
-
-    if (window.confirm(confirmationMessage)) {
-      onFinish(finalAnswers);
-    }
-  }, [quiz.questions.length, onFinish]);
-
-  // Set up the countdown timer. Runs only once on mount.
-  useEffect(() => {
-    if (timeLeft === undefined) return;
-
-    const intervalId = setInterval(() => {
-      setTimeLeft(t => (t ? t - 1 : 0));
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []); // Empty dependency array ensures this runs only once.
-
-  // Stable onFinish using ref for autosubmit
-  const stableOnFinish = useRef(onFinish);
-  useEffect(() => {
-    stableOnFinish.current = onFinish;
-  }, [onFinish]);
-
-  // Handle auto-submission when time runs out
-  useEffect(() => {
-    if (timeLeft === 0) {
-      alert('Đã hết giờ làm bài! Hệ thống sẽ tự động nộp bài của anh/chị.');
-      stableOnFinish.current(latestAnswers.current);
-    }
-  }, [timeLeft]);
-
-
-  const handleAnswerSelect = (answerId: string) => {
-    setUserAnswers(prev => ({ ...prev, [currentQuestion.id]: answerId }));
-  };
-
-  const examProgress = (Object.keys(userAnswers).length / quiz.questions.length) * 100;
-
-  // Safety: đề thi rỗng hoặc index vượt bounds (chống trắng trang khi data lỗi)
-  if (!quiz.questions || quiz.questions.length === 0 || !currentQuestion) {
-    return (
-      <div className="w-full max-w-3xl mx-auto p-4 text-center">
-        <h2 className="text-xl font-bold mb-4">Chưa có câu hỏi nào trong đề thi này.</h2>
-        <button
-          onClick={onBack}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-4 rounded-lg"
-        >
-          Quay lại
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="w-full max-w-3xl mx-auto p-4 md:p-6 animate-slide-in-right font-quiz-default" style={{ '--content-scale': scale } as React.CSSProperties}>
-      <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-6 md:p-8">
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-4 relative">
-            <button
-              onClick={onBack}
-              className="absolute left-0 top-1/2 -translate-y-1/2 bg-background/50 p-3 rounded-full shadow-md hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-card transition-all duration-300 transform hover:scale-110"
-              aria-label="Quay lại"
-            >
-              <ArrowLeftIcon3D className="h-10 w-10" />
-            </button>
-            <h1 className="text-xl font-bold text-foreground text-center flex-grow">{quiz.title}</h1>
-            <button
-              onClick={handleFinishQuiz}
-              className={'bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-bold py-2 px-4 rounded-lg transition-colors duration-300'}
-            >
-              Nộp bài
-            </button>
-          </div>
-          <div className="w-full bg-secondary rounded-full h-2.5 mb-2">
-            <div className="bg-primary h-2.5 rounded-full transition-all duration-500" style={{ width: `${examProgress}%` }}></div>
-          </div>
-          <div className="flex justify-between items-center text-sm text-muted-foreground">
-            <span>Câu {currentQuestionIndex + 1} / {quiz.questions.length}</span>
-            {timeLeft !== undefined && (
-              <div className="flex items-center font-semibold text-destructive">
-                <ClockIcon3D className="h-5 w-5 mr-1" />
-                <span>{formatTime(timeLeft)}</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="mb-6 border-b border-border pb-6">
-          <h3 className="text-sm font-semibold text-muted-foreground mb-3">Danh sách câu hỏi:</h3>
-          <div className="flex flex-wrap gap-2">
-            {quiz.questions.map((q, index) => {
-              const isCurrent = index === currentQuestionIndex;
-              const isQuestionAnswered = userAnswers[q.id] !== undefined;
-              let btnClass = 'w-8 h-8 rounded-md flex items-center justify-center font-bold text-xs transition-all duration-200 ';
-              if (isCurrent) {
-                btnClass += 'bg-primary text-primary-foreground scale-110 shadow-lg ring-2 ring-ring';
-              } else if (isQuestionAnswered) {
-                btnClass += 'bg-success text-success-foreground hover:bg-success/80';
-              } else {
-                btnClass += 'bg-secondary text-secondary-foreground hover:bg-muted';
-              }
-              return (
-                <button key={q.id} className={btnClass} onClick={() => setCurrentQuestionIndex(index)}>
-                  {index + 1}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div>
-          <h2 className="font-bold mb-5 text-foreground" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>{currentQuestion.text}</h2>
-          {currentQuestion.image && (
-            <div className="mb-6 rounded-lg overflow-hidden">
-              <img
-                src={getLocalImageSrc(currentQuestion) || currentQuestion.image}
-                alt="Câu hỏi"
-                className="w-full h-auto object-cover max-h-80"
-                onError={(e) => handleImageError(e, currentQuestion.image)} loading="lazy" />
-            </div>
-          )}
-
-          <div className="space-y-3">
-            {currentQuestion.answers.map((answer, index) => {
-              const isSelected = userAnswers[currentQuestion.id] === answer.id;
-              // Removed justify-between since we have a single child div handling layout
-              let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all duration-300 flex items-center';
-
-              if (isSelected) {
-                buttonClass += ' bg-primary/10 border-primary ring-2 ring-primary text-foreground';
-              } else {
-                buttonClass += ' bg-background hover:bg-muted border-border text-foreground';
-              }
-
-              return (
-                <button
-                  key={answer.id}
-                  onClick={() => handleAnswerSelect(answer.id)}
-                  className={buttonClass}
-                  style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}
-                >
-                  <div className="flex items-start w-full">
-                    <span className="font-bold mr-2 min-w-[20px]">{String.fromCharCode(65 + index)}.</span>
-                    <span>{answer.text}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-8">
-            <div className="flex justify-between items-center">
-              <button
-                onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-                disabled={currentQuestionIndex === 0}
-                className="bg-secondary text-secondary-foreground font-bold py-3 px-8 rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-              >
-                Câu trước
-              </button>
-              {currentQuestionIndex === quiz.questions.length - 1 ? (
-                <button
-                  onClick={handleFinishQuiz}
-                  className="bg-destructive text-destructive-foreground font-bold py-3 px-8 rounded-lg hover:bg-destructive/90 transition-all duration-300"
-                >
-                  Nộp bài
-                </button>
-              ) : (
-                <button
-                  onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
-                  className="bg-primary text-primary-foreground font-bold py-3 px-8 rounded-lg hover:bg-primary/90 transition-all duration-300"
-                >
-                  Câu tiếp
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      <ZoomBar scale={scale} setScale={setScale} increase={increase} decrease={decrease} />
+// Square Checkbox Component matching the reference design
+const SquareCheckbox = ({ checked, onChange }: { checked: boolean, onChange: () => void }) => (
+    <div
+        role="checkbox"
+        aria-checked={checked}
+        tabIndex={0}
+        onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onChange?.();
+            }
+        }}
+        onClick={onChange}
+        className={`w-[14px] h-[14px] border border-[#999] inline-block cursor-pointer bg-white relative ${checked ? 'bg-[#333]' : ''}`}
+    >
+        {checked && (
+            <div className="absolute top-[2px] left-[2px] w-[8px] h-[8px] bg-[#333]"></div>
+        )}
     </div>
-  );
+);
+
+// Helper for date formatting
+const formatDate = (dateString?: string) => {
+    if (!dateString) return '---';
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        const [year, month, day] = dateString.split('-');
+        return `${day}/${month}/${year}`;
+    }
+    return dateString;
+};
+
+const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
+    quiz,
+    onFinish,
+    onBack,
+    userName,
+    userProfile,
+    selectedLicense,
+    initialIndex = 0,
+    initialAnswers = {},
+    initialTime,
+    onProgressUpdate
+}) => {
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialIndex);
+    const [userAnswers, setUserAnswers] = useState<UserAnswers>(initialAnswers);
+    // Use initialTime if provided, else quiz limit, else default 3600
+    const [timeLeft, setTimeLeft] = useState(initialTime !== undefined ? initialTime : (quiz.timeLimit ?? 3600));
+    const { scale, setScale, increase, decrease } = useFontScale();
+
+    const currentQuestion = useMemo(() => quiz.questions[currentQuestionIndex], [quiz.questions, currentQuestionIndex]);
+
+    const latestAnswers = useRef(userAnswers);
+    useEffect(() => {
+        latestAnswers.current = userAnswers;
+        // Auto-save on answer change
+        onProgressUpdate?.(currentQuestionIndex, timeLeft, userAnswers);
+    }, [userAnswers]);
+
+    // Save on index change
+    useEffect(() => {
+        onProgressUpdate?.(currentQuestionIndex, timeLeft, userAnswers);
+    }, [currentQuestionIndex]);
+
+    // Save on time change (throttled? No, implicit via interval, but maybe too frequent? 
+    // Let's rely on the separate interval or just save strictly. 
+    // Ideally we shouldn't save every second. Let's debounce or save every 5s?
+    // For simplicity/safety vs user request "F5 any time", saving every second is heavy for localStorage but acceptable for local-only app.
+    // Optimization: Save every 5 seconds OR on significant events (Answer/Index change).
+    // Implementation: specialized effect for time.
+    useEffect(() => {
+        if (timeLeft % 5 === 0) {
+            onProgressUpdate?.(currentQuestionIndex, timeLeft, userAnswers);
+        }
+    }, [timeLeft]);
+
+    const handleBackWithConfirm = () => {
+        if (window.confirm('Anh/chị có chắc chắn muốn thoát khỏi bài thi không? Mọi tiến trình sẽ bị mất.')) {
+            onBack();
+        }
+    };
+
+    const addIncorrectQuestions = useAppStore(state => state.addIncorrectQuestions);
+    const handleFinishQuiz = useCallback(() => {
+        const finalAnswers = latestAnswers.current;
+        const unansweredCount = quiz.questions.length - Object.keys(finalAnswers).length;
+        const confirmationMessage = unansweredCount > 0
+            ? `Anh/chị vẫn còn ${unansweredCount} câu chưa trả lời. Anh/chị có chắc chắn muốn nộp bài không?`
+            : 'Anh/chị đã hoàn thành tất cả các câu hỏi. Anh/chị có muốn nộp bài không?';
+
+        if (window.confirm(confirmationMessage)) {
+            const incorrectIds = quiz.questions
+                .filter(q => finalAnswers[q.id] !== undefined && finalAnswers[q.id] !== q.correctAnswerId)
+                .map(q => q.id);
+            if (incorrectIds.length > 0) {
+                addIncorrectQuestions(incorrectIds);
+            }
+            onFinish(finalAnswers);
+        }
+    }, [quiz.questions, onFinish, addIncorrectQuestions]);
+
+    const stableOnFinish = useRef(onFinish);
+    useEffect(() => {
+        stableOnFinish.current = onFinish;
+    }, [onFinish]);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setTimeLeft(t => (t > 0 ? t - 1 : 0));
+        }, 1000);
+        return () => clearInterval(intervalId);
+    }, []);
+
+    useEffect(() => {
+        if (timeLeft === 0) {
+            alert('Đã hết giờ làm bài! Hệ thống sẽ tự động nộp bài của anh/chị.');
+            stableOnFinish.current(latestAnswers.current);
+        }
+    }, [timeLeft]);
+
+    const handleAnswerSelect = (questionId: string, answerId: string) => {
+        setUserAnswers(prev => ({ ...prev, [questionId]: answerId }));
+    };
+
+    useExamKeyboard(
+        () => setCurrentQuestionIndex(prev => Math.min(prev + 1, quiz.questions.length - 1)),
+        () => setCurrentQuestionIndex(prev => Math.max(prev - 1, 0)),
+        (answerId) => { if (currentQuestion) handleAnswerSelect(currentQuestion.id, answerId); },
+        currentQuestion
+    );
+
+    // Safety: đề thi rỗng hoặc index vượt bounds (chống trắng trang khi data lỗi)
+    if (!quiz.questions || quiz.questions.length === 0 || !currentQuestion) {
+        return (
+            <div className="w-full max-w-7xl mx-auto p-4 text-center">
+                <h2 className="text-xl font-bold mb-4">Chưa có câu hỏi nào trong đề thi này.</h2>
+                <button
+                    onClick={onBack}
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-4 rounded-lg"
+                >
+                    Quay lại
+                </button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-full max-w-7xl mx-auto font-sans text-black shadow-lg animate-slide-in-right rounded-md" style={{ '--content-scale': scale } as React.CSSProperties}>
+            <div className="h-3 bg-yellow-700 rounded-t-md border-b-2 border-yellow-900"></div>
+            <div className="bg-white p-4">
+                <div className="flex justify-between items-start pb-4 border-b border-gray-300">
+                    <div className="flex gap-4 items-start">
+                        <img
+                            src={userProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`}
+                            alt="Avatar"
+                            className="w-[100px] h-[130px] border border-gray-300 object-cover p-1 bg-white"
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).src = 'https://i.postimg.cc/8PDn1wfM/favicon.png';
+                            }} loading="lazy" />
+                        <div className="text-sm space-y-1">
+                            <p className="font-bold text-blue-700 text-lg uppercase">{userProfile?.full_name || userProfile?.fullName || userName || 'Học viên'}</p>
+                            <p>Số báo danh: <span className="font-semibold text-gray-800">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
+                            <p>Ngày sinh: <span className="font-semibold text-gray-800">{formatDate(userProfile?.birthDate)}</span></p>
+                            <p>Địa chỉ: <span className="font-semibold text-gray-800">{userProfile?.address || '---'}</span></p>
+                            <p>Lớp: <span className="font-semibold text-gray-800">{userProfile?.class || userProfile?.courseName || '---'}</span></p>
+                            <p>Hạng bằng: <span className="font-bold text-red-600 border border-red-500 px-1 rounded bg-red-50">{selectedLicense?.name || '---'}</span></p>
+                        </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                        <div className="bg-[#f0ad4e] text-black p-2 rounded-md text-sm w-48">
+                            <p className="font-bold">Đang thi</p>
+                            <p>Thời gian: 45 phút</p>
+                            <p>Bù giờ: 0 phút</p>
+                            <p>Còn lại: <span className="font-bold">{formatTime(timeLeft)}</span></p>
+                        </div>
+                        <button onClick={handleBackWithConfirm} className="text-sm text-gray-600 hover:text-red-500 font-semibold">Thoát</button>
+                    </div>
+                </div>
+
+                <div className="flex mt-4 gap-4">
+                    {/* Left Column: Question Content (Read-only) */}
+                    <div className="flex-1 border border-gray-400 rounded-md p-4 flex flex-col justify-between min-h-[500px]">
+                        <div>
+                            <p className="font-bold mb-4 border-b border-dashed border-gray-400 pb-2">Nội dung câu hỏi</p>
+                            <p className="font-bold text-red-600 mb-2">Câu :{currentQuestionIndex + 1}</p>
+                            <p className="mb-4 font-semibold" style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{currentQuestion.text}</p>
+
+                            {currentQuestion.image && (
+                                <div className="mb-4 flex justify-start">
+                                    <img
+                                        src={getLocalImageSrc(currentQuestion) || currentQuestion.image}
+                                        alt="Hình ảnh câu hỏi"
+                                        className="max-w-full h-auto max-h-60 object-contain border border-gray-300 rounded-md"
+                                        onError={(e) => handleImageError(e, currentQuestion.image)} loading="lazy" />
+                                </div>
+                            )}
+
+                            <div className="space-y-4">
+                                {currentQuestion.answers.map((answer, index) => (
+                                    <div key={answer.id} className="flex items-start">
+                                        <span className="font-bold mr-2 text-gray-700 min-w-[20px]">{String.fromCharCode(65 + index)}.</span>
+                                        <p style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{answer.text}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex justify-center gap-4 mt-8">
+                            <button onClick={() => setCurrentQuestionIndex(p => Math.max(0, p - 1))} disabled={currentQuestionIndex === 0} className="bg-[#f0ad4e] text-black px-4 py-2 rounded-md border border-gray-400 flex items-center font-semibold hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                                Trở lại
+                            </button>
+                            {currentQuestionIndex < quiz.questions.length - 1 && (
+                                <button onClick={() => setCurrentQuestionIndex(p => Math.min(quiz.questions.length - 1, p + 1))} className="bg-[#f0ad4e] text-black px-4 py-2 rounded-md border border-gray-400 flex items-center font-semibold hover:bg-yellow-500 transition-colors">
+                                    Tiếp tục
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Right Column: Answer Sheet (Interactive) */}
+                    <div className="w-[200px] flex-none flex flex-col">
+                        <div className="border border-gray-300 rounded-md">
+                            <table className="w-full border-collapse text-xs">
+                                <thead className="sticky top-0 bg-[#f0ad4e] z-10">
+                                    <tr>
+                                        <th className="border border-gray-400 p-2">Câu</th>
+                                        <th className="border border-gray-400 p-2">a</th>
+                                        <th className="border border-gray-400 p-2">b</th>
+                                        <th className="border border-gray-400 p-2">c</th>
+                                        <th className="border border-gray-400 p-2">d</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {quiz.questions.map((q, index) => (
+                                        <tr key={q.id} className={currentQuestionIndex === index ? 'bg-cyan-200' : 'hover:bg-gray-50'}>
+                                            <td
+                                                className={`border border-gray-400 p-2 font-bold text-center cursor-pointer whitespace-nowrap ${currentQuestionIndex === index ? 'text-black' : 'text-gray-500'}`}
+                                                onClick={() => setCurrentQuestionIndex(index)}
+                                            >
+                                                Câu {index + 1}
+                                            </td>
+                                            {q.answers.slice(0, 4).map((a) => (
+                                                <td key={a.id} className="border border-gray-400 p-2 text-center">
+                                                    <SquareCheckbox
+                                                        checked={userAnswers[q.id] === a.id}
+                                                        onChange={() => handleAnswerSelect(q.id, a.id)}
+                                                    />
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="text-center mt-4 pt-2 border-t border-gray-200">
+                            <button onClick={handleFinishQuiz} className="bg-[#337ab7] text-white px-8 py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors w-full">Nộp bài</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-4 bg-[#005a9c] text-white p-4 rounded-b-md flex items-center gap-4 text-xs">
+                    <img src="https://i.postimg.cc/8PDn1wfM/favicon.png" alt="Logo" className="h-16 w-16 object-contain" loading="lazy" />
+                    <div>
+                        <p className="font-bold">CÔNG TY CỔ PHẦN TƯ VẤN VÀ GIÁO DỤC NINH BÌNH</p>
+                        <p>Địa chỉ: Đường Triệu Việt Vương, phường Hoa Lư, tỉnh Ninh Bình </p>
+                    </div>
+                </div>
+            </div>
+            <ZoomBar scale={scale} setScale={setScale} increase={increase} decrease={decrease} />
+        </div>
+    );
 };
 
 export default ExamQuizScreen;

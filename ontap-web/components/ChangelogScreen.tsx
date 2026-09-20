@@ -1,42 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { Rocket, Loader2 } from 'lucide-react';
-import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
 import { triggerHaptic } from '../utils/nativeUX';
 import { ArrowLeftIcon3D } from './icons';
-// @ts-ignore
-import changelogRaw from '../CHANGELOG.md?raw';
+import { getGitHubReleases } from '../services/releaseService';
 
 interface ChangelogScreenProps {
   onBack: () => void;
 }
 
 const ChangelogScreen: React.FC<ChangelogScreenProps> = ({ onBack }) => {
-  const [changelogData, setChangelogData] = useState<ChangelogVersion[]>([]);
+  const [changelogData, setChangelogData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchChangelog = async () => {
       try {
-        const response = await fetch('https://daotaothuyenvien.com/ontap/CHANGELOG.md', {
-          cache: 'no-cache'
-        });
-        
-        if (response.ok) {
-          const text = await response.text();
-          const parsed = parseChangelog(text);
-          if (parsed.length > 0) {
-            setChangelogData(parsed);
-            setLoading(false);
-            return;
-          }
+        const releases = await getGitHubReleases();
+        if (releases.length > 0) {
+          const parsed = releases.map((rel, index) => ({
+            version: rel.version,
+            date: new Date(rel.created_at || Date.now()).toLocaleDateString('vi-VN'),
+            isLatest: index === 0,
+            sections: [
+              {
+                icon: Rocket,
+                title: 'Cập nhật',
+                color: 'text-blue-500',
+                bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+                items: rel.release_notes ? rel.release_notes.split('\n') : ['Cập nhật hiệu suất và vá lỗi']
+              }
+            ]
+          }));
+          setChangelogData(parsed);
         }
       } catch (error) {
         console.error('Lỗi khi tải Changelog từ remote:', error);
+      } finally {
+        setLoading(false);
       }
-
-      const localData = parseChangelog(changelogRaw);
-      setChangelogData(localData);
-      setLoading(false);
     };
 
     fetchChangelog();

@@ -64,7 +64,7 @@ const Dashboard: React.FC<DashboardProps> = ({
     });
 
     return (
-        <div className="min-h-screen flex flex-col items-center px-4 pt-24 pb-6 animate-slide-in-right">
+        <div className="min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right">
             {/* === Thanh Weather & Online Stats (Stacked Vertically) === */}
             <div className="w-full max-w-4xl flex flex-col gap-2.5 mb-4">
                 <WeatherWidget />

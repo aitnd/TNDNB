@@ -11,7 +11,7 @@ import NameInputScreen from '../components/NameInputScreen';
 import ModeSelectionScreen from '../components/ModeSelectionScreen';
 import SubjectSelectionScreen from '../components/SubjectSelectionScreen';
 import QuizScreen from '../components/QuizScreen';
-import ExamQuizScreen2 from '../components/ExamQuizScreen2';
+import ExamQuizScreen from '../components/ExamQuizScreen';
 import ExamResultsScreen from '../components/ExamResultsScreen';
 import ResultsScreen from '../components/ResultsScreen';
 import CountdownAdScreen from '../components/CountdownAdScreen';
@@ -212,7 +212,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
 
         <Route path="/ontap/giamkhao/thithu" element={
           currentQuiz ? (
-            <ExamQuizScreen2
+            <ExamQuizScreen
               quiz={currentQuiz}
               onFinish={handleQuizFinish}
               onBack={() => navigate('/ontap/giamkhao')}
@@ -314,7 +314,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
 
         <Route path="/ontap/thithu" element={
           currentQuiz ? (
-            <ExamQuizScreen2
+            <ExamQuizScreen
               quiz={currentQuiz}
               onFinish={handleQuizFinish}
               onBack={() => navigate('/ontap/chonchedo')}

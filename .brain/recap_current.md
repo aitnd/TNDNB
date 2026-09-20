@@ -1,24 +1,24 @@
 ﻿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 HANDOVER DOCUMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Đang làm: TNDNB - Cập nhật UI & Sync Ngầm (v3.18.1)
-🔢 Đến bước: Đã hoàn tất Build & Commit (Phase 6 của /tndnb-build). Chờ User Deploy và Test thực tế.
+📍 Đang làm: Dự án TNDNB - Nâng cấp Version Check & Kéo Thả, UI/UX Refinements
+🔢 Đến bước: Đã hoàn tất bản 3.19.1. Đang chuẩn bị code UI/UX Refinements (Phase 1, 2, 4)
 
 ✅ ĐÃ XONG: 
-- Nâng cấp phiên bản lên 3.18.1.
-- Sửa lỗi thanh trạng thái bị che bởi TopNavbar (Padding pt-2 -> pt-24).
-- Chuyển quá trình đồng bộ dữ liệu sang chạy ngầm (Sử dụng toast.promise).
-- Hoàn tất QA Loop 100% Pass.
-- Dọn dẹp branch rác.
-- Commit và đẩy mã nguồn lên nhánh feature/phase-1-2-updates.
-
-⏳ CÒN LẠI: 
-- Người dùng tự Deploy, Test file Setup (.exe).
-- Merged vào main nếu bản build ổn định.
-
+- Kéo thả Upload ở trang Admin.
+- Xóa đọc file CHANGELOG local, đổi sang fetch version từ Supabase pp_releases.
+- Đóng gói thành công bản v3.19.1.
+⏳ CÒN LẠI:
+- Fix lỗi Navbar che màn hình.
+- Tháo thanh cuộn lồng nhau (Nested scroll) ở trang Kết quả.
+- Đổi bảng chọn đáp án Web thành 5 cột như App Desktop.
+- Thêm Context Menu cho Windows System Tray (Menu chuột phải).
 🔧 QUYẾT ĐỊNH QUAN TRỌNG: 
-- Không sửa 3 lỗ hổng bảo mật Critical từ npm audit (next, @capacitor/cli) vì đây là các core dependency, tránh breaking changes.
-
+- Ứng dụng Desktop nay phải hoàn toàn dựa vào Backend (Supabase) để kiểm tra Version, không dựa vào file Local như trước.
 ⚠️ LƯU Ý CHO SESSION SAU: 
-- Khôi phục tiến độ từ nhánh feature/phase-1-2-updates. Nhớ kiểm tra lại trạng thái Sync Data của người dùng.
+- Tiếp tục thực hiện docs/plans/260919-1518-ui-ux-refinements/task.md.
+📁 FILES QUAN TRỌNG: 
+- ontap-win/components/ChangelogModal.tsx
+- ontap-web/components/Admin/UploadZone.tsx
+- ontap-win/electron/main.ts (Sắp tới)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
