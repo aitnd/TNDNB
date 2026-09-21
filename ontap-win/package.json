@@ -70,7 +70,7 @@
   },
   "build": {
     "appId": "com.horizon.daotaothuyenvien",
-    "productName": "TNDNB Ôn thi",
+    "productName": "Ôn thi Đường thủy",
     "artifactName": "Onthi-${version}-${arch}-Setup.${ext}",
     "directories": {
       "output": "release"

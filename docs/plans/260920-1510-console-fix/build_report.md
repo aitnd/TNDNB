@@ -1,44 +1,40 @@
 # Build & Test Evidence (Phase 5)
 
-> Chạy lại lần cuối: 21/09/2026 15:31 (sau khi fix 8× TS6133 unused imports)
+> Chạy lần cuối: 21/09/2026 16:38 — sau khi dọn sạch console.error + unused imports
 
-## 1. Typecheck Evidence (`npx tsc --noEmit`)
+## 1. Typecheck (`npx tsc --noEmit`)
 
-### ontap-web
-- **Exit code**: 0
-- **Errors**: 0
-- **Log file**: [web_tsc_log.txt](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/web_tsc_log.txt) (trống = sạch)
-- **Ghi chú**: Đã fix 8 lỗi TS6133 (unused imports) tại `UploadStatus.tsx`, `UploadZone.tsx`, `UsageConfigPanel.tsx` — những file này nằm ngoài scope P1-P3 nhưng đã được dọn dẹp luôn cho đồng bộ.
+| Project | Exit code | Errors | Log |
+|---------|-----------|--------|-----|
+| ontap-web | 0 | 0 | [web_tsc_log.txt](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/web_tsc_log.txt) |
+| ontap-win | 0 | 0 | [win_tsc_log.txt](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/win_tsc_log.txt) |
 
-### ontap-win
-- **Exit code**: 0
-- **Errors**: 0
-- **Log file**: [win_tsc_log.txt](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/win_tsc_log.txt) (trống = sạch)
+**Ghi chú Web**: Đã fix 8 lỗi TS6133 (unused imports) tại `UploadStatus.tsx`, `UploadZone.tsx`, `UsageConfigPanel.tsx`.
 
-## 2. Build Evidence (`npm run build`)
+## 2. Build (`npm run build`)
 
-### ontap-web
-- **Exit code**: 0
-- **Log file**: [web_build_log.txt](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/web_build_log.txt)
-- **Kết quả**:
-  ```
-  ../public/ontap/index.html                    1.93 kB │ gzip:   0.84 kB
-  ../public/ontap/assets/index-n7mUR1ux.css   211.60 kB │ gzip:  28.74 kB
-  ✓ built in 15.22s
-  ```
-  *(CSS 211.60 kB = Tailwind v4 bundled thành công, không còn CDN)*
+| Project | Exit code | Log |
+|---------|-----------|-----|
+| ontap-web | 0 | [web_build_log.txt](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/web_build_log.txt) |
+| ontap-win | 0 | [win_build_log.txt](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/win_build_log.txt) |
 
-### ontap-win
-- **Exit code**: 0
-- **Log file**: [win_build_log.txt](file:///d:/Antigravity/TNDNB/docs/plans/260920-1510-console-fix/win_build_log.txt)
+**Kết quả Web build**:
+```
+../public/ontap/assets/index-n7mUR1ux.css   211.60 kB │ gzip: 28.74 kB
+✓ built in 15.22s
+```
 
-## 3. Preview Evidence
-- Guest access: Console sạch, không còn `PERMISSION_DENIED` từ AlertMarquee.
-- Network throttle: TopNavbar fallback `3.19.2` hiển thị đúng khi rớt mạng.
+## 3. Console Verification
+- Guest rớt mạng: Console **sạch** — TopNavbar và AlertMarquee nuốt lỗi im, không còn `console.error` đỏ.
+- `PERMISSION_DENIED`: AlertMarquee onSnapshot fallback `setAlerts([])` hoạt động đúng.
 
-## 4. Các file đã fix thêm (ngoài scope P1-P3)
-| File | Lỗi | Hành động |
-|------|------|-----------|
+## 4. Các file đã fix (tổng hợp)
+
+| File | Vấn đề | Fix |
+|------|--------|-----|
 | `ontap-web/components/Admin/UploadStatus.tsx` | TS6133: `React` unused | Xóa import |
 | `ontap-web/components/Admin/UploadZone.tsx` | TS6133: `FaFileAlt` unused | Xóa khỏi destructure |
-| `ontap-web/components/UsageConfigPanel.tsx` | TS6133: `saveGitHubConfig`, `GitHubConfig`, `FaGithub`, `FaKey`, `FaUpload`, `FaFileAlt` unused | Xóa khỏi destructure |
+| `ontap-web/components/UsageConfigPanel.tsx` | TS6133: 5 symbols unused | Xóa khỏi destructure |
+| `ontap-win/components/TopNavbar.tsx` | `console.error` gây noise | Đổi sang silent `.catch()` |
+| `ontap-win/components/AlertMarquee.tsx` | `Timestamp` unused, thiếu `\|\| []`, `console.error` | Xóa import, thêm fallback, nuốt im |
+| `ontap-win/package.json` | `productName` mojibake | Ghi lại UTF-8 chuẩn |

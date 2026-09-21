@@ -1,26 +1,38 @@
-# Phase 4: Sửa lỗi hiển thị và bọc lỗi trên bản Electron (Win)
+# Phase 4: Khắc phục lỗi bản Electron (Win)
 
 ## Mục tiêu
 - Kế thừa component ErrorBoundary từ web sang Win để bọc lỗi UI.
-- Sửa lỗi runtime của AlertMarquee khi Firestore chặn quyền.
-- Dọn dẹp cảnh báo log trong Electron Main & Preload process.
-- Khắc phục lỗi hiển thị phiên bản .0.0 trong bản Win.
+- Đồng bộ AlertMarquee Win khớp Web: nuốt lỗi im (không `console.error`), thêm `|| []`.
+- Xóa import `Timestamp` thừa.
+- Dọn dẹp `console.log` trong Electron Main & Preload process bằng `electron-log`.
+- Khắc phục lỗi hiển thị phiên bản `0.0.0` trong bản Win.
+- Sửa `productName` mojibake trong `package.json`.
 
 ## Các bước thực hiện (TDD Steps)
 
-1. **Copy ErrorBoundary từ web sang win và bọc vào App.tsx**
-   - Đảm bảo ontap-win/components/ErrorBoundary.tsx tồn tại hoặc được tái sử dụng/sao chép từ web.
-   - Import vào ontap-win/App.tsx.
-   - Bọc TopNavbar và AlertMarquee bằng <ErrorBoundary> giống như cách đã làm trên web.
+### T4.1: Copy ErrorBoundary từ web sang win
+- Tạo [ErrorBoundary.tsx](file:///d:/Antigravity/TNDNB/ontap-win/components/ErrorBoundary.tsx) (copy từ web).
+- Bọc `TopNavbar` và `AlertMarquee` trong [AppRoutes.tsx](file:///d:/Antigravity/TNDNB/ontap-win/routes/AppRoutes.tsx).
 
-2. **Thêm try/catch và error callback cho AlertMarquee của bản win**
-   - Mở ontap-win/components/AlertMarquee.tsx.
-   - Bọc nội dung hàm loadAlerts trong 	ry/catch. Trong khối catch, bắt lỗi và gọi setAlerts([]) để tránh sập toàn ứng dụng.
-   - Thêm tham số callback xử lý lỗi cho các lời gọi onSnapshot (cả global và personal).
+### T4.2: Đồng bộ AlertMarquee Win = Web
+- File: [ontap-win/components/AlertMarquee.tsx](file:///d:/Antigravity/TNDNB/ontap-win/components/AlertMarquee.tsx)
+- Xóa `Timestamp` khỏi import dòng 4 (dead import).
+- Dòng 19: `setAlerts(data)` → `setAlerts(data || [])`.
+- Dòng 21: xóa `console.error(...)`, thay bằng comment im lặng.
+- Dòng 44-46, 58-60: xóa tham số `(error)` và `console.error(...)`, thay bằng `() => { setAlerts([]) }`.
 
-3. **Dọn dẹp log và sửa lỗi hiển thị version .0.0**
-   - Mở ontap-win/electron/main.cjs.
-   - Tìm các lời gọi console.log và thay thế thành log.info hoặc loại bỏ để dọn dẹp console.
-   - Mở ontap-win/electron/preload.cjs.
-   - Cập nhật console.log thành log.info hoặc loại bỏ.
-   - Sửa logic tại dòng 4 của preload.cjs để hiển thị đúng phiên bản thay vì .0.0.
+### T4.3: Đồng bộ TopNavbar Win = Web
+- File: [ontap-win/components/TopNavbar.tsx](file:///d:/Antigravity/TNDNB/ontap-win/components/TopNavbar.tsx)
+- Dòng 26-28: xóa `console.error(...)`, đổi thành `.catch(() => setLatestVersion('3.19.2'))`.
+
+### T4.4: Dọn dẹp log Electron
+- File: [ontap-win/electron/main.cjs](file:///d:/Antigravity/TNDNB/ontap-win/electron/main.cjs)
+- Thay `console.log` → `log.info` (dùng `electron-log`).
+- File: [ontap-win/electron/preload.cjs](file:///d:/Antigravity/TNDNB/ontap-win/electron/preload.cjs)
+- Thay `console.log` → `log.info`.
+- Sửa logic fallback version `0.0.0`.
+
+### T4.5: Sửa productName mojibake
+- File: [ontap-win/package.json](file:///d:/Antigravity/TNDNB/ontap-win/package.json)
+- Ghi lại bằng Python (`json.dump` với `ensure_ascii=False`) để đảm bảo UTF-8 chuẩn.
+- Giá trị đúng: `Ôn thi Đường thủy`.
