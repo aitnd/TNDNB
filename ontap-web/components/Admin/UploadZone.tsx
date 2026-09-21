@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { FaCloudUploadAlt, FaFileAlt } from 'react-icons/fa';
+import { FaCloudUploadAlt } from 'react-icons/fa';
 
 import Swal from 'sweetalert2';
 import { getGitHubConfig, saveUsageConfig } from '../../services/adminConfigService';

@@ -1,13 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { Toaster } from 'sonner';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
-import SweetAlertPopup from './components/SweetAlertPopup';
-import TopNavbar from './components/TopNavbar';
-import AlertMarquee from './components/AlertMarquee';
-import MobileHeader from './components/MobileHeader';
-import MobileBottomNav from './components/MobileBottomNav';
 import { useAppStore } from './stores/useAppStore';
 import { useAppInitialization } from './hooks/useAppInitialization';
 import { useUiZoom } from './hooks/useUiZoom';

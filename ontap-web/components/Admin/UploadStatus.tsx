@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 interface UploadStatusProps {
