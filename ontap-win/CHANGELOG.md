@@ -1,4 +1,9 @@
-﻿## [3.19.2] - 2026-09-20
+## [3.19.3] - 2026-09-22
+### Tính năng mới & Khắc phục lỗi (App Win)
+- **Tính năng Giám khảo:** Đưa tính năng phòng thi Giám Khảo có mặt trên ứng dụng Windows, đồng bộ đầy đủ trải nghiệm thi với bản Web.
+- **Sửa lỗi Đồng bộ:** Khắc phục lỗi sai thứ tự câu hỏi và danh mục khi tải dữ liệu ôn tập (Offline Sync). Dữ liệu sẽ tự động được làm mới chính xác.
+
+## [3.19.2] - 2026-09-20
 ### Tối ưu Hiển thị & Nâng cấp Hệ thống (Web & App Win)
 - **Sửa lỗi giao diện:** Khắc phục lỗi thanh điều hướng che khuất nội dung, loại bỏ thanh cuộn thừa ở trang kết quả giúp xem mượt mà hơn.
 - **Tối ưu Bảng đáp án:** Bảng chọn đáp án Ôn tập & Thi thử được tinh chỉnh để dễ nhìn hơn, tối ưu tương tác trên cả máy tính và điện thoại.

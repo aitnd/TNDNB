@@ -2,7 +2,7 @@ import { supabase } from './supabaseClient';
 import type { License, Subject, Question, Answer } from '../types';
 
 // Helper function for natural sorting of questions (e.g., q2 before q10)
-const naturalSortQuestions = (a: { id: string }, b: { id: string }): number => {
+export const naturalSortQuestions = (a: { id: string }, b: { id: string }): number => {
   // Extracts the number from an ID like 'prefix_q123' or 'nvmt_10'
   const getNum = (id: string): number => {
     const match = id.match(/(\d+)$/); // Use a more general regex to find trailing numbers

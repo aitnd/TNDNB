@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Marquee from 'react-fast-marquee';
 import { fetchActiveMarqueeNotifications, Notification } from '../services/notificationService';
-import { collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../services/firebaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppStore } from '../stores/useAppStore';
@@ -14,8 +14,13 @@ const AlertMarquee: React.FC = () => {
     const { userProfile } = useAppStore(state => state); // Need to import useAppStore
 
     const loadAlerts = async () => {
-        const data = await fetchActiveMarqueeNotifications(user?.uid, userProfile?.role);
-        setAlerts(data);
+        try {
+            const data = await fetchActiveMarqueeNotifications(user?.uid, userProfile?.role);
+            setAlerts(data || []);
+        } catch (error) {
+            // Người dùng chưa đăng nhập hoặc mất mạng: Ẩn thông báo nhẹ nhàng
+            setAlerts([]);
+        }
     };
 
     useEffect(() => {
@@ -36,6 +41,9 @@ const AlertMarquee: React.FC = () => {
 
         const unsubGlobal = onSnapshot(qGlobal, () => {
             loadAlerts(); // Reload all alerts (including personal) when global changes
+        }, () => {
+            // Nuốt lỗi permission-denied khi khách chưa đăng nhập truy cập
+            setAlerts([]);
         });
 
         // Realtime Listener for Personal Alerts (if user exists)
@@ -47,6 +55,8 @@ const AlertMarquee: React.FC = () => {
             );
             unsubPersonal = onSnapshot(qPersonal, () => {
                 loadAlerts();
+            }, () => {
+                setAlerts([]);
             });
         }
 

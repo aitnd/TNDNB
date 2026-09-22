@@ -42,7 +42,7 @@ function setupAutoLaunch() {
                 openAtLogin: true,
                 path: app.getPath('exe')
             });
-            console.log('Auto-launch enabled on first run/install');
+            log.info('Auto-launch enabled on first run/install');
         }
     }
 }
@@ -75,7 +75,7 @@ function createWindow() {
         // Try to load the URL with retries
         const loadDevUrl = () => {
             mainWindow.loadURL('http://127.0.0.1:5173').catch((err) => {
-                console.log('Error loading URL, retrying in 1s...', err);
+                log.error('Error loading URL, retrying in 1s...', err);
                 setTimeout(loadDevUrl, 1000);
             });
         };
@@ -121,13 +121,17 @@ function createWindow() {
         return app.getVersion();
     });
 
+    ipcMain.on('get-app-version-sync', (event) => {
+        event.returnValue = app.getVersion();
+    });
+
     ipcMain.handle('get-resources-path', () => {
         return process.resourcesPath;
     });
 
     // --- AUTO UPDATE HANDLERS ---
     ipcMain.on('download-update', (event, url) => {
-        console.log('Download update requested');
+        log.info('Download update requested');
         // Sử dụng checkForUpdates (autoDownload đã được bật trong config)
         if (autoUpdater) {
             autoUpdater.checkForUpdates().catch(err => {

@@ -12,6 +12,13 @@ export const useAppInitialization = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  useEffect(() => {
+    if (!localStorage.getItem('migrated_display_order_v1')) {
+      localStorage.removeItem('questions_last_sync');
+      localStorage.setItem('migrated_display_order_v1', 'true');
+    }
+  }, []);
+
   const setLicenses = useAppStore(state => state.setLicenses);
   const licenses = useAppStore(state => state.licenses);
   const userName = useAppStore(state => state.userName);

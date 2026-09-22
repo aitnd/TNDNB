@@ -11,6 +11,7 @@ import MobileHeader from './components/MobileHeader';
 import MobileBottomNav from './components/MobileBottomNav';
 import { useAppStore } from './stores/useAppStore'; 
 import { useAppInitialization } from './hooks/useAppInitialization';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useUiZoom } from './hooks/useUiZoom';
 import { AppRoutes } from './routes/AppRoutes';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -416,14 +417,14 @@ const AppContent: React.FC = () => {
       )}
       
       {!isMobileApp && (
-        <>
+        <ErrorBoundary name="TopNavAndMarquee">
           <TopNavbar
             userProfile={userProfile}
             onNavigate={handleTopNavNavigate}
             onLogout={handleLogout}
           />
           <AlertMarquee />
-        </>
+        </ErrorBoundary>
       )}
 
       {isMobileApp && (

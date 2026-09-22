@@ -1,13 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { Toaster } from 'sonner';
 import ThemeSwitcher from './components/ThemeSwitcher';
 import SnowEffect from './components/SnowEffect';
-import SweetAlertPopup from './components/SweetAlertPopup';
-import TopNavbar from './components/TopNavbar';
-import AlertMarquee from './components/AlertMarquee';
-import MobileHeader from './components/MobileHeader';
-import MobileBottomNav from './components/MobileBottomNav';
 import { useAppStore } from './stores/useAppStore';
 import { useAppInitialization } from './hooks/useAppInitialization';
 import { useUiZoom } from './hooks/useUiZoom';
@@ -198,6 +192,52 @@ const AppContent: React.FC = () => {
     }
   };
 
+  const startGiamkhaoOnlineExam = async () => {
+    if (!selectedLicense) return;
+    const allowed = await checkUsage(userProfile);
+    if (allowed !== 'ALLOWED') {
+      await showLimitAlert(userProfile, () => navigate('/ontap/login'));
+      return;
+    }
+    await incrementUsage(userProfile);
+
+    const allQuestions: any[] = [];
+    selectedLicense.subjects.forEach(subj => {
+      allQuestions.push(...subj.questions);
+    });
+    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 30);
+
+    if (selected.length === 0) {
+      alert("Chưa có câu hỏi nào cho hạng bằng này. Vui lòng thử lại sau.");
+      return;
+    }
+
+    const examQuiz: Quiz = {
+      id: `exam_${Date.now()}`,
+      title: `Thi Thử - ${selectedLicense.name}`,
+      questions: selected,
+      timeLimit: 2700
+    };
+
+    setCurrentQuiz(examQuiz);
+    setUserAnswers({});
+    setScore(0);
+    localStorage.removeItem('ontap_quiz_session');
+    navigate('/ontap/giamkhao/thithu');
+  };
+
+  const handleGiamkhaoModeSelect = async (mode: 'practice' | 'exam' | 'online_exam') => {
+    if (mode === 'practice') {
+      if (selectedLicense) {
+        setSubjects(selectedLicense.subjects);
+        navigate('/ontap/giamkhao/chonmon');
+      }
+    } else if (mode === 'online_exam') {
+      startGiamkhaoOnlineExam();
+    }
+  };
+
   const handleSubjectSelect = async (subject: Subject) => {
     const allowed = await checkUsage(userProfile);
     if (allowed !== 'ALLOWED') {
@@ -233,13 +273,15 @@ const AppContent: React.FC = () => {
       setScore(correctCount);
       setUserAnswers(answers);
 
+      const isGK = location.pathname.startsWith('/ontap/giamkhao');
+
       const { param } = getUserRoleConfig(usageConfig!, userProfile);
       const showMonetag = param?.showMonetag || false;
       const maxCountdown = showMonetag ? (usageConfig?.monetagCountdownMaxPerSession ?? 0) : 0;
       const currentCountdownCount = parseInt(sessionStorage.getItem('MONETAG_COUNTDOWN_COUNT') || '0', 10);
       const showCountdownAd = maxCountdown > 0 && currentCountdownCount < maxCountdown;
 
-      if (location.pathname === '/ontap/thithu') {
+      if (location.pathname === '/ontap/thithu' || location.pathname === '/ontap/giamkhao/thithu') {
         if (userProfile) {
           saveExamResult(
             userProfile.id,
@@ -258,7 +300,7 @@ const AppContent: React.FC = () => {
           BadgeService.increaseMockTestProgress(userProfile.id, correctCount, 30).catch(console.error);
         }
 
-        navigate('/ontap/ketquathi');
+        navigate(isGK ? '/ontap/giamkhao/ketquathi' : '/ontap/ketquathi');
       } else {
         if (userProfile && selectedLicense) {
           const subjName = selectedSubject ? selectedSubject.name : null;
@@ -279,7 +321,7 @@ const AppContent: React.FC = () => {
           BadgeService.increasePracticeProgress(userProfile.id, currentQuiz.questions.length).catch(console.error);
         }
 
-        const targetPath = '/ontap/ketqua';
+        const targetPath = isGK ? '/ontap/giamkhao/ketqua' : '/ontap/ketqua';
         // ⏱️ Redirect qua trang đếm ngược nếu config bật (không áp dụng trên Electron)
         if (showCountdownAd && !(window as any).electron) {
           sessionStorage.setItem('MONETAG_COUNTDOWN_COUNT', (currentCountdownCount + 1).toString());
@@ -325,6 +367,7 @@ const AppContent: React.FC = () => {
       case 'login_history': navigate('/ontap/login-history'); break;
       case 'usermanager': navigate('/ontap/usermanager'); break;
       case 'changelog': navigate('/ontap/changelog'); break;
+      case 'giam_khao': navigate('/ontap/giamkhao'); break;
       default: navigate('/ontap/dashboard');
     }
   };
@@ -336,6 +379,7 @@ const AppContent: React.FC = () => {
       handleLicenseSelect={handleLicenseSelect}
       handleNameSubmit={handleNameSubmit}
       handleModeSelect={handleModeSelect}
+      handleGiamkhaoModeSelect={handleGiamkhaoModeSelect}
       handleSubjectSelect={handleSubjectSelect}
       handleQuizFinish={handleQuizFinish}
       handleRetry={handleRetry}

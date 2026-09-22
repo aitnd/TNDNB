@@ -72,7 +72,8 @@ export const saveLicensesOffline = async (licenses: License[]) => {
 };
 
 export const getLicensesOffline = async () => {
-    return await db_offline.licenses.toArray();
+    const arr = await db_offline.licenses.toArray();
+    return arr.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
 };
 
 export const saveResultOffline = async (result: Omit<OfflineResult, 'id' | 'isSynced'>) => {

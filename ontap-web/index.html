@@ -6,15 +6,13 @@
   <link rel="icon" type="image/png" href="https://i.postimg.cc/8PDn1wfM/favicon.png" />
   <link rel="manifest" href="/ontap/manifest.json" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
-  <title>Ứng dụng Ôn tập, ôn thi chứng chỉ chuyên môn phương tiên thủy nội địa</title>
+  <title>Ứng dụng Ôn tập, Ôn thi chứng chỉ chuyên môn phương tiện thủy nội địa</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="/theme.css">
   <script type="importmap">
 {
   "imports": {
@@ -26,76 +24,6 @@
   }
 }
 </script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['var(--font-sans)', 'sans-serif'],
-          },
-          colors: {
-            border: 'hsl(var(--border))',
-            input: 'hsl(var(--input))',
-            ring: 'hsl(var(--ring))',
-            background: 'hsl(var(--background))',
-            foreground: 'hsl(var(--foreground))',
-            primary: {
-              DEFAULT: 'hsl(var(--primary))',
-              foreground: 'hsl(var(--primary-foreground))',
-            },
-            secondary: {
-              DEFAULT: 'hsl(var(--secondary))',
-              foreground: 'hsl(var(--secondary-foreground))',
-            },
-            destructive: {
-              DEFAULT: 'hsl(var(--destructive))',
-              foreground: 'hsl(var(--destructive-foreground))',
-            },
-            success: {
-              DEFAULT: 'hsl(var(--success))',
-              foreground: 'hsl(var(--success-foreground))',
-            },
-            muted: {
-              DEFAULT: 'hsl(var(--muted))',
-              foreground: 'hsl(var(--muted-foreground))',
-            },
-            accent: {
-              DEFAULT: 'hsl(var(--accent))',
-              foreground: 'hsl(var(--accent-foreground))',
-            },
-            popover: {
-              DEFAULT: 'hsl(var(--popover))',
-              foreground: 'hsl(var(--popover-foreground))',
-            },
-            card: {
-              DEFAULT: 'hsl(var(--card))',
-              foreground: 'hsl(var(--card-foreground))',
-            },
-          },
-          borderRadius: {
-            lg: "var(--radius)",
-            md: "calc(var(--radius) - 2px)",
-            sm: "calc(var(--radius) - 4px)",
-          },
-          animation: {
-            'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
-            'shine': 'shine 3s linear infinite',
-          },
-          keyframes: {
-            fadeInUp: {
-              '0%': { opacity: '0', transform: 'translateY(10px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
-            },
-            shine: {
-              '0%': { transform: 'translateX(-100%) skewX(12deg)' },
-              '20%': { transform: 'translateX(100%) skewX(12deg)' },
-              '100%': { transform: 'translateX(100%) skewX(12deg)' },
-            }
-          }
-        }
-      }
-    }
-  </script>
 </head>
 
 <body class="font-sans">
