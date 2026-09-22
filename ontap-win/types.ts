@@ -37,12 +37,14 @@ export interface Question {
 export interface Subject {
   id: string;
   name: string;
+  displayOrder?: number;
   questions: Question[];
 }
 
 export interface License {
   id: string;
   name: string;
+  displayOrder?: number;
   subjects: Subject[];
 }
 

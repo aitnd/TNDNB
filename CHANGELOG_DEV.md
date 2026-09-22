@@ -1,4 +1,16 @@
-﻿## [3.19.2] - 2026-09-20
+## [3.19.3] - 2026-09-22
+### Môi trường Windows (Electron & React)
+- **Feat: Bổ sung tính năng Giám khảo:** 
+  - Copy `GiamKhaoSelectionScreen.tsx` từ Web sang Win.
+  - Tích hợp logic routing và handling (`startGiamkhaoOnlineExam`, `handleGiamkhaoModeSelect`) vào `App.tsx` và `AppRoutes.tsx`.
+- **Fix: Offline Sync & IndexedDB Sorting:**
+  - Thêm `display_order` (foreignTable `subjects`) vào truy vấn Supabase ở `syncService.ts`.
+  - Cập nhật logic `naturalSortQuestions` lên mảng questions lấy về.
+  - Sửa lỗi sắp xếp cứng của Dexie bằng cách lấy `toArray()` rồi `sort()` theo `displayOrder` ở `offlineService.ts`.
+  - Dọn dẹp các import thừa `fetchLicenses` và `Question` trong `syncService.ts`.
+  - Thêm cờ `migrated_display_order_v1` để ép clear localStorage `questions_last_sync` giúp máy khách update db mới.
+
+## [3.19.2] - 2026-09-20
 ### Phase 1-4 UI/UX Refinements & GitHub Release Architecture (Web & Win)
 - **UI & Layout Fixes:** Resolved overlapping Navbar on Web/Win by fixing padding configurations. Removed nested overflow-y-auto scrollbars on ResultsScreen and ExamResultsScreen.
 - **Exam UI Rewrite & Cleanup:** Replaced legacy ExamQuizScreen with ExamQuizScreen2, renamed it globally, and removed dead v1 code. Restored the 5-column answer grid and pointer-events-none for desktop, while allowing text-clicking for mobile Web. Added 11y roles and keyboard handlers to SquareCheckbox.

@@ -1,14 +1,14 @@
 import { auth, db } from './firebaseClient';
 import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db_offline, getUnsyncedResults, markResultAsSynced, saveLicensesOffline } from './offlineService';
-import { fetchLicenses } from './dataService';
+import { naturalSortQuestions } from './dataService';
 import { supabase } from './supabaseClient';
 import type { License } from '../types';
 
 interface AnswerRow { id: string; text: string }
 interface QuestionRow { id: string; text: string; image?: string | null; correct_answer_id: string; answers?: AnswerRow[] | null }
-interface SubjectRow { id: string; name: string; questions?: QuestionRow[] | null }
-interface LicenseRow { id: string; name: string; subjects?: SubjectRow[] | null }
+interface SubjectRow { id: string; name: string; display_order?: number; questions?: QuestionRow[] | null }
+interface LicenseRow { id: string; name: string; display_order?: number; subjects?: SubjectRow[] | null }
 
 export const fetchAndSaveQuestions = async (): Promise<boolean> => {
   if (!navigator.onLine) return false;
@@ -16,17 +16,18 @@ export const fetchAndSaveQuestions = async (): Promise<boolean> => {
     const { data } = await supabase
       .from('licenses')
       .select(`id, name, display_order, subjects (id, name, display_order, questions (*, answers (id, text)))`)
-      .order('display_order', { ascending: true });
+      .order('display_order', { ascending: true })
+      .order('display_order', { foreignTable: 'subjects', ascending: true });
 
     if (data) {
       const licenses: License[] = (data as LicenseRow[]).map((license) => ({
-        id: license.id, name: license.name,
+        id: license.id, name: license.name, displayOrder: license.display_order,
         subjects: (license.subjects || []).map((s) => ({
-          id: s.id, name: s.name,
-          questions: (s.questions || []).map((q) => ({
+          id: s.id, name: s.name, displayOrder: s.display_order,
+          questions: (s.questions as any[] || []).sort(naturalSortQuestions).map((q) => ({
             id: q.id, text: q.text, image: q.image ?? undefined,
             correctAnswerId: q.correct_answer_id,
-            answers: (q.answers || []).map((a) => ({ id: a.id, text: a.text })),
+            answers: (q.answers || []).map((a: any) => ({ id: a.id, text: a.text })),
           })),
         })),
       }));
@@ -75,8 +76,7 @@ export const syncData = async (userId: string) => {
         }
 
         // 2. Tải ngân hàng câu hỏi mới nhất về máy
-        const licenses = await fetchLicenses();
-        await saveLicensesOffline(licenses);
+        await fetchAndSaveQuestions();
 
         // 3. Kiểm tra và cập nhật Profile (Xử lý xung đột)
         const userDocRef = doc(db, 'users', userId);

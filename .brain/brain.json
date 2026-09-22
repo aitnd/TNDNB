@@ -3,7 +3,11 @@
                      "Authentication",
                      "Quiz System",
                      "Class Management",
-                     "GitHub Releases Auto-Update"
+                     "GitHub Releases Auto-Update",
+                     "ErrorBoundary header resilience",
+                     "Admin GitHub multi-upload (exe/yml/blockmap, fail-fast rollback)",
+                     "5-column answer sheet + mobile answer grid",
+                     "Electron tray context menu"
                  ],
     "project":  "TNDNB",
     "architecture":  "Monorepo with Root Portal (Next.js), Web App (Vite), Desktop App (Electron+Vite)",

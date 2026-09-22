@@ -1,4 +1,8 @@
-﻿## [3.19.2] - 2026-09-20
+## [3.19.3] - 2026-09-22
+### Bảo trì & Nâng cấp Hệ thống (Web)
+- **Bảo trì:** Cập nhật phiên bản hệ thống để đồng bộ với ứng dụng Windows.
+
+## [3.19.2] - 2026-09-20
 ### Tối ưu Hiển thị & Nâng cấp Hệ thống (Web & App Win)
 - **Sửa lỗi giao diện:** Khắc phục lỗi thanh điều hướng che khuất nội dung, loại bỏ thanh cuộn thừa ở trang kết quả giúp xem mượt mà hơn.
 - **Tối ưu Bảng đáp án:** Bảng chọn đáp án Ôn tập & Thi thử được tinh chỉnh để dễ nhìn hơn, tối ưu tương tác trên cả máy tính và điện thoại.

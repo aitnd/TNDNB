@@ -1,1 +1,1 @@
-Ho�n t?t Release v3.19.2, fix to�n b? UI/UX v� logic c?p nh?t. Gi?y t? d� chu?n ch?.
+TNDNB v3.19.2 code xong (Phase 1-4 UI/UX + console-fix đạt ~99%). Còn lại: commit fix TopNavbar, push nhánh fix/console-cleanup, bổ sung preview log, publish GitHub Release v3.19.2 (tag + latest.yml), manual Supabase (drop releases, rotate key, RLS), test installer tiếng Việt.
