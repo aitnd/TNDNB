@@ -798,16 +798,16 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
 
                                             {isUploadingRelease && (
                                                 <div className="mt-4">
-                                                    <h5 className="font-bold mb-2 text-sm text-gray-700 dark:text-gray-300">Tiến trình Upload:</h5>
+                                                    <h5 className="font-bold mb-2 text-sm text-foreground">Tiến trình Upload:</h5>
                                                     <div className="space-y-2">
                                                         {Object.entries(githubUploadProgress).map(([fileName, percent]) => (
                                                             <div key={fileName} className="flex flex-col gap-1">
-                                                                <div className="flex justify-between text-xs text-gray-500">
+                                                                <div className="flex justify-between text-xs text-muted-foreground">
                                                                     <span>{fileName}</span>
                                                                     <span>{percent}%</span>
                                                                 </div>
-                                                                <div className="w-full h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                                                                    <div className="h-full bg-blue-600 transition-all duration-300" style={{ width: `${percent}%` }}></div>
+                                                                <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+                                                                    <div className="h-full bg-primary transition-all duration-300" style={{ width: `${percent}%` }}></div>
                                                                 </div>
                                                             </div>
                                                         ))}
