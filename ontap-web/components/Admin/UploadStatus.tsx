@@ -9,7 +9,7 @@ interface UploadStatusProps {
 export default function UploadStatus({ error, success, onRetry }: UploadStatusProps) {
   if (error) {
     return (
-      <div className="mt-4 p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 text-red-700 dark:text-red-300 rounded flex items-center justify-between">
+      <div className="mt-4 p-4 bg-destructive/10 border border-destructive text-destructive rounded flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FaExclamationCircle />
           <span>{error}</span>

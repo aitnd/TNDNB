@@ -786,7 +786,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             <UploadZone onFilesSelected={setSelectedFiles} disabled={isUploadingRelease} />
                                             
                                             {selectedFiles.length > 0 && (
-                                                <div className="mt-4 p-4 border rounded-lg dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50">
+                                                <div className="mt-4 p-4 border rounded-lg bg-muted text-foreground">
                                                     <h5 className="font-bold mb-2">Đã chọn:</h5>
                                                     <ul className="list-disc pl-5">
                                                         {selectedFiles.map(f => (

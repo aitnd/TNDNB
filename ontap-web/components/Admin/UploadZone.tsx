@@ -22,17 +22,12 @@ export const publishReleaseToGitHub = async (
         Swal.fire('Lỗi', 'Vui lòng nhập phiên bản', 'error');
         return false;
     }
-    if (selectedFiles.length !== 3) {
-        Swal.fire('Lỗi', 'Bắt buộc phải chọn đúng 3 file: .exe, .yml, .blockmap.', 'error');
-        return false;
-    }
-
-    const hasExe = selectedFiles.some(f => f.name.endsWith('.exe'));
     const hasYml = selectedFiles.some(f => f.name.endsWith('.yml'));
+    const hasExe = selectedFiles.some(f => f.name.endsWith('.exe'));
     const hasBlockmap = selectedFiles.some(f => f.name.endsWith('.blockmap'));
     
-    if (!hasExe || !hasYml || !hasBlockmap) {
-        Swal.fire('Lỗi', 'Thiếu file. Yêu cầu chọn đủ .exe, .yml và .blockmap.', 'error');
+    if (!hasYml || !hasExe || !hasBlockmap) {
+        Swal.fire('Lỗi', 'Bắt buộc phải chọn file .yml và các file .exe, .blockmap tương ứng.', 'error');
         return false;
     }
 
@@ -80,7 +75,13 @@ export const publishReleaseToGitHub = async (
             });
             
             if (file.name.endsWith('.exe')) {
-                exeUrl = asset.browser_download_url || `https://github.com/aitnd/TNDNB/releases/download/${tag}/${file.name}`;
+                const currentUrl = asset.browser_download_url || `https://github.com/aitnd/TNDNB/releases/download/${tag}/${file.name}`;
+                if (!exeUrl) {
+                    exeUrl = currentUrl;
+                } else if (file.name.includes('x64') || (!file.name.includes('ia32') && file.name.includes('Setup.exe'))) {
+                    // Ưu tiên x64 hoặc bản Setup chung hơn là ia32
+                    exeUrl = currentUrl;
+                }
             }
         }
         
@@ -190,7 +191,7 @@ export default function UploadZone({ onFilesSelected, disabled }: UploadZoneProp
           or click to select files
         </p>
       </div>
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+      {error && <p className="text-destructive text-sm mt-2">{error}</p>}
     </div>
   );
 }
