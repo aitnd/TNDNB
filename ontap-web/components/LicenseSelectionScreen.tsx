@@ -25,12 +25,12 @@ const getLicenseIcon = (license: License, theme: Theme): React.ReactNode => {
     const name = license.name.toLowerCase();
 
     if (theme === 'noel') {
-        if (name.includes('thuyền trưởng')) return <img src="/assets/img/hat.png" alt="Captain Hat" className={noelIconClass} loading="lazy" />;
-        if (name.includes('máy trưởng')) return <img src="/assets/img/gift4.png" alt="Chief Engineer" className={noelIconClass} loading="lazy" />;
-        if (name.includes('thủy thủ')) return <img src="/assets/img/bell.png" alt="Sailor" className={noelIconClass} loading="lazy" />;
-        if (name.includes('lái phương tiện')) return <img src="/assets/img/tree.png" alt="Helm" className={noelIconClass} loading="lazy" />;
-        if (name.includes('chứng chỉ')) return <img src="/assets/img/star-gold.png" alt="Certificate" className={noelIconClass} loading="lazy" />;
-        return <img src="/assets/img/gift5.png" alt="Default" className={noelIconClass} loading="lazy" />;
+        if (name.includes('thuyền trưởng')) return <img src={`${import.meta.env.BASE_URL}assets/img/hat.png`} alt="Captain Hat" className={noelIconClass} loading="lazy" />;
+        if (name.includes('máy trưởng')) return <img src={`${import.meta.env.BASE_URL}assets/img/gift4.png`} alt="Chief Engineer" className={noelIconClass} loading="lazy" />;
+        if (name.includes('thủy thủ')) return <img src={`${import.meta.env.BASE_URL}assets/img/bell.png`} alt="Sailor" className={noelIconClass} loading="lazy" />;
+        if (name.includes('lái phương tiện')) return <img src={`${import.meta.env.BASE_URL}assets/img/tree.png`} alt="Helm" className={noelIconClass} loading="lazy" />;
+        if (name.includes('chứng chỉ')) return <img src={`${import.meta.env.BASE_URL}assets/img/star-gold.png`} alt="Certificate" className={noelIconClass} loading="lazy" />;
+        return <img src={`${import.meta.env.BASE_URL}assets/img/gift5.png`} alt="Default" className={noelIconClass} loading="lazy" />;
     }
 
     if (theme === 'tri-an') {
@@ -96,21 +96,21 @@ const LicenseSelectionScreen: React.FC<LicenseSelectionScreenProps> = ({ license
       <div className="relative text-center mb-10 pt-4">
         <button 
           onClick={() => { triggerHaptic('light'); onBack(); }} 
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-slate-600"
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-card p-2 rounded-2xl shadow-lg border border-border active:scale-90 transition-all font-bold text-muted-foreground"
           aria-label="Quay lại"
         >
-            <ArrowLeftIcon3D className="h-8 w-8 text-slate-800 dark:text-white" />
+            <ArrowLeftIcon3D className="h-8 w-8 text-foreground" />
         </button>
-        <div className="bg-indigo-100 dark:bg-indigo-900/30 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+        <div className="bg-primary/10 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
           {theme === 'noel' ? (
-              <img src="/assets/img/tree.png" alt="Tree" className="h-14 w-14 object-contain drop-shadow-lg animate-pulse" loading="lazy" />
+              <img src={`${import.meta.env.BASE_URL}assets/img/tree.png`} alt="Tree" className="h-14 w-14 object-contain drop-shadow-lg animate-pulse" loading="lazy" />
           ) : (
-              <AnchorIcon3D className="h-14 w-14 text-indigo-600 drop-shadow-md" />
+              <AnchorIcon3D className="h-14 w-14 text-primary drop-shadow-md" />
           )}
         </div>
         
-        <h1 className="text-3xl md:text-5xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Chọn Hạng Bằng</h1>
-        <p className="text-base md:text-lg text-slate-500 mt-2 font-medium px-4">Vui lòng chọn hạng bằng muốn ôn tập và thi thử.</p>
+        <h1 className="text-3xl md:text-5xl font-black text-foreground uppercase tracking-tight">Chọn Hạng Bằng</h1>
+        <p className="text-base md:text-lg text-muted-foreground mt-2 font-medium px-4">Vui lòng chọn hạng bằng muốn ôn tập và thi thử.</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
@@ -120,16 +120,16 @@ const LicenseSelectionScreen: React.FC<LicenseSelectionScreenProps> = ({ license
             <button
               key={license.id}
               onClick={() => { triggerHaptic('medium'); onSelect(license); }}
-              className="group relative overflow-hidden flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-800 rounded-[2.5rem] text-center border-2 border-slate-100 dark:border-slate-700 shadow-xl active:scale-90 transition-all hover:border-indigo-500/50 hover:shadow-indigo-500/10"
+              className="group relative overflow-hidden flex flex-col items-center justify-center p-6 bg-card rounded-[2.5rem] text-center border-2 border-border shadow-xl active:scale-90 transition-all hover:border-primary/50 hover:shadow-primary/10"
             >
               <div className="mb-4 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
                 {getLicenseIcon(license, theme)}
               </div>
-              <h3 className="text-base md:text-lg font-black text-slate-800 dark:text-white leading-tight mb-2">{license.name}</h3>
-              <div className="bg-slate-50 dark:bg-slate-900/50 px-3 py-1 rounded-full border border-slate-100 dark:border-slate-700">
-                <p className="text-[10px] md:text-xs font-black text-indigo-600 uppercase tracking-widest">{license.subjects.length} môn • {totalQuestions} câu</p>
+              <h3 className="text-base md:text-lg font-black text-foreground leading-tight mb-2">{license.name}</h3>
+              <div className="bg-secondary px-3 py-1 rounded-full border border-border">
+                <p className="text-[10px] md:text-xs font-black text-primary uppercase tracking-widest">{license.subjects.length} môn • {totalQuestions} câu</p>
               </div>
-              <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700 group-hover:bg-indigo-500 transition-colors"></div>
+              <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-muted group-hover:bg-primary transition-colors"></div>
             </button>
           )
         })}
