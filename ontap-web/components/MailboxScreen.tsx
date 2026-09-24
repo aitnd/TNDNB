@@ -392,9 +392,9 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile }) => {
     };
 
     return (
-        <div className="w-full h-[calc(100vh-64px)] bg-white dark:bg-black flex">
+        <div className="w-full h-[calc(100vh-64px)] bg-card dark:bg-black flex">
             {/* LEFT SIDEBAR - Users List */}
-            <div className={`w-full md:w-[360px] border-r border-gray-200 dark:border-gray-800 flex flex-col bg-white dark:bg-black ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
+            <div className={`w-full md:w-[360px] border-r border-gray-200 dark:border-gray-800 flex flex-col bg-card dark:bg-black ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
                 {/* Header Sidebar */}
                 <div className="p-4 flex flex-col gap-4">
                     <div className="flex items-center justify-between">
@@ -402,7 +402,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile }) => {
                         <div className="flex gap-2">
                             {/* Decorative Buttons */}
                             <button className="p-2 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors">
-                                <Video size={20} className="text-gray-600 dark:text-gray-300" />
+                                <Video size={20} className="text-muted-foreground dark:text-gray-300" />
                             </button>
                         </div>
                     </div>
@@ -476,11 +476,11 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile }) => {
             </div>
 
             {/* RIGHT MAIN CHAT AREA */}
-            <div className={`flex-1 flex flex-col bg-white dark:bg-black transition-all ${!selectedUser ? 'hidden md:flex items-center justify-center' : 'flex'}`}>
+            <div className={`flex-1 flex flex-col bg-card dark:bg-black transition-all ${!selectedUser ? 'hidden md:flex items-center justify-center' : 'flex'}`}>
                 {selectedUser ? (
                     <>
                         {/* Header */}
-                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-md sticky top-0 z-10 shadow-sm">
+                        <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between bg-card/80 dark:bg-black/80 backdrop-blur-md sticky top-0 z-10 shadow-sm">
                             <div className="flex items-center gap-3">
                                 <button onClick={() => setSelectedUser(null)} className="md:hidden p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full">
                                     <ChevronLeft size={24} className="text-blue-600" />
@@ -519,7 +519,7 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile }) => {
                         )}
 
                         {/* Messages Area - Virtualized */}
-                        <div className="flex-1 p-4 bg-white dark:bg-black overflow-hidden">
+                        <div className="flex-1 p-4 bg-card dark:bg-black overflow-hidden">
                             <Virtuoso
                                 ref={virtuosoRef}
                                 style={{ height: '100%' }}
@@ -620,10 +620,10 @@ const MailboxScreen: React.FC<MailboxScreenProps> = ({ userProfile }) => {
                         </div>
 
                         {/* Input Area */}
-                        <div className="p-3 bg-white dark:bg-black flex items-center gap-2 border-t border-gray-100 dark:border-gray-800 relative">
+                        <div className="p-3 bg-card dark:bg-black flex items-center gap-2 border-t border-gray-100 dark:border-gray-800 relative">
                             {/* Disabled Input overlay if offline */}
                             {!isConnected && (
-                                <div className="absolute inset-0 bg-white/50 dark:bg-black/50 z-10 flex items-center justify-center cursor-not-allowed"></div>
+                                <div className="absolute inset-0 bg-card/50 dark:bg-black/50 z-10 flex items-center justify-center cursor-not-allowed"></div>
                             )}
 
                             <button className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-zinc-800 rounded-full transition-colors relative">

@@ -152,7 +152,7 @@ export const AdminBadgeManager: React.FC<AdminBadgeManagerProps> = ({
         onClick={onClose}
       >
         <motion.div
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-hidden flex flex-col"
+          className="bg-card dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-hidden flex flex-col"
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -170,7 +170,7 @@ export const AdminBadgeManager: React.FC<AdminBadgeManagerProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors text-xl font-bold p-1"
+              className="text-gray-400 hover:text-muted-foreground dark:hover:text-gray-200 transition-colors text-xl font-bold p-1"
             >
               ✕
             </button>

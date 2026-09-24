@@ -64,7 +64,7 @@ const DownloadAppPage: React.FC = () => {
                     <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
                         Tải Ứng Dụng <span className="text-blue-600">Ôn Thi Đường Thuỷ</span>
                     </h1>
-                    <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    <p className="text-xl text-muted-foreground dark:text-gray-300 max-w-2xl mx-auto">
                         Ôn tập mọi lúc, mọi nơi trên mọi thiết bị. Đồng bộ dữ liệu, làm bài thi thử và theo dõi tiến độ học tập của bạn.
                     </p>
                     {appLinks.version && (
@@ -78,13 +78,13 @@ const DownloadAppPage: React.FC = () => {
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
 
                     {/* Windows Card */}
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-slate-700 flex flex-col">
+                    <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-slate-700 flex flex-col">
                         <div className="p-8 flex-1 flex flex-col items-center text-center">
                             <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6 text-blue-600 dark:text-blue-400">
                                 <FaWindows className="text-5xl" />
                             </div>
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Phiên bản Windows</h2>
-                            <p className="text-gray-600 dark:text-gray-400 mb-6">
+                            <p className="text-muted-foreground dark:text-gray-400 mb-6">
                                 Dành cho máy tính để bàn và laptop. Trải nghiệm ôn thi tốt nhất với màn hình lớn.
                             </p>
                             <ul className="text-left text-sm text-gray-500 dark:text-gray-400 space-y-2 mb-8 w-full px-4">
@@ -112,13 +112,13 @@ const DownloadAppPage: React.FC = () => {
                     </div>
 
                     {/* Android Card */}
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-slate-700 flex flex-col">
+                    <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-slate-700 flex flex-col">
                         <div className="p-8 flex-1 flex flex-col items-center text-center">
                             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mb-6 text-green-600 dark:text-green-400">
                                 <FaAndroid className="text-5xl" />
                             </div>
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Phiên bản Android</h2>
-                            <p className="text-gray-600 dark:text-gray-400 mb-6">
+                            <p className="text-muted-foreground dark:text-gray-400 mb-6">
                                 Ôn tập tiện lợi ngay trên điện thoại của bạn. Hỗ trợ đầy đủ tính năng như trên web.
                             </p>
                             <ul className="text-left text-sm text-gray-500 dark:text-gray-400 space-y-2 mb-8 w-full px-4">
@@ -146,13 +146,13 @@ const DownloadAppPage: React.FC = () => {
                     </div>
 
                     {/* 💖 iOS Card - LUÔN HIỂN THỊ */}
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-slate-700 flex flex-col">
+                    <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-slate-700 flex flex-col">
                         <div className="p-8 flex-1 flex flex-col items-center text-center">
                             <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800/50 rounded-2xl flex items-center justify-center mb-6 text-gray-700 dark:text-gray-300">
                                 <FaApple className="text-5xl" />
                             </div>
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Phiên bản iOS</h2>
-                            <p className="text-gray-600 dark:text-gray-400 mb-6">
+                            <p className="text-muted-foreground dark:text-gray-400 mb-6">
                                 Dành cho iPhone và iPad. Trải nghiệm mượt mà trên hệ sinh thái Apple.
                             </p>
                             <ul className="text-left text-sm text-gray-500 dark:text-gray-400 space-y-2 mb-8 w-full px-4">

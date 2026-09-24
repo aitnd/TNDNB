@@ -48,7 +48,7 @@ const GiamKhaoSelectionScreen: React.FC<GiamKhaoSelectionScreenProps> = ({ licen
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="p-10 bg-white/5 dark:bg-black/20 backdrop-blur-xl border border-white/10 dark:border-white/5 rounded-3xl text-center shadow-2xl max-w-md w-full relative overflow-hidden"
+          className="p-10 bg-card/5 dark:bg-black/20 backdrop-blur-xl border border-white/10 dark:border-white/5 rounded-3xl text-center shadow-2xl max-w-md w-full relative overflow-hidden"
         >
           <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
           <div className="mx-auto w-24 h-24 bg-amber-500/10 rounded-full flex items-center justify-center mb-6">
@@ -79,7 +79,7 @@ const GiamKhaoSelectionScreen: React.FC<GiamKhaoSelectionScreenProps> = ({ licen
         >
           <button 
             onClick={onBack} 
-            className="group flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-black/20 hover:bg-white dark:hover:bg-white/10 border border-black/5 dark:border-white/10 rounded-full text-sm font-medium transition-all shadow-sm backdrop-blur-md z-10 self-start md:self-auto"
+            className="group flex items-center gap-2 px-4 py-2 bg-card/50 dark:bg-black/20 hover:bg-card dark:hover:bg-card/10 border border-black/5 dark:border-white/10 rounded-full text-sm font-medium transition-all shadow-sm backdrop-blur-md z-10 self-start md:self-auto"
           >
             <ArrowLeft className="w-4 h-4 text-foreground/70 group-hover:text-foreground transition-colors" />
             <span className="text-foreground/80 group-hover:text-foreground">Trở về</span>
@@ -102,7 +102,7 @@ const GiamKhaoSelectionScreen: React.FC<GiamKhaoSelectionScreenProps> = ({ licen
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="mt-32 md:mt-24 mb-12 bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-3xl p-6 shadow-xl shadow-black/5"
+          className="mt-32 md:mt-24 mb-12 bg-card/40 dark:bg-black/40 backdrop-blur-xl border border-white/50 dark:border-white/10 rounded-3xl p-6 shadow-xl shadow-black/5"
         >
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-black/5 dark:divide-white/10">
             <div className="flex flex-col items-center justify-center pt-4 sm:pt-0">
@@ -141,7 +141,7 @@ const GiamKhaoSelectionScreen: React.FC<GiamKhaoSelectionScreenProps> = ({ licen
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => onSelectLicense(lic)}
-                className="group relative flex flex-col text-left bg-white dark:bg-card border border-black/5 dark:border-white/10 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300"
+                className="group relative flex flex-col text-left bg-card dark:bg-card border border-black/5 dark:border-white/10 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300"
               >
                 {/* Decorative background glow */}
                 <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 bg-amber-500/10 blur-3xl rounded-full group-hover:bg-amber-500/20 transition-all duration-500" />

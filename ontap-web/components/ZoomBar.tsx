@@ -9,7 +9,7 @@ interface ZoomBarProps {
 
 export const ZoomBar: React.FC<ZoomBarProps> = ({ scale, setScale, increase, decrease }) => {
   return (
-    <div className="sticky bottom-0 w-full bg-white dark:bg-slate-900 border-t dark:border-slate-700 text-slate-800 dark:text-slate-200 p-2 flex justify-end items-center gap-2 z-50">
+    <div className="sticky bottom-0 w-full bg-card dark:bg-slate-900 border-t dark:border-slate-700 text-slate-800 dark:text-slate-200 p-2 flex justify-end items-center gap-2 z-50">
       <button onClick={decrease} className="px-2 text-xl" aria-label="Giảm cỡ chữ">-</button>
       <input
         type="range" min="0.5" max="2" step="0.1"

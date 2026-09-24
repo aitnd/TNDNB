@@ -76,7 +76,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ userProfile, onBack }) =>
             <div className="relative text-center mb-8 pt-4">
                 <button 
                   onClick={() => { triggerHaptic('light'); onBack(); }} 
-                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-slate-600"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-card dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-muted-foreground"
                   aria-label="Quay lại"
                 >
                     <ArrowLeftIcon3D className="h-8 w-8 text-slate-800 dark:text-white" />
@@ -104,7 +104,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ userProfile, onBack }) =>
                     const isPass = calculateIsPass(item.score, item.totalQuestions || 1, examType);
                     
                     return (
-                        <div key={item.id} className="relative overflow-hidden bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl p-5 active:scale-[0.98] transition-all">
+                        <div key={item.id} className="relative overflow-hidden bg-card dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl p-5 active:scale-[0.98] transition-all">
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3">
                                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${

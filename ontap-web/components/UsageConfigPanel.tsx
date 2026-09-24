@@ -215,14 +215,14 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-white animate-fade-in">
             {/* Header */}
-            <header className="bg-white dark:bg-slate-800 shadow-sm border-b dark:border-slate-700 sticky top-0 z-30">
+            <header className="bg-card dark:bg-slate-800 shadow-sm border-b dark:border-slate-700 sticky top-0 z-30">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => navigate('/ontap/dashboard')}
                             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                         >
-                            <FaArrowLeft className="text-gray-600 dark:text-gray-300" />
+                            <FaArrowLeft className="text-muted-foreground dark:text-gray-300" />
                         </button>
                         <h1 className="text-xl font-bold flex items-center gap-2">
                             <FaCog className="text-purple-600 animate-spin-slow" />
@@ -247,8 +247,8 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                         <button
                             onClick={() => setActiveMainTab('limits')}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMainTab === 'limits'
-                                ? 'bg-white dark:bg-slate-800 shadow-md text-purple-600 font-bold border-l-4 border-purple-600'
-                                : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-slate-800/50'
+                                ? 'bg-card dark:bg-slate-800 shadow-md text-purple-600 font-bold border-l-4 border-purple-600'
+                                : 'text-muted-foreground dark:text-gray-400 hover:bg-card/50 dark:hover:bg-slate-800/50'
                                 }`}
                         >
                             <FaShieldAlt className="text-xl" />
@@ -257,8 +257,8 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                         <button
                             onClick={() => setActiveMainTab('app_links')}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMainTab === 'app_links'
-                                ? 'bg-white dark:bg-slate-800 shadow-md text-blue-600 font-bold border-l-4 border-blue-600'
-                                : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-slate-800/50'
+                                ? 'bg-card dark:bg-slate-800 shadow-md text-blue-600 font-bold border-l-4 border-blue-600'
+                                : 'text-muted-foreground dark:text-gray-400 hover:bg-card/50 dark:hover:bg-slate-800/50'
                                 }`}
                         >
                             <FaMobileAlt className="text-xl" />
@@ -267,8 +267,8 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                         <button
                             onClick={() => setActiveMainTab('system')}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeMainTab === 'system'
-                                ? 'bg-white dark:bg-slate-800 shadow-md text-orange-600 font-bold border-l-4 border-orange-600'
-                                : 'text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-slate-800/50'
+                                ? 'bg-card dark:bg-slate-800 shadow-md text-orange-600 font-bold border-l-4 border-orange-600'
+                                : 'text-muted-foreground dark:text-gray-400 hover:bg-card/50 dark:hover:bg-slate-800/50'
                                 }`}
                         >
                             <FaServer className="text-xl" />
@@ -281,7 +281,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
 
                         {/* 1. ACCESS LIMITS TAB */}
                         {activeMainTab === 'limits' && (
-                            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border dark:border-slate-700 p-6 animate-fade-in-up">
+                            <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-sm border dark:border-slate-700 p-6 animate-fade-in-up">
                                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                                     <FaShieldAlt className="text-purple-600" />
                                     Cấu hình Giới hạn & Quyền
@@ -297,7 +297,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                 onClick={() => setActiveRole(role.id)}
                                                 className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all border ${activeRole === role.id
                                                     ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-300 font-bold shadow-sm'
-                                                    : 'bg-gray-50 dark:bg-slate-700 border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-600'
+                                                    : 'bg-gray-50 dark:bg-slate-700 border-transparent text-muted-foreground dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-600'
                                                     }`}
                                             >
                                                 <role.icon className={activeRole === role.id ? role.color : ''} />
@@ -329,7 +329,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                 onChange={(e) => updateRoleConfig(activeRole, 'isEnabled', e.target.checked)}
                                                 className="sr-only peer"
                                             />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                 {currentRoleConfig.isEnabled ? 'Đang bật giới hạn' : 'Không giới hạn (Tắt)'}
                                             </span>
@@ -379,7 +379,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="p-8 bg-white dark:bg-slate-800 rounded-xl border border-dashed border-gray-300 dark:border-slate-600 text-center text-gray-500">
+                                        <div className="p-8 bg-card dark:bg-slate-800 rounded-xl border border-dashed border-gray-300 dark:border-slate-600 text-center text-gray-500">
                                             <FaCheckCircle className="text-5xl mx-auto mb-4 text-green-500 opacity-50" />
                                             <p className="text-lg">Người dùng thuộc nhóm này được truy cập không giới hạn.</p>
                                         </div>
@@ -400,7 +400,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => updateRoleConfig(activeRole, 'preventCopy', e.target.checked)}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600 disabled:opacity-50"></div>
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600 disabled:opacity-50"></div>
                                             </label>
                                         </div>
 
@@ -417,7 +417,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => updateRoleConfig(activeRole, 'showAdSense', e.target.checked)}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500 disabled:opacity-50"></div>
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-500 disabled:opacity-50"></div>
                                             </label>
                                         </div>
 
@@ -434,7 +434,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => updateRoleConfig(activeRole, 'showAdsterra', e.target.checked)}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500 disabled:opacity-50"></div>
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500 disabled:opacity-50"></div>
                                             </label>
                                         </div>
 
@@ -451,7 +451,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => updateRoleConfig(activeRole, 'showMonetag', e.target.checked)}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                             </label>
                                         </div>
 
@@ -539,7 +539,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                          </select>
                                                      </div>
 
-                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                    <div className="flex items-center justify-between p-2 bg-card dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
                                                         <div>
                                                             <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Gán/Xóa Giáo viên & Học viên</h6>
                                                             <p className="text-[10px] text-gray-500">Cho phép phân quyền thành viên vào lớp.</p>
@@ -552,7 +552,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 onChange={(e) => updateRoleConfig(activeRole, 'courseAssignMembers', e.target.checked)}
                                                                 className="sr-only peer"
                                                             />
-                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -563,7 +563,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                 <h5 className="font-bold text-sm text-gray-700 dark:text-slate-300 border-b dark:border-slate-700 pb-1.5 uppercase tracking-wider">👤 Quản lý người dùng</h5>
                                                 
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                    <div className="flex items-center justify-between p-2 bg-card dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
                                                         <div>
                                                             <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xem & Sửa tài khoản khác</h6>
                                                             <p className="text-[10px] text-gray-500">Chỉ thao tác trên tài khoản cấp thấp hơn.</p>
@@ -576,11 +576,11 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 onChange={(e) => updateRoleConfig(activeRole, 'userViewEditOthers', e.target.checked)}
                                                                 className="sr-only peer"
                                                             />
-                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                                         </label>
                                                     </div>
 
-                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                    <div className="flex items-center justify-between p-2 bg-card dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
                                                         <div>
                                                             <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Thay đổi vai trò (Role)</h6>
                                                             <p className="text-[10px] text-gray-500">Cho phép chuyển vai trò của tài khoản thấp hơn.</p>
@@ -593,11 +593,11 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 onChange={(e) => updateRoleConfig(activeRole, 'userChangeRoleOthers', e.target.checked)}
                                                                 className="sr-only peer"
                                                             />
-                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                                         </label>
                                                     </div>
 
-                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                    <div className="flex items-center justify-between p-2 bg-card dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
                                                         <div>
                                                             <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xóa vĩnh viễn tài khoản</h6>
                                                             <p className="text-[10px] text-gray-500">Cho phép xóa tài khoản cấp thấp hơn (Xóa mềm).</p>
@@ -610,11 +610,11 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 onChange={(e) => updateRoleConfig(activeRole, 'userDeleteOthers', e.target.checked)}
                                                                 className="sr-only peer"
                                                             />
-                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                                         </label>
                                                     </div>
 
-                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                    <div className="flex items-center justify-between p-2 bg-card dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
                                                         <div>
                                                             <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Đăng xuất từ xa / Thiết bị</h6>
                                                             <p className="text-[10px] text-gray-500">Đăng xuất các thiết bị của tài khoản thấp hơn.</p>
@@ -627,7 +627,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 onChange={(e) => updateRoleConfig(activeRole, 'userForceLogoutOthers', e.target.checked)}
                                                                 className="sr-only peer"
                                                             />
-                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -652,7 +652,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         </select>
                                                     </div>
 
-                                                    <div className="flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
+                                                    <div className="flex items-center justify-between p-2 bg-card dark:bg-slate-800 rounded border border-gray-100 dark:border-slate-700">
                                                         <div>
                                                             <h6 className="font-bold text-gray-800 dark:text-slate-200 text-xs">Xóa bài viết của người khác</h6>
                                                             <p className="text-[10px] text-gray-500">Xóa bài viết do thành viên khác đăng.</p>
@@ -665,7 +665,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 onChange={(e) => updateRoleConfig(activeRole, 'newsDeleteOthers', e.target.checked)}
                                                                 className="sr-only peer"
                                                             />
-                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
+                                                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600 disabled:opacity-50"></div>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -678,7 +678,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
 
                         {/* 2. APP LINKS TAB */}
                         {activeMainTab === 'app_links' && (
-                            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border dark:border-slate-700 p-6 animate-fade-in-up">
+                            <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-sm border dark:border-slate-700 p-6 animate-fade-in-up">
                                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                                     <FaMobileAlt className="text-blue-600" />
                                     Cấu hình Link Tải App
@@ -831,7 +831,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
 
                         {/* 3. SYSTEM TAB */}
                         {activeMainTab === 'system' && (
-                            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border dark:border-slate-700 p-6 animate-fade-in-up">
+                            <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-sm border dark:border-slate-700 p-6 animate-fade-in-up">
                                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                                     <FaServer className="text-orange-600" />
                                     Công cụ Hệ thống
@@ -857,7 +857,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => setConfig({ ...config, showPortalAdSense: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
                                                 <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                     {(config.showPortalAdSense ?? true) ? 'Đang bật' : 'Đã tắt'}
                                                 </span>
@@ -877,7 +877,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => setConfig({ ...config, showPortalAdsterra: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
                                                 <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                     {(config.showPortalAdsterra ?? true) ? 'Đang bật' : 'Đã tắt'}
                                                 </span>
@@ -897,7 +897,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => setConfig({ ...config, showPortalMonetag: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
                                                 <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                                     {(config.showPortalMonetag ?? false) ? 'Đang bật' : 'Đã tắt'}
                                                 </span>
@@ -911,7 +911,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                     <h4 className="font-bold text-lg text-purple-800 dark:text-purple-400 flex items-center gap-2 mb-2">
                                         🔗 Monetag Direct Link URL
                                     </h4>
-                                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                                    <p className="text-sm text-muted-foreground dark:text-gray-300 mb-4">
                                         Dán URL Direct Link từ <a href="https://publishers.monetag.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 underline">Monetag Dashboard</a> vào đây.
                                         Dùng cho nút Download, Auto Popunder, và các vị trí quảng cáo Direct Link.
                                     </p>
@@ -921,7 +921,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             value={config.monetagDirectLinkUrl || ''}
                                             onChange={(e) => setConfig({ ...config, monetagDirectLinkUrl: e.target.value })}
                                             placeholder="VD: https://3nbf4.com/4/11198611"
-                                            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                         />
                                     </div>
                                     {config.monetagDirectLinkUrl && (
@@ -934,7 +934,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                     <h4 className="font-bold text-lg text-yellow-800 dark:text-yellow-500 flex items-center gap-2 mb-2">
                                         <FaShieldAlt /> Bảo vệ Quảng cáo (IVT Shield)
                                     </h4>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                    <p className="text-sm text-muted-foreground dark:text-gray-400 mb-6">
                                         Cấu hình giới hạn tần suất quảng cáo để chống Invalid Traffic và bảo vệ tài khoản quảng cáo.
                                     </p>
 
@@ -950,7 +950,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         type="number"
                                                         value={config.adsenseMaxClicks ?? 2}
                                                         onChange={(e) => setConfig({ ...config, adsenseMaxClicks: parseInt(e.target.value) || 2 })}
-                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
                                                     />
                                                     <span className="text-sm text-gray-500">lần / chu kỳ</span>
                                                 </div>
@@ -963,7 +963,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         type="number"
                                                         value={config.adsenseCooldownMinutes ?? 30}
                                                         onChange={(e) => setConfig({ ...config, adsenseCooldownMinutes: parseInt(e.target.value) || 30 })}
-                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800 focus:ring-2 focus:ring-orange-500"
                                                     />
                                                     <span className="text-sm text-gray-500">phút</span>
                                                 </div>
@@ -992,7 +992,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         type="number"
                                                         value={config.monetagDirectLinkMaxPerSession ?? 0}
                                                         onChange={(e) => setConfig({ ...config, monetagDirectLinkMaxPerSession: parseInt(e.target.value) || 0 })}
-                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagDirectLinkMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
+                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagDirectLinkMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
                                                     />
                                                     <span className="text-sm text-gray-500">lần (0 = tắt)</span>
                                                 </div>
@@ -1016,7 +1016,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         type="number"
                                                         value={config.monetagPopunderMaxPerSession ?? 0}
                                                         onChange={(e) => setConfig({ ...config, monetagPopunderMaxPerSession: parseInt(e.target.value) || 0 })}
-                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagPopunderMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
+                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagPopunderMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
                                                     />
                                                     <span className="text-sm text-gray-500">lần (0 = tắt)</span>
                                                 </div>
@@ -1040,7 +1040,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         type="number"
                                                         value={config.monetagCountdownMaxPerSession ?? 0}
                                                         onChange={(e) => setConfig({ ...config, monetagCountdownMaxPerSession: parseInt(e.target.value) || 0 })}
-                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagCountdownMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
+                                                        className={`w-24 px-3 py-2 rounded-lg border ${(config.monetagCountdownMaxPerSession ?? 0) <= 0 ? 'border-red-300 dark:border-red-900 bg-red-50/10 dark:bg-red-950/10 text-red-900 dark:text-red-100' : 'border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800'} focus:ring-2 focus:ring-purple-500`}
                                                     />
                                                     <span className="text-sm text-gray-500">lần (0 = tắt)</span>
                                                 </div>
@@ -1053,7 +1053,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         type="number"
                                                         value={config.monetagPopunderCooldownMinutes ?? 30}
                                                         onChange={(e) => setConfig({ ...config, monetagPopunderCooldownMinutes: parseInt(e.target.value) || 30 })}
-                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
                                                     />
                                                     <span className="text-sm text-gray-500">phút</span>
                                                 </div>
@@ -1066,7 +1066,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                         type="number"
                                                         value={config.monetagDirectLinkCooldownMinutes ?? 30}
                                                         onChange={(e) => setConfig({ ...config, monetagDirectLinkCooldownMinutes: parseInt(e.target.value) || 30 })}
-                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
+                                                        className="w-24 px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800 focus:ring-2 focus:ring-purple-500"
                                                     />
                                                     <span className="text-sm text-gray-500">phút</span>
                                                 </div>
@@ -1082,7 +1082,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                             <h4 className="font-bold text-lg text-red-800 dark:text-red-400 flex items-center gap-2">
                                                 🛑 Chế độ Bảo trì (Soft Maintenance)
                                             </h4>
-                                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 mb-4">
+                                            <p className="text-sm text-muted-foreground dark:text-gray-300 mt-1 mb-4">
                                                 Bật chế độ này sẽ chặn người dùng truy cập vào ứng dụng và hiển thị màn hình thông báo bảo trì. Admin vẫn có thể đăng nhập qua đường dẫn <code>/login-admin</code> để kiểm tra hệ thống.
                                             </p>
                                             
@@ -1096,7 +1096,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                             value={config.maintenanceMessage || ''}
                                                             onChange={(e) => setConfig({ ...config, maintenanceMessage: e.target.value })}
                                                             placeholder="VD: Hệ thống đang được nâng cấp để phục vụ bạn tốt hơn. Vui lòng quay lại sau ít phút..."
-                                                            className="w-full px-4 py-3 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none h-20"
+                                                            className="w-full px-4 py-3 rounded-lg border border-red-300 dark:border-red-700/50 bg-card dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none h-20"
                                                         />
                                                     </div>
                                                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -1108,7 +1108,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 type="datetime-local"
                                                                 value={config.maintenanceEndTime || ''}
                                                                 onChange={(e) => setConfig({ ...config, maintenanceEndTime: e.target.value })}
-                                                                className="w-full px-4 py-2 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                                className="w-full px-4 py-2 rounded-lg border border-red-300 dark:border-red-700/50 bg-card dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                                             />
                                                         </div>
                                                         <div>
@@ -1120,7 +1120,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 value={config.maintenanceEstimatedTime || ''}
                                                                 onChange={(e) => setConfig({ ...config, maintenanceEstimatedTime: e.target.value })}
                                                                 placeholder="VD: Sớm nhất có thể..."
-                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-card dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                                             />
                                                         </div>
                                                         <div>
@@ -1132,7 +1132,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 value={config.maintenanceSafetyInfo || ''}
                                                                 onChange={(e) => setConfig({ ...config, maintenanceSafetyInfo: e.target.value })}
                                                                 placeholder="VD: Dữ liệu an toàn 100%..."
-                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-card dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                                             />
                                                         </div>
                                                         <div>
@@ -1144,7 +1144,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                                 value={config.maintenanceContact || ''}
                                                                 onChange={(e) => setConfig({ ...config, maintenanceContact: e.target.value })}
                                                                 placeholder="VD: contact@daotaothuyenvien.com"
-                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                                                className="w-full px-4 py-2.5 rounded-lg border border-red-300 dark:border-red-700/50 bg-card dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                                                             />
                                                         </div>
                                                     </div>
@@ -1161,7 +1161,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => setConfig({ ...config, isMaintenancePortal: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
                                             </label>
 
                                             {/* Maint Web */}
@@ -1173,7 +1173,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => setConfig({ ...config, isMaintenanceWeb: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
                                             </label>
 
                                             {/* Maint Win */}
@@ -1185,7 +1185,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
                                                     onChange={(e) => setConfig({ ...config, isMaintenanceWin: e.target.checked })}
                                                     className="sr-only peer"
                                                 />
-                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+                                                <div className="relative w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-card after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
                                             </label>
                                         </div>
                                     </div>
@@ -1194,7 +1194,7 @@ const UsageConfigPanel: React.FC<{ userProfile?: any }> = ({ userProfile }) => {
 
                                 <div className="p-6 bg-orange-50 dark:bg-slate-700/30 rounded-xl border border-orange-200 dark:border-slate-600">
                                     <h4 className="font-bold text-lg mb-2 text-orange-800 dark:text-orange-400 flex items-center gap-2"><FaBroom /> Dọn dẹp dữ liệu rác</h4>
-                                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
+                                    <p className="text-sm text-muted-foreground dark:text-gray-300 mb-6">
                                         Tìm và sửa các tài khoản học viên vẫn còn liên kết với lớp học đã bị xóa (Orphaned Data).
                                         Lỗi này khiến học viên hiển thị "Đã xác thực" nhưng thông tin lớp không tồn tại.
                                     </p>

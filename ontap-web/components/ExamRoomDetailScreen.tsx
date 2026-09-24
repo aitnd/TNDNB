@@ -132,11 +132,11 @@ const ExamRoomDetailScreen: React.FC<ExamRoomDetailScreenProps> = ({ roomId: pro
     return (
         <div className="max-w-6xl mx-auto p-6 space-y-6">
             {/* Header Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div className="bg-card rounded-xl shadow-sm p-6 border border-gray-100">
                 <div className="flex justify-between items-start">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800 mb-2">{room.name}</h1>
-                        <div className="flex gap-4 text-sm text-gray-600">
+                        <div className="flex gap-4 text-sm text-muted-foreground">
                             <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full">
                                 {room.license_id ? `Hạng ${room.license_id}` : 'Tự do'}
                             </span>
@@ -180,7 +180,7 @@ const ExamRoomDetailScreen: React.FC<ExamRoomDetailScreenProps> = ({ roomId: pro
             </div>
 
             {/* Participants Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-card rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-6 border-b border-gray-100 flex justify-between items-center">
                     <h2 className="text-lg font-semibold flex items-center gap-2">
                         <FaUsers className="text-blue-500" />
@@ -190,7 +190,7 @@ const ExamRoomDetailScreen: React.FC<ExamRoomDetailScreenProps> = ({ roomId: pro
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-gray-50 text-gray-600 text-sm uppercase">
+                        <thead className="bg-gray-50 text-muted-foreground text-sm uppercase">
                             <tr>
                                 <th className="px-6 py-4">Thí sinh</th>
                                 <th className="px-6 py-4">SBD</th>
@@ -215,7 +215,7 @@ const ExamRoomDetailScreen: React.FC<ExamRoomDetailScreenProps> = ({ roomId: pro
                                             {p.user_name}
                                             <div className="text-xs text-gray-400 font-normal">{p.user_email}</div>
                                         </td>
-                                        <td className="px-6 py-4 text-gray-600">{p.user_sbd}</td>
+                                        <td className="px-6 py-4 text-muted-foreground">{p.user_sbd}</td>
                                         <td className="px-6 py-4">
                                             <span className={`px-2 py-1 rounded text-xs font-medium ${p.status === 'doing' ? 'bg-blue-100 text-blue-700' :
                                                 p.status === 'submitted' ? 'bg-green-100 text-green-700' :
@@ -227,13 +227,13 @@ const ExamRoomDetailScreen: React.FC<ExamRoomDetailScreenProps> = ({ roomId: pro
                                                         p.status === 'offline' ? 'Mất kết nối' : 'Đã vào'}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-gray-600">
+                                        <td className="px-6 py-4 text-muted-foreground">
                                             {p.answers_count || 0}/{p.total_questions || 0} câu
                                         </td>
                                         <td className="px-6 py-4 font-bold text-blue-600">
                                             {p.score !== undefined ? p.score.toFixed(1) : '--'}
                                         </td>
-                                        <td className="px-6 py-4 text-gray-600">
+                                        <td className="px-6 py-4 text-muted-foreground">
                                             {p.time_left ? `${Math.floor(p.time_left / 60)}p ${p.time_left % 60}s` : '--'}
                                         </td>
                                         <td className="px-6 py-4 text-right space-x-2">

@@ -209,7 +209,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                         Quay lại
                     </button>
                 </div>
-                <div className="text-center p-12 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
+                <div className="text-center p-12 bg-card dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm">
                     <p className="text-gray-500">Bạn chưa được phân lớp.</p>
                 </div>
             </div>
@@ -248,7 +248,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
 
                 {/* Stats */}
                 <div className="flex gap-4">
-                    <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-3">
+                    <div className="bg-card dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-3">
                         <div className="bg-green-100 p-2 rounded-full text-green-600">
                             <FaUserTie />
                         </div>
@@ -257,7 +257,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                             <p className="font-bold text-lg">{teachers.length}</p>
                         </div>
                     </div>
-                    <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-3">
+                    <div className="bg-card dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-3">
                         <div className="bg-blue-100 p-2 rounded-full text-blue-600">
                             <FaUsers />
                         </div>
@@ -273,7 +273,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
 
                 {/* LEFT COL: TEACHERS */}
                 <div className="lg:col-span-1 space-y-6">
-                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 sticky top-20">
+                    <div className="bg-card dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 sticky top-20">
                         <h3 className="font-bold text-lg mb-4 flex items-center gap-2 text-gray-800 dark:text-white border-b pb-3 border-gray-100 dark:border-slate-700">
                             <FaUserTie className="text-green-500" /> Đội ngũ Giáo viên
                         </h3>
@@ -309,19 +309,19 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
 
                 {/* RIGHT COL: CLASSMATES */}
                 <div className="lg:col-span-3">
-                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 min-h-[500px]">
+                    <div className="bg-card dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 min-h-[500px]">
                         <div className="flex items-center gap-2 mb-6">
                             <div className="flex bg-gray-100 dark:bg-slate-700 rounded-lg p-1">
                                 <button
                                     onClick={() => setViewMode('grid')}
-                                    className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-white dark:bg-slate-600 shadow text-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+                                    className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-card dark:bg-slate-600 shadow text-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
                                     title="Dạng lưới"
                                 >
                                     <FaThLarge />
                                 </button>
                                 <button
                                     onClick={() => setViewMode('list')}
-                                    className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white dark:bg-slate-600 shadow text-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+                                    className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-card dark:bg-slate-600 shadow text-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
                                     title="Dạng danh sách"
                                 >
                                     <FaList />
@@ -356,7 +356,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                                                     {s.fullName}
                                                 </h4>
                                                 <div className="space-y-1.5 mt-2">
-                                                    <p className="text-xs text-gray-500 flex items-center gap-1.5 bg-white dark:bg-slate-800 px-2 py-1 rounded border border-gray-100 dark:border-slate-600 w-fit">
+                                                    <p className="text-xs text-gray-500 flex items-center gap-1.5 bg-card dark:bg-slate-800 px-2 py-1 rounded border border-gray-100 dark:border-slate-600 w-fit">
                                                         <span>🎂</span> {s.birthDate || '--/--'}
                                                     </p>
                                                     <p className="text-xs text-gray-500 truncate flex items-center gap-1.5" title={s.address}>
@@ -392,7 +392,7 @@ const MyClassScreen: React.FC<MyClassScreenProps> = ({ userProfile, onBack }) =>
                                         {classmates.map(s => {
                                             const result = studentLatestResults[s.uid] || { type: '--', time: '--', score: '--' };
                                             return (
-                                                <tr key={s.uid} className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                                                <tr key={s.uid} className="bg-card dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                                                     <td className="px-4 py-3 font-medium text-gray-900 dark:text-white flex items-center gap-3">
                                                         <img
                                                             src={s.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.fullName)}`}

@@ -4,7 +4,7 @@ import { rtdb } from '../services/firebaseClient';
 import { motion } from 'framer-motion';
 
 const StatCard = ({ label, count, color }: { label: string, count: number, color: string }) => (
-    <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 p-4 rounded-xl shadow-sm flex items-center justify-between">
+    <div className="bg-card dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 p-4 rounded-xl shadow-sm flex items-center justify-between">
         <div>
             <p className="text-xs text-gray-500 uppercase font-semibold">{label}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{count}</p>

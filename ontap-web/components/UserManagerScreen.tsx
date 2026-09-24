@@ -357,7 +357,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
         <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 p-4 md:p-6 pb-20">
             {/* Header */}
             <div className="flex items-center gap-3 mb-6">
-                <button onClick={onBack} className="p-2.5 bg-white dark:bg-slate-800 rounded-xl shadow hover:bg-gray-100 dark:hover:bg-slate-700 transition">
+                <button onClick={onBack} className="p-2.5 bg-card dark:bg-slate-800 rounded-xl shadow hover:bg-gray-100 dark:hover:bg-slate-700 transition">
                     <FaArrowLeft />
                 </button>
                 <div>
@@ -370,7 +370,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
 
             {/* KPI Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 flex items-center gap-4">
+                <div className="bg-card dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 flex items-center gap-4">
                     <div className="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
                         <FaUsers size={20} />
                     </div>
@@ -379,7 +379,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                         <div className="text-xl font-black">{stats.total}</div>
                     </div>
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 flex items-center gap-4">
+                <div className="bg-card dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 flex items-center gap-4">
                     <div className="p-3 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-xl">
                         <FaUserCheck size={20} />
                     </div>
@@ -388,7 +388,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                         <div className="text-xl font-black">{stats.active}</div>
                     </div>
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 flex items-center gap-4">
+                <div className="bg-card dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 flex items-center gap-4">
                     <div className="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl">
                         <FaUserSlash size={20} />
                     </div>
@@ -400,7 +400,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
             </div>
 
             {/* Main Content Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 p-4 md:p-6">
+            <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50 p-4 md:p-6">
                 
                 {/* Sticky Toolbar Filters */}
                 <div className="flex flex-col xl:flex-row gap-4 mb-6">
@@ -418,7 +418,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                         {/* Status Filter */}
                         <div className="relative flex-1 md:flex-none">
                             <select
-                                className="w-full appearance-none bg-white dark:bg-slate-700 border hover:border-blue-500 px-4 py-2.5 pr-8 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
+                                className="w-full appearance-none bg-card dark:bg-slate-700 border hover:border-blue-500 px-4 py-2.5 pr-8 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
                                 value={filterStatus}
                                 onChange={(e) => { setFilterStatus(e.target.value as any); setCurrentPage(1); }}
                             >
@@ -432,7 +432,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                         {/* Verified Filter */}
                         <div className="relative flex-1 md:flex-none">
                             <select
-                                className="w-full appearance-none bg-white dark:bg-slate-700 border hover:border-blue-500 px-4 py-2.5 pr-8 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
+                                className="w-full appearance-none bg-card dark:bg-slate-700 border hover:border-blue-500 px-4 py-2.5 pr-8 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
                                 value={filterVerified}
                                 onChange={(e) => { setFilterVerified(e.target.value as any); setCurrentPage(1); }}
                             >
@@ -446,7 +446,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                         {/* Class Filter */}
                         <div className="relative flex-1 md:flex-none">
                             <select
-                                className="w-full appearance-none bg-white dark:bg-slate-700 border hover:border-blue-500 px-4 py-2.5 pr-8 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm max-w-[200px]"
+                                className="w-full appearance-none bg-card dark:bg-slate-700 border hover:border-blue-500 px-4 py-2.5 pr-8 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm max-w-[200px]"
                                 value={filterClass}
                                 onChange={(e) => { setFilterClass(e.target.value); setCurrentPage(1); }}
                             >
@@ -462,7 +462,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                         {/* Role Filter */}
                         <div className="relative flex-1 md:flex-none">
                             <select
-                                className="w-full appearance-none bg-white dark:bg-slate-700 border hover:border-blue-500 px-4 py-2.5 pr-8 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
+                                className="w-full appearance-none bg-card dark:bg-slate-700 border hover:border-blue-500 px-4 py-2.5 pr-8 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-sm"
                                 value={filterRole}
                                 onChange={(e) => { setFilterRole(e.target.value as any); setCurrentPage(1); }}
                             >
@@ -649,7 +649,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                         </div>
                         <div className="flex items-center gap-2">
                             <select
-                                className="border border-gray-200 dark:border-slate-700 rounded-xl text-sm p-2 outline-none bg-white dark:bg-slate-800 cursor-pointer"
+                                className="border border-gray-200 dark:border-slate-700 rounded-xl text-sm p-2 outline-none bg-card dark:bg-slate-800 cursor-pointer"
                                 value={itemsPerPage}
                                 onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
                             >
@@ -712,7 +712,7 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'tween', duration: 0.3 }}
-                            className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-white dark:bg-slate-800 z-50 shadow-2xl p-6 overflow-y-auto flex flex-col"
+                            className="fixed top-0 right-0 bottom-0 w-full max-w-md bg-card dark:bg-slate-800 z-50 shadow-2xl p-6 overflow-y-auto flex flex-col"
                         >
                             {/* Header Panel */}
                             <div className="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-slate-700/50 mb-6">
@@ -819,10 +819,10 @@ const UserManagerScreen: React.FC<UserManagerScreenProps> = ({ userProfile, onBa
             {/* EDIT USER MODAL */}
             {showEditModal && editingUser && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={() => setShowEditModal(false)}>
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto border border-gray-100 dark:border-slate-700" onClick={e => e.stopPropagation()}>
+                    <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative max-h-[90vh] overflow-y-auto border border-gray-100 dark:border-slate-700" onClick={e => e.stopPropagation()}>
                         <div className="flex justify-between items-center pb-3 border-b dark:border-slate-700 mb-4">
                             <h2 className="text-lg font-bold">Chỉnh sửa tài khoản: {editingUser.fullName}</h2>
-                            <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-gray-600"><FaTimes /></button>
+                            <button onClick={() => setShowEditModal(false)} className="text-gray-400 hover:text-muted-foreground"><FaTimes /></button>
                         </div>
                         <form onSubmit={handleSaveOtherUser} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

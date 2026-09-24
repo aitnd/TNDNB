@@ -143,7 +143,7 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
             </div>
 
             {/* Room List */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="bg-card rounded-lg shadow overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
@@ -154,7 +154,7 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chi tiết</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-card divide-y divide-gray-200">
                         {loading ? (
                             <tr><td colSpan={5} className="text-center py-4">Đang tải...</td></tr>
                         ) : rooms.length === 0 ? (
@@ -192,7 +192,7 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
             {/* Create Modal */}
             {showCreateModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-lg w-full max-w-md">
+                    <div className="bg-card p-6 rounded-lg w-full max-w-md">
                         <h2 className="text-xl font-bold mb-4">Tạo Phòng Thi Mới</h2>
                         <form onSubmit={handleCreateRoom} className="space-y-4">
                             <div>

@@ -31,7 +31,7 @@ const GoogleAnalyticsWidget: React.FC<GoogleAnalyticsWidgetProps> = ({ userRole 
             <div className="relative group rounded-2xl p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl">
 
                 {/* Inner Content */}
-                <div className="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden h-full relative">
+                <div className="bg-card dark:bg-zinc-900 rounded-2xl overflow-hidden h-full relative">
 
                     {/* Header Section */}
                     <div className="px-6 py-4 border-b border-gray-100 dark:border-zinc-800 flex justify-between items-center bg-gray-50/50 dark:bg-zinc-800/50 backdrop-blur-sm">
@@ -70,11 +70,11 @@ const GoogleAnalyticsWidget: React.FC<GoogleAnalyticsWidgetProps> = ({ userRole 
                     </div>
 
                     {/* Iframe Container */}
-                    <div className="relative w-full h-[600px] bg-white dark:bg-zinc-950 transition-all duration-500">
+                    <div className="relative w-full h-[600px] bg-card dark:bg-zinc-950 transition-all duration-500">
 
                         {/* Loading Overlay */}
                         {isLoading && (
-                            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white dark:bg-zinc-900">
+                            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-card dark:bg-zinc-900">
                                 <div className="w-12 h-12 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mb-4"></div>
                                 <p className="text-sm text-gray-500 animate-pulse">Đang tải dữ liệu báo cáo...</p>
                             </div>

@@ -27,7 +27,7 @@ const NameInputScreen: React.FC<NameInputScreenProps> = ({ onNameSubmit, onBack 
       <div className="relative text-center mb-12">
         <button 
           onClick={() => { triggerHaptic('light'); onBack(); }} 
-          className="absolute left-0 top-0 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-slate-600"
+          className="absolute left-0 top-0 bg-card dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-muted-foreground"
           aria-label="Quay lại"
         >
             <ArrowLeftIcon3D className="h-8 w-8 text-slate-800 dark:text-white" />
@@ -43,7 +43,7 @@ const NameInputScreen: React.FC<NameInputScreenProps> = ({ onNameSubmit, onBack 
         </p>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-700">
+      <div className="bg-card dark:bg-slate-800 p-10 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-700">
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label htmlFor="name" className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">

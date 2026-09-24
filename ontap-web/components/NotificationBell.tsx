@@ -214,7 +214,7 @@ const NotificationBell: React.FC = () => {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={handleToggle}
-                className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+                className="relative p-2 text-muted-foreground dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
                 title="Thông báo"
             >
                 <FaBell className={`text-xl ${unreadCount > 0 ? 'text-yellow-500 animate-swing' : ''}`} />
@@ -226,7 +226,7 @@ const NotificationBell: React.FC = () => {
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-2xl overflow-hidden z-50 border border-gray-200 dark:border-gray-700 animate-fade-in-down">
+                <div className="absolute right-0 mt-2 w-80 bg-card dark:bg-slate-800 rounded-xl shadow-2xl overflow-hidden z-50 border border-gray-200 dark:border-gray-700 animate-fade-in-down">
                     <div className="p-3 bg-gray-50 dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                         <h3 className="font-semibold text-gray-800 dark:text-white">Thông báo</h3>
                         <div className="flex gap-3 text-xs">
@@ -260,7 +260,7 @@ const NotificationBell: React.FC = () => {
                                                 {!notif.read && <FaCircle className="inline-block text-[8px] text-blue-500 mr-1 mb-0.5" />}
                                                 {notif.title}
                                             </p>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{notif.body}</p>
+                                            <p className="text-sm text-muted-foreground dark:text-gray-400 line-clamp-2">{notif.body}</p>
                                         </div>
 
                                         {/* Delete Button - Only for non-special/attention */}

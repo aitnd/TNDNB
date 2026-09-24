@@ -110,7 +110,7 @@ const ClassList: React.FC<ClassListProps> = ({
 
             {/* Insights Bar */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
+                <div className="bg-card dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xl">
                         <FaSchool />
                     </div>
@@ -119,7 +119,7 @@ const ClassList: React.FC<ClassListProps> = ({
                         <p className="text-2xl font-bold text-gray-800 dark:text-white">{courses.length}</p>
                     </div>
                 </div>
-                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
+                <div className="bg-card dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
                         <FaUsers />
                     </div>
@@ -128,7 +128,7 @@ const ClassList: React.FC<ClassListProps> = ({
                         <p className="text-2xl font-bold text-gray-800 dark:text-white">{totalStudents}</p>
                     </div>
                 </div>
-                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
+                <div className="bg-card dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
                         <div className="relative">
                             <FaSchool />
@@ -150,7 +150,7 @@ const ClassList: React.FC<ClassListProps> = ({
                     </div>
                     <input
                         type="text"
-                        className="w-full pl-12 pr-10 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 focus:border-teal-500 rounded-xl shadow-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none transition-all duration-300"
+                        className="w-full pl-12 pr-10 py-3 bg-card dark:bg-slate-800 border border-gray-200 dark:border-slate-700 focus:border-teal-500 rounded-xl shadow-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none transition-all duration-300"
                         placeholder="Tìm kiếm lớp học theo tên hoặc mô tả..."
                         value={courseSearchTerm}
                         onChange={(e) => {setCourseSearchTerm(e.target.value); setCurrentPage(1);}}
@@ -172,7 +172,7 @@ const ClassList: React.FC<ClassListProps> = ({
                             <button
                                 key={status}
                                 onClick={() => {setStatusFilter(status); setCurrentPage(1);}}
-                                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${statusFilter === status ? 'bg-white dark:bg-slate-700 text-teal-600 dark:text-teal-400 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
+                                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${statusFilter === status ? 'bg-card dark:bg-slate-700 text-teal-600 dark:text-teal-400 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
                             >
                                 {status === 'all' ? 'Tất cả' : status === 'active' ? 'Hoạt động' : 'Đã kết thúc'}
                             </button>
@@ -183,13 +183,13 @@ const ClassList: React.FC<ClassListProps> = ({
 
                     <button 
                         onClick={() => handleSort('name')}
-                        className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${sortKey === 'name' ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800' : 'bg-white dark:bg-slate-800 text-gray-600 border border-gray-200 dark:border-slate-700'}`}
+                        className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${sortKey === 'name' ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800' : 'bg-card dark:bg-slate-800 text-muted-foreground border border-gray-200 dark:border-slate-700'}`}
                     >
                         Tên {sortKey === 'name' && (sortOrder === 'asc' ? <FaSortAmountDown /> : <FaSortAmountUp />)}
                     </button>
                     <button 
                         onClick={() => handleSort('createdAt')}
-                        className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${sortKey === 'createdAt' ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800' : 'bg-white dark:bg-slate-800 text-gray-600 border border-gray-200 dark:border-slate-700'}`}
+                        className={`px-3 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${sortKey === 'createdAt' ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800' : 'bg-card dark:bg-slate-800 text-muted-foreground border border-gray-200 dark:border-slate-700'}`}
                     >
                         Mới nhất {sortKey === 'createdAt' && (sortOrder === 'asc' ? <FaSortAmountDown /> : <FaSortAmountUp />)}
                     </button>
@@ -198,10 +198,10 @@ const ClassList: React.FC<ClassListProps> = ({
 
                     {/* View Toggle */}
                     <div className="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-xl">
-                        <button onClick={() => setViewMode('grid')} className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`} title="Grid View">
+                        <button onClick={() => setViewMode('grid')} className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-card dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400 hover:text-muted-foreground'}`} title="Grid View">
                             <FaThLarge />
                         </button>
-                        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`} title="List View">
+                        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-card dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400 hover:text-muted-foreground'}`} title="List View">
                             <FaList />
                         </button>
                     </div>
@@ -224,7 +224,7 @@ const ClassList: React.FC<ClassListProps> = ({
                     <p className="mt-4 text-gray-500 animate-pulse">Đang tải danh sách lớp học...</p>
                 </div>
             ) : paginatedCourses.length === 0 ? (
-                <div className="text-center p-16 bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-xl max-w-2xl mx-auto">
+                <div className="text-center p-16 bg-card dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-xl max-w-2xl mx-auto">
                     <div className="bg-gray-50 dark:bg-slate-700 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
                         <FaSchool className="w-12 h-12 text-gray-300" />
                     </div>
@@ -253,7 +253,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                     <div
                                         key={course.id}
                                         onClick={() => onSelectCourse(course)}
-                                        className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-700 overflow-hidden cursor-pointer transition-all duration-200 flex items-center p-4 gap-4 animate-fade-in group"
+                                        className="bg-card dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-700 overflow-hidden cursor-pointer transition-all duration-200 flex items-center p-4 gap-4 animate-fade-in group"
                                         style={{ animationDelay: `${idx * 0.05}s` }}
                                     >
                                         <div className="w-20 h-20 rounded-xl flex-shrink-0 bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center relative overflow-hidden">
@@ -273,7 +273,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                                 </div>
                                             </div>
                                             <p className="text-sm text-gray-500 truncate mt-1">{course.description || 'Chưa có mô tả'}</p>
-                                            <div className="flex items-center gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
+                                            <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground dark:text-gray-400">
                                                 <div className="flex items-center gap-1.5"><FaUserTie className="text-blue-500"/> <span className="truncate max-w-[150px]">{course.headTeacherId ? (headTeacherNames[course.headTeacherId] || '...') : 'Chưa phân công'}</span></div>
                                                 <div className="flex items-center gap-1.5"><FaUsers className="text-teal-500"/> {classStats[course.id] || 0} học viên</div>
                                             </div>
@@ -292,7 +292,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                 <div
                                     key={course.id}
                                     onClick={() => onSelectCourse(course)}
-                                    className="bg-white dark:bg-slate-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-gray-100 dark:border-slate-700 overflow-hidden cursor-pointer hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col relative animate-fade-in"
+                                    className="bg-card dark:bg-slate-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-gray-100 dark:border-slate-700 overflow-hidden cursor-pointer hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col relative animate-fade-in"
                                     style={{ animationDelay: `${idx * 0.05}s` }}
                                 >
                                     {(canEditThis || canDeleteThis) && (
@@ -300,7 +300,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                             {canEditThis && (
                                                 <button
                                                     onClick={(e) => onEditCourse(course, e)}
-                                                    className="p-2.5 bg-white/90 dark:bg-slate-800/90 text-blue-600 dark:text-blue-400 rounded-xl shadow-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                                                    className="p-2.5 bg-card/90 dark:bg-slate-800/90 text-blue-600 dark:text-blue-400 rounded-xl shadow-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
                                                     title="Sửa lớp"
                                                 >
                                                     <FaEdit size={16} />
@@ -309,7 +309,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                             {canDeleteThis && (
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); onDeleteCourse(course.id); }}
-                                                    className="p-2.5 bg-white/90 dark:bg-slate-800/90 text-red-600 dark:text-red-400 rounded-xl shadow-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                                                    className="p-2.5 bg-card/90 dark:bg-slate-800/90 text-red-600 dark:text-red-400 rounded-xl shadow-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                                                     title="Xóa lớp"
                                                 >
                                                     <FaTrash size={16} />
@@ -331,7 +331,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                             <h3 className="font-bold text-xl text-white truncate drop-shadow-md">{course.name}</h3>
                                             <div className="flex items-center gap-2 mt-2">
                                                 {course.licenseId && (
-                                                    <span className="text-[10px] font-bold text-teal-100 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                                    <span className="text-[10px] font-bold text-teal-100 bg-card/20 backdrop-blur-md px-2 py-0.5 rounded-full uppercase tracking-wider">
                                                         {licenses.find(l => l.id === course.licenseId)?.name || course.licenseId}
                                                     </span>
                                                 )}
@@ -350,7 +350,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                             {course.description || 'Chưa có mô tả chi tiết cho lớp học này.'}
                                         </p>
                                         <div className="flex justify-between items-center pt-5 border-t border-gray-50 dark:border-slate-700">
-                                            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                                            <div className="flex items-center gap-2 text-muted-foreground dark:text-gray-300">
                                                 <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
                                                     <FaUserTie className="text-blue-600" />
                                                 </div>
@@ -362,7 +362,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                                     {course.createdBy && creatorProfiles[course.createdBy] && (
                                                         <div className="flex items-center gap-1.5 mt-1 border-t border-gray-100 dark:border-slate-700/50 pt-1">
                                                             <span className="text-[9px] text-gray-400 uppercase font-bold">Người tạo:</span>
-                                                            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 truncate max-w-[80px]" title={creatorProfiles[course.createdBy].name}>
+                                                            <span className="text-xs font-semibold text-muted-foreground dark:text-gray-300 truncate max-w-[80px]" title={creatorProfiles[course.createdBy].name}>
                                                               {creatorProfiles[course.createdBy].name}
                                                             </span>
                                                         </div>
@@ -381,7 +381,7 @@ const ClassList: React.FC<ClassListProps> = ({
 
                     {/* Pagination Bar */}
                     {totalPages > 1 && (
-                        <div className="mt-12 flex flex-col sm:flex-row justify-between items-center gap-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                        <div className="mt-12 flex flex-col sm:flex-row justify-between items-center gap-6 bg-card dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
                             <span className="text-sm text-gray-500">
                                 Hiển thị <span className="font-bold text-gray-800 dark:text-gray-200">{paginatedCourses.length}</span> trong <span className="font-bold text-gray-800 dark:text-gray-200">{filteredAndSortedCourses.length}</span> lớp học
                             </span>
@@ -398,7 +398,7 @@ const ClassList: React.FC<ClassListProps> = ({
                                         <button
                                             key={page}
                                             onClick={() => setCurrentPage(page)}
-                                            className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${currentPage === page ? 'bg-teal-600 text-white shadow-lg scale-110' : 'bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-gray-300 hover:border-teal-500'}`}
+                                            className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${currentPage === page ? 'bg-teal-600 text-white shadow-lg scale-110' : 'bg-card dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-muted-foreground dark:text-gray-300 hover:border-teal-500'}`}
                                         >
                                             {page}
                                         </button>

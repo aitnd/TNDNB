@@ -35,7 +35,7 @@ export const BadgeUnlockPopup: React.FC<BadgeUnlockPopupProps> = ({ badgeId, isO
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ type: "spring", damping: 15 }}
-            className="relative bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden"
+            className="relative bg-card dark:bg-gray-800 rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden"
           >
             {/* Background rays effect */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none opacity-20">
@@ -49,7 +49,7 @@ export const BadgeUnlockPopup: React.FC<BadgeUnlockPopupProps> = ({ badgeId, isO
 
             <button 
               onClick={onClose}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white z-10"
+              className="absolute top-4 right-4 text-gray-400 hover:text-muted-foreground dark:hover:text-white z-10"
             >
               <X size={24} />
             </button>
@@ -85,7 +85,7 @@ export const BadgeUnlockPopup: React.FC<BadgeUnlockPopupProps> = ({ badgeId, isO
               <h3 className={`text-xl font-bold mb-2 bg-gradient-to-r ${badge.color} bg-clip-text text-transparent`}>
                 {badge.name}
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-muted-foreground dark:text-gray-300">
                 {badge.description}
               </p>
               

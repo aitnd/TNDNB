@@ -101,7 +101,7 @@ const NativeSettingsModal: React.FC<NativeSettingsModalProps> = ({ isOpen, onClo
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
             
-            <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-[32px] overflow-hidden shadow-2xl border border-white/10 animate-scale-up">
+            <div className="relative w-full max-w-md bg-card dark:bg-slate-900 rounded-[32px] overflow-hidden shadow-2xl border border-white/10 animate-scale-up">
                 {/* Header */}
                 <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-gradient-to-r from-blue-500/10 to-violet-500/10">
                     <div className="flex items-center gap-3">
@@ -132,7 +132,7 @@ const NativeSettingsModal: React.FC<NativeSettingsModalProps> = ({ isOpen, onClo
                             onClick={toggleBiometric}
                             className={`w-14 h-8 rounded-full p-1 transition-colors duration-300 ${biometricEnabled ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'}`}
                         >
-                            <div className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${biometricEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
+                            <div className={`w-6 h-6 bg-card rounded-full shadow-md transform transition-transform duration-300 ${biometricEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
                         </button>
                     </div>
 
@@ -152,7 +152,7 @@ const NativeSettingsModal: React.FC<NativeSettingsModalProps> = ({ isOpen, onClo
                                 onClick={toggleNotifications}
                                 className={`w-14 h-8 rounded-full p-1 transition-colors duration-300 ${notificationsEnabled ? 'bg-orange-500' : 'bg-slate-300 dark:bg-slate-700'}`}
                             >
-                                <div className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${notificationsEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
+                                <div className={`w-6 h-6 bg-card rounded-full shadow-md transform transition-transform duration-300 ${notificationsEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
                             </button>
                         </div>
                         {notificationsEnabled && (
@@ -167,7 +167,7 @@ const NativeSettingsModal: React.FC<NativeSettingsModalProps> = ({ isOpen, onClo
                                             triggerHaptic('light');
                                         }));
                                     }}
-                                    className="border border-slate-300 dark:border-slate-600 rounded p-1 text-sm bg-white dark:bg-slate-700"
+                                    className="border border-slate-300 dark:border-slate-600 rounded p-1 text-sm bg-card dark:bg-slate-700"
                                 />
                             </div>
                         )}

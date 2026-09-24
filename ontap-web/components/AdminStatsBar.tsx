@@ -75,7 +75,7 @@ const AdminStatsBar: React.FC<AdminStatsBarProps> = ({ userRole }) => {
             transition={{ duration: 0.4 }}
             className="w-full"
         >
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 px-3 py-1.5 rounded-2xl bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md border border-gray-200/50 dark:border-zinc-700/50 shadow-sm">
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 px-3 py-1.5 rounded-2xl bg-card/60 dark:bg-zinc-900/60 backdrop-blur-md border border-gray-200/50 dark:border-zinc-700/50 shadow-sm">
                 {/* Chấm xanh nhấp nháy */}
                 <div className="flex items-center gap-1.5 mr-1">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />

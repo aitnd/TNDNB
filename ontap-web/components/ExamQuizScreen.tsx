@@ -38,7 +38,7 @@ const SquareCheckbox = ({ checked, onChange }: { checked: boolean, onChange: () 
             }
         }}
         onClick={onChange}
-        className={`w-[14px] h-[14px] border border-[#999] inline-block cursor-pointer bg-white relative ${checked ? 'bg-[#333]' : ''}`}
+        className={`w-[14px] h-[14px] border border-[#999] inline-block cursor-pointer bg-card relative ${checked ? 'bg-[#333]' : ''}`}
     >
         {checked && (
             <div className="absolute top-[2px] left-[2px] w-[8px] h-[8px] bg-[#333]"></div>
@@ -175,22 +175,22 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
     return (
         <div className="w-full max-w-7xl mx-auto font-sans text-black shadow-lg animate-slide-in-right rounded-md" style={{ '--content-scale': scale } as React.CSSProperties}>
             <div className="h-3 bg-yellow-700 rounded-t-md border-b-2 border-yellow-900"></div>
-            <div className="bg-white p-4">
+            <div className="bg-card p-4">
                 <div className="flex justify-between items-start pb-4 border-b border-gray-300">
                     <div className="flex gap-4 items-start">
                         <img
                             src={userProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`}
                             alt="Avatar"
-                            className="w-[100px] h-[130px] border border-gray-300 object-cover p-1 bg-white"
+                            className="w-[100px] h-[130px] border border-gray-300 object-cover p-1 bg-card"
                             onError={(e) => {
                                 (e.target as HTMLImageElement).src = 'https://i.postimg.cc/8PDn1wfM/favicon.png';
                             }} loading="lazy" />
                         <div className="text-sm space-y-1">
                             <p className="font-bold text-blue-700 text-lg uppercase">{userProfile?.full_name || userProfile?.fullName || userName || 'Học viên'}</p>
-                            <p>Số báo danh: <span className="font-semibold text-gray-800">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
-                            <p>Ngày sinh: <span className="font-semibold text-gray-800">{formatDate(userProfile?.birthDate)}</span></p>
-                            <p>Địa chỉ: <span className="font-semibold text-gray-800">{userProfile?.address || '---'}</span></p>
-                            <p>Lớp: <span className="font-semibold text-gray-800">{userProfile?.class || userProfile?.courseName || '---'}</span></p>
+                            <p>Số báo danh: <span className="font-semibold text-foreground">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
+                            <p>Ngày sinh: <span className="font-semibold text-foreground">{formatDate(userProfile?.birthDate)}</span></p>
+                            <p>Địa chỉ: <span className="font-semibold text-foreground">{userProfile?.address || '---'}</span></p>
+                            <p>Lớp: <span className="font-semibold text-foreground">{userProfile?.class || userProfile?.courseName || '---'}</span></p>
                             <p>Hạng bằng: <span className="font-bold text-red-600 border border-red-500 px-1 rounded bg-red-50">{selectedLicense?.name || '---'}</span></p>
                         </div>
                     </div>
@@ -201,7 +201,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                             <p>Bù giờ: 0 phút</p>
                             <p>Còn lại: <span className="font-bold">{formatTime(timeLeft)}</span></p>
                         </div>
-                        <button onClick={handleBackWithConfirm} className="text-sm text-gray-600 hover:text-red-500 font-semibold">Thoát</button>
+                        <button onClick={handleBackWithConfirm} className="text-sm text-muted-foreground hover:text-red-500 font-semibold">Thoát</button>
                     </div>
                 </div>
 
@@ -239,11 +239,11 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                                             }`}
                                         >
                                             <div className={`flex-none w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 ${
-                                                isSelected ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
+                                                isSelected ? 'bg-blue-600 text-white' : 'bg-gray-200 text-foreground'
                                             }`}>
                                                 {String.fromCharCode(65 + index)}
                                             </div>
-                                            <p className={`${isSelected ? 'font-bold text-blue-700' : 'text-gray-800'}`} style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{answer.text}</p>
+                                            <p className={`${isSelected ? 'font-bold text-blue-700' : 'text-foreground'}`} style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{answer.text}</p>
                                         </div>
                                     );
                                 })}
@@ -296,7 +296,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                                         {quiz.questions.map((q, index) => (
                                             <tr key={q.id} className={currentQuestionIndex === index ? 'bg-cyan-200' : 'hover:bg-gray-50'}>
                                                 <td
-                                                    className={`border border-gray-400 p-2 font-bold text-center cursor-pointer whitespace-nowrap ${currentQuestionIndex === index ? 'text-black' : 'text-gray-500'}`}
+                                                    className={`border border-gray-400 p-2 font-bold text-center cursor-pointer whitespace-nowrap ${currentQuestionIndex === index ? 'text-black' : 'text-muted-foreground'}`}
                                                     onClick={() => setCurrentQuestionIndex(index)}
                                                 >
                                                     Câu {index + 1}
@@ -334,7 +334,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                                         onClick={() => { triggerHaptic('light'); setCurrentQuestionIndex(index); }}
                                         className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs transition-all ${
                                             isCurrent ? 'bg-blue-600 text-white ring-2 ring-blue-300 scale-110' :
-                                            isAnswered ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-white text-gray-500 border border-gray-200'
+                                            isAnswered ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-card text-muted-foreground border border-gray-200'
                                         }`}
                                      >
                                          {index + 1}

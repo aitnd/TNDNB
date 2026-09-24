@@ -216,7 +216,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
                                 onClick={() => { triggerHaptic('light'); setCurrentQuestionIndex(index); }}
                                 className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs transition-all ${
                                     isCurrent ? 'bg-blue-600 text-white ring-2 ring-blue-300 scale-110' :
-                                    hasAnswered ? (isCorrect ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300') : 'bg-white text-gray-500 border border-gray-200'
+                                    hasAnswered ? (isCorrect ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300') : 'bg-card text-gray-500 border border-gray-200'
                                 }`}
                              >
                                  {index + 1}

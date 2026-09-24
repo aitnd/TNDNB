@@ -1,5 +1,11 @@
 @import "tailwindcss";
-@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+@custom-variant dark (&:where(
+  [data-theme='dark'], [data-theme='dark'] *,
+  [data-theme='modern'], [data-theme='modern'] *,
+  [data-theme='sunrise'], [data-theme='sunrise'] *,
+  [data-theme='tri-an'], [data-theme='tri-an'] *,
+  [data-theme='noel'], [data-theme='noel'] *,
+  [data-theme='premium'], [data-theme='premium'] *));
 
 @theme {
   --font-sans: var(--font-sans), sans-serif;

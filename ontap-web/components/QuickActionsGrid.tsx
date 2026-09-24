@@ -63,7 +63,7 @@ const ActionTile: React.FC<{ action: QuickAction; index: number }> = ({ action, 
             triggerHaptic('light');
             action.onClick();
         }}
-        className="relative group rounded-2xl p-4 bg-white/60 dark:bg-zinc-800/60 backdrop-blur-md border border-gray-200/50 dark:border-zinc-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 text-left shadow-sm hover:shadow-md"
+        className="relative group rounded-2xl p-4 bg-card/60 dark:bg-zinc-800/60 backdrop-blur-md border border-gray-200/50 dark:border-zinc-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 text-left shadow-sm hover:shadow-md"
     >
         {/* Badge thông báo */}
         {action.badge && action.badge > 0 && (
@@ -98,12 +98,12 @@ const SecondaryButton: React.FC<{ action: QuickAction; index: number }> = ({ act
             triggerHaptic('light');
             action.onClick();
         }}
-        className="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl bg-white/60 dark:bg-zinc-800/60 backdrop-blur-md border border-gray-200/50 dark:border-zinc-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md"
+        className="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl bg-card/60 dark:bg-zinc-800/60 backdrop-blur-md border border-gray-200/50 dark:border-zinc-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-md"
     >
         <div className="text-slate-500 dark:text-slate-400 group-hover:text-blue-500">
             {action.icon}
         </div>
-        <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{action.label}</span>
+        <span className="text-sm font-semibold text-muted-foreground dark:text-slate-300">{action.label}</span>
     </motion.button>
 );
 

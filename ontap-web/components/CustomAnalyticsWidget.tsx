@@ -101,7 +101,7 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-4xl mb-4"
         >
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 overflow-hidden transition-all duration-300">
+            <div className="bg-card dark:bg-zinc-900 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 overflow-hidden transition-all duration-300">
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 dark:border-zinc-800 flex justify-between items-center bg-gradient-to-r from-gray-50 to-white dark:from-zinc-900 dark:to-zinc-900 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
                     <div className="flex items-center gap-3">
@@ -132,7 +132,7 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
                         <select
                             value={timeRange}
                             onChange={(e) => setTimeRange(e.target.value as any)}
-                            className="text-xs border-none bg-gray-100 dark:bg-zinc-800 rounded-lg px-3 py-1.5 text-gray-600 dark:text-gray-300 focus:ring-0 cursor-pointer hover:bg-gray-200 transition-colors outline-none"
+                            className="text-xs border-none bg-gray-100 dark:bg-zinc-800 rounded-lg px-3 py-1.5 text-muted-foreground dark:text-gray-300 focus:ring-0 cursor-pointer hover:bg-gray-200 transition-colors outline-none"
                         >
                             <option value="7d">7 ngày qua</option>
                             <option value="30d">30 ngày qua</option>
@@ -140,7 +140,7 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
                         </select>
                         <button
                             onClick={() => setIsExpanded(!isExpanded)}
-                            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                            className="p-2 text-gray-400 hover:text-muted-foreground dark:hover:text-gray-200 transition-colors"
                         >
                             {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
                         </button>
@@ -148,14 +148,14 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
                 </div>
 
                 {/* Key Metrics Cards (Always Visible) */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-white dark:bg-zinc-900 relative">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-card dark:bg-zinc-900 relative">
                     {loading && (
-                        <div className="absolute inset-0 bg-white/50 dark:bg-zinc-900/50 z-10 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-card/50 dark:bg-zinc-900/50 z-10 flex items-center justify-center">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                         </div>
                     )}
                     {error && (
-                        <div className="absolute inset-0 bg-white/90 dark:bg-zinc-900/90 z-10 flex flex-col items-center justify-center text-red-500 p-4 text-center">
+                        <div className="absolute inset-0 bg-card/90 dark:bg-zinc-900/90 z-10 flex flex-col items-center justify-center text-red-500 p-4 text-center">
                             <p className="font-bold">Không thể tải dữ liệu</p>
                             <p className="text-sm">{error}</p>
                             <p className="text-xs text-gray-500 mt-2">Vui lòng kiểm tra quyền truy cập Service Account</p>
@@ -208,12 +208,12 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
                         >
                             <div className="p-6 h-[350px] w-full bg-gray-50/30 dark:bg-zinc-900/30 relative">
                                 {loading && (
-                                    <div className="absolute inset-0 bg-white/50 dark:bg-zinc-900/50 z-10 flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-card/50 dark:bg-zinc-900/50 z-10 flex items-center justify-center">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                                     </div>
                                 )}
                                 {error && (
-                                    <div className="absolute inset-0 bg-white/90 dark:bg-zinc-900/90 z-10 flex flex-col items-center justify-center text-red-500 p-4 text-center">
+                                    <div className="absolute inset-0 bg-card/90 dark:bg-zinc-900/90 z-10 flex flex-col items-center justify-center text-red-500 p-4 text-center">
                                         <p className="font-bold">Không thể tải dữ liệu</p>
                                         <p className="text-sm">{error}</p>
                                         <p className="text-xs text-gray-500 mt-2">Vui lòng kiểm tra quyền truy cập Service Account</p>
@@ -290,7 +290,7 @@ const CustomAnalyticsWidget: React.FC<CustomAnalyticsWidgetProps> = ({ userRole 
 const MetricCard = ({ icon, label, value, trend, trendUp, color }: any) => (
     <div className={`p-4 rounded-xl ${color} transition-all duration-300 hover:shadow-md`}>
         <div className="flex justify-between items-start mb-2">
-            <div className="p-2 bg-white dark:bg-zinc-800 rounded-lg shadow-sm">
+            <div className="p-2 bg-card dark:bg-zinc-800 rounded-lg shadow-sm">
                 {icon}
             </div>
             <span className={`text-xs font-bold px-2 py-1 rounded-full ${trendUp ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'}`}>

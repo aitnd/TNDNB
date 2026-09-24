@@ -213,7 +213,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700 mb-6">
+            <div className="bg-card dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700 mb-6">
                 <div className="flex flex-col items-center mb-8">
                     <div className="relative group cursor-pointer" onClick={handleAvatarClick}>
                         <img 
@@ -310,12 +310,12 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
             </div>
 
             {/* Badge List Section */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700 mb-6">
+            <div className="bg-card dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700 mb-6">
                 <BadgeList userId={userProfile.id} userRole={userProfile.role} />
             </div>
 
             {/* Phiên hoạt động cá nhân */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700">
+            <div className="bg-card dark:bg-slate-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-slate-700">
                 <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
                     <FaHistory className="text-teal-600" /> Phiên đăng nhập hoạt động cá nhân
                 </h3>
@@ -325,7 +325,7 @@ const AccountScreen: React.FC<AccountScreenProps> = ({ userProfile, onBack, onNa
             {/* CHANGE PASSWORD MODAL */}
             {showChangePassModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowChangePassModal(false)}>
-                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 relative" onClick={e => e.stopPropagation()}>
+                    <div className="bg-card dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 relative" onClick={e => e.stopPropagation()}>
                         <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-gray-800 dark:text-white">
                             <FaLock className="text-blue-600" /> Đổi mật khẩu
                         </h2>

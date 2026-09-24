@@ -279,7 +279,7 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
 
     return (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl p-6 h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
+            <div className="bg-card dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-4xl p-6 h-[80vh] flex flex-col relative" onClick={e => e.stopPropagation()}>
                 <button onClick={onClose} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full"><FaTimes /></button>
 
                 <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-green-600">
@@ -356,7 +356,7 @@ const ImportStudentModal: React.FC<ImportStudentModalProps> = ({ courseId, cours
                                                         }
                                                         setConflicts(prev => prev.map((c, i) => i === idx ? { ...c, action: newAction } : c));
                                                     }}
-                                                    className="border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 rounded px-2 py-1 text-xs font-semibold"
+                                                    className="border border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-800 rounded px-2 py-1 text-xs font-semibold"
                                                 >
                                                     <option value="overwrite">♻️ Ghi đè & Reset</option>
                                                     <option value="skip">⛔ Bỏ qua (Keep Old)</option>

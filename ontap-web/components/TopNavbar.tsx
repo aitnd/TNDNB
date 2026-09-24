@@ -27,7 +27,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
 
     return (
         <>
-            <div className="fixed top-0 left-0 right-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-50 px-4 flex items-center justify-between h-16 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300">
+            <div className="fixed top-0 left-0 right-0 bg-card/80 dark:bg-slate-900/80 backdrop-blur-md z-50 px-4 flex items-center justify-between h-16 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300">
 
                 {/* LEFT: Navigation Links */}
                 <div className="flex items-center gap-1 md:gap-4 overflow-x-auto no-scrollbar">
@@ -74,7 +74,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 <ChevronDown size={16} className={`transition-transform ${showSystemDropdown ? 'rotate-180' : ''}`} />
                             </button>
                             {showSystemDropdown && (
-                                <div className="fixed mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]" style={{ top: '56px' }}>
+                                <div className="fixed mt-1 bg-card dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]" style={{ top: '56px' }}>
                                     <button onClick={() => { setShowSystemDropdown(false); onNavigate('class_management'); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left">
                                         <School size={18} className="text-indigo-500" />
                                         <span className="font-medium text-sm">Quản lý lớp</span>
@@ -114,7 +114,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                             <ChevronDown size={16} className={`transition-transform ${showLinksDropdown ? 'rotate-180' : ''}`} />
                         </button>
                         {showLinksDropdown && (
-                            <div className="fixed mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]" style={{ top: '56px' }}>
+                            <div className="fixed mt-1 bg-card dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-[100]" style={{ top: '56px' }}>
                                 {/* Giải trí */}
                                 {userProfile && (
                                     <button onClick={() => { setShowLinksDropdown(false); onNavigate('giaitri'); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-left relative overflow-hidden group">

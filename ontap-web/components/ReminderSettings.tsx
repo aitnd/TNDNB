@@ -15,7 +15,7 @@ export const ReminderSettings: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow mt-4 mb-4">
+    <div className="p-4 bg-card rounded-lg shadow mt-4 mb-4">
       <h3 className="font-bold mb-2">Cài đặt giờ nhắc học</h3>
       <label className="mr-2">Giờ nhắc học mỗi ngày</label>
       <input

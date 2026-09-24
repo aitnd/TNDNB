@@ -4,7 +4,7 @@ import { PaletteIcon } from './icons';
 import type { Theme } from '../types';
 
 const themes: { name: Theme; label: string; color: string }[] = [
-  { name: 'light', label: 'Sáng', color: 'bg-white' },
+  { name: 'light', label: 'Sáng', color: 'bg-card' },
   { name: 'dark', label: 'Tối', color: 'bg-slate-900' },
   { name: 'noel', label: 'Giáng Sinh', color: 'bg-[#8B0000]' },
   { name: 'modern', label: 'Hiện Đại', color: 'bg-indigo-600' },

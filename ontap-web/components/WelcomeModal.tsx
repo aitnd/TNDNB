@@ -54,7 +54,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ onStart, onLoginClick, onRe
               </button>
               <button
                 onClick={onLoginClick}
-                className="w-full sm:w-auto font-bold text-lg py-4 px-10 rounded-xl border border-white/20 hover:bg-white/5 transition-all duration-300"
+                className="w-full sm:w-auto font-bold text-lg py-4 px-10 rounded-xl border border-white/20 hover:bg-card/5 transition-all duration-300"
                 style={{ color: 'hsl(var(--foreground))' }}
               >
                 Đăng nhập

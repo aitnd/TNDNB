@@ -291,7 +291,7 @@ const ThiTrucTuyenPage: React.FC = () => {
     return (
         <div className="min-h-screen flex flex-col font-sans text-[#333]">
             {/* HEADER */}
-            <div className="bg-white">
+            <div className="bg-card">
                 <div className="w-full h-[150px] bg-cover bg-center relative" style={{ backgroundImage: "url('/ontap/assets/img/banner1.png')" }}>
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-200 opacity-50"></div>
                     <div className="container mx-auto h-full flex items-center px-4 relative z-10">
@@ -307,11 +307,11 @@ const ThiTrucTuyenPage: React.FC = () => {
             </div>
 
             {/* MAIN CONTENT */}
-            <div className="flex-grow bg-white flex justify-center pt-10 pb-20">
+            <div className="flex-grow bg-card flex justify-center pt-10 pb-20">
                 <div className="w-full max-w-4xl px-4">
                     {!user ? (
                         <>
-                            <div className="text-center mb-8 text-sm text-gray-700 space-y-1">
+                            <div className="text-center mb-8 text-sm text-foreground space-y-1">
                                 <p>Vui lòng nhập tài khoản và mật khẩu để đăng nhập.</p>
                                 <p>Nếu bạn chưa có tài khoản hoặc quên mật khẩu vui lòng liên hệ giám thị coi thi!</p>
                                 <p>Nếu bạn muốn tra kết quả học tập, hãy vào <a href="/ontap" className="text-blue-600 font-bold hover:underline">TRA CỨU ĐIỂM</a></p>
@@ -320,10 +320,10 @@ const ThiTrucTuyenPage: React.FC = () => {
 
                             <div className="max-w-md mx-auto">
                                 <fieldset className="border border-gray-300 p-6 rounded-sm shadow-sm">
-                                    <legend className="px-2 text-gray-700 font-bold text-sm">Thông tin đăng nhập</legend>
+                                    <legend className="px-2 text-foreground font-bold text-sm">Thông tin đăng nhập</legend>
                                     <form onSubmit={handleLogin} className="space-y-4 mt-2">
                                         <div className="flex items-center">
-                                            <label className="w-32 text-sm font-bold text-gray-700">Số báo danh:</label>
+                                            <label className="w-32 text-sm font-bold text-foreground">Số báo danh:</label>
                                             <input
                                                 type="text"
                                                 value={username}
@@ -333,7 +333,7 @@ const ThiTrucTuyenPage: React.FC = () => {
                                             />
                                         </div>
                                         <div className="flex items-center">
-                                            <label className="w-32 text-sm font-bold text-gray-700">Mật khẩu:</label>
+                                            <label className="w-32 text-sm font-bold text-foreground">Mật khẩu:</label>
                                             <input
                                                 type="password"
                                                 value={password}
@@ -392,13 +392,13 @@ const ThiTrucTuyenPage: React.FC = () => {
 
                             <div className="text-center mb-6">
                                 <h2 className="text-xl font-bold text-blue-700 uppercase">Khu vực Thi Trực Tuyến</h2>
-                                <p className="text-gray-600 mt-2">Xin chào, <strong className="text-blue-900">{user.displayName || user.email}</strong></p>
+                                <p className="text-muted-foreground mt-2">Xin chào, <strong className="text-blue-900">{user.displayName || user.email}</strong></p>
                             </div>
                             <fieldset className="border border-gray-300 p-6 rounded-sm shadow-sm bg-blue-50/30">
-                                <legend className="px-2 text-blue-800 font-bold text-sm bg-white border border-gray-200 rounded shadow-sm">Vào Phòng Thi</legend>
+                                <legend className="px-2 text-blue-800 font-bold text-sm bg-card border border-gray-200 rounded shadow-sm">Vào Phòng Thi</legend>
                                 <div className="space-y-4 mt-4">
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Mã phòng thi (Room ID):</label>
+                                        <label className="block text-sm font-bold text-foreground mb-1">Mã phòng thi (Room ID):</label>
                                         <input
                                             type="text"
                                             placeholder="Nhập mã phòng do giám thị cung cấp..."
@@ -419,7 +419,7 @@ const ThiTrucTuyenPage: React.FC = () => {
                                 </div>
                             </fieldset>
                             <div className="mt-6 text-center">
-                                <a href="/ontap" className="text-sm text-gray-500 hover:text-blue-600 hover:underline">
+                                <a href="/ontap" className="text-sm text-muted-foreground hover:text-blue-600 hover:underline">
                                     &larr; Quay lại Ôn tập
                                 </a>
                             </div>

@@ -49,14 +49,14 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ quiz, userAnswers, score,
                     <TrophyIcon3D className="h-28 w-28 mx-auto text-yellow-500 mb-4 drop-shadow-lg" />
                     <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white mb-2 uppercase tracking-tight">Kết quả Ôn tập</h1>
 
-                    <div className="my-4 text-slate-600 dark:text-slate-400">
+                    <div className="my-4 text-muted-foreground dark:text-slate-400">
                         <p className="text-lg">Học viên: <span className="font-bold text-indigo-600 dark:text-indigo-400">{displayName}</span></p>
                         <p className="text-sm">Hoàn thành lúc: {formattedDate}</p>
                     </div>
 
                     <div className="mt-6 flex flex-col items-center">
                         <div className="relative">
-                            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-8 border-indigo-500/20 flex flex-col items-center justify-center bg-white dark:bg-slate-900 shadow-inner">
+                            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-8 border-indigo-500/20 flex flex-col items-center justify-center bg-card dark:bg-slate-900 shadow-inner">
                                 <p className="text-4xl md:text-5xl font-black text-indigo-600">{score}</p>
                                 <p className="text-xs md:text-sm font-bold text-slate-400 uppercase">/{totalQuestions} Câu</p>
                             </div>
@@ -74,13 +74,13 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ quiz, userAnswers, score,
                     <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl w-full md:w-auto">
                         <button 
                             onClick={() => { triggerHaptic('light'); setFilter('all'); }} 
-                            className={`flex-1 md:flex-none px-6 py-2.5 text-sm font-bold rounded-xl transition-all ${filter === 'all' ? 'bg-white dark:bg-slate-700 text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+                            className={`flex-1 md:flex-none px-6 py-2.5 text-sm font-bold rounded-xl transition-all ${filter === 'all' ? 'bg-card dark:bg-slate-700 text-indigo-600 shadow-sm' : 'text-slate-500'}`}
                         >
                             Tất cả
                         </button>
                         <button 
                             onClick={() => { triggerHaptic('light'); setFilter('incorrect'); }} 
-                            className={`flex-1 md:flex-none px-6 py-2.5 text-sm font-bold rounded-xl transition-all ${filter === 'incorrect' ? 'bg-white dark:bg-slate-700 text-red-600 shadow-sm' : 'text-slate-500'}`}
+                            className={`flex-1 md:flex-none px-6 py-2.5 text-sm font-bold rounded-xl transition-all ${filter === 'incorrect' ? 'bg-card dark:bg-slate-700 text-red-600 shadow-sm' : 'text-slate-500'}`}
                         >
                             Câu sai ({totalQuestions - score})
                         </button>

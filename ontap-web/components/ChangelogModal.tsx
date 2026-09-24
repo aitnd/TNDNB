@@ -56,7 +56,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fade-in">
-      <div className="bg-white dark:bg-slate-800 w-full max-w-2xl max-h-[85vh] rounded-[2rem] shadow-2xl flex flex-col overflow-hidden border border-white/20 animate-scale-up">
+      <div className="bg-card dark:bg-slate-800 w-full max-w-2xl max-h-[85vh] rounded-[2rem] shadow-2xl flex flex-col overflow-hidden border border-white/20 animate-scale-up">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-indigo-50/50 to-blue-50/50 dark:from-slate-900/50 dark:to-slate-800/50">
           <div className="flex items-center gap-4">
@@ -94,7 +94,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                 <div className="flex items-center gap-4 mb-6">
                   <div className={`px-4 py-2 rounded-2xl font-black text-sm shadow-sm ${release.isLatest
                     ? 'bg-gradient-to-br from-indigo-600 to-blue-600 text-white shadow-indigo-500/20'
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                    : 'bg-slate-100 dark:bg-slate-700 text-muted-foreground dark:text-slate-300'
                     }`}>
                     v{release.version}
                   </div>

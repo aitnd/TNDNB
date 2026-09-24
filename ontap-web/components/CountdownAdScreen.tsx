@@ -60,8 +60,8 @@ const CountdownAdScreen: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
             {/* Hiệu ứng nền */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-20 -left-20 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+                <div className="absolute -top-20 -left-20 w-80 h-80 bg-card/5 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-card/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
             </div>
 
             <div className="relative text-center px-6">
@@ -102,7 +102,7 @@ const CountdownAdScreen: React.FC = () => {
                 </p>
 
                 {/* Gợi ý tải app */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 max-w-sm mx-auto">
+                <div className="bg-card/10 backdrop-blur-sm rounded-2xl p-4 mb-6 max-w-sm mx-auto">
                     <p className="text-white/90 text-sm">
                         💡 <span className="font-semibold">Mẹo:</span> Tải ứng dụng Windows để ôn tập offline, không quảng cáo!
                     </p>

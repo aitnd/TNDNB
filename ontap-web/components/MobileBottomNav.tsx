@@ -128,7 +128,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                 ref={menuRef}
                 className={`fixed bottom-24 right-4 z-[10000] md:hidden transition-all duration-300 origin-bottom-right ${isMenuOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'
                     }`}>
-                <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-4 w-56 flex flex-col gap-2">
+                <div className="bg-card/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-4 w-56 flex flex-col gap-2">
                     {userProfile ? (
                         <>
                             <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 mb-2 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -146,7 +146,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                                         }}
                                         className="flex items-center gap-3 w-full p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group"
                                     >
-                                        <div className={`p-2 rounded-lg bg-gray-50 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 shadow-sm ${item.color}`}>
+                                        <div className={`p-2 rounded-lg bg-gray-50 dark:bg-slate-800 group-hover:bg-card dark:group-hover:bg-slate-700 shadow-sm ${item.color}`}>
                                             <Icon />
                                         </div>
                                         <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{item.name}</span>
@@ -187,7 +187,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
             {/* BOTTOM NAVBAR */}
             <div className="fixed bottom-4 left-4 right-4 z-[9999] md:hidden animate-fade-in-up" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
                 {/* Glassmorphism Container */}
-                <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-2 flex justify-between items-center relative overflow-hidden">
+                <div className="bg-card/90 dark:bg-slate-900/90 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-2 flex justify-between items-center relative overflow-hidden">
                     {/* Shine Effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 animate-shine pointer-events-none" />
 
@@ -209,7 +209,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                                 <Icon
                                     className={`text-2xl mb-1 transition-all duration-300 drop-shadow-sm ${active
                                         ? 'text-indigo-600 dark:text-indigo-400 scale-110 filter drop-shadow-[0_2px_4px_rgba(79,70,229,0.3)]'
-                                        : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300'
+                                        : 'text-gray-400 dark:text-gray-500 group-hover:text-muted-foreground dark:group-hover:text-gray-300'
                                         }`}
                                 />
 
@@ -239,7 +239,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                         {isMenuOpen ? (
                             <FaTimes className="text-2xl mb-1 text-orange-600 dark:text-orange-400 scale-110 transition-all duration-300" />
                         ) : (
-                            <FaBars className="text-2xl mb-1 text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-all duration-300" />
+                            <FaBars className="text-2xl mb-1 text-gray-400 dark:text-gray-500 group-hover:text-muted-foreground dark:group-hover:text-gray-300 transition-all duration-300" />
                         )}
 
 

@@ -339,7 +339,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
   return (
     <div className="space-y-6">
       {/* Action Bar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm flex flex-col xl:flex-row justify-between items-center gap-4">
+      <div className="bg-card dark:bg-slate-900 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm flex flex-col xl:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-3 w-full xl:w-auto">
           <div className="relative flex-1 xl:w-80 group">
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-teal-500 transition-colors" />
@@ -358,13 +358,13 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           <div className="flex bg-gray-50 dark:bg-slate-800 p-1 rounded-xl border border-gray-100 dark:border-slate-700">
             <button 
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400'}`}
+              className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-card dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400'}`}
             >
               <FaThLarge />
             </button>
             <button 
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400'}`}
+              className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-card dark:bg-slate-700 text-teal-600 shadow-sm' : 'text-gray-400'}`}
             >
               <FaList />
             </button>
@@ -407,7 +407,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           ))}
         </div>
       ) : filteredStudents.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 p-20 rounded-3xl border border-dashed border-gray-200 dark:border-slate-800 text-center space-y-4 shadow-sm">
+        <div className="bg-card dark:bg-slate-900 p-20 rounded-3xl border border-dashed border-gray-200 dark:border-slate-800 text-center space-y-4 shadow-sm">
           <FaUsers size={48} className="mx-auto text-gray-200" />
           <p className="text-gray-400 font-medium">Không tìm thấy học viên nào phù hợp.</p>
         </div>
@@ -421,7 +421,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="group relative bg-white dark:bg-slate-900 rounded-3xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300"
+                className="group relative bg-card dark:bg-slate-900 rounded-3xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="relative">
@@ -459,14 +459,14 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
                 <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button 
                     onClick={() => setBadgeUser(st)}
-                    className="p-1 text-xs text-amber-500 hover:text-amber-600 bg-white/80 backdrop-blur rounded-md shadow-sm"
+                    className="p-1 text-xs text-amber-500 hover:text-amber-600 bg-card/80 backdrop-blur rounded-md shadow-sm"
                     title="Quản lý huy hiệu"
                   >
                     🏅
                   </button>
                   <button 
                     onClick={() => handleRemoveStudent(st.id, st.fullName || st.full_name || '')}
-                    className="p-1 text-xs text-gray-400 hover:text-rose-500 bg-white/80 backdrop-blur rounded-md shadow-sm"
+                    className="p-1 text-xs text-gray-400 hover:text-rose-500 bg-card/80 backdrop-blur rounded-md shadow-sm"
                     title="Gỡ học viên"
                   >
                     <FaTrash />
@@ -477,7 +477,7 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           </AnimatePresence>
         </div>
       ) : (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 overflow-hidden shadow-sm">
+        <div className="bg-card dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 overflow-hidden shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50/50 dark:bg-slate-800/50 border-b border-gray-100 dark:border-slate-800">
@@ -538,15 +538,15 @@ const StudentsTab: React.FC<StudentsTabProps> = ({
           <button 
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+            className="p-3 rounded-xl bg-card dark:bg-slate-900 border border-gray-100 dark:border-slate-800 disabled:opacity-30 hover:bg-gray-50 transition-colors"
           ><FaChevronLeft size={10} /></button>
           {[...Array(totalPages)].map((_, i) => (
-            <button key={i} onClick={() => setCurrentPage(i + 1)} className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${currentPage === i + 1 ? 'bg-teal-600 text-white shadow-lg' : 'bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 text-gray-400'}`}>{i + 1}</button>
+            <button key={i} onClick={() => setCurrentPage(i + 1)} className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${currentPage === i + 1 ? 'bg-teal-600 text-white shadow-lg' : 'bg-card dark:bg-slate-900 border border-gray-100 dark:border-slate-800 text-gray-400'}`}>{i + 1}</button>
           ))}
           <button 
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-            className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+            className="p-3 rounded-xl bg-card dark:bg-slate-900 border border-gray-100 dark:border-slate-800 disabled:opacity-30 hover:bg-gray-50 transition-colors"
           ><FaChevronRight size={10} /></button>
         </div>
       )}

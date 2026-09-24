@@ -36,13 +36,13 @@ const EditStudentModal: React.FC<EditStudentModalProps> = ({ isOpen, student, on
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-[2rem] shadow-2xl overflow-hidden border border-white/20"
+                    className="bg-card dark:bg-slate-900 w-full max-w-xl rounded-[2rem] shadow-2xl overflow-hidden border border-white/20"
                 >
                     <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50/50 dark:bg-slate-800/30">
                         <h2 className="text-xl font-bold dark:text-white">Chỉnh sửa Học viên</h2>
                         <button 
                             onClick={onClose}
-                            className="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-xl text-gray-400 dark:text-slate-500 transition-all shadow-sm"
+                            className="p-2 hover:bg-card dark:hover:bg-slate-800 rounded-xl text-gray-400 dark:text-slate-500 transition-all shadow-sm"
                         >
                             <FaTimes size={16} />
                         </button>

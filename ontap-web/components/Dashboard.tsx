@@ -107,7 +107,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                                 ))}
                             </div>
 
-                            <div className="w-full bg-white/40 dark:bg-zinc-800/40 backdrop-blur-md rounded-2xl p-4 border border-gray-200/30 dark:border-zinc-700/30">
+                            <div className="w-full bg-card/40 dark:bg-zinc-800/40 backdrop-blur-md rounded-2xl p-4 border border-gray-200/30 dark:border-zinc-700/30">
                                 <h3 className="font-bold text-slate-700 dark:text-slate-200 mb-2">Tiến bộ học tập</h3>
                                 <ProgressDashboard history={history} />
                             </div>
@@ -162,10 +162,10 @@ const Dashboard: React.FC<DashboardProps> = ({
                         >
                             <button
                                 onClick={() => setIsAnalyticsOpen(!isAnalyticsOpen)}
-                                className="w-full flex items-center justify-between px-5 py-3 rounded-2xl bg-white/40 dark:bg-zinc-800/40 backdrop-blur-md border border-gray-200/30 dark:border-zinc-700/30 hover:bg-white/60 dark:hover:bg-zinc-800/60 transition-all"
+                                className="w-full flex items-center justify-between px-5 py-3 rounded-2xl bg-card/40 dark:bg-zinc-800/40 backdrop-blur-md border border-gray-200/30 dark:border-zinc-700/30 hover:bg-card/60 dark:hover:bg-zinc-800/60 transition-all"
                             >
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">📊 Tổng quan truy cập</span>
+                                    <span className="text-sm font-semibold text-muted-foreground dark:text-slate-300">📊 Tổng quan truy cập</span>
                                     <span className="text-xs text-slate-400">Google Analytics</span>
                                 </div>
                                 {isAnalyticsOpen ? <ChevronUp size={18} className="text-slate-400" /> : <ChevronDown size={18} className="text-slate-400" />}

@@ -35,14 +35,14 @@ const InboxModal: React.FC<InboxModalProps> = ({ isOpen, onClose, notifications,
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fade-in" onClick={onClose}>
             <div
-                className="bg-white dark:bg-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+                className="bg-card dark:bg-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
                 onClick={e => e.stopPropagation()}
             >
                 <div className="p-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
                     <h2 className="text-xl font-bold flex items-center gap-2">
                         <FaBell /> Hộp thư thông báo
                     </h2>
-                    <button onClick={onClose} className="hover:bg-white/20 p-2 rounded-full transition-colors">
+                    <button onClick={onClose} className="hover:bg-card/20 p-2 rounded-full transition-colors">
                         <FaTimes />
                     </button>
                 </div>
@@ -62,8 +62,8 @@ const InboxModal: React.FC<InboxModalProps> = ({ isOpen, onClose, notifications,
                                     onClick={() => onMarkRead(n.id)}
                                     className={`p-4 rounded-xl border transition-all cursor-pointer relative overflow-hidden group
                                         ${isRead
-                                            ? 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 opacity-60'
-                                            : 'bg-white dark:bg-slate-800 border-blue-200 dark:border-blue-500/50 shadow-md transform hover:-translate-y-1'
+                                            ? 'bg-card dark:bg-slate-800 border-gray-200 dark:border-slate-700 opacity-60'
+                                            : 'bg-card dark:bg-slate-800 border-blue-200 dark:border-blue-500/50 shadow-md transform hover:-translate-y-1'
                                         }
                                     `}
                                 >
@@ -80,7 +80,7 @@ const InboxModal: React.FC<InboxModalProps> = ({ isOpen, onClose, notifications,
                                             <FaBell size={14} />
                                         </div>
                                         <div className="flex-1">
-                                            <h3 className={`font-bold text-sm mb-1 ${!isRead ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
+                                            <h3 className={`font-bold text-sm mb-1 ${!isRead ? 'text-gray-900 dark:text-white' : 'text-muted-foreground dark:text-gray-400'}`}>
                                                 {n.title}
                                                 {(n.type === 'special' || n.type === 'attention') &&
                                                     <span className="ml-2 text-[10px] uppercase border px-1 rounded bg-red-50 text-red-500 border-red-200">Quan trọng</span>

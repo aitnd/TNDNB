@@ -206,7 +206,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
 
                 {/* TEACHERS COLUMN */}
                 <div className="lg:col-span-1 space-y-6">
-                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 sticky top-20">
+                    <div className="bg-card dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 sticky top-20">
                         <div className="flex justify-between items-center border-b pb-3 border-gray-100 dark:border-slate-700 mb-4">
                             <h3 className="font-bold text-lg flex items-center gap-2 text-gray-800 dark:text-white">
                                 <FaUserTie className="text-green-500" /> Giáo viên
@@ -248,7 +248,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
 
                 {/* STUDENTS COLUMN */}
                 <div className="lg:col-span-3">
-                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 min-h-[500px]">
+                    <div className="bg-card dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 min-h-[500px]">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-100 dark:border-slate-700 gap-4">
                             <div className="flex items-center gap-3">
                                 <h3 className="font-bold text-xl flex items-center gap-2 text-gray-800 dark:text-white">
@@ -258,14 +258,14 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
                                 <div className="flex bg-gray-100 dark:bg-slate-700 rounded-lg p-1 ml-4">
                                     <button
                                         onClick={() => setViewMode('grid')}
-                                        className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-white dark:bg-slate-600 shadow text-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+                                        className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-card dark:bg-slate-600 shadow text-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
                                         title="Dạng lưới"
                                     >
                                         <FaThLarge />
                                     </button>
                                     <button
                                         onClick={() => setViewMode('list')}
-                                        className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white dark:bg-slate-600 shadow text-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
+                                        className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-card dark:bg-slate-600 shadow text-blue-600' : 'text-gray-500 hover:text-blue-500'}`}
                                         title="Dạng danh sách"
                                     >
                                         <FaList />
@@ -425,7 +425,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400 text-xs">
+                                                    <td className="px-4 py-3 text-muted-foreground dark:text-gray-400 text-xs">
                                                         {s.birthDate || '--/--/----'}
                                                     </td>
                                                     <td className="px-4 py-3">
@@ -473,7 +473,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
 
                         {/* Bulk Action Bar */}
                         {selectedUsers.size > 0 && (
-                            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-2 border border-gray-200 dark:border-slate-700 flex-wrap justify-center max-w-[95vw]">
+                            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-card dark:bg-slate-800 rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-2 border border-gray-200 dark:border-slate-700 flex-wrap justify-center max-w-[95vw]">
                                 <span className="font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                                     Đã chọn <span className="text-blue-600 font-bold">{selectedUsers.size}</span>
                                 </span>
@@ -542,7 +542,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
                         {/* Bulk Notification Modal */}
                         {showBulkNotifModal && createPortal(
                             <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
-                                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
+                                <div className="bg-card dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6">
                                     <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
                                         <FaPaperPlane className="text-blue-500" />
                                         Gửi thông báo cho {selectedUsers.size} học viên
@@ -594,7 +594,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
                             </p>
                             <div className="flex items-center gap-2">
                                 <select
-                                    className="border border-gray-300 dark:border-slate-600 rounded-md text-sm p-1.5 focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200"
+                                    className="border border-gray-300 dark:border-slate-600 rounded-md text-sm p-1.5 focus:ring-2 focus:ring-blue-500 outline-none bg-card dark:bg-slate-700 text-gray-700 dark:text-gray-200"
                                     value={itemsPerPage}
                                     onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
                                 >
@@ -616,7 +616,7 @@ const ClassDetail: React.FC<ClassDetailProps> = ({
                                         <button
                                             key={page}
                                             onClick={() => setCurrentPage(page)}
-                                            className={`w-8 h-8 rounded-lg text-sm font-bold shrink-0 transition-all ${currentPage === page ? 'bg-blue-600 text-white shadow-md' : 'hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-600'}`}
+                                            className={`w-8 h-8 rounded-lg text-sm font-bold shrink-0 transition-all ${currentPage === page ? 'bg-blue-600 text-white shadow-md' : 'hover:bg-gray-100 dark:hover:bg-slate-700 text-muted-foreground'}`}
                                         >
                                             {page}
                                         </button>

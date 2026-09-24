@@ -97,7 +97,7 @@ const AddStudentModal: React.FC<AddStudentModalProps> = ({ isOpen, onClose, clas
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/20"
+        className="bg-card dark:bg-slate-900 w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/20"
       >
         <div className="p-8 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50/50 dark:bg-slate-800/30">
           <div className="flex items-center gap-4">
@@ -111,7 +111,7 @@ const AddStudentModal: React.FC<AddStudentModalProps> = ({ isOpen, onClose, clas
           </div>
           <button 
             onClick={onClose}
-            className="p-3 hover:bg-white dark:hover:bg-slate-800 rounded-2xl text-gray-400 dark:text-slate-500 transition-all shadow-sm"
+            className="p-3 hover:bg-card dark:hover:bg-slate-800 rounded-2xl text-gray-400 dark:text-slate-500 transition-all shadow-sm"
           >
             <FaTimes size={20} />
           </button>
@@ -142,7 +142,7 @@ const AddStudentModal: React.FC<AddStudentModalProps> = ({ isOpen, onClose, clas
                     flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-all border-2
                     ${selectedIds.includes(user.id) 
                       ? 'bg-teal-50 dark:bg-teal-500/10 border-teal-500 shadow-md translate-x-1' 
-                      : 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800 hover:border-teal-200'
+                      : 'bg-card dark:bg-slate-900 border-gray-100 dark:border-slate-800 hover:border-teal-200'
                     }
                   `}
                 >

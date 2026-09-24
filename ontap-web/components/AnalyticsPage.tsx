@@ -55,9 +55,9 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
                 <div className="flex items-center gap-4 w-full md:w-auto">
                     <button
                         onClick={onBack}
-                        className="p-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors shadow-sm bg-white dark:bg-zinc-900"
+                        className="p-3 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors shadow-sm bg-card dark:bg-zinc-900"
                     >
-                        <FaArrowLeft className="text-xl text-gray-600 dark:text-gray-300" />
+                        <FaArrowLeft className="text-xl text-muted-foreground dark:text-gray-300" />
                     </button>
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
@@ -69,7 +69,7 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 bg-white dark:bg-zinc-900 p-1.5 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
+                <div className="flex items-center gap-2 bg-card dark:bg-zinc-900 p-1.5 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
                     <FaCalendarAlt className="text-gray-400 ml-2" />
                     <select
                         value={timeRange}
@@ -100,7 +100,7 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
                     </div>
 
                     {/* Main Chart */}
-                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
+                    <div className="bg-card dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
                         <h3 className="text-lg font-bold mb-6 text-gray-800 dark:text-white">Xu hướng truy cập</h3>
                         <div className="h-[300px]">
                             <ResponsiveContainer width="100%" height="100%">
@@ -123,7 +123,7 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Top Pages */}
-                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
+                        <div className="bg-card dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
                             <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
                                 <FaFileAlt className="text-blue-500" /> Trang được xem nhiều nhất
                             </h3>
@@ -154,7 +154,7 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
                         {/* Devices & Geo */}
                         <div className="space-y-6">
                             {/* Devices */}
-                            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
+                            <div className="bg-card dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
                                 <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
                                     <FaDesktop className="text-purple-500" /> Thiết bị
                                 </h3>
@@ -182,14 +182,14 @@ const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onBack }) => {
                             </div>
 
                             {/* Cities */}
-                            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
+                            <div className="bg-card dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800">
                                 <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
                                     <FaMapMarkerAlt className="text-red-500" /> Địa điểm (Top 5)
                                 </h3>
                                 <div className="space-y-3">
                                     {data.cities.slice(0, 5).map((city: any, idx: number) => (
                                         <div key={idx} className="flex items-center justify-between">
-                                            <span className="text-sm text-gray-600 dark:text-gray-400">{city.name}</span>
+                                            <span className="text-sm text-muted-foreground dark:text-gray-400">{city.name}</span>
                                             <div className="flex items-center gap-3 flex-1 justify-end">
                                                 <div className="w-24 h-2 bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                                                     <div
@@ -220,7 +220,7 @@ const StatCard = ({ label, value, color }: any) => {
     };
 
     return (
-        <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm">
+        <div className="bg-card dark:bg-zinc-900 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm">
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{label}</p>
             <p className={`text-xl font-bold ${colorClasses[color].split(' ')[1]}`}>{value}</p>
         </div>

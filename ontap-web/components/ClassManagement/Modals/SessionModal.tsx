@@ -21,7 +21,7 @@ const SessionModal: React.FC<SessionModalProps> = ({ isOpen, student, sessions, 
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 flex flex-col max-h-[85vh]"
+                    className="bg-card dark:bg-slate-900 w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 flex flex-col max-h-[85vh]"
                 >
                     <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50/50 dark:bg-slate-800/30 shrink-0">
                         <div>
@@ -30,7 +30,7 @@ const SessionModal: React.FC<SessionModalProps> = ({ isOpen, student, sessions, 
                         </div>
                         <button 
                             onClick={onClose}
-                            className="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-xl text-gray-400 dark:text-slate-500 transition-all shadow-sm"
+                            className="p-2 hover:bg-card dark:hover:bg-slate-800 rounded-xl text-gray-400 dark:text-slate-500 transition-all shadow-sm"
                         >
                             <FaTimes size={16} />
                         </button>
@@ -66,7 +66,7 @@ const SessionModal: React.FC<SessionModalProps> = ({ isOpen, student, sessions, 
                                 ))}
                                 {sessions.length === 0 && (
                                     <div className="text-center py-16">
-                                        <div className="w-16 h-16 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300 dark:text-slate-600">
+                                        <div className="w-16 h-16 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300 dark:text-muted-foreground">
                                             <FaUserClock size={24} />
                                         </div>
                                         <p className="text-gray-500 dark:text-slate-400 font-medium">Không có dữ liệu phiên truy cập.</p>

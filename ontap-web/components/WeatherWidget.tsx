@@ -98,7 +98,7 @@ const WeatherWidget: React.FC = () => {
 
   if (loading) {
     return (
-      <div className={`w-full max-w-7xl mx-auto py-3 px-5 rounded-2xl flex items-center justify-center space-x-3 backdrop-blur-xl border shadow-sm ${theme === 'dark' ? 'bg-gray-900/60 border-gray-700/50 text-gray-300' : 'bg-white/80 border-white/60 text-gray-600'}`}>
+      <div className={`w-full max-w-7xl mx-auto py-3 px-5 rounded-2xl flex items-center justify-center space-x-3 backdrop-blur-xl border shadow-sm ${theme === 'dark' ? 'bg-gray-900/60 border-gray-700/50 text-gray-300' : 'bg-card/80 border-white/60 text-muted-foreground'}`}>
         <Loader2 className="w-5 h-5 animate-spin" />
         <span className="text-sm font-medium">Đang đồng bộ thời tiết...</span>
       </div>
@@ -170,7 +170,7 @@ const WeatherWidget: React.FC = () => {
       <div className="relative" onClick={(e) => { e.stopPropagation(); setShowTooltip(!showTooltip); }}
            onMouseEnter={() => setShowTooltip(true)}
            onMouseLeave={() => setShowTooltip(false)}>
-        <div className={`flex items-center justify-center bg-white/90 dark:bg-gray-800/90 rounded-full p-[3px] shadow-sm border border-gray-100 dark:border-gray-700 ${config.color} ${config.pulse ? 'animate-pulse' : ''}`}>
+        <div className={`flex items-center justify-center bg-card/90 dark:bg-gray-800/90 rounded-full p-[3px] shadow-sm border border-gray-100 dark:border-gray-700 ${config.color} ${config.pulse ? 'animate-pulse' : ''}`}>
           {config.icon}
         </div>
         <AnimatePresence>
@@ -179,7 +179,7 @@ const WeatherWidget: React.FC = () => {
               initial={{ opacity: 0, y: 4, scale: 0.95 }} 
               animate={{ opacity: 1, y: 0, scale: 1 }} 
               exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-[60] w-[130px] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-xl rounded-lg p-2 flex flex-col items-center pointer-events-none"
+              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-[60] w-[130px] bg-card dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-xl rounded-lg p-2 flex flex-col items-center pointer-events-none"
             >
               <div className="text-[10px] font-bold text-gray-800 dark:text-gray-100 whitespace-nowrap">{config.label}</div>
               <div className="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5 leading-tight text-center">{config.detail}</div>
@@ -194,7 +194,7 @@ const WeatherWidget: React.FC = () => {
 
   const bgClass = theme === 'dark' 
     ? 'bg-gray-900/70 backdrop-blur-2xl border-gray-700/50 text-white shadow-sm' 
-    : 'bg-white/80 backdrop-blur-2xl border-white/60 text-gray-800 shadow-sm';
+    : 'bg-card/80 backdrop-blur-2xl border-white/60 text-gray-800 shadow-sm';
 
   return (
     <div className={`w-full rounded-2xl border transition-all duration-300 overflow-hidden ${bgClass}`}>
@@ -239,7 +239,7 @@ const WeatherWidget: React.FC = () => {
         </div>
 
         {/* Desktop Chevron */}
-        <div className="hidden md:flex items-center justify-center w-7 h-7 rounded-full bg-black/5 dark:bg-white/10 ml-1 group-hover:bg-black/10 dark:group-hover:bg-white/20 transition-colors">
+        <div className="hidden md:flex items-center justify-center w-7 h-7 rounded-full bg-black/5 dark:bg-white/10 ml-1 group-hover:bg-black/10 dark:group-hover:bg-card/20 transition-colors">
           <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
             <ChevronDown className="w-4 h-4 opacity-70" />
           </motion.div>

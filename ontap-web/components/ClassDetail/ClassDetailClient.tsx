@@ -102,7 +102,7 @@ const ClassDetailClient: React.FC<ClassDetailClientProps> = ({
         <div className="flex items-center gap-4">
           <button 
             onClick={onBack}
-            className="p-3 bg-white dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-teal-500/10 text-gray-400 hover:text-teal-600 rounded-2xl transition-all shadow-sm border border-gray-100 dark:border-slate-800"
+            className="p-3 bg-card dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-teal-500/10 text-gray-400 hover:text-teal-600 rounded-2xl transition-all shadow-sm border border-gray-100 dark:border-slate-800"
           >
             <FaChevronLeft />
           </button>
@@ -154,7 +154,7 @@ const ClassDetailClient: React.FC<ClassDetailClientProps> = ({
               className={`
                 relative flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all duration-300
                 ${activeTab === tab.id 
-                  ? 'text-teal-600 dark:text-teal-400 bg-white dark:bg-slate-800 shadow-sm' 
+                  ? 'text-teal-600 dark:text-teal-400 bg-card dark:bg-slate-800 shadow-sm' 
                   : 'text-gray-500 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 hover:bg-gray-200/50 dark:hover:bg-slate-800/50'
                 }
               `}
@@ -207,7 +207,7 @@ const ClassDetailClient: React.FC<ClassDetailClientProps> = ({
             )}
 
             {activeTab === 'settings' && (
-              <div className="p-20 bg-white dark:bg-slate-900 rounded-[3rem] border border-gray-100 dark:border-slate-800 text-center space-y-6 shadow-sm">
+              <div className="p-20 bg-card dark:bg-slate-900 rounded-[3rem] border border-gray-100 dark:border-slate-800 text-center space-y-6 shadow-sm">
                 <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto text-rose-600">
                   <FaCog className="text-4xl" />
                 </div>

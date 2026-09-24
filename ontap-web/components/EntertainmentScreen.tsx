@@ -158,7 +158,7 @@ const EntertainmentScreen: React.FC<EntertainmentScreenProps> = ({ onBack }) => 
               </div>
               <button 
                 onClick={onBack}
-                className="group p-4 rounded-2xl glass-premium hover:bg-white/10 transition-all duration-300 transform active:scale-95 shadow-xl"
+                className="group p-4 rounded-2xl glass-premium hover:bg-card/10 transition-all duration-300 transform active:scale-95 shadow-xl"
               >
                 <ArrowLeft size={28} className="group-hover:-translate-x-1 transition-transform" />
               </button>
@@ -209,7 +209,7 @@ const EntertainmentScreen: React.FC<EntertainmentScreenProps> = ({ onBack }) => 
                 </div>
                 <div className="flex-1 text-center md:text-left">
                   <h4 className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">Bạn muốn chơi Game nào khác?</h4>
-                  <p className="text-slate-600 dark:text-slate-400 mt-2 text-lg font-medium">Hãy nhắn cho Admin để tụi mình cập nhật thêm những game tuổi thơ xịn xò nhất nhé! 🚀</p>
+                  <p className="text-muted-foreground dark:text-slate-400 mt-2 text-lg font-medium">Hãy nhắn cho Admin để tụi mình cập nhật thêm những game tuổi thơ xịn xò nhất nhé! 🚀</p>
                 </div>
                 <button className="px-10 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:scale-105 hover:shadow-emerald-500/40 text-white font-black text-lg rounded-2xl transition-all shadow-xl">
                   Yêu cầu ngay
@@ -229,7 +229,7 @@ const EntertainmentScreen: React.FC<EntertainmentScreenProps> = ({ onBack }) => 
               <div className="flex items-center gap-6">
                 <button 
                   onClick={() => setSelectedGame(null)}
-                  className="p-3 rounded-2xl glass-premium hover:bg-white/10 transition-all shadow-lg active:scale-95"
+                  className="p-3 rounded-2xl glass-premium hover:bg-card/10 transition-all shadow-lg active:scale-95"
                 >
                   <ArrowLeft size={24} />
                 </button>

@@ -36,7 +36,7 @@ export const BadgeIcon: React.FC<BadgeIconProps> = ({
       
       {/* Glow effect for unlocked badges */}
       {isUnlocked && (
-        <div className="absolute inset-0 rounded-full bg-white/20 blur-md pointer-events-none" />
+        <div className="absolute inset-0 rounded-full bg-card/20 blur-md pointer-events-none" />
       )}
       
       {/* Lock icon for locked badges */}

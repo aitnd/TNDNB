@@ -15,7 +15,7 @@ export const ModalWrapper: React.FC<{
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-fade-in text-slate-900 dark:text-slate-100" onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
     }}>
-        <div className={`bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full ${maxWidth} overflow-hidden transform animate-scale-in`}>
+        <div className={`bg-card dark:bg-slate-800 rounded-2xl shadow-2xl w-full ${maxWidth} overflow-hidden transform animate-scale-in`}>
             <div className="p-4 border-b dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-800/50">
                 <h3 className="text-xl font-bold dark:text-white flex items-center gap-2">
                     {title}

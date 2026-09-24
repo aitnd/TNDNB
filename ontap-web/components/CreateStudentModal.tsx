@@ -170,7 +170,7 @@ const CreateStudentModal: React.FC<CreateStudentModalProps> = ({ courseId, cours
 
     return (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 relative" onClick={e => e.stopPropagation()}>
+            <div className="bg-card dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-md p-6 relative" onClick={e => e.stopPropagation()}>
                 <button onClick={onClose} className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 p-2 rounded-full"><FaTimes /></button>
 
                 <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-blue-600">
@@ -186,7 +186,7 @@ const CreateStudentModal: React.FC<CreateStudentModalProps> = ({ courseId, cours
                             <p className="text-amber-700 dark:text-amber-200 mb-3">
                                 Số báo danh <strong className="font-mono">{conflict.account}</strong> đã được đăng ký cho một học viên trước đó.
                             </p>
-                            <div className="space-y-2 bg-white dark:bg-slate-800 p-3 rounded-lg border border-amber-100 dark:border-slate-700">
+                            <div className="space-y-2 bg-card dark:bg-slate-800 p-3 rounded-lg border border-amber-100 dark:border-slate-700">
                                 <div><span className="text-gray-500">Học viên cũ:</span> <strong>{conflict.oldName}</strong> ({conflict.oldCourseName})</div>
                                 <div>
                                     <span className="text-gray-500">Trạng thái:</span>{' '}

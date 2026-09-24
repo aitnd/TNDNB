@@ -134,7 +134,7 @@ const TeachersTab: React.FC<TeachersTabProps> = ({ course }) => {
                   relative p-6 rounded-3xl border transition-all flex items-center gap-5
                   ${teacher.id === course.headTeacherId 
                     ? 'bg-teal-50/50 dark:bg-teal-500/5 border-teal-200 dark:border-teal-500/30' 
-                    : 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800 shadow-sm'
+                    : 'bg-card dark:bg-slate-900 border-gray-100 dark:border-slate-800 shadow-sm'
                   }
                 `}
               >

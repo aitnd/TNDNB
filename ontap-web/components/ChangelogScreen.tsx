@@ -48,7 +48,7 @@ const ChangelogScreen: React.FC<ChangelogScreenProps> = ({ onBack }) => {
       <div className="relative text-center mb-8 pt-4">
         <button 
           onClick={() => { triggerHaptic('light'); onBack(); }} 
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-slate-600"
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-card dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-muted-foreground"
           aria-label="Quay lại"
         >
           <ArrowLeftIcon3D className="h-8 w-8 text-slate-800 dark:text-white" />
@@ -62,7 +62,7 @@ const ChangelogScreen: React.FC<ChangelogScreenProps> = ({ onBack }) => {
         </p>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl p-6">
+      <div className="bg-card dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl p-6">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
             <Loader2 className="h-10 w-10 text-indigo-600 animate-spin" />
@@ -76,7 +76,7 @@ const ChangelogScreen: React.FC<ChangelogScreenProps> = ({ onBack }) => {
                 <div className="flex items-center gap-4 mb-6">
                   <div className={`px-4 py-2 rounded-2xl font-black text-sm shadow-sm ${release.isLatest
                     ? 'bg-gradient-to-br from-indigo-600 to-blue-600 text-white shadow-indigo-500/20'
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                    : 'bg-slate-100 dark:bg-slate-700 text-muted-foreground dark:text-slate-300'
                     }`}>
                     v{release.version}
                   </div>

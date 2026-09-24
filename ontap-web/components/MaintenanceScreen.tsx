@@ -15,7 +15,7 @@ interface MaintenanceScreenProps {
 /** Ô hiển thị một đơn vị thời gian trong bộ đếm ngược */
 const CountdownBlock: React.FC<{ value: number; label: string }> = ({ value, label }) => (
   <div className="flex flex-col items-center">
-    <div className="relative bg-white/5 border border-white/15 backdrop-blur-md rounded-2xl w-[72px] h-[80px] flex items-center justify-center shadow-lg overflow-hidden">
+    <div className="relative bg-card/5 border border-white/15 backdrop-blur-md rounded-2xl w-[72px] h-[80px] flex items-center justify-center shadow-lg overflow-hidden">
       {/* Hiệu ứng gradient tinh tế */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
       <AnimatePresence mode="popLayout">
@@ -84,7 +84,7 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimate
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative z-10 max-w-2xl w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl text-center"
+        className="relative z-10 max-w-2xl w-full bg-card/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-12 shadow-2xl text-center"
       >
         
         {/* Floating Icons Animation */}
@@ -160,7 +160,7 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimate
           {countdown.isActive && !countdown.isOver ? (
             <div className="flex flex-col items-center gap-6">
               {estimatedTime && (
-                <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full shadow-inner backdrop-blur-sm">
+                <div className="inline-flex items-center gap-2 bg-card/5 border border-white/10 px-4 py-2 rounded-full shadow-inner backdrop-blur-sm">
                   <Clock className="w-4 h-4 text-blue-400" />
                   <span className="text-sm text-slate-200 font-medium font-sans">
                     Thời gian dự kiến: {estimatedTime}
@@ -194,7 +194,7 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimate
           ) : (
             /* Fallback: hiển thị text tĩnh khi không có maintenanceEndTime */
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-              <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+              <div className="flex items-center gap-2 bg-card/5 border border-white/10 px-4 py-2 rounded-full">
                 <Clock className="w-4 h-4 text-blue-400" />
                 <span className="text-sm text-slate-200">
                   {estimatedTime ? `Thời gian dự kiến: ${estimatedTime}` : 'Thời gian dự kiến: Sớm nhất có thể'}
@@ -211,7 +211,7 @@ const MaintenanceScreen: React.FC<MaintenanceScreenProps> = ({ message, estimate
           transition={{ delay: 0.6, duration: 0.6 }}
           className="flex justify-center mb-8"
         >
-          <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+          <div className="flex items-center gap-2 bg-card/5 border border-white/10 px-4 py-2 rounded-full">
             <ShieldAlert className="w-4 h-4 text-purple-400" />
             <span className="text-sm text-slate-200">
               {safetyInfo || 'Dữ liệu của bạn an toàn 100%'}

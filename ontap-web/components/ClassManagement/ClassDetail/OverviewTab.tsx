@@ -38,7 +38,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ course, studentCount = 0 }) =
         animate={{ opacity: 1, x: 0 }}
         className="space-y-6"
       >
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm">
+        <div className="bg-card dark:bg-slate-900 p-6 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm">
           <h3 className="text-lg font-bold mb-6 flex items-center gap-2 dark:text-white">
             <FaInfoCircle className="text-teal-500" /> Thông tin cơ bản
           </h3>
@@ -76,8 +76,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ course, studentCount = 0 }) =
           <p className="text-teal-50 opacity-90 text-sm mb-4">
             Người chịu trách nhiệm chính quản lý học viên và nội dung đào tạo của lớp.
           </p>
-          <div className="flex items-center gap-3 bg-white/10 p-4 rounded-2xl backdrop-blur-sm">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center font-bold">
+          <div className="flex items-center gap-3 bg-card/10 p-4 rounded-2xl backdrop-blur-sm">
+            <div className="w-10 h-10 bg-card/20 rounded-full flex items-center justify-center font-bold">
               GV
             </div>
             <div>
@@ -94,10 +94,10 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ course, studentCount = 0 }) =
         animate={{ opacity: 1, x: 0 }}
         className="space-y-6"
       >
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm h-full">
+        <div className="bg-card dark:bg-slate-900 p-6 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm h-full">
           <h3 className="text-lg font-bold mb-4 dark:text-white">Mô tả lớp học</h3>
           <div className="prose dark:prose-invert max-w-none">
-            <p className="text-gray-600 dark:text-slate-400 leading-relaxed italic">
+            <p className="text-muted-foreground dark:text-slate-400 leading-relaxed italic">
               {course.description || 'Không có mô tả cho lớp học này.'}
             </p>
           </div>

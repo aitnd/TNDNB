@@ -89,7 +89,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4 animate-fade-in" onClick={onClose}>
             <div
-                className="bg-white dark:bg-slate-800 w-full max-w-5xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+                className="bg-card dark:bg-slate-800 w-full max-w-5xl h-[85vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
@@ -101,19 +101,19 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                         {viewMode === 'list' ? (
                             <button
                                 onClick={() => setViewMode('create')}
-                                className="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"
+                                className="bg-card/20 hover:bg-card/30 text-white px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"
                             >
                                 <FaPlus /> Tạo mới
                             </button>
                         ) : (
                             <button
                                 onClick={() => setViewMode('list')}
-                                className="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors"
+                                className="bg-card/20 hover:bg-card/30 text-white px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors"
                             >
                                 Quay lại DS
                             </button>
                         )}
-                        <button onClick={onClose} className="hover:bg-white/20 p-2 rounded-full transition-colors">
+                        <button onClick={onClose} className="hover:bg-card/20 p-2 rounded-full transition-colors">
                             <FaTimes />
                         </button>
                     </div>
@@ -124,7 +124,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
 
                     {viewMode === 'create' ? (
                         <div className="p-8 max-w-2xl mx-auto">
-                            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-slate-700">
+                            <div className="bg-card dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-slate-700">
                                 <h3 className="text-lg font-bold mb-6 text-gray-800 dark:text-white flex items-center gap-2">
                                     <FaPaperPlane className="text-indigo-500" /> Soạn thông báo mới
                                 </h3>
@@ -135,7 +135,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                                             <button
                                                 type="button"
                                                 onClick={() => setType('system')}
-                                                className={`p-3 rounded-lg border text-sm font-medium transition-all ${type === 'system' ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-500' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                                                className={`p-3 rounded-lg border text-sm font-medium transition-all ${type === 'system' ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-500' : 'border-gray-200 text-muted-foreground hover:bg-gray-50'}`}
                                             >
                                                 🔵 Tin thường
                                                 <div className="text-[10px] font-normal mt-1 opacity-70">Thông tin chung, cập nhật</div>
@@ -143,7 +143,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                                             <button
                                                 type="button"
                                                 onClick={() => setType('attention')}
-                                                className={`p-3 rounded-lg border text-sm font-medium transition-all ${type === 'attention' ? 'bg-orange-50 border-orange-500 text-orange-700 ring-1 ring-orange-500' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                                                className={`p-3 rounded-lg border text-sm font-medium transition-all ${type === 'attention' ? 'bg-orange-50 border-orange-500 text-orange-700 ring-1 ring-orange-500' : 'border-gray-200 text-muted-foreground hover:bg-gray-50'}`}
                                             >
                                                 🟠 Chú ý (Vàng)
                                                 <div className="text-[10px] font-normal mt-1 opacity-70">Nhắc nhở, quan trọng vừa</div>
@@ -151,7 +151,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                                             <button
                                                 type="button"
                                                 onClick={() => setType('special')}
-                                                className={`p-3 rounded-lg border text-sm font-medium transition-all ${type === 'special' ? 'bg-red-50 border-red-500 text-red-700 ring-1 ring-red-500' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                                                className={`p-3 rounded-lg border text-sm font-medium transition-all ${type === 'special' ? 'bg-red-50 border-red-500 text-red-700 ring-1 ring-red-500' : 'border-gray-200 text-muted-foreground hover:bg-gray-50'}`}
                                             >
                                                 🔴 Khẩn cấp (Đỏ)
                                                 <div className="text-[10px] font-normal mt-1 opacity-70">Báo động, bắt buộc xem</div>
@@ -165,7 +165,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                                             type="text"
                                             value={title}
                                             onChange={e => setTitle(e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all dark:text-white"
+                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all dark:text-white"
                                             placeholder="Ví dụ: Lịch thi mới..."
                                             required
                                         />
@@ -177,7 +177,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                                             value={message}
                                             onChange={e => setMessage(e.target.value)}
                                             rows={4}
-                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all dark:text-white"
+                                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-card dark:bg-slate-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all dark:text-white"
                                             placeholder="Nội dung chi tiết..."
                                             required
                                         ></textarea>
@@ -197,7 +197,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                                                     onChange={e => setExpiryHours(Number(e.target.value))}
                                                     className="w-20 px-3 py-1.5 rounded border border-yellow-300 focus:ring-yellow-500 text-center font-bold"
                                                 />
-                                                <span className="text-sm text-gray-600 dark:text-gray-400">Giờ (App sẽ nhắc lại mỗi 6 tiếng trong khoảng này)</span>
+                                                <span className="text-sm text-muted-foreground dark:text-gray-400">Giờ (App sẽ nhắc lại mỗi 6 tiếng trong khoảng này)</span>
                                             </div>
                                         </div>
                                     )}
@@ -206,7 +206,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                                         <button
                                             type="button"
                                             onClick={() => setViewMode('list')}
-                                            className="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 transition-colors"
+                                            className="px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 transition-colors"
                                         >
                                             Hủy bỏ
                                         </button>
@@ -227,7 +227,7 @@ const NotificationManager: React.FC<NotificationManagerProps> = ({ onClose }) =>
                             {loading ? (
                                 <div className="text-center py-10">Đang tải dữ liệu...</div>
                             ) : (
-                                <div className="bg-white dark:bg-slate-800 rounded-xl shadow border border-gray-200 dark:border-slate-700 overflow-hidden">
+                                <div className="bg-card dark:bg-slate-800 rounded-xl shadow border border-gray-200 dark:border-slate-700 overflow-hidden">
                                     <table className="w-full text-left text-sm">
                                         <thead className="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 font-bold uppercase">
                                             <tr>

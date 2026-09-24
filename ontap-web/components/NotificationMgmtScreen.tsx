@@ -195,7 +195,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
 
     return (
         <div className="p-4 md:p-8 animate-fade-in pb-20 max-w-7xl mx-auto">
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden min-h-[500px] flex flex-col">
+            <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden min-h-[500px] flex flex-col">
                 {/* Header */}
                 <div className="p-6 border-b border-gray-100 dark:border-slate-700 bg-gradient-to-r from-teal-500 to-emerald-600 text-white flex justify-between items-center">
                     <div>
@@ -251,7 +251,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                         </button>
                         <button
                             onClick={() => setShowCreateModal(true)}
-                            className="bg-white text-teal-600 px-4 py-2 rounded-lg font-bold shadow hover:bg-teal-50 transition flex items-center gap-2"
+                            className="bg-card text-teal-600 px-4 py-2 rounded-lg font-bold shadow hover:bg-teal-50 transition flex items-center gap-2"
                         >
                             <FaPlus /> Tạo mới
                         </button>
@@ -263,7 +263,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                     {loading ? (
                         <div className="text-center py-20 text-gray-500">Đang tải dữ liệu...</div>
                     ) : (
-                        <div className="bg-white dark:bg-slate-800 rounded-xl shadow border border-gray-200 dark:border-slate-700 overflow-hidden min-w-[800px]">
+                        <div className="bg-card dark:bg-slate-800 rounded-xl shadow border border-gray-200 dark:border-slate-700 overflow-hidden min-w-[800px]">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 font-bold uppercase">
                                     <tr>
@@ -317,7 +317,7 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
                                                     </td>
                                                     <td className="p-4 align-top">
                                                         <div className="font-bold text-gray-900 dark:text-white mb-1 text-base">{n.title}</div>
-                                                        <div className="text-gray-600 dark:text-gray-400 line-clamp-2">{n.message}</div>
+                                                        <div className="text-muted-foreground dark:text-gray-400 line-clamp-2">{n.message}</div>
                                                     </td>
                                                     <td className="p-4 align-top text-gray-700 dark:text-gray-300 font-medium">
                                                         {n.senderName}
@@ -372,12 +372,12 @@ const NotificationMgmtScreen: React.FC<NotificationMgmtScreenProps> = ({ userPro
             {/* CREATE MODAL */}
             {showCreateModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={() => setShowCreateModal(false)}>
-                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-scale-in" onClick={e => e.stopPropagation()}>
+                    <div className="bg-card dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-scale-in" onClick={e => e.stopPropagation()}>
                         <div className="p-6 border-b dark:border-slate-700 bg-gray-50 dark:bg-slate-900 flex justify-between items-center">
                             <h2 className="text-xl font-bold flex items-center gap-2 text-gray-800 dark:text-white">
                                 {editingNotification ? <><FaEdit className="text-blue-600" /> Cập nhật thông báo</> : <><FaPlus className="text-teal-600" /> Tạo thông báo mới</>}
                             </h2>
-                            <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                            <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-muted-foreground text-2xl">&times;</button>
                         </div>
 
                         <form onSubmit={handleCreate} className="p-6 space-y-4">
