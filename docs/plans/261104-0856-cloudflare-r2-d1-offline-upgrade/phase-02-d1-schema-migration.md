@@ -1,6 +1,6 @@
 # Phase 02: Thiết Kế Schema D1 & Di Trú Dữ Liệu (Supabase + Firebase -> D1 & R2)
 
-Status: Pending
+Status: Completed
 Dependencies: Phase 01 (`phase-01-cloudflare-infra.md`)
 
 > **Thuộc kế hoạch:** [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/plan.md)  
