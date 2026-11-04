@@ -1,0 +1,15 @@
+- [ ] Phase 1: Fix White Screen & Crashes
+  - [x] Task 0 (P0): Bổ sung VITE_SUPABASE_URL và ANON_KEY vào ontap-win/.env và .env.example, rebuild và kiểm tra ném lỗi. (Smoke unpacked làm gate). Thêm bước grep-bundle vào quy trình build chuẩn.
+  - [x] Task 1 (P1): Sửa [supabaseClient.ts](file:///d:/Antigravity/TNDNB/ontap-win/services/supabaseClient.ts) sang lazy-init để tránh lỗi tĩnh.
+  - [x] Task 2: Kiểm tra và xử lý local changes ở [main.cjs](file:///d:/Antigravity/TNDNB/ontap-win/electron/main.cjs) (stash/restore) trước khi sửa.
+  - [x] Task 3: Sửa [main.cjs](file:///d:/Antigravity/TNDNB/ontap-win/electron/main.cjs) (Thêm require('fs'), process.exit, bắt lỗi createTray, bắt lỗi loadFile).
+  - [x] Task 4: Sửa [index.tsx](file:///d:/Antigravity/TNDNB/ontap-win/index.tsx) bọc ErrorBoundary với fallback full-screen.
+- [x] Phase 2: Fix Version Check
+  - [x] Sửa [UpdateService.ts](file:///d:/Antigravity/TNDNB/ontap-win/services/UpdateService.ts) (Thêm isVersionLower, lọc draft/prerelease, sort 3 nhánh). Viết test tại `UpdateService.test.ts` (colocated).
+  - [x] Sửa [ChangelogModal.tsx](file:///d:/Antigravity/TNDNB/ontap-win/components/ChangelogModal.tsx) (Gỡ window.require, dùng IPC invoke).
+  - [x] Sửa [TopNavbar.tsx](file:///d:/Antigravity/TNDNB/ontap-win/components/TopNavbar.tsx) (Xóa hardcode 3.19.2, lấy version động).
+- [x] Phase 3: Chẩn đoán & Publish & Acceptance Criteria
+  - [x] Chẩn đoán lỗi version trước publish: kiểm tra release v3.19.x trên GitHub có phải Draft không, API trả releases[0] là tag nào, app_links.version hiện tại là gì — rồi mới publish.
+  - [x] Bump version 3.19.4 trong package.json và smoke test unpacked.
+  - [ ] Publish GitHub Release v3.19.4 (upload đủ .exe, latest.yml sinh từ electron-builder, .blockmap). Giữ exe 3.18.1 rollback. Dọn code fence, commit message có attribution AI.
+  - [ ] Cập nhật app_links.version = 3.19.4 trên Firestore.

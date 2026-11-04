@@ -5,13 +5,13 @@ require('dotenv').config();
 
 // Firebase config
 const firebaseConfig = {
-    apiKey: process.env.VITE_FIREBASE_API_KEY || "AIzaSyDll7h-FpzCVml2vy8KeMPA6xExGUda_NE",
-    authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || "thi-tnd.firebaseapp.com",
-    projectId: process.env.VITE_FIREBASE_PROJECT_ID || "thi-tnd",
-    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || "thi-tnd.firebasestorage.app",
-    messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "107125875663",
-    appId: process.env.VITE_FIREBASE_APP_ID || "1:107125875663:web:0e1a632779f51340c828ba",
-    databaseURL: process.env.VITE_FIREBASE_DATABASE_URL || "https://thi-tnd-default-rtdb.asia-southeast1.firebasedatabase.app"
+    apiKey: process.env.VITE_FIREBASE_API_KEY,
+    authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.VITE_FIREBASE_APP_ID,
+    databaseURL: process.env.VITE_FIREBASE_DATABASE_URL
 };
 
 const app = initializeApp(firebaseConfig);

@@ -2,7 +2,7 @@ import { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
-  fallback?: ReactNode;
+  fallback?: ReactNode | ((error: Error | null) => ReactNode);
   name?: string;
 }
 
@@ -28,7 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback;
+        return typeof this.props.fallback === 'function' ? this.props.fallback(this.state.error) : this.props.fallback;
       }
       return (
         <div className="p-3 my-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-lg text-amber-800 dark:text-amber-200 text-xs flex items-center justify-between">

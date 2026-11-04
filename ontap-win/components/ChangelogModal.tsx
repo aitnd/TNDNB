@@ -114,10 +114,10 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
     setUpdateStatus('checking');
     setErrorMessage('');
     try {
-      // @ts-ignore - Gửi lệnh check update cho main process
-      if (window.require) {
-        const { ipcRenderer } = window.require('electron');
-        ipcRenderer.send('download-update');
+      // @ts-ignore
+      if (window.electron) {
+        // @ts-ignore
+        window.electron.downloadUpdate();
 
         // Timeout sau 10 giây nếu không có response
         setTimeout(() => {
@@ -144,9 +144,9 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const handleInstallUpdate = () => {
     try {
       // @ts-ignore
-      if (window.require) {
-        const { ipcRenderer } = window.require('electron');
-        ipcRenderer.send('install-update');
+      if (window.electron) {
+        // @ts-ignore
+        window.electron.installUpdate();
       }
     } catch (e) {
       console.error('Install update failed:', e);

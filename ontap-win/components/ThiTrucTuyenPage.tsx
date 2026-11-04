@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db, rtdb } from '../services/firebaseClient';
-import { supabase } from '../services/supabaseClient';
+import { getSupabase } from '../services/supabaseClient';
 import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, set, update, onDisconnect, serverTimestamp as rtdbTimestamp } from 'firebase/database';
 import ExamQuizScreen from './ExamQuizScreen';
@@ -109,7 +109,7 @@ const ThiTrucTuyenPage: React.FC = () => {
             // Fetch Questions based on License (Supabase)
             const licenseId = roomData.license_id;
 
-            let query = supabase
+            let query = getSupabase()
                 .from('questions')
                 .select('*')
                 .eq('license_id', licenseId);

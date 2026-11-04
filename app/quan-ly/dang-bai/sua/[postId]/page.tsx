@@ -601,7 +601,7 @@ function EditPostForm() {
                 {!isLoadingPost && (
                   <Editor
                     // (Dùng "chìa khóa" của anh)
-                    apiKey='20m5wt4ebguc9anzt43drvz8gd06zeumm7srlb0ivrdq2m4t' 
+                    apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} 
                     
                     // (Khai báo 'any' cho 'onInit')
                     onInit={(_evt: any, editor: any) => {

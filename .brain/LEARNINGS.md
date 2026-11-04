@@ -9,3 +9,11 @@
 - [2026-09-22] Firestore guest permission: giữ `allow read: if request.auth != null` (least privilege), nhưng mọi `onSnapshot` bắt buộc có error callback + `try/catch` với fallback `setAlerts([])` (graceful hide) — nếu không guest sẽ bắn `PERMISSION_DENIED` đỏ console.
 - [2026-09-22] Checkbox `[x]` không evidence thì chưa xong: mọi tick hoàn thành phải kèm log/screenshot/test (tsc log, build log, preview). Task Phase 5 tick đủ nhưng thiếu tag `v3.19.2`, `latest.yml` vẫn `3.19.1` — suýt nghiệm thu khống.
 - [2026-09-22] Double-sync plan docs: `task.md` và `phase-*.md` phải khớp nhau (checkbox, số dòng file, phạm vi Web/Win); line number trong docs trôi theo code nên ghi `±`. Plan ghi sai stack (`NEXT_PUBLIC_` trong project Vite) gây hiểu nhầm ENV.
+## 2026-09-24: Tailwind v4 Dark Mode & Vite Asset Paths
+- **Tailwind v4 Multi-Dark Themes:** Khi update từ v3 lên v4, biến dark: mặc định chạy theo OS media query. Nếu app có nhiều dark themes (vd: dark, noel, tri-an), PHẢI cấu hình @custom-variant dark mở rộng trong 	heme.css để liệt kê toàn bộ các attribute tương ứng. Nếu không, các class dark: sẽ không kích hoạt khi user chọn các theme tối khác.
+- **Vite Asset Base URL:** Khi set ase trong ite.config.ts, tuyệt đối KHÔNG dùng đường dẫn tuyệt đối tĩnh (src="/assets/img/...") vì sẽ bị 404. Luôn phải dùng ` src={${import.meta.env.BASE_URL}assets/img/...} `.
+
+## 2026-09-26: Loi UTF-8 BOM, TypeScript Supabase & Security Keys
+- **Loi UTF-8 BOM do PowerShell:** Khong dung Set-Content -Encoding UTF8 de ghi file code.
+- **Loi TypeScript TS2339 (Supabase):** Du lieu tra ve doi khi bi suy dien thanh never. Cach xu ly: ep kieu (data as any).
+- **Bao mat API Key:** Cac fallback API key cung rat nguy hiem. Luon thay the bang bien moi truong.
