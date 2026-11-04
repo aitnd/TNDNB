@@ -41,21 +41,21 @@
 ## Phase 02: Thiết Kế Schema D1 & Di Trú Dữ Liệu (Supabase + Firebase -> D1 & R2)
 > Chi tiết TDD: [phase-02-d1-schema-migration.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/phase-02-d1-schema-migration.md)
 
-- [ ] **Task 2.1:** Tạo SQL Migration `0001_initial_schema.sql` & Route Câu hỏi (`src/routes/questions.ts`)
-  - [ ] **Step 2.1.1 (RED):** Viết unit test kiểm tra `assembleLicensesTree` và `GET /api/v1/meta/version` tại [cloudflare-worker/test/questions-route.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/questions-route.test.ts).
-  - [ ] **Step 2.1.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/questions-route.test.ts` xác nhận FAIL.
-  - [ ] **Step 2.1.3 (GREEN):** Tạo [cloudflare-worker/migrations/0001_initial_schema.sql](file:///d:/Antigravity/TNDNB/cloudflare-worker/migrations/0001_initial_schema.sql) và [cloudflare-worker/src/routes/questions.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/routes/questions.ts).
-  - [ ] **Step 2.1.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/questions-route.test.ts` xác nhận PASS (2/2 tests).
-- [ ] **Task 2.2:** Xây dựng Route Cấu hình Hệ thống & Thông báo Chạy chữ (`src/routes/config.ts` & `src/routes/alerts.ts`)
-  - [ ] **Step 2.2.1 (RED):** Viết unit test cho `handleConfigRoutes` và `handleAlertsRoutes` tại [cloudflare-worker/test/config-alerts.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/config-alerts.test.ts).
-  - [ ] **Step 2.2.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/config-alerts.test.ts` xác nhận FAIL.
-  - [ ] **Step 2.2.3 (GREEN):** Tạo [cloudflare-worker/src/routes/config.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/routes/config.ts) và [cloudflare-worker/src/routes/alerts.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/routes/alerts.ts).
-  - [ ] **Step 2.2.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/config-alerts.test.ts` xác nhận PASS (3/3 tests).
-- [ ] **Task 2.3:** Xây dựng Script Di trú Dữ liệu sang D1 & Chuẩn hóa URL Ảnh R2 (`scripts/migrate-to-d1.mjs` & `scripts/migrate-images-to-r2.mjs`)
-  - [ ] **Step 2.3.1 (RED):** Viết unit test kiểm tra `normalizeQuestionImageForR2` và `generateSeedSqlFromLicenses` tại [scripts/migrate-to-d1.test.ts](file:///d:/Antigravity/TNDNB/scripts/migrate-to-d1.test.ts).
-  - [ ] **Step 2.3.2 (FAIL):** Chạy `npx vitest run scripts/migrate-to-d1.test.ts` xác nhận FAIL.
-  - [ ] **Step 2.3.3 (GREEN):** Tạo [scripts/migrate-to-d1.mjs](file:///d:/Antigravity/TNDNB/scripts/migrate-to-d1.mjs) và [scripts/migrate-images-to-r2.mjs](file:///d:/Antigravity/TNDNB/scripts/migrate-images-to-r2.mjs).
-  - [ ] **Step 2.3.4 (PASS):** Chạy lại `npx vitest run scripts/migrate-to-d1.test.ts` xác nhận PASS (2/2 tests).
+- [x] **Task 2.1:** Tạo SQL Migration `0001_initial_schema.sql` & Route Câu hỏi (`src/routes/questions.ts`)
+  - [x] **Step 2.1.1 (RED):** Viết unit test kiểm tra `assembleLicensesTree` và `GET /api/v1/meta/version` tại [cloudflare-worker/test/questions-route.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/questions-route.test.ts).
+  - [x] **Step 2.1.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/questions-route.test.ts` xác nhận FAIL.
+  - [x] **Step 2.1.3 (GREEN):** Tạo [cloudflare-worker/migrations/0001_initial_schema.sql](file:///d:/Antigravity/TNDNB/cloudflare-worker/migrations/0001_initial_schema.sql) và [cloudflare-worker/src/routes/questions.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/routes/questions.ts).
+  - [x] **Step 2.1.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/questions-route.test.ts` xác nhận PASS (2/2 tests).
+- [x] **Task 2.2:** Xây dựng Route Cấu hình Hệ thống & Thông báo Chạy chữ (`src/routes/config.ts` & `src/routes/alerts.ts`)
+  - [x] **Step 2.2.1 (RED):** Viết unit test cho `handleConfigRoutes` và `handleAlertsRoutes` tại [cloudflare-worker/test/config-alerts.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/config-alerts.test.ts).
+  - [x] **Step 2.2.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/config-alerts.test.ts` xác nhận FAIL.
+  - [x] **Step 2.2.3 (GREEN):** Tạo [cloudflare-worker/src/routes/config.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/routes/config.ts) và [cloudflare-worker/src/routes/alerts.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/routes/alerts.ts).
+  - [x] **Step 2.2.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/config-alerts.test.ts` xác nhận PASS (3/3 tests).
+- [x] **Task 2.3:** Xây dựng Script Di trú Dữ liệu sang D1 & Chuẩn hóa URL Ảnh R2 (`scripts/migrate-to-d1.mjs` & `scripts/migrate-images-to-r2.mjs`)
+  - [x] **Step 2.3.1 (RED):** Viết unit test kiểm tra `normalizeQuestionImageForR2` và `generateSeedSqlFromLicenses` tại [scripts/migrate-to-d1.test.ts](file:///d:/Antigravity/TNDNB/scripts/migrate-to-d1.test.ts).
+  - [x] **Step 2.3.2 (FAIL):** Chạy `npx vitest run scripts/migrate-to-d1.test.ts` xác nhận FAIL.
+  - [x] **Step 2.3.3 (GREEN):** Tạo [scripts/migrate-to-d1.mjs](file:///d:/Antigravity/TNDNB/scripts/migrate-to-d1.mjs) và [scripts/migrate-images-to-r2.mjs](file:///d:/Antigravity/TNDNB/scripts/migrate-images-to-r2.mjs).
+  - [x] **Step 2.3.4 (PASS):** Chạy lại `npx vitest run scripts/migrate-to-d1.test.ts` xác nhận PASS (2/2 tests).
 
 ---
 
@@ -128,12 +128,17 @@
 
 ---
 
-## Phase 07: Kiểm Thử Trên Link Preview, Benchmark & Merge Cut-over (`main`)
+## Phase 07: Kiểm Thử Trên Link Preview, Nâng Version Đồng Bộ v3.21.0 & Merge Cut-over (`main`)
 > Chi tiết TDD: [phase-07-testing-verification.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/phase-07-testing-verification.md)
 
 - [ ] **Task 7.1:** Kiểm thử E2E Offline Mode + Delta Sync + R2 Precache + Portal Redesign & Build Verification
   - [ ] **Step 7.1.1 (RED):** Viết kịch bản E2E test mất mạng hoàn toàn tại [ontap-web/services/__tests__/offlineIntegration.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/services/__tests__/offlineIntegration.test.ts).
   - [ ] **Step 7.1.2 (FAIL):** Xác nhận test FAIL nếu thiếu bất kỳ thành phần nào của Phase 03-04.
-  - [ ] **Step 7.1.3 (GREEN):** Chạy toàn bộ 17 test files (43 unit/integration tests) trên cả `cloudflare-worker`, `ontap-web`, `ontap-win` và `scripts`.
-  - [ ] **Step 7.1.4 (PASS):** Xác nhận 43/43 tests PASS và chạy `npm run build:ontap:cf`, `npm run build:portal`, `npm --prefix ontap-win run build` thành công.
-- [ ] **Task 7.2:** Push nhánh `feat/cloudflare-offline-v3.21` lên GitHub, kiểm thử thực tế trên **Vercel Preview URL** và **Cloudflare Pages Preview URL (`*.pages.dev`)** trong khi Production (`main`) vẫn chạy bình thường. Sau khi nghiệm thu 100% PASS mới merge vào `main`.
+  - [ ] **Step 7.1.3 (GREEN):** Chạy toàn bộ 18 test files (45 unit/integration tests) trên cả `cloudflare-worker`, `ontap-web`, `ontap-win` và `scripts`.
+  - [ ] **Step 7.1.4 (PASS):** Xác nhận 45/45 tests PASS và chạy `npm run build:ontap:cf`, `npm run build:portal`, `npm --prefix ontap-win run build` thành công.
+- [x] **Task 7.2:** Nâng Cấp và Đồng Bộ Phiên Bản v3.21.0 Toàn Bộ Ứng Dụng (`Root`, `ontap-web`, `ontap-win`, `cloudflare-worker`) & Cập Nhật Changelogs
+  - [x] **Step 7.2.1 (RED):** Viết unit test kiểm tra toàn bộ 4 file package.json đều có version "3.21.0" tại [scripts/version-sync.test.ts](file:///d:/Antigravity/TNDNB/scripts/version-sync.test.ts).
+  - [x] **Step 7.2.2 (FAIL):** Chạy `npx vitest run scripts/version-sync.test.ts` xác nhận FAIL (do hiện tại là 3.20.0).
+  - [x] **Step 7.2.3 (GREEN):** Cập nhật `update_versions.js` & `update_changelogs.js`, chạy nâng version lên `3.21.0` cho `package.json`, `ontap-web/package.json`, `ontap-win/package.json`, `cloudflare-worker/package.json` và cập nhật các file `CHANGELOG.md`.
+  - [x] **Step 7.2.4 (PASS):** Chạy lại `npx vitest run scripts/version-sync.test.ts` xác nhận PASS (2/2 tests).
+- [ ] **Task 7.3:** Push nhánh `feat/cloudflare-offline-v3.21` lên GitHub, kiểm thử thực tế trên **Vercel Preview URL** và **Cloudflare Pages Preview URL (`*.pages.dev`)** trong khi Production (`main`) vẫn chạy bình thường. Sau khi nghiệm thu 100% PASS mới merge vào `main`.

@@ -1,3 +1,11 @@
+## [3.21.0] - 2026-11-04
+### Cloudflare R2, D1, Worker Proxy, Editorial Redesign & Split Deployment
+- **Infra (R2 CDN & Pre-caching):** Migrated 280+ exam question images to Cloudflare R2 bucket with custom CDN domain and Cache-First Service Worker pre-caching for PWA offline operation.
+- **Database (Cloudflare D1 & Dexie):** Replaced legacy live queries with D1 edge database snapshots, HTTP API endpoints, and Dexie IndexedDB offline caching with delta synchronization.
+- **Update Proxy (Worker):** Deployed Cloudflare Worker proxy (`/releases/*`) to accelerate GitHub Release `.exe` asset downloads for `ontap-win`.
+- **Portal UI/UX (Hallmark Editorial):** Redesigned Root Portal header (N6 Newspaper Masthead with zero yellow pill buttons) and homepage (H2 Split Diptych with 7fr Lead Story and 5fr Numbered Briefing column), strictly adhering to Hallmark Gate 38a (roman display, font-style: normal).
+- **Deployment Architecture:** Configured Dual-Target Deployment for `ontap-web` with `CF_PAGES=1` build targeting Cloudflare Pages dist with `_redirects` and `_headers`, and dynamic proxy rewrites on Vercel Root Portal.
+
 ## [3.19.3] - 2026-09-22
 ### Môi trường Windows (Electron & React)
 - **Feat: Bổ sung tính năng Giám khảo:** 

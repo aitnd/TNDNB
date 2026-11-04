@@ -1,10 +1,13 @@
-# Phase 07: Kiểm Thử Toàn Diện, Benchmark Hiệu Năng & Quy Trình Merge Cut-over (`main`)
+# Phase 07: Kiểm Thử Toàn Diện, Nâng Version Đồng Bộ v3.21.0 & Quy Trình Merge Cut-over (`main`)
 
 Status: Pending
 Dependencies: Phase 00, Phase 01, Phase 02, Phase 03, Phase 04, Phase 05, Phase 06
 
 > **Thuộc kế hoạch:** [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/plan.md)  
-> **Mục tiêu:** Xác minh tích hợp toàn bộ 7 Phases nâng cấp (Tách Deployment Monorepo, Cloudflare R2 + PWA Offline Cache, Cloudflare D1 + IndexedDB Offline-First, Cloudflare Worker Release CDN Proxy, và Giao diện Editorial mới của Root Portal) qua bộ Integration Test tự động, kiểm thử trên link Preview (`vercel.app` & `pages.dev`) và quy trình Rollback 0-downtime.
+> **Mục tiêu:**
+> 1. Xác minh tích hợp toàn bộ 7 Phases nâng cấp (Tách Deployment Monorepo, Cloudflare R2 + PWA Offline Cache, Cloudflare D1 + IndexedDB Offline-First, Cloudflare Worker Release CDN Proxy, và Giao diện Editorial mới của Root Portal) qua bộ Integration Test tự động.
+> 2. Nâng cấp và đồng bộ hóa phiên bản `v3.21.0` xuyên suốt toàn bộ Monorepo (`Root Portal`, `ontap-web`, `ontap-win`, `cloudflare-worker`) và cập nhật toàn bộ hệ thống nhật ký thay đổi (`CHANGELOG.md`, `ontap-web/CHANGELOG.md`, `ontap-win/CHANGELOG.md`, `CHANGELOG_DEV.md`).
+> 3. Kiểm thử trên link Preview (`vercel.app` & `pages.dev`) và quy trình Rollback 0-downtime trước khi merge vào `main`.
 
 ---
 
@@ -110,37 +113,12 @@ Error: Failed to resolve import "../d1Client"
 
 #### Step 7.1.3: Chạy toàn bộ Test Suite sau khi hoàn tất Phase 00 -> Phase 06 (GREEN)
 ```powershell
-npx vitest run cloudflare-worker/test/ scripts/migrate-to-d1.test.ts scripts/monorepo-routing.test.ts scripts/portal-navbar-cleanup.test.ts scripts/portal-homepage-editorial.test.ts
+npx vitest run cloudflare-worker/test/ scripts/
 npx --prefix ontap-web vitest run services/__tests__/ utils/__tests__/
 npx --prefix ontap-win vitest run services/__tests__/UpdateService.test.ts
 ```
 
-#### Step 7.1.4: Xác nhận toàn bộ 17 Test Files (43 Tests) PASS & Kiểm tra Build
-Expected output:
-```text
- ✓ scripts/monorepo-routing.test.ts (3 tests)
- ✓ scripts/portal-navbar-cleanup.test.ts (3 tests)
- ✓ scripts/portal-homepage-editorial.test.ts (2 tests)
- ✓ scripts/migrate-to-d1.test.ts (2 tests)
- ✓ cloudflare-worker/test/types.test.ts (2 tests)
- ✓ cloudflare-worker/test/infra.test.ts (4 tests)
- ✓ cloudflare-worker/test/questions-route.test.ts (2 tests)
- ✓ cloudflare-worker/test/config-alerts.test.ts (3 tests)
- ✓ cloudflare-worker/test/releases-proxy.test.ts (2 tests)
- ✓ ontap-web/utils/__tests__/deployConfig.test.ts (3 tests)
- ✓ ontap-web/services/__tests__/d1Client.test.ts (3 tests)
- ✓ ontap-web/services/__tests__/dataService.test.ts (3 tests)
- ✓ ontap-web/services/__tests__/adminConfigD1.test.ts (2 tests)
- ✓ ontap-web/utils/__tests__/imageHelper.test.ts (4 tests)
- ✓ ontap-web/utils/__tests__/swPwa.test.ts (3 tests)
- ✓ ontap-web/services/__tests__/offlineIntegration.test.ts (1 test)
- ✓ ontap-win/services/__tests__/UpdateService.test.ts (1 test)
-
- Test Files  17 passed (17)
-      Tests  43 passed (43)
-```
-
-#### Step 7.1.5: Kiểm tra Build Production cả 3 đích (`Root Portal`, `ontap-web` Cloudflare Pages, `ontap-win`)
+#### Step 7.1.4: Xác nhận toàn bộ Test Files PASS & Kiểm tra Build Production
 ```powershell
 npm run build:ontap:cf
 npm run build:portal
@@ -149,7 +127,106 @@ npm --prefix ontap-win run build
 
 ---
 
-## 2. Quy Trình Nghiệm Thu Trên Link Preview & Rollback An Toàn
+### Task 7.2: Nâng Cấp và Đồng Bộ Phiên Bản v3.21.0 Toàn Bộ Ứng Dụng (`Root`, `ontap-web`, `ontap-win`, `cloudflare-worker`) & Cập Nhật Changelogs
+
+- **Files:**
+  - Modify: [d:/Antigravity/TNDNB/package.json](file:///d:/Antigravity/TNDNB/package.json)
+  - Modify: [d:/Antigravity/TNDNB/ontap-web/package.json](file:///d:/Antigravity/TNDNB/ontap-web/package.json)
+  - Modify: [d:/Antigravity/TNDNB/ontap-win/package.json](file:///d:/Antigravity/TNDNB/ontap-win/package.json)
+  - Modify: [d:/Antigravity/TNDNB/cloudflare-worker/package.json](file:///d:/Antigravity/TNDNB/cloudflare-worker/package.json)
+  - Modify: [d:/Antigravity/TNDNB/update_versions.js](file:///d:/Antigravity/TNDNB/update_versions.js)
+  - Modify: [d:/Antigravity/TNDNB/update_changelogs.js](file:///d:/Antigravity/TNDNB/update_changelogs.js)
+  - Modify: [d:/Antigravity/TNDNB/CHANGELOG.md](file:///d:/Antigravity/TNDNB/CHANGELOG.md)
+  - Modify: [d:/Antigravity/TNDNB/ontap-web/CHANGELOG.md](file:///d:/Antigravity/TNDNB/ontap-web/CHANGELOG.md)
+  - Modify: [d:/Antigravity/TNDNB/ontap-win/CHANGELOG.md](file:///d:/Antigravity/TNDNB/ontap-win/CHANGELOG.md)
+  - Modify: [d:/Antigravity/TNDNB/CHANGELOG_DEV.md](file:///d:/Antigravity/TNDNB/CHANGELOG_DEV.md)
+  - Test: [d:/Antigravity/TNDNB/scripts/version-sync.test.ts](file:///d:/Antigravity/TNDNB/scripts/version-sync.test.ts)
+- **Interfaces:**
+  - Consumes: Target version string `'3.21.0'`
+  - Produces: Toàn bộ 4 package.json đều đồng nhất version `3.21.0`, các changelog ghi nhận chi tiết bản nâng cấp Cloudflare R2/D1/PWA Offline/Editorial Masthead.
+
+#### Step 7.2.1: Viết test thất bại (RED)
+Tạo file [d:/Antigravity/TNDNB/scripts/version-sync.test.ts](file:///d:/Antigravity/TNDNB/scripts/version-sync.test.ts):
+
+```typescript
+import { describe, it, expect } from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
+
+describe('Monorepo Full-Stack Version Synchronization (v3.21.0)', () => {
+  const rootPkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8'));
+  const webPkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'ontap-web/package.json'), 'utf8'));
+  const winPkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'ontap-win/package.json'), 'utf8'));
+  const workerPkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'cloudflare-worker/package.json'), 'utf8'));
+
+  it('toàn bộ 4 gói trong Monorepo đều đồng bộ chính xác phiên bản 3.21.0', () => {
+    expect(rootPkg.version).toBe('3.21.0');
+    expect(webPkg.version).toBe('3.21.0');
+    expect(winPkg.version).toBe('3.21.0');
+    expect(workerPkg.version).toBe('3.21.0');
+  });
+
+  it('tất cả các file CHANGELOG ghi nhận đầy đủ mục [3.21.0]', () => {
+    const changelog = fs.readFileSync(path.resolve(process.cwd(), 'CHANGELOG.md'), 'utf8');
+    const webChangelog = fs.readFileSync(path.resolve(process.cwd(), 'ontap-web/CHANGELOG.md'), 'utf8');
+    const winChangelog = fs.readFileSync(path.resolve(process.cwd(), 'ontap-win/CHANGELOG.md'), 'utf8');
+    const devChangelog = fs.readFileSync(path.resolve(process.cwd(), 'CHANGELOG_DEV.md'), 'utf8');
+
+    expect(changelog).toContain('## [3.21.0]');
+    expect(webChangelog).toContain('## [3.21.0]');
+    expect(winChangelog).toContain('## [3.21.0]');
+    expect(devChangelog).toContain('## [3.21.0]');
+  });
+});
+```
+
+#### Step 7.2.2: Chạy test — xác nhận FAIL
+```powershell
+npx vitest run scripts/version-sync.test.ts
+```
+Expected output:
+```text
+FAIL  scripts/version-sync.test.ts
+AssertionError: expected '3.20.0' to be '3.21.0'
+```
+
+#### Step 7.2.3: Implement tối thiểu (GREEN)
+1. Cập nhật [d:/Antigravity/TNDNB/update_versions.js](file:///d:/Antigravity/TNDNB/update_versions.js):
+```javascript
+const fs = require('fs');
+const targetVersion = '3.21.0';
+const files = [
+  'package.json',
+  'ontap-web/package.json',
+  'ontap-win/package.json',
+  'cloudflare-worker/package.json'
+];
+
+files.forEach(file => {
+  if (fs.existsSync(file)) {
+    let content = fs.readFileSync(file, 'utf8');
+    content = content.replace(/"version":\s*"[^"]+"/, `"version": "${targetVersion}"`);
+    fs.writeFileSync(file, content, 'utf8');
+    console.log(`Updated ${file} to ${targetVersion}`);
+  }
+});
+```
+
+2. Cập nhật [d:/Antigravity/TNDNB/update_changelogs.js](file:///d:/Antigravity/TNDNB/update_changelogs.js) với nội dung chi tiết bản `3.21.0`:
+   - Hạ tầng Cloudflare R2 CDN cho toàn bộ 280+ ảnh câu hỏi + PWA Offline Pre-caching.
+   - CSDL Cloudflare D1 + Dexie IndexedDB Offline-First cho `ontap-web` & `ontap-win`.
+   - Worker CDN Proxy tăng tốc tải bản cập nhật `.exe` của `ontap-win`.
+   - Tái thiết kế giao diện Cổng thông tin trường theo chuẩn Editorial Báo chí (`N6 Masthead` + `H2 Split Diptych`).
+3. Chạy `node update_versions.js` và `node update_changelogs.js`.
+
+#### Step 7.2.4: Chạy lại test — xác nhận PASS
+```powershell
+npx vitest run scripts/version-sync.test.ts
+```
+
+---
+
+### Task 7.3: Push Preview Branch & Quy Trình Nghiệm Thu Trên Link Preview
 
 1. **Kiểm thử trên nhánh `feat/cloudflare-offline-v3.21` (Preview Environment):**
    - **Link Vercel Preview (`tndnb-git-feat-...vercel.app`):** Kiểm tra giao diện Editorial mới của Cổng thông tin Công ty Cổ phần Tư vấn và Giáo dục Ninh Bình (đã gỡ 5 nút màu vàng và banner `/ontap`, hiển thị chuẩn `N6 Masthead` + `H2 Split Diptych`).
