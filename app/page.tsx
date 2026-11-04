@@ -1,20 +1,14 @@
-// 💖 1. SERVER COMPONENT (Mặc định)
 import React from 'react'
 import { supabase } from '../utils/supabaseClient'
 import Link from 'next/link'
 import Sidebar from '../components/Sidebar'
 import FeaturedSlider from '../components/FeaturedSlider'
-import PostImage from '../components/PostImage' // 💖 Import Component Mới
+import PostImage from '../components/PostImage'
 import styles from './page.module.css'
 
-// (Hàm tạo tóm tắt - ĐÃ NÂNG CẤP)
-function taoTomTat(htmlContent: string, length: number = 150): string {
+function taoTomTat(htmlContent: string, length: number = 160): string {
   if (!htmlContent) return '';
-
-  // 1. Xóa thẻ HTML
   let text = htmlContent.replace(/<[^>]+>/g, '');
-
-  // 2. ✨ GIẢI MÃ HTML ENTITIES (Thủ công) ✨
   const entities: { [key: string]: string } = {
     '&nbsp;': ' ', '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos;': "'",
     '&agrave;': 'à', '&Agrave;': 'À', '&aacute;': 'á', '&Aacute;': 'Á',
@@ -30,30 +24,19 @@ function taoTomTat(htmlContent: string, length: number = 150): string {
     '&ldquo;': '“', '&rdquo;': '”'
   };
   text = text.replace(/&[a-zA-Z]+;/g, (match) => entities[match] || match);
-
-  // 3. Xóa khoảng trắng thừa
   text = text.trim().replace(/\s+/g, ' ');
-
-  // 4. Cắt ngắn
   if (text.length <= length) return text;
-
   const subText = text.substring(0, length);
   const lastSpaceIndex = subText.lastIndexOf(' ');
-
-  if (lastSpaceIndex > 0) {
-    return subText.substring(0, lastSpaceIndex) + '...';
-  }
-
-  return subText + '...';
+  return lastSpaceIndex > 0 ? subText.substring(0, lastSpaceIndex) + '...' : subText + '...';
 }
 
-// (Hàm lấy bài viết mới nhất - Giữ nguyên)
 async function getLatestPosts() {
   const { data, error } = await supabase
     .from('posts')
     .select('*')
     .order('created_at', { ascending: false })
-    .limit(10);
+    .limit(12);
 
   if (error) {
     console.error('Lỗi lấy bài viết:', error);
@@ -64,38 +47,87 @@ async function getLatestPosts() {
 
 export default async function HomePage() {
   const posts = await getLatestPosts();
+  const leadPost = posts[0] || null;
+  const briefingPosts = posts.slice(1, 5);
+  const feedPosts = posts.slice(1);
 
   return (
     <div className={styles.container}>
-
       <section className={styles.featuredSection}>
         <FeaturedSlider />
       </section>
 
-      <div className={styles.layoutGrid}>
-
-        {/* === CỘT 1: NỘI DUNG CHÍNH === */}
-        <div className={styles.mainContent}>
-
-          {/* 💖 CTA NỔI BẬT: Hệ thống Ôn tập 💖 */}
-          <section className={styles.ctaBanner}>
-            <div className={styles.ctaContent}>
-              <h3>Hệ thống Ôn tập & Thi trực tuyến</h3>
-              <p>Nền tảng hỗ trợ học sinh ôn luyện kiến thức hiệu quả, mọi lúc mọi nơi.</p>
+      {/* === HALLMARK H2: SPLIT DIPTYCH (TIÊU ĐIỂM ĐÀO TẠO & BẢN TIN HỌC VỤ) === */}
+      {leadPost && (
+        <section className={styles.editorialDiptych} aria-label="Tiêu điểm đào tạo">
+          <article className={styles.leadStory}>
+            <div className={styles.leadImageFrame}>
+              <PostImage
+                src={leadPost.thumbnail_url || '/assets/img/logo.png'}
+                alt={leadPost.title}
+                className={styles.leadImage}
+              />
             </div>
-            <Link href="/ontap" className={styles.ctaButton}>
-               Vào ôn tập ngay <i className="fas fa-rocket"></i>
-            </Link>
-          </section>
+            <div className={styles.leadBody}>
+              <div className={styles.leadMeta}>
+                <span className={styles.kickerTag}>TIÊU ĐIỂM ĐÀO TẠO</span>
+                <span className={styles.metaDate}>
+                  {new Date(leadPost.created_at).toLocaleDateString('vi-VN')}
+                </span>
+              </div>
+              <h1 className={styles.leadHeadline}>
+                <Link href={`/bai-viet/${leadPost.id}`}>{leadPost.title}</Link>
+              </h1>
+              <p className={styles.leadDeck}>{taoTomTat(leadPost.content, 220)}</p>
+              <Link href={`/bai-viet/${leadPost.id}`} className={styles.editorialLink}>
+                Đọc toàn văn bản tin →
+              </Link>
+            </div>
+          </article>
 
+          <aside className={styles.briefingColumn}>
+            <div className={styles.briefingHeader}>
+              <span className={styles.briefingCode}>BẢN TIN HỌC VỤ</span>
+              <h2 className={styles.briefingHeading}>Thông báo &amp; Tuyển sinh mới</h2>
+            </div>
+            <ol className={styles.briefingList}>
+              {briefingPosts.map((item, idx) => (
+                <li key={item.id} className={styles.briefingItem}>
+                  <span className={styles.briefingIndex}>
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <div className={styles.briefingContent}>
+                    <Link href={`/bai-viet/${item.id}`} className={styles.briefingTitle}>
+                      {item.title}
+                    </Link>
+                    <time className={styles.briefingDate}>
+                      {new Date(item.created_at).toLocaleDateString('vi-VN')}
+                    </time>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </aside>
+        </section>
+      )}
+
+      <div className={styles.layoutGrid}>
+        {/* === CỘT 1: CHUYÊN MỤC TIN TỨC & SỰ KIỆN (Hallmark S1 Header) === */}
+        <div className={styles.mainContent}>
           <section className={styles.latestNews}>
-            <h2 className={styles.sectionTitle}>Tin tức & Sự kiện</h2>
+            <div className={styles.sectionHeaderRow}>
+              <h2 className={styles.sectionTitle}>
+                <span className={styles.sectionIndex}>01</span> — TIN TỨC &amp; SỰ KIỆN ĐÀO TẠO
+              </h2>
+              <Link href="/danh-muc/tin-tuc-su-kien" className={styles.sectionViewAll}>
+                Xem tất cả chuyên mục →
+              </Link>
+            </div>
 
             <div className={styles.newsGrid}>
-              {posts.map((post) => (
-                <div key={post.id} className={styles.newsCard}>
+              {(feedPosts.length > 0 ? feedPosts : posts).map((post) => (
+                <article key={post.id} className={styles.newsCard}>
                   <div className={styles.imageWrapper}>
-                    {/* 💖 DÙNG COMPONENT MỚI THAY VÌ IMG THƯỜNG 💖 */}
                     <PostImage
                       src={post.thumbnail_url || '/assets/img/logo.png'}
                       alt={post.title}
@@ -103,41 +135,31 @@ export default async function HomePage() {
                     />
                   </div>
                   <div className={styles.postContent}>
+                    <div className={styles.postDate}>
+                      <span>{new Date(post.created_at).toLocaleDateString('vi-VN')}</span>
+                    </div>
                     <h3>
                       <Link href={`/bai-viet/${post.id}`} className={styles.postTitle}>
                         {post.title}
                       </Link>
                     </h3>
-                    <div className={styles.postDate}>
-                      <i className="far fa-calendar-alt"></i>
-                      <span>{new Date(post.created_at).toLocaleDateString('vi-VN')}</span>
-                    </div>
-
-                    {/* 💖 SỬA LỖI HIỂN THỊ MÃ HTML Ở ĐÂY 💖 */}
-                    <p className={styles.postExcerpt}>
-                      {taoTomTat(post.content)}
-                    </p>
-
+                    <p className={styles.postExcerpt}>{taoTomTat(post.content, 140)}</p>
                     <Link href={`/bai-viet/${post.id}`} className={styles.readMore}>
-                      Xem chi tiết »
+                      Xem chi tiết
                     </Link>
                   </div>
-                </div>
+                </article>
               ))}
 
-              {posts.length === 0 && (
-                <p>Chưa có bài viết nào.</p>
-              )}
+              {posts.length === 0 && <p>Chưa có bài viết nào.</p>}
             </div>
           </section>
-
         </div>
 
-        {/* === CỘT 2: SIDEBAR === */}
+        {/* === CỘT 2: SIDEBAR CHUYÊN MỤC === */}
         <div className={styles.sidebarWrapper}>
           <Sidebar />
         </div>
-
       </div>
     </div>
   )

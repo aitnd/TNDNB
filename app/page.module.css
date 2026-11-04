@@ -1,92 +1,270 @@
 /* ╔══════════════════════════════════════════════════════╗
- * ║  TRANG CHỦ — Maritime Premium Content Area          ║
- * ║  Cards hiện đại, gold accents, premium typography   ║
+ * ║  PORTAL HOMEPAGE — Hallmark Editorial Design         ║
+ * ║  H2 · Split Diptych + S1 Numbered Header             ║
+ * ║  Zero AI-Slop (No italic headings, locked 4px radius)║
  * ╚══════════════════════════════════════════════════════╝ */
 
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 2rem 1.5rem 4rem 1.5rem;
   overflow-x: hidden;
 }
 
 .featuredSection {
+  margin-bottom: 2rem;
+}
+
+/* === HALLMARK H2: SPLIT DIPTYCH (TIÊU ĐIỂM 7fr / 5fr) === */
+.editorialDiptych {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 2.25rem;
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--border-color, #E2E8F0);
+  border-radius: var(--radius-editorial, 4px);
+  padding: 1.75rem;
   margin-bottom: 2.5rem;
+  box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);
 }
 
-/* === 3. CTA BANNER (HỆ THỐNG ÔN TẬP) === */
-.ctaBanner {
-  background: linear-gradient(135deg, var(--mau-chinh) 0%, #3b82f6 100%);
-  border-radius: var(--radius-premium);
-  padding: 2.5rem;
-  margin-bottom: 3.5rem;
+:global([data-theme='dark']) .editorialDiptych {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+:global([data-theme='classic']) .editorialDiptych {
+  background: #FDF6E3;
+  border-color: #D4C5B0;
+}
+
+/* CỘT TRÁI (7fr) — LEAD STORY */
+.leadStory {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  box-shadow: 0 20px 40px rgba(30, 58, 138, 0.2);
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.leadImageFrame {
   position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
+  border-radius: var(--radius-editorial, 4px);
+  background: #F1F5F9;
 }
 
-.ctaBanner::before {
-  content: '';
-  position: absolute;
-  top: -50px;
-  right: -50px;
-  width: 200px;
-  height: 200px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
+.leadImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
 }
 
-.ctaContent h3 {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-  color: white;
-  font-family: 'Merriweather', serif;
+.leadStory:hover .leadImage {
+  transform: scale(1.03);
 }
 
-.ctaContent p {
-  font-size: 1.05rem;
-  opacity: 0.9;
+.leadBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
-.ctaButton {
-  background: var(--mau-phu);
-  color: var(--text-header);
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-weight: 800;
-  text-decoration: none !important;
+.leadMeta {
   display: flex;
   align-items: center;
-  gap: 10px;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-  white-space: nowrap;
+  gap: 12px;
 }
 
-.ctaButton:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
-  filter: brightness(1.1);
+.kickerTag {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-signal, #B91C1C);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: rgba(185, 28, 28, 0.08);
+  padding: 2px 8px;
+  border-radius: var(--radius-editorial, 4px);
 }
 
-@media (max-width: 768px) {
-  .ctaBanner {
-    flex-direction: column;
-    text-align: center;
-    gap: 1.5rem;
-    padding: 2rem 1.5rem;
-  }
-  .ctaContent h3 {
-    font-size: 1.4rem;
-  }
+.metaDate {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.76rem;
+  color: var(--color-ink-muted, #475569);
 }
 
-/* === 4. TIN TỨC === */
-/* === 2. BỐ CỤC GRID (PC) === */
+.leadHeadline {
+  font-family: var(--font-display, 'Merriweather', Georgia, serif);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.3;
+  color: var(--color-ink, #0B132B);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.leadHeadline a {
+  color: inherit;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+.leadHeadline a:hover {
+  color: var(--color-accent, #003566);
+}
+
+:global([data-theme='dark']) .leadHeadline a:hover {
+  color: #60A5FA;
+}
+
+.leadDeck {
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--color-ink-muted, #475569);
+  margin: 0;
+}
+
+.editorialLink {
+  margin-top: 0.25rem;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--color-accent, #003566);
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.2s ease;
+}
+
+.editorialLink:hover {
+  transform: translateX(4px);
+  text-decoration: underline !important;
+}
+
+:global([data-theme='dark']) .editorialLink {
+  color: #60A5FA;
+}
+
+/* CỘT PHẢI (5fr) — NUMBERED EDITORIAL BRIEFING */
+.briefingColumn {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border-color, #E2E8F0);
+  padding-left: 2rem;
+}
+
+:global([data-theme='dark']) .briefingColumn {
+  border-left-color: #334155;
+}
+
+.briefingHeader {
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-ink, #0B132B);
+}
+
+:global([data-theme='dark']) .briefingHeader {
+  border-bottom-color: #F8FAFC;
+}
+
+.briefingCode {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-signal, #B91C1C);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.briefingHeading {
+  font-family: var(--font-display, 'Merriweather', Georgia, serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-ink, #0B132B);
+  margin: 4px 0 0 0;
+  line-height: 1.35;
+}
+
+:global([data-theme='dark']) .briefingHeading {
+  color: #F8FAFC;
+}
+
+.briefingList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.briefingItem {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color, #E2E8F0);
+}
+
+.briefingItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.briefingIndex {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-signal, #B91C1C);
+  line-height: 1.2;
+  min-width: 24px;
+  flex-shrink: 0;
+}
+
+.briefingContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.briefingTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-ink, #0B132B);
+  text-decoration: none !important;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.briefingTitle:hover {
+  color: var(--color-accent, #003566);
+}
+
+:global([data-theme='dark']) .briefingTitle {
+  color: #E2E8F0;
+}
+
+:global([data-theme='dark']) .briefingTitle:hover {
+  color: #60A5FA;
+}
+
+.briefingDate {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.72rem;
+  color: var(--color-ink-muted, #475569);
+}
+
+/* === BỐ CỤC CHÍNH (CONTENT + SIDEBAR) === */
 .layoutGrid {
   display: grid;
   grid-template-columns: 1fr 340px;
@@ -94,127 +272,153 @@
   align-items: start;
 }
 
-/* (Tiêu đề mục — gradient underline) */
-.sectionTitle {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--text-header, #0a1628);
+/* === HALLMARK S1: SECTION HEADER NUMBERED === */
+.sectionHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1.5rem;
-  padding-bottom: 12px;
-  position: relative;
-  border-bottom: none;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-ink, #0B132B);
+}
+
+:global([data-theme='dark']) .sectionHeaderRow {
+  border-bottom-color: #F8FAFC;
+}
+
+.sectionTitle {
+  font-family: var(--font-display, 'Merriweather', Georgia, serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-ink, #0B132B);
+  margin: 0;
   letter-spacing: -0.01em;
 }
 
-.sectionTitle::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, #1e40af 0%, #0d9488 100%);
-  border-radius: 2px;
+:global([data-theme='dark']) .sectionTitle {
+  color: #F8FAFC;
 }
 
-/* === 4. TIN TỨC (GRID) === */
+.sectionIndex {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  color: var(--color-signal, #B91C1C);
+  font-weight: 800;
+  margin-right: 4px;
+}
+
+.sectionViewAll {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent, #003566);
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+
+.sectionViewAll:hover {
+  text-decoration: underline !important;
+}
+
+:global([data-theme='dark']) .sectionViewAll {
+  color: #60A5FA;
+}
+
+/* === NEWS GRID === */
 .newsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 1.75rem;
 }
 
 .newsCard {
-  background: var(--bg-header);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-premium);
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--border-color, #E2E8F0);
+  border-radius: var(--radius-editorial, 4px);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.4s ease;
-  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);
 }
 
 .newsCard:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-  border-color: var(--mau-phu);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(11, 19, 43, 0.08);
+  border-color: var(--color-accent, #003566);
 }
 
-/* Ảnh của Card */
+:global([data-theme='dark']) .newsCard {
+  background: #1E293B;
+  border-color: #334155;
+}
+
 .imageWrapper {
   width: 100%;
-  height: 220px;
+  aspect-ratio: 16 / 10;
   position: relative;
   overflow: hidden;
-  border-radius: 8px 8px 0 0; /* Added for consistency with new card design */
+  background: #F1F5F9;
 }
 
-.newsCard:hover .postThumb {
-  transform: scale(1.1);
-}
-
-/* Phần chữ */
 .postThumb {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s ease;
 }
 
-/* Nội dung của Card */
+.newsCard:hover .postThumb {
+  transform: scale(1.05);
+}
+
 .postContent {
-  padding: 1.5rem;
+  padding: 1.25rem;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .postDate {
-  font-size: 0.8rem;
-  color: #64748b;
-  margin-bottom: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.74rem;
+  color: var(--color-ink-muted, #475569);
+  margin-bottom: 0.5rem;
 }
 
 .postTitle {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--text-header);
+  font-family: var(--font-display, 'Merriweather', Georgia, serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-ink, #0B132B);
   text-decoration: none !important;
-  margin-bottom: 1rem;
+  margin-bottom: 0.65rem;
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  height: 3.36rem; /* Cố định chiều cao để grid đều */
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 .postTitle:hover {
-  color: var(--mau-chinh); /* Updated hover color for new design */
+  color: var(--color-accent, #003566);
 }
 
-:global([data-theme='dark']) .postTitle:hover,
-:global([data-theme='modern']) .postTitle:hover,
-:global([data-theme='sunrise']) .postTitle:hover,
-:global([data-theme='tri-an']) .postTitle:hover {
-  color: #d4af37;
+:global([data-theme='dark']) .postTitle {
+  color: #F8FAFC;
+}
+
+:global([data-theme='dark']) .postTitle:hover {
+  color: #60A5FA;
 }
 
 .postExcerpt {
-  font-size: 0.95rem;
-  color: var(--text-main);
-  line-height: 1.6;
-  opacity: 0.8;
-  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--color-ink-muted, #475569);
+  line-height: 1.55;
+  margin-bottom: 1rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -225,145 +429,82 @@
 .readMore {
   margin-top: auto;
   font-weight: 700;
-  color: var(--mau-chinh);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
+  color: var(--color-accent, #003566);
   text-decoration: none !important;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s;
-}
-
-.readMore::after {
-  content: '→';
-  transition: transform 0.3s;
-}
-
-.readMore:hover::after {
-  transform: translateX(5px);
-}
-
-:global([data-theme='dark']) .readMore,
-:global([data-theme='modern']) .readMore,
-:global([data-theme='sunrise']) .readMore,
-:global([data-theme='tri-an']) .readMore {
-  color: #d4af37;
+  gap: 4px;
+  transition: transform 0.2s ease;
 }
 
 .readMore:hover {
-  color: var(--mau-chinh); /* Keep original color or adjust as needed */
-  text-decoration: none;
+  transform: translateX(4px);
+  text-decoration: underline !important;
 }
 
-/* === 4. RESPONSIVE (TABLET) === */
+:global([data-theme='dark']) .readMore {
+  color: #60A5FA;
+}
+
+/* === RESPONSIVE LAYOUTS (Tablet & Mobile) === */
 @media (max-width: 992px) {
-  .layoutGrid {
-    display: flex;
-    flex-direction: column;
+  .editorialDiptych {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
   }
 
-  .mainContent {
-    order: 1;
-    width: 100%;
+  .briefingColumn {
+    border-left: none;
+    border-top: 1px solid var(--border-color, #E2E8F0);
+    padding-left: 0;
+    padding-top: 1.5rem;
+  }
+
+  .layoutGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .sidebarWrapper {
-    order: 2;
     width: 100%;
-    margin-top: 3rem;
-  }
-
-  .imageWrapper {
-    height: 200px; /* Adjusted for tablet view of new card */
+    margin-top: 1rem;
   }
 }
 
-/* === 5. RESPONSIVE (MOBILE) === */
 @media (max-width: 768px) {
   .container {
-    padding: 1.5rem 1rem;
+    padding: 1.25rem 1rem 3rem 1rem;
+  }
+
+  .editorialDiptych {
+    padding: 1rem;
+  }
+
+  .newsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .sectionTitle {
+    font-size: 1.1rem;
+  }
+
+  .sectionViewAll {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 414px) {
+  .container {
+    padding: 1rem 0.75rem 2.5rem 0.75rem;
+  }
+
+  .leadHeadline {
     font-size: 1.15rem;
-    margin-bottom: 0.75rem;
-    padding-left: 12px;
-    padding-bottom: 0;
-    border-left: 3px solid #1e40af;
-    line-height: 1.2;
   }
 
-  .sectionTitle::after {
-    display: none;
-  }
-
-  .newsList {
-    gap: 0.75rem;
-  }
-
-  .newsItemLarge {
-    display: flex;
-    flex-direction: row;
-    padding: 0.75rem;
-    gap: 0.75rem;
-    align-items: flex-start;
-    border-radius: 10px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  }
-
-  .newsItemLarge::before {
-    display: none;
-  }
-
-  .imageWrapper {
-    width: 100px;
-    height: 75px;
-    flex-shrink: 0;
-    margin: 0;
-    border-radius: 6px;
-  }
-
-  .postContent {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-width: 0;
-  }
-
-  .postTitle {
-    font-size: 0.92rem;
-    line-height: 1.3;
-    margin-bottom: 0.2rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .postDate {
-    margin-bottom: 0.2rem;
-    font-size: 0.72rem;
-    color: #94a3b8;
-  }
-
-  .postExcerpt {
-    font-size: 0.78rem;
-    line-height: 1.4;
-    margin-bottom: 0.2rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .readMore {
-    display: block;
-    text-align: right;
-    font-size: 0.78rem;
-    margin-top: 0;
-    padding: 0;
+  .briefingHeading {
+    font-size: 1.05rem;
   }
 }

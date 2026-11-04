@@ -9,23 +9,44 @@
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');
+/* Hallmark · pre-emit critique:
+ * - genre: editorial (Institutional Maritime Education & News Portal)
+ * - macrostructure: 20 · Ecosystem Index + Editorial Newsprint Grid
+ * - nav archetype: N6 · Newspaper Masthead (3-tier institutional header, zero yellow pill buttons)
+ * - hero archetype: H2 · Split Diptych (7fr Lead Story / 5fr Numbered Briefing with 1px hairline rule)
+ * - section header: S1 · Left margin numbered (01 — TIN TỨC & SỰ KIỆN)
+ * - typography: Merriweather roman display (strictly font-style: normal, Gate 38a) + Be Vietnam Pro + JetBrains Mono
+ */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
 
 :root {
+    /* --- Hallmark Editorial Tokens --- */
+    --color-paper: #FAF9F6;
+    --color-surface: #FFFFFF;
+    --color-ink: #0B132B;
+    --color-ink-muted: #475569;
+    --color-accent: #003566;
+    --color-signal: #B91C1C;
+    --color-rule: #CBD5E1;
+    --font-display: 'Merriweather', Georgia, serif;
+    --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', Consolas, monospace;
+    --radius-editorial: 4px;
+
     /* --- 1. Giao diện Sáng (Light) - Blue & Gold Premium --- */
-    --bg-body: #f8fafc;
-    --bg-header: #ffffff;
-    --text-header: #0a1e3b;      /* Navy đậm */
+    --bg-body: var(--color-paper);
+    --bg-header: var(--color-surface);
+    --text-header: var(--color-ink);
     --text-main: #334155;
-    --text-link: #1e3a8a;
+    --text-link: var(--color-accent);
     --bg-footer: #0a1e3b;
     --text-footer: #f1f5f9;
-    --mau-chinh: #1e3a8a;        /* Royal Blue */
+    --mau-chinh: var(--color-accent);
     --mau-phu: #d4af37;          /* Gold */
     --mau-nen-phu: #f1f5f9;
-    --border-color: #e2e8f0;
-    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
-    --radius-premium: 16px;
+    --border-color: var(--color-rule);
+    --shadow-soft: 0 1px 3px rgba(11, 19, 43, 0.05);
+    --radius-premium: 4px;
 }
 
 [data-theme='dark'] {
@@ -78,8 +99,9 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Merriweather', serif;
+    font-family: var(--font-display, 'Merriweather', serif);
     font-weight: 700;
+    font-style: normal;
     color: var(--text-header);
 }
 

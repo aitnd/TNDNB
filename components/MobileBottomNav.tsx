@@ -20,8 +20,8 @@ export default function MobileBottomNav() {
     { name: 'Trang chủ', href: '/', icon: FaHome },
     { name: 'Tin tức', href: '/danh-muc/tin-tuc-su-kien', icon: FaNewspaper },
     { name: 'Tuyển sinh', href: '/danh-muc/tuyen-sinh', icon: FaUser },
-    { name: 'Ôn tập', href: '/ontap', icon: FaGraduationCap },
-    { name: 'Quản lý', href: '/quan-ly', icon: FaBars }, // Changed 'Them' to 'Menu' for clarity
+    { name: 'Đào tạo', href: '/chuong-trinh-dao-tao', icon: FaGraduationCap },
+    { name: 'Quản lý', href: '/quan-ly', icon: FaBars },
   ]
 
   return (

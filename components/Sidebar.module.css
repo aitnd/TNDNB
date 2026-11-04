@@ -1,35 +1,51 @@
-/* === KHUNG SIDEBAR === */
+/* ╔══════════════════════════════════════════════════════╗
+ * ║  SIDEBAR — Hallmark Editorial Style                 ║
+ * ║  Crisp hairline rules, 4px radius, no AI slop        ║
+ * ╚══════════════════════════════════════════════════════╝ */
+
 .sidebar {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 1.75rem;
     width: 100%;
 }
 
 /* (Tiêu đề Widget) */
 .sidebarTitle {
-    font-size: 1.2rem;
+    font-family: var(--font-display, 'Merriweather', Georgia, serif);
+    font-size: 1.05rem;
     font-weight: 700;
-    color: #333;
-    padding-bottom: 0.8rem;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #004a99;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
+    padding-bottom: 0.65rem;
+    margin-bottom: 0.85rem;
+    border-bottom: 2px solid var(--color-ink, #0B132B);
     text-transform: uppercase;
     line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+
+:global([data-theme='dark']) .sidebarTitle {
+    color: #F8FAFC;
+    border-bottom-color: #F8FAFC;
 }
 
 /* (Hộp Widget chung) */
 .widgetBox {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 1px solid #eee;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    background-color: var(--color-surface, #FFFFFF);
+    padding: 1.25rem;
+    border-radius: var(--radius-editorial, 4px);
+    border: 1px solid var(--border-color, #E2E8F0);
+    box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);
     overflow: hidden;
-    /* Chống tràn khung */
 }
 
-/* === 💖 LIST LINK (Đã sửa lỗi dính chữ) 💖 === */
+:global([data-theme='dark']) .widgetBox {
+    background-color: #1E293B;
+    border-color: #334155;
+}
+
+/* === LIST LINK === */
 .linkList {
     list-style: none;
     padding: 0;
@@ -37,9 +53,13 @@
 }
 
 .linkList li {
-    margin-bottom: 0.8rem;
-    border-bottom: 1px dashed #eee;
-    padding-bottom: 0.8rem;
+    margin-bottom: 0.65rem;
+    border-bottom: 1px solid var(--border-color, #E2E8F0);
+    padding-bottom: 0.65rem;
+}
+
+:global([data-theme='dark']) .linkList li {
+    border-bottom-color: #334155;
 }
 
 .linkList li:last-child {
@@ -50,62 +70,69 @@
 
 .linkList a {
     text-decoration: none;
-    color: #555;
+    color: var(--color-ink-muted, #475569);
+    font-size: 0.88rem;
     font-weight: 500;
     transition: color 0.2s;
     display: flex;
     align-items: flex-start;
-    /* 💖 Căn icon lên đầu dòng (nếu chữ xuống dòng) */
-    gap: 0.75rem;
-    /* Tăng khoảng cách icon-chữ */
-    line-height: 1.5;
+    gap: 0.6rem;
+    line-height: 1.45;
+}
+
+:global([data-theme='dark']) .linkList a {
+    color: #CBD5E1;
 }
 
 .linkList a:hover {
-    color: #004a99;
+    color: var(--color-accent, #003566);
 }
 
-/* 💖 Icon trong list (QUAN TRỌNG: Không cho co lại) 💖 */
+:global([data-theme='dark']) .linkList a:hover {
+    color: #60A5FA;
+}
+
+/* Icon trong list */
 .linkList i {
-    color: #004a99;
-    font-size: 1rem;
-    min-width: 20px;
-    /* Chiều rộng cố định */
+    color: var(--color-accent, #003566);
+    font-size: 0.85rem;
+    min-width: 16px;
     text-align: center;
     margin-top: 3px;
-    /* Căn chỉnh cho khớp với dòng chữ đầu tiên */
     flex-shrink: 0;
-    /* 💖 CHỐNG MÉO ICON TUYỆT ĐỐI 💖 */
 }
 
-/* === CÁC PHẦN KHÁC === */
+:global([data-theme='dark']) .linkList i {
+    color: #60A5FA;
+}
+
+/* === MEDIA PREVIEW & FILES === */
 .mediaPreviewGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .mediaPreviewItem {
     display: block;
     position: relative;
     cursor: pointer;
-    /* Thêm con trỏ tay */
 }
 
 .mediaPreviewItem img {
     width: 100%;
-    height: 80px;
+    height: 75px;
     object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #eee;
+    border-radius: var(--radius-editorial, 4px);
+    border: 1px solid var(--border-color, #E2E8F0);
 }
 
 .viewAllButton {
     display: block;
     text-align: right;
-    font-size: 0.9rem;
-    color: #004a99;
+    font-size: 0.82rem;
+    color: var(--color-accent, #003566);
     text-decoration: none;
     font-weight: 600;
     margin-top: 0.5rem;
@@ -115,10 +142,15 @@
     text-decoration: underline;
 }
 
+:global([data-theme='dark']) .viewAllButton {
+    color: #60A5FA;
+}
+
 .emptyMessage {
-    color: #888;
+    color: var(--color-ink-muted, #475569);
     font-style: italic;
     text-align: center;
+    font-size: 0.85rem;
 }
 
 /* === MODAL STYLES === */
@@ -128,13 +160,13 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(11, 19, 43, 0.85);
     z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2rem;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(4px);
 }
 
 .modalContent {
@@ -144,14 +176,13 @@
     width: auto;
     height: auto;
     background: transparent;
-    border-radius: 8px;
+    border-radius: var(--radius-editorial, 4px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Close Button */
 .closeButton {
     position: absolute;
     top: -40px;
@@ -170,29 +201,27 @@
     color: #ff4d4d;
 }
 
-/* Media Types */
 .modalImage {
     max-width: 100%;
     max-height: 85vh;
     object-fit: contain;
-    border-radius: 4px;
+    border-radius: var(--radius-editorial, 4px);
 }
 
 .modalVideo {
     max-width: 100%;
     max-height: 85vh;
-    border-radius: 4px;
+    border-radius: var(--radius-editorial, 4px);
 }
 
 .modalIframe {
     width: 80vw;
     height: 85vh;
     background: white;
-    border-radius: 4px;
+    border-radius: var(--radius-editorial, 4px);
     border: none;
 }
 
-/* Loading Spinner */
 .loadingSpinner {
     border: 4px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
@@ -203,16 +232,10 @@
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .modalOverlay {
         padding: 1rem;
