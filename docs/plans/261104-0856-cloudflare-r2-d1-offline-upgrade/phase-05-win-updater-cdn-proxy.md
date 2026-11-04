@@ -1,6 +1,6 @@
 # Phase 05: Tăng Tốc Auto-Update `.exe` Cho `ontap-win` Qua Cloudflare Worker CDN Proxy (Kèm Công Tắc Fallback R2)
 
-Status: Pending
+Status: Completed
 Dependencies: Phase 01, Phase 03
 
 > **Thuộc kế hoạch:** [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/plan.md)  

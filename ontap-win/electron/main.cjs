@@ -1,8 +1,10 @@
 const { app, BrowserWindow, ipcMain, dialog, Tray, Menu, nativeImage, globalShortcut } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
+  process.exit(0);
 }
 
 let tray = null;
@@ -17,12 +19,20 @@ const isDev = process.env.ELECTRON_MODE === 'true';
 
 // Chỉ load autoUpdater khi không phải dev mode
 let autoUpdater = null;
+let hasFallenBackToGitHub = false;
+const WORKER_RELEASE_FEED_URL =
+    process.env.VITE_UPDATE_FEED_URL || 'https://api.tndnb.vn/releases/download';
 if (!isDev) {
     try {
         autoUpdater = require('electron-updater').autoUpdater;
         autoUpdater.logger = log;
         autoUpdater.autoDownload = true;
         autoUpdater.autoInstallOnAppQuit = true;
+        autoUpdater.setFeedURL({
+            provider: 'generic',
+            url: WORKER_RELEASE_FEED_URL
+        });
+        log.info('Configured autoUpdater with Cloudflare CDN Proxy:', WORKER_RELEASE_FEED_URL);
     } catch (e) {
         log.error('Failed to load autoUpdater:', e);
     }
@@ -85,6 +95,7 @@ function createWindow() {
         log.info('Loading file:', indexPath);
         mainWindow.loadFile(indexPath).catch(err => {
             log.error('Failed to load index.html:', err);
+            dialog.showErrorBox('Lỗi khởi động', 'Không thể tải giao diện người dùng. Vui lòng thử cài đặt lại phần mềm.\nChi tiết: ' + err.message);
         });
     }
 
@@ -170,6 +181,21 @@ function createWindow() {
 
         autoUpdater.on('error', (err) => {
             log.error('AutoUpdater error:', err);
+            if (!hasFallenBackToGitHub) {
+                hasFallenBackToGitHub = true;
+                log.warn('Worker CDN proxy update failed. Falling back to GitHub Releases provider directly.');
+                try {
+                    autoUpdater.setFeedURL({
+                        provider: 'github',
+                        owner: 'aitnd',
+                        repo: 'TNDNB'
+                    });
+                    autoUpdater.checkForUpdates();
+                    return;
+                } catch (fallbackErr) {
+                    log.error('Fallback to GitHub failed:', fallbackErr);
+                }
+            }
             mainWindow.webContents.send('update-error', err.message);
         });
 
@@ -193,7 +219,11 @@ function createWindow() {
     );
 
     win = mainWindow;
-    createTray(mainWindow);
+    try {
+        createTray(mainWindow);
+    } catch (e) {
+        log.error('Failed to create tray:', e);
+    }
     return mainWindow;
 }
 

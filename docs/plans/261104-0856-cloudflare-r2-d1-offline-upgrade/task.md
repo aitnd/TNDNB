@@ -99,16 +99,16 @@
 ## Phase 05: Tăng Tốc Auto-Update `.exe` Qua Cloudflare Worker CDN Proxy
 > Chi tiết TDD: [phase-05-win-updater-cdn-proxy.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/phase-05-win-updater-cdn-proxy.md)
 
-- [ ] **Task 5.1:** Xây dựng Route `/releases/*` Trên Cloudflare Worker (`src/routes/releasesProxy.ts`)
-  - [ ] **Step 5.1.1 (RED):** Viết unit test kiểm tra cả 2 chế độ `github_proxy` và `r2_direct` tại [cloudflare-worker/test/releases-proxy.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/releases-proxy.test.ts).
-  - [ ] **Step 5.1.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/releases-proxy.test.ts` xác nhận FAIL.
-  - [ ] **Step 5.1.3 (GREEN):** Tạo [cloudflare-worker/src/routes/releasesProxy.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/routes/releasesProxy.ts).
-  - [ ] **Step 5.1.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/releases-proxy.test.ts` xác nhận PASS (2/2 tests).
-- [ ] **Task 5.2:** Cập nhật `UpdateService.ts`, `releaseService.ts` & `electron/main.cjs` Dùng Worker CDN Proxy
-  - [ ] **Step 5.2.1 (RED):** Viết unit test cho `getGitHubReleases` tại [ontap-win/services/__tests__/UpdateService.test.ts](file:///d:/Antigravity/TNDNB/ontap-win/services/__tests__/UpdateService.test.ts).
-  - [ ] **Step 5.2.2 (FAIL):** Chạy `npx --prefix ontap-win vitest run services/__tests__/UpdateService.test.ts` xác nhận FAIL.
-  - [ ] **Step 5.2.3 (GREEN):** Cập nhật [ontap-win/services/UpdateService.ts](file:///d:/Antigravity/TNDNB/ontap-win/services/UpdateService.ts), [ontap-web/services/releaseService.ts](file:///d:/Antigravity/TNDNB/ontap-web/services/releaseService.ts), [ontap-win/electron/main.cjs](file:///d:/Antigravity/TNDNB/ontap-win/electron/main.cjs) và tạo [scripts/upload-release-to-r2.mjs](file:///d:/Antigravity/TNDNB/scripts/upload-release-to-r2.mjs).
-  - [ ] **Step 5.2.4 (PASS):** Chạy lại `npx --prefix ontap-win vitest run services/__tests__/UpdateService.test.ts` xác nhận PASS (1/1 test).
+- [x] **Task 5.1:** Xây dựng Route `/releases/*` Trên Cloudflare Worker (`src/routes/releasesProxy.ts`)
+  - [x] **Step 5.1.1 (RED):** Viết unit test kiểm tra cả 2 chế độ `github_proxy` và `r2_direct` tại [cloudflare-worker/test/releases-proxy.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/releases-proxy.test.ts).
+  - [x] **Step 5.1.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/releases-proxy.test.ts` xác nhận FAIL.
+  - [x] **Step 5.1.3 (GREEN):** Tạo [cloudflare-worker/src/routes/releasesProxy.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/routes/releasesProxy.ts).
+  - [x] **Step 5.1.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/releases-proxy.test.ts` xác nhận PASS (3/3 tests).
+- [x] **Task 5.2:** Cập nhật `UpdateService.ts`, `releaseService.ts` & `electron/main.cjs` Dùng Worker CDN Proxy
+  - [x] **Step 5.2.1 (RED):** Viết unit test cho `getGitHubReleases` tại [ontap-win/services/__tests__/UpdateService.test.ts](file:///d:/Antigravity/TNDNB/ontap-win/services/__tests__/UpdateService.test.ts).
+  - [x] **Step 5.2.2 (FAIL):** Chạy `npx --prefix ontap-win vitest run services/__tests__/UpdateService.test.ts` xác nhận FAIL.
+  - [x] **Step 5.2.3 (GREEN):** Cập nhật [ontap-win/services/UpdateService.ts](file:///d:/Antigravity/TNDNB/ontap-win/services/UpdateService.ts), [ontap-web/services/releaseService.ts](file:///d:/Antigravity/TNDNB/ontap-web/services/releaseService.ts), [ontap-win/electron/main.cjs](file:///d:/Antigravity/TNDNB/ontap-win/electron/main.cjs) và tạo [scripts/upload-release-to-r2.mjs](file:///d:/Antigravity/TNDNB/scripts/upload-release-to-r2.mjs).
+  - [x] **Step 5.2.4 (PASS):** Chạy lại `npx --prefix ontap-win vitest run services/__tests__/UpdateService.test.ts` xác nhận PASS (1/1 test).
 
 ---
 
