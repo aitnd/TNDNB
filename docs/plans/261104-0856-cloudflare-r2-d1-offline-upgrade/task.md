@@ -25,16 +25,16 @@
 ## Phase 01: Khởi Tạo Hạ Tầng Cloudflare (Worker, D1 Database, R2 Bucket)
 > Chi tiết TDD: [phase-01-cloudflare-infra.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/phase-01-cloudflare-infra.md)
 
-- [ ] **Task 1.1:** Khởi tạo cấu hình dự án Worker & kiểu dữ liệu (`package.json`, `tsconfig.json`, `wrangler.toml`, `src/types.ts`)
-  - [ ] **Step 1.1.1 (RED):** Viết unit test kiểm tra `parseAllowedOrigins` tại [cloudflare-worker/test/types.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/types.test.ts).
-  - [ ] **Step 1.1.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/types.test.ts` xác nhận FAIL do chưa có file `src/types.ts`.
-  - [ ] **Step 1.1.3 (GREEN):** Tạo [cloudflare-worker/package.json](file:///d:/Antigravity/TNDNB/cloudflare-worker/package.json), [cloudflare-worker/tsconfig.json](file:///d:/Antigravity/TNDNB/cloudflare-worker/tsconfig.json), [cloudflare-worker/wrangler.toml](file:///d:/Antigravity/TNDNB/cloudflare-worker/wrangler.toml) và [cloudflare-worker/src/types.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/types.ts).
-  - [ ] **Step 1.1.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/types.test.ts` xác nhận PASS (2/2 tests).
-- [ ] **Task 1.2:** Xây dựng Middleware Xác thực Admin & Entrypoint CORS (`src/middleware/auth.ts` & `src/index.ts`)
-  - [ ] **Step 1.2.1 (RED):** Viết unit test kiểm tra `verifyAdminAuthorization`, `buildCorsHeaders` và `/api/v1/health` tại [cloudflare-worker/test/infra.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/infra.test.ts).
-  - [ ] **Step 1.2.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/infra.test.ts` xác nhận FAIL.
-  - [ ] **Step 1.2.3 (GREEN):** Tạo [cloudflare-worker/src/middleware/auth.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/middleware/auth.ts) và [cloudflare-worker/src/index.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/index.ts).
-  - [ ] **Step 1.2.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/infra.test.ts` xác nhận PASS (4/4 tests).
+- [x] **Task 1.1:** Khởi tạo cấu hình dự án Worker & kiểu dữ liệu (`package.json`, `tsconfig.json`, `wrangler.toml`, `src/types.ts`)
+  - [x] **Step 1.1.1 (RED):** Viết unit test kiểm tra `parseAllowedOrigins` tại [cloudflare-worker/test/types.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/types.test.ts).
+  - [x] **Step 1.1.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/types.test.ts` xác nhận FAIL do chưa có file `src/types.ts`.
+  - [x] **Step 1.1.3 (GREEN):** Tạo [cloudflare-worker/package.json](file:///d:/Antigravity/TNDNB/cloudflare-worker/package.json), [cloudflare-worker/tsconfig.json](file:///d:/Antigravity/TNDNB/cloudflare-worker/tsconfig.json), [cloudflare-worker/wrangler.toml](file:///d:/Antigravity/TNDNB/cloudflare-worker/wrangler.toml) và [cloudflare-worker/src/types.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/types.ts).
+  - [x] **Step 1.1.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/types.test.ts` xác nhận PASS (2/2 tests).
+- [x] **Task 1.2:** Xây dựng Middleware Xác thực Admin & Entrypoint CORS (`src/middleware/auth.ts` & `src/index.ts`)
+  - [x] **Step 1.2.1 (RED):** Viết unit test kiểm tra `verifyAdminAuthorization`, `buildCorsHeaders` và `/api/v1/health` tại [cloudflare-worker/test/infra.test.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/test/infra.test.ts).
+  - [x] **Step 1.2.2 (FAIL):** Chạy `npx vitest run cloudflare-worker/test/infra.test.ts` xác nhận FAIL.
+  - [x] **Step 1.2.3 (GREEN):** Tạo [cloudflare-worker/src/middleware/auth.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/middleware/auth.ts) và [cloudflare-worker/src/index.ts](file:///d:/Antigravity/TNDNB/cloudflare-worker/src/index.ts).
+  - [x] **Step 1.2.4 (PASS):** Chạy lại `npx vitest run cloudflare-worker/test/infra.test.ts` xác nhận PASS (4/4 tests).
 
 ---
 

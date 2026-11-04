@@ -40,6 +40,7 @@
     "node_modules",
     "amthuc-web",
     "ontap-web",
-    "ontap-win"
+    "ontap-win",
+    "cloudflare-worker"
   ]
 }
