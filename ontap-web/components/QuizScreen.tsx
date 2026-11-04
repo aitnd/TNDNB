@@ -5,6 +5,7 @@ import { triggerHaptic } from '../utils/nativeUX';
 import { useFontScale } from '../hooks/useFontScale';
 import { ZoomBar } from './ZoomBar';
 import { useAppStore } from '../stores/useAppStore';
+import { resolveQuestionImageUrl } from '../utils/imageHelper';
 
 interface QuizScreenProps {
   quiz: Quiz;
@@ -32,6 +33,22 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
 
   const isAnswered = useMemo(() => currentQuestionId ? userAnswers[currentQuestionId] !== undefined : false, [userAnswers, currentQuestionId]);
   const selectedAnswer = useMemo(() => currentQuestionId ? userAnswers[currentQuestionId] || null : null, [userAnswers, currentQuestionId]);
+  const currentImageUrl = useMemo(
+    () => (currentQuestion ? resolveQuestionImageUrl(currentQuestion) : null),
+    [currentQuestion]
+  );
+
+  // Preload ảnh câu hỏi kế tiếp để chuyển câu không có độ trễ
+  useEffect(() => {
+    const nextQ = quiz.questions?.[currentQuestionIndex + 1];
+    if (nextQ) {
+      const nextUrl = resolveQuestionImageUrl(nextQ);
+      if (nextUrl) {
+        const img = new Image();
+        img.src = nextUrl;
+      }
+    }
+  }, [quiz.questions, currentQuestionIndex]);
 
   // Auto-save logic
   useEffect(() => {
@@ -137,9 +154,9 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1">
             <h2 className="font-bold mb-5 text-foreground" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>{currentQuestion.text}</h2>
-            {currentQuestion.image && (
+            {currentImageUrl && (
               <div className="mb-6 rounded-lg overflow-hidden">
-                <img src={currentQuestion.image} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
+                <img src={currentImageUrl} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
               </div>
             )}
 

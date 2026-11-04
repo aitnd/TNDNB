@@ -1,57 +1,46 @@
-/**
- * Helper để lấy đường dẫn ảnh câu hỏi từ local
- * Ưu tiên ảnh offline đã tải về trong folder question_images
- */
+import React from 'react';
 
-/**
- * Chuyển đổi URL ảnh online thành đường dẫn local
- * @param question - Đối tượng câu hỏi có id và image
- * @returns Đường dẫn ảnh local hoặc null nếu không có ảnh
- */
+export const getR2FallbackUrl = (questionId: string, originalUrl?: string | null): string | null => {
+  if (originalUrl && /^https?:\/\//i.test(originalUrl)) {
+    return originalUrl;
+  }
+  const r2Base = ((import.meta as any).env?.VITE_R2_PUBLIC_URL || 'https://cdn.tndnb.vn').replace(/\/+$/, '');
+  return `${r2Base}/question-images/${questionId}.png`;
+};
+
 export function getLocalImageSrc(question: { id: string; image?: string | null }): string | null {
-    if (!question.image) return null;
+  if (!question.image) return null;
+  const ext = '.png';
+  const isElectron = (window as any).electron?.isElectron;
+  const resourcesPath = (window as any).electron?.resourcesPath;
 
-    // Luôn dùng .png vì file local được lưu dưới dạng .png
-    const ext = '.png';
+  if (isElectron && resourcesPath && !(import.meta as any).env?.DEV) {
+    const normalizedPath = resourcesPath.replace(/\\/g, '/');
+    return `file://${normalizedPath}/question_images/${question.id}${ext}`;
+  }
 
-    // Trả về đường dẫn local
-    // Trong môi trường Dev: dùng đường dẫn tương đối /question_images/...
-    // Trong môi trường Prod (Electron): dùng đường dẫn tuyệt đối file://...
-    const isElectron = (window as any).electron?.isElectron;
-    const resourcesPath = (window as any).electron?.resourcesPath;
-
-    if (isElectron && resourcesPath && !import.meta.env.DEV) {
-        // Chuyển đổi đường dẫn Windows sang format URL (thay \\ bằng /)
-        const normalizedPath = resourcesPath.replace(/\\/g, '/');
-        return `file://${normalizedPath}/question_images/${question.id}${ext}`;
-    }
-
-    return `/question_images/${question.id}${ext}`;
+  return `/question_images/${question.id}${ext}`;
 }
 
-/**
- * Fallback: Nếu ảnh local không load được, dùng ảnh online
- * Có cơ chế chống retry loop bằng cách đánh dấu đã thử fallback
- */
 export function handleImageError(
-    e: React.SyntheticEvent<HTMLImageElement, Event>,
-    originalUrl?: string | null
+  e: React.SyntheticEvent<HTMLImageElement, Event>,
+  originalUrl?: string | null,
+  questionId?: string
 ) {
-    const img = e.currentTarget;
+  const img = e.currentTarget;
+  if (img.dataset.fallbackAttempted === 'true') {
+    img.style.display = 'none';
+    return;
+  }
 
-    // Đánh dấu đã thử fallback để tránh vòng lặp vô hạn
-    if (img.dataset.fallbackAttempted === 'true') {
-        // Đã thử fallback rồi, ẩn ảnh đi
-        img.style.display = 'none';
-        return;
-    }
+  img.dataset.fallbackAttempted = 'true';
+  const fallbackUrl = questionId
+    ? getR2FallbackUrl(questionId, originalUrl)
+    : originalUrl;
 
-    img.dataset.fallbackAttempted = 'true';
-
-    if (originalUrl && img.src !== originalUrl) {
-        img.src = originalUrl;
-    } else {
-        // Không có URL fallback hoặc đã thử rồi, ẩn ảnh
-        img.style.display = 'none';
-    }
+  if (fallbackUrl && img.src !== fallbackUrl) {
+    img.src = fallbackUrl;
+  } else {
+    img.style.display = 'none';
+  }
 }

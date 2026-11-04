@@ -1,6 +1,6 @@
 # Phase 04: Tối Ưu Ảnh Câu Hỏi (Cloudflare R2 CDN + PWA Offline Cache)
 
-Status: Pending
+Status: Completed
 Dependencies: Phase 02, Phase 03
 
 > **Thuộc kế hoạch:** [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/plan.md)  

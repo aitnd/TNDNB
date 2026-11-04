@@ -83,16 +83,16 @@
 ## Phase 04: Tối Ưu Ảnh Câu Hỏi (Cloudflare R2 CDN + PWA Offline Cache)
 > Chi tiết TDD: [phase-04-r2-images-pwa-cache.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/phase-04-r2-images-pwa-cache.md)
 
-- [ ] **Task 4.1:** Xây dựng `ontap-web/utils/imageHelper.ts` & Cập nhật `ontap-win/utils/imageHelper.ts` + `QuizScreen.tsx`
-  - [ ] **Step 4.1.1 (RED):** Viết unit test cho `resolveQuestionImageUrl`, `extractAllQuestionImageUrls`, `precacheAllQuestionImages` tại [ontap-web/utils/__tests__/imageHelper.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/__tests__/imageHelper.test.ts).
-  - [ ] **Step 4.1.2 (FAIL):** Chạy `npx --prefix ontap-web vitest run utils/__tests__/imageHelper.test.ts` xác nhận FAIL.
-  - [ ] **Step 4.1.3 (GREEN):** Tạo [ontap-web/utils/imageHelper.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/imageHelper.ts), cập nhật [ontap-win/utils/imageHelper.ts](file:///d:/Antigravity/TNDNB/ontap-win/utils/imageHelper.ts) và [ontap-web/components/QuizScreen.tsx](file:///d:/Antigravity/TNDNB/ontap-web/components/QuizScreen.tsx).
-  - [ ] **Step 4.1.4 (PASS):** Chạy lại `npx --prefix ontap-web vitest run utils/__tests__/imageHelper.test.ts` xác nhận PASS (4/4 tests).
-- [ ] **Task 4.2:** Nâng cấp Service Worker [ontap-web/public/sw-pwa.js](file:///d:/Antigravity/TNDNB/ontap-web/public/sw-pwa.js) (Cache-First + Background Batch Pre-cache)
-  - [ ] **Step 4.2.1 (RED):** Viết specification test cho `sw-pwa.js` tại [ontap-web/utils/__tests__/swPwa.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/__tests__/swPwa.test.ts).
-  - [ ] **Step 4.2.2 (FAIL):** Chạy `npx --prefix ontap-web vitest run utils/__tests__/swPwa.test.ts` xác nhận FAIL.
-  - [ ] **Step 4.2.3 (GREEN):** Cập nhật [ontap-web/public/sw-pwa.js](file:///d:/Antigravity/TNDNB/ontap-web/public/sw-pwa.js) (tuyệt đối giữ nguyên [ontap-web/public/sw.js](file:///d:/Antigravity/TNDNB/ontap-web/public/sw.js)).
-  - [ ] **Step 4.2.4 (PASS):** Chạy lại `npx --prefix ontap-web vitest run utils/__tests__/swPwa.test.ts` xác nhận PASS (3/3 tests).
+- [x] **Task 4.1:** Xây dựng `ontap-web/utils/imageHelper.ts` & Cập nhật `ontap-win/utils/imageHelper.ts` + `QuizScreen.tsx`
+  - [x] **Step 4.1.1 (RED):** Viết unit test cho `resolveQuestionImageUrl`, `extractAllQuestionImageUrls`, `precacheAllQuestionImages` tại [ontap-web/utils/__tests__/imageHelper.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/__tests__/imageHelper.test.ts).
+  - [x] **Step 4.1.2 (FAIL):** Chạy `npx --prefix ontap-web vitest run utils/__tests__/imageHelper.test.ts` xác nhận FAIL.
+  - [x] **Step 4.1.3 (GREEN):** Tạo [ontap-web/utils/imageHelper.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/imageHelper.ts), cập nhật [ontap-win/utils/imageHelper.ts](file:///d:/Antigravity/TNDNB/ontap-win/utils/imageHelper.ts) và [ontap-web/components/QuizScreen.tsx](file:///d:/Antigravity/TNDNB/ontap-web/components/QuizScreen.tsx).
+  - [x] **Step 4.1.4 (PASS):** Chạy lại `npx --prefix ontap-web vitest run utils/__tests__/imageHelper.test.ts` xác nhận PASS (4/4 tests).
+- [x] **Task 4.2:** Nâng cấp Service Worker [ontap-web/public/sw-pwa.js](file:///d:/Antigravity/TNDNB/ontap-web/public/sw-pwa.js) (Cache-First + Background Batch Pre-cache)
+  - [x] **Step 4.2.1 (RED):** Viết specification test cho `sw-pwa.js` tại [ontap-web/utils/__tests__/swPwa.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/__tests__/swPwa.test.ts).
+  - [x] **Step 4.2.2 (FAIL):** Chạy `npx --prefix ontap-web vitest run utils/__tests__/swPwa.test.ts` xác nhận FAIL.
+  - [x] **Step 4.2.3 (GREEN):** Cập nhật [ontap-web/public/sw-pwa.js](file:///d:/Antigravity/TNDNB/ontap-web/public/sw-pwa.js) (tuyệt đối giữ nguyên [ontap-web/public/sw.js](file:///d:/Antigravity/TNDNB/ontap-web/public/sw.js)).
+  - [x] **Step 4.2.4 (PASS):** Chạy lại `npx --prefix ontap-web vitest run utils/__tests__/swPwa.test.ts` xác nhận PASS (3/3 tests).
 
 ---
 
