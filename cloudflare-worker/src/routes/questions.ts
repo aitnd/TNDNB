@@ -1,4 +1,14 @@
-import { WorkerEnv, LicenseDTO, AnswerDTO, QuestionDTO, SubjectDTO } from '../types';
+import {
+  WorkerEnv,
+  LicenseDTO,
+  AnswerDTO,
+  QuestionDTO,
+  SubjectDTO,
+  LicenseRow,
+  SubjectRow,
+  QuestionRow,
+  AnswerRow
+} from '../types';
 
 const naturalSortById = (a: { id: string }, b: { id: string }): number => {
   const getTrailingNum = (id: string): number => {
@@ -9,10 +19,10 @@ const naturalSortById = (a: { id: string }, b: { id: string }): number => {
 };
 
 export function assembleLicensesTree(
-  licenses: any[],
-  subjects: any[],
-  questions: any[],
-  answers: any[]
+  licenses: LicenseRow[],
+  subjects: SubjectRow[],
+  questions: QuestionRow[],
+  answers: AnswerRow[]
 ): LicenseDTO[] {
   const answersByQuestion = new Map<string, AnswerDTO[]>();
   for (const ans of answers) {
@@ -96,11 +106,15 @@ export async function handleQuestionsRoutes(
 
   if (pathname === '/api/v1/questions/snapshot' && request.method === 'GET') {
     const [licRes, subRes, qRes, ansRes, metaRow] = await Promise.all([
-      env.DB.prepare(`SELECT id, name, display_order FROM licenses ORDER BY display_order ASC`).all(),
-      env.DB.prepare(`SELECT id, license_id, name, display_order FROM subjects ORDER BY display_order ASC`).all(),
-      env.DB.prepare(`SELECT id, subject_id, text, image, correct_answer_id FROM questions`).all(),
-      env.DB.prepare(`SELECT id, question_id, text, display_order FROM answers ORDER BY display_order ASC`).all(),
-      env.DB.prepare(`SELECT version, content_hash, updated_at FROM sync_meta WHERE id = 'questions_bank'`).first()
+      env.DB.prepare(`SELECT id, name, display_order FROM licenses ORDER BY display_order ASC`).all<LicenseRow>(),
+      env.DB.prepare(`SELECT id, license_id, name, display_order FROM subjects ORDER BY display_order ASC`).all<SubjectRow>(),
+      env.DB.prepare(`SELECT id, subject_id, text, image, correct_answer_id FROM questions`).all<QuestionRow>(),
+      env.DB.prepare(`SELECT id, question_id, text, display_order FROM answers ORDER BY display_order ASC`).all<AnswerRow>(),
+      env.DB.prepare(`SELECT version, content_hash, updated_at FROM sync_meta WHERE id = 'questions_bank'`).first<{
+        version: number;
+        content_hash: string;
+        updated_at: number;
+      }>()
     ]);
 
     const licenses = assembleLicensesTree(
@@ -112,9 +126,9 @@ export async function handleQuestionsRoutes(
 
     return new Response(
       JSON.stringify({
-        version: (metaRow as any)?.version ?? 1,
-        contentHash: (metaRow as any)?.content_hash ?? 'initial',
-        updatedAt: (metaRow as any)?.updated_at ?? Date.now(),
+        version: metaRow?.version ?? 1,
+        contentHash: metaRow?.content_hash ?? 'initial',
+        updatedAt: metaRow?.updated_at ?? Date.now(),
         licenses
       }),
       {
@@ -130,11 +144,11 @@ export async function handleQuestionsRoutes(
 
   if (pathname.startsWith('/api/v1/licenses/') && request.method === 'GET') {
     const licenseId = decodeURIComponent(pathname.replace('/api/v1/licenses/', '').split('/')[0]);
-    const licRow: any = await env.DB.prepare(
+    const licRow = await env.DB.prepare(
       `SELECT id, name, display_order FROM licenses WHERE id = ?`
     )
       .bind(licenseId)
-      .first();
+      .first<LicenseRow>();
 
     if (!licRow) {
       return new Response(JSON.stringify({ error: `Không tìm thấy hạng bằng ${licenseId}` }), {
@@ -147,7 +161,7 @@ export async function handleQuestionsRoutes(
       `SELECT id, license_id, name, display_order FROM subjects WHERE license_id = ? ORDER BY display_order ASC`
     )
       .bind(licenseId)
-      .all();
+      .all<SubjectRow>();
     const qRes = await env.DB.prepare(
       `SELECT q.id, q.subject_id, q.text, q.image, q.correct_answer_id
        FROM questions q
@@ -155,7 +169,7 @@ export async function handleQuestionsRoutes(
        WHERE s.license_id = ?`
     )
       .bind(licenseId)
-      .all();
+      .all<QuestionRow>();
     const ansRes = await env.DB.prepare(
       `SELECT a.id, a.question_id, a.text, a.display_order
        FROM answers a
@@ -165,7 +179,7 @@ export async function handleQuestionsRoutes(
        ORDER BY a.display_order ASC`
     )
       .bind(licenseId)
-      .all();
+      .all<AnswerRow>();
 
     const [licenseTree] = assembleLicensesTree(
       [licRow],

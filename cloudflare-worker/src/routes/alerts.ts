@@ -1,4 +1,4 @@
-import { WorkerEnv } from '../types';
+import { WorkerEnv, AlertDbRow } from '../types';
 import { verifyAdminAuthorization } from '../middleware/auth';
 
 export async function handleAlertsRoutes(
@@ -14,12 +14,12 @@ export async function handleAlertsRoutes(
   if (request.method === 'GET') {
     const res = await env.DB.prepare(
       `SELECT * FROM alerts ORDER BY created_at DESC LIMIT 50`
-    ).all();
+    ).all<AlertDbRow>();
 
     const now = Date.now();
     const rows = res.results || [];
     const filtered = rows
-      .map((r: any) => {
+      .map((r) => {
         const targetRoles: string[] = JSON.parse(r.target_roles_json || '[]');
         const readBy: string[] = JSON.parse(r.read_by_json || '[]');
         const deletedBy: string[] = JSON.parse(r.deleted_by_json || '[]');

@@ -2,10 +2,36 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
+interface ExamAnswer {
+  id: string;
+  text: string;
+}
+
+interface ExamQuestion {
+  id: string;
+  text: string;
+  image?: string | null;
+  correctAnswerId?: string;
+  correct_answer_id?: string;
+  answers: ExamAnswer[];
+}
+
+interface ExamSubject {
+  id: string;
+  name: string;
+  questions?: ExamQuestion[];
+}
+
+interface ExamLicensePayload {
+  id?: string;
+  name?: string;
+  subjects?: ExamSubject[];
+}
+
 // --- CÔNG THỨC TRỘN ĐỀ (Giữ nguyên) ---
 
 // Hàm "xáo" bài (Giữ nguyên)
-function xaoTronBai(array: any[]) {
+function xaoTronBai<T>(array: T[]): T[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -34,14 +60,14 @@ export async function GET(
       throw new Error(errBody.error || `Không tìm thấy hạng bằng ${licenseId} hoặc lỗi kết nối Cloudflare D1 (HTTP ${res.status}).`);
     }
 
-    const data = await res.json();
+    const data = (await res.json()) as ExamLicensePayload;
     const licenseName = data.name || licenseId;
 
     // 2. "LÀM PHẲNG" DỮ LIỆU (Flatten)
     // Gom hết câu hỏi từ các môn (subjects) lại thành 1 mảng
-    let allQuestions: any[] = [];
+    let allQuestions: ExamQuestion[] = [];
     if (data.subjects && Array.isArray(data.subjects)) {
-      data.subjects.forEach((subject: any) => {
+      data.subjects.forEach((subject) => {
         if (subject.questions && Array.isArray(subject.questions)) {
           allQuestions = allQuestions.concat(subject.questions);
         }
@@ -69,9 +95,9 @@ export async function GET(
     deThiCuoiCung = deThiCuoiCung.slice(0, limit);
 
     // 4. "LỌC" ĐÁP ÁN ĐÚNG & XÁO ĐÁP ÁN (Bảo mật - Zero Answer Leaks)
-    const deThiAnToan = deThiCuoiCung.map((q: any) => {
+    const deThiAnToan = deThiCuoiCung.map((q) => {
       // Tách correct_answer_id / correctAnswerId ra khỏi object trả về
-      const { correct_answer_id, correctAnswerId, ...safeQuestion } = q;
+      const { correct_answer_id: _ca1, correctAnswerId: _ca2, ...safeQuestion } = q;
 
       // Xáo trộn thứ tự đáp án (a, b, c, d)
       if (safeQuestion.answers && Array.isArray(safeQuestion.answers)) {
@@ -87,10 +113,11 @@ export async function GET(
       questions: deThiAnToan,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Lỗi không xác định khi trộn đề.";
     console.error('[API Trộn Đề] Lỗi nghiêm trọng:', error);
     return NextResponse.json(
-      { error: error.message || "Lỗi không xác định khi trộn đề." },
+      { error: message },
       { status: 500 }
     );
   }

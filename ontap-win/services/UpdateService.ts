@@ -11,6 +11,16 @@ export interface AppRelease {
   download_url?: string;
 }
 
+interface RawGitHubRelease {
+  tag_name: string;
+  body?: string;
+  published_at?: string;
+  created_at?: string;
+  draft?: boolean;
+  prerelease?: boolean;
+  assets?: Array<{ browser_download_url?: string }>;
+}
+
 const GITHUB_API_URL = 'https://api.github.com/repos/aitnd/TNDNB/releases';
 
 export async function getLatestAppRelease(): Promise<AppRelease | null> {
@@ -31,10 +41,10 @@ export async function getGitHubReleases(): Promise<AppRelease[]> {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as RawGitHubRelease[];
         return data
-          .filter((release: any) => !release.draft && !release.prerelease)
-          .map((release: any) => ({
+          .filter((release) => !release.draft && !release.prerelease)
+          .map((release) => ({
             version: normalizeVersion(release.tag_name),
             release_notes: release.body || 'Cập nhật hiệu suất và vá lỗi',
             created_at: release.published_at || release.created_at,

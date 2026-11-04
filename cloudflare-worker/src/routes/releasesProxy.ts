@@ -1,5 +1,17 @@
 import { WorkerEnv } from '../types';
 
+interface UpstreamReleaseAsset {
+  name: string;
+  browser_download_url?: string;
+  [key: string]: unknown;
+}
+
+interface UpstreamRelease {
+  tag_name?: string;
+  assets?: UpstreamReleaseAsset[];
+  [key: string]: unknown;
+}
+
 export async function handleReleasesProxyRoutes(
   request: Request,
   env: WorkerEnv,
@@ -34,11 +46,11 @@ export async function handleReleasesProxyRoutes(
       });
     }
 
-    const rawReleases: any[] = await upstreamRes.json();
+    const rawReleases = (await upstreamRes.json()) as UpstreamRelease[];
     const rewritten = rawReleases.map((rel) => ({
       ...rel,
       assets: Array.isArray(rel.assets)
-        ? rel.assets.map((asset: any) => ({
+        ? rel.assets.map((asset) => ({
             ...asset,
             browser_download_url: `${url.origin}/releases/download/${encodeURIComponent(asset.name)}`
           }))

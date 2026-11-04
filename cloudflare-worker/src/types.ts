@@ -44,6 +44,52 @@ export interface LicenseDTO {
   subjects: SubjectDTO[];
 }
 
+export interface LicenseRow {
+  id: string;
+  name: string;
+  display_order?: number;
+}
+
+export interface SubjectRow {
+  id: string;
+  license_id: string;
+  name: string;
+  display_order?: number;
+}
+
+export interface QuestionRow {
+  id: string;
+  subject_id: string;
+  text: string;
+  image?: string | null;
+  correct_answer_id: string;
+  display_order?: number;
+}
+
+export interface AnswerRow {
+  id: string;
+  question_id: string;
+  text: string;
+  display_order?: number;
+}
+
+export interface AlertDbRow {
+  id: string;
+  title: string;
+  message: string;
+  type: string;
+  target_type: string;
+  target_id?: string | null;
+  target_name?: string | null;
+  target_roles_json?: string | null;
+  sender_id: string;
+  sender_name?: string | null;
+  created_at: number | string;
+  expiry_date?: number | string | null;
+  read_by_json?: string | null;
+  deleted_by_json?: string | null;
+}
+
 export function parseAllowedOrigins(raw: string): string[] {
   if (!raw || !raw.trim()) {
     return ['*'];

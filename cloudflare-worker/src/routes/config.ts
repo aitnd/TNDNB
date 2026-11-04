@@ -17,11 +17,11 @@ export async function handleConfigRoutes(
   }
 
   if (request.method === 'GET') {
-    const row: any = await env.DB.prepare(
+    const row = await env.DB.prepare(
       `SELECT key, value_json, updated_at FROM app_configs WHERE key = ?`
     )
       .bind(key)
-      .first();
+      .first<{ key: string; value_json: string; updated_at: number }>();
 
     if (!row) {
       return new Response(JSON.stringify(null), {

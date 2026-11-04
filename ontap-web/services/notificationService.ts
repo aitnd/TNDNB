@@ -1,4 +1,4 @@
-import { collection, addDoc, query, where, getDocs, updateDoc, doc, serverTimestamp, orderBy, limit, Timestamp, writeBatch, deleteDoc, documentId } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, updateDoc, doc, serverTimestamp, orderBy, limit, Timestamp, writeBatch, deleteDoc, documentId, arrayUnion } from 'firebase/firestore';
 import { db } from './firebaseClient';
 import { fetchD1Alerts } from './d1Client';
 
@@ -162,7 +162,6 @@ export const fetchNotifications = async (userId: string, _classId?: string, user
 export const deleteNotificationForUser = async (notificationId: string, userId: string) => {
     try {
         const globalRef = doc(db, 'notifications', notificationId);
-        const { arrayUnion } = await import('firebase/firestore');
         try {
             await updateDoc(globalRef, {
                 deletedBy: arrayUnion(userId)

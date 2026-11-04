@@ -1,4 +1,3 @@
-import React from 'react'
 import { supabase } from '../utils/supabaseClient'
 import Link from 'next/link'
 import Sidebar from '../components/Sidebar'

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { SyntheticEvent } from 'react';
 
 export const getR2FallbackUrl = (questionId: string, originalUrl?: string | null): string | null => {
   if (originalUrl && /^https?:\/\//i.test(originalUrl)) {
@@ -23,7 +23,7 @@ export function getLocalImageSrc(question: { id: string; image?: string | null }
 }
 
 export function handleImageError(
-  e: React.SyntheticEvent<HTMLImageElement, Event>,
+  e: SyntheticEvent<HTMLImageElement, Event>,
   originalUrl?: string | null,
   questionId?: string
 ) {

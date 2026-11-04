@@ -3,7 +3,7 @@ import type { License } from '../types';
 
 export interface OfflineConfigRow {
   key: string;
-  value: any;
+  value: unknown;
   updatedAt: number;
 }
 
@@ -60,7 +60,7 @@ export const getLicensesOffline = async (): Promise<License[]> => {
   try {
     const list = await db_offline.licenses.toArray();
     if (list && list.length > 0) {
-      return list.sort((a: any, b: any) => (a.displayOrder || 0) - (b.displayOrder || 0));
+      return list.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
     }
   } catch {
     // Fallback xuống localStorage nếu IndexedDB bị chặn trong Private Mode
