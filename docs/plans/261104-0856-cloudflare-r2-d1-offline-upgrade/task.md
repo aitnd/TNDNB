@@ -9,16 +9,16 @@
 ## Phase 00: Khởi Tạo Nhánh Git Preview & Tách Deployment Monorepo (`ontap-web` Cloudflare Pages + Vercel Root Portal)
 > Chi tiết TDD: [phase-00-split-deployment-monorepo.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/phase-00-split-deployment-monorepo.md)
 
-- [ ] **Task 0.1:** Khởi tạo nhánh `feat/cloudflare-offline-v3.21` & Xây dựng Module Cấu hình Dual-Target (`ontap-web/utils/deployConfig.ts`, `_redirects`, `_headers`)
-  - [ ] **Step 0.1.1 (RED):** Chuyển sang nhánh `feat/cloudflare-offline-v3.21` và viết unit test kiểm tra `resolveDeployTargetConfig` + cấu hình `_redirects`/`_headers` tại [ontap-web/utils/__tests__/deployConfig.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/__tests__/deployConfig.test.ts).
-  - [ ] **Step 0.1.2 (FAIL):** Chạy `npx --prefix ontap-web vitest run utils/__tests__/deployConfig.test.ts` xác nhận FAIL.
-  - [ ] **Step 0.1.3 (GREEN):** Tạo [ontap-web/utils/deployConfig.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/deployConfig.ts), [ontap-web/public/_redirects](file:///d:/Antigravity/TNDNB/ontap-web/public/_redirects), [ontap-web/public/_headers](file:///d:/Antigravity/TNDNB/ontap-web/public/_headers), cập nhật [ontap-web/vite.config.ts](file:///d:/Antigravity/TNDNB/ontap-web/vite.config.ts) và [ontap-web/App.tsx](file:///d:/Antigravity/TNDNB/ontap-web/App.tsx).
-  - [ ] **Step 0.1.4 (PASS):** Chạy lại `npx --prefix ontap-web vitest run utils/__tests__/deployConfig.test.ts` xác nhận PASS (3/3 tests).
-- [ ] **Task 0.2:** Cấu hình Tách Build & Routing `/ontap` Linh hoạt Trên Root Portal (`package.json` & `next.config.mjs`)
-  - [ ] **Step 0.2.1 (RED):** Viết unit test kiểm tra script `build:portal`, `build:ontap:cf` và logic `rewrites()` theo biến `NEXT_PUBLIC_ONTAP_STANDALONE_URL` tại [scripts/monorepo-routing.test.ts](file:///d:/Antigravity/TNDNB/scripts/monorepo-routing.test.ts).
-  - [ ] **Step 0.2.2 (FAIL):** Chạy `npx vitest run scripts/monorepo-routing.test.ts` xác nhận FAIL.
-  - [ ] **Step 0.2.3 (GREEN):** Cập nhật [package.json](file:///d:/Antigravity/TNDNB/package.json) và [next.config.mjs](file:///d:/Antigravity/TNDNB/next.config.mjs).
-  - [ ] **Step 0.2.4 (PASS):** Chạy lại `npx vitest run scripts/monorepo-routing.test.ts` xác nhận PASS (3/3 tests).
+- [x] **Task 0.1:** Khởi tạo nhánh `feat/cloudflare-offline-v3.21` & Xây dựng Module Cấu hình Dual-Target (`ontap-web/utils/deployConfig.ts`, `_redirects`, `_headers`)
+  - [x] **Step 0.1.1 (RED):** Chuyển sang nhánh `feat/cloudflare-offline-v3.21` và viết unit test kiểm tra `resolveDeployTargetConfig` + cấu hình `_redirects`/`_headers` tại [ontap-web/utils/__tests__/deployConfig.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/__tests__/deployConfig.test.ts).
+  - [x] **Step 0.1.2 (FAIL):** Chạy `npx --prefix ontap-web vitest run utils/__tests__/deployConfig.test.ts` xác nhận FAIL.
+  - [x] **Step 0.1.3 (GREEN):** Tạo [ontap-web/utils/deployConfig.ts](file:///d:/Antigravity/TNDNB/ontap-web/utils/deployConfig.ts), [ontap-web/public/_redirects](file:///d:/Antigravity/TNDNB/ontap-web/public/_redirects), [ontap-web/public/_headers](file:///d:/Antigravity/TNDNB/ontap-web/public/_headers), cập nhật [ontap-web/vite.config.ts](file:///d:/Antigravity/TNDNB/ontap-web/vite.config.ts) và [ontap-web/App.tsx](file:///d:/Antigravity/TNDNB/ontap-web/App.tsx).
+  - [x] **Step 0.1.4 (PASS):** Chạy lại `npx --prefix ontap-web vitest run utils/__tests__/deployConfig.test.ts` xác nhận PASS (3/3 tests).
+- [x] **Task 0.2:** Cấu hình Tách Build & Routing `/ontap` Linh hoạt Trên Root Portal (`package.json` & `next.config.mjs`)
+  - [x] **Step 0.2.1 (RED):** Viết unit test kiểm tra script `build:portal`, `build:ontap:cf` và logic `rewrites()` theo biến `NEXT_PUBLIC_ONTAP_STANDALONE_URL` tại [scripts/monorepo-routing.test.ts](file:///d:/Antigravity/TNDNB/scripts/monorepo-routing.test.ts).
+  - [x] **Step 0.2.2 (FAIL):** Chạy `npx vitest run scripts/monorepo-routing.test.ts` xác nhận FAIL.
+  - [x] **Step 0.2.3 (GREEN):** Cập nhật [package.json](file:///d:/Antigravity/TNDNB/package.json) và [next.config.mjs](file:///d:/Antigravity/TNDNB/next.config.mjs).
+  - [x] **Step 0.2.4 (PASS):** Chạy lại `npx vitest run scripts/monorepo-routing.test.ts` xác nhận PASS (3/3 tests).
 
 ---
 

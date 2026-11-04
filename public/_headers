@@ -1,0 +1,10 @@
+/sw-pwa.js
+  Cache-Control: no-cache, no-store, must-revalidate
+  Service-Worker-Allowed: /
+
+/ontap/sw-pwa.js
+  Cache-Control: no-cache, no-store, must-revalidate
+  Service-Worker-Allowed: /
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

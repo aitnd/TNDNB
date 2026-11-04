@@ -1,6 +1,6 @@
 # Phase 00: Khởi Tạo Nhánh Git Preview & Kiến Trúc "Tách Deployment — Giữ Monorepo" (`ontap-web` Cloudflare Pages + Vercel Root Portal)
 
-Status: Pending
+Status: Completed
 Dependencies: None (Foundation Phase)
 
 > **Thuộc kế hoạch:** [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/plan.md)  

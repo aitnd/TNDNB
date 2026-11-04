@@ -18,6 +18,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
 import { Quiz, License, Subject, UserAnswers } from './types';
 import { scheduleLocalReminder } from './utils/reminder';
+import { getRuntimeServiceWorkerUrl } from './utils/deployConfig';
 
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/ontap/sw-pwa.js').catch(() => {});
+      navigator.serviceWorker.register(getRuntimeServiceWorkerUrl()).catch(() => {});
     }
   }, []);
 

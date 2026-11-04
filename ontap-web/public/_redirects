@@ -1,0 +1,7 @@
+/ontap/sw-pwa.js /sw-pwa.js 200
+/ontap/sw.js /sw.js 200
+/ontap/manifest.json /manifest.json 200
+/ontap/icon-192.png /icon-192.png 200
+/ontap/icon-512.png /icon-512.png 200
+/ontap/assets/* /assets/:splat 200
+/* /index.html 200

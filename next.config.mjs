@@ -28,10 +28,13 @@ const nextConfig = {
         ];
     },
     async rewrites() {
+        const standaloneOntapUrl = (process.env.NEXT_PUBLIC_ONTAP_STANDALONE_URL || '').replace(/\/+$/, '');
         return [
             {
                 source: '/ontap/:path*',
-                destination: '/ontap/index.html',
+                destination: standaloneOntapUrl
+                    ? `${standaloneOntapUrl}/ontap/:path*`
+                    : '/ontap/index.html',
             },
             {
                 source: '/food/:path*',

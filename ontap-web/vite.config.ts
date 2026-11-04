@@ -2,8 +2,11 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { resolveDeployTargetConfig } from './utils/deployConfig';
 
 export default defineConfig(() => {
+  const deployCfg = resolveDeployTargetConfig(process.env as Record<string, string | undefined>);
+
   return {
     server: {
       port: 3000,
@@ -24,9 +27,9 @@ export default defineConfig(() => {
         '@': path.resolve(process.cwd(), '.'),
       }
     },
-    base: '/ontap/', /* 💖 Base path cho deployment */
+    base: deployCfg.viteBase,
     build: {
-      outDir: '../public/ontap',
+      outDir: deployCfg.outDir,
       emptyOutDir: true,
       rollupOptions: {
         output: {
