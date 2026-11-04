@@ -1,8 +1,10 @@
-import { doc, getDoc, setDoc} from 'firebase/firestore'; 
-import { db } from './firebaseClient';
+import { fetchD1Config, saveD1Config } from './d1Client';
+import { auth } from './firebaseClient';
 
 export const USAGE_CONFIG_DOC_ID = 'usage_config';
 export const SETTINGS_COLLECTION = 'settings';
+export const USAGE_CONFIG_CACHE_KEY = 'ontap_usage_config_cache';
+export const GITHUB_CONFIG_CACHE_KEY = 'ontap_github_config_cache';
 
 export interface RoleConfig {
     limit: number;
@@ -272,14 +274,29 @@ const DEFAULT_CONFIG: UsageConfig = {
     showPortalMonetag: false
 };
 
-// 1. Get Config (with default fallback)
+// 1. Get Config (with default fallback & offline cache)
 export const getUsageConfig = async (): Promise<UsageConfig> => {
     try {
-        const docRef = doc(db, SETTINGS_COLLECTION, USAGE_CONFIG_DOC_ID);
-        const snapshot = await getDoc(docRef);
+        let data = await fetchD1Config<Partial<UsageConfig>>(USAGE_CONFIG_DOC_ID);
 
-        if (snapshot.exists()) {
-            const data = snapshot.data() as Partial<UsageConfig>;
+        if (data) {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem(USAGE_CONFIG_CACHE_KEY, JSON.stringify(data));
+                }
+            } catch {}
+        } else {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    const cachedRaw = localStorage.getItem(USAGE_CONFIG_CACHE_KEY);
+                    if (cachedRaw) {
+                        data = JSON.parse(cachedRaw) as Partial<UsageConfig>;
+                    }
+                }
+            } catch {}
+        }
+
+        if (data) {
             // DEEP MERGE to ensure new fields in sub-objects are preserved
             return {
                 ...DEFAULT_CONFIG,
@@ -314,14 +331,10 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
                 monetagPopunderMaxPerSession: data.monetagPopunderMaxPerSession ?? 0,
                 monetagCountdownMaxPerSession: data.monetagCountdownMaxPerSession ?? 0
             };
-        } else {
-            // Initialize if not exists
-            const initialConfig = { ...DEFAULT_CONFIG, isMaintenancePortal: false, isMaintenanceWeb: false, isMaintenanceWin: false, isMaintenanceMode: false, maintenanceMessage: 'Hệ thống đang được bảo trì để nâng cấp. Vui lòng quay lại sau ít phút!' };
-            await setDoc(docRef, initialConfig);
-            return initialConfig;
         }
+        return DEFAULT_CONFIG;
     } catch (error) {
-        console.error('Error fetching usage config:', error);
+        console.error('Error fetching usage config from D1:', error);
         return DEFAULT_CONFIG; // Fail safe
     }
 };
@@ -329,8 +342,17 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
 // 2. Save Config
 export const saveUsageConfig = async (config: UsageConfig): Promise<void> => {
     try {
-        const docRef = doc(db, SETTINGS_COLLECTION, USAGE_CONFIG_DOC_ID);
-        await setDoc(docRef, config);
+        const token = await auth?.currentUser?.getIdToken().catch(() => undefined);
+        const ok = await saveD1Config(USAGE_CONFIG_DOC_ID, config, token);
+        if (ok) {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem(USAGE_CONFIG_CACHE_KEY, JSON.stringify(config));
+                }
+            } catch {}
+        } else {
+            throw new Error('Không thể lưu cấu hình lên Cloudflare D1');
+        }
     } catch (error) {
         console.error('Error saving usage config:', error);
         throw error;
@@ -340,14 +362,24 @@ export const saveUsageConfig = async (config: UsageConfig): Promise<void> => {
 // 3. Get GitHub Config
 export const getGitHubConfig = async (): Promise<GitHubConfig> => {
     try {
-        const docRef = doc(db, SETTINGS_COLLECTION, 'github_config');
-        const snapshot = await getDoc(docRef);
-        if (snapshot.exists()) {
-            return snapshot.data() as GitHubConfig;
+        let data = await fetchD1Config<GitHubConfig>('github_config');
+        if (data) {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem(GITHUB_CONFIG_CACHE_KEY, JSON.stringify(data));
+                }
+            } catch {}
+            return data;
+        }
+        if (typeof localStorage !== 'undefined') {
+            const cached = localStorage.getItem(GITHUB_CONFIG_CACHE_KEY);
+            if (cached) {
+                return JSON.parse(cached) as GitHubConfig;
+            }
         }
         return { owner: 'aitnd', repo: 'TNDNB' };
     } catch (error) {
-        console.error('Error fetching GitHub config:', error);
+        console.error('Error fetching GitHub config from D1:', error);
         return { owner: 'aitnd', repo: 'TNDNB' };
     }
 };
@@ -355,8 +387,17 @@ export const getGitHubConfig = async (): Promise<GitHubConfig> => {
 // 4. Save GitHub Config
 export const saveGitHubConfig = async (config: GitHubConfig): Promise<void> => {
     try {
-        const docRef = doc(db, SETTINGS_COLLECTION, 'github_config');
-        await setDoc(docRef, config);
+        const token = await auth?.currentUser?.getIdToken().catch(() => undefined);
+        const ok = await saveD1Config('github_config', config, token);
+        if (ok) {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem(GITHUB_CONFIG_CACHE_KEY, JSON.stringify(config));
+                }
+            } catch {}
+        } else {
+            throw new Error('Không thể lưu cấu hình GitHub lên Cloudflare D1');
+        }
     } catch (error) {
         console.error('Error saving GitHub config:', error);
         throw error;

@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Marquee from 'react-fast-marquee';
 import { fetchActiveMarqueeNotifications, Notification } from '../services/notificationService';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db } from '../services/firebaseClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useAppStore } from '../stores/useAppStore';
 import { FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa';
 
 const AlertMarquee: React.FC = () => {
     const [alerts, setAlerts] = useState<Notification[]>([]);
-    // const { socket } = useSocket(); // Removed
     const { user } = useAuth();
-    const { userProfile } = useAppStore(state => state); // Need to import useAppStore
+    const { userProfile } = useAppStore(state => state);
 
     const loadAlerts = async () => {
         try {
@@ -29,42 +26,7 @@ const AlertMarquee: React.FC = () => {
         // Refresh every 5 minutes to check expiry
         const interval = setInterval(loadAlerts, 5 * 60 * 1000);
         return () => clearInterval(interval);
-    }, [user, userProfile]); // Reload when user/profile changes
-
-    useEffect(() => {
-        // Realtime Listener for Global Alerts
-        const qGlobal = query(
-            collection(db, 'notifications'),
-            where('targetType', '==', 'all'),
-            where('type', 'in', ['special', 'attention'])
-        );
-
-        const unsubGlobal = onSnapshot(qGlobal, () => {
-            loadAlerts(); // Reload all alerts (including personal) when global changes
-        }, () => {
-            // Nuốt lỗi permission-denied khi khách chưa đăng nhập truy cập
-            setAlerts([]);
-        });
-
-        // Realtime Listener for Personal Alerts (if user exists)
-        let unsubPersonal = () => { };
-        if (user) {
-            const qPersonal = query(
-                collection(db, 'users', user.uid, 'notifications'),
-                where('type', 'in', ['special', 'attention'])
-            );
-            unsubPersonal = onSnapshot(qPersonal, () => {
-                loadAlerts();
-            }, () => {
-                setAlerts([]);
-            });
-        }
-
-        return () => {
-            unsubGlobal();
-            unsubPersonal();
-        };
-    }, [user]);
+    }, [user, userProfile]);
 
     if (alerts.length === 0) return null;
 

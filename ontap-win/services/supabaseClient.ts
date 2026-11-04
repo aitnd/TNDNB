@@ -1,10 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Supabase URL and Anon Key must be provided.");
-}
+export const getSupabase = () => {
+    if (supabaseInstance) return supabaseInstance;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+        throw new Error("Supabase URL and Anon Key must be provided.");
+    }
+
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+    return supabaseInstance;
+};

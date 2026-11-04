@@ -1,5 +1,7 @@
 import { getUsageConfig } from './adminConfigService';
-import { normalizeVersion } from '../utils/versionUtils';
+import { normalizeVersion, isVersionLower } from '../utils/versionUtils';
+
+export { isVersionLower };
 
 export interface AppRelease {
   version: string;
@@ -24,11 +26,24 @@ export async function getGitHubReleases(): Promise<AppRelease[]> {
     
     if (response.ok) {
       const data = await response.json();
-      return data.map((release: any) => ({
-        version: normalizeVersion(release.tag_name),
-        release_notes: release.body || 'Cập nhật hiệu suất và vá lỗi',
-        created_at: release.published_at || release.created_at
-      }));
+      return data
+        .filter((release: any) => !release.draft && !release.prerelease)
+        .map((release: any) => ({
+          version: normalizeVersion(release.tag_name),
+          release_notes: release.body || 'Cập nhật hiệu suất và vá lỗi',
+          created_at: release.published_at || release.created_at
+        }))
+        .sort((a: AppRelease, b: AppRelease) => {
+          const partsA = a.version.split('.').map(Number);
+          const partsB = b.version.split('.').map(Number);
+          for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
+            const pA = partsA[i] || 0;
+            const pB = partsB[i] || 0;
+            if (pA > pB) return -1;
+            if (pA < pB) return 1;
+          }
+          return 0;
+        });
     }
   } catch (error) {
     console.warn('Lỗi gọi API GitHub Releases trực tiếp, fallback qua config:', error);

@@ -1,5 +1,5 @@
 import { db } from './firebaseClient';
-import { supabase } from './supabaseClient';
+import { getSupabase } from './supabaseClient';
 import { doc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { UserProfile } from '../types';
 import { saveResultOffline } from './offlineService';
@@ -78,7 +78,7 @@ export const uploadAvatar = async (file: File, userId: string): Promise<string> 
         const filePath = `avatars/${fileName}`;
 
         // 1. Upload to Supabase 'avatars' bucket
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await getSupabase().storage
             .from('avatars')
             .upload(filePath, webpBlob, {
                 cacheControl: '3600',
@@ -91,7 +91,7 @@ export const uploadAvatar = async (file: File, userId: string): Promise<string> 
         }
 
         // 2. Get Public URL
-        const { data } = supabase.storage
+        const { data } = getSupabase().storage
             .from('avatars')
             .getPublicUrl(filePath);
 

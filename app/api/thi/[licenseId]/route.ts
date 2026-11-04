@@ -1,11 +1,8 @@
 // File: app/api/thi/[licenseId]/route.ts
 
-import { NextRequest, NextResponse } from 'next/server'
-// 1. 💖 "TRIỆU HỒI" SUPABASE 💖
-import { supabase } from '../../../../utils/supabaseClient'
+import { NextRequest, NextResponse } from 'next/server';
 
 // --- CÔNG THỨC TRỘN ĐỀ (Giữ nguyên) ---
-
 
 // Hàm "xáo" bài (Giữ nguyên)
 function xaoTronBai(array: any[]) {
@@ -22,56 +19,40 @@ export async function GET(
   { params }: { params: { licenseId: string } }
 ) {
   try {
-    const licenseId = params.licenseId
+    const licenseId = params.licenseId;
 
+    // 1. 💖 LẤY "KHO" CÂU HỎI TỪ CLOUDFLARE D1 WORKER API 💖
+    const cloudflareApiUrl = process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL || 'https://api.tndnb.vn';
+    const res = await fetch(`${cloudflareApiUrl}/api/v1/licenses/${encodeURIComponent(licenseId)}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      next: { revalidate: 3600 }
+    });
 
-    // 2. 💖 LẤY "KHO" CÂU HỎI TỪ SUPABASE 💖
-    // Truy vấn: licenses -> subjects -> questions -> answers
-    const { data, error } = await supabase
-      .from('licenses')
-      .select(`
-        name,
-        subjects (
-          questions (
-            id,
-            text,
-            image,
-            correct_answer_id,
-            answers (
-              id,
-              text
-            )
-          )
-        )
-      `)
-      .eq('id', licenseId)
-      .single()
-
-    if (error || !data) {
-      console.error('[API Trộn Đề] Lỗi Supabase:', error)
-      throw new Error(`Không tìm thấy hạng bằng ${licenseId} hoặc lỗi kết nối.`)
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error(errBody.error || `Không tìm thấy hạng bằng ${licenseId} hoặc lỗi kết nối Cloudflare D1 (HTTP ${res.status}).`);
     }
 
-    const licenseName = data.name;
+    const data = await res.json();
+    const licenseName = data.name || licenseId;
 
-    // 3. "LÀM PHẲNG" DỮ LIỆU (Flatten)
-    // Supabase trả về dạng lồng nhau, ta cần gom hết câu hỏi lại thành 1 mảng
+    // 2. "LÀM PHẲNG" DỮ LIỆU (Flatten)
+    // Gom hết câu hỏi từ các môn (subjects) lại thành 1 mảng
     let allQuestions: any[] = [];
-    if (data.subjects) {
+    if (data.subjects && Array.isArray(data.subjects)) {
       data.subjects.forEach((subject: any) => {
-        if (subject.questions) {
+        if (subject.questions && Array.isArray(subject.questions)) {
           allQuestions = allQuestions.concat(subject.questions);
         }
       });
     }
 
-
-
     if (allQuestions.length === 0) {
       throw new Error(`Hạng bằng ${licenseName} chưa có câu hỏi nào.`);
     }
 
-    // 4. "TRỘN" ĐỀ (Giữ nguyên logic)
+    // 3. "TRỘN" ĐỀ (Giữ nguyên logic)
     let deThiCuoiCung = xaoTronBai(allQuestions);
 
     // 💖 XỬ LÝ GIỚI HẠN CÂU HỎI 💖
@@ -79,41 +60,38 @@ export async function GET(
     const limitStr = url.searchParams.get('limit');
     let limit = 30; // Mặc định 30 câu
     if (limitStr) {
-      const parsedLimit = parseInt(limitStr);
+      const parsedLimit = parseInt(limitStr, 10);
       if (!isNaN(parsedLimit) && parsedLimit > 0) {
         limit = parsedLimit;
       }
     }
 
-
     deThiCuoiCung = deThiCuoiCung.slice(0, limit);
 
-    // 5. "LỌC" ĐÁP ÁN ĐÚNG & XÁO ĐÁP ÁN (Bảo mật)
+    // 4. "LỌC" ĐÁP ÁN ĐÚNG & XÁO ĐÁP ÁN (Bảo mật - Zero Answer Leaks)
     const deThiAnToan = deThiCuoiCung.map((q: any) => {
-      // Tách correct_answer_id ra khỏi object trả về (để lộ là toang!)
-      const { correct_answer_id, ...safeQuestion } = q;
+      // Tách correct_answer_id / correctAnswerId ra khỏi object trả về
+      const { correct_answer_id, correctAnswerId, ...safeQuestion } = q;
 
       // Xáo trộn thứ tự đáp án (a, b, c, d)
-      if (safeQuestion.answers) {
-        safeQuestion.answers = xaoTronBai(safeQuestion.answers);
+      if (safeQuestion.answers && Array.isArray(safeQuestion.answers)) {
+        safeQuestion.answers = xaoTronBai([...safeQuestion.answers]);
       }
 
       return safeQuestion;
     });
 
-
-
-    // 6. "Gửi" bộ đề
+    // 5. "Gửi" bộ đề
     return NextResponse.json({
       licenseName: licenseName,
       questions: deThiAnToan,
-    })
+    });
 
   } catch (error: any) {
-    console.error('[API Trộn Đề] Lỗi nghiêm trọng:', error)
+    console.error('[API Trộn Đề] Lỗi nghiêm trọng:', error);
     return NextResponse.json(
       { error: error.message || "Lỗi không xác định khi trộn đề." },
       { status: 500 }
-    )
+    );
   }
 }

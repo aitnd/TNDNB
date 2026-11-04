@@ -26,6 +26,7 @@
         "@vitejs/plugin-react": "^5.0.0",
         "capacitor-native-biometric": "^4.2.2",
         "cors": "^2.8.5",
+        "dexie": "^4.2.1",
         "dotenv": "^17.2.3",
         "express": "^5.2.1",
         "firebase": "^12.6.0",
