@@ -131,11 +131,11 @@
 ## Phase 07: Kiểm Thử Trên Link Preview, Nâng Version Đồng Bộ v3.21.0 & Merge Cut-over (`main`)
 > Chi tiết TDD: [phase-07-testing-verification.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/phase-07-testing-verification.md)
 
-- [ ] **Task 7.1:** Kiểm thử E2E Offline Mode + Delta Sync + R2 Precache + Portal Redesign & Build Verification
-  - [ ] **Step 7.1.1 (RED):** Viết kịch bản E2E test mất mạng hoàn toàn tại [ontap-web/services/__tests__/offlineIntegration.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/services/__tests__/offlineIntegration.test.ts).
-  - [ ] **Step 7.1.2 (FAIL):** Xác nhận test FAIL nếu thiếu bất kỳ thành phần nào của Phase 03-04.
-  - [ ] **Step 7.1.3 (GREEN):** Chạy toàn bộ 18 test files (45 unit/integration tests) trên cả `cloudflare-worker`, `ontap-web`, `ontap-win` và `scripts`.
-  - [ ] **Step 7.1.4 (PASS):** Xác nhận 45/45 tests PASS và chạy `npm run build:ontap:cf`, `npm run build:portal`, `npm --prefix ontap-win run build` thành công.
+- [x] **Task 7.1:** Kiểm thử E2E Offline Mode + Delta Sync + R2 Precache + Portal Redesign & Build Verification
+  - [x] **Step 7.1.1 (RED):** Viết kịch bản E2E test mất mạng hoàn toàn tại [ontap-web/services/__tests__/offlineIntegration.test.ts](file:///d:/Antigravity/TNDNB/ontap-web/services/__tests__/offlineIntegration.test.ts).
+  - [x] **Step 7.1.2 (FAIL):** Xác nhận test FAIL nếu thiếu bất kỳ thành phần nào của Phase 03-04.
+  - [x] **Step 7.1.3 (GREEN):** Chạy toàn bộ 18 test files (45 unit/integration tests) trên cả `cloudflare-worker`, `ontap-web`, `ontap-win` và `scripts`.
+  - [x] **Step 7.1.4 (PASS):** Xác nhận 45/45 tests PASS và chạy `npm run build:ontap:cf`, `npm run build:portal`, `npm --prefix ontap-win run build` thành công.
 - [x] **Task 7.2:** Nâng Cấp và Đồng Bộ Phiên Bản v3.21.0 Toàn Bộ Ứng Dụng (`Root`, `ontap-web`, `ontap-win`, `cloudflare-worker`) & Cập Nhật Changelogs
   - [x] **Step 7.2.1 (RED):** Viết unit test kiểm tra toàn bộ 4 file package.json đều có version "3.21.0" tại [scripts/version-sync.test.ts](file:///d:/Antigravity/TNDNB/scripts/version-sync.test.ts).
   - [x] **Step 7.2.2 (FAIL):** Chạy `npx vitest run scripts/version-sync.test.ts` xác nhận FAIL (do hiện tại là 3.20.0).

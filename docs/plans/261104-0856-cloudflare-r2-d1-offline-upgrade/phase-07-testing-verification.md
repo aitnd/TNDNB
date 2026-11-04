@@ -1,6 +1,6 @@
 # Phase 07: Kiểm Thử Toàn Diện, Nâng Version Đồng Bộ v3.21.0 & Quy Trình Merge Cut-over (`main`)
 
-Status: Pending
+Status: In Progress (Task 7.1 & 7.2 Completed, Ready for 7.3 Preview Verification)
 Dependencies: Phase 00, Phase 01, Phase 02, Phase 03, Phase 04, Phase 05, Phase 06
 
 > **Thuộc kế hoạch:** [plan.md](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/plan.md)  
