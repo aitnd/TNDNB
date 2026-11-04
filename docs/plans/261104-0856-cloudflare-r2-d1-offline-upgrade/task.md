@@ -141,4 +141,4 @@
   - [x] **Step 7.2.2 (FAIL):** Chạy `npx vitest run scripts/version-sync.test.ts` xác nhận FAIL (do hiện tại là 3.20.0).
   - [x] **Step 7.2.3 (GREEN):** Cập nhật `update_versions.js` & `update_changelogs.js`, chạy nâng version lên `3.21.0` cho `package.json`, `ontap-web/package.json`, `ontap-win/package.json`, `cloudflare-worker/package.json` và cập nhật các file `CHANGELOG.md`.
   - [x] **Step 7.2.4 (PASS):** Chạy lại `npx vitest run scripts/version-sync.test.ts` xác nhận PASS (2/2 tests).
-- [ ] **Task 7.3:** Push nhánh `feat/cloudflare-offline-v3.21` lên GitHub, kiểm thử thực tế trên **Vercel Preview URL** và **Cloudflare Pages Preview URL (`*.pages.dev`)** trong khi Production (`main`) vẫn chạy bình thường. Sau khi nghiệm thu 100% PASS mới merge vào `main`.
+- [x] **Task 7.3:** Push nhánh `feat/cloudflare-offline-v3.21` lên GitHub, kiểm thử thực tế trên **Vercel Preview URL** và **Cloudflare Pages Preview URL (`*.pages.dev`)** trong khi Production (`main`) vẫn chạy bình thường. Sau khi nghiệm thu 100% PASS mới merge vào `main`.
