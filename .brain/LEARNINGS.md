@@ -1,4 +1,4 @@
-﻿# Những Bài Học (Learnings) - Dự án TNDNB
+# Những Bài Học (Learnings) - Dự án TNDNB
 
 - **Kiến trúc App Update (2026-09-19, đính chính 2026-09-20):** Không dùng file CHANGELOG.md tĩnh đi kèm app để check version (app cũ mãi đọc file cũ). Version truth nằm ở **GitHub Releases API** (`aitnd/TNDNB`, electron-updater đọc `.yml/.exe/.blockmap`); Firebase `settings/usage_config app_links` chỉ mirror link hiển thị. **Supabase chỉ chứa câu hỏi** (`licenses/subjects/questions/answers` + bucket ảnh `TND`) — tuyệt đối không host file release trên Supabase (plan 260919-1428 đi sai hướng này đã bị revert).
 - **Tránh Nested Scroll:** Hạn chế thanh cuộn bên trong thanh cuộn, đặc biệt là ở giao diện Bài thi / Kết quả, vì rất khó thao tác cho người dùng phổ thông.
@@ -17,3 +17,10 @@
 - **Loi UTF-8 BOM do PowerShell:** Khong dung Set-Content -Encoding UTF8 de ghi file code.
 - **Loi TypeScript TS2339 (Supabase):** Du lieu tra ve doi khi bi suy dien thanh never. Cach xu ly: ep kieu (data as any).
 - **Bao mat API Key:** Cac fallback API key cung rat nguy hiem. Luon thay the bang bien moi truong.
+
+
+## [2026-11-05] Single Canonical Hallmark Editorial Theme & Portal Auth/Admin Restoration
+- **Quyết định Kiến trúc UI (`[type=architecture]`):** Loại bỏ hoàn toàn cơ chế đa giao diện (`ThemeContext`, `data-theme`, hiệu ứng tuyết rơi Noel) trên Root Portal để triệt tiêu hiện tượng FOUC, giảm kích thước bundle và giữ vững tính chính thống của Cổng thông tin Đào tạo & Sát hạch Thủy nội địa (Hallmark Editorial — N6 Masthead + H2 Split Diptych).
+- **Bài học Kỹ thuật (`[type=lesson]`):**
+  1. Khi tách monorepo (`ontap-web` / `ontap-win` ra khỏi Root Portal), cần có bộ kiểm thử tự động (`scripts/portal-login-dashboard.test.ts`) canh gác sự tồn tại của các route trọng yếu (`app/login/page.tsx`, `app/quan-ly/page.tsx`) để tránh xóa nhầm khi dọn dẹp.
+  2. Trên Next.js 14 App Router, mọi trang sử dụng `useSearchParams()` (như `/login?redirect=...`) bắt buộc phải bọc component con trong `<Suspense>` để `npm run build:portal` tĩnh hóa (Static Prerender) thành công mà không bị lỗi CSR Bailout.
