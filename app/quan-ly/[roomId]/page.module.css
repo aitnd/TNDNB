@@ -1,48 +1,57 @@
 .container {
-    max-width: 1200px;
+    max-width: 1360px;
     margin: 0 auto;
-    padding: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
+    padding: 2.5rem 1rem;
+    font-family: var(--font-sans, 'Be Vietnam Pro', system-ui, sans-serif);
+    color: var(--color-ink, #0B132B);
+    background-color: var(--color-paper, #FAF9F6);
 }
 
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 20px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--color-rule, #CBD5E1);
+    padding-bottom: 15px;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 .backLink {
     text-decoration: none;
-    color: #666;
-    font-weight: bold;
+    color: var(--color-accent, #003566);
+    font-weight: 600;
     font-size: 0.9rem;
 }
 
 .title {
-    font-size: 1.8rem;
-    color: #1e3a8a;
+    font-family: var(--font-display, 'Merriweather', Georgia, serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
     margin: 0;
 }
 
 .statusBadge {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.9rem;
+    padding: 6px 14px;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 700;
+    font-size: 0.82rem;
     background-color: #e0f2fe;
     color: #0284c7;
     text-transform: uppercase;
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    letter-spacing: 0.5px;
 }
 
 /* --- CONTROL PANEL --- */
 .controlPanel {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-top: 3px solid var(--color-accent, #003566);
+    border-radius: var(--radius-editorial, 4px);
     padding: 20px;
     margin-bottom: 30px;
     display: flex;
@@ -50,6 +59,7 @@
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
 }
 
 .controlGroup {
@@ -60,7 +70,8 @@
 .controlGroup h3 {
     margin: 0 0 10px 0;
     font-size: 1.1rem;
-    color: #0f172a;
+    font-weight: 700;
+    color: var(--color-ink, #0B132B);
 }
 
 .controlRow {
@@ -72,7 +83,7 @@
 
 .infoText {
     font-size: 0.95rem;
-    color: #475569;
+    color: var(--color-ink-muted, #475569);
 }
 
 .toggleGroup {
@@ -87,22 +98,25 @@
     font-size: 0.95rem;
     cursor: pointer;
     user-select: none;
+    color: var(--color-ink, #0B132B);
 }
 
 .actionButtons {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .startBtn {
     background-color: #16a34a;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: bold;
+    padding: 10px 18px;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
+    font-size: 0.9rem;
 }
 
 .startBtn:hover {
@@ -110,33 +124,35 @@
 }
 
 .finishBtn {
-    background-color: #dc2626;
+    background-color: var(--color-signal, #B91C1C);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: bold;
+    padding: 10px 18px;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
+    font-size: 0.9rem;
 }
 
 .finishBtn:hover {
-    background-color: #b91c1c;
+    background-color: #991b1b;
 }
 
 .distributeBtn {
-    background-color: #0ea5e9;
+    background-color: var(--color-accent, #003566);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: bold;
+    padding: 10px 18px;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
+    font-size: 0.9rem;
 }
 
 .distributeBtn:hover:not(:disabled) {
-    background-color: #0284c7;
+    background-color: var(--color-accent-hover, #002244);
 }
 
 .distributeBtn:disabled {
@@ -148,11 +164,12 @@
     background-color: #2563eb;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: bold;
+    padding: 10px 18px;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
+    font-size: 0.9rem;
 }
 
 .excelBtn:hover {
@@ -165,7 +182,7 @@
     border: 1px solid #fed7aa;
     color: #9a3412;
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: var(--radius-editorial, 4px);
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
@@ -195,8 +212,8 @@
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 4px;
-    font-weight: bold;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -205,46 +222,51 @@
 }
 
 .kickBtn {
-    background-color: #ef4444;
+    background-color: var(--color-signal, #B91C1C);
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 4px;
-    font-weight: bold;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     cursor: pointer;
 }
 
 .kickBtn:hover {
-    background-color: #b91c1c;
+    background-color: #991b1b;
 }
 
 /* --- TABLE --- */
 .tableContainer {
     overflow-x: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    background-color: white;
+    border-radius: var(--radius-editorial, 4px);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
+    background-color: var(--color-surface, #FFFFFF);
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
     min-width: 800px;
+    font-variant-numeric: tabular-nums;
 }
 
 .table th,
 .table td {
-    padding: 15px;
+    padding: 12px 16px;
     text-align: left;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--color-rule, #CBD5E1);
+    color: var(--color-ink, #0B132B);
 }
 
 .table th {
-    background-color: #f1f5f9;
-    font-weight: 600;
-    color: #475569;
+    background-color: var(--color-surface-subtle, #F1F5F9);
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-weight: 700;
+    color: var(--color-ink, #0B132B);
     text-transform: uppercase;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
 }
 
 .table tr:last-child td {
@@ -257,11 +279,12 @@
 
 .statusTag {
     display: inline-block;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: var(--radius-editorial, 4px);
+    font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
 }
 
 .statusTag.waiting {
@@ -281,18 +304,19 @@
 
 .statusTag.kicked {
     background-color: #fee2e2;
-    color: #dc2626;
+    color: var(--color-signal, #B91C1C);
 }
 
 .scoreCell {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink, #0B132B);
 }
 
 .empty {
     text-align: center;
-    color: #94a3b8;
+    color: var(--color-ink-muted, #475569);
     padding: 40px;
     font-style: italic;
 }

@@ -145,36 +145,6 @@
   transition: background 0.3s;
 }
 
-:global([data-theme='dark']) .headerTop {
-  background: #111827;
-  border-bottom-color: #1F2937;
-}
-
-:global([data-theme='modern']) .headerTop {
-  background: #0F172A;
-  border-bottom-color: #1E293B;
-}
-
-:global([data-theme='noel']) .headerTop {
-  background: rgba(30, 10, 10, 0.95);
-  border-bottom-color: rgba(255, 255, 255, 0.15);
-}
-
-:global([data-theme='classic']) .headerTop {
-  background: #FDF6E3;
-  border-bottom-color: #D4C5B0;
-}
-
-:global([data-theme='sunrise']) .headerTop {
-  background: #16213E;
-  border-bottom-color: #0F3460;
-}
-
-:global([data-theme='tri-an']) .headerTop {
-  background: #142B22;
-  border-bottom-color: #2D5A45;
-}
-
 .topContainer {
   max-width: 1400px;
   margin: 0 auto;
@@ -221,18 +191,6 @@
   letter-spacing: -0.01em;
 }
 
-:global([data-theme='dark']) .brandTitle,
-:global([data-theme='modern']) .brandTitle,
-:global([data-theme='noel']) .brandTitle,
-:global([data-theme='sunrise']) .brandTitle,
-:global([data-theme='tri-an']) .brandTitle {
-  color: #FFFFFF;
-}
-
-:global([data-theme='classic']) .brandTitle {
-  color: #5C4033;
-}
-
 .brandSubtitle {
   font-family: var(--font-sans, 'Be Vietnam Pro', system-ui, sans-serif);
   font-size: clamp(0.8rem, 1vw, 0.92rem);
@@ -242,21 +200,6 @@
   font-weight: 500;
 }
 
-:global([data-theme='dark']) .brandSubtitle,
-:global([data-theme='modern']) .brandSubtitle,
-:global([data-theme='sunrise']) .brandSubtitle,
-:global([data-theme='tri-an']) .brandSubtitle {
-  color: #94A3B8;
-}
-
-:global([data-theme='noel']) .brandSubtitle {
-  color: #CBD5E1;
-}
-
-:global([data-theme='classic']) .brandSubtitle {
-  color: #7C5E48;
-}
-
 /* === TẦNG 3: THANH MAIN NAV === */
 .mainNav {
   background: var(--color-accent, #003566);
@@ -264,30 +207,6 @@
   box-shadow: 0 2px 8px rgba(0, 53, 102, 0.15);
   position: relative;
   transition: background 0.3s;
-}
-
-:global([data-theme='dark']) .mainNav {
-  background: #1E293B;
-}
-
-:global([data-theme='modern']) .mainNav {
-  background: #312E81;
-}
-
-:global([data-theme='noel']) .mainNav {
-  background: #991B1B;
-}
-
-:global([data-theme='classic']) .mainNav {
-  background: #1D3557;
-}
-
-:global([data-theme='sunrise']) .mainNav {
-  background: #0F3460;
-}
-
-:global([data-theme='tri-an']) .mainNav {
-  background: #1A3A28;
 }
 
 .mainContainer {

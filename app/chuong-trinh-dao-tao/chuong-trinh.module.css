@@ -4,24 +4,26 @@
     max-width: 900px;
     margin: 2rem auto;
     padding: 2.5rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    background-color: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-rule, #e5e7eb);
+    border-radius: var(--radius-editorial, 4px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow-x: auto;
 }
 
 .title {
     font-size: 2rem;
     font-weight: 700;
-    color: #004a99;
+    color: var(--color-accent, #004a99);
     margin-bottom: 0.5rem;
     text-transform: uppercase;
 }
 
 .subtitle {
     font-size: 1.1rem;
-    color: #555;
+    color: var(--color-text-muted, #6b7280);
     margin-bottom: 2rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-rule, #e5e7eb);
     padding-bottom: 1rem;
     font-weight: 500;
 }
@@ -29,7 +31,7 @@
 .sectionTitle {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text, #1f2937);
     margin-top: 2.5rem;
     margin-bottom: 1rem;
 }
@@ -39,21 +41,23 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-rule, #e5e7eb);
+    font-variant-numeric: tabular-nums;
 }
 
 .table th,
 .table td {
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-rule, #e5e7eb);
     padding: 0.75rem 1rem;
     text-align: left;
     vertical-align: top;
+    color: var(--color-text, #1f2937);
 }
 
 .table th {
-    background-color: #f3f4f6;
+    background-color: #f8fafc;
     font-weight: 600;
-    color: #004a99;
+    color: var(--color-accent, #004a99);
 }
 
 /* (Căn cột STT và Thời gian) */
@@ -70,18 +74,21 @@
 
 .totalRow td {
     font-weight: 700;
-    background-color: #f3f4f6;
+    background-color: #f8fafc;
 }
 
 .backButton {
-    display: inline-block;
-    background-color: #004a99;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    background-color: var(--color-accent, #004a99);
     color: #ffffff;
     padding: 0.75rem 1.5rem;
-    border-radius: 5px;
+    border-radius: var(--radius-editorial, 4px);
     font-weight: 500;
     text-decoration: none;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s ease;
 }
 .backButton:hover {
     background-color: #003366;

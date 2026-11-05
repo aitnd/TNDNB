@@ -23,17 +23,22 @@
     /* --- Hallmark Editorial Tokens --- */
     --color-paper: #FAF9F6;
     --color-surface: #FFFFFF;
+    --color-surface-subtle: #F1F5F9;
     --color-ink: #0B132B;
     --color-ink-muted: #475569;
     --color-accent: #003566;
+    --color-accent-hover: #002244;
+    --color-gold: #D4AF37;
     --color-signal: #B91C1C;
     --color-rule: #CBD5E1;
+    --radius-editorial: 4px;
+    --shadow-soft: 0 1px 3px rgba(11, 19, 43, 0.05);
+
     --font-display: 'Merriweather', Georgia, serif;
     --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', Consolas, monospace;
-    --radius-editorial: 4px;
 
-    /* --- 1. Giao diện Sáng (Light) - Blue & Gold Premium --- */
+    /* --- Canonical Theme Compatibility Tokens --- */
     --bg-body: var(--color-paper);
     --bg-header: var(--color-surface);
     --text-header: var(--color-ink);
@@ -42,53 +47,15 @@
     --bg-footer: #0a1e3b;
     --text-footer: #f1f5f9;
     --mau-chinh: var(--color-accent);
-    --mau-phu: #d4af37;          /* Gold */
-    --mau-nen-phu: #f1f5f9;
+    --mau-phu: var(--color-gold);
+    --mau-nen-phu: var(--color-surface-subtle);
     --border-color: var(--color-rule);
-    --shadow-soft: 0 1px 3px rgba(11, 19, 43, 0.05);
     --radius-premium: 4px;
-}
-
-[data-theme='dark'] {
-    /* --- 2. Giao diện Tối (Dark) --- */
-    --bg-body: #111827;
-    --bg-header: #1f2937;
-    --text-header: #ffffff;
-    --text-main: #f3f4f6;
-    --text-link: #60a5fa;
-    --bg-footer: #0f172a;
-    --text-footer: #9ca3af;
-    --mau-chinh: #60a5fa;
-    --mau-nen-phu: #374151;
-    --border-color: #374151;
-}
-
-/* ... (Các phần trên giữ nguyên) ... */
-
-[data-theme='noel'] {
-    /* --- 3. Giao diện NOEL (Mới - Dùng ảnh nền) --- */
-    --christmas-red: #DA2535;
-    
-    /* 🔥 THAY ĐỔI Ở ĐÂY: Dùng ảnh nền thay cho gradient */
-    /* Anh thay 'noel-bg.jpg' bằng đúng tên file ảnh anh đã lưu nhé */
-    --bg-body: url('/assets/img/noel-bg.jpg') no-repeat center center fixed;
-    
-    /* Vì ảnh nền có thể sáng hoặc tối, mình nên để header bán trong suốt màu tối để dễ đọc chữ */
-    --bg-header: rgba(30, 10, 10, 0.85); 
-    --text-header: #ffffff;
-    --text-main: #e0e0e0;       /* Chữ nội dung màu sáng */
-    --text-link: #ff8fa3;       /* Link màu hồng/đỏ nổi bật */
-    --bg-footer: rgba(30, 10, 10, 0.9); /* Footer cũng bán trong suốt */
-    --text-footer: #cccccc;
-    --mau-chinh: #ff4757;
-    --mau-nen-phu: rgba(255, 255, 255, 0.1);
-    --border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* === PHẦN 3: STYLE CƠ BẢN === */
 body {
     background: var(--bg-body);
-    background-size: cover; 
     color: var(--text-main);
     font-family: 'Be Vietnam Pro', sans-serif;
     margin: 0; padding: 0;
@@ -105,9 +72,6 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-header);
 }
 
-/* ... (Các phần dưới giữ nguyên) ... */
-
-
 a {
     color: var(--text-link);
     text-decoration: none;
@@ -115,13 +79,13 @@ a {
 }
 a:hover {
     text-decoration: underline;
-    filter: brightness(1.2); /* Sáng lên khi hover */
+    filter: brightness(1.2);
 }
 
 /* Scrollbar đẹp hơn */
 ::-webkit-scrollbar {
     width: 0.6rem;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.06);
 }
 ::-webkit-scrollbar-thumb {
     background: var(--mau-chinh);
@@ -132,354 +96,12 @@ a:hover {
 .post-content h1, .post-content h2, .post-content h3 {
     color: var(--mau-chinh);
 }
-[data-theme='noel'] .post-content h1, 
-[data-theme='noel'] .post-content h2 {
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Thêm bóng chữ cho nổi */
-}
-
-/* === PHẦN 4: ẢNH TRANG TRÍ (CHỈ HIỆN Ở THEME NOEL) === */
-.decor-img {
-    display: none; 
-    position: absolute;
-    pointer-events: none; 
-    z-index: 10;
-}
-[data-theme='noel'] .decor-img { display: block; }
-
-/* Dây đèn */
-.decor-nav-corner {
-    top: 0; right: 0;
-    width: 140px; height: auto;
-    z-index: 101;
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); /* Hiệu ứng phát sáng */
-}
-
-/* Footer Decor */
-.decor-footer-left {
-    bottom: 0; left: 0; width: 150px;
-    animation: swing 3s infinite ease-in-out;
-}
-.decor-footer-right {
-    bottom: 20px; right: -10px; width: 120px;
-    transform: rotate(10deg);
-}
-
-/* === THEME CỔ ĐIỂN (Classic) === */
-[data-theme='classic'] {
-    --font-sans: 'Playfair Display', serif;
-
-    --background: 39 52% 95%; /* beige-50 */
-    --foreground: 39 33% 20%; /* dark brown */
-    
-    --card: 40 71% 98%; /* lighter beige */
-    --card-foreground: 39 33% 20%;
-    
-    --popover: 39 52% 95%;
-    --popover-foreground: 39 33% 20%;
-    
-    --primary: 221 39% 28%; /* navy */
-    --primary-foreground: 39 52% 95%;
-    
-    --secondary: 39 33% 85%;
-    --secondary-foreground: 39 33% 20%;
-
-    --muted: 39 33% 90%;
-    --muted-foreground: 39 33% 40%;
-    
-    --accent: 39 33% 85%;
-    --accent-foreground: 39 33% 20%;
-    
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
-    
-    --border: 39 33% 80%;
-    --input: 39 33% 80%;
-    --ring: 221 39% 28%;
-
-    --gradient-from: #fdf6e3;
-    --gradient-to: #f0e6d2;
-    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-
-    /* Colors for old CSS vars compatibility */
-    --bg-body: #fdf6e3;
-    --bg-header: #fdf6e3;
-    --text-header: #5c4033;
-    --text-main: #4a3728;
-    --text-link: #1d3557;
-    --bg-footer: #e6dfd1;
-    --text-footer: #5c4033;
-    --mau-chinh: #1d3557;
-    --mau-nen-phu: #e6dfd1;
-    --border-color: #d4c5b0;
-}
-
-/* === THEME HIỆN ĐẠI (Modern) === */
-[data-theme='modern'] {
-    --font-sans: 'Be Vietnam Pro', sans-serif;
-    
-    --background: 222 84% 9.8%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 84% 12.0%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 84% 9.8%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 243 75% 58%;
-    --primary-foreground: 210 40% 98%;
-    
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 213 31% 91%;
-    
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    
-    --success: 142 76% 36%;
-    --success-foreground: 142 100% 96%;
-
-    --border: 217 33% 27%;
-    --input: 217 33% 27%;
-    --ring: 243 75% 58%;
-    
-    --radius: 0.75rem;
-
-    --gradient-from: #111827;
-    --gradient-to: #1f2937;
-    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-
-    /* Colors for old CSS vars compatibility */
-    --bg-body: #0f172a;
-    --bg-header: #1e293b;
-    --text-header: #f8fafc;
-    --text-main: #cbd5e1;
-    --text-link: #818cf8;
-    --bg-footer: #020617;
-    --text-footer: #94a3b8;
-    --mau-chinh: #6366f1;
-    --mau-nen-phu: #1e293b;
-    --border-color: #334155;
-}
-
-/* === THEME BÌNH MINH (Sunrise) === */
-[data-theme='sunrise'] {
-    --font-sans: 'Nunito', sans-serif;
-
-    --background: 220 13% 11%;
-    --foreground: 210 20% 98%;
-
-    --card: 215 19% 15%;
-    --card-foreground: 210 20% 98%;
-
-    --popover: 220 13% 11%;
-    --popover-foreground: 210 20% 98%;
-
-    --primary: 13 96% 56%; /* orange */
-    --primary-foreground: 13 100% 96%;
-
-    --secondary: 215 19% 25%;
-    --secondary-foreground: 210 20% 98%;
-
-    --muted: 215 19% 25%;
-    --muted-foreground: 210 20% 70%;
-    
-    --accent: 215 19% 25%;
-    --accent-foreground: 210 20% 98%;
-    
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
-    
-    --border: 215 19% 30%;
-    --input: 215 19% 30%;
-    --ring: 13 96% 56%;
-
-    --gradient-from: #0d1b2a;
-    --gradient-to: #1b263b;
-    --gradient-body: linear-gradient(160deg, #FF8C42 0%, #FF3C83 35%, #6C47FF 70%, #0396FF 100%);
-
-    /* Colors for old CSS vars compatibility */
-    --bg-body: #1a1a2e;
-    --bg-header: #16213e;
-    --text-header: #fff;
-    --text-main: #eaeaea;
-    --text-link: #ff2a6d;
-    --bg-footer: #0f3460;
-    --text-footer: #ccc;
-    --mau-chinh: #ff2a6d;
-    --mau-nen-phu: #16213e;
-    --border-color: #0f3460;
-}
-
-/* === THEME TRI ÂN (Tri-an) === */
-[data-theme='tri-an'] {
-    --font-sans: 'Nunito', sans-serif;
-    
-    --background: 160 34% 26%; /* chalkboard green */
-    --foreground: 150 8% 95%; /* chalk white */
-
-    --card: 160 34% 30%;
-    --card-foreground: 150 8% 95%;
-
-    --popover: 160 34% 22%;
-    --popover-foreground: 150 8% 95%;
-
-    --primary: 0 63% 67%; /* chalk red */
-    --primary-foreground: 0 0% 98%;
-    
-    --secondary: 160 34% 35%;
-    --secondary-foreground: 150 8% 95%;
-
-    --muted: 160 34% 35%;
-    --muted-foreground: 150 8% 80%;
-    
-    --accent: 160 34% 40%;
-    --accent-foreground: 150 8% 98%;
-
-    --destructive: 0 50% 55%;
-    --destructive-foreground: 0 0% 98%;
-    
-    --success: 130 50% 60%;
-    --success-foreground: 130 100% 96%;
-
-    --border: 150 8% 85%; /* chalk border */
-    --input: 160 34% 28%;
-    --ring: 0 63% 67%;
-    
-    --radius: 0.75rem;
-
-    --gradient-from: hsl(160 34% 22%);
-    --gradient-to: hsl(160 34% 26%);
-    --gradient-body: linear-gradient(to bottom right, var(--gradient-from), var(--gradient-to));
-
-    /* Colors for old CSS vars compatibility */
-    --bg-body: #1e3d2f;
-    --bg-header: #142b22;
-    --text-header: #fff;
-    --text-main: #eaeaea;
-    --text-link: #ff9f1c;
-    --bg-footer: #11241c;
-    --text-footer: #ccc;
-    --mau-chinh: #ff9f1c;
-    --mau-nen-phu: #2d5a45;
-    --border-color: #4b7a63;
-}
-
-
-/* === PHẦN 5: HIỆU ỨNG TUYẾT & QUÀ RƠI === */
-.snowflakes {
-    display: none;
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-}
-[data-theme='noel'] .snowflakes { display: block; }
-
-.snowflake {
-    color: #fff;
-    font-size: 1.2em;
-    font-family: Arial, sans-serif;
-    text-shadow: 0 0 3px rgba(255,255,255,0.8); /* Tuyết phát sáng nhẹ */
-    position: fixed;
-    top: -10%;
-    z-index: 9999;
-    user-select: none;
-    cursor: default;
-    animation-name: snowflakes-fall, snowflakes-shake;
-    animation-timing-function: linear, ease-in-out;
-    animation-iteration-count: infinite, infinite;
-    animation-play-state: running, running;
-}
-
-.snowflake-img img {
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-    width: 30px; 
-    height: auto;
-    opacity: 0.9;
-}
-
-@keyframes snowflakes-fall {
-    0% { top: -10%; }
-    100% { top: 100%; }
-}
-@keyframes snowflakes-shake {
-    0% { transform: translateX(0px) rotate(0deg); }
-    50% { transform: translateX(80px) rotate(180deg); }
-    100% { transform: translateX(0px) rotate(360deg); }
-}
-
-/* Cấu hình rơi ngẫu nhiên (Giữ nguyên logic cũ) */
-.snowflake:nth-of-type(1) { left: 1%; animation-duration: 12s, 4s; animation-delay: 0s, 0s; }
-.snowflake:nth-of-type(2) { left: 5%; animation-duration: 15s, 6s; animation-delay: 1s, 1s; }
-.snowflake:nth-of-type(3) { left: 10%; animation-duration: 10s, 3s; animation-delay: 2s, 0.5s; }
-.snowflake:nth-of-type(4) { left: 15%; animation-duration: 18s, 5s; animation-delay: 4s, 2s; }
-.snowflake:nth-of-type(5) { left: 20%; animation-duration: 11s, 4s; animation-delay: 2s, 2s; }
-.snowflake:nth-of-type(6) { left: 25%; animation-duration: 14s, 7s; animation-delay: 6s, 3s; }
-.snowflake:nth-of-type(7) { left: 30%; animation-duration: 16s, 5s; animation-delay: 3s, 2s; }
-.snowflake:nth-of-type(8) { left: 35%; animation-duration: 13s, 4s; animation-delay: 1s, 1s; }
-.snowflake:nth-of-type(9) { left: 40%; animation-duration: 17s, 6s; animation-delay: 0s, 0s; }
-.snowflake:nth-of-type(10) { left: 45%; animation-duration: 9s, 3s; animation-delay: 5s, 1.5s; }
-.snowflake:nth-of-type(11) { left: 50%; animation-duration: 14s, 5s; animation-delay: 2s, 3s; }
-.snowflake:nth-of-type(12) { left: 55%; animation-duration: 11s, 4s; animation-delay: 4s, 1s; }
-.snowflake:nth-of-type(13) { left: 60%; animation-duration: 19s, 7s; animation-delay: 1s, 2s; }
-.snowflake:nth-of-type(14) { left: 65%; animation-duration: 12s, 3s; animation-delay: 3s, 0s; }
-.snowflake:nth-of-type(15) { left: 70%; animation-duration: 15s, 6s; animation-delay: 5s, 4s; }
-.snowflake:nth-of-type(16) { left: 75%; animation-duration: 10s, 4s; animation-delay: 0s, 2s; }
-.snowflake:nth-of-type(17) { left: 80%; animation-duration: 16s, 5s; animation-delay: 2s, 1s; }
-.snowflake:nth-of-type(18) { left: 85%; animation-duration: 13s, 4s; animation-delay: 4s, 3s; }
-.snowflake:nth-of-type(19) { left: 90%; animation-duration: 18s, 6s; animation-delay: 1s, 2s; }
-.snowflake:nth-of-type(20) { left: 95%; animation-duration: 11s, 3s; animation-delay: 3s, 0s; }
-/* ... (Các dòng cấu hình random khác vẫn giữ nguyên như cũ để tuyết rơi đẹp) ... */
-.snowflake:nth-of-type(21) { left: 2%; animation-duration: 13s, 5s; animation-delay: 5s, 1s; }
-.snowflake:nth-of-type(22) { left: 8%; animation-duration: 10s, 3s; animation-delay: 2s, 4s; }
-.snowflake:nth-of-type(23) { left: 12%; animation-duration: 16s, 6s; animation-delay: 1s, 2s; }
-.snowflake:nth-of-type(24) { left: 18%; animation-duration: 12s, 4s; animation-delay: 6s, 0s; }
-.snowflake:nth-of-type(25) { left: 22%; animation-duration: 14s, 5s; animation-delay: 0s, 3s; }
-.snowflake:nth-of-type(26) { left: 28%; animation-duration: 11s, 3s; animation-delay: 4s, 2s; }
-.snowflake:nth-of-type(27) { left: 32%; animation-duration: 19s, 7s; animation-delay: 2s, 1s; }
-.snowflake:nth-of-type(28) { left: 38%; animation-duration: 15s, 6s; animation-delay: 5s, 5s; }
-.snowflake:nth-of-type(29) { left: 42%; animation-duration: 12s, 4s; animation-delay: 1s, 0s; }
-.snowflake:nth-of-type(30) { left: 48%; animation-duration: 17s, 5s; animation-delay: 3s, 2s; }
-.snowflake:nth-of-type(31) { left: 52%; animation-duration: 9s, 3s; animation-delay: 0s, 3s; }
-.snowflake:nth-of-type(32) { left: 58%; animation-duration: 14s, 6s; animation-delay: 4s, 1s; }
-.snowflake:nth-of-type(33) { left: 62%; animation-duration: 11s, 4s; animation-delay: 2s, 4s; }
-.snowflake:nth-of-type(34) { left: 68%; animation-duration: 16s, 5s; animation-delay: 6s, 0s; }
-.snowflake:nth-of-type(35) { left: 72%; animation-duration: 13s, 3s; animation-delay: 1s, 2s; }
-.snowflake:nth-of-type(36) { left: 78%; animation-duration: 18s, 7s; animation-delay: 5s, 1s; }
-.snowflake:nth-of-type(37) { left: 82%; animation-duration: 10s, 4s; animation-delay: 2s, 3s; }
-.snowflake:nth-of-type(38) { left: 88%; animation-duration: 15s, 6s; animation-delay: 4s, 0s; }
-.snowflake:nth-of-type(39) { left: 92%; animation-duration: 12s, 5s; animation-delay: 0s, 2s; }
-.snowflake:nth-of-type(40) { left: 98%; animation-duration: 17s, 4s; animation-delay: 3s, 5s; }
-
-.snowflake:nth-child(odd) { animation-direction: normal; }
-.snowflake:nth-child(even) { animation-direction: alternate; }
-
-@media (max-width: 768px) {
-    .snowflake { font-size: 1em; }
-    .snowflake-img img { width: 20px; }
-}
 
 /* === CAPACITOR MOBILE APP STYLES === */
 
-/* 1. Ẩn Header, Footer, Music, Snowflakes KHI LÀ APP */
-body.is-mobile-app nav,         /* Ẩn Navbar trên */
-body.is-mobile-app footer,      /* Ẩn Footer dưới */
-body.is-mobile-app .music-player, /* Ẩn nhạc */
-body.is-mobile-app .snowflakes    /* Ẩn tuyết rơi */
-{
+/* 1. Ẩn Header, Footer KHI LÀ APP */
+body.is-mobile-app nav,
+body.is-mobile-app footer {
     display: none !important;
 }
 

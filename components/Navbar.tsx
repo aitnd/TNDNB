@@ -1,10 +1,8 @@
 'use client'
 
-import ThemeSwitcher from './ThemeSwitcher'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '../context/AuthContext'
-import { useTheme } from '../context/ThemeContext'
 import { auth } from '../utils/firebaseClient'
 import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
@@ -14,7 +12,6 @@ import styles from './Navbar.module.css'
 
 export default function Navbar() {
   const { user } = useAuth()
-  const { theme } = useTheme()
   const router = useRouter()
 
   const handleLogout = async () => {
@@ -28,17 +25,6 @@ export default function Navbar() {
 
   return (
     <header className={styles.editorialHeader}>
-      {/* 🎄 ẢNH TRANG TRÍ (Chỉ hiện khi Theme Noel) 🎄 */}
-      {theme === 'noel' && (
-        <Image
-          src="/assets/img/nav-light.png"
-          alt=""
-          width={120}
-          height={60}
-          style={{ position: 'absolute', top: '60px', right: 0, pointerEvents: 'none', zIndex: 60 }}
-        />
-      )}
-
       {/* === TẦNG 1: TOP INSTITUTIONAL META BAR (N6 Masthead) === */}
       <div className={styles.mastheadMetaBar}>
         <div className={styles.metaContainer}>
@@ -55,7 +41,6 @@ export default function Navbar() {
           </div>
 
           <div className={styles.metaRight}>
-            <ThemeSwitcher />
             {user ? (
               <div className={styles.userActions}>
                 <span className={styles.welcomeText}>{user.fullName}</span>
@@ -68,7 +53,7 @@ export default function Navbar() {
               </div>
             ) : (
               <Link href="/login" className={styles.loginBtn}>
-                Đăng nhập cán bộ
+                Đăng nhập
               </Link>
             )}
           </div>

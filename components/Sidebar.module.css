@@ -25,11 +25,6 @@
     letter-spacing: -0.01em;
 }
 
-:global([data-theme='dark']) .sidebarTitle {
-    color: #F8FAFC;
-    border-bottom-color: #F8FAFC;
-}
-
 /* (Hộp Widget chung) */
 .widgetBox {
     background-color: var(--color-surface, #FFFFFF);
@@ -38,11 +33,6 @@
     border: 1px solid var(--border-color, #E2E8F0);
     box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);
     overflow: hidden;
-}
-
-:global([data-theme='dark']) .widgetBox {
-    background-color: #1E293B;
-    border-color: #334155;
 }
 
 /* === LIST LINK === */
@@ -56,10 +46,6 @@
     margin-bottom: 0.65rem;
     border-bottom: 1px solid var(--border-color, #E2E8F0);
     padding-bottom: 0.65rem;
-}
-
-:global([data-theme='dark']) .linkList li {
-    border-bottom-color: #334155;
 }
 
 .linkList li:last-child {
@@ -80,16 +66,8 @@
     line-height: 1.45;
 }
 
-:global([data-theme='dark']) .linkList a {
-    color: #CBD5E1;
-}
-
 .linkList a:hover {
     color: var(--color-accent, #003566);
-}
-
-:global([data-theme='dark']) .linkList a:hover {
-    color: #60A5FA;
 }
 
 /* Icon trong list */
@@ -100,10 +78,6 @@
     text-align: center;
     margin-top: 3px;
     flex-shrink: 0;
-}
-
-:global([data-theme='dark']) .linkList i {
-    color: #60A5FA;
 }
 
 /* === MEDIA PREVIEW & FILES === */
@@ -140,10 +114,6 @@
 
 .viewAllButton:hover {
     text-decoration: underline;
-}
-
-:global([data-theme='dark']) .viewAllButton {
-    color: #60A5FA;
 }
 
 .emptyMessage {

@@ -47,7 +47,7 @@
 /* (Style cho "Trạng thái" - 'pill') */
 .pill {
     padding: 0.25rem 0.75rem;
-    border-radius: 99px; 
+    border-radius: var(--radius-editorial, 4px); 
     font-size: 0.875rem;
     font-weight: 500;
     white-space: nowrap;

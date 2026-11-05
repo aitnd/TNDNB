@@ -1,10 +1,10 @@
 .footer {
-  background-color: var(--mau-chinh);
+  background-color: var(--color-ink, #0B132B);
   color: rgba(255, 255, 255, 0.8);
   padding: 60px 0 30px;
   margin-top: 5rem;
-  border-top: 4px solid var(--mau-phu);
-  font-family: 'Be Vietnam Pro', sans-serif;
+  border-top: 4px solid var(--color-gold, #D4AF37);
+  font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
 }
 
 .container {
@@ -17,10 +17,12 @@
 }
 
 .col h3 {
-  color: var(--christmas-title); /* Tiêu đề footer màu trắng sáng */
+  color: #FFFFFF;
   margin-bottom: 20px;
   font-size: 1.1rem;
-  border-bottom: 2px solid var(--mau-chinh);
+  font-family: var(--font-display, 'Merriweather', serif);
+  font-style: normal;
+  border-bottom: 2px solid var(--color-gold, #D4AF37);
   display: inline-block;
   padding-bottom: 5px;
 }
@@ -35,12 +37,12 @@
 }
 
 .col ul li a {
-  color: var(--text-footer);
+  color: var(--text-footer, #f1f5f9);
   transition: color 0.2s;
 }
 
 .col ul li a:hover {
-  color: var(--mau-chinh);
+  color: var(--color-gold, #D4AF37);
   padding-left: 5px;
 }
 
@@ -51,11 +53,11 @@
 }
 
 .socialLinks a {
-  color: var(--text-footer);
+  color: var(--text-footer, #f1f5f9);
   font-size: 1.2rem;
 }
 .socialLinks a:hover {
-  color: var(--mau-chinh);
+  color: var(--color-gold, #D4AF37);
 }
 
 .copyright {

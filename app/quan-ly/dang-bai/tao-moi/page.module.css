@@ -1,35 +1,40 @@
-/* === Trang điểm cho Trang Admin === */
-/* (Đây là code cũ của app/admin/page.module.css) */
+/* === Trang Tạo Mới Bài Viết (Hallmark Editorial) === */
 
 .container {
     min-height: 80vh;
-    padding: 2rem;
-    background-color: #f3f4f6; /* Nền xám nhạt */
+    padding: 2.5rem 1rem;
+    background-color: var(--color-paper, #FAF9F6);
 }
 
 .wrapper {
-    max-width: 900px; /* Rộng hơn trang Login */
+    max-width: 900px;
     margin: 0 auto;
 }
 
 .title {
-    font-size: 2rem;
+    font-family: var(--font-display, 'Merriweather', Georgia, serif);
+    font-size: 1.85rem;
     font-weight: 700;
-    color: #004a99;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
     margin-bottom: 1.5rem;
 }
 
 .formBox {
-    background-color: #ffffff;
+    background-color: var(--color-surface, #FFFFFF);
     padding: 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: var(--radius-editorial, 4px);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-top: 3px solid var(--color-accent, #003566);
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
 }
 
 .formTitle {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #333;
+    font-family: var(--font-display, 'Merriweather', serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
     margin-bottom: 1.5rem;
 }
 
@@ -46,82 +51,91 @@
 
 .label {
     margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #333;
+    font-weight: 600;
+    color: var(--color-ink, #0B132B);
+    font-size: 0.92rem;
 }
 
 .input,
 .select {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-radius: var(--radius-editorial, 4px);
+    font-size: 0.95rem;
+    color: var(--color-ink, #0B132B);
+    background-color: var(--color-surface, #FFFFFF);
     box-sizing: border-box; 
+    transition: border-color 0.2s;
 }
 
-/* 💖 CSS MỚI CHO Ô UPLOAD FILE 💖 */
+.input:focus,
+.select:focus {
+    outline: none;
+    border-color: var(--color-accent, #003566);
+    box-shadow: 0 0 0 3px rgba(0, 53, 102, 0.12);
+}
+
 .fileInput {
   padding: 0;
   border: none;
 }
 .fileInput::file-selector-button {
-  background-color: #e5e7eb;
-  color: #374151;
-  border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 5px;
-  font-weight: 500;
+  background-color: var(--color-surface-subtle, #F1F5F9);
+  color: var(--color-ink, #0B132B);
+  border: 1px solid var(--color-rule, #CBD5E1);
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-editorial, 4px);
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
   margin-right: 1rem;
 }
 .fileInput::file-selector-button:hover {
-  background-color: #d1d5db;
+  background-color: #E2E8F0;
 }
 
-/* 💖 CSS NÂNG CẤP CHO ẢNH XEM TRƯỚC + NÚT XÓA 💖 */
 .thumbnailPreviewContainer {
-  position: relative; /* (Để định vị nút Xóa) */
-  display: inline-block; /* (Để nó không chiếm 100% chiều rộng) */
+  position: relative;
+  display: inline-block;
   margin-top: 1rem;
 }
 
 .thumbnailPreview {
   max-width: 300px;
   height: auto;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  display: block; /* (Quan trọng để container nhận đúng kích thước) */
+  border-radius: var(--radius-editorial, 4px);
+  border: 1px solid var(--color-rule, #CBD5E1);
+  display: block;
 }
 
 .buttonRemove {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background-color: #d9534f; /* (Màu đỏ) */
+  background-color: var(--color-signal, #B91C1C);
   color: white;
-  border: 2px solid white; /* (Thêm viền trắng cho nổi) */
-  border-radius: 50%; /* (Cho nó tròn) */
+  border: 2px solid white;
+  border-radius: 50%;
   width: 30px;
   height: 30px;
   font-size: 1.2rem;
   font-weight: bold;
-  line-height: 26px; /* (Căn chữ X vào giữa) */
+  line-height: 26px;
   cursor: pointer;
-  opacity: 0.8;
-  transition: all 0.3s;
+  opacity: 0.9;
+  transition: all 0.2s;
 }
 
 .buttonRemove:hover {
   opacity: 1;
-  transform: scale(1.1); /* (Phóng to xíu) */
+  transform: scale(1.1);
 }
-
 
 .input:disabled,
 .select:disabled {
-    background-color: #f3f4f6;
+    background-color: var(--color-surface-subtle, #F1F5F9);
     cursor: not-allowed;
 }
 
@@ -142,18 +156,19 @@
 }
 
 .button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    border-radius: 5px;
+    border-radius: var(--radius-editorial, 4px);
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
-    background-color: #004a99;
+    transition: background-color 0.2s;
+    background-color: var(--color-accent, #003566);
     color: white;
+    min-height: 44px;
 }
 .button:hover {
-    background-color: #003366;
+    background-color: var(--color-accent-hover, #002244);
 }
 .button:disabled {
     opacity: 0.5;
@@ -163,25 +178,25 @@
 .error,
 .success {
     margin: 1rem 0;
-    padding: 0.75rem;
-    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-editorial, 4px);
     text-align: center;
+    font-size: 0.9rem;
 }
 
 .error {
     background-color: #fde8e8;
-    color: #9b2c2c;
-    border: 1px solid #f9bdbb;
+    color: var(--color-signal, #B91C1C);
+    border: 1px solid #fecaca;
 }
 
 .success {
-    background-color: #e6f7ec;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
 }
 
-
-/* === (CSS CHO TỆP ĐÍNH KÈM) === */
+/* === CSS CHO TỆP ĐÍNH KÈM === */
 .attachmentList {
   list-style: none;
   padding: 0;
@@ -194,18 +209,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f3f4f6;
-  border: 1px solid #e5e7eb;
+  background-color: var(--color-surface-subtle, #F1F5F9);
+  border: 1px solid var(--color-rule, #CBD5E1);
   padding: 0.75rem 1rem;
-  border-radius: 5px;
+  border-radius: var(--radius-editorial, 4px);
 }
 .attachmentIcon {
   margin-right: 0.75rem;
-  color: #555;
+  color: var(--color-accent, #003566);
 }
 .attachmentName {
   font-weight: 500;
-  color: #333;
+  color: var(--color-ink, #0B132B);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -213,12 +228,12 @@
 }
 .attachmentSize {
   font-size: 0.85rem;
-  color: #777;
+  color: var(--color-ink-muted, #475569);
   margin-left: 1rem;
   white-space: nowrap; 
 }
 .attachmentRemoveButton {
-  background-color: #ef4444; 
+  background-color: var(--color-signal, #B91C1C); 
   color: white;
   border: none;
   border-radius: 50%;
@@ -229,33 +244,30 @@
   line-height: 24px;
   cursor: pointer;
   margin-left: 1rem;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
 }
 .attachmentRemoveButton:hover {
-  background-color: #dc2626;
+  background-color: #991b1b;
 }
 
-/* (Icon quay tròn khi đang tải tệp) */
 .uploadSpinner {
   width: 16px;
   height: 16px;
-  border: 2px solid #004a99;
+  border: 2px solid var(--color-accent, #003566);
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-left: 0.5rem;
 }
 
-/* (Định nghĩa @keyframes spin) */
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* === 💖 CSS MỚI CHO TINYMCE LOADING 💖 === */
 .editorWrapper {
   position: relative;
-  min-height: 300px; /* (Bằng chiều cao của editor) */
+  min-height: 300px;
 }
 
 .editorLoadingPlaceholder {
@@ -263,12 +275,12 @@
   align-items: center;
   justify-content: center;
   position: absolute;
-  inset: 0; /* (Phủ kín) */
-  background-color: #f3f4f6;
-  border: 1px dashed #ddd;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  color: #777;
+  inset: 0;
+  background-color: var(--color-surface-subtle, #F1F5F9);
+  border: 1px dashed var(--color-rule, #CBD5E1);
+  border-radius: var(--radius-editorial, 4px);
+  font-size: 1.05rem;
+  color: var(--color-ink-muted, #475569);
   font-style: italic;
   z-index: 10;
 }

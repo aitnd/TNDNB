@@ -1,20 +1,21 @@
 /* === Trang điểm cho Trang Thư viện === */
 
 .container {
-    max-width: 1100px; /* (Cho trang này rộng hơn trang đọc bài) */
+    max-width: 1100px;
     margin: 2rem auto;
     padding: 2.5rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    background-color: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-rule, #e5e7eb);
+    border-radius: var(--radius-editorial, 4px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .title {
     font-size: 2rem;
     font-weight: 700;
-    color: #004a99;
+    color: var(--color-accent, #004a99);
     margin-bottom: 2rem;
-    border-bottom: 2px solid #e6f0ff;
+    border-bottom: 2px solid var(--color-rule, #e6f0ff);
     padding-bottom: 1rem;
 }
 
@@ -25,11 +26,11 @@
 }
 
 .albumBox {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-rule, #e5e7eb);
     padding-bottom: 1.5rem;
 }
 
-/* 💖 CSS MỚI: Bọc Tiêu đề và Nút Xóa Album 💖 */
+/* Bọc Tiêu đề và Nút Xóa Album */
 .albumHeader {
     display: flex;
     justify-content: space-between;
@@ -40,112 +41,113 @@
 .albumTitle a {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text, #1f2937);
     text-decoration: none;
-    transition: color 0.3s;
+    transition: color 0.2s ease;
 }
 .albumTitle a:hover {
-    color: #004a99;
+    color: var(--color-accent, #004a99);
     text-decoration: underline;
 }
 
 .albumTitle span {
     font-size: 1rem;
     font-weight: 400;
-    color: #777;
+    color: var(--color-text-muted, #6b7280);
     margin-left: 0.5rem;
 }
 
-/* 💖 CSS MỚI: Nút Xóa Album 💖 */
+/* Nút Xóa Album */
 .albumDeleteButton {
-    background-color: #fef2f2; /* (Màu nền đỏ nhạt) */
-    color: #dc2626; /* (Màu chữ đỏ đậm) */
+    background-color: #fef2f2;
+    color: var(--color-signal, #dc2626);
     border: 1px solid #fecaca;
     padding: 0.5rem 1rem;
-    border-radius: 5px;
+    min-height: 44px;
+    border-radius: var(--radius-editorial, 4px);
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
-    white-space: nowrap; /* (Không xuống dòng) */
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 .albumDeleteButton:hover {
-    background-color: #dc2626;
-    color: white;
+    background-color: var(--color-signal, #dc2626);
+    color: #ffffff;
 }
 .albumDeleteButton i {
     margin-right: 0.5rem;
 }
 
-
-/* (Lưới chứa ảnh) */
+/* Lưới chứa ảnh */
 .mediaGrid {
     display: grid;
-    /* (Tự động chia cột, mỗi cột ít nhất 150px) */
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 1rem;
     margin-top: 1rem;
 }
 
-/* 💖 CSS MỚI: Bọc cái ảnh lại 💖 */
+/* Bọc ảnh */
 .mediaItemContainer {
-    position: relative; /* (Để định vị nút xóa) */
-    border-radius: 5px;
+    position: relative;
+    border-radius: var(--radius-editorial, 4px);
     overflow: hidden;
-    border: 1px solid #ddd;
-    aspect-ratio: 1 / 1; /* (Cho nó vuông vức) */
+    border: 1px solid var(--color-rule, #e5e7eb);
+    aspect-ratio: 1 / 1;
 }
 
 .mediaItem img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* (Ảnh sẽ tự zoom cho vừa khung) */
+    object-fit: cover;
     transition: transform 0.3s ease;
 }
 
 .mediaItem a:hover img {
-    transform: scale(1.05); /* (Phóng to xíu khi hover) */
+    transform: scale(1.05);
 }
 
-/* 💖 CSS MỚI: Lớp mờ và Nút Xóa Ảnh 💖 */
+/* Lớp mờ và Nút Xóa Ảnh */
 .mediaItemOverlay {
     position: absolute;
-    inset: 0; /* (Phủ kín) */
+    inset: 0;
     background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0; /* (Mặc định ẩn) */
-    transition: opacity 0.3s;
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 .mediaItemContainer:hover .mediaItemOverlay {
-    opacity: 1; /* (Hiện ra khi hover) */
+    opacity: 1;
 }
 
 .mediaDeleteButton {
-    background-color: #ef4444; /* (Màu đỏ) */
-    color: white;
+    background-color: var(--color-signal, #dc2626);
+    color: #ffffff;
     border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    border-radius: var(--radius-editorial, 4px);
+    min-width: 44px;
+    min-height: 44px;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s ease;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 .mediaDeleteButton:hover {
-    background-color: #dc2626;
-    transform: scale(1.1);
+    background-color: #b91c1c;
+    transform: scale(1.05);
 }
-
 
 .emptyMessage {
     font-size: 1.1rem;
-    color: #555;
+    color: var(--color-text-muted, #6b7280);
     text-align: center;
     padding: 3rem 0;
 }

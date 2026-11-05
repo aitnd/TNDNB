@@ -1,16 +1,15 @@
-/* === Trang điểm cho Trang Quản lý Tài khoản === */
-/* (Mình mượn tạm style của 'tai-khoan' cho trang 'dang-bai' luôn) */
+/* === Quản lý Bài viết (Hallmark Editorial) === */
 
 .container {
     min-height: 80vh;
-    padding: 2rem;
-    background-color: #f3f4f6; /* Nền xám nhạt */
+    padding: 2.5rem 1rem;
+    background-color: var(--color-paper, #FAF9F6);
 }
 
 .wrapper {
-    max-width: 1280px; /* (Rộng hơn nữa cho bảng) */
+    max-width: 1360px;
     margin: 0 auto;
-    position: relative; /* (Giúp modal hoạt động) */
+    position: relative;
 }
 
 .header {
@@ -18,82 +17,98 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    flex-wrap: wrap; /* (Xuống dòng nếu hẹp) */
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .title {
-    font-size: 2.5rem; 
+    font-family: var(--font-display, 'Merriweather', Georgia, serif);
+    font-size: 1.85rem;
     font-weight: 700;
-    color: #004a99;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
+    margin: 0;
 }
 
 .backButton {
-    color: #004a99;
+    color: var(--color-accent, #003566);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.92rem;
 }
 .backButton:hover {
     text-decoration: underline;
 }
 
-/* 💖 NÚT TẠO MỚI (MÀU XANH LÁ) 💖 */
 .buttonCreate {
-    background-color: #16a34a;
+    background-color: var(--color-accent, #003566);
     color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 500;
+    padding: 0.65rem 1.4rem;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
+    font-size: 0.92rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 .buttonCreate:hover {
-    background-color: #14833a;
+    background-color: var(--color-accent-hover, #002244);
     text-decoration: none;
 }
 
 /* (Box chứa bảng) */
 .tableContainer {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    overflow-x: auto; /* (Cho phép cuộn ngang nếu bảng quá rộng) */
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-radius: var(--radius-editorial, 4px);
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
+    overflow-x: auto;
 }
 
 /* (Bảng danh sách) */
 .userTable {
     width: 100%;
     border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
 }
 .userTable th,
 .userTable td {
-    border-bottom: 1px solid #ddd;
-    padding: 1rem;
+    border-bottom: 1px solid var(--color-rule, #CBD5E1);
+    padding: 0.9rem 1rem;
     text-align: left;
     vertical-align: middle;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
 }
 .userTable th {
-    background-color: #f3f4f6;
-    font-weight: 600;
-    color: #004a99;
+    background-color: var(--color-surface-subtle, #F1F5F9);
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: var(--color-ink, #0B132B);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 .userTable td strong {
     font-weight: 600;
-    color: #333;
+    color: var(--color-ink, #0B132B);
 }
 .subText {
-    font-size: 0.85rem;
-    color: #555;
+    font-size: 0.82rem;
+    color: var(--color-ink-muted, #475569);
 }
 
 /* (Nhãn vai trò/trạng thái) */
 .pill {
-    padding: 0.25rem 0.75rem;
-    border-radius: 99px; 
-    font-size: 0.875rem;
-    font-weight: 500;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-editorial, 4px);
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
     white-space: nowrap;
+    text-transform: uppercase;
 }
 
 /* (Nút Sửa/Xóa) */
@@ -105,14 +120,16 @@
 .buttonDelete,
 .buttonSecondary {
     border: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 5px;
-    font-weight: 500;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 0.875rem;
-    color: white; /* (Thêm) */
-    text-decoration: none; /* (Thêm) */
+    transition: background-color 0.2s;
+    font-size: 0.82rem;
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
 }
 .buttonEdit:disabled,
 .buttonDelete:disabled {
@@ -120,29 +137,33 @@
     cursor: not-allowed;
 }
 .buttonEdit {
-    background-color: #004a99;
+    background-color: var(--color-accent, #003566);
 }
 .buttonEdit:hover:not(:disabled) {
-    background-color: #003366;
+    background-color: var(--color-accent-hover, #002244);
     text-decoration: none;
 }
 .buttonDelete {
-    background-color: #d9534f;
+    background-color: var(--color-signal, #B91C1C);
 }
 .buttonDelete:hover:not(:disabled) {
-    background-color: #c9302c;
+    background-color: #991b1b;
 }
 .buttonSecondary {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--color-surface-subtle, #F1F5F9);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    color: var(--color-ink, #0B132B);
 }
 .buttonSecondary:hover {
-    background-color: #d1d5db;
+    background-color: #E2E8F0;
 }
 
 /* === LỖI === */
 .error {
     padding: 1rem;
     background-color: #fde8e8;
-    color: #9b2c2c;
+    color: var(--color-signal, #B91C1C);
+    border-radius: var(--radius-editorial, 4px);
+    border: 1px solid #fecaca;
+    margin-bottom: 1rem;
 }

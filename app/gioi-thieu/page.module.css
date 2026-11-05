@@ -1,34 +1,47 @@
-/* === Trang điểm cho Trang Giới thiệu === */
+/* === Trang Giới thiệu (Hallmark Editorial) === */
 
 .container {
     max-width: 900px;
-    margin: 2rem auto;
+    margin: 2.5rem auto;
     padding: 2.5rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-top: 3px solid var(--color-accent, #003566);
+    border-radius: var(--radius-editorial, 4px);
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
 }
 
 .title {
-    font-size: 2rem;
+    font-family: var(--font-display, 'Merriweather', Georgia, serif);
+    font-size: 1.85rem;
     font-weight: 700;
-    color: #004a99;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
     margin-bottom: 1.5rem;
-    border-bottom: 2px solid #e6f0ff;
+    border-bottom: 2px solid var(--color-ink, #0B132B);
     padding-bottom: 1rem;
 }
 
 .content h3 {
+    font-family: var(--font-display, 'Merriweather', serif);
     font-size: 1.25rem;
-    font-weight: 600;
-    color: #333;
+    font-weight: 700;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
     margin-top: 2rem;
     margin-bottom: 0.5rem;
 }
 
 .content p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #555;
-    margin-bottom: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--color-ink, #0B132B);
+    margin-bottom: 1.25rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+        margin: 1.25rem 1rem;
+    }
 }

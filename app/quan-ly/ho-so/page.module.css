@@ -1,37 +1,36 @@
-/* === Trang điểm cho Trang Hồ sơ cá nhân === */
+/* === Trang điểm cho Trang Hồ sơ cá nhân (Hallmark Editorial) === */
 
 .container {
     min-height: 80vh;
-    padding: 2rem;
-    background-color: #f3f4f6;
-    /* Nền xám nhạt */
+    padding: 2.5rem 1rem;
+    background-color: var(--color-paper, #FAF9F6);
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* Căn trên cùng */
     width: 100%;
-    /* Đảm bảo full width */
 }
 
 .wrapper {
     width: 100%;
     max-width: 800px;
-    /* Tăng chiều rộng form */
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-top: 3px solid var(--color-accent, #003566);
+    border-radius: var(--radius-editorial, 4px);
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
     padding: 2.5rem;
     margin: 0 auto;
-    /* Căn giữa wrapper nếu cần */
 }
 
 .title {
-    font-size: 2rem;
+    font-family: var(--font-display, 'Merriweather', Georgia, serif);
+    font-size: 1.75rem;
     font-weight: 700;
-    color: #004a99;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
     margin-bottom: 2rem;
     text-align: center;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid var(--color-rule, #CBD5E1);
     padding-bottom: 1rem;
 }
 
@@ -53,29 +52,33 @@
 
 .label {
     font-weight: 600;
-    color: #374151;
-    font-size: 0.95rem;
+    color: var(--color-ink, #0B132B);
+    font-size: 0.92rem;
 }
 
 .input {
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 1rem;
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-radius: var(--radius-editorial, 4px);
+    font-size: 0.95rem;
+    min-height: 44px;
+    color: var(--color-ink, #0B132B);
+    background-color: var(--color-surface, #FFFFFF);
     transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
+    box-sizing: border-box;
 }
 
 .input:focus {
-    border-color: #004a99;
-    box-shadow: 0 0 0 3px rgba(0, 74, 153, 0.1);
+    border-color: var(--color-accent, #003566);
+    box-shadow: 0 0 0 3px rgba(0, 53, 102, 0.12);
 }
 
 .input:disabled {
-    background-color: #f9fafb;
-    color: #6b7280;
+    background-color: var(--color-surface-subtle, #F1F5F9);
+    color: var(--color-ink-muted, #475569);
     cursor: not-allowed;
-    border-color: #e5e7eb;
+    border-color: var(--color-rule, #CBD5E1);
 }
 
 .buttonContainer {
@@ -84,11 +87,11 @@
     align-items: center;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--color-rule, #CBD5E1);
 }
 
 .backLink {
-    color: #6b7280;
+    color: var(--color-ink-muted, #475569);
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -96,24 +99,25 @@
 }
 
 .backLink:hover {
-    color: #004a99;
+    color: var(--color-accent, #003566);
     text-decoration: underline;
 }
 
 .button {
-    background-color: #004a99;
+    background-color: var(--color-accent, #003566);
     color: white;
     padding: 0.75rem 2rem;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-editorial, 4px);
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    min-height: 44px;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s;
 }
 
 .button:hover:not(:disabled) {
-    background-color: #003366;
+    background-color: var(--color-accent-hover, #002244);
 }
 
 .button:active:not(:disabled) {
@@ -128,8 +132,8 @@
 .error {
     padding: 1rem;
     background-color: #fef2f2;
-    color: #991b1b;
-    border-radius: 8px;
+    color: var(--color-signal, #B91C1C);
+    border-radius: var(--radius-editorial, 4px);
     font-size: 0.9rem;
     border: 1px solid #fecaca;
 }
@@ -138,7 +142,7 @@
     padding: 1rem;
     background-color: #f0fdf4;
     color: #166534;
-    border-radius: 8px;
+    border-radius: var(--radius-editorial, 4px);
     font-size: 0.9rem;
     border: 1px solid #bbf7d0;
 }

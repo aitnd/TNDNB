@@ -5,11 +5,8 @@ import Script from 'next/script'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { AuthProvider } from '../context/AuthContext'
-import { ThemeProvider } from '../context/ThemeContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import MusicPlayer from '../components/MusicPlayer'
-import ThemeEffects from '../components/ThemeEffects'
 import dynamic from 'next/dynamic'
 
 const MobileBottomNav = dynamic(() => import('../components/MobileBottomNav'), { ssr: false })
@@ -50,7 +47,6 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
-// ... (Phần trên giữ nguyên) ...
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -58,31 +54,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className={rubik.className} suppressHydrationWarning={true}>
         <AuthProvider>
-          <ThemeProvider>
+          <Navbar />
 
-            {/* ❄️ HIỆU ỨNG TUYẾT & QUÀ RƠI DÀY ĐẶC ❄️ */}
-            {/* ❄️ HIỆU ỨNG TUYẾT & QUÀ RƠI DÀY ĐẶC ❄️ */}
-            <ThemeEffects />
+          <main style={{ minHeight: '80vh', position: 'relative', paddingBottom: '64px' }}>
+            <PortalMaintenanceWrapper>
+              {children}
+            </PortalMaintenanceWrapper>
+          </main>
 
-            <Navbar />{/* Force Rebuild Layout */}
-            {/* ... (Phần dưới giữ nguyên) ... */}
+          <MobileBottomNav />
+          <CapacitorDetector />
+          <GlobalNotificationHandler />
+          <PortalAdLoader />
 
-            <main style={{ minHeight: '80vh', position: 'relative', paddingBottom: '64px' }}>
-              <PortalMaintenanceWrapper>
-                {children}
-              </PortalMaintenanceWrapper>
-            </main>
-
-            {/* Gắn nhạc nền Noel */}
-            <MusicPlayer />
-            <MobileBottomNav />
-            <CapacitorDetector />
-            <GlobalNotificationHandler />
-            <PortalAdLoader />
-
-            <Footer />
-
-          </ThemeProvider>
+          <Footer />
         </AuthProvider>
 
         {/* === CÁC SCRIPT THEO DÕI (GA4, ADS) === */}

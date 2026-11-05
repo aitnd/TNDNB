@@ -1,60 +1,65 @@
-/* === Bố cục 2 cột (ĐÃ SỬA LẠI CHO ĐÚNG) === */
+/* === Trang Liên Hệ (Hallmark Editorial) === */
+
 .layoutGrid {
-    display: grid; /* (Giữ grid cho desktop) */
-    grid-template-columns: 2fr 1fr; 
-    gap: 2rem; 
-    width: 90%;
-    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 1fr 340px; 
+    gap: 2.5rem; 
+    width: 100%;
+    max-width: 1400px;
     margin: 2rem auto;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
 }
+
 .mainContent {
     display: flex;
     flex-direction: column;
     gap: 1.5rem; 
 }
 
-/* (Trên điện thoại: 1 cột VÀ ĐẢO NGƯỢC) */
-@media (max-width: 768px) {
-    .layoutGrid {
-        display: flex; 
-        flex-direction: column-reverse; 
-        gap: 1.5rem; 
-    }
-}
-
-/* === Box chung (Giữ nguyên) === */
+/* === Box chung (Widget) === */
 .widgetBox {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.widgetTitle {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #004a99;
-    padding: 1rem 1.5rem;
-    border-bottom: 2px solid #e6f0ff;
-    margin-bottom: 1.5rem;
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-radius: var(--radius-editorial, 4px);
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
+    overflow: hidden;
 }
 
-/* === Style riêng cho Trang Liên Hệ (Giữ nguyên) === */
+.widgetTitle {
+    font-family: var(--font-display, 'Merriweather', Georgia, serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 2px solid var(--color-ink, #0B132B);
+    margin: 0 0 1.5rem 0;
+    text-transform: uppercase;
+}
+
+/* === Style riêng cho Trang Liên Hệ === */
 .contactInfo {
     padding: 0 1.5rem 1.5rem 1.5rem;
     line-height: 1.8;
+    color: var(--color-ink, #0B132B);
 }
+
 .contactInfo h3 {
-    font-size: 1.2rem;
+    font-family: var(--font-display, 'Merriweather', serif);
+    font-size: 1.15rem;
     font-weight: 700;
-    color: #333; 
-    margin-bottom: 1rem;
+    font-style: normal;
+    color: var(--color-ink, #0B132B); 
+    margin-bottom: 0.75rem;
 }
+
 .contactInfo p {
     margin-bottom: 0.5rem;
+    font-size: 0.95rem;
 }
 
-
-/* === 💖 CSS MỚI CHO FORM LIÊN HỆ 💖 === */
+/* === FORM LIÊN HỆ === */
 .formContainer {
     padding: 0 1.5rem 1.5rem 1.5rem;
 }
@@ -72,41 +77,59 @@
 
 .label {
     margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #333;
+    font-weight: 600;
+    color: var(--color-ink, #0B132B);
+    font-size: 0.9rem;
 }
 
 .input,
 .textarea {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    box-sizing: border-box; /* (Quan trọng) */
-    font-family: inherit; /* (Cho nó giống font chữ web) */
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-radius: var(--radius-editorial, 4px);
+    font-size: 0.95rem;
+    color: var(--color-ink, #0B132B);
+    background-color: var(--color-surface, #FFFFFF);
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.input {
+    min-height: 44px;
+}
+
+.input:focus,
+.textarea:focus {
+    outline: none;
+    border-color: var(--color-accent, #003566);
+    box-shadow: 0 0 0 3px rgba(0, 53, 102, 0.12);
 }
 
 .textarea {
     min-height: 150px;
-    resize: vertical; /* (Cho phép kéo dọc) */
+    resize: vertical;
 }
 
 .button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
+    min-height: 44px;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    border-radius: 5px;
+    border-radius: var(--radius-editorial, 4px);
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
-    background-color: #004a99;
+    transition: background-color 0.2s;
+    background-color: var(--color-accent, #003566);
     color: white;
-    align-self: flex-start; /* (Cho nút nó co lại) */
+    align-self: flex-start;
 }
+
 .button:hover {
-    background-color: #003366;
+    background-color: var(--color-accent-hover, #002244);
 }
+
 .button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -114,17 +137,34 @@
 
 .formStatus {
     margin-top: 1rem;
-    padding: 0.75rem;
-    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-editorial, 4px);
     text-align: center;
+    font-size: 0.9rem;
 }
+
 .success {
-    background-color: #e6f7ec;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
 }
+
 .error {
     background-color: #fde8e8;
-    color: #9b2c2c;
-    border: 1px solid #f9bdbb;
+    color: var(--color-signal, #B91C1C);
+    border: 1px solid #fecaca;
+}
+
+@media (max-width: 900px) {
+    .layoutGrid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .layoutGrid {
+        padding: 0 1rem;
+        margin: 1.25rem auto;
+    }
 }

@@ -142,6 +142,7 @@
 .userTable {
     width: 100%;
     border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
 }
 
 .userTable th,
@@ -175,7 +176,7 @@
 /* (Nhãn vai trò) */
 .rolePill {
     padding: 0.25rem 0.75rem;
-    border-radius: 99px;
+    border-radius: var(--radius-editorial, 4px);
     font-size: 0.875rem;
     font-weight: 600;
     /* Đậm hơn */
@@ -338,6 +339,7 @@
 .userTable {
     width: 100%;
     border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
 }
 
 .userTable th,
@@ -371,7 +373,7 @@
 /* (Nhãn vai trò) */
 .rolePill {
     padding: 0.25rem 0.75rem;
-    border-radius: 99px;
+    border-radius: var(--radius-editorial, 4px);
     font-size: 0.875rem;
     font-weight: 600;
     /* Đậm hơn */
@@ -571,7 +573,7 @@
 
 .pill {
     padding: 0.25rem 0.75rem;
-    border-radius: 99px;
+    border-radius: var(--radius-editorial, 4px);
     font-size: 0.75rem;
     font-weight: 600;
 }

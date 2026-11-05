@@ -1,28 +1,32 @@
-/* === Trang điểm cho Trang Chi tiết Bài viết === */
+/* === Chi tiết Bài viết (Hallmark Editorial) === */
 
 .container {
-    max-width: 800px; /* (Giới hạn chiều rộng cho dễ đọc) */
+    max-width: 860px;
     margin: 2rem auto;
     padding: 2.5rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-radius: var(--radius-editorial, 4px);
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
 }
 
 .title {
-    font-size: 2.5rem;
+    font-family: var(--font-display, 'Merriweather', Georgia, serif);
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
     font-weight: 700;
-    color: #1e3a8a; /* (Màu xanh đậm) */
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
+    margin-bottom: 0.75rem;
+    line-height: 1.35;
 }
 
 .meta {
-    font-size: 0.9rem;
-    color: #777;
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.82rem;
+    color: var(--color-ink-muted, #475569);
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-rule, #CBD5E1);
+    padding-bottom: 1rem;
 }
 
 .meta span {
@@ -33,95 +37,85 @@
 .image {
     width: 100%;
     height: auto;
-    max-height: 400px;
+    max-height: 440px;
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: var(--radius-editorial, 4px);
     margin-bottom: 2rem;
-    border: 1px solid #eee;
+    border: 1px solid var(--color-rule, #CBD5E1);
 }
 
-/* (Class ".post-content" đã được định nghĩa ở file "app/globals.css") */
-
-
-/* (CSS CHO TÊN TÁC GIẢ) */
 .authorName {
     font-size: 0.9rem;
-    font-style: italic;
-    color: #555;
-    text-align: right; /* (Cho nó qua góc phải) */
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-ink, #0B132B);
+    text-align: right;
     margin-top: 2rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--color-rule, #CBD5E1);
     padding-top: 1rem;
 }
 
-/* (Container nút bấm - Giữ nguyên) */
 .backButtonContainer {
     margin-top: 1.5rem; 
     padding-top: 1rem;
     text-align: center;
-    
-    /* (Cho các nút nằm ngang) */
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem; /* (Khoảng cách 2 nút) */
-    flex-wrap: wrap; /* (Tự xuống dòng nếu chật) */
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-/* (Nút "Quay về" - Giữ nguyên) */
 .backButton {
     display: inline-block;
-    background-color: #004a99;
+    background-color: var(--color-accent, #003566);
     color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 500;
+    padding: 0.65rem 1.4rem;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s;
 }
 .backButton:hover {
-    background-color: #003366;
+    background-color: var(--color-accent-hover, #002244);
     text-decoration: none;
 }
 
-/* (Nút "Quản lý" - Giữ nguyên) */
 .buttonSecondary {
     display: inline-block;
-    background-color: #e5e7eb; /* (Màu xám nhạt) */
-    color: #374151; /* (Màu chữ tối) */
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 500;
+    background-color: var(--color-surface-subtle, #F1F5F9);
+    color: var(--color-ink, #0B132B);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    padding: 0.65rem 1.4rem;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s;
 }
 .buttonSecondary:hover {
-    background-color: #d1d5db; /* (Xám đậm hơn) */
+    background-color: #E2E8F0;
     text-decoration: none;
 }
 
-/* (Nút "Share" - Giữ nguyên) */
 .buttonShare {
-    display: inline-flex; /* (Để icon và chữ nằm ngang) */
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem; /* (Cách icon và chữ) */
-    background-color: #1877f2; /* (Màu Facebook "xịn") */
+    gap: 0.5rem;
+    background-color: #1877f2;
     color: #ffffff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
-    font-weight: 500;
+    padding: 0.65rem 1.4rem;
+    border-radius: var(--radius-editorial, 4px);
+    font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.3s;
-    border: none; /* (Vì đây là <button>) */
+    transition: background-color 0.2s;
+    border: none;
     cursor: pointer;
 }
 .buttonShare:hover {
-    background-color: #166fe5; /* (Màu hover) */
+    background-color: #166fe5;
     text-decoration: none;
 }
 
-
-/* === Style cho Trang Lỗi 404 === */
 .errorContainer {
     text-align: center;
     padding: 4rem 1rem;
@@ -134,25 +128,25 @@
 .errorTitle {
     font-size: 2rem;
     font-weight: 700;
-    color: #9b2c2c; /* (Màu đỏ) */
+    color: var(--color-signal, #B91C1C);
 }
 .errorMessage {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-top: 1rem;
-    color: #555;
+    color: var(--color-ink-muted, #475569);
 }
 
-
-/* === (CSS CHO TỆP ĐÍNH KÈM - Giữ nguyên) === */
 .attachmentSection {
     margin-top: 2.5rem;
-    border-top: 2px solid #e6f0ff;
+    border-top: 2px solid var(--color-rule, #CBD5E1);
     padding-top: 1.5rem;
 }
 .attachmentTitle {
-    font-size: 1.5rem;
+    font-family: var(--font-display, 'Merriweather', serif);
+    font-size: 1.35rem;
     font-weight: 700;
-    color: #004a99;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
     margin-bottom: 1rem;
 }
 .attachmentList {
@@ -161,121 +155,125 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; 
+    gap: 1rem; 
 }
 .pdfViewer {
     width: 100%;
     aspect-ratio: 4 / 5; 
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-radius: var(--radius-editorial, 4px);
 }
 .pdfViewerTitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: var(--color-ink, #0B132B);
 }
 .downloadLink {
     display: flex;
     align-items: center;
-    background-color: #f3f4f6;
-    border: 1px solid #e5e7eb;
-    padding: 1rem 1.5rem;
-    border-radius: 5px;
+    background-color: var(--color-surface-subtle, #F1F5F9);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    padding: 0.9rem 1.25rem;
+    border-radius: var(--radius-editorial, 4px);
     text-decoration: none;
-    transition: all 0.3s;
+    transition: all 0.2s;
 }
 .downloadLink:hover {
-    background-color: #e6f0ff;
-    border-color: #004a99;
+    background-color: #E2E8F0;
+    border-color: var(--color-accent, #003566);
     text-decoration: none;
 }
 .downloadIcon {
     font-size: 1.5rem;
-    color: #004a99;
+    color: var(--color-accent, #003566);
     margin-right: 1rem;
 }
 .downloadInfo {
     flex: 1;
 }
 .downloadName {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
-    color: #004a99;
+    color: var(--color-accent, #003566);
 }
 .downloadSize {
-    font-size: 0.9rem;
-    color: #777;
+    font-size: 0.85rem;
+    color: var(--color-ink-muted, #475569);
 }
 
-/* === 💖 CSS MỚI CHO "BÀI VIẾT KHÁC" (Thêm ở cuối) 💖 === */
 .relatedSection {
     margin-top: 2.5rem;
-    border-top: 2px solid #e6f0ff;
+    border-top: 2px solid var(--color-rule, #CBD5E1);
     padding-top: 1.5rem;
 }
 .relatedTitle {
-    font-size: 1.5rem;
+    font-family: var(--font-display, 'Merriweather', serif);
+    font-size: 1.35rem;
     font-weight: 700;
-    color: #004a99;
+    font-style: normal;
+    color: var(--color-ink, #0B132B);
     margin-bottom: 1.5rem;
 }
 .relatedGrid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* (3 cột y như hình) */
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
 }
 .relatedCard {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-rule, #CBD5E1);
+    border-radius: var(--radius-editorial, 4px);
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 .relatedCard:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(11, 19, 43, 0.08);
+    border-color: var(--color-accent, #003566);
     text-decoration: none;
 }
 .relatedImage {
     width: 100%;
-    height: 150px; /* (Chiều cao cố định) */
-    object-fit: cover; /* (Ảnh tự zoom) */
+    height: 150px;
+    object-fit: cover;
     display: block;
-    background-color: #f0f0f0; /* (Màu nền lót) */
+    background-color: var(--color-surface-subtle, #F1F5F9);
 }
 .relatedInfo {
     padding: 1rem;
 }
 .relatedCard h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-ink, #0B132B);
     margin: 0 0 0.5rem 0;
-    /* (Giới hạn 2 dòng) */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-height: 2.4em; /* (Giữ chỗ 2 dòng) */
+    min-height: 2.4em;
 }
 .relatedCard p {
-    font-size: 0.875rem;
-    color: #777;
+    font-size: 0.82rem;
+    color: var(--color-ink-muted, #475569);
     margin: 0;
 }
 
-/* (Responsive cho 3 cột) */
 @media (max-width: 768px) {
+    .container {
+        padding: 1.5rem 1rem;
+        margin: 1rem auto;
+    }
     .relatedGrid {
-        grid-template-columns: 1fr 1fr; /* (2 cột trên tablet) */
+        grid-template-columns: 1fr 1fr;
     }
 }
 @media (max-width: 500px) {
     .relatedGrid {
-        grid-template-columns: 1fr; /* (1 cột trên điện thoại) */
+        grid-template-columns: 1fr;
     }
 }

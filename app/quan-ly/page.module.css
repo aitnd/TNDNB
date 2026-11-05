@@ -1,200 +1,267 @@
-/* === Trang điểm cho Trang Quản lý (Dashboard) === */
+/* ╔══════════════════════════════════════════════════════╗
+ * ║  QUẢN LÝ — Institutional Operations Workspace         ║
+ * ║  Hallmark Editorial, 4px radius, hairline rules      ║
+ * ╚══════════════════════════════════════════════════════╝ */
 
 .container {
-    min-height: 80vh;
-    padding: 2rem;
-    background-color: #f8fafc;
-    /* Nền sáng, hiện đại hơn */
-    font-family: 'Inter', sans-serif;
-    /* Font hiện đại nếu có */
+  min-height: 85vh;
+  background-color: var(--color-paper, #FAF9F6);
+  padding: 2rem 1.5rem 4rem 1.5rem;
 }
 
 .wrapper {
-    max-width: 1280px;
-    margin: 0 auto;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #1e293b;
-    /* Màu đậm hơn */
-    margin-bottom: 2rem;
-    text-align: center;
-    /* Căn giữa cho đẹp */
+  font-family: var(--font-display, 'Merriweather', Georgia, serif);
+  font-size: 1.85rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-ink, #0B132B);
+  margin: 0 0 1.5rem 0;
+  border-bottom: 2px solid var(--color-ink, #0B132B);
+  padding-bottom: 0.75rem;
 }
 
-/* === 💖 TAB NAVIGATION ĐẸP MẮT 💖 === */
+/* === THANH TAB ĐIỀU HƯỚNG === */
 .tabContainer {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    background: white;
-    padding: 1rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  background-color: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-rule, #CBD5E1);
+  border-radius: var(--radius-editorial, 4px);
+  padding: 6px;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
 }
 
 .tabButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    background: transparent;
-    color: #64748b;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-ink-muted, #475569);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-editorial, 4px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .tabButton:hover {
-    background-color: #f1f5f9;
-    color: #334155;
+  background-color: var(--color-surface-subtle, #F1F5F9);
+  color: var(--color-ink, #0B132B);
 }
 
 .activeTab {
-    background-color: #0070f3;
-    /* Màu chủ đạo */
-    color: white !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 112, 243, 0.3);
+  background-color: var(--color-accent, #003566) !important;
+  color: #FFFFFF !important;
+  border-bottom: 2px solid var(--color-gold, #D4AF37);
 }
 
 .tabIcon {
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
+  font-size: 0.95rem;
 }
 
-/* === NỘI DUNG TAB === */
-.tabContent {
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* === DASHBOARD CONTENT (TỔNG QUAN) === */
+/* === NỘI DUNG TỔNG QUAN (DASHBOARD) === */
 .dashboardContent {
-    display: grid;
-    gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
+/* === THẺ THÔNG TIN TÀI KHOẢN === */
 .infoBox {
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-rule, #CBD5E1);
+  border-top: 3px solid var(--color-accent, #003566);
+  border-radius: var(--radius-editorial, 4px);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
+}
+
+.infoHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-rule, #CBD5E1);
 }
 
 .sectionTitle {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #334155;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #f1f5f9;
-    padding-bottom: 0.5rem;
+  font-family: var(--font-display, 'Merriweather', serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-ink, #0B132B);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.infoGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+.profileLayout {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 2rem;
 }
 
-@media (max-width: 768px) {
-    .infoGrid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
+.avatarColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.infoBox p {
-    margin-bottom: 0.75rem;
-    font-size: 1.05rem;
-    color: #475569;
+.avatarFrame {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-editorial, 4px);
+  overflow: hidden;
+  border: 2px solid var(--color-rule, #CBD5E1);
+  margin-bottom: 0.75rem;
+  background: var(--color-surface-subtle, #F1F5F9);
 }
 
-.infoBox strong {
-    color: #1e293b;
-    min-width: 120px;
-    display: inline-block;
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .roleTag {
-    background-color: #dbeafe;
-    color: #1e40af;
-    padding: 0.25rem 0.75rem;
-    border-radius: 99px;
-    font-size: 0.875rem;
-    font-weight: 600;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-editorial, 4px);
+  background-color: rgba(0, 53, 102, 0.08);
+  color: var(--color-accent, #003566);
+  text-align: center;
+}
+
+.detailsColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.dataRow {
+  margin-bottom: 0.85rem;
+  font-size: 0.92rem;
+  color: var(--color-ink, #0B132B);
+  line-height: 1.5;
 }
 
 .subText {
-    color: #94a3b8;
-    font-style: italic;
+  color: var(--color-ink-muted, #475569);
+  font-style: italic;
+}
+
+.cccdBox {
+  background-color: var(--color-surface-subtle, #F1F5F9);
+  border: 1px solid var(--color-rule, #CBD5E1);
+  border-radius: var(--radius-editorial, 4px);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  margin-top: 0.5rem;
+  line-height: 1.5;
 }
 
 .infoBoxActions {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-rule, #CBD5E1);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
 }
 
-/* BUTTONS */
 .buttonPrimary {
-    background-color: #0070f3;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background-color 0.2s;
-    border: none;
-    cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--color-accent, #003566);
+  color: #FFFFFF !important;
+  padding: 8px 16px;
+  border-radius: var(--radius-editorial, 4px);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none !important;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .buttonPrimary:hover {
-    background-color: #0060df;
+  background-color: var(--color-accent-hover, #002244);
 }
 
 .buttonDanger {
-    background-color: #ef4444;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: transparent;
+  color: var(--color-signal, #B91C1C);
+  border: 1px solid var(--color-signal, #B91C1C);
+  padding: 8px 16px;
+  border-radius: var(--radius-editorial, 4px);
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .buttonDanger:hover {
-    background-color: #dc2626;
+  background-color: #FEF2F2;
 }
 
 .success {
-    color: #16a34a;
-    margin-top: 1rem;
-    font-weight: 500;
+  color: #166534;
+  font-size: 0.88rem;
+  margin-top: 0.75rem;
+  text-align: right;
 }
 
 .error {
-    color: #dc2626;
-    margin-top: 1rem;
-    font-weight: 500;
+  color: var(--color-signal, #B91C1C);
+  font-size: 0.88rem;
+  margin-top: 0.75rem;
+  text-align: right;
+}
+
+/* === ACCOUNTS CARD === */
+.accountsCard {
+  background-color: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-rule, #CBD5E1);
+  border-top: 3px solid var(--color-accent, #003566);
+  border-radius: var(--radius-editorial, 4px);
+  padding: 2rem;
+  box-shadow: var(--shadow-soft, 0 1px 3px rgba(11, 19, 43, 0.05));
+}
+
+.accountsDescription {
+  color: var(--color-ink-muted, #475569);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0.75rem 0 1.5rem 0;
+}
+
+@media (max-width: 900px) {
+  .profileLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .detailsColumns {
+    grid-template-columns: 1fr;
+  }
 }
