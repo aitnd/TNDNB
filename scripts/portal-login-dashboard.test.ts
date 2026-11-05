@@ -139,4 +139,29 @@ describe('Phase 01: Single Canonical Hallmark Editorial Shell & Legacy Theme Rem
     const hocPhiCss = fs.readFileSync(path.resolve(rootDir, 'app/hoc-phi/page.module.css'), 'utf8')
     expect(hocPhiCss).toContain('tabular-nums')
   })
+
+  it('Analytics Robustness: app/api/analytics/route.ts hỗ trợ GET an toàn và components/AnalyticsWidget.tsx parse JSON an toàn chuẩn Hallmark', () => {
+    const routePath = path.resolve(rootDir, 'app/api/analytics/route.ts')
+    const widgetPath = path.resolve(rootDir, 'components/AnalyticsWidget.tsx')
+
+    expect(fs.existsSync(routePath)).toBe(true)
+    expect(fs.existsSync(widgetPath)).toBe(true)
+
+    const routeCode = fs.readFileSync(routePath, 'utf8')
+    const widgetCode = fs.readFileSync(widgetPath, 'utf8')
+
+    // 1. API Route must export GET and POST with totalUsers / totalPageViews fallback
+    expect(routeCode).toMatch(/export\s+async\s+function\s+GET/)
+    expect(routeCode).toMatch(/export\s+async\s+function\s+POST/)
+    expect(routeCode).toContain('totalUsers')
+    expect(routeCode).toContain('totalPageViews')
+    expect(routeCode).toContain('isMock')
+
+    // 2. Widget must parse JSON safely without crashing on empty response
+    expect(widgetCode).toMatch(/res\.text\(\)|JSON\.parse/)
+    expect(widgetCode).not.toContain('#fde8e8')
+    expect(widgetCode).not.toContain('#9b2c2c')
+    expect(widgetCode).not.toContain("fontStyle: 'italic'")
+    expect(widgetCode).not.toContain('fontStyle: "italic"')
+  })
 })

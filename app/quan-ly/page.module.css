@@ -265,3 +265,63 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* === ANALYTICS WIDGET (HALLMARK EDITORIAL) === */
+.analyticsTitle {
+  font-family: var(--font-display, 'Merriweather', Georgia, serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-ink, #0B132B);
+  margin: 0 0 1.25rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-rule, #CBD5E1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.analyticsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.analyticsCard {
+  background-color: var(--color-surface-subtle, #F1F5F9);
+  border: 1px solid var(--color-rule, #CBD5E1);
+  border-radius: var(--radius-editorial, 4px);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: border-color 0.2s ease;
+}
+
+.analyticsCard:hover {
+  border-color: var(--color-accent, #003566);
+}
+
+.analyticsValue {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent, #003566);
+}
+
+.analyticsLabel {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--color-ink-muted, #475569);
+  font-style: normal;
+}
+
+.analyticsNotice {
+  font-size: 0.82rem;
+  color: var(--color-ink-muted, #475569);
+  font-style: normal;
+  margin-top: 1rem;
+}
