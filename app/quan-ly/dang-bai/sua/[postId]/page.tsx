@@ -10,7 +10,7 @@ import { useRouter, useParams } from 'next/navigation'
 // (Gỡ SunEditor)
 // import dynamic from 'next/dynamic' 
 
-import { FaFilePdf, FaFileWord, FaFileArchive, FaFile } from 'react-icons/fa'
+import { Category, Attachment, getFileIcon, sanitizeFileName, formatFileSize } from '../../dangBaiUtils'
 import { useAuth } from '../../../../../context/AuthContext' 
 import ProtectedRoute from '../../../../../components/ProtectedRoute' 
 import { supabase } from '../../../../../utils/supabaseClient' 
@@ -23,19 +23,6 @@ import { Editor } from '@tinymce/tinymce-react';
 
 // "Triệu hồi" file CSS Module (Mượn của trang Tạo Mới)
 import styles from '../../tao-moi/page.module.css' 
-
-type Category = {
-  id: string;
-  name: string;
-}
-
-// (Kiểu Tệp đính kèm - Giữ nguyên)
-type Attachment = {
-  file_name: string; 
-  file_url: string;  
-  file_size: number; 
-  file_type: string; 
-};
 
 function EditPostForm() {
   const { user } = useAuth()
@@ -196,37 +183,6 @@ function EditPostForm() {
       );
     }
   }
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
-  const getFileIcon = (fileType: string) => {
-    if (fileType.includes('pdf')) return <FaFilePdf className={styles.attachmentIcon} />;
-    if (fileType.includes('word') || fileType.includes('doc')) return <FaFileWord className={styles.attachmentIcon} />;
-    if (fileType.includes('zip') || fileType.includes('rar')) return <FaFileArchive className={styles.attachmentIcon} />;
-    return <FaFile className={styles.attachmentIcon} />;
-  }
-
-  // (Hàm "Làm sạch" tên file - Giữ nguyên)
-  const sanitizeFileName = (fileName: string) => {
-    const extension = fileName.substring(fileName.lastIndexOf('.'));
-    let baseName = fileName.substring(0, fileName.lastIndexOf('.'));
-    baseName = baseName
-      .toLowerCase()
-      .normalize("NFD") 
-      .replace(/[\u0300-\u036f]/g, "") 
-      .replace(/đ/g, "d") 
-      .replace(/\s+/g, '_') 
-      .replace(/[^a-z0-9._-]/g, '-') 
-      .replace(/__+/g, '_') 
-      .replace(/--+/g, '-'); 
-    return `${baseName}${extension}`;
-  };
-
-  // ("Thợ" upload ảnh TinyMCE - Giữ nguyên)
   const tinymceUploadHandler = (blobInfo: any, _progress: (percent: number) => void): Promise<string> => {
     return new Promise((resolve, reject) => {
       const file = blobInfo.blob();

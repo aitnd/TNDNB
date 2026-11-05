@@ -14,12 +14,6 @@ export function verifyAdminAuthorization(
     return true;
   }
 
-  // Hỗ trợ xác thực cấu trúc JWT Firebase ID Token (3 phần header.payload.signature)
-  const parts = token.split('.');
-  if (parts.length === 3 && parts[0].length > 10 && parts[1].length > 10) {
-    return true;
-  }
-
   return false;
 }
 

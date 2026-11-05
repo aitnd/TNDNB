@@ -22,7 +22,7 @@ interface UserData {
     cccdDate?: string
     cccdPlace?: string
     address?: string
-    createdAt?: any
+    createdAt?: unknown
 }
 
 export default function CourseManager() {

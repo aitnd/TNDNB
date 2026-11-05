@@ -7,14 +7,17 @@ const mockEnv: any = {
   GITHUB_REPO: 'TNDNB',
   RELEASE_UPSTREAM_MODE: 'github_proxy',
   ALLOWED_ORIGINS: 'https://tndnb.vn,http://localhost:5173',
-  ADMIN_API_SECRET: 'super-secret-2026'
+  ADMIN_API_SECRET: 'test-only-mock-val'
 };
 
 describe('Auth & CORS Middleware + Worker Healthcheck', () => {
   it('verifyAdminAuthorization từ chối request thiếu Bearer token hoặc sai secret', () => {
-    expect(verifyAdminAuthorization(null, 'super-secret-2026')).toBe(false);
-    expect(verifyAdminAuthorization('Bearer wrong-key', 'super-secret-2026')).toBe(false);
-    expect(verifyAdminAuthorization('Bearer super-secret-2026', 'super-secret-2026')).toBe(true);
+    const mockSecret = 'test-only-mock-val';
+    const fakeThreePart = ['header_mock', 'payload_mock', 'sig'].join('.');
+    expect(verifyAdminAuthorization(null, mockSecret)).toBe(false);
+    expect(verifyAdminAuthorization(`Bearer wrong`, mockSecret)).toBe(false);
+    expect(verifyAdminAuthorization(`Bearer ${fakeThreePart}`, mockSecret)).toBe(false);
+    expect(verifyAdminAuthorization(`Bearer ${mockSecret}`, mockSecret)).toBe(true);
   });
 
   it('buildCorsHeaders trả về đúng Access-Control-Allow-Origin cho origin hợp lệ và Electron file://', () => {
