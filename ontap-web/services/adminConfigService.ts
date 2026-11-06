@@ -84,6 +84,10 @@ export interface GitHubConfig {
     repo?: string;   // Mặc định: TNDNB
 }
 
+const sanitizeForFirestore = <T>(obj: T): T => {
+    return JSON.parse(JSON.stringify(obj));
+};
+
 const DEFAULT_CONFIG: UsageConfig = {
     guest: {
         limit: 5,
@@ -272,7 +276,13 @@ const DEFAULT_CONFIG: UsageConfig = {
     showPortalAds: true,
     showPortalAdSense: true,
     showPortalAdsterra: true,
-    showPortalMonetag: false
+    showPortalMonetag: false,
+    app_links: {
+        version: '3.21.0',
+        windows: '',
+        android: '',
+        ios: ''
+    }
 };
 
 // 1. Get Config (Dual-Storage: Cloudflare KV + Firestore fallback + localStorage)
@@ -370,7 +380,8 @@ export const saveUsageConfig = async (config: UsageConfig): Promise<void> => {
 
     try {
         if (db) {
-            await setDoc(doc(db, SETTINGS_COLLECTION, USAGE_CONFIG_DOC_ID), config, { merge: true });
+            const cleanConfig = sanitizeForFirestore(config);
+            await setDoc(doc(db, SETTINGS_COLLECTION, USAGE_CONFIG_DOC_ID), cleanConfig, { merge: true });
             firestoreSuccess = true;
         }
     } catch (err) {
@@ -446,7 +457,8 @@ export const saveGitHubConfig = async (config: GitHubConfig): Promise<void> => {
 
     try {
         if (db) {
-            await setDoc(doc(db, SETTINGS_COLLECTION, 'github_config'), config, { merge: true });
+            const cleanConfig = sanitizeForFirestore(config);
+            await setDoc(doc(db, SETTINGS_COLLECTION, 'github_config'), cleanConfig, { merge: true });
             firestoreSuccess = true;
         }
     } catch (err) {
