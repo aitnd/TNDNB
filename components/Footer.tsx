@@ -21,7 +21,7 @@ export default function Footer() {
             <ul>
               <li><Link href="/gioi-thieu">Giới thiệu</Link></li>
               <li><Link href="/chuong-trinh-dao-tao">Chương trình đào tạo</Link></li>
-              <li><Link href="/tuyen-dung">Tuyển dụng</Link></li>
+              <li><Link href="/tu-van-nghe-nghiep">Tư vấn nghề nghiệp</Link></li>
               <li><Link href="/danh-muc/tin-tuc-su-kien">Tin tức - Sự kiện</Link></li>
               <li><Link href="/danh-muc/gioi-thieu-viec-lam">Giới thiệu việc làm</Link></li>
             </ul>

@@ -11,6 +11,13 @@ export const naturalSortQuestions = (a: { id: string }, b: { id: string }): numb
   return getNum(a.id) - getNum(b.id);
 };
 
+export const normalizeQuestionImage = (id: string, image?: string | null): string | null => {
+  if (!image) return null;
+  const trimmed = String(image).trim();
+  if (!trimmed) return null;
+  return `https://cdn.daotaothuyenvien.com/question-images/${id}.png`;
+};
+
 export const syncQuestionsInBackground = async (): Promise<License[] | null> => {
   if (typeof navigator !== 'undefined' && navigator.onLine === false) {
     return null;
@@ -30,12 +37,22 @@ export const syncQuestionsInBackground = async (): Promise<License[] | null> => 
 
     const snapshot = await fetchQuestionsSnapshot();
     if (snapshot && Array.isArray(snapshot.licenses) && snapshot.licenses.length > 0) {
-      await saveLicensesOffline(snapshot.licenses, {
+      const sanitizedLicenses: License[] = snapshot.licenses.map((lic: any) => ({
+        ...lic,
+        subjects: (lic.subjects || []).map((sub: any) => ({
+          ...sub,
+          questions: (sub.questions || []).map((q: any) => ({
+            ...q,
+            image: normalizeQuestionImage(q.id, q.image)
+          }))
+        }))
+      }));
+      await saveLicensesOffline(sanitizedLicenses, {
         version: snapshot.version,
         contentHash: snapshot.contentHash
       });
-      precacheAllQuestionImages(snapshot.licenses);
-      return snapshot.licenses;
+      precacheAllQuestionImages(sanitizedLicenses);
+      return sanitizedLicenses;
     }
     return null;
   } catch (err) {
@@ -67,7 +84,7 @@ export const fetchLicensesFromSupabaseFallback = async (): Promise<License[]> =>
         questions: (sub.questions || []).map((q: any) => ({
           id: q.id,
           text: q.text,
-          image: q.image,
+          image: normalizeQuestionImage(q.id, q.image),
           answers: q.answers || [],
           correctAnswerId: q.correctAnswerId || q.correct_answer_id
         }))
@@ -95,12 +112,22 @@ export const fetchLicenses = async (): Promise<License[]> => {
   try {
     const snapshot = await fetchQuestionsSnapshot();
     if (snapshot && Array.isArray(snapshot.licenses) && snapshot.licenses.length > 0) {
-      await saveLicensesOffline(snapshot.licenses, {
+      const sanitizedLicenses: License[] = snapshot.licenses.map((lic: any) => ({
+        ...lic,
+        subjects: (lic.subjects || []).map((sub: any) => ({
+          ...sub,
+          questions: (sub.questions || []).map((q: any) => ({
+            ...q,
+            image: normalizeQuestionImage(q.id, q.image)
+          }))
+        }))
+      }));
+      await saveLicensesOffline(sanitizedLicenses, {
         version: snapshot.version,
         contentHash: snapshot.contentHash
       });
-      precacheAllQuestionImages(snapshot.licenses);
-      return snapshot.licenses;
+      precacheAllQuestionImages(sanitizedLicenses);
+      return sanitizedLicenses;
     }
   } catch (err) {
     console.warn('[D1 Snapshot] Fetch failed, falling back to Supabase:', err);

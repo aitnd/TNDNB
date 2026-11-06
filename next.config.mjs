@@ -21,6 +21,11 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/tuyen-dung',
+                destination: '/danh-muc/gioi-thieu-viec-lam',
+                permanent: true,
+            },
+            {
                 source: '/amthuc/:path*',
                 destination: '/food/:path*',
                 permanent: true,
@@ -30,6 +35,10 @@ const nextConfig = {
     async rewrites() {
         const standaloneOntapUrl = (process.env.NEXT_PUBLIC_ONTAP_STANDALONE_URL || '').replace(/\/+$/, '');
         return [
+            {
+                source: '/api/v1/:path*',
+                destination: 'https://api.daotaothuyenvien.com/api/v1/:path*',
+            },
             {
                 source: '/ontap/:path*',
                 destination: standaloneOntapUrl

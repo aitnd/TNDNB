@@ -7,7 +7,7 @@ GITHUB_OWNER = "aitnd"
 GITHUB_REPO = "TNDNB"
 RELEASE_UPSTREAM_MODE = "github_proxy"
 ALLOWED_ORIGINS = "https://daotaothuyenvien.com,https://www.daotaothuyenvien.com,http://localhost:3000,http://localhost:3001,http://localhost:5173"
-FIREBASE_PROJECT_ID = "tndnb-prod"
+FIREBASE_PROJECT_ID = "thi-tnd"
 
 [[d1_databases]]
 binding = "DB"

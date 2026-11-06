@@ -21,7 +21,7 @@ export async function handleConfigRoutes(
 
     if (val === null) {
       return new Response(JSON.stringify(null), {
-        status: 404,
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json; charset=utf-8' }
       });
     }
@@ -37,9 +37,10 @@ export async function handleConfigRoutes(
   }
 
   if (request.method === 'PUT') {
-    const isAuthorized = verifyAdminAuthorization(
+    const isAuthorized = await verifyAdminAuthorization(
       request.headers.get('Authorization'),
-      env.ADMIN_API_SECRET
+      env.ADMIN_API_SECRET,
+      env
     );
     if (!isAuthorized) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {

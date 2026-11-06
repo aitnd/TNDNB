@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../utils/firebaseClient'
-import { supabase } from '../utils/supabaseClient' // 💖 "TRIỆU HỒI" SUPABASE 💖
+
 
 // 1. 💖 NÂNG CẤP "KIỂU" NGƯỜI DÙNG 💖
 interface AuthUser {
@@ -44,22 +44,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
       if (firebaseUser) {
         // --- Có người đăng nhập! ---
-        try {
-          const token = await firebaseUser.getIdToken()
-          // (Đưa "vé" cho Supabase để "nâng cấp" quyền)
-          const { error: sessionError } = await supabase.auth.setSession({
-            access_token: token,
-            // (Refresh token đôi khi bị null, mình chỉ cần access_token là đủ)
-            refresh_token: firebaseUser.refreshToken || token,
-          });
-          if (sessionError) {
-            console.error("LỖI KHI SETSESSION SUPABASE:", sessionError.message);
-            // (Nếu setSession lỗi, mình vẫn tiếp tục để ít nhất web chạy được)
-          } else {
-          }
-        } catch (e: any) {
-          console.error("LỖI NGOẠI LỆ khi lấy token/setSession:", e.message);
-        }
 
         // (Lấy "hồ sơ" vai trò từ "Tủ" Firestore)
         const userDocRef = doc(db, 'users', firebaseUser.uid)
@@ -101,8 +85,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         // --- Không có ai đăng nhập ---
         setUser(null)
-        // 💖 BƯỚC 2: "BÁO CÁO" ĐĂNG XUẤT 💖
-        await supabase.auth.signOut();
       }
       setLoading(false) // Tải xong!
     })

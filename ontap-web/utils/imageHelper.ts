@@ -4,7 +4,7 @@ export const getR2PublicBaseUrl = (overrideBase?: string): string => {
   const raw =
     overrideBase ||
     (import.meta as any).env?.VITE_R2_PUBLIC_URL ||
-    '';
+    'https://cdn.daotaothuyenvien.com';
   return String(raw).replace(/\/+$/, '');
 };
 
@@ -16,12 +16,17 @@ export function resolveQuestionImageUrl(
   const trimmed = question.image.trim();
   if (!trimmed) return null;
 
+  const base = getR2PublicBaseUrl(r2BaseUrl);
+  const prefix = base ? `${base}/question-images` : '/question-images';
+
+  if (trimmed.includes('supabase.co')) {
+    return `${prefix}/${question.id}.png`;
+  }
+
   if (/^https?:\/\//i.test(trimmed)) {
     return trimmed;
   }
 
-  const base = getR2PublicBaseUrl(r2BaseUrl);
-  const prefix = base ? `${base}/question-images` : '/question-images';
   return `${prefix}/${question.id}.png`;
 }
 

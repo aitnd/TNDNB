@@ -538,6 +538,8 @@ function EditPostForm() {
                     }}
                     
                     init={{
+                      license_key: 'gpl',
+                      promotion: false,
                       skin_url: '/tinymce/skins/ui/oxide',
                       content_css: '/tinymce/skins/content/default/content.min.css',
                       height: 500,
@@ -545,8 +547,8 @@ function EditPostForm() {
                       plugins: [
                         'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 
                         'preview', 'anchor', 'searchreplace', 'visualblocks', 'code', 
-                        'fullscreen', 'insertdatetime', 'media', 'table', 'code', 
-                        'help', 'wordcount', 'image'
+                        'fullscreen', 'insertdatetime', 'media', 'table', 
+                        'help', 'wordcount'
                       ],
                       toolbar:
                         'undo redo | formatselect | ' +
@@ -559,7 +561,7 @@ function EditPostForm() {
                       file_picker_types: 'image media',
                       
                       images_upload_handler: tinymceUploadHandler,
-                    }}
+                    } as any}
                   />
                 )}
               </div>

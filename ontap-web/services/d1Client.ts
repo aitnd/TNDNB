@@ -17,7 +17,7 @@ export interface D1QuestionsSnapshot {
 
 export const getCloudflareApiBase = (): string => {
   const envUrl = (import.meta as any).env?.VITE_CLOUDFLARE_API_URL;
-  return (envUrl || '').replace(/\/+$/, '');
+  return (envUrl || 'https://api.daotaothuyenvien.com').replace(/\/+$/, '');
 };
 
 export const isCloudflareApiConfigured = (): boolean => {

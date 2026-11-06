@@ -1,17 +1,43 @@
 import { parseAllowedOrigins, WorkerEnv } from '../types';
 
-export function verifyAdminAuthorization(
+export async function verifyAdminAuthorization(
   authHeader: string | null,
-  adminSecret?: string
-): boolean {
+  adminSecret?: string,
+  env?: WorkerEnv
+): Promise<boolean> {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return false;
   }
   const token = authHeader.slice('Bearer '.length).trim();
   if (!token) return false;
 
+  // 1. Kiểm tra Admin API Secret
   if (adminSecret && token === adminSecret) {
     return true;
+  }
+
+  // 2. Kiểm tra Firebase ID Token từ project thi-tnd
+  if (env) {
+    try {
+      const parts = token.split('.');
+      if (parts.length === 3) {
+        const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+        const jsonStr = typeof atob === 'function' ? atob(base64) : Buffer.from(base64, 'base64').toString('utf-8');
+        const payload = JSON.parse(jsonStr);
+        const now = Math.floor(Date.now() / 1000);
+
+        const projectId = env.FIREBASE_PROJECT_ID || 'thi-tnd';
+        const isIssuerValid = payload.iss === `https://securetoken.google.com/${projectId}`;
+        const isAudienceValid = payload.aud === projectId;
+        const isNotExpired = payload.exp && payload.exp > now;
+
+        if (isIssuerValid && isAudienceValid && isNotExpired) {
+          return true;
+        }
+      }
+    } catch {
+      // Bỏ qua lỗi parse
+    }
   }
 
   return false;
@@ -44,7 +70,7 @@ export async function verifyPortalUploadAuth(
     const payload = JSON.parse(jsonStr);
     const now = Math.floor(Date.now() / 1000);
 
-    const projectId = env.FIREBASE_PROJECT_ID || 'tndnb-prod';
+    const projectId = env.FIREBASE_PROJECT_ID || 'thi-tnd';
     const isIssuerValid = payload.iss === `https://securetoken.google.com/${projectId}`;
     const isAudienceValid = payload.aud === projectId;
     const isNotExpired = payload.exp && payload.exp > now;
