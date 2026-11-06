@@ -4,7 +4,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
   background-color: #f8f9fa;
   min-height: 100vh;
 }

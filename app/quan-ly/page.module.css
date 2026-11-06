@@ -136,7 +136,7 @@
 }
 
 .roleTag {
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -265,7 +265,6 @@
     grid-template-columns: 1fr;
   }
 }
-
 
 /* === ANALYTICS WIDGET (HALLMARK EDITORIAL) === */
 .analyticsTitle {

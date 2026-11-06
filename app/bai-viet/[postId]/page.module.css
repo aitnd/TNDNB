@@ -21,7 +21,8 @@
 }
 
 .meta {
-    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
+    font-variant-numeric: tabular-nums;
     font-size: 0.82rem;
     color: var(--color-ink-muted, #475569);
     margin-bottom: 1.5rem;
@@ -276,4 +277,58 @@
     .relatedGrid {
         grid-template-columns: 1fr;
     }
+}
+
+
+/* --- SKELETON LOADING (Task 1.5) --- */
+@keyframes editorialPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
+.skeletonBlock {
+    background-color: var(--color-surface-subtle, #E2E8F0);
+    border-radius: var(--radius-editorial, 4px);
+    animation: editorialPulse 1.4s ease-in-out infinite;
+}
+
+.skeletonTitle {
+    height: 2.25rem;
+    width: 88%;
+    margin-bottom: 0.75rem;
+}
+
+.skeletonTitleShort {
+    height: 2.25rem;
+    width: 58%;
+    margin-bottom: 1.25rem;
+}
+
+.skeletonMeta {
+    height: 1rem;
+    width: 36%;
+    margin-bottom: 1.5rem;
+}
+
+.skeletonHero {
+    width: 100%;
+    height: 340px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--color-rule, #CBD5E1);
+}
+
+.skeletonParagraph {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.skeletonLine {
+    height: 1rem;
+    width: 100%;
+}
+
+.skeletonLineShort {
+    height: 1rem;
+    width: 72%;
 }

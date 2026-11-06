@@ -9,7 +9,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans, 'Be Vietnam Pro', system-ui, sans-serif);
     border: 1px solid rgba(255, 255, 255, 0.4);
     position: relative;
     margin: 0 auto 20px auto;
@@ -270,6 +270,7 @@
     color: #64748b;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 600;
+    font-variant-numeric: tabular-nums;
 }
 
 .verifiedBadge {

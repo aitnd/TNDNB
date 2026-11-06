@@ -4,16 +4,17 @@
 import Image from 'next/image'
 
 // 💖 1. THÊM "NÃO" 'useRef' 💖
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter, useParams } from 'next/navigation' 
 
 // (Gỡ SunEditor)
 // import dynamic from 'next/dynamic' 
 
-import { Category, Attachment, getFileIcon, sanitizeFileName, formatFileSize } from '../../dangBaiUtils'
+import { Category, Attachment, getFileIcon, formatFileSize } from '../../dangBaiUtils'
 import { useAuth } from '../../../../../context/AuthContext' 
 import ProtectedRoute from '../../../../../components/ProtectedRoute' 
-import { supabase } from '../../../../../utils/supabaseClient' 
+import { supabase } from '../../../../../utils/supabaseClient'
+import { uploadPortalAsset, createTinyMceUploadHandler } from '../../../../../lib/portalMediaService' 
 import Link from 'next/link' 
 import { db } from '../../../../../utils/firebaseClient'
 import { doc, getDoc } from 'firebase/firestore'
@@ -183,33 +184,7 @@ function EditPostForm() {
       );
     }
   }
-  const tinymceUploadHandler = (blobInfo: any, _progress: (percent: number) => void): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const file = blobInfo.blob();
-      if (file.size > 5 * 1024 * 1024) {
-        reject('Lỗi: Ảnh quá lớn, vui lòng chọn ảnh dưới 5MB');
-        return;
-      }
-      const fileName = `content_${Date.now()}_${blobInfo.filename()}`;
-      supabase.storage
-        .from('post_images') 
-        .upload(fileName, file)
-        .then(({ error: uploadError }) => {
-          if (uploadError) {
-            console.error(`Lỗi tải ảnh ${fileName}:`, uploadError.message);
-            return reject(new Error(uploadError.message)); 
-          }
-          const { data: publicUrlData } = supabase.storage
-            .from('post_images')
-            .getPublicUrl(fileName);
-          resolve(publicUrlData.publicUrl); 
-        })
-        .catch(err => {
-           console.error(`Lỗi ngoại lệ khi tải ${fileName}:`, err);
-           return reject(err);
-        });
-    });
-  }
+  const tinymceUploadHandler = useMemo(() => createTinyMceUploadHandler(), []);
 
   // (Hàm "Lưu thư viện" - Giữ nguyên)
   const extractMediaAndSave = async (
@@ -288,17 +263,14 @@ function EditPostForm() {
         is_featured: isFeatured 
       };
 
-      // 1. "Đẩy" ảnh đại diện
+      // 1. "Đẩy" ảnh đại diện lên Cloudflare R2 (Fallback Supabase 5s)
       if (thumbnailFile) {
-        const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from('post_images')
-          .upload(fileName, thumbnailFile);
-        if (uploadError) throw new Error(`Lỗi tải ảnh đại diện: ${uploadError.message}`);
-        const { data: publicUrlData } = supabase.storage
-          .from('post_images')
-          .getPublicUrl(fileName);
-        updateData.thumbnail_url = publicUrlData.publicUrl; 
+        const result = await uploadPortalAsset({
+          file: thumbnailFile,
+          category: 'image',
+          kind: 'thumbnail'
+        });
+        updateData.thumbnail_url = result.url;
       }
       
       // (Xử lý Bấm nút Xóa ảnh đại diện)
@@ -306,26 +278,18 @@ function EditPostForm() {
          updateData.thumbnail_url = null;
       }
      
-      // 2. "ĐẨY" TỆP ĐÍNH KÈM MỚI
+      // 2. "ĐẨY" TỆP ĐÍNH KÈM MỚI lên Cloudflare R2 (Fallback Supabase 5s)
       const newlyUploadedAttachments: Attachment[] = [];
       if (newAttachmentFiles.length > 0) {
-
         for (const file of newAttachmentFiles) {
-          const cleanName = sanitizeFileName(file.name);
-          const fileName = `file_${Date.now()}_${cleanName}`;
-          
-          const { error: fileUploadError } = await supabase.storage
-            .from('post_files') 
-            .upload(fileName, file);
-          if (fileUploadError) throw new Error(`Lỗi khi tải tệp ${file.name}: ${fileUploadError.message}`);
-          
-          const { data: publicUrlData } = supabase.storage
-            .from('post_files')
-            .getPublicUrl(fileName);
-            
+          const result = await uploadPortalAsset({
+            file,
+            category: 'document',
+            kind: 'document'
+          });
           newlyUploadedAttachments.push({
-            file_name: file.name, 
-            file_url: publicUrlData.publicUrl,
+            file_name: file.name,
+            file_url: result.url,
             file_size: file.size,
             file_type: file.type,
           });
@@ -557,7 +521,7 @@ function EditPostForm() {
                 {!isLoadingPost && (
                   <Editor
                     // (Dùng "chìa khóa" của anh)
-                    apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} 
+                    tinymceScriptSrc="/tinymce/tinymce.min.js" 
                     
                     // (Khai báo 'any' cho 'onInit')
                     onInit={(_evt: any, editor: any) => {
@@ -574,6 +538,8 @@ function EditPostForm() {
                     }}
                     
                     init={{
+                      skin_url: '/tinymce/skins/ui/oxide',
+                      content_css: '/tinymce/skins/content/default/content.min.css',
                       height: 500,
                       menubar: false,
                       plugins: [

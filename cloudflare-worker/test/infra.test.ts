@@ -6,7 +6,7 @@ const mockEnv: any = {
   GITHUB_OWNER: 'aitnd',
   GITHUB_REPO: 'TNDNB',
   RELEASE_UPSTREAM_MODE: 'github_proxy',
-  ALLOWED_ORIGINS: 'https://tndnb.vn,http://localhost:5173',
+  ALLOWED_ORIGINS: 'https://www.daotaothuyenvien.com,https://daotaothuyenvien.com,http://localhost:5173',
   ADMIN_API_SECRET: 'test-only-mock-val'
 };
 
@@ -29,7 +29,7 @@ describe('Auth & CORS Middleware + Worker Healthcheck', () => {
   });
 
   it('GET /api/v1/health trả về status 200 kèm thông tin mode và CORS headers', async () => {
-    const req = new Request('https://api.tndnb.vn/api/v1/health', {
+    const req = new Request('https://www.daotaothuyenvien.com/api/v1/health', {
       method: 'GET',
       headers: { Origin: 'http://localhost:5173' }
     });
@@ -45,9 +45,9 @@ describe('Auth & CORS Middleware + Worker Healthcheck', () => {
   });
 
   it('OPTIONS preflight request trả về 204 No Content', async () => {
-    const req = new Request('https://api.tndnb.vn/api/v1/config/usage_config', {
+    const req = new Request('https://www.daotaothuyenvien.com/api/v1/config/usage_config', {
       method: 'OPTIONS',
-      headers: { Origin: 'https://tndnb.vn' }
+      headers: { Origin: 'https://www.daotaothuyenvien.com' }
     });
     const res = await workerApp.fetch(req, mockEnv);
     expect(res.status).toBe(204);

@@ -3,7 +3,6 @@ import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Toaster } from 'sonner';
 import ThemeSwitcher from './components/ThemeSwitcher';
-import SnowEffect from './components/SnowEffect';
 import SweetAlertPopup from './components/SweetAlertPopup';
 import TopNavbar from './components/TopNavbar';
 import AlertMarquee from './components/AlertMarquee';
@@ -461,7 +460,6 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <SnowEffect />
       <AppContent />
       <Analytics />
       <div className="fixed bottom-4 right-4 z-50">

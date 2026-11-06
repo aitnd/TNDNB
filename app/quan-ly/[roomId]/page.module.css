@@ -42,7 +42,8 @@
     background-color: #e0f2fe;
     color: #0284c7;
     text-transform: uppercase;
-    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
+    font-variant-numeric: tabular-nums;
     letter-spacing: 0.5px;
 }
 
@@ -261,7 +262,8 @@
 
 .table th {
     background-color: var(--color-surface-subtle, #F1F5F9);
-    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
+    font-variant-numeric: tabular-nums;
     font-weight: 700;
     color: var(--color-ink, #0B132B);
     text-transform: uppercase;
@@ -284,7 +286,8 @@
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
-    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
+    font-variant-numeric: tabular-nums;
 }
 
 .statusTag.waiting {

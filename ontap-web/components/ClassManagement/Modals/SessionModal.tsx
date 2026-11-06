@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaUserClock } from 'react-icons/fa';
 import { UserProfile } from '../../../types';
@@ -21,7 +21,7 @@ const SessionModal: React.FC<SessionModalProps> = ({ isOpen, student, sessions, 
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="bg-card dark:bg-slate-900 w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 flex flex-col max-h-[85vh]"
+                    className="bg-card dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-white/20 flex flex-col max-h-[85vh]"
                 >
                     <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50/50 dark:bg-slate-800/30 shrink-0">
                         <div>

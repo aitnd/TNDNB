@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { collection, query, where, getDocs, updateDoc, doc, arrayUnion } from 'firebase/firestore';
 import { db } from '../../../services/firebaseClient';
@@ -80,7 +80,7 @@ const AddTeacherModal: React.FC<AddTeacherModalProps> = ({ isOpen, onClose, clas
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-card dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/10"
+        className="bg-card dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-white/10"
       >
         <div className="p-8 border-b border-gray-100 dark:border-slate-800 flex justify-between items-center bg-gray-50/30 dark:bg-slate-800/20">
           <div className="flex items-center gap-4">

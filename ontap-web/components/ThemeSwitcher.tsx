@@ -1,55 +1,54 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTheme } from '../contexts/ThemeContext';
-import { PaletteIcon } from './icons';
-import type { Theme } from '../types';
 
-const themes: { name: Theme; label: string; color: string }[] = [
-  { name: 'light', label: 'Sáng', color: 'bg-card' },
-  { name: 'dark', label: 'Tối', color: 'bg-slate-900' },
-  { name: 'noel', label: 'Giáng Sinh', color: 'bg-[#8B0000]' },
-  { name: 'modern', label: 'Hiện Đại', color: 'bg-indigo-600' },
-  { name: 'classic', label: 'Cổ Điển', color: 'bg-[#6F6049]' },
-  { name: 'sunrise', label: 'Bình Minh', color: 'bg-orange-500' },
-  { name: 'tri-an', label: 'Tri Ân', color: 'bg-red-400' },
-  { name: 'premium', label: '✨ Premium v2', color: 'bg-cyan-600' },
-];
+const SunIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+  </svg>
+);
+
+const MoonIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.981A10.503 10.503 0 0112 21a10.5 10.5 0 01-10.5-10.5c0-4.368 2.667-8.162 6.43-9.742a.75.75 0 01.819.162z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
 
 const ThemeSwitcher: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
-  const handleThemeChange = (newTheme: Theme) => {
-    setTheme(newTheme);
-    setIsOpen(false);
-  };
+  const isDark = theme === 'dark';
+  const label = isDark ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối';
 
   return (
-    <div className="relative">
-      {isOpen && (
-        <div className="absolute bottom-full right-0 mb-2 w-40 rounded-lg border border-border bg-card p-2 shadow-2xl flex flex-col gap-1 animate-slide-in-right">
-          {themes.map((t) => (
-            <button
-              key={t.name}
-              onClick={() => handleThemeChange(t.name)}
-              className={`w-full text-left px-3 py-2 text-sm font-semibold rounded-md flex items-center gap-3 transition-colors ${theme === t.name
-                  ? 'bg-primary/20 text-primary'
-                  : 'text-card-foreground hover:bg-secondary'
-                }`}
-            >
-              <span className={`w-4 h-4 rounded-full ${t.color} border border-white/20`}></span>
-              {t.label}
-            </button>
-          ))}
-        </div>
+    <button
+      onClick={toggleTheme}
+      type="button"
+      className="inline-flex items-center justify-center min-w-[40px] min-h-[40px] w-10 h-10 rounded-xl border border-border bg-secondary/70 hover:bg-secondary text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-sm"
+      aria-label={label}
+      title={label}
+    >
+      {isDark ? (
+        <SunIcon className="w-5 h-5 text-amber-400 transition-transform duration-200" />
+      ) : (
+        <MoonIcon className="w-5 h-5 text-slate-700 transition-transform duration-200" />
       )}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary text-secondary-foreground shadow-sm transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
-        aria-label="Change theme"
-      >
-        <PaletteIcon className="h-6 w-6" />
-      </button>
-    </div>
+    </button>
   );
 };
 

@@ -13,3 +13,9 @@
   - TypeScript (`npx tsc --noEmit`) & ESLint (`npm run lint`): **0 errors, 0 warnings**.
   - Next.js Production Build (`npm run build:portal`): **57/57 static pages thành công (`exit code 0`)**.
 - **Bước tiếp theo khi quay lại:** Merge nhánh `feat/cloudflare-offline-v3.21` vào `main` / kiểm tra Vercel Production hoặc phát triển tính năng mới.
+
+
+- **Định Danh Hệ Thống Chính Thức (Cập nhật 2026-11-06):**
+  - **Cổng thông tin:** `https://www.daotaothuyenvien.com`
+  - **App Ôn tập & Thi thử Trực tuyến:** `https://www.daotaothuyenvien.com/ontap`
+  - **Lưu ý:** Không dùng domain `tndnb.vn`. Toàn bộ cấu hình CORS Cloudflare Worker và Router phải chuẩn hóa theo `daotaothuyenvien.com`.

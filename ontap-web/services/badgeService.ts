@@ -15,14 +15,17 @@ export const BadgeService = {
    */
   getUserBadges: async (uid: string): Promise<UserBadgeProgress[]> => {
     try {
+      if (!uid || uid === 'guest') return [];
       const q = query(collection(db, 'users', uid, 'userBadges'));
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => ({
         badgeId: doc.id,
         ...doc.data()
       })) as UserBadgeProgress[];
-    } catch (error) {
-      console.error('Error fetching user badges:', error);
+    } catch (error: any) {
+      if (error?.code !== 'permission-denied') {
+        console.warn('Error fetching user badges:', error);
+      }
       return [];
     }
   },

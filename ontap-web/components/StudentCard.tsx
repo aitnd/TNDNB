@@ -85,14 +85,14 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                         </div>
 
                         <div className={styles.infoRow}>
-                            <Calendar size={12} className="text-slate-400" />
+                            <Calendar size={12} className="text-muted-foreground" />
                             <span className={styles.label}>Ngày sinh:</span>
-                            <span className={styles.value}>{formatDate(user.birthDate)}</span>
+                            <span className={`${styles.value} tabular-nums`}>{formatDate(user.birthDate)}</span>
                         </div>
 
                         {isTeacher ? (
                             <div className={styles.infoRow}>
-                                <Building2 size={12} className="text-slate-400" />
+                                <Building2 size={12} className="text-muted-foreground" />
                                 <span className={styles.label}>Phòng:</span>
                                 <span className={styles.value} style={{ fontSize: '0.68rem' }}>
                                     P. Đào tạo - Tổ vận hành máy tàu thủy
@@ -100,14 +100,14 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                             </div>
                         ) : (
                             <div className={styles.infoRow}>
-                                <GraduationCap size={12} className="text-slate-400" />
+                                <GraduationCap size={12} className="text-muted-foreground" />
                                 <span className={styles.label}>Lớp học:</span>
                                 <span className={styles.value}>{user.courseName || 'N/A'}</span>
                             </div>
                         )}
 
                         <div className={styles.infoRow}>
-                            <MapPin size={12} className="text-slate-400" />
+                            <MapPin size={12} className="text-muted-foreground" />
                             <span className={styles.label}>Địa chỉ:</span>
                             <span className={styles.value} style={{ fontSize: '0.68rem', lineHeight: '1.2' }}>
                                 {user.address || '---'}
@@ -122,7 +122,7 @@ const StudentCard: React.FC<StudentCardProps> = ({ user }) => {
                 <div className={styles.barcodeSection}>
                     <div className={styles.barcode}></div>
                 </div>
-                <div className={styles.idText}>
+                <div className={`${styles.idText} tabular-nums`}>
                     ID: {user.id ? user.id.substring(0, 10).toUpperCase() : 'APP-ID-NEW'}
                 </div>
             </div>

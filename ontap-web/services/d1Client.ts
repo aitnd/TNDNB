@@ -17,12 +17,35 @@ export interface D1QuestionsSnapshot {
 
 export const getCloudflareApiBase = (): string => {
   const envUrl = (import.meta as any).env?.VITE_CLOUDFLARE_API_URL;
-  return (envUrl || 'https://api.tndnb.vn').replace(/\/+$/, '');
+  return (envUrl || '').replace(/\/+$/, '');
 };
+
+export const isCloudflareApiConfigured = (): boolean => {
+  const base = getCloudflareApiBase();
+  return Boolean(base && base !== 'undefined');
+};
+
+export async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeoutMs: number = 2500
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+    return response;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
 
 export async function fetchMetaVersion(): Promise<D1MetaVersion | null> {
   try {
-    const res = await fetch(`${getCloudflareApiBase()}/api/v1/meta/version`, {
+    const res = await fetchWithTimeout(`${getCloudflareApiBase()}/api/v1/meta/version`, {
       method: 'GET',
       headers: { Accept: 'application/json' }
     });
@@ -34,10 +57,14 @@ export async function fetchMetaVersion(): Promise<D1MetaVersion | null> {
 }
 
 export async function fetchQuestionsSnapshot(): Promise<D1QuestionsSnapshot> {
-  const res = await fetch(`${getCloudflareApiBase()}/api/v1/questions/snapshot`, {
-    method: 'GET',
-    headers: { Accept: 'application/json' }
-  });
+  const res = await fetchWithTimeout(
+    `${getCloudflareApiBase()}/api/v1/questions/snapshot`,
+    {
+      method: 'GET',
+      headers: { Accept: 'application/json' }
+    },
+    10000
+  );
   if (!res.ok) {
     throw new Error(`D1 Snapshot HTTP ${res.status}`);
   }
@@ -46,7 +73,7 @@ export async function fetchQuestionsSnapshot(): Promise<D1QuestionsSnapshot> {
 
 export async function fetchD1Config<T = any>(key: string): Promise<T | null> {
   try {
-    const res = await fetch(`${getCloudflareApiBase()}/api/v1/config/${encodeURIComponent(key)}`, {
+    const res = await fetchWithTimeout(`${getCloudflareApiBase()}/api/v1/config/${encodeURIComponent(key)}`, {
       method: 'GET',
       headers: { Accept: 'application/json' }
     });
@@ -62,18 +89,22 @@ export async function saveD1Config<T = any>(
   data: T,
   authToken?: string
 ): Promise<boolean> {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json'
-  };
-  if (authToken) {
-    headers['Authorization'] = `Bearer ${authToken}`;
+  try {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    const res = await fetchWithTimeout(`${getCloudflareApiBase()}/api/v1/config/${encodeURIComponent(key)}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(data)
+    });
+    return res.ok;
+  } catch {
+    return false;
   }
-  const res = await fetch(`${getCloudflareApiBase()}/api/v1/config/${encodeURIComponent(key)}`, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify(data)
-  });
-  return res.ok;
 }
 
 export async function fetchD1Alerts(params?: {
@@ -87,7 +118,7 @@ export async function fetchD1Alerts(params?: {
     if (params?.role) qs.set('role', params.role);
     if (params?.userId) qs.set('userId', params.userId);
     const queryStr = qs.toString() ? `?${qs.toString()}` : '';
-    const res = await fetch(`${getCloudflareApiBase()}/api/v1/alerts${queryStr}`, {
+    const res = await fetchWithTimeout(`${getCloudflareApiBase()}/api/v1/alerts${queryStr}`, {
       method: 'GET',
       headers: { Accept: 'application/json' }
     });

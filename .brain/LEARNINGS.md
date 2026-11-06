@@ -24,3 +24,10 @@
 - **Bài học Kỹ thuật (`[type=lesson]`):**
   1. Khi tách monorepo (`ontap-web` / `ontap-win` ra khỏi Root Portal), cần có bộ kiểm thử tự động (`scripts/portal-login-dashboard.test.ts`) canh gác sự tồn tại của các route trọng yếu (`app/login/page.tsx`, `app/quan-ly/page.tsx`) để tránh xóa nhầm khi dọn dẹp.
   2. Trên Next.js 14 App Router, mọi trang sử dụng `useSearchParams()` (như `/login?redirect=...`) bắt buộc phải bọc component con trong `<Suspense>` để `npm run build:portal` tĩnh hóa (Static Prerender) thành công mà không bị lỗi CSR Bailout.
+
+
+## [2026-11-06] Định Danh Tên Miền Chính Thức Của Dự Án (Canonical Domains & URLs)
+- **Tên miền Cổng thông tin chính thức (`[type=architecture]`):** `https://www.daotaothuyenvien.com` (và `https://daotaothuyenvien.com`). Dự án KHÔNG dùng domain `tndnb.vn`.
+- **Đường dẫn Web App Ôn tập chính thức (`[type=architecture]`):** `https://www.daotaothuyenvien.com/ontap` (chạy qua Next.js Reverse Proxy/Rewrite trên Vercel).
+- **Quy chuẩn CORS & Backend Cloudflare Worker:** Toàn bộ API Worker và Cloudflare D1/R2 phải cho phép origin `https://www.daotaothuyenvien.com` và `https://daotaothuyenvien.com` trong `ALLOWED_ORIGINS`.
+- **Chiến lược Tên miền App Ôn tập (`[type=decision]`):** Giữ nguyên `https://www.daotaothuyenvien.com/ontap` làm địa chỉ chính thức duy nhất cho học viên truy cập để tập trung 100% sức mạnh SEO (Domain Authority) và kiếm tiền ổn định qua Google AdSense / Monetag mà không cần duyệt lại subdomain.

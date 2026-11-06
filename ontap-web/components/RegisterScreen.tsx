@@ -79,97 +79,98 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onBack, onSuccess }) =>
             <div className="relative text-center mb-6">
                 <button
                     onClick={onBack}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-card/50 p-2 rounded-full shadow-md hover:bg-muted transition-all duration-300"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-card border border-border p-2.5 rounded-full shadow-sm hover:bg-muted transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                    aria-label="Quay lại"
                 >
-                    <ArrowLeftIcon3D className="h-8 w-8 text-primary" />
+                    <ArrowLeftIcon3D className="h-6 w-6 text-primary" />
                 </button>
                 <HelmIcon3D className="h-16 w-16 mx-auto text-primary mb-2" />
-                <h1 className="text-3xl font-bold text-foreground">Đăng Ký</h1>
-                <p className="text-sm text-muted-foreground">Tạo tài khoản học viên mới</p>
+                <h1 className="text-3xl font-bold tracking-tight text-foreground">Đăng Ký</h1>
+                <p className="text-sm text-muted-foreground mt-1">Tạo tài khoản học viên mới</p>
             </div>
 
-            <div className="bg-card p-6 rounded-2xl shadow-lg">
+            <div className="bg-card text-card-foreground p-6 md:p-8 rounded-2xl border border-border shadow-sm">
                 <form onSubmit={handleRegister} className="space-y-4">
-                    {error && <p className="bg-destructive/10 text-destructive p-3 rounded-md text-sm text-center">{error}</p>}
+                    {error && <p className="bg-destructive/10 text-destructive border border-destructive/20 p-3 rounded-xl text-sm text-center">{error}</p>}
 
                     <div>
-                        <label className="block text-sm font-medium text-card-foreground mb-1">Họ và Tên *</label>
+                        <label className="block text-sm font-medium text-card-foreground mb-1.5">Họ và Tên *</label>
                         <input
                             type="text"
                             value={fullName}
                             onChange={e => setFullName(e.target.value)}
                             required
-                            className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                            className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                             placeholder="Nguyễn Văn A"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-card-foreground mb-1">Lớp Học *</label>
+                        <label className="block text-sm font-medium text-card-foreground mb-1.5">Lớp Học *</label>
                         <input
                             type="text"
                             value={className}
                             onChange={e => setClassName(e.target.value)}
                             required
-                            className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                            className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                             placeholder="Nhập tên lớp (GV sẽ duyệt)"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-card-foreground mb-1">Ngày sinh</label>
+                            <label className="block text-sm font-medium text-card-foreground mb-1.5">Ngày sinh</label>
                             <input
                                 type="date"
                                 value={birthDate}
                                 onChange={e => setBirthDate(e.target.value)}
-                                className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                                className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors tabular-nums"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-card-foreground mb-1">SĐT</label>
+                            <label className="block text-sm font-medium text-card-foreground mb-1.5">SĐT</label>
                             <input
                                 type="tel"
                                 value={phoneNumber}
                                 onChange={e => setPhoneNumber(e.target.value)}
-                                className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                                className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors tabular-nums"
                                 placeholder="09..."
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-card-foreground mb-1">Email *</label>
+                        <label className="block text-sm font-medium text-card-foreground mb-1.5">Email *</label>
                         <input
                             type="email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                             required
-                            className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                            className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                             placeholder="email@example.com"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-card-foreground mb-1">Mật khẩu *</label>
+                        <label className="block text-sm font-medium text-card-foreground mb-1.5">Mật khẩu *</label>
                         <input
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
                             required
-                            className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                            className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                             placeholder="Ít nhất 6 ký tự"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-card-foreground mb-1">Xác nhận mật khẩu *</label>
+                        <label className="block text-sm font-medium text-card-foreground mb-1.5">Xác nhận mật khẩu *</label>
                         <input
                             type="password"
                             value={confirmPassword}
                             onChange={e => setConfirmPassword(e.target.value)}
                             required
-                            className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary outline-none"
+                            className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
                             placeholder="Nhập lại mật khẩu"
                         />
                     </div>
@@ -177,7 +178,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onBack, onSuccess }) =>
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-primary text-primary-foreground font-bold py-3 px-6 rounded-lg hover:bg-primary/90 transition-all duration-300 mt-4 disabled:opacity-50"
+                        className="w-full min-h-[44px] bg-primary text-primary-foreground font-semibold py-2.5 px-6 rounded-xl hover:bg-primary/90 transition-all duration-300 mt-4 disabled:opacity-50 shadow-sm"
                     >
                         {loading ? 'Đang tạo tài khoản...' : 'Đăng Ký'}
                     </button>

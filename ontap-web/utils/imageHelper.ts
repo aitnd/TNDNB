@@ -4,7 +4,7 @@ export const getR2PublicBaseUrl = (overrideBase?: string): string => {
   const raw =
     overrideBase ||
     (import.meta as any).env?.VITE_R2_PUBLIC_URL ||
-    'https://cdn.tndnb.vn';
+    '';
   return String(raw).replace(/\/+$/, '');
 };
 
@@ -21,7 +21,22 @@ export function resolveQuestionImageUrl(
   }
 
   const base = getR2PublicBaseUrl(r2BaseUrl);
-  return `${base}/question-images/${question.id}.png`;
+  const prefix = base ? `${base}/question-images` : '/question-images';
+  return `${prefix}/${question.id}.png`;
+}
+
+export function resolveQuestionImageFallbackUrl(
+  question: { id: string; image?: string | null }
+): string | null {
+  if (!question || !question.image) return null;
+  const trimmed = question.image.trim();
+  if (!trimmed) return null;
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  return `/ontap/question_images/${question.id}.png`;
 }
 
 export function extractAllQuestionImageUrls(

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaHome, FaUserCog, FaBars, FaHistory, FaSchool, FaUserGraduate, FaExclamationTriangle, FaSignOutAlt, FaTimes, FaDownload, FaEnvelope, FaCog } from 'react-icons/fa';
+import { FaHome, FaUserCog, FaBars, FaHistory, FaSchool, FaUserGraduate, FaExclamationTriangle, FaSignOutAlt, FaTimes, FaEnvelope } from 'react-icons/fa';
 
 import { UserProfile } from '../types';
 import { triggerHaptic } from '../utils/nativeUX';
@@ -70,51 +70,37 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
     const menuItems = [];
 
     if (userProfile) {
-        // 1. Tài khoản
         menuItems.push({
             name: 'Tài khoản',
             icon: FaUserCog,
             action: () => handleNavigate('account'),
-            color: 'text-blue-600'
+            color: 'text-primary'
         });
 
-        // 2. Hộp thư
         menuItems.push({
             name: 'Hộp thư',
             icon: FaEnvelope,
             action: () => handleNavigate('mailbox'),
-            color: 'text-pink-600'
+            color: 'text-pink-500'
         });
 
-        // 3. Extra Management (Role based)
         if (isTeacher) {
-            // Notification Mgmt
             menuItems.push({
                 name: 'Quản lý TB',
                 icon: FaExclamationTriangle,
                 action: () => handleNavigate('notification_mgmt'),
-                color: 'text-red-500'
+                color: 'text-amber-500'
             });
-            // Cấu hình (chỉ Admin)
             if (userProfile?.role === 'admin') {
                 menuItems.push({
-                    name: 'Cấu hình',
-                    icon: FaCog,
+                    name: 'Cấu hình hệ thống',
+                    icon: FaUserCog,
                     action: () => handleNavigate('config'),
-                    color: 'text-purple-600'
+                    color: 'text-purple-500'
                 });
             }
         }
-
-        // 4. Tải App (cho tất cả)
-        menuItems.push({
-            name: 'Tải App',
-            icon: FaDownload,
-            action: () => handleNavigate('download_app'),
-            color: 'text-green-600'
-        });
     }
-
 
     const toggleMenu = () => {
         triggerHaptic('light');
@@ -123,15 +109,16 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
 
     return (
         <>
-            {/* EXPANDABLE MENU (The "Pile") */}
+            {/* OVERLAY EXTENDED MENU */}
             <div
                 ref={menuRef}
-                className={`fixed bottom-24 right-4 z-[10000] md:hidden transition-all duration-300 origin-bottom-right ${isMenuOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'
-                    }`}>
-                <div className="bg-card/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-4 w-56 flex flex-col gap-2">
+                className={`fixed bottom-20 right-4 z-[10000] transition-all duration-300 origin-bottom-right ${
+                    isMenuOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'
+                }`}>
+                <div className="bg-card text-card-foreground border border-border shadow-2xl rounded-2xl p-4 w-56 flex flex-col gap-2">
                     {userProfile ? (
                         <>
-                            <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 mb-2 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b border-border pb-2">
                                 Menu mở rộng
                             </div>
 
@@ -144,17 +131,17 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                                             item.action();
                                             setIsMenuOpen(false);
                                         }}
-                                        className="flex items-center gap-3 w-full p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors group"
+                                        className="flex items-center gap-3 w-full p-2.5 rounded-xl hover:bg-secondary transition-colors group min-h-[44px]"
                                     >
-                                        <div className={`p-2 rounded-lg bg-gray-50 dark:bg-slate-800 group-hover:bg-card dark:group-hover:bg-slate-700 shadow-sm ${item.color}`}>
+                                        <div className={`p-2 rounded-lg bg-secondary group-hover:bg-card shadow-xs ${item.color}`}>
                                             <Icon />
                                         </div>
-                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{item.name}</span>
+                                        <span className="text-sm font-medium text-foreground">{item.name}</span>
                                     </button>
                                 );
                             })}
 
-                            <div className="h-px bg-gray-200 dark:bg-gray-700 my-1" />
+                            <div className="h-px bg-border my-1" />
 
                             <button
                                 onClick={() => {
@@ -162,12 +149,12 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                                     onLogout();
                                     setIsMenuOpen(false);
                                 }}
-                                className="flex items-center gap-3 w-full p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 transition-colors"
+                                className="flex items-center gap-3 w-full p-2.5 rounded-xl hover:bg-destructive/10 text-destructive transition-colors min-h-[44px]"
                             >
-                                <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/30">
+                                <div className="p-2 rounded-lg bg-destructive/15">
                                     <FaSignOutAlt />
                                 </div>
-                                <span className="text-sm font-medium">Đăng xuất</span>
+                                <span className="text-sm font-semibold">Đăng xuất</span>
                             </button>
                         </>
                     ) : (
@@ -176,7 +163,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                                 handleNavigate('login');
                                 setIsMenuOpen(false);
                             }}
-                            className="w-full py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition"
+                            className="w-full py-2.5 bg-primary text-primary-foreground rounded-xl font-bold hover:bg-primary/90 transition shadow-sm min-h-[44px]"
                         >
                             Đăng nhập ngay
                         </button>
@@ -186,12 +173,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
 
             {/* BOTTOM NAVBAR */}
             <div className="fixed bottom-4 left-4 right-4 z-[9999] md:hidden animate-fade-in-up" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-                {/* Glassmorphism Container */}
-                <div className="bg-card/90 dark:bg-slate-900/90 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-2 flex justify-between items-center relative overflow-hidden">
-                    {/* Shine Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 animate-shine pointer-events-none" />
-
-                    {/* 3 Common Items */}
+                <div className="bg-card/95 backdrop-blur-md border border-border shadow-xl rounded-2xl p-2 flex justify-between items-center relative overflow-hidden text-foreground">
+                    {/* Primary Items */}
                     {primaryItems.map((item) => {
                         const Icon = item.icon;
                         const active = item.active;
@@ -200,57 +183,51 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                             <button
                                 key={item.key}
                                 onClick={item.action}
-                                className={`relative flex flex-col items-center justify-center w-full py-2 transition-all duration-300 group ${active ? '-translate-y-1' : ''}`}
+                                className={`relative flex flex-col items-center justify-center w-full py-2 min-h-[44px] transition-all duration-200 group ${active ? '-translate-y-0.5' : ''}`}
                             >
-                                {active && (
-                                    <div className="absolute top-1 w-10 h-10 bg-indigo-500/20 rounded-full blur-md" />
-                                )}
-
                                 <Icon
-                                    className={`text-2xl mb-1 transition-all duration-300 drop-shadow-sm ${active
-                                        ? 'text-indigo-600 dark:text-indigo-400 scale-110 filter drop-shadow-[0_2px_4px_rgba(79,70,229,0.3)]'
-                                        : 'text-gray-400 dark:text-gray-500 group-hover:text-muted-foreground dark:group-hover:text-gray-300'
-                                        }`}
+                                    className={`text-xl mb-1 transition-colors ${
+                                        active
+                                            ? 'text-primary'
+                                            : 'text-muted-foreground group-hover:text-foreground'
+                                    }`}
                                 />
 
-                                <span className={`text-[10px] font-bold transition-all duration-300 ${active
-                                    ? 'text-indigo-600 dark:text-indigo-400 opacity-100'
-                                    : 'text-gray-400 dark:text-gray-500 opacity-80 group-hover:opacity-100'
-                                    }`}>
+                                <span className={`text-[10px] font-bold transition-colors ${
+                                    active
+                                        ? 'text-primary'
+                                        : 'text-muted-foreground group-hover:text-foreground'
+                                }`}>
                                     {item.name}
                                 </span>
 
                                 {active && (
-                                    <span className="absolute -bottom-1 w-1 h-1 bg-indigo-600 rounded-full" />
+                                    <span className="absolute bottom-0 w-1.5 h-1.5 bg-primary rounded-full" />
                                 )}
                             </button>
                         );
                     })}
 
-                    {/* 4. MORE BUTTON (Thêm) */}
+                    {/* MORE BUTTON */}
                     <button
                         onClick={toggleMenu}
-                        className={`relative flex flex-col items-center justify-center w-full py-2 transition-all duration-300 group ${isMenuOpen ? '-translate-y-1' : ''}`}
+                        className={`relative flex flex-col items-center justify-center w-full py-2 min-h-[44px] transition-all duration-200 group ${isMenuOpen ? '-translate-y-0.5' : ''}`}
+                        aria-label="Thêm thao tác"
                     >
-                        {isMenuOpen && (
-                            <div className="absolute top-1 w-10 h-10 bg-orange-500/20 rounded-full blur-md" />
-                        )}
-
                         {isMenuOpen ? (
-                            <FaTimes className="text-2xl mb-1 text-orange-600 dark:text-orange-400 scale-110 transition-all duration-300" />
+                            <FaTimes className="text-xl mb-1 text-primary transition-colors" />
                         ) : (
-                            <FaBars className="text-2xl mb-1 text-gray-400 dark:text-gray-500 group-hover:text-muted-foreground dark:group-hover:text-gray-300 transition-all duration-300" />
+                            <FaBars className="text-xl mb-1 text-muted-foreground group-hover:text-foreground transition-colors" />
                         )}
 
-
-                        <span className={`text-[10px] font-bold transition-all duration-300 ${isMenuOpen
-                            ? 'text-orange-600 dark:text-orange-400 opacity-100'
-                            : 'text-gray-400 dark:text-gray-500 opacity-80 group-hover:opacity-100'
-                            }`}>
+                        <span className={`text-[10px] font-bold transition-colors ${
+                            isMenuOpen
+                                ? 'text-primary'
+                                : 'text-muted-foreground group-hover:text-foreground'
+                        }`}>
                             Thêm
                         </span>
                     </button>
-
                 </div>
             </div>
         </>

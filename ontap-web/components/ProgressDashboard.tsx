@@ -17,17 +17,19 @@ export const ProgressDashboard = ({ history }: { history: ExamResult[] }) => {
   }, [history]);
 
   if (data.length === 0) {
-    return <p>Chưa có dữ liệu — làm vài bài thi rồi quay lại nhé!</p>;
+    return <p className="text-sm text-muted-foreground py-6 text-center">Chưa có dữ liệu — làm vài bài thi rồi quay lại nhé!</p>;
   }
 
   return (
-    <ResponsiveContainer width="100%" height={280}>
-      <BarChart data={data}>
-        <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="highScore" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="w-full h-[280px] pt-2">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data}>
+          <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="currentColor" className="text-muted-foreground" />
+          <YAxis stroke="currentColor" className="text-muted-foreground tabular-nums" />
+          <Tooltip contentStyle={{ backgroundColor: 'var(--color-card, #fff)', borderColor: 'var(--color-border, #e2e8f0)', borderRadius: '0.75rem', color: 'var(--color-foreground, #0f172a)' }} />
+          <Bar dataKey="highScore" fill="var(--color-primary, #0284c7)" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 };

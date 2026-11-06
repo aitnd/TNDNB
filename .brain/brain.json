@@ -1,23 +1,29 @@
 {
-    "features":  [
-                     "Authentication",
-                     "Quiz System",
-                     "Class Management",
-                     "GitHub Releases Auto-Update",
-                     "ErrorBoundary header resilience",
-                     "Admin GitHub multi-upload (exe/yml/blockmap, fail-fast rollback)",
-                     "5-column answer sheet + mobile answer grid",
-                     "Electron tray context menu"
-                 ],
-    "project":  "TNDNB",
-    "architecture":  "Monorepo with Root Portal (Next.js), Web App (Vite), Desktop App (Electron+Vite)",
-    "tech_stack":  [
-                       "Next.js",
-                       "Vite",
-                       "React",
-                       "Electron",
-                       "TailwindCSS",
-                       "Supabase",
-                       "Firebase"
-                   ]
+    "features": [
+        "Authentication",
+        "Quiz System",
+        "Class Management",
+        "GitHub Releases Auto-Update",
+        "ErrorBoundary header resilience",
+        "Admin GitHub multi-upload (exe/yml/blockmap, fail-fast rollback)",
+        "5-column answer sheet + mobile answer grid",
+        "Electron tray context menu",
+        "Dual-Theme Core (Light/Dark)",
+        "Editorial Post ISR < 50ms"
+    ],
+    "project": "TNDNB",
+    "canonical_domain": "https://www.daotaothuyenvien.com",
+    "ontap_web_url": "https://www.daotaothuyenvien.com/ontap",
+    "architecture": "Monorepo with Root Portal (Next.js), Web App (Vite), Desktop App (Electron+Vite), Cloudflare Edge Worker (Hono)",
+    "tech_stack": [
+        "Next.js",
+        "Vite",
+        "React",
+        "Electron",
+        "TailwindCSS",
+        "Supabase",
+        "Firebase",
+        "Cloudflare D1",
+        "Cloudflare R2"
+    ]
 }

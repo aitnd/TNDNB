@@ -1,6 +1,7 @@
 // File: app/api/thi/[licenseId]/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '../../../../utils/supabaseClient';
 
 interface ExamAnswer {
   id: string;
@@ -28,15 +29,70 @@ interface ExamLicensePayload {
   subjects?: ExamSubject[];
 }
 
-// --- CÔNG THỨC TRỘN ĐỀ (Giữ nguyên) ---
-
-// Hàm "xáo" bài (Giữ nguyên)
+// Hàm "xáo" bài
 function xaoTronBai<T>(array: T[]): T[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+}
+
+// Fallback truy vấn trực tiếp từ Supabase khi Worker API không khả dụng hoặc lỗi mạng
+async function fetchLicenseFromSupabase(licenseId: string): Promise<ExamLicensePayload | null> {
+  const { data, error } = await supabase
+    .from('licenses')
+    .select(`
+      id,
+      name,
+      subjects (
+        id,
+        name,
+        questions (
+          id,
+          text,
+          image,
+          correct_answer_id,
+          answers (
+            id,
+            text
+          )
+        )
+      )
+    `)
+    .eq('id', licenseId)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+  return data as unknown as ExamLicensePayload;
+}
+
+async function fetchLicensePayload(licenseId: string): Promise<ExamLicensePayload> {
+  const configuredWorkerUrl = process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL?.trim();
+  if (configuredWorkerUrl) {
+    try {
+      const cleanBase = configuredWorkerUrl.replace(/\/+$/, '');
+      const res = await fetch(`${cleanBase}/api/v1/licenses/${encodeURIComponent(licenseId)}`, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(2500),
+        next: { revalidate: 3600 },
+      });
+      if (res.ok) {
+        return (await res.json()) as ExamLicensePayload;
+      }
+    } catch (workerErr) {
+      console.warn(`[API Trộn Đề] Cloudflare Worker không phản hồi cho ${licenseId}, chuyển sang Supabase fallback:`, workerErr);
+    }
+  }
+
+  const fallbackData = await fetchLicenseFromSupabase(licenseId);
+  if (!fallbackData) {
+    throw new Error(`Không tìm thấy dữ liệu hạng bằng ${licenseId}.`);
+  }
+  return fallbackData;
 }
 
 // --- HÀM API CHÍNH (GET) ---
@@ -47,20 +103,8 @@ export async function GET(
   try {
     const licenseId = params.licenseId;
 
-    // 1. 💖 LẤY "KHO" CÂU HỎI TỪ CLOUDFLARE D1 WORKER API 💖
-    const cloudflareApiUrl = process.env.NEXT_PUBLIC_CLOUDFLARE_API_URL || 'https://api.tndnb.vn';
-    const res = await fetch(`${cloudflareApiUrl}/api/v1/licenses/${encodeURIComponent(licenseId)}`, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      next: { revalidate: 3600 }
-    });
-
-    if (!res.ok) {
-      const errBody = await res.json().catch(() => ({}));
-      throw new Error(errBody.error || `Không tìm thấy hạng bằng ${licenseId} hoặc lỗi kết nối Cloudflare D1 (HTTP ${res.status}).`);
-    }
-
-    const data = (await res.json()) as ExamLicensePayload;
+    // 1. Lấy dữ liệu đề thi (Cloudflare Worker D1 với Supabase Fallback)
+    const data = await fetchLicensePayload(licenseId);
     const licenseName = data.name || licenseId;
 
     // 2. "LÀM PHẲNG" DỮ LIỆU (Flatten)
@@ -78,10 +122,10 @@ export async function GET(
       throw new Error(`Hạng bằng ${licenseName} chưa có câu hỏi nào.`);
     }
 
-    // 3. "TRỘN" ĐỀ (Giữ nguyên logic)
+    // 3. "TRỘN" ĐỀ
     let deThiCuoiCung = xaoTronBai(allQuestions);
 
-    // 💖 XỬ LÝ GIỚI HẠN CÂU HỎI 💖
+    // Xử lý giới hạn câu hỏi
     const url = new URL(request.url);
     const limitStr = url.searchParams.get('limit');
     let limit = 30; // Mặc định 30 câu

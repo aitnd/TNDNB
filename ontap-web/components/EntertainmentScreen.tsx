@@ -98,8 +98,22 @@ const gamesList: Game[] = [
   {
     name: '2048 Puzzle',
     file: 'https://2048game.com/embed/',
-    image: 'https://2048game.com/meta/apple-touch-icon.png',
-    tag: 'Trí Tuệ',
+    image: 'https://play-lh.googleusercontent.com/fymW_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z=w240-h480-rw',
+    tag: 'Trí Não',
+    type: 'html5',
+  },
+  {
+    name: 'Flappy Bird',
+    file: 'https://flappybird.io/',
+    image: 'https://play-lh.googleusercontent.com/fLz_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z=w240-h480-rw',
+    tag: 'Ức Chế',
+    type: 'html5',
+  },
+  {
+    name: 'Khủng Long Nhảy (Chrome Dino)',
+    file: 'https://chromedino.com/',
+    image: 'https://play-lh.googleusercontent.com/9wz_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z_Z=w240-h480-rw',
+    tag: 'Mất Mạng',
     type: 'html5',
   }
 ];
@@ -113,29 +127,23 @@ const EntertainmentScreen: React.FC<EntertainmentScreenProps> = ({ onBack }) => 
   const gameContainerRef = useRef<HTMLDivElement>(null);
 
   const handleSelectGame = (game: Game) => {
-    if (game.type === 'external') {
-      window.open(game.file, '_blank');
-    } else {
-      setSelectedGame(game);
-    }
+    setSelectedGame(game);
   };
 
   const handleFullScreen = () => {
     if (gameContainerRef.current) {
-      if (gameContainerRef.current.requestFullscreen) {
-        gameContainerRef.current.requestFullscreen();
+      if (!document.fullscreenElement) {
+        gameContainerRef.current.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
       }
     }
   };
 
   return (
-    <div className="relative min-h-screen p-4 md:p-8 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-      {/* Dynamic Background Overlays */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/10 blur-[120px] animate-pulse-slow" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[150px] animate-bounce-slow" />
-      </div>
-
+    <div className="relative min-h-screen p-4 md:p-8 overflow-hidden bg-background text-foreground pb-24 pt-20 transition-colors duration-300">
       <AnimatePresence mode="wait">
         {!selectedGame ? (
           <motion.div 
@@ -145,117 +153,113 @@ const EntertainmentScreen: React.FC<EntertainmentScreenProps> = ({ onBack }) => 
             exit={{ opacity: 0, scale: 0.95 }}
             className="relative z-10 max-w-7xl mx-auto"
           >
-            <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center justify-between mb-8">
               <div className="relative">
-                <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-emerald-400 via-teal-500 to-blue-500 bg-clip-text text-transparent flex items-center gap-4 py-2">
-                  <Gamepad2 size={56} className="text-emerald-500 drop-shadow-lg" />
+                <h1 className="text-3xl md:text-5xl font-black text-foreground flex items-center gap-3 py-1">
+                  <Gamepad2 size={44} className="text-primary" />
                   Góc Giải Trí
                 </h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-2 font-bold text-lg flex items-center gap-2">
-                  <Sparkles size={20} className="text-yellow-500" />
+                <p className="text-muted-foreground mt-1 font-semibold text-base flex items-center gap-2">
+                  <Sparkles size={18} className="text-amber-500" />
                   Xả stress sau giờ học căng thẳng nè! ✨
                 </p>
               </div>
               <button 
                 onClick={onBack}
-                className="group p-4 rounded-2xl glass-premium hover:bg-card/10 transition-all duration-300 transform active:scale-95 shadow-xl"
+                className="p-3 rounded-2xl bg-card border border-border hover:bg-muted text-foreground transition-all duration-200 transform active:scale-95 shadow-sm min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Quay lại"
               >
-                <ArrowLeft size={28} className="group-hover:-translate-x-1 transition-transform" />
+                <ArrowLeft size={24} />
               </button>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
               {gamesList.map((game, idx) => (
                 <motion.button
                   key={game.name}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05, type: 'spring', stiffness: 100 }}
+                  transition={{ delay: idx * 0.03, type: 'spring', stiffness: 120 }}
                   onClick={() => handleSelectGame(game)}
-                  className="game-card-hover group relative flex flex-col glass-premium rounded-[32px] overflow-hidden shadow-2xl text-left border-white/5"
+                  className="group relative flex flex-col bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-md text-left border border-border hover:border-primary/40 transition-all"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                     <img 
                       src={game.image} 
                       alt={game.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=Game+Icon';
                       }} loading="lazy" />
-                    {/* Shadow Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
-                    <div className="absolute top-4 left-4 z-20">
-                      <span className="px-3 py-1.5 bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/30 rounded-full text-[10px] font-black uppercase tracking-widest text-emerald-400 shadow-lg">
+                    <div className="absolute top-3 left-3 z-20">
+                      <span className="px-2.5 py-1 bg-black/60 backdrop-blur-xs rounded-full text-[10px] font-black uppercase tracking-wider text-white border border-white/20">
                         {game.tag}
                       </span>
                     </div>
                   </div>
-                  <div className="p-5 relative z-20">
-                    <h3 className="font-black text-slate-800 dark:text-slate-100 text-lg line-clamp-1 group-hover:text-emerald-400 transition-colors duration-300">
+                  <div className="p-4 relative z-20">
+                    <h3 className="font-bold text-foreground text-sm line-clamp-1 group-hover:text-primary transition-colors">
                       {game.name}
                     </h3>
-                    <div className="mt-2 w-0 group-hover:w-12 h-1 bg-emerald-500 rounded-full transition-all duration-500" />
                   </div>
                 </motion.button>
               ))}
             </div>
             
-            <div className="mt-16 p-1 relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-[42px] opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-500" />
-              <div className="relative p-8 md:p-12 rounded-[40px] glass-premium flex flex-col md:flex-row items-center gap-8 border-white/10">
-                <div className="p-6 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
-                  <Trophy size={48} />
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                  <h4 className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">Bạn muốn chơi Game nào khác?</h4>
-                  <p className="text-muted-foreground dark:text-slate-400 mt-2 text-lg font-medium">Hãy nhắn cho Admin để tụi mình cập nhật thêm những game tuổi thơ xịn xò nhất nhé! 🚀</p>
-                </div>
-                <button className="px-10 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:scale-105 hover:shadow-emerald-500/40 text-white font-black text-lg rounded-2xl transition-all shadow-xl">
-                  Yêu cầu ngay
-                </button>
+            <div className="mt-12 p-6 md:p-8 rounded-2xl bg-card border border-border shadow-sm flex flex-col md:flex-row items-center gap-6">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary shrink-0">
+                <Trophy size={40} />
               </div>
+              <div className="flex-1 text-center md:text-left">
+                <h4 className="text-xl font-black text-foreground">Bạn muốn chơi Game nào khác?</h4>
+                <p className="text-muted-foreground mt-1 text-sm">Hãy nhắn cho Admin để tụi mình cập nhật thêm những game tuổi thơ nhé! 🚀</p>
+              </div>
+              <button 
+                onClick={onBack}
+                className="px-6 py-3 bg-primary hover:opacity-90 text-primary-foreground font-bold text-sm rounded-xl transition-all shadow-sm min-h-[44px]"
+              >
+                Nhắn Admin
+              </button>
             </div>
           </motion.div>
         ) : (
           <motion.div 
             key="player"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="relative z-10 flex flex-col h-[calc(100vh-4rem)] max-w-6xl mx-auto"
+            exit={{ opacity: 0, scale: 0.98 }}
+            className="relative z-10 flex flex-col h-[calc(100vh-6rem)] max-w-6xl mx-auto"
           >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
                 <button 
                   onClick={() => setSelectedGame(null)}
-                  className="p-3 rounded-2xl glass-premium hover:bg-card/10 transition-all shadow-lg active:scale-95"
+                  className="p-2.5 rounded-xl bg-card border border-border hover:bg-muted text-foreground transition-all shadow-sm active:scale-95 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  aria-label="Thoát trò chơi"
                 >
-                  <ArrowLeft size={24} />
+                  <ArrowLeft size={20} />
                 </button>
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-black dark:text-white flex items-center gap-3">
-                    <Sparkles size={28} className="text-yellow-500 animate-pulse" />
+                  <h2 className="text-xl md:text-2xl font-black text-foreground flex items-center gap-2">
+                    <Sparkles size={22} className="text-amber-500" />
                     {selectedGame.name}
                   </h2>
                 </div>
               </div>
               <button 
                 onClick={handleFullScreen}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:scale-105 text-white font-black rounded-2xl transition-all shadow-xl shadow-emerald-500/20"
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground hover:opacity-90 font-bold rounded-xl transition-all shadow-sm min-h-[44px] text-sm"
               >
-                <Maximize2 size={24} />
+                <Maximize2 size={18} />
                 <span className="hidden md:inline">Toàn màn hình</span>
               </button>
             </div>
 
             <div 
               ref={gameContainerRef}
-              className="flex-1 rounded-[40px] overflow-hidden border-[1px] border-white/20 shadow-[0_0_50px_rgba(16,185,129,0.15)] relative bg-black"
+              className="flex-1 rounded-2xl overflow-hidden border border-border shadow-sm relative bg-black"
             >
-              {/* Neon Frame Effect */}
-              <div className="absolute inset-0 border-[8px] border-emerald-500/5 pointer-events-none rounded-[40px] z-20" />
-              
               <iframe
                 src={selectedGame.file}
                 className="w-full h-full border-none relative z-10"

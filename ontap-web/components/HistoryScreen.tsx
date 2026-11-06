@@ -19,27 +19,15 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ userProfile, onBack }) =>
     useEffect(() => {
         const loadHistory = async () => {
             const data = await getExamHistory(userProfile.id);
-            // Sort by completedAt desc
             data.sort((a, b) => b.completedAt.getTime() - a.completedAt.getTime());
             setHistory(data);
             setLoading(false);
 
-            // Fetch Room Details for Online Exams
             const roomIds = Array.from(new Set(data.filter(item => item.roomId).map(item => item.roomId!)));
             if (roomIds.length > 0) {
                 const details: Record<string, any> = {};
-                // Fetch in parallel
                 await Promise.all(roomIds.map(async (rid) => {
                     try {
-                        // Assuming 'db' is available via imports or we import it.
-                        // We need to ensure 'db' is imported. Check imports.
-                        // Importing db here if not present in file would be tricky with replace_file_content partial.
-                        // But I will check imports first.
-                        // Assuming I can't easily see imports here, I will add logic and rely on auto-imports or explicit imports in separate step if needed.
-                        // Actually, I can use the import from services/firebaseClient if exported, or just assume it is imported. 
-                        // Note: HistoryScreen imports 'getExamHistory'. It doesn't import 'db' yet.
-                        // I will add 'db' import in a separate step or assume I need to do it.
-                        // Let's assume I need to add imports.
                         const { doc, getDoc } = await import('firebase/firestore');
                         const { db } = await import('../services/firebaseClient');
 
@@ -76,16 +64,16 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ userProfile, onBack }) =>
             <div className="relative text-center mb-8 pt-4">
                 <button 
                   onClick={() => { triggerHaptic('light'); onBack(); }} 
-                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-card dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 active:scale-90 transition-all font-bold text-muted-foreground"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-card p-2 rounded-2xl shadow-sm border border-border active:scale-95 transition-all font-bold text-foreground hover:bg-muted"
                   aria-label="Quay lại"
                 >
-                    <ArrowLeftIcon3D className="h-8 w-8 text-slate-800 dark:text-white" />
+                    <ArrowLeftIcon3D className="h-7 w-7 text-foreground" />
                 </button>
-                <div className="bg-indigo-100 dark:bg-indigo-900/30 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
-                  <FaHistory className="h-8 w-8 text-indigo-600" />
+                <div className="bg-primary/10 text-primary w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm border border-primary/20">
+                  <FaHistory className="h-7 w-7" />
                 </div>
-                <h1 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight">Nhật ký Học tập</h1>
-                <p className="text-sm text-slate-500 mt-1 font-medium">Theo dõi quá trình rèn luyện của bạn.</p>
+                <h1 className="text-2xl font-black text-foreground uppercase tracking-tight">Nhật ký Học tập</h1>
+                <p className="text-sm text-muted-foreground mt-1 font-medium">Theo dõi quá trình rèn luyện của bạn.</p>
             </div>
 
             {loading ? (
@@ -93,7 +81,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ userProfile, onBack }) =>
                     <p className="text-muted-foreground">Đang tải dữ liệu...</p>
                 </div>
             ) : history.length === 0 ? (
-                <div className="text-center p-8 bg-card rounded-xl shadow-sm border border-border">
+                <div className="text-center p-8 bg-card rounded-2xl shadow-sm border border-border">
                     <p className="text-muted-foreground">Chưa có lịch sử làm bài nào.</p>
                 </div>
             ) : (
@@ -104,51 +92,51 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ userProfile, onBack }) =>
                     const isPass = calculateIsPass(item.score, item.totalQuestions || 1, examType);
                     
                     return (
-                        <div key={item.id} className="relative overflow-hidden bg-card dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl p-5 active:scale-[0.98] transition-all">
+                        <div key={item.id} className="relative overflow-hidden bg-card rounded-2xl border border-border shadow-sm p-5 hover:border-primary/40 active:scale-[0.99] transition-all">
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                                        type === 'Thi Trực Tuyến' ? 'bg-rose-100 text-rose-600' : 
-                                        type === 'Thi thử' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${
+                                        type === 'Thi Trực Tuyến' ? 'bg-destructive/15 text-destructive' : 
+                                        type === 'Thi thử' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-primary/15 text-primary'
                                     }`}>
-                                        {type === 'Thi Trực Tuyến' ? <FaGlobe /> : type === 'Thi thử' ? <FaBook /> : <FaBook />}
+                                        {type === 'Thi Trực Tuyến' ? <FaGlobe /> : <FaBook />}
                                     </div>
                                     <div>
                                         <span className={`text-[10px] font-black uppercase tracking-widest ${
-                                            type === 'Thi Trực Tuyến' ? 'text-rose-500' : 
-                                            type === 'Thi thử' ? 'text-amber-500' : 'text-blue-500'
+                                            type === 'Thi Trực Tuyến' ? 'text-destructive' : 
+                                            type === 'Thi thử' ? 'text-amber-600 dark:text-amber-400' : 'text-primary'
                                         }`}>
                                             {type}
                                         </span>
-                                        <h3 className="text-base font-black text-slate-800 dark:text-slate-100 leading-tight">
+                                        <h3 className="text-base font-black text-foreground leading-tight">
                                             {getDisplayName(item)}
                                         </h3>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className={`text-2xl font-black ${isPass ? 'text-green-600' : 'text-rose-600'}`}>
+                                    <div className={`text-2xl font-black tabular-nums ${isPass ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive'}`}>
                                         {item.score}
-                                        <span className="text-xs text-slate-400 font-bold ml-0.5">/{item.totalQuestions}</span>
+                                        <span className="text-xs text-muted-foreground font-bold ml-0.5">/{item.totalQuestions}</span>
                                     </div>
                                     <div className="flex items-center justify-end gap-1">
-                                        {isPass ? <FaCheckCircle className="text-green-500 text-xs" /> : <FaExclamationCircle className="text-rose-500 text-xs" />}
-                                        <span className={`text-[10px] font-bold uppercase ${isPass ? 'text-green-500' : 'text-rose-500'}`}>
+                                        {isPass ? <FaCheckCircle className="text-emerald-500 text-xs" /> : <FaExclamationCircle className="text-destructive text-xs" />}
+                                        <span className={`text-[10px] font-bold uppercase ${isPass ? 'text-emerald-600 dark:text-emerald-400' : 'text-destructive'}`}>
                                             {isPass ? 'Hoàn thành' : 'Cố gắng lên'}
                                         </span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-4 border-t border-slate-50 dark:border-slate-700/50 pt-4">
-                                <div className="flex items-center gap-1 text-slate-400">
+                            <div className="flex items-center gap-4 border-t border-border pt-3">
+                                <div className="flex items-center gap-1.5 text-muted-foreground">
                                     <FaClock className="text-xs" />
-                                    <span className="text-[11px] font-bold">
+                                    <span className="text-xs font-semibold tabular-nums">
                                         {new Date(item.completedAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
-                                <div className="flex items-center gap-1 text-slate-400">
+                                <div className="flex items-center gap-1.5 text-muted-foreground">
                                     <FaCalendarAlt className="text-xs" />
-                                    <span className="text-[11px] font-bold">
+                                    <span className="text-xs font-semibold tabular-nums">
                                         {new Date(item.completedAt).toLocaleDateString('vi-VN')}
                                     </span>
                                 </div>

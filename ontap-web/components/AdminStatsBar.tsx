@@ -56,15 +56,15 @@ const AdminStatsBar: React.FC<AdminStatsBarProps> = ({ userRole }) => {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [isAdmin]);
 
     if (!isAdmin) return null;
 
     const items = [
-        { label: 'Trực tuyến', value: stats.total, icon: Users, color: 'text-blue-500', dot: 'bg-green-500' },
-        { label: 'Khách', value: stats.guests, icon: UserCheck, color: 'text-gray-400', dot: 'bg-gray-400' },
+        { label: 'Trực tuyến', value: stats.total, icon: Users, color: 'text-primary', dot: 'bg-emerald-500' },
+        { label: 'Khách', value: stats.guests, icon: UserCheck, color: 'text-muted-foreground', dot: 'bg-muted-foreground' },
         { label: 'Học viên', value: stats.students, icon: GraduationCap, color: 'text-emerald-500', dot: 'bg-emerald-500' },
-        { label: 'Giáo viên', value: stats.teachers, icon: UserCheck, color: 'text-orange-500', dot: 'bg-orange-500' },
+        { label: 'Giáo viên', value: stats.teachers, icon: UserCheck, color: 'text-amber-500', dot: 'bg-amber-500' },
         { label: 'Quản lý', value: stats.admins, icon: Shield, color: 'text-violet-500', dot: 'bg-violet-500' },
     ];
 
@@ -75,23 +75,23 @@ const AdminStatsBar: React.FC<AdminStatsBarProps> = ({ userRole }) => {
             transition={{ duration: 0.4 }}
             className="w-full"
         >
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 px-3 py-1.5 rounded-2xl bg-card/60 dark:bg-zinc-900/60 backdrop-blur-md border border-gray-200/50 dark:border-zinc-700/50 shadow-sm">
+            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 px-3 py-1.5 rounded-2xl bg-card/90 backdrop-blur-md border border-border shadow-sm text-foreground">
                 {/* Chấm xanh nhấp nháy */}
                 <div className="flex items-center gap-1.5 mr-1">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Live</span>
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Live</span>
                 </div>
 
                 {/* Separator */}
-                <div className="w-px h-4 bg-gray-300 dark:bg-zinc-600 hidden md:block" />
+                <div className="w-px h-4 bg-border hidden md:block" />
 
                 {items.map((item, idx) => (
                     <div key={item.label} className="flex items-center gap-1.5">
                         <div className={`w-1.5 h-1.5 rounded-full ${item.dot}`} />
-                        <span className="text-xs text-gray-500 dark:text-gray-400">{item.label}:</span>
-                        <span className={`text-xs md:text-sm font-bold ${item.color}`}>{item.value}</span>
+                        <span className="text-xs text-muted-foreground">{item.label}:</span>
+                        <span className={`text-xs md:text-sm font-bold tabular-nums ${item.color}`}>{item.value}</span>
                         {idx < items.length - 1 && (
-                            <div className="w-px h-3 bg-gray-200 dark:bg-zinc-700 ml-1 hidden sm:block" />
+                            <div className="w-px h-3 bg-border ml-1 hidden sm:block" />
                         )}
                     </div>
                 ))}

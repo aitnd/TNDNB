@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Cloud, Sun, CloudRain, Loader2, MapPin, ChevronDown, Droplets, Sparkles, Signal, SignalLow, WifiOff } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface WeatherData {
@@ -22,7 +21,6 @@ const WeatherWidget: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [dataSource, setDataSource] = useState<'live' | 'server-mock' | 'offline'>('live');
   const [showTooltip, setShowTooltip] = useState(false);
-  const { theme } = useTheme();
 
   useEffect(() => {
     const fetchWeather = async (lat?: number, lon?: number) => {
@@ -98,8 +96,8 @@ const WeatherWidget: React.FC = () => {
 
   if (loading) {
     return (
-      <div className={`w-full max-w-7xl mx-auto py-3 px-5 rounded-2xl flex items-center justify-center space-x-3 backdrop-blur-xl border shadow-sm ${theme === 'dark' ? 'bg-gray-900/60 border-gray-700/50 text-gray-300' : 'bg-card/80 border-white/60 text-muted-foreground'}`}>
-        <Loader2 className="w-5 h-5 animate-spin" />
+      <div className="w-full max-w-7xl mx-auto py-3 px-5 rounded-2xl flex items-center justify-center space-x-3 bg-card/90 backdrop-blur-md border border-border text-muted-foreground shadow-sm">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
         <span className="text-sm font-medium">Đang đồng bộ thời tiết...</span>
       </div>
     );
@@ -117,18 +115,12 @@ const WeatherWidget: React.FC = () => {
   const getAdviceStyle = () => {
     const text = weather.advice?.toLowerCase() || '';
     if (text.includes('mưa') || text.includes('rain')) {
-      return theme === 'dark'
-        ? 'bg-blue-950/20 border-blue-900/30 text-blue-200'
-        : 'bg-blue-50/60 border-blue-100 text-blue-800';
+      return 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400';
     }
     if (text.includes('nắng') || text.includes('sun')) {
-      return theme === 'dark'
-        ? 'bg-amber-950/20 border-amber-900/30 text-amber-200'
-        : 'bg-amber-50/60 border-amber-100 text-amber-800';
+      return 'bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400';
     }
-    return theme === 'dark'
-      ? 'bg-zinc-800/40 border-zinc-700/30 text-zinc-200'
-      : 'bg-zinc-50 border-zinc-100 text-zinc-800';
+    return 'bg-muted/50 border-border text-foreground';
   };
 
   const renderIcon = () => {
@@ -137,8 +129,8 @@ const WeatherWidget: React.FC = () => {
     }
     const condition = weather.condition?.toLowerCase() || 'sun';
     if (condition.includes('rain') || condition.includes('mưa')) return <CloudRain className="w-8 h-8 text-blue-500 drop-shadow-md" />;
-    if (condition.includes('cloud') || condition.includes('mây')) return <Cloud className="w-8 h-8 text-gray-400 drop-shadow-md" />;
-    return <Sun className="w-8 h-8 text-yellow-500 drop-shadow-md" />;
+    if (condition.includes('cloud') || condition.includes('mây')) return <Cloud className="w-8 h-8 text-muted-foreground drop-shadow-md" />;
+    return <Sun className="w-8 h-8 text-amber-500 drop-shadow-md" />;
   };
 
   const renderStatusIndicator = () => {
@@ -159,7 +151,7 @@ const WeatherWidget: React.FC = () => {
       },
       'offline': {
         icon: <WifiOff className="w-3 h-3" />,
-        color: 'text-red-500',
+        color: 'text-destructive',
         pulse: false,
         label: 'Không kết nối',
         detail: 'Dữ liệu tạm thời'
@@ -170,7 +162,7 @@ const WeatherWidget: React.FC = () => {
       <div className="relative" onClick={(e) => { e.stopPropagation(); setShowTooltip(!showTooltip); }}
            onMouseEnter={() => setShowTooltip(true)}
            onMouseLeave={() => setShowTooltip(false)}>
-        <div className={`flex items-center justify-center bg-card/90 dark:bg-gray-800/90 rounded-full p-[3px] shadow-sm border border-gray-100 dark:border-gray-700 ${config.color} ${config.pulse ? 'animate-pulse' : ''}`}>
+        <div className={`flex items-center justify-center bg-card rounded-full p-[3px] shadow-sm border border-border ${config.color} ${config.pulse ? 'animate-pulse' : ''}`}>
           {config.icon}
         </div>
         <AnimatePresence>
@@ -179,12 +171,11 @@ const WeatherWidget: React.FC = () => {
               initial={{ opacity: 0, y: 4, scale: 0.95 }} 
               animate={{ opacity: 1, y: 0, scale: 1 }} 
               exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-[60] w-[130px] bg-card dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-xl rounded-lg p-2 flex flex-col items-center pointer-events-none"
+              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-[60] w-[130px] bg-card border border-border shadow-xl rounded-lg p-2 flex flex-col items-center pointer-events-none"
             >
-              <div className="text-[10px] font-bold text-gray-800 dark:text-gray-100 whitespace-nowrap">{config.label}</div>
-              <div className="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5 leading-tight text-center">{config.detail}</div>
-              {/* Triangle pointer */}
-              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-white dark:border-t-gray-800"></div>
+              <div className="text-[10px] font-bold text-foreground whitespace-nowrap">{config.label}</div>
+              <div className="text-[9px] text-muted-foreground mt-0.5 leading-tight text-center">{config.detail}</div>
+              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-card"></div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -192,9 +183,7 @@ const WeatherWidget: React.FC = () => {
     );
   };
 
-  const bgClass = theme === 'dark' 
-    ? 'bg-gray-900/70 backdrop-blur-2xl border-gray-700/50 text-white shadow-sm' 
-    : 'bg-card/80 backdrop-blur-2xl border-white/60 text-gray-800 shadow-sm';
+  const bgClass = 'bg-card/95 backdrop-blur-md border border-border text-card-foreground shadow-sm';
 
   return (
     <div className={`w-full rounded-2xl border transition-all duration-300 overflow-hidden ${bgClass}`}>
@@ -213,7 +202,7 @@ const WeatherWidget: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <div className="flex items-baseline space-x-1.5">
-                <span className="text-2xl md:text-3xl font-black tracking-tighter">{weather.temp}°</span>
+                <span className="text-2xl md:text-3xl font-black tracking-tighter tabular-nums">{weather.temp}°</span>
                 <span className="text-xs font-semibold opacity-80 hidden sm:inline-block">{weather.condition}</span>
               </div>
               <div className="flex items-center text-[10px] md:text-xs opacity-70 font-medium uppercase tracking-wider">
@@ -224,7 +213,7 @@ const WeatherWidget: React.FC = () => {
           </div>
           
           {/* Mobile Chevron */}
-          <div className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-black/5 dark:bg-white/10">
+          <div className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-muted text-muted-foreground">
             <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
               <ChevronDown className="w-4 h-4 opacity-70" />
             </motion.div>
@@ -233,13 +222,13 @@ const WeatherWidget: React.FC = () => {
         
         {/* Advice Text - Truncated on desktop */}
         <div className="hidden lg:flex flex-1 px-4 items-center justify-end">
-          <div className={`text-xs font-medium italic ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'} border-r-2 ${theme === 'dark' ? 'border-blue-400/30' : 'border-blue-500/30'} pr-3 py-0.5 truncate max-w-sm`}>
+          <div className="text-xs font-medium text-primary/80 border-r-2 border-primary/20 pr-3 py-0.5 truncate max-w-sm">
             {weather.advice}
           </div>
         </div>
 
         {/* Desktop Chevron */}
-        <div className="hidden md:flex items-center justify-center w-7 h-7 rounded-full bg-black/5 dark:bg-white/10 ml-1 group-hover:bg-black/10 dark:group-hover:bg-card/20 transition-colors">
+        <div className="hidden md:flex items-center justify-center w-7 h-7 rounded-full bg-muted text-muted-foreground ml-1 group-hover:bg-muted/80 transition-colors">
           <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
             <ChevronDown className="w-4 h-4 opacity-70" />
           </motion.div>
@@ -254,7 +243,7 @@ const WeatherWidget: React.FC = () => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={`border-t ${theme === 'dark' ? 'border-zinc-800' : 'border-zinc-100'}`}
+            className="border-t border-border"
           >
             <div className="p-4 md:p-6">
               {/* Lời khuyên thiết kế chuyên nghiệp không dùng emoji */}
@@ -280,17 +269,13 @@ const WeatherWidget: React.FC = () => {
                         key={idx} 
                         whileHover={{ scale: 1.05, y: -2 }}
                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        className={`flex flex-col items-center justify-center p-3 rounded-2xl min-w-[78px] transition-colors ${
-                          theme === 'dark' 
-                            ? 'bg-zinc-800/40 hover:bg-zinc-800/70 border-zinc-700/30 text-zinc-100' 
-                            : 'bg-zinc-50 hover:bg-zinc-100/80 border-zinc-200/50 text-zinc-800'
-                        } border`}
+                        className="flex flex-col items-center justify-center p-3 rounded-2xl min-w-[78px] transition-colors bg-muted/40 hover:bg-muted/70 border border-border text-foreground"
                       >
-                        <span className="text-xs font-semibold opacity-60 mb-2 font-mono">{hour.time}</span>
+                        <span className="text-xs font-semibold opacity-60 mb-2 font-mono tabular-nums">{hour.time}</span>
                         <img src={hour.icon} className="w-8 h-8 drop-shadow-sm" alt="icon" loading="lazy" />
-                        <span className="text-base font-black mt-2 tracking-tighter">{Math.round(hour.temp)}°</span>
+                        <span className="text-base font-black mt-2 tracking-tighter tabular-nums">{Math.round(hour.temp)}°</span>
                         {hour.rain_chance > 0 ? (
-                          <span className="text-[10px] text-sky-600 dark:text-sky-400 font-bold mt-1.5 flex items-center bg-sky-500/10 px-1.5 py-0.5 rounded-md">
+                          <span className="text-[10px] text-sky-600 dark:text-sky-400 font-bold mt-1.5 flex items-center bg-sky-500/10 px-1.5 py-0.5 rounded-md tabular-nums">
                             <Droplets className="w-2.5 h-2.5 mr-0.5" />
                             {hour.rain_chance}%
                           </span>
@@ -303,7 +288,7 @@ const WeatherWidget: React.FC = () => {
                 </div>
 
               {/* Daily Forecast */}
-              <div className={`rounded-3xl p-5 ${theme === 'dark' ? 'bg-gray-800/40' : 'bg-gray-50'}`}>
+              <div className="rounded-3xl p-5 bg-muted/40 border border-border">
                 <h4 className="text-xs font-bold uppercase tracking-wider opacity-50 mb-4">Dự báo 3 ngày tới</h4>
                 <div className="flex flex-col space-y-4">
                   {weather.forecast.daily.map((day, idx) => (
@@ -311,7 +296,7 @@ const WeatherWidget: React.FC = () => {
                       <span className="w-24 text-sm font-bold opacity-90">{day.date}</span>
                       <div className="flex items-center space-x-2 flex-1 justify-center">
                         {day.rain_chance > 0 && (
-                          <span className="text-[11px] text-blue-500 font-bold flex items-center w-12 bg-blue-500/10 px-1.5 py-0.5 rounded-md">
+                          <span className="text-[11px] text-blue-500 font-bold flex items-center w-12 bg-blue-500/10 px-1.5 py-0.5 rounded-md tabular-nums">
                             <Droplets className="w-3 h-3 mr-0.5" />
                             {day.rain_chance}%
                           </span>
@@ -320,11 +305,11 @@ const WeatherWidget: React.FC = () => {
                         <img src={day.icon} className="w-8 h-8 drop-shadow-sm" alt="icon" loading="lazy" />
                       </div>
                       <div className="flex items-center w-28 justify-end space-x-2 text-sm font-bold">
-                        <span className="opacity-50 w-6 text-right">{Math.round(day.minTemp)}°</span>
-                        <div className={`w-10 h-1.5 rounded-full ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'} overflow-hidden relative`}>
-                          <div className={`absolute inset-y-0 left-0 w-full opacity-80 rounded-full ${theme === 'dark' ? 'bg-gradient-to-r from-blue-500 to-yellow-500' : 'bg-gradient-to-r from-blue-400 to-orange-400'}`}></div>
+                        <span className="opacity-70 w-6 text-right tabular-nums">{Math.round(day.minTemp)}°</span>
+                        <div className="w-10 h-1.5 rounded-full bg-muted overflow-hidden relative">
+                          <div className="absolute inset-y-0 left-0 w-full opacity-80 rounded-full bg-gradient-to-r from-blue-500 to-amber-500"></div>
                         </div>
-                        <span className="w-6 text-right">{Math.round(day.maxTemp)}°</span>
+                        <span className="w-6 text-right tabular-nums">{Math.round(day.maxTemp)}°</span>
                       </div>
                     </div>
                   ))}

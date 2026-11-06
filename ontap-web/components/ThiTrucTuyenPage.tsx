@@ -247,11 +247,6 @@ const ThiTrucTuyenPage: React.FC = () => {
             if (score >= 10 && questions.length > 0) {
                 await BadgeService.unlockBadge(user.uid, 'achievement_perfect');
             }
-            // 3. Thi tốc độ (Nộp dưới 3 phút = 180s)
-            // Assuming examRoom.duration_minutes is the total time and time_left is remaining
-            // Actually, we need to know the start time. 
-            // We can approximate by checking if time spent is small.
-            // For now, let's keep it simple.
             
             toast.success(`Đã nộp bài! Điểm số: ${score.toFixed(1)}`);
             setIsExamStarted(false);
@@ -265,7 +260,7 @@ const ThiTrucTuyenPage: React.FC = () => {
 
     if (isExamStarted && examRoom && questions.length > 0) {
         return (
-            <div className="min-h-screen bg-gray-100 p-4">
+            <div className="min-h-screen bg-background p-4">
                 <ExamQuizScreen
                     quiz={{
                         id: examRoom.id,
@@ -289,17 +284,16 @@ const ThiTrucTuyenPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col font-sans text-[#333]">
+        <div className="min-h-screen flex flex-col font-sans bg-background text-foreground">
             {/* HEADER */}
-            <div className="bg-card">
-                <div className="w-full h-[150px] bg-cover bg-center relative" style={{ backgroundImage: "url('/ontap/assets/img/banner1.png')" }}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-200 opacity-50"></div>
-                    <div className="container mx-auto h-full flex items-center px-4 relative z-10">
+            <div className="bg-card border-b border-border shadow-sm">
+                <div className="w-full py-6 px-4">
+                    <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
-                            <img src="/ontap/assets/img/logo1.ico" alt="Logo" className="h-24 w-24 object-contain" onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/100?text=LOGO'} loading="lazy" />
-                            <div className="text-blue-800 uppercase font-bold drop-shadow-sm">
-                                <h1 className="text-3xl">CÔNG TY CP TƯ VẤN VÀ GIÁO DỤC NINH BÌNH</h1>
-                                <h2 className="text-xl text-red-600 mt-1">NINH BINH CONSULTING AND EDUCATION JOINT STOCK COMPANY</h2>
+                            <img src="/ontap/assets/img/logo1.ico" alt="Logo" className="h-16 w-16 object-contain" onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/100?text=LOGO'} loading="lazy" />
+                            <div>
+                                <h1 className="text-xl md:text-2xl font-black text-foreground tracking-tight">CÔNG TY CP TƯ VẤN VÀ GIÁO DỤC NINH BÌNH</h1>
+                                <h2 className="text-xs md:text-sm font-semibold text-primary mt-0.5">HỆ THỐNG SÁT HẠCH TRỰC TUYẾN THỦY NỘI ĐỊA</h2>
                             </div>
                         </div>
                     </div>
@@ -307,119 +301,104 @@ const ThiTrucTuyenPage: React.FC = () => {
             </div>
 
             {/* MAIN CONTENT */}
-            <div className="flex-grow bg-card flex justify-center pt-10 pb-20">
-                <div className="w-full max-w-4xl px-4">
+            <div className="flex-grow flex justify-center items-center py-10 px-4">
+                <div className="w-full max-w-md">
                     {!user ? (
-                        <>
-                            <div className="text-center mb-8 text-sm text-foreground space-y-1">
-                                <p>Vui lòng nhập tài khoản và mật khẩu để đăng nhập.</p>
-                                <p>Nếu bạn chưa có tài khoản hoặc quên mật khẩu vui lòng liên hệ giám thị coi thi!</p>
-                                <p>Nếu bạn muốn tra kết quả học tập, hãy vào <a href="/ontap" className="text-blue-600 font-bold hover:underline">TRA CỨU ĐIỂM</a></p>
-                                <p>Nếu bạn muốn ôn tập hoặc thi thử, hãy vào <a href="/ontap" className="text-blue-600 font-bold hover:underline">THI THỬ</a></p>
+                        <div className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-6 md:p-8">
+                            <div className="text-center mb-6 space-y-1">
+                                <h2 className="text-xl font-bold tracking-tight text-foreground">Đăng nhập Phòng thi</h2>
+                                <p className="text-xs text-muted-foreground">Nhập Số báo danh và mật khẩu do Hội đồng thi cung cấp.</p>
                             </div>
 
-                            <div className="max-w-md mx-auto">
-                                <fieldset className="border border-gray-300 p-6 rounded-sm shadow-sm">
-                                    <legend className="px-2 text-foreground font-bold text-sm">Thông tin đăng nhập</legend>
-                                    <form onSubmit={handleLogin} className="space-y-4 mt-2">
-                                        <div className="flex items-center">
-                                            <label className="w-32 text-sm font-bold text-foreground">Số báo danh:</label>
-                                            <input
-                                                type="text"
-                                                value={username}
-                                                onChange={(e) => setUsername(e.target.value)}
-                                                className="flex-1 border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:border-blue-400 rounded-sm"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="flex items-center">
-                                            <label className="w-32 text-sm font-bold text-foreground">Mật khẩu:</label>
-                                            <input
-                                                type="password"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                className="flex-1 border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:border-blue-400 rounded-sm"
-                                                required
-                                            />
-                                        </div>
-                                        {error && <p className="text-red-500 text-xs text-center">{error}</p>}
-                                        <div className="flex justify-end mt-6">
-                                            <button
-                                                type="submit"
-                                                disabled={loading}
-                                                className="bg-[#2962ff] text-white px-6 py-1.5 text-sm font-bold rounded-sm hover:bg-blue-700 transition-colors shadow-sm"
-                                            >
-                                                {loading ? 'Đang xử lý...' : 'Đăng nhập'}
-                                            </button>
-                                        </div>
-                                    </form>
-                                </fieldset>
+                            <form onSubmit={handleLogin} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Số báo danh</label>
+                                    <input
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        placeholder="Ví dụ: SBD123"
+                                        className="w-full px-4 py-2.5 bg-background border border-border text-foreground rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Mật khẩu</label>
+                                    <input
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="••••••••"
+                                        className="w-full px-4 py-2.5 bg-background border border-border text-foreground rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                                        required
+                                    />
+                                </div>
+                                {error && <p className="text-destructive text-xs text-center bg-destructive/10 border border-destructive/20 p-2.5 rounded-xl">{error}</p>}
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full min-h-[44px] bg-primary text-primary-foreground font-semibold py-2.5 px-6 rounded-xl hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 mt-2"
+                                >
+                                    {loading ? 'Đang xử lý...' : 'Đăng nhập vào thi'}
+                                </button>
+                            </form>
+
+                            <div className="mt-6 pt-4 border-t border-border text-center text-xs text-muted-foreground space-y-1">
+                                <p>Cần hỗ trợ tra cứu kết quả? <a href="/ontap" className="text-primary font-semibold hover:underline">Về Trang Ôn tập</a></p>
                             </div>
-                        </>
+                        </div>
                     ) : (
-                        <div className="max-w-md mx-auto">
-                            {/* CẢNH BÁO TÀI KHOẢN (Chỉ hiện nếu không phải mail hệ thống) */}
+                        <div className="bg-card text-card-foreground border border-border rounded-2xl shadow-sm p-6 md:p-8">
                             {user.email && !user.email.endsWith('@daotaothuyenvien.com') && (
-                                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 shadow-sm">
-                                    <div className="flex">
-                                        <div className="flex-shrink-0">
-                                            <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                            </svg>
-                                        </div>
-                                        <div className="ml-3">
-                                            <p className="text-sm text-yellow-700">
-                                                Bạn đang đăng nhập là <strong className="font-bold">{user.displayName || user.email}</strong>.
-                                            </p>
-                                            <p className="text-sm text-yellow-700 mt-1">
-                                                Nếu đây là tài khoản cá nhân, vui lòng đăng xuất để đăng nhập bằng <strong>Số Báo Danh</strong>.
-                                            </p>
-                                            <div className="mt-2">
-                                                <button
-                                                    onClick={async () => {
-                                                        await auth.signOut();
-                                                        window.location.href = '/ontap/online-exam';
-                                                    }}
-                                                    className="text-sm font-bold text-red-600 hover:text-red-800 underline"
-                                                >
-                                                    Đăng xuất & Đăng nhập lại
-                                                </button>
-                                            </div>
-                                        </div>
+                                <div className="bg-amber-500/10 border border-amber-500/30 text-foreground p-3.5 rounded-xl mb-5 text-xs leading-relaxed">
+                                    <p>
+                                        Đang đăng nhập: <strong className="font-bold text-primary">{user.displayName || user.email}</strong>.
+                                    </p>
+                                    <p className="mt-1 text-muted-foreground">
+                                        Nếu thi chính thức, vui lòng đăng xuất để đăng nhập bằng <strong>Số Báo Danh</strong>.
+                                    </p>
+                                    <div className="mt-2">
+                                        <button
+                                            onClick={async () => {
+                                                await auth.signOut();
+                                                window.location.href = '/ontap/online-exam';
+                                            }}
+                                            className="text-xs font-semibold text-destructive hover:underline"
+                                        >
+                                            Đăng xuất & Đăng nhập lại
+                                        </button>
                                     </div>
                                 </div>
                             )}
 
                             <div className="text-center mb-6">
-                                <h2 className="text-xl font-bold text-blue-700 uppercase">Khu vực Thi Trực Tuyến</h2>
-                                <p className="text-muted-foreground mt-2">Xin chào, <strong className="text-blue-900">{user.displayName || user.email}</strong></p>
+                                <h2 className="text-xl font-bold tracking-tight text-foreground uppercase">Phòng Thi Trực Tuyến</h2>
+                                <p className="text-xs text-muted-foreground mt-1">Xin chào, <strong className="text-foreground">{user.displayName || user.email}</strong></p>
                             </div>
-                            <fieldset className="border border-gray-300 p-6 rounded-sm shadow-sm bg-blue-50/30">
-                                <legend className="px-2 text-blue-800 font-bold text-sm bg-card border border-gray-200 rounded shadow-sm">Vào Phòng Thi</legend>
-                                <div className="space-y-4 mt-4">
-                                    <div>
-                                        <label className="block text-sm font-bold text-foreground mb-1">Mã phòng thi (Room ID):</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Nhập mã phòng do giám thị cung cấp..."
-                                            value={roomId}
-                                            onChange={e => setRoomId(e.target.value)}
-                                            className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-blue-400 rounded-sm shadow-inner"
-                                        />
-                                        {autoJoinMessage && <p className="text-green-600 text-xs mt-1 font-bold">{autoJoinMessage}</p>}
-                                    </div>
-                                    <button
-                                        onClick={handleJoinRoom}
-                                        disabled={loading}
-                                        className="w-full bg-[#2962ff] text-white px-4 py-2.5 text-sm font-bold rounded-sm hover:bg-blue-700 transition-all shadow-md flex justify-center items-center gap-2 disabled:opacity-70"
-                                    >
-                                        {loading ? <span className="animate-spin">⏳</span> : <span>VÀO THI NGAY</span>}
-                                        {!loading && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>}
-                                    </button>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Mã phòng thi (Room ID)</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Nhập mã phòng do giám thị cung cấp..."
+                                        value={roomId}
+                                        onChange={e => setRoomId(e.target.value)}
+                                        className="w-full px-4 py-2.5 bg-background border border-border text-foreground rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                                    />
+                                    {autoJoinMessage && <p className="text-emerald-600 dark:text-emerald-400 text-xs mt-1.5 font-medium">{autoJoinMessage}</p>}
                                 </div>
-                            </fieldset>
+                                <button
+                                    onClick={handleJoinRoom}
+                                    disabled={loading}
+                                    className="w-full min-h-[44px] bg-primary text-primary-foreground font-semibold px-4 py-2.5 rounded-xl hover:bg-primary/90 transition-all shadow-sm flex justify-center items-center gap-2 disabled:opacity-50"
+                                >
+                                    {loading ? <span className="animate-spin">⏳ Đang vào phòng...</span> : <span>VÀO THI NGAY</span>}
+                                </button>
+                            </div>
+
                             <div className="mt-6 text-center">
-                                <a href="/ontap" className="text-sm text-muted-foreground hover:text-blue-600 hover:underline">
+                                <a href="/ontap" className="text-xs text-muted-foreground hover:text-primary transition-colors">
                                     &larr; Quay lại Ôn tập
                                 </a>
                             </div>
@@ -429,12 +408,10 @@ const ThiTrucTuyenPage: React.FC = () => {
             </div>
 
             {/* FOOTER */}
-            <div className="bg-[#0d47a1] text-white py-4 text-center text-xs space-y-1">
-                <p className="uppercase font-bold">Công ty cổ phần Tư vấn và Giáo dục Ninh Bình</p>
+            <div className="bg-card border-t border-border py-4 text-center text-xs text-muted-foreground space-y-1">
+                <p className="uppercase font-semibold text-foreground">Công ty CP Tư vấn và Giáo dục Ninh Bình</p>
                 <p>Đường Triệu Việt Vương - Phường Hoa Lư - Tỉnh Ninh Bình</p>
-                <p>022.96.282.969</p>
-                <p>ninhbinheduco.jsc@gmail.com</p>
-                <p>giaoducninhbinh@daotaothuyenvien.com</p>
+                <p className="tabular-nums font-medium">Hotline: 0229 628 2969</p>
             </div>
         </div>
     );

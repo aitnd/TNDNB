@@ -1,12 +1,15 @@
 export interface WorkerEnv {
   DB: D1Database;
   ASSETS_BUCKET: R2Bucket;
+  CONFIG_KV: KVNamespace;
   GITHUB_OWNER: string;
   GITHUB_REPO: string;
   RELEASE_UPSTREAM_MODE: 'github_proxy' | 'r2_direct';
   ALLOWED_ORIGINS: string;
   ADMIN_API_SECRET?: string;
   GITHUB_TOKEN?: string;
+  FIREBASE_PROJECT_ID?: string;
+  CDN_BASE_URL?: string;
 }
 
 export interface SyncMetaDTO {

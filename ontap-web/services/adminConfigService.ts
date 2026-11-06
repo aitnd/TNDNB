@@ -274,7 +274,7 @@ const DEFAULT_CONFIG: UsageConfig = {
     showPortalMonetag: false
 };
 
-// 1. Get Config (with default fallback & offline cache)
+// 1. Get Config (Ruling 2.3: Cloudflare KV 100% Single Source of Truth — No Firestore fallback)
 export const getUsageConfig = async (): Promise<UsageConfig> => {
     try {
         let data = await fetchD1Config<Partial<UsageConfig>>(USAGE_CONFIG_DOC_ID);
@@ -334,32 +334,33 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
         }
         return DEFAULT_CONFIG;
     } catch (error) {
-        console.error('Error fetching usage config from D1:', error);
-        return DEFAULT_CONFIG; // Fail safe
+        console.error('Error fetching usage config from Cloudflare KV:', error);
+        return DEFAULT_CONFIG; // Fail safe in-memory fallback
     }
 };
 
-// 2. Save Config
+// 2. Save Config (Ruling 2.3: Cloudflare KV 100% Single Source of Truth — NO Firestore fallback)
 export const saveUsageConfig = async (config: UsageConfig): Promise<void> => {
     try {
         const token = await auth?.currentUser?.getIdToken().catch(() => undefined);
         const ok = await saveD1Config(USAGE_CONFIG_DOC_ID, config, token);
-        if (ok) {
-            try {
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem(USAGE_CONFIG_CACHE_KEY, JSON.stringify(config));
-                }
-            } catch {}
-        } else {
-            throw new Error('Không thể lưu cấu hình lên Cloudflare D1');
+
+        if (!ok) {
+            throw new Error('Không thể lưu cấu hình lên Cloudflare KV API. Vui lòng kiểm tra kết nối mạng và quyền quản trị.');
         }
+
+        try {
+            if (typeof localStorage !== 'undefined') {
+                localStorage.setItem(USAGE_CONFIG_CACHE_KEY, JSON.stringify(config));
+            }
+        } catch {}
     } catch (error) {
-        console.error('Error saving usage config:', error);
+        console.error('Error saving usage config to KV:', error);
         throw error;
     }
 };
 
-// 3. Get GitHub Config
+// 3. Get GitHub Config (Ruling 2.3: Cloudflare KV Single Source of Truth)
 export const getGitHubConfig = async (): Promise<GitHubConfig> => {
     try {
         let data = await fetchD1Config<GitHubConfig>('github_config');
@@ -379,27 +380,28 @@ export const getGitHubConfig = async (): Promise<GitHubConfig> => {
         }
         return { owner: 'aitnd', repo: 'TNDNB' };
     } catch (error) {
-        console.error('Error fetching GitHub config from D1:', error);
+        console.error('Error fetching GitHub config from KV:', error);
         return { owner: 'aitnd', repo: 'TNDNB' };
     }
 };
 
-// 4. Save GitHub Config
+// 4. Save GitHub Config (Ruling 2.3: Cloudflare KV Single Source of Truth)
 export const saveGitHubConfig = async (config: GitHubConfig): Promise<void> => {
     try {
         const token = await auth?.currentUser?.getIdToken().catch(() => undefined);
         const ok = await saveD1Config('github_config', config, token);
-        if (ok) {
-            try {
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem(GITHUB_CONFIG_CACHE_KEY, JSON.stringify(config));
-                }
-            } catch {}
-        } else {
-            throw new Error('Không thể lưu cấu hình GitHub lên Cloudflare D1');
+
+        if (!ok) {
+            throw new Error('Không thể lưu cấu hình GitHub lên Cloudflare KV API. Vui lòng kiểm tra kết nối mạng và quyền quản trị.');
         }
+
+        try {
+            if (typeof localStorage !== 'undefined') {
+                localStorage.setItem(GITHUB_CONFIG_CACHE_KEY, JSON.stringify(config));
+            }
+        } catch {}
     } catch (error) {
-        console.error('Error saving GitHub config:', error);
+        console.error('Error saving GitHub config to KV:', error);
         throw error;
     }
 };

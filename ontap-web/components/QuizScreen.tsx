@@ -3,9 +3,8 @@ import type { Quiz, UserAnswers } from '../types';
 import { CheckIcon3D, XIcon3D, ArrowLeftIcon3D } from './icons';
 import { triggerHaptic } from '../utils/nativeUX';
 import { useFontScale } from '../hooks/useFontScale';
-import { ZoomBar } from './ZoomBar';
 import { useAppStore } from '../stores/useAppStore';
-import { resolveQuestionImageUrl } from '../utils/imageHelper';
+import { resolveQuestionImageUrl, resolveQuestionImageFallbackUrl } from '../utils/imageHelper';
 
 interface QuizScreenProps {
   quiz: Quiz;
@@ -26,7 +25,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialIndex);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>(initialAnswers);
-  const { scale, setScale, increase, decrease } = useFontScale();
+  const { scale } = useFontScale();
 
   const currentQuestion = useMemo(() => quiz.questions?.[currentQuestionIndex], [quiz.questions, currentQuestionIndex]);
   const currentQuestionId = currentQuestion?.id;
@@ -61,10 +60,10 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
   if (!quiz.questions || quiz.questions.length === 0) {
     return (
       <div className="w-full max-w-3xl mx-auto p-4 text-center">
-        <h2 className="text-xl font-bold mb-4">Chưa có câu hỏi nào trong chủ đề này.</h2>
+        <h2 className="text-xl font-bold mb-4 text-foreground">Chưa có câu hỏi nào trong chủ đề này.</h2>
         <button
           onClick={onBack}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-4 rounded-lg"
+          className="min-h-[44px] bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-6 rounded-xl font-semibold shadow-sm transition-colors"
         >
           Quay lại
         </button>
@@ -76,15 +75,19 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
   if (!currentQuestion) {
     return (
       <div className="w-full max-w-3xl mx-auto p-4 text-center">
-        <h2 className="text-xl font-bold mb-4">Có lỗi xảy ra khi tải câu hỏi.</h2>
-        <button onClick={onBack} className="bg-primary text-primary-foreground py-2 px-4 rounded-lg">Quay lại</button>
+        <h2 className="text-xl font-bold mb-4 text-foreground">Có lỗi xảy ra khi tải câu hỏi.</h2>
+        <button 
+          onClick={onBack} 
+          className="min-h-[44px] bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-6 rounded-xl font-semibold shadow-sm transition-colors"
+        >
+          Quay lại
+        </button>
       </div>
-    )
+    );
   }
 
   const removeIncorrectQuestion = useAppStore(state => state.removeIncorrectQuestion);
   const isPracticeMode = quiz.id === 'incorrect_practice';
-
   const addIncorrectQuestions = useAppStore(state => state.addIncorrectQuestions);
 
   const handleFinishQuiz = () => {
@@ -121,66 +124,80 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
     }
   };
 
-  const progressPercentage = ((currentQuestionIndex) / quiz.questions.length) * 100;
+  const progressPercentage = ((currentQuestionIndex + 1) / quiz.questions.length) * 100;
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-4 md:p-6 animate-slide-in-right font-quiz-default" style={{ '--content-scale': scale } as React.CSSProperties}>
-      <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-6 md:p-8">
+    <div className="w-full max-w-5xl mx-auto p-4 md:p-6 animate-slide-in-right font-quiz-default" style={{ '--content-scale': scale } as React.CSSProperties}>
+      <div className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border p-6 md:p-8">
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4 relative">
             <button
               onClick={onBack}
-              className="absolute left-0 top-1/2 -translate-y-1/2 bg-background/50 p-3 rounded-full shadow-md hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-card transition-all duration-300 transform hover:scale-110"
+              className="bg-card border border-border p-2 rounded-xl shadow-sm hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring transition-all min-h-[44px] min-w-[44px] flex items-center justify-center text-foreground"
               aria-label="Quay lại"
             >
-              <ArrowLeftIcon3D className="h-10 w-10" />
+              <ArrowLeftIcon3D className="h-6 w-6 text-primary" />
             </button>
-            <h1 className="text-xl font-bold text-foreground text-center flex-grow">{quiz.title}</h1>
+            <h1 className="text-lg md:text-xl font-bold text-foreground text-center flex-grow px-4 truncate">{quiz.title}</h1>
             <button
               onClick={handleFinishQuiz}
-              className={'bg-secondary text-secondary-foreground hover:bg-secondary/80 text-sm font-bold py-2 px-4 rounded-lg transition-colors duration-300'}
+              className="min-h-[40px] bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border text-sm font-semibold py-2 px-4 rounded-xl transition-colors"
             >
               Kết thúc
             </button>
           </div>
-          <div className="w-full bg-secondary rounded-full h-2.5 mb-2">
-            <div className="bg-primary h-2.5 rounded-full transition-all duration-500" style={{ width: `${progressPercentage}%` }}></div>
+          <div className="w-full bg-secondary rounded-full h-2 mb-2 overflow-hidden">
+            <div className="bg-primary h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercentage}%` }}></div>
           </div>
           <div className="flex justify-between items-center text-sm text-muted-foreground">
-            <span>Câu {currentQuestionIndex + 1} / {quiz.questions.length}</span>
+            <span className="tabular-nums font-medium">Câu {currentQuestionIndex + 1} / {quiz.questions.length}</span>
           </div>
         </div>
 
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex-1">
-            <h2 className="font-bold mb-5 text-foreground" style={{ fontSize: 'calc(1.5rem * var(--content-scale, 1))' }}>{currentQuestion.text}</h2>
+          {/* Question & Answers Area */}
+          <div className="flex-1 min-w-0">
+            <h2 className="font-bold mb-5 text-foreground leading-snug" style={{ fontSize: 'calc(1.25rem * var(--content-scale, 1))' }}>
+              {currentQuestion.text}
+            </h2>
             {currentImageUrl && (
-              <div className="mb-6 rounded-lg overflow-hidden">
-                <img src={currentImageUrl} alt="Câu hỏi" className="w-full h-auto object-cover max-h-80" loading="lazy" />
+              <div className="mb-6 rounded-xl overflow-hidden border border-border bg-muted/20">
+                <img
+                  src={currentImageUrl}
+                  alt="Hình minh họa câu hỏi"
+                  className="w-full h-auto object-contain max-h-80 mx-auto"
+                  loading="lazy"
+                  onError={(e) => {
+                    const fallback = resolveQuestionImageFallbackUrl(currentQuestion);
+                    if (fallback && e.currentTarget.src !== fallback && !e.currentTarget.src.endsWith(fallback)) {
+                      e.currentTarget.src = fallback;
+                    }
+                  }}
+                />
               </div>
             )}
 
             <div className="space-y-3">
               {currentQuestion.answers.map((answer, index) => {
                 const isSelected = selectedAnswer === answer.id;
-                let buttonClass = 'w-full text-left p-4 rounded-lg border-2 transition-all duration-300 flex items-center justify-between';
+                let buttonClass = 'w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between min-h-[52px] ';
 
                 const isCorrect = answer.id === currentQuestion.correctAnswerId;
                 const showReveal = isAnswered && (!isPracticeMode || isSelected);
 
                 if (showReveal) {
                   if (isCorrect) {
-                    buttonClass += ' bg-success/10 border-success text-success';
+                    buttonClass += 'bg-emerald-500/10 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-semibold';
                   } else if (isSelected && !isCorrect) {
-                    buttonClass += ' bg-destructive/10 border-destructive text-destructive';
+                    buttonClass += 'bg-destructive/10 border-destructive/40 text-destructive font-semibold';
                   } else {
-                    buttonClass += ' border-border text-muted-foreground';
+                    buttonClass += 'border-border text-muted-foreground opacity-60';
                   }
                 } else {
                   if (isSelected) {
-                    buttonClass += ' bg-primary/10 border-primary ring-2 ring-primary text-primary-foreground';
+                    buttonClass += 'bg-primary/10 border-primary ring-2 ring-primary text-primary font-semibold';
                   } else {
-                    buttonClass += ' bg-background hover:bg-muted border-border text-foreground';
+                    buttonClass += 'bg-card hover:bg-muted/60 border-border text-foreground';
                   }
                 }
 
@@ -190,13 +207,16 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
                     onClick={() => handleAnswerSelect(answer.id)}
                     disabled={isAnswered && (!isPracticeMode || selectedAnswer === currentQuestion.correctAnswerId)}
                     className={buttonClass}
-                    style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}
+                    style={{ fontSize: 'calc(1.05rem * var(--content-scale, 1))' }}
                   >
-                    <span className="flex-grow"><span className='font-bold mr-2'>{String.fromCharCode(65 + index)}. </span>{answer.text}</span>
+                    <span className="flex-grow">
+                      <span className="font-bold mr-2 tabular-nums">{String.fromCharCode(65 + index)}. </span>
+                      {answer.text}
+                    </span>
                     {showReveal && (
                       <>
-                        {isCorrect && <CheckIcon3D className="h-6 w-6 text-success ml-3" />}
-                        {isSelected && !isCorrect && <XIcon3D className="h-6 w-6 text-destructive ml-3" />}
+                        {isCorrect && <CheckIcon3D className="h-5 w-5 text-emerald-600 dark:text-emerald-400 ml-3 flex-shrink-0" />}
+                        {isSelected && !isCorrect && <XIcon3D className="h-5 w-5 text-destructive ml-3 flex-shrink-0" />}
                       </>
                     )}
                   </button>
@@ -209,42 +229,46 @@ const QuizScreen: React.FC<QuizScreenProps> = ({
                 {isAnswered ? (
                   <button
                     onClick={handleNext}
-                    className="bg-success text-success-foreground font-bold py-3 px-8 rounded-lg hover:bg-success/90 transition-all duration-300 animate-slide-in-right"
+                    className="min-h-[44px] bg-primary text-primary-foreground font-semibold py-2.5 px-8 rounded-xl hover:bg-primary/90 transition-all shadow-sm"
                   >
                     {currentQuestionIndex === quiz.questions.length - 1 ? 'Hoàn thành' : 'Câu tiếp theo'}
                   </button>
                 ) : (
-                  <div className="h-[48px]"></div> // Placeholder to prevent layout jump
+                  <div className="h-[44px]"></div>
                 )}
               </div>
             </div>
           </div>
 
           {/* Question Navigation Grid */}
-          <div className="w-full md:w-[220px] flex-none">
-            <div className="flex-wrap gap-2 justify-center p-2 bg-gray-50 rounded-xl border border-gray-200 flex">
-                 {quiz.questions.map((q, index) => {
-                         const hasAnswered = !!userAnswers[q.id];
-                         const isCorrect = userAnswers[q.id] === q.correctAnswerId;
-                         const isCurrent = currentQuestionIndex === index;
-                         return (
-                             <button
-                                key={q.id}
-                                onClick={() => { triggerHaptic('light'); setCurrentQuestionIndex(index); }}
-                                className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs transition-all ${
-                                    isCurrent ? 'bg-blue-600 text-white ring-2 ring-blue-300 scale-110' :
-                                    hasAnswered ? (isCorrect ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300') : 'bg-card text-gray-500 border border-gray-200'
-                                }`}
-                             >
-                                 {index + 1}
-                             </button>
-                         );
-                     })}
+          <div className="w-full md:w-[240px] flex-none">
+            <div className="flex flex-wrap gap-2 justify-center p-3.5 bg-muted/50 rounded-xl border border-border">
+              {quiz.questions.map((q, index) => {
+                const hasAnswered = userAnswers[q.id] !== undefined;
+                const isCorrect = userAnswers[q.id] === q.correctAnswerId;
+                const isCurrent = currentQuestionIndex === index;
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => { triggerHaptic('light'); setCurrentQuestionIndex(index); }}
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center font-semibold text-xs tabular-nums transition-colors ${
+                      isCurrent
+                        ? 'bg-primary text-primary-foreground ring-2 ring-ring shadow-sm'
+                        : hasAnswered
+                          ? isCorrect
+                            ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30'
+                            : 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30'
+                          : 'bg-card text-muted-foreground hover:bg-secondary hover:text-foreground border border-border'
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
       </div>
-      <ZoomBar scale={scale} setScale={setScale} increase={increase} decrease={decrease} />
     </div>
   );
 };

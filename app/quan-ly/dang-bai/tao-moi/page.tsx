@@ -3,12 +3,13 @@
 
 import Image from 'next/image'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Category, Attachment, getFileIcon, sanitizeFileName, formatFileSize } from '../dangBaiUtils'
+import { Category, Attachment, getFileIcon, formatFileSize } from '../dangBaiUtils'
 import { useAuth } from '../../../../context/AuthContext' 
 import ProtectedRoute from '../../../../components/ProtectedRoute' 
 import { supabase } from '../../../../utils/supabaseClient' 
+import { uploadPortalAsset, createTinyMceUploadHandler } from '../../../../lib/portalMediaService'
 import Link from 'next/link' 
 
 // "THUÊ" TINYMCE
@@ -99,40 +100,7 @@ function CreatePostForm() {
 
 
   // ("Thợ" upload ảnh TinyMCE - Giữ nguyên)
-  const tinymceUploadHandler = (blobInfo: any, _progress: (percent: number) => void): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      
-      const file = blobInfo.blob();
-      
-      if (file.size > 5 * 1024 * 1024) {
-        reject('Lỗi: Ảnh quá lớn, vui lòng chọn ảnh dưới 5MB');
-        return;
-      }
-
-      const fileName = `content_${Date.now()}_${blobInfo.filename()}`;
-
-      supabase.storage
-        .from('post_images') 
-        .upload(fileName, file)
-        .then(({ error: uploadError }) => {
-          if (uploadError) {
-            console.error(`Lỗi tải ảnh ${fileName}:`, uploadError.message);
-            return reject(new Error(uploadError.message)); 
-          }
-          
-          const { data: publicUrlData } = supabase.storage
-            .from('post_images')
-            .getPublicUrl(fileName);
-
-          resolve(publicUrlData.publicUrl); 
-        })
-        .catch(err => {
-           console.error(`Lỗi ngoại lệ khi tải ${fileName}:`, err);
-           return reject(err);
-        });
-    });
-  }
-
+  const tinymceUploadHandler = useMemo(() => createTinyMceUploadHandler(), []);
 
   // (Hàm "Lưu thư viện" - Giữ nguyên)
   const extractMediaAndSave = async (
@@ -209,46 +177,31 @@ function CreatePostForm() {
       let thumbnailUrl: string | null = null;
       const attachmentsData: Attachment[] = []; 
 
-      // 1. "Đẩy" ảnh đại diện
+      // 1. "Đẩy" ảnh đại diện lên Cloudflare R2 (Fallback Supabase 5s)
       if (thumbnailFile) {
-
-        const fileName = `thumbnail_${Date.now()}_${thumbnailFile.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from('post_images') 
-          .upload(fileName, thumbnailFile);
-        if (uploadError) throw new Error(`Lỗi tải ảnh đại diện: ${uploadError.message}`);
-        const { data: publicUrlData } = supabase.storage
-          .from('post_images')
-          .getPublicUrl(fileName);
-        thumbnailUrl = publicUrlData.publicUrl;
+        const result = await uploadPortalAsset({
+          file: thumbnailFile,
+          category: 'image',
+          kind: 'thumbnail'
+        });
+        thumbnailUrl = result.url;
       }
 
-      // 2. "ĐẨY" TỆP ĐÍNH KÈM
+      // 2. "ĐẨY" TỆP ĐÍNH KÈM lên Cloudflare R2 (Fallback Supabase 5s)
       if (attachmentFiles.length > 0) {
-
         for (const file of attachmentFiles) {
-          const cleanName = sanitizeFileName(file.name);
-          const fileName = `file_${Date.now()}_${cleanName}`;
-          
-          const { error: fileUploadError } = await supabase.storage
-            .from('post_files') 
-            .upload(fileName, file);
-
-          if (fileUploadError) {
-            throw new Error(`Lỗi khi tải tệp ${file.name}: ${fileUploadError.message}`);
-          }
-          const { data: publicUrlData } = supabase.storage
-            .from('post_files')
-            .getPublicUrl(fileName);
-            
+          const result = await uploadPortalAsset({
+            file,
+            category: 'document',
+            kind: 'document'
+          });
           attachmentsData.push({
-            file_name: file.name, 
-            file_url: publicUrlData.publicUrl,
+            file_name: file.name,
+            file_url: result.url,
             file_size: file.size,
             file_type: file.type,
           });
         }
-
       }
 
       // 3. "CẤT" BÀI VIẾT
@@ -448,7 +401,7 @@ function CreatePostForm() {
                 )}
                 <Editor
                   // 💖 8. TRA "CHÌA KHÓA" CỦA ANH VÀO ĐÂY 💖
-                  apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
+                  tinymceScriptSrc="/tinymce/tinymce.min.js"
                   
                   // (Khai báo 'any' cho 'onInit')
                   onInit={(_evt: any, editor: any) => {
@@ -464,6 +417,8 @@ function CreatePostForm() {
                   }}
                   
                   init={{
+                    skin_url: '/tinymce/skins/ui/oxide',
+                    content_css: '/tinymce/skins/content/default/content.min.css',
                     height: 500,
                     menubar: false,
                     plugins: [

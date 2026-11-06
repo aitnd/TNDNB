@@ -12,11 +12,11 @@ export function normalizeQuestionImageForR2(questionId, rawImage, r2BaseUrl) {
   if (!rawImage || String(rawImage).trim() === '') {
     return null;
   }
-  const cleanBase = (r2BaseUrl || 'https://cdn.tndnb.vn').replace(/\/+$/, '');
+  const cleanBase = (r2BaseUrl || 'https://www.daotaothuyenvien.com').replace(/\/+$/, '');
   return `${cleanBase}/question-images/${questionId}.png`;
 }
 
-export function generateSeedSqlFromLicenses(licenses, r2BaseUrl = 'https://cdn.tndnb.vn') {
+export function generateSeedSqlFromLicenses(licenses, r2BaseUrl = 'https://www.daotaothuyenvien.com') {
   const lines = [];
   let totalQuestions = 0;
 
@@ -66,9 +66,11 @@ export function generateSeedSqlFromLicenses(licenses, r2BaseUrl = 'https://cdn.t
 // Chạy trực tiếp từ CLI: node scripts/migrate-to-d1.mjs
 const currentFile = fileURLToPath(import.meta.url);
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(currentFile)) {
-  const r2BaseUrl = process.env.VITE_R2_PUBLIC_URL || 'https://cdn.tndnb.vn';
+  const r2Arg = process.argv.find((a) => a.startsWith('--r2-url='));
+  const outArg = process.argv.find((a) => a.startsWith('--output='));
+  const r2BaseUrl = (r2Arg ? r2Arg.slice('--r2-url='.length) : null) || process.env.VITE_R2_PUBLIC_URL || 'https://www.daotaothuyenvien.com';
+  const outSqlPath = (outArg ? outArg.slice('--output='.length) : null) || path.resolve(process.cwd(), 'cloudflare-worker/migrations/0002_seed_data.sql');
   const jsonPath = path.resolve(process.cwd(), 'ontap-win/data/questions_db.json');
-  const outSqlPath = path.resolve(process.cwd(), 'cloudflare-worker/migrations/0002_seed_data.sql');
 
   const rawData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
   const { sql, contentHash, totalQuestions } = generateSeedSqlFromLicenses(rawData, r2BaseUrl);

@@ -17,20 +17,16 @@ export async function handleConfigRoutes(
   }
 
   if (request.method === 'GET') {
-    const row = await env.DB.prepare(
-      `SELECT key, value_json, updated_at FROM app_configs WHERE key = ?`
-    )
-      .bind(key)
-      .first<{ key: string; value_json: string; updated_at: number }>();
+    const val = await env.CONFIG_KV.get(key);
 
-    if (!row) {
+    if (val === null) {
       return new Response(JSON.stringify(null), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json; charset=utf-8' }
       });
     }
 
-    return new Response(row.value_json, {
+    return new Response(val, {
       status: 200,
       headers: {
         ...corsHeaders,
@@ -54,13 +50,7 @@ export async function handleConfigRoutes(
 
     const bodyObj = await request.json();
     const now = Date.now();
-    await env.DB.prepare(
-      `INSERT INTO app_configs (key, value_json, updated_at)
-       VALUES (?, ?, ?)
-       ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at`
-    )
-      .bind(key, JSON.stringify(bodyObj), now)
-      .run();
+    await env.CONFIG_KV.put(key, JSON.stringify(bodyObj));
 
     return new Response(JSON.stringify({ ok: true, key, updatedAt: now }), {
       status: 200,

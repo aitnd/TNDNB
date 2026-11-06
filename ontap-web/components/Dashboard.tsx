@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { UserProfile } from '../types';
 import StudentCard from './StudentCard';
-import { useTheme } from '../contexts/ThemeContext';
 import { triggerHaptic } from '../utils/nativeUX';
 import { useAppStore } from '../stores/useAppStore';
 
@@ -10,10 +9,6 @@ import AdminStatsBar from './AdminStatsBar';
 import WeatherWidget from './WeatherWidget';
 import WelcomeHeader from './WelcomeHeader';
 import { useQuickActions, PrimaryButton, ActionTile, SecondaryButton } from './QuickActionsGrid';
-
-// Giữ lại cho trang thống kê, nhưng không import trực tiếp trên dashboard nữa
-// import OnlineStatsWidget from './OnlineStatsWidget';
-// import CustomAnalyticsWidget from './CustomAnalyticsWidget';
 
 import NativeSettingsModal from './NativeSettingsModal';
 import { Settings, ChevronDown, ChevronUp } from 'lucide-react';
@@ -26,7 +21,7 @@ import type { ExamResult } from '../services/historyService';
 // Lazy load GA Analytics widget (chỉ khi user bấm mở)
 const CustomAnalyticsWidget = React.lazy(() => import('./CustomAnalyticsWidget'));
 
-interface DashboardProps {
+export interface DashboardProps {
     userProfile: UserProfile;
     onStart: () => void;
     onHistoryClick: () => void;
@@ -43,19 +38,20 @@ const Dashboard: React.FC<DashboardProps> = ({
     onOnlineExamClick, onNotificationClick, onStatsClick, onSettingsClick,
     onUserManagerClick
 }) => {
-    const { theme } = useTheme();
     const isMobileApp = useAppStore(state => state.isMobileApp);
     const [isNativeSettingsOpen, setIsNativeSettingsOpen] = useState(false);
     const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 
-    const userId = useAppStore(s => s.userProfile?.id ?? 'guest');
-    const [history, setHistory] = React.useState<ExamResult[]>([]);
-    React.useEffect(() => { getExamHistory(userId).then(setHistory); }, [userId]);
-
-    const userRole = userProfile?.role || 'hoc_vien';
+    const userRole = userProfile.role || 'hoc_vien';
     const isAdminOnly = ['admin', 'quan_ly', 'lanh_dao'].includes(userRole);
 
-    // Hook tính toán quick actions theo role
+    const [history, setHistory] = React.useState<ExamResult[]>([]);
+    React.useEffect(() => {
+        if (userProfile?.id) {
+            getExamHistory(userProfile.id).then(setHistory).catch(() => {});
+        }
+    }, [userProfile?.id]);
+
     const { primaryAction, rightTiles, leftButtons } = useQuickActions({
         userRole,
         onStart,
@@ -68,212 +64,126 @@ const Dashboard: React.FC<DashboardProps> = ({
         onUserManagerClick,
     });
 
-    // === PREMIUM THEME — PHƯƠNG ÁN C "HYBRID SMART" ===
-    if (theme === 'premium') {
-        return (
-            <div className="relative min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right overflow-hidden transition-colors duration-500">
-                {/* Background Decorations */}
-                <div className="absolute inset-0 z-0 pointer-events-none">
-                    <div className="absolute top-[20%] left-[-5%] w-[30%] h-[30%] bg-cyan-500/10 blur-[100px] rounded-full animate-pulse-slow" />
-                    <div className="absolute bottom-[20%] right-[-5%] w-[35%] h-[35%] bg-violet-500/10 blur-[120px] rounded-full animate-bounce-slow" />
-                </div>
-
-                <div className="relative z-10 w-full max-w-6xl">
-                    {/* === ROW 1: Weather & Online Stats Banner (Stacked Vertically) === */}
-                    <div className="w-full flex flex-col gap-2.5 mb-4">
-                        <WeatherWidget />
-                        {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
-                            <AdminStatsBar userRole={userRole} />
-                        )}
-                    </div>
-
-                    {/* === ROW 2: Main Content (2 cột) === */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-
-                        {/* === CỘT TRÁI (4 col): StudentCard + Nút phụ === */}
-                        <div className="lg:col-span-4 flex flex-col items-center gap-4">
-                            {/* Thẻ Giáo viên/Học viên — GIỮ NGUYÊN */}
-                            <div className="relative w-full group">
-                                <div className="absolute -inset-2 bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-600 rounded-[32px] opacity-20 blur-2xl group-hover:opacity-40 transition-opacity duration-500" />
-                                <div className="relative">
-                                    <StudentCard user={userProfile} />
-                                </div>
-                            </div>
-
-                            {/* Nút phụ dưới thẻ: Lịch sử + Quản lý Lớp */}
-                            <div className="w-full space-y-2 mt-2">
-                                {leftButtons.map((action, idx) => (
-                                    <SecondaryButton key={action.id} action={action} index={idx} />
-                                ))}
-                            </div>
-
-                            <div className="w-full bg-card/40 dark:bg-zinc-800/40 backdrop-blur-md rounded-2xl p-4 border border-gray-200/30 dark:border-zinc-700/30">
-                                <h3 className="font-bold text-slate-700 dark:text-slate-200 mb-2">Tiến bộ học tập</h3>
-                                <ProgressDashboard history={history} />
-                            </div>
-                        </div>
-
-                        {/* === CỘT PHẢI (8 col): Welcome + CTA + Tiles === */}
-                        <div className="lg:col-span-8">
-                            <div className="glass-premium rounded-[32px] p-6 md:p-10 border-white/10 shadow-3xl relative">
-                                {/* Nút Settings (Mobile App) */}
-                                {isMobileApp && (
-                                    <button
-                                        onClick={() => {
-                                            triggerHaptic('light');
-                                            setIsNativeSettingsOpen(true);
-                                        }}
-                                        className="absolute top-6 right-6 p-2.5 rounded-xl glass-premium border-white/20 text-slate-400 hover:text-blue-500 transition-all active:scale-90"
-                                    >
-                                        <Settings size={20} />
-                                    </button>
-                                )}
-
-                                {/* Lời chào thông minh */}
-                                <WelcomeHeader
-                                    userName={userProfile.full_name || 'Bạn'}
-                                    userRole={userRole}
-                                />
-
-                                {/* Nút CTA chính: Vào Ôn Tập */}
-                                <div className="mb-6">
-                                    <PrimaryButton action={primaryAction} />
-                                </div>
-
-                                {/* Grid tiles 2x2 cho admin */}
-                                {rightTiles.length > 0 && (
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {rightTiles.map((action, idx) => (
-                                            <ActionTile key={action.id} action={action} index={idx} />
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* === ROW 3: GA Analytics Thu Gọn (chỉ admin) === */}
-                    {isAdminOnly && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                            className="mt-6"
-                        >
-                            <button
-                                onClick={() => setIsAnalyticsOpen(!isAnalyticsOpen)}
-                                className="w-full flex items-center justify-between px-5 py-3 rounded-2xl bg-card/40 dark:bg-zinc-800/40 backdrop-blur-md border border-gray-200/30 dark:border-zinc-700/30 hover:bg-card/60 dark:hover:bg-zinc-800/60 transition-all"
-                            >
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm font-semibold text-muted-foreground dark:text-slate-300">📊 Tổng quan truy cập</span>
-                                    <span className="text-xs text-slate-400">Google Analytics</span>
-                                </div>
-                                {isAnalyticsOpen ? <ChevronUp size={18} className="text-slate-400" /> : <ChevronDown size={18} className="text-slate-400" />}
-                            </button>
-
-                            <AnimatePresence>
-                                {isAnalyticsOpen && (
-                                    <motion.div
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: 'auto', opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="overflow-hidden mt-2"
-                                    >
-                                        <React.Suspense fallback={
-                                            <div className="text-center py-8 text-slate-400 text-sm">Đang tải thống kê...</div>
-                                        }>
-                                            <CustomAnalyticsWidget userRole={userRole} />
-                                        </React.Suspense>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </motion.div>
+    return (
+        <div className="relative min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right overflow-hidden transition-colors">
+            <div className="relative z-10 w-full max-w-6xl">
+                {/* === ROW 1: Weather & Online Stats Banner (Stacked Vertically) === */}
+                <div className="w-full flex flex-col gap-2.5 mb-4">
+                    <WeatherWidget />
+                    {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
+                        <AdminStatsBar userRole={userRole} />
                     )}
                 </div>
 
-                {/* Native Settings Modal */}
-                <NativeSettingsModal
-                    isOpen={isNativeSettingsOpen}
-                    onClose={() => setIsNativeSettingsOpen(false)}
-                />
-            </div>
-        );
-    }
+                {/* === ROW 2: Main Content (Bento Asymmetric 12-Col) === */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
 
-    // === THEME CŨ (cũng áp dụng layout Phương án C nhưng đơn giản hơn) ===
-    return (
-        <div className="min-h-screen flex flex-col items-center px-4 pt-2 pb-6 animate-slide-in-right">
-            {/* Thanh Weather & Online Stats (Stacked Vertically) */}
-            <div className="w-full max-w-4xl flex flex-col gap-2.5 mb-4">
-                <WeatherWidget />
-                {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
-                    <AdminStatsBar userRole={userRole} />
+                    {/* === CỘT TRÁI (4 col): StudentCard + Nút phụ + Tiến bộ === */}
+                    <div className="lg:col-span-4 flex flex-col items-center gap-4">
+                        {/* Thẻ Giáo viên/Học viên */}
+                        <div className="w-full">
+                            <StudentCard user={userProfile} />
+                        </div>
+
+                        {/* Nút phụ dưới thẻ: Lịch sử + Quản lý Lớp */}
+                        <div className="w-full space-y-2">
+                            {leftButtons.map((action, idx) => (
+                                <SecondaryButton key={action.id} action={action} index={idx} />
+                            ))}
+                        </div>
+
+                        {/* Thẻ tiến bộ học tập */}
+                        <div className="w-full bg-card text-card-foreground rounded-2xl p-5 border border-border shadow-xs">
+                            <h3 className="font-bold text-foreground mb-2 text-sm uppercase tracking-wide">Tiến bộ học tập</h3>
+                            <ProgressDashboard history={history} />
+                        </div>
+                    </div>
+
+                    {/* === CỘT PHẢI (8 col): Welcome + CTA + Tiles === */}
+                    <div className="lg:col-span-8">
+                        <div className="bg-card text-card-foreground rounded-2xl p-6 md:p-8 border border-border shadow-xs relative">
+                            {/* Nút Settings (Mobile App) */}
+                            {isMobileApp && (
+                                <button
+                                    onClick={() => {
+                                        triggerHaptic('light');
+                                        setIsNativeSettingsOpen(true);
+                                    }}
+                                    className="absolute top-6 right-6 p-2 rounded-xl bg-secondary text-muted-foreground hover:text-foreground transition-all active:scale-95 border border-border"
+                                    aria-label="Cài đặt"
+                                >
+                                    <Settings size={20} />
+                                </button>
+                            )}
+
+                            {/* Lời chào thông minh */}
+                            <WelcomeHeader
+                                userName={userProfile.full_name || 'Bạn'}
+                                userRole={userRole}
+                            />
+
+                            {/* Nút CTA chính: Vào Ôn Tập */}
+                            <div className="mb-6">
+                                <PrimaryButton action={primaryAction} />
+                            </div>
+
+                            {/* Grid tiles 2x2 cho admin */}
+                            {rightTiles.length > 0 && (
+                                <div className="grid grid-cols-2 gap-3">
+                                    {rightTiles.map((action, idx) => (
+                                        <ActionTile key={action.id} action={action} index={idx} />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* === ROW 3: GA Analytics Thu Gọn (chỉ admin) === */}
+                {isAdminOnly && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="mt-6"
+                    >
+                        <button
+                            onClick={() => setIsAnalyticsOpen(!isAnalyticsOpen)}
+                            className="w-full flex items-center justify-between px-5 py-3.5 rounded-2xl bg-card border border-border hover:bg-secondary/60 text-card-foreground transition-all shadow-xs"
+                        >
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-semibold text-foreground">📊 Tổng quan truy cập</span>
+                                <span className="text-xs text-muted-foreground">Google Analytics</span>
+                            </div>
+                            {isAnalyticsOpen ? <ChevronUp size={18} className="text-muted-foreground" /> : <ChevronDown size={18} className="text-muted-foreground" />}
+                        </button>
+
+                        <AnimatePresence>
+                            {isAnalyticsOpen && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="overflow-hidden mt-2 bg-card border border-border rounded-2xl p-4 shadow-xs"
+                                >
+                                    <React.Suspense fallback={
+                                        <div className="text-center py-8 text-muted-foreground text-sm">Đang tải thống kê...</div>
+                                    }>
+                                        <CustomAnalyticsWidget userRole={userRole} />
+                                    </React.Suspense>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
                 )}
             </div>
 
-            <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-
-                {/* Cột trái: StudentCard + nút phụ */}
-                <div className="flex flex-col items-center gap-4">
-                    <StudentCard user={userProfile} />
-
-                    {/* Nút phụ */}
-                    <div className="w-full space-y-2">
-                        {leftButtons.map((action, idx) => (
-                            <SecondaryButton key={action.id} action={action} index={idx} />
-                        ))}
-                    </div>
-
-                    <div className="w-full bg-card p-4 rounded-xl shadow-md border border-border">
-                        <h3 className="font-bold mb-2">Tiến bộ học tập</h3>
-                        <ProgressDashboard history={history} />
-                    </div>
-                </div>
-
-                {/* Cột phải: Welcome + Actions */}
-                <div className="bg-card/90 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-border">
-                    {/* Lời chào thông minh */}
-                    <WelcomeHeader
-                        userName={userProfile.full_name || 'Học viên'}
-                        userRole={userRole}
-                    />
-
-                    {/* Nút CTA chính */}
-                    <div className="mb-4">
-                        <PrimaryButton action={primaryAction} />
-                    </div>
-
-                    {/* Grid tiles cho admin */}
-                    {rightTiles.length > 0 && (
-                        <div className="grid grid-cols-2 gap-3 mt-4">
-                            {rightTiles.map((action, idx) => (
-                                <ActionTile key={action.id} action={action} index={idx} />
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* GA Analytics thu gọn */}
-            {isAdminOnly && (
-                <div className="w-full max-w-4xl mt-6">
-                    <button
-                        onClick={() => setIsAnalyticsOpen(!isAnalyticsOpen)}
-                        className="w-full flex items-center justify-between px-5 py-3 rounded-xl bg-card/90 border border-border hover:bg-card transition-all"
-                    >
-                        <span className="text-sm font-semibold text-muted-foreground">📊 Tổng quan truy cập</span>
-                        {isAnalyticsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                    </button>
-                    {isAnalyticsOpen && (
-                        <div className="mt-2">
-                            <React.Suspense fallback={<div className="text-center py-8 text-muted-foreground text-sm">Đang tải...</div>}>
-                                <CustomAnalyticsWidget userRole={userRole} />
-                            </React.Suspense>
-                        </div>
-                    )}
-                </div>
-            )}
+            {/* Native Settings Modal */}
+            <NativeSettingsModal
+                isOpen={isNativeSettingsOpen}
+                onClose={() => setIsNativeSettingsOpen(false)}
+            />
         </div>
     );
 };

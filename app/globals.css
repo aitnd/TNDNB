@@ -17,7 +17,6 @@
  * - section header: S1 · Left margin numbered (01 — TIN TỨC & SỰ KIỆN)
  * - typography: Merriweather roman display (strictly font-style: normal, Gate 38a) + Be Vietnam Pro + JetBrains Mono
  */
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
 
 :root {
     /* --- Hallmark Editorial Tokens --- */
@@ -57,7 +56,7 @@
 body {
     background: var(--bg-body);
     color: var(--text-main);
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: var(--font-sans), 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
     margin: 0; padding: 0;
     line-height: 1.7;
     overflow-x: hidden;
@@ -66,9 +65,9 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display, 'Merriweather', serif);
+    font-family: var(--font-display), 'Merriweather', serif;
     font-weight: 700;
-    font-style: normal;
+    font-style: normal !important;
     color: var(--text-header);
 }
 

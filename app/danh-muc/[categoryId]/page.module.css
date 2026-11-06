@@ -100,7 +100,8 @@
 }
 
 .newsItemLarge p {
-    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
+    font-variant-numeric: tabular-nums;
     font-size: 0.74rem;
     color: var(--color-ink-muted, #475569);
     margin: 0.35rem 0 0 0;

@@ -9,14 +9,7 @@ import { timeoutWrapper } from '../utils/authTimeout';
 
 // Import Saved Accounts
 import SavedAccountsList from './SavedAccountsList';
-import {   getSavedAccounts,   saveAccount,   getAccountPassword,   updateLastLogin,   SavedAccount } from '../services/savedAccountsService'; 
-
-
-
-
-
-
-
+import { getSavedAccounts, saveAccount, getAccountPassword, updateLastLogin, SavedAccount } from '../services/savedAccountsService'; 
 
 interface LoginScreenProps {
   onBack: () => void;
@@ -194,23 +187,24 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
         <div className="relative text-center mb-10">
           <button
             onClick={() => { setShowForgotPassword(false); setError(null); setSuccessMsg(null); }}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-card/50 p-3 rounded-full shadow-md hover:bg-muted transition-all duration-300"
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-card border border-border p-2.5 rounded-full shadow-sm hover:bg-muted transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-label="Quay lại"
           >
-            <ArrowLeftIcon3D className="h-10 w-10 text-primary" />
+            <ArrowLeftIcon3D className="h-6 w-6 text-primary" />
           </button>
           <div className="h-20 w-20 mx-auto text-primary mb-4 flex items-center justify-center bg-primary/10 rounded-full">
             <FaKey className="text-4xl" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground">Khôi phục mật khẩu</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Khôi phục mật khẩu</h1>
           <p className="text-sm text-muted-foreground mt-2">
             Nhập email của bạn để nhận liên kết đặt lại mật khẩu.
           </p>
         </div>
 
-        <div className="bg-card p-8 rounded-2xl shadow-lg">
+        <div className="bg-card text-card-foreground p-6 md:p-8 rounded-2xl border border-border shadow-sm">
           <form onSubmit={handleResetPassword}>
-            {error && <p className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-center text-sm">{error}</p>}
-            {successMsg && <p className="bg-green-100 text-green-700 p-3 rounded-md mb-4 text-center text-sm">{successMsg}</p>}
+            {error && <p className="bg-destructive/10 text-destructive border border-destructive/20 p-3 rounded-xl mb-4 text-center text-sm">{error}</p>}
+            {successMsg && <p className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 p-3 rounded-xl mb-4 text-center text-sm">{successMsg}</p>}
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-card-foreground mb-2">Email đăng ký</label>
@@ -219,7 +213,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
                 placeholder="email@example.com"
-                className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-300"
+                className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-300"
                 required
                 autoFocus
               />
@@ -228,7 +222,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-primary-foreground font-bold py-3 px-6 rounded-lg hover:bg-primary/90 transition-all duration-300 disabled:opacity-50"
+              className="w-full min-h-[44px] bg-primary text-primary-foreground font-semibold py-2.5 px-6 rounded-xl hover:bg-primary/90 transition-all duration-300 disabled:opacity-50 shadow-sm"
             >
               {loading ? 'Đang gửi...' : 'Gửi yêu cầu'}
             </button>
@@ -245,19 +239,19 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
         <div className="relative text-center mb-10">
           <button
             onClick={onBack}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-card/50 p-3 rounded-full shadow-md hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-300 transform hover:scale-110"
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-card border border-border p-2.5 rounded-full shadow-sm hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Quay lại"
           >
-            <ArrowLeftIcon3D className="h-10 w-10 text-primary" />
+            <ArrowLeftIcon3D className="h-6 w-6 text-primary" />
           </button>
           <HelmIcon3D className="h-20 w-20 mx-auto text-primary mb-4" />
-          <h1 className="text-4xl font-bold text-foreground">Chào mừng trở lại</h1>
-          <p className="text-lg text-muted-foreground mt-2">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Chào mừng trở lại</h1>
+          <p className="text-base text-muted-foreground mt-2">
             Chọn tài khoản để đăng nhập
           </p>
         </div>
 
-        <div className="bg-card p-6 rounded-2xl shadow-lg">
+        <div className="bg-card text-card-foreground p-6 md:p-8 rounded-2xl border border-border shadow-sm">
           <SavedAccountsList
             accounts={savedAccounts}
             onSelectAccount={handleSelectSavedAccount}
@@ -283,21 +277,21 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
               onBack();
             }
           }}
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-card/50 p-3 rounded-full shadow-md hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-300 transform hover:scale-110"
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-card border border-border p-2.5 rounded-full shadow-sm hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center"
           aria-label="Quay lại"
         >
-          <ArrowLeftIcon3D className="h-10 w-10 text-primary" />
+          <ArrowLeftIcon3D className="h-6 w-6 text-primary" />
         </button>
         <HelmIcon3D className="h-20 w-20 mx-auto text-primary mb-4" />
-        <h1 className="text-4xl font-bold text-foreground">Đăng nhập</h1>
-        <p className="text-lg text-muted-foreground mt-2">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Đăng nhập</h1>
+        <p className="text-base text-muted-foreground mt-2">
           Truy cập vào hệ thống quản lý học tập.
         </p>
       </div>
 
-      <div className="bg-card p-8 rounded-2xl shadow-lg">
+      <div className="bg-card text-card-foreground p-6 md:p-8 rounded-2xl border border-border shadow-sm">
         <form onSubmit={handleLogin}>
-          {error && <p className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-center">{error}</p>}
+          {error && <p className="bg-destructive/10 text-destructive border border-destructive/20 p-3 rounded-xl mb-4 text-center text-sm">{error}</p>}
 
           <div className="mb-4">
             <label htmlFor="account" className="block text-sm font-medium text-card-foreground mb-2">
@@ -309,7 +303,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
               value={account}
               onChange={(e) => setAccount(e.target.value)}
               placeholder="Nhập tài khoản hoặc email"
-              className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-300"
+              className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-300"
               required
               autoFocus
             />
@@ -325,7 +319,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-300"
+              className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-300"
               required
             />
           </div>
@@ -334,7 +328,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
             <button
               type="button"
               onClick={() => setShowForgotPassword(true)}
-              className="text-sm text-primary hover:underline"
+              className="text-sm font-medium text-primary hover:underline min-h-[36px]"
             >
               Quên mật khẩu?
             </button>
@@ -345,7 +339,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
             {saveThisAccount ? (
               <FaCheckSquare className="text-primary text-xl" />
             ) : (
-              <FaSquare className="text-gray-400 text-xl" />
+              <FaSquare className="text-muted-foreground text-xl" />
             )}
             <span className="text-sm text-muted-foreground select-none">Lưu tài khoản này</span>
           </div>
@@ -355,7 +349,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
             {rememberMe ? (
               <FaCheckSquare className="text-primary text-xl" />
             ) : (
-              <FaSquare className="text-gray-400 text-xl" />
+              <FaSquare className="text-muted-foreground text-xl" />
             )}
             <span className="text-sm text-muted-foreground select-none">Ghi nhớ đăng nhập</span>
           </div>
@@ -363,7 +357,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary text-primary-foreground font-bold py-3 px-6 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-ring transition-all duration-300 disabled:opacity-50 disabled:cursor-wait mb-4"
+            className="w-full min-h-[44px] bg-primary text-primary-foreground font-semibold py-2.5 px-6 rounded-xl hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-300 disabled:opacity-50 disabled:cursor-wait mb-4 shadow-sm"
           >
             {loading ? 'Đang xử lý...' : 'Đăng nhập'}
           </button>
@@ -375,7 +369,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
                 type="button"
                 onClick={handleBiometricAuth}
                 disabled={loading}
-                className="flex flex-col items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                className="flex flex-col items-center gap-2 text-primary hover:text-primary/80 transition-colors min-h-[44px]"
               >
                 <div className="p-3 bg-primary/10 rounded-full">
                   <FaFingerprint className="text-3xl" />

@@ -37,7 +37,7 @@
 }
 
 .metaBadge {
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
   font-weight: 700;
   color: #F8FAFC;
   letter-spacing: 0.5px;
@@ -232,6 +232,7 @@
 }
 
 .navRow1 a {
+  font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
   color: rgba(255, 255, 255, 0.92) !important;
   background: transparent;
   text-decoration: none !important;
@@ -291,7 +292,7 @@
 }
 
 .categoryLabel {
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
   font-size: 0.74rem;
   font-weight: 700;
   color: #FCD34D;
@@ -301,6 +302,7 @@
 }
 
 .categoryGroup a {
+  font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
   color: rgba(255, 255, 255, 0.88) !important;
   text-decoration: none !important;
   font-size: 0.8rem;

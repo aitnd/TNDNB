@@ -297,18 +297,15 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         setSubjectStats([...newSubjectStats, finalMockStat]);
     }, [selectedCourse, licenses, allClassHistories]);
 
-
     // --- HANDLERS ---
     const handleSaveCourse = async (data: any) => {
         try {
             if (editingCourse) {
-                // Update
                 await updateDoc(doc(db, 'courses', editingCourse.id), {
                     ...data,
                     updatedAt: serverTimestamp()
                 });
             } else {
-                // Create
                 await addDoc(collection(db, 'courses'), {
                     ...data,
                     createdAt: serverTimestamp(),
@@ -330,7 +327,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
         const course = courses.find(c => c.id === courseId);
         if (!course) return;
 
-        // Kiểm tra quyền xóa
         if (createDeletePermission === 'none') {
             alert('Bạn không có quyền xóa lớp học!');
             return;
@@ -344,8 +340,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
 
         if (!confirm('Bạn có chắc chắn muốn xóa lớp học này? Tất cả học viên sẽ bị đẩy ra khỏi lớp!')) return;
         try {
-            // Logic to unassign students usually goes on the server side or triggered here
-            // For now, keep it simple as the previous implementation
             await deleteDoc(doc(db, 'courses', courseId));
         } catch (error) {
             console.error("Error deleting class:", error);
@@ -356,7 +350,6 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     const openEditCourseModal = (course: Course, e: React.MouseEvent) => {
         e.stopPropagation();
 
-        // Kiểm tra quyền sửa
         if (editPermission === 'none') {
             alert('Bạn không có quyền sửa thông tin lớp học!');
             return;
@@ -441,7 +434,7 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
     // --- RENDER ---
     if (!selectedCourse) {
         return (
-            <>
+            <div className="w-full tabular-nums">
                 <ClassList 
                     courses={courses}
                     loadingCourses={loadingCourses}
@@ -468,26 +461,28 @@ const ClassManagementScreen: React.FC<ClassManagementScreenProps> = ({ userProfi
                         onSave={handleSaveCourse}
                     />
                 )}
-            </>
+            </div>
         );
     }
 
     // --- DETAIL VIEW ---
     return (
-        <ClassDetailClient 
-            course={selectedCourse} 
-            onBack={() => navigate('/ontap/class-manager')} 
-            userProfile={userProfile} 
-            studentLatestResults={studentLatestResults}
-            deviceCounts={deviceCounts}
-            subjectStats={subjectStats}
-            creatorProfiles={creatorProfiles}
-            canAssignMembers={canAssignMembers}
-            canFinishClass={canFinishClass}
-            canDisableAccounts={canDisableAccounts}
-            onFinishCourse={handleFinishCourse}
-            onReopenCourse={handleReopenCourse}
-        />
+        <div className="w-full tabular-nums">
+            <ClassDetailClient 
+                course={selectedCourse} 
+                onBack={() => navigate('/ontap/class-manager')} 
+                userProfile={userProfile} 
+                studentLatestResults={studentLatestResults}
+                deviceCounts={deviceCounts}
+                subjectStats={subjectStats}
+                creatorProfiles={creatorProfiles}
+                canAssignMembers={canAssignMembers}
+                canFinishClass={canFinishClass}
+                canDisableAccounts={canDisableAccounts}
+                onFinishCourse={handleFinishCourse}
+                onReopenCourse={handleReopenCourse}
+            />
+        </div>
     );
 };
 

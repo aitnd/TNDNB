@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Rubik } from 'next/font/google'
+import { Be_Vietnam_Pro, Merriweather, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import Script from 'next/script'
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -15,11 +15,25 @@ const GlobalNotificationHandler = dynamic(() => import('./components/GlobalNotif
 const PortalAdLoader = dynamic(() => import('./components/PortalAdLoader'), { ssr: false })
 const PortalMaintenanceWrapper = dynamic(() => import('../components/PortalMaintenanceWrapper'), { ssr: false })
 
-// Cấu hình font Rubik (Hỗ trợ tiếng Việt đầy đủ)
-const rubik = Rubik({
-  subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-rubik',
+// Cấu hình các phông chữ chuẩn hỗ trợ đầy đủ tiếng Việt (Zero Fallback)
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ['latin', 'vietnamese'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+const merriweather = Merriweather({
+  subsets: ['latin', 'vietnamese'],
+  weight: ['400', '700', '900'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin', 'vietnamese'],
+  weight: ['400', '600', '700'],
+  variable: '--font-mono',
   display: 'swap',
 })
 
@@ -50,9 +64,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi">
+    <html lang="vi" className={`${beVietnamPro.variable} ${merriweather.variable} ${jetbrainsMono.variable}`}>
       <head />
-      <body className={rubik.className} suppressHydrationWarning={true}>
+      <body className={beVietnamPro.className} suppressHydrationWarning={true}>
         <AuthProvider>
           <Navbar />
 

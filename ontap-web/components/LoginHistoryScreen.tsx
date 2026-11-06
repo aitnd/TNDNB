@@ -47,26 +47,27 @@ const LoginHistoryScreen: React.FC<LoginHistoryScreenProps> = ({ onBack }) => {
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto p-4 animate-slide-in-right">
-            <div className="relative text-center mb-8">
+        <div className="w-full max-w-3xl mx-auto p-4 animate-slide-in-right pb-24 pt-20">
+            <div className="relative text-center mb-8 pt-4">
                 <button
                     onClick={onBack}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-card/50 p-3 rounded-full shadow-md hover:bg-muted transition-all duration-300"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-card p-2 rounded-2xl shadow-sm border border-border hover:bg-muted transition-all text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center font-bold"
+                    aria-label="Quay lại"
                 >
-                    <ArrowLeftIcon3D className="h-8 w-8 text-primary" />
+                    <ArrowLeftIcon3D className="h-7 w-7 text-foreground" />
                 </button>
-                <div className="h-16 w-16 mx-auto text-primary mb-4 flex items-center justify-center bg-primary/10 rounded-full">
+                <div className="h-16 w-16 mx-auto text-primary mb-3 flex items-center justify-center bg-primary/10 rounded-2xl border border-primary/20 shadow-sm">
                     <FaShieldAlt className="text-3xl" />
                 </div>
-                <h1 className="text-3xl font-bold text-foreground">Lịch sử đăng nhập</h1>
-                <p className="text-sm text-muted-foreground mt-2">
+                <h1 className="text-2xl font-black text-foreground uppercase tracking-tight">Lịch sử đăng nhập</h1>
+                <p className="text-sm text-muted-foreground mt-1 font-medium">
                     Quản lý các thiết bị đang đăng nhập vào tài khoản của bạn.
                 </p>
             </div>
 
-            <div className="bg-card rounded-2xl shadow-lg overflow-hidden">
-                <div className="p-6 border-b border-border bg-muted/30">
-                    <h2 className="text-lg font-semibold flex items-center gap-2">
+            <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+                <div className="p-4 sm:p-5 border-b border-border bg-muted/30">
+                    <h2 className="text-base font-bold flex items-center gap-2 text-foreground">
                         <FaHistory className="text-primary" />
                         Các thiết bị đang hoạt động
                     </h2>
@@ -80,28 +81,28 @@ const LoginHistoryScreen: React.FC<LoginHistoryScreenProps> = ({ onBack }) => {
                     ) : (
                         sessions.map((session) => (
                             <div key={session.id} className="p-4 flex items-center justify-between hover:bg-muted/20 transition-colors">
-                                <div className="flex items-center gap-4">
-                                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <div className="flex items-center gap-3.5">
+                                    <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shrink-0">
                                         {session.deviceName.toLowerCase().includes('windows') || session.deviceName.toLowerCase().includes('mac') ? (
-                                            <FaLaptop className="text-2xl" />
+                                            <FaLaptop className="text-xl" />
                                         ) : (
-                                            <FaMobileAlt className="text-2xl" />
+                                            <FaMobileAlt className="text-xl" />
                                         )}
                                     </div>
                                     <div>
-                                        <div className="font-bold text-foreground flex items-center gap-2">
+                                        <div className="font-bold text-foreground text-sm flex items-center gap-2">
                                             {session.deviceName}
                                             {session.isCurrent && (
-                                                <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full uppercase font-bold">
+                                                <span className="text-[10px] bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full uppercase font-bold">
                                                     Hiện tại
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="text-xs text-muted-foreground flex flex-col gap-0.5">
-                                            <span className="flex items-center gap-1">
+                                        <div className="text-xs text-muted-foreground flex flex-col gap-0.5 mt-0.5">
+                                            <span className="flex items-center gap-1 tabular-nums">
                                                 <FaGlobe className="text-[10px]" /> {session.browser} • {session.ip}
                                             </span>
-                                            <span>
+                                            <span className="tabular-nums">
                                                 Đăng nhập: {session.loginAt?.seconds ? new Date(session.loginAt.seconds * 1000).toLocaleString('vi-VN') : 'Vừa xong'}
                                             </span>
                                         </div>
@@ -111,10 +112,11 @@ const LoginHistoryScreen: React.FC<LoginHistoryScreenProps> = ({ onBack }) => {
                                 {!session.isCurrent && (
                                     <button
                                         onClick={() => handleLogoutSession(session.id!, false)}
-                                        className="p-2 text-muted-foreground hover:text-destructive transition-colors"
+                                        className="p-2.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl transition min-w-[44px] min-h-[44px] flex items-center justify-center"
                                         title="Đăng xuất thiết bị này"
+                                        aria-label="Đăng xuất thiết bị này"
                                     >
-                                        <FaSignOutAlt className="text-xl" />
+                                        <FaSignOutAlt className="text-lg" />
                                     </button>
                                 )}
                             </div>
@@ -123,9 +125,9 @@ const LoginHistoryScreen: React.FC<LoginHistoryScreenProps> = ({ onBack }) => {
                 </div>
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-xl text-sm text-blue-700">
-                <p className="font-semibold mb-1">💡 Mẹo bảo mật:</p>
-                <p>Nếu bạn thấy thiết bị lạ, hãy đăng xuất nó ngay lập tức và đổi mật khẩu để bảo vệ tài khoản.</p>
+            <div className="mt-6 p-4 bg-primary/10 border border-primary/20 rounded-2xl text-sm text-foreground">
+                <p className="font-bold text-primary mb-1">💡 Mẹo bảo mật:</p>
+                <p className="text-muted-foreground text-xs leading-relaxed">Nếu bạn thấy thiết bị lạ, hãy đăng xuất nó ngay lập tức và đổi mật khẩu để bảo vệ tài khoản.</p>
             </div>
         </div>
     );

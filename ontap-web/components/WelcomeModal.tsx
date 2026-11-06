@@ -1,140 +1,117 @@
 import React from 'react';
-import { HelmIcon3D} from './icons'; 
-import { useTheme } from '../contexts/ThemeContext';
+import { HelmIcon3D } from './icons';
+import { CheckCircle2, BookOpen, ShieldCheck, Award } from 'lucide-react';
 
-interface WelcomeModalProps {
+export interface WelcomeModalProps {
   onStart: () => void;
   onLoginClick: () => void;
   onRegisterClick: () => void;
 }
 
 const WelcomeModal: React.FC<WelcomeModalProps> = ({ onStart, onLoginClick, onRegisterClick }) => {
-  const { theme } = useTheme();
-
-  // === PREMIUM v2 THEME ===
-  if (theme === 'premium') {
-    return (
-      <div className="text-center p-4 animate-slide-in-right min-h-[80vh] flex items-center justify-center">
-        <div className="relative max-w-2xl mx-auto">
-          {/* Glow effect phía sau card */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 rounded-3xl opacity-20 blur-xl" />
-
-          <div className="relative rounded-3xl p-8 md:p-12 border border-white/10"
-            style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(20px)' }}>
-
-            {/* Icon với animation */}
-            <div className="relative mx-auto mb-6 w-20 h-20">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 opacity-20 animate-pulse" />
-              <HelmIcon3D className="h-20 w-20 mx-auto text-cyan-400 relative z-10" />
+  return (
+    <div className="min-h-[78vh] flex items-center justify-center px-4 py-8">
+      <div className="max-w-4xl w-full bg-card text-card-foreground border border-border rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-12">
+        {/* Cột trái (7/12): Thông điệp học thuật & Hành động chính */}
+        <div className="md:col-span-7 p-6 md:p-10 flex flex-col justify-between">
+          <div>
+            <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wide uppercase mb-5">
+              <HelmIcon3D className="h-4 w-4 text-primary" />
+              <span>Hệ thống Đào tạo &amp; Sát hạch Thủy nội địa</span>
             </div>
 
-            {/* Gradient title */}
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-3">
-              <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text" style={{ WebkitTextFillColor: 'transparent' }}>
-                Ứng Dụng Ôn tập
-              </span>
+            <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-foreground mb-3">
+              Ôn tập Trắc nghiệm Phương tiện Thủy nội địa
             </h1>
 
-            <p className="text-lg mb-2 font-medium" style={{ color: 'hsl(var(--muted-foreground))' }}>
-              Ôn thi chứng chỉ chuyên môn phương tiện thủy nội địa
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-6">
+              Ngân hàng câu hỏi chuẩn hóa theo chương trình đào tạo thuyền viên, người lái phương tiện thủy nội địa kèm chế độ thi thử sát đề thực tế.
             </p>
 
-            <p className="text-sm mb-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
-              Hệ thống câu hỏi cập nhật • Thi thử giống đề thật • Theo dõi tiến độ
-            </p>
+            <ul className="space-y-2.5 mb-8 text-sm text-foreground">
+              <li className="flex items-center gap-2.5">
+                <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                <span>Ôn luyện theo từng môn chuyên ngành có giải thích trực quan</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                <span>Tự động lưu câu hay sai để ôn tập củng cố trọng tâm</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                <span>Hỗ trợ làm bài ngoại tuyến (Offline-First) tốc độ cao</span>
+              </li>
+            </ul>
+          </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <button
                 onClick={onStart}
-                className="w-full sm:w-auto font-bold text-lg py-4 px-10 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25"
-                style={{ background: 'linear-gradient(135deg, hsl(187 96% 42%), hsl(217 91% 60%))', color: 'hsl(var(--primary-foreground))' }}
+                className="min-h-[46px] px-6 py-3 rounded-xl font-semibold text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
               >
-                🚀 Bắt đầu Ôn tập
+                Bắt đầu ôn tập ngay
               </button>
               <button
                 onClick={onLoginClick}
-                className="w-full sm:w-auto font-bold text-lg py-4 px-10 rounded-xl border border-white/20 hover:bg-card/5 transition-all duration-300"
-                style={{ color: 'hsl(var(--foreground))' }}
+                className="min-h-[46px] px-6 py-3 rounded-xl font-semibold text-base border border-border bg-secondary text-secondary-foreground hover:bg-muted transition-colors"
               >
-                Đăng nhập
+                Đăng nhập học viên
               </button>
             </div>
-
-            <div className="mt-5">
+            <div className="mt-4">
               <button
                 onClick={onRegisterClick}
-                className="text-sm hover:underline font-medium"
-                style={{ color: 'hsl(var(--primary))' }}
+                className="text-sm font-medium text-primary hover:underline min-h-[36px]"
               >
-                Chưa có tài khoản? Đăng ký ngay →
+                Chưa có tài khoản học viên? Đăng ký ngay →
               </button>
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
 
-  // === THEME CŨ (giữ nguyên) ===
-  return (
-    <div className="text-center p-4 animate-slide-in-right">
-      <div className="bg-card text-card-foreground rounded-2xl shadow-xl p-8 md:p-12 max-w-2xl mx-auto relative">
-        {theme === 'tri-an' ? (
-          <img src="https://i.postimg.cc/MH9hVp8S/happy-techers-day.jpg" alt="Icon Chúc mừng Ngày Nhà giáo" className="h-24 w-24 mx-auto mb-4 rounded-full object-cover" loading="lazy" />
-        ) : theme === 'noel' ? (
-          <HelmIcon3D className="h-24 w-24 mx-auto text-primary mb-4" />
-        ) : (
-          <HelmIcon3D className="h-24 w-24 mx-auto text-primary mb-4" />
-        )}
+        {/* Cột phải (5/12): Thống kê học vụ chuẩn tabular-nums */}
+        <div className="md:col-span-5 bg-muted/50 border-t md:border-t-0 md:border-l border-border p-6 md:p-8 flex flex-col justify-between gap-6">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+              Thông số Hệ thống Học liệu
+            </h2>
+            <div className="space-y-3">
+              <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3.5 shadow-xs">
+                <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
+                  <BookOpen className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-foreground tabular-nums">100%</p>
+                  <p className="text-xs text-muted-foreground">Bám sát bộ câu hỏi sát hạch hiện hành</p>
+                </div>
+              </div>
 
-        <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-2">
-          Ứng Dụng Ôn tập
-        </h1>
+              <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3.5 shadow-xs">
+                <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-foreground tabular-nums">30 câu / đề</p>
+                  <p className="text-xs text-muted-foreground">Cấu trúc đề thi thử chuẩn thời gian thực</p>
+                </div>
+              </div>
 
-        {theme === 'tri-an' && (
-          <p className="text-xl font-semibold text-primary mb-4">
-            Phiên bản đặc biệt Tri Ân Thầy Cô
-          </p>
-        )}
-        {theme === 'noel' && (
-          <p className="text-xl font-semibold text-primary mb-4">
-            Chào đón Giáng Sinh An Lành
-          </p>
-        )}
+              <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-3.5 shadow-xs">
+                <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
+                  <Award className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-foreground tabular-nums">24/7</p>
+                  <p className="text-xs text-muted-foreground">Đồng bộ lịch sử làm bài đa thiết bị</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <p className="text-lg text-muted-foreground mb-4">
-          Chào mừng anh/chị đã đến với Ứng dụng Ôn tập, ôn thi chứng chỉ chuyên môn phương tiện thủy nội địa.
-        </p>
-
-        {theme === 'tri-an' && (
-          <p className="text-lg text-muted-foreground mb-8 italic">
-            "Nhân ngày Nhà giáo Việt Nam 20-11, kính chúc quý thầy cô luôn mạnh khỏe, hạnh phúc và thành công trong sự nghiệp trồng người."
-          </p>
-        )}
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button
-            onClick={onStart}
-            className="w-full sm:w-auto bg-primary text-primary-foreground font-bold text-lg py-4 px-10 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-4 focus:ring-ring transition-all duration-300 transform hover:scale-105"
-          >
-            Bắt đầu
-          </button>
-          <button
-            onClick={onLoginClick}
-            className="w-full sm:w-auto bg-secondary text-secondary-foreground font-bold text-lg py-4 px-10 rounded-lg hover:bg-secondary/80 focus:outline-none focus:ring-4 focus:ring-ring transition-all duration-300"
-          >
-            Đăng nhập
-          </button>
-        </div>
-
-        <div className="mt-4">
-          <button
-            onClick={onRegisterClick}
-            className="text-primary hover:underline font-medium"
-          >
-            Chưa có tài khoản? Đăng ký ngay
-          </button>
+          <div className="pt-4 border-t border-border text-xs text-muted-foreground leading-relaxed">
+            Đơn vị đào tạo: <strong className="text-foreground font-semibold">Công ty CP Tư vấn và Giáo dục Ninh Bình</strong> • Hotline: <span className="font-semibold text-foreground tabular-nums">0229 628 2969</span>
+          </div>
         </div>
       </div>
     </div>

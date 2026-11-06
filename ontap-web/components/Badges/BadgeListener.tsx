@@ -2,34 +2,46 @@ import React, { useEffect, useState } from 'react';
 import { useAppStore } from '../../stores/useAppStore';
 import { BadgeService } from '../../services/badgeService';
 import { BadgeUnlockPopup } from './BadgeUnlockPopup';
+import { auth } from '../../services/firebaseClient';
 
 export const BadgeListener: React.FC = () => {
   const userProfile = useAppStore(state => state.userProfile);
   const [unlockedBadgeId, setUnlockedBadgeId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!userProfile) return;
+    if (!userProfile || !userProfile.id || userProfile.id === 'guest' || !auth?.currentUser) {
+      return;
+    }
 
-    // Check periodically for new badges
+    let isPolling = true;
+    let intervalId: any = null;
+
     const checkNewBadges = async () => {
-      const badges = await BadgeService.getUserBadges(userProfile.id);
-      const newBadges = badges.filter(b => b.isNew && b.isUnlocked);
-      
-      if (newBadges.length > 0) {
-        // Show the first new badge
-        setUnlockedBadgeId(newBadges[0].badgeId);
-        // Mark as read so it doesn't show again
-        await BadgeService.markAsRead(userProfile.id, [newBadges[0].badgeId]);
+      if (!isPolling || !auth?.currentUser) return;
+      try {
+        const badges = await BadgeService.getUserBadges(userProfile.id);
+        const newBadges = badges.filter(b => b.isNew && b.isUnlocked);
+        
+        if (newBadges.length > 0) {
+          setUnlockedBadgeId(newBadges[0].badgeId);
+          await BadgeService.markAsRead(userProfile.id, [newBadges[0].badgeId]);
+        }
+      } catch (err: any) {
+        if (err?.code === 'permission-denied' || err?.message?.includes('permission')) {
+          isPolling = false;
+          if (intervalId) clearInterval(intervalId);
+        }
       }
     };
 
-    // Initial check
     checkNewBadges();
+    intervalId = setInterval(checkNewBadges, 30000);
 
-    // Set up polling (every 30 seconds)
-    const interval = setInterval(checkNewBadges, 30000);
-    return () => clearInterval(interval);
-  }, [userProfile]);
+    return () => {
+      isPolling = false;
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [userProfile?.id]);
 
   return (
     <>

@@ -138,6 +138,11 @@ export default async function Sidebar() {
         <h3 className={styles.sidebarTitle}>Tra cứu & Tiện ích</h3>
         <ul className={styles.linkList}>
           <li>
+            <Link href="/ontap">
+              <i className="fas fa-graduation-cap" style={{ color: 'var(--color-accent, #003566)' }}></i> Ôn tập &amp; Thi thử Trực tuyến
+            </Link>
+          </li>
+          <li>
             <Link href="https://nguoidieukhien-v2-viwa.fds.vn/tra_cuu_thuyen_vien_tnd" target="_blank">
               <i className="fas fa-search" style={{ color: '#004a99' }}></i> Tra cứu Văn bằng
             </Link>

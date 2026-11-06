@@ -97,4 +97,50 @@ describe('Offline-First dataService (ontap-web)', () => {
       contentHash: 'updated-hash'
     });
   });
+
+  it('fetchLicenses tự động fallback sang Supabase và lưu IndexedDB khi lần đầu mở app mà D1 fetchQuestionsSnapshot bị lỗi DNS', async () => {
+    vi.spyOn(offlineService, 'getLicensesOffline').mockResolvedValue([]);
+    vi.spyOn(d1Client, 'fetchQuestionsSnapshot').mockRejectedValue(new TypeError('Failed to fetch'));
+    const saveSpy = vi.spyOn(offlineService, 'saveLicensesOffline').mockResolvedValue();
+
+    vi.doMock('../supabaseClient', () => ({
+      supabase: {
+        from: vi.fn(() => ({
+          select: vi.fn(() => ({
+            order: vi.fn(() => ({
+              order: vi.fn().mockResolvedValue({
+                data: [
+                  {
+                    id: 'maytruong-h1',
+                    name: 'Máy trưởng H1',
+                    subjects: [
+                      {
+                        id: 'nvmt',
+                        name: 'Nghiệp vụ',
+                        questions: [
+                          {
+                            id: 'nvmt_1',
+                            text: 'Câu 1',
+                            image: 'https://cdn.tndnb.vn/question-images/nvmt_1.png',
+                            correct_answer_id: 'nvmt_1_1',
+                            answers: [{ id: 'nvmt_1_1', text: 'Đáp án A' }]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                error: null
+              })
+            }))
+          }))
+        }))
+      }
+    }));
+
+    const data = await fetchLicenses();
+    expect(data).toEqual(sampleLicenses);
+    expect(saveSpy).toHaveBeenCalledTimes(1);
+    vi.doUnmock('../supabaseClient');
+  });
 });

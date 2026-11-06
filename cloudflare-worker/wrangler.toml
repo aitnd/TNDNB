@@ -6,13 +6,18 @@ compatibility_date = "2026-11-01"
 GITHUB_OWNER = "aitnd"
 GITHUB_REPO = "TNDNB"
 RELEASE_UPSTREAM_MODE = "github_proxy"
-ALLOWED_ORIGINS = "https://tndnb.vn,http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,app://."
+ALLOWED_ORIGINS = "https://daotaothuyenvien.com,https://www.daotaothuyenvien.com,http://localhost:3000,http://localhost:3001,http://localhost:5173"
+FIREBASE_PROJECT_ID = "tndnb-prod"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "tndnb-d1-prod"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "0177c851-b4c5-45a0-9980-785b758fdb20"
 migrations_dir = "migrations"
+
+[[kv_namespaces]]
+binding = "CONFIG_KV"
+id = "fba8d3d67cfb44bdbef1855016061ff4"
 
 [[r2_buckets]]
 binding = "ASSETS_BUCKET"

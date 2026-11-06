@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../services/firebaseClient';
 import { collection, addDoc, query, orderBy, serverTimestamp, getDocs, where } from 'firebase/firestore'; 
 import { toast } from 'sonner';
-import { FaPlus, FaEye } from 'react-icons/fa';
+import { FaPlus, FaEye, FaArrowLeft, FaLaptopCode } from 'react-icons/fa';
 import ExamRoomDetailScreen from './ExamRoomDetailScreen';
 import { UserProfile } from '../types';
 
@@ -38,19 +38,17 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
     const [selectedLicenseId, setSelectedLicenseId] = useState('');
     const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
-    // Mock Data for Licenses (Should fetch from store or API)
+    // Mock Data for Licenses
     const [licenses, setLicenses] = useState<any[]>([]);
     const [courses, setCourses] = useState<any[]>([]);
     const [selectedCourseId, setSelectedCourseId] = useState('');
 
     useEffect(() => {
         fetchRooms();
-        // Fetch licenses
         import('../services/dataService').then(({ fetchLicenses }) => {
             fetchLicenses().then(setLicenses);
         });
 
-        // Fetch Courses
         const fetchCourses = async () => {
             const q = query(collection(db, 'courses'), orderBy('createdAt', 'desc'));
             const snapshot = await getDocs(q);
@@ -100,42 +98,58 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
             await addDoc(collection(db, 'exam_rooms'), {
                 room_name: roomName,
                 license_id: selectedLicenseId,
-                license_name: selectedLicense?.name || 'Unknown',
+                license_name: selectedLicense?.name || '',
+                course_id: selectedCourseId || null,
+                course_name: selectedCourse?.name || null,
                 teacher_id: userProfile.id,
-                teacher_name: userProfile.full_name || userProfile.email || 'Unknown',
+                teacher_name: userProfile.fullName,
                 status: 'waiting',
                 duration: Number(duration),
                 password: password || null,
-                created_at: serverTimestamp(),
-                is_paused: false,
-                course_id: selectedCourseId || null,
-                course_name: selectedCourse?.name || null
+                created_at: serverTimestamp()
             });
+
             toast.success("Tạo phòng thi thành công!");
             setShowCreateModal(false);
             setRoomName('');
             setPassword('');
-            setSelectedCourseId('');
             fetchRooms();
         } catch (error) {
-            console.error(error);
-            toast.error("Lỗi khi tạo phòng.");
+            console.error("Error creating room:", error);
+            toast.error("Không thể tạo phòng thi.");
         }
     };
 
     if (selectedRoomId) {
-        return <ExamRoomDetailScreen roomId={selectedRoomId} onBack={() => { setSelectedRoomId(null); fetchRooms(); }} />;
+        return (
+            <ExamRoomDetailScreen 
+                roomId={selectedRoomId} 
+                onBack={() => {
+                    setSelectedRoomId(null);
+                    fetchRooms();
+                }} 
+            />
+        );
     }
 
     return (
-        <div className="p-6 max-w-7xl mx-auto font-sans text-gray-800">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-blue-800">Quản lý Thi Trực Tuyến</h1>
-                <div className="flex gap-2">
-                    <button onClick={onBack} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Quay lại</button>
+        <div className="p-4 sm:p-6 max-w-7xl mx-auto pb-24 pt-20 tabular-nums">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <button 
+                        onClick={onBack}
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-2 transition-colors font-medium min-h-[44px]"
+                    >
+                        <FaArrowLeft /> Quay lại Dashboard
+                    </button>
+                    <h1 className="text-2xl sm:text-3xl font-black text-foreground flex items-center gap-2.5">
+                        <FaLaptopCode className="text-primary" /> Quản lý Thi Trực Tuyến
+                    </h1>
+                </div>
+                <div className="flex items-center gap-3">
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2"
+                        className="px-4 py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl hover:opacity-90 flex items-center gap-2 min-h-[44px] transition shadow-sm"
                     >
                         <FaPlus /> Tạo Phòng Thi
                     </button>
@@ -143,75 +157,77 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
             </div>
 
             {/* Room List */}
-            <div className="bg-card rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên Phòng</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạng Bằng</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giáo Viên</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng Thái</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chi tiết</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-card divide-y divide-gray-200">
-                        {loading ? (
-                            <tr><td colSpan={5} className="text-center py-4">Đang tải...</td></tr>
-                        ) : rooms.length === 0 ? (
-                            <tr><td colSpan={5} className="text-center py-4 text-gray-500">Chưa có phòng thi nào.</td></tr>
-                        ) : (
-                            rooms.map(room => (
-                                <tr key={room.id}>
-                                    <td className="px-6 py-4 whitespace-nowrap font-medium">{room.room_name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{room.license_name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{room.teacher_name}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            ${room.status === 'waiting' ? 'bg-yellow-100 text-yellow-800' :
-                                                room.status === 'in_progress' ? 'bg-green-100 text-green-800' :
-                                                    'bg-gray-100 text-gray-800'}`}>
-                                            {room.status === 'waiting' ? 'Đang chờ' :
-                                                room.status === 'in_progress' ? 'Đang thi' : 'Kết thúc'}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button
-                                            onClick={() => setSelectedRoomId(room.id)}
-                                            className="text-blue-600 hover:text-blue-900 flex items-center gap-1"
-                                        >
-                                            <FaEye /> Xem chi tiết
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+            <div className="bg-card text-card-foreground rounded-2xl shadow-sm border border-border overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-border">
+                        <thead className="bg-muted/50">
+                            <tr>
+                                <th className="px-5 py-3.5 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Tên Phòng</th>
+                                <th className="px-5 py-3.5 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Hạng Bằng</th>
+                                <th className="px-5 py-3.5 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Giáo Viên</th>
+                                <th className="px-5 py-3.5 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Trạng Thái</th>
+                                <th className="px-5 py-3.5 text-left text-xs font-bold text-muted-foreground uppercase tracking-wider">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border">
+                            {loading ? (
+                                <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">Đang tải dữ liệu phòng thi...</td></tr>
+                            ) : rooms.length === 0 ? (
+                                <tr><td colSpan={5} className="text-center py-8 text-muted-foreground font-medium">Chưa có phòng thi nào.</td></tr>
+                            ) : (
+                                rooms.map(room => (
+                                    <tr key={room.id} className="hover:bg-muted/30 transition-colors">
+                                        <td className="px-5 py-4 whitespace-nowrap font-bold text-foreground text-sm">{room.room_name}</td>
+                                        <td className="px-5 py-4 whitespace-nowrap text-sm text-muted-foreground">{room.license_name}</td>
+                                        <td className="px-5 py-4 whitespace-nowrap text-sm text-foreground font-medium">{room.teacher_name}</td>
+                                        <td className="px-5 py-4 whitespace-nowrap">
+                                            <span className={`px-2.5 py-1 inline-flex text-xs font-bold rounded-full border
+                                                ${room.status === 'waiting' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30' :
+                                                    room.status === 'in_progress' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30' :
+                                                        'bg-muted text-muted-foreground border-border'}`}>
+                                                {room.status === 'waiting' ? 'Đang chờ' :
+                                                    room.status === 'in_progress' ? 'Đang thi' : 'Kết thúc'}
+                                            </span>
+                                        </td>
+                                        <td className="px-5 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button
+                                                onClick={() => setSelectedRoomId(room.id)}
+                                                className="text-primary hover:underline flex items-center gap-1.5 font-bold min-h-[44px]"
+                                            >
+                                                <FaEye /> Xem chi tiết
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Create Modal */}
             {showCreateModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-card p-6 rounded-lg w-full max-w-md">
-                        <h2 className="text-xl font-bold mb-4">Tạo Phòng Thi Mới</h2>
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4" onClick={() => setShowCreateModal(false)}>
+                    <div className="bg-card text-card-foreground p-6 rounded-2xl w-full max-w-md border border-border shadow-2xl" onClick={e => e.stopPropagation()}>
+                        <h2 className="text-xl font-bold mb-4 text-foreground">Tạo Phòng Thi Mới</h2>
                         <form onSubmit={handleCreateRoom} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Tên phòng thi</label>
+                                <label className="block text-sm font-semibold text-foreground mb-1">Tên phòng thi</label>
                                 <input
                                     type="text"
                                     value={roomName}
                                     onChange={e => setRoomName(e.target.value)}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                    className="w-full border border-border rounded-xl bg-card text-foreground p-2.5 outline-none focus:ring-2 focus:ring-primary transition"
                                     placeholder="Ví dụ: Thi thử M1 - Lần 1"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Hạng bằng</label>
+                                <label className="block text-sm font-semibold text-foreground mb-1">Hạng bằng</label>
                                 <select
                                     value={selectedLicenseId}
                                     onChange={e => setSelectedLicenseId(e.target.value)}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                    className="w-full border border-border rounded-xl bg-card text-foreground p-2.5 outline-none focus:ring-2 focus:ring-primary transition"
                                     required
                                 >
                                     <option value="">-- Chọn hạng bằng --</option>
@@ -221,11 +237,11 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Lớp (Tùy chọn - Để tự động vào phòng)</label>
+                                <label className="block text-sm font-semibold text-foreground mb-1">Lớp (Tùy chọn - Để tự động vào phòng)</label>
                                 <select
                                     value={selectedCourseId}
                                     onChange={e => setSelectedCourseId(e.target.value)}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                    className="w-full border border-border rounded-xl bg-card text-foreground p-2.5 outline-none focus:ring-2 focus:ring-primary transition"
                                 >
                                     <option value="">-- Không chọn lớp --</option>
                                     {courses.map(c => (
@@ -234,36 +250,36 @@ const OnlineExamManagementScreen: React.FC<OnlineExamManagementScreenProps> = ({
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Thời gian làm bài (phút)</label>
+                                <label className="block text-sm font-semibold text-foreground mb-1">Thời gian làm bài (phút)</label>
                                 <input
                                     type="number"
                                     value={duration}
                                     onChange={e => setDuration(Number(e.target.value))}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                    className="w-full border border-border rounded-xl bg-card text-foreground p-2.5 tabular-nums outline-none focus:ring-2 focus:ring-primary transition"
                                     min="1"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Mật khẩu (Tùy chọn)</label>
+                                <label className="block text-sm font-semibold text-foreground mb-1">Mật khẩu (Tùy chọn)</label>
                                 <input
                                     type="text"
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                    className="w-full border border-border rounded-xl bg-card text-foreground p-2.5 outline-none focus:ring-2 focus:ring-primary transition"
                                     placeholder="Để trống nếu không cần mật khẩu"
                                 />
                             </div>
-                            <div className="flex justify-end gap-2 mt-6">
+                            <div className="flex justify-end gap-2.5 mt-6 pt-2">
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateModal(false)}
-                                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                                    className="px-4 py-2.5 bg-card border border-border text-foreground rounded-xl hover:bg-muted font-semibold min-h-[44px] transition"
                                 >
                                     Hủy
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                    className="px-5 py-2.5 bg-primary text-primary-foreground rounded-xl hover:opacity-90 font-semibold min-h-[44px] transition"
                                 >
                                     Tạo phòng
                                 </button>

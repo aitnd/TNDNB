@@ -15,7 +15,6 @@ const AlertMarquee: React.FC = () => {
             const data = await fetchActiveMarqueeNotifications(user?.uid, userProfile?.role);
             setAlerts(data || []);
         } catch (error) {
-            // Người dùng chưa đăng nhập hoặc mất mạng: Ẩn thông báo nhẹ nhàng
             setAlerts([]);
         }
     };
@@ -23,7 +22,6 @@ const AlertMarquee: React.FC = () => {
     useEffect(() => {
         loadAlerts();
 
-        // Refresh every 5 minutes to check expiry
         const interval = setInterval(loadAlerts, 5 * 60 * 1000);
         return () => clearInterval(interval);
     }, [user, userProfile]);
@@ -32,29 +30,31 @@ const AlertMarquee: React.FC = () => {
 
     return (
         <div className="w-full z-30 sticky top-16">
-            {alerts.map(alert => (
-                <div
-                    key={alert.id}
-                    className={`
-                        w-full py-2 px-4 flex items-center shadow-md
-                        ${alert.type === 'special'
-                            ? 'bg-gradient-to-r from-red-600 to-red-700 text-white'
-                            : 'bg-gradient-to-r from-amber-400 to-orange-500 text-gray-900'
-                        }
-                    `}
-                >
-                    <div className="flex-shrink-0 mr-4 font-bold flex items-center gap-2 uppercase tracking-wider text-sm">
-                        {alert.type === 'special' ? <FaExclamationTriangle className="animate-pulse" /> : <FaInfoCircle />}
-                        {alert.type === 'special' ? 'Thông báo khẩn' : 'Chú ý'}
+            {alerts.map(alert => {
+                const isSpecial = alert.type === 'special';
+                return (
+                    <div
+                        key={alert.id}
+                        className={`
+                            w-full py-2 px-4 flex items-center border-b shadow-xs transition-colors
+                            ${isSpecial
+                                ? 'bg-destructive/10 text-destructive border-destructive/25'
+                                : 'bg-primary/10 text-foreground border-primary/20'
+                            }
+                        `}
+                    >
+                        <div className="flex-shrink-0 mr-4 font-bold flex items-center gap-2 uppercase tracking-wider text-xs md:text-sm">
+                            {isSpecial ? <FaExclamationTriangle className="animate-pulse text-destructive" /> : <FaInfoCircle className="text-primary" />}
+                            <span>{isSpecial ? 'Thông báo khẩn' : 'Chú ý'}</span>
+                        </div>
+                        <Marquee gradient={false} speed={50} className="flex-1 font-medium text-xs md:text-sm">
+                            <span className="mx-4">{alert.title}: {alert.message}</span>
+                            <span className="mx-4 text-muted-foreground"> • </span>
+                            <span className="mx-4">{alert.title}: {alert.message}</span>
+                        </Marquee>
                     </div>
-                    <Marquee gradient={false} speed={50} className="flex-1 font-medium text-sm md:text-base">
-                        <span className="mx-4">{alert.title}: {alert.message}</span>
-                        {/* Repeat for visual continuity if short */}
-                        <span className="mx-4"> | </span>
-                        <span className="mx-4">{alert.title}: {alert.message}</span>
-                    </Marquee>
-                </div>
-            ))}
+                );
+            })}
         </div>
     );
 };

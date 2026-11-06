@@ -1,60 +1,42 @@
-# TNDNB - Hệ thống Ôn tập & Thi nâng định hạng thuyền viên
+# Cổng Thông Tin & Hệ Thống Ôn Tập Thuyền Viên Ninh Bình (TNDNB)
 
-> **Cập nhật lần cuối:** 2026-06-25  
-> **Phiên bản hiện tại:** v3.10.4  
-> **Mục tiêu:** Hệ thống ôn tập, thi thử và quản lý học viên chuyên nghiệp dành cho thuyền viên, vận hành đồng bộ trên cả nền tảng Web và ứng dụng Desktop Windows.
+> **Cổng thông tin chính thức:** https://www.daotaothuyenvien.com  
+> **App Ôn tập & Thi thử Trực tuyến:** https://www.daotaothuyenvien.com/ontap  
+> **Cập nhật lần cuối:** 2026-11-06  
+> **Phiên bản hiện tại:** v3.21.0  
+> **Mục tiêu:** Hệ thống đào tạo, ôn tập, thi thử và quản lý học viên chuyên nghiệp dành cho người lái, thuyền viên phương tiện thủy nội địa, vận hành đồng bộ trên cả nền tảng Web PWA và ứng dụng Desktop Windows.
 
 ---
 
 ## 📂 Cấu Trúc Hệ Thống (Workspace Architecture)
 
-Dự án là một monorepo bao gồm 3 thành phần chính:
+Dự án là một monorepo bao gồm 4 thành phần chính:
 
-1. **Root Portal (Next.js App Router):**
-   - Đóng vai trò là trang giới thiệu, cổng tin tức, tài liệu học tập và tra cứu.
-   - Sử dụng Next.js, tối ưu hóa SEO, tích hợp cơ chế tải quảng cáo động `PortalAdLoader` từ Firestore.
+1. **Root Portal (Next.js 14 App Router):**
+   - Đóng vai trò là cổng thông tin chính thức của **Công ty Cổ phần Tư vấn và Giáo dục Ninh Bình** tại `https://www.daotaothuyenvien.com`.
+   - Giao diện Editorial Hallmark chuẩn mực, quản lý tin tức, tuyển sinh, văn bản pháp quy và tra cứu học phí. Tối ưu SEO Google với Next.js ISR (`< 50ms`).
+   - Reverse proxy / rewrite `/ontap/:path*` tải ứng dụng ôn tập một cách liền mạch.
 
-2. **ontap-web (Vite SPA - React + TailwindCSS):**
-   - Phân hệ chính dành cho học viên và quản trị viên thực hiện ôn tập, thi thử, nộp bài, xem kết quả và cấu hình hệ thống.
-   - Tích hợp đầy đủ Firebase/Firestore, các bộ chặn chống sao chép đề thi và tối ưu hóa hiệu năng bundle (vendor chunking).
+2. **ontap-web (Vite SPA - React 19 + TailwindCSS):**
+   - Phân hệ chính dành cho học viên và cán bộ thực hiện ôn tập, thi thử, nộp bài, xem kết quả và quản trị hệ thống tại `https://www.daotaothuyenvien.com/ontap`.
+   - Giao diện Dual-Theme Sáng/Tối (Maritime EdTech), lưu trữ Offline-First với IndexedDB (`OnTapWebDB`), đồng bộ đề thi qua Cloudflare Edge API / Supabase.
 
 3. **ontap-win (Vite + Electron App):**
-   - Ứng dụng Desktop chạy ngoại tuyến/cửa sổ cho Windows, đóng gói bằng Electron.
-   - Đồng bộ 100% giao diện và tính năng từ `ontap-web`.
-   - Bổ sung các tính năng kiểm soát phần cứng như khóa chuột phải toàn cục và vô hiệu hóa phím tắt kiểm tra của trình duyệt để chống gian lận trong phòng thi.
+   - Ứng dụng Desktop chạy ngoại tuyến 100% cho Windows, đóng gói bằng Electron.
+   - Đồng bộ 100% dữ liệu đề thi cục bộ (`questions_db.json`), chống gian lận trong phòng thi (khóa chuột phải, vô hiệu hóa DevTools).
+
+4. **cloudflare-worker (tndnb-edge-api):**
+   - API phân phối đề thi, đồng bộ cấu hình và proxy cập nhật ứng dụng Desktop tại Cloudflare Edge VN (< 30ms).
 
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
 
-- **Frontend:** React 18, TypeScript, TailwindCSS, Vite (cho web/win), Next.js (cho portal)
-- **Database & Auth:** Google Firebase (Authentication, Firestore, Cloud Storage)
+- **Frontend:** React 19, Next.js 14, TypeScript, TailwindCSS v4, Vite
+- **Database & Storage:** Supabase (PostgreSQL), Google Firebase Firestore, Cloudflare D1 (SQLite), Cloudflare R2
 - **Desktop Container:** Electron
-- **Testing:** Vitest + React Testing Library (10/10 test cases passed)
+- **Testing:** Vitest (18/18 test suites passed 100%)
 - **Build & Package:** npm, Next Build, Electron Builder
-
----
-
-## 🚀 Tính Năng Nổi Bật Gần Đây (v3.10.4)
-
-### 1. 🛡️ Hệ Thống Bảo Trì 2 Tầng (Web & App Win)
-- **Tầng 1 (Bảo Trì Mềm - Firebase):** Khóa giao diện qua cấu hình Firebase Realtime Database. App Windows và Web đều đồng bộ tức thời khóa màn hình với thông báo bảo trì, nhưng vẫn có route ẩn (`/ontap/login-admin`) dành riêng cho Admin để vượt rào (bypass) vào quản trị.
-- **Tầng 2 (Bảo Trì Cứng - Vercel Edge Config):** Chặn ở cấp độ Network (Vercel Edge Middleware). Khi hệ thống sập nặng hoặc trắng trang, yêu cầu truy cập sẽ bị chuyển hướng ngay sang trang bảo trì tĩnh (HTML) trên Edge network, tiết kiệm tài nguyên và bảo vệ server origin.
-
-### 2. 💰 Chiến Lực Tối Ưu Hóa MMO & Mạng Quảng Cáo Monetag
-- **Popunder & Direct Links:** Tích hợp cơ chế tự động mở tab Popunder ẩn khi người dùng tương tác lần đầu (giới hạn 1 lần/phiên) và chèn **Direct Link** vào các nút tải tài liệu/xem đáp án để tối ưu doanh thu click sạch.
-- **Trang Chờ Đếm Ngược:** Màn hình chờ đếm ngược 5 giây (`CountdownAdScreen`) trước khi xem kết quả thi để hiển thị quảng cáo chuyển tiếp (Interstitial) hiệu quả (tự động vô hiệu hóa trên app Windows).
-- **Cấu hình động qua Firestore:** Admin có thể thay đổi link quảng cáo Monetag động trực tiếp từ trang cấu hình hệ thống mà không cần chỉnh sửa source code.
-- **Xác minh qua Service Worker:** File `sw.js` đặt ở root web hỗ trợ cơ chế Anti-Adblock và đẩy tin nhắn quảng cáo Push.
-
-### 2. 👥 Quản Lý Thành Viên Chuyên Biệt (`/ontap/usermanager`)
-- Tách biệt hoàn toàn tính năng quản trị thành viên ra khỏi màn hình Profile cá nhân.
-- Tích hợp 3 thẻ KPI Stats thống kê nhanh và bộ lọc vai trò, tìm kiếm thông minh.
-- Cho phép Admin theo dõi danh sách thiết bị/phiên đăng nhập hoạt động và kích hoạt đăng xuất từ xa (Force Logout).
-
-### 3. 🛡️ Bảo Mật Đề Thi & Phân Quyền Vai Trò
-- Khóa chuột phải, bôi đen, copy và các phím tắt hệ thống (`Ctrl+C`, `Ctrl+U`) trong các màn hình thi/làm bài dựa trên cài đặt động `preventCopy` theo vai trò.
-- Thiết lập Trọng số Vai trò (Role Hierarchy) để tránh việc giáo viên/quản lý cấp thấp thao tác trên tài khoản cấp cao hơn.
 
 ---
 
@@ -71,7 +53,7 @@ Dự án là một monorepo bao gồm 3 thành phần chính:
 ```bash
 npm run dev
 # Build production
-npx next build
+npm run build:portal
 ```
 
 ### 2. Phát triển bản Web (`ontap-web`)
@@ -93,5 +75,5 @@ npm run build:win
 
 ---
 
-## 📈 Lịch Sử Cập Nhật Gần Nhất
+## 📈 Lịch Sử Cập Nhật
 Chi tiết lịch sử thay đổi của dự án được ghi nhận đầy đủ tại [CHANGELOG.md](./CHANGELOG.md).

@@ -96,3 +96,7 @@ lint*_output.txt
 project_qa_report.md
 build_report.md
 
+
+# Local Skill Artifacts & Caches
+.superpowers/
+.taste-skill/

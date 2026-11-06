@@ -67,7 +67,7 @@
 
 .userTable th {
     background-color: var(--color-surface-subtle, #F1F5F9);
-    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
     font-weight: 700;
     font-size: 0.78rem;
     color: var(--color-ink, #0B132B);
@@ -89,7 +89,7 @@
 .rolePill {
     padding: 0.25rem 0.65rem;
     border-radius: var(--radius-editorial, 4px);
-    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-family: var(--font-sans, 'Be Vietnam Pro', sans-serif);
     font-size: 0.75rem;
     font-weight: 700;
     white-space: nowrap;

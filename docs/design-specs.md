@@ -424,3 +424,21 @@ Mọi màn hình trong 5 nhóm trên bắt buộc phải tuân thủ 4 trạng t
    - Mọi liên kết, nút bấm và ô nhập liệu khi `:focus-visible` đều hiển thị viền rõ nét `outline: 2px solid #003566; outline-offset: 2px;`.
 4. **Ngữ nghĩa HTML (Semantic Landmarks):**
    - Sử dụng đầy đủ `<header>`, `<nav aria-label="Điều hướng chính">`, `<main>`, `<article>`, `<aside>`, `<footer>`, và thứ tự thẻ tiêu đề `h1 -> h2 -> h3` hợp lệ.
+
+
+---
+
+## 6. Đặc Tả Mở Rộng (`261105-1836-ontap-web-ui-overhaul`): Chuẩn Hóa Font Tiếng Việt Root Portal, Liên Kết `/ontap` Trên Sidebar & Hệ Giao Diện Dual-Theme (`light` / `dark`) Cho `ontap-web`
+
+> Chi tiết đầy đủ xem tại: [docs/plans/261105-1836-ontap-web-ui-overhaul/design-specs.md](file:///d:/Antigravity/TNDNB/docs/plans/261105-1836-ontap-web-ui-overhaul/design-specs.md)
+
+1. **Diệt Tận Gốc Lỗi "Chữ To Chữ Bé" Trên Root Portal (13 Files):**
+   - Loại bỏ `Rubik` trong [app/layout.tsx](file:///d:/Antigravity/TNDNB/app/layout.tsx), nạp `Be_Vietnam_Pro` (`--font-sans`), `Merriweather` (`--font-display`), `JetBrains_Mono` (`--font-mono`) với `subsets: ['latin', 'vietnamese']`.
+   - Chuyển toàn bộ các selector hiển thị chữ Tiếng Việt có dấu trong 11 file `.module.css` sang `var(--font-sans, 'Be Vietnam Pro', sans-serif)` kết hợp `font-variant-numeric: tabular-nums` (chỉ giữ `--font-mono` cho chỉ mục số `01..04` và cột số tiền).
+2. **Điểm Truy Cập `/ontap` Chính Thức Trên `Sidebar.tsx`:**
+   - Bổ sung mục `<Link href="/ontap">Ôn tập & Thi thử Trực tuyến</Link>` lên đầu khung **"Tra cứu & Tiện ích"** trong [components/Sidebar.tsx](file:///d:/Antigravity/TNDNB/components/Sidebar.tsx#L137-L151).
+3. **Kiến Trúc Maritime EdTech High-Craft Dual-Theme (`light` / `dark`) Cho `ontap-web` (30+ Màn Hình):**
+   - Thu gọn `Theme = 'light' | 'dark'`, tự động chuẩn hóa giá trị cũ trong `localStorage` về `'light'`, xóa `SnowEffect.tsx` và 6 theme mùa vụ.
+   - Sửa lỗi vòng lặp `--font-sans` trong [ontap-web/theme.css](file:///d:/Antigravity/TNDNB/ontap-web/theme.css).
+   - Hợp nhất `Dashboard.tsx` thành 1 lưới Bento Asymmetric 12 cột duy nhất; chuẩn hóa `QuizScreen.tsx` 2 cột tương thích hoàn toàn với chế độ `dark`.
+   - **Ràng buộc bất di bất dịch:** Bảo toàn 100% (`git diff = 0`) đối với [ontap-web/components/ExamQuizScreen.tsx](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx).
