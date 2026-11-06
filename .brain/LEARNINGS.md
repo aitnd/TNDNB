@@ -31,3 +31,15 @@
 - **Đường dẫn Web App Ôn tập chính thức (`[type=architecture]`):** `https://www.daotaothuyenvien.com/ontap` (chạy qua Next.js Reverse Proxy/Rewrite trên Vercel).
 - **Quy chuẩn CORS & Backend Cloudflare Worker:** Toàn bộ API Worker và Cloudflare D1/R2 phải cho phép origin `https://www.daotaothuyenvien.com` và `https://daotaothuyenvien.com` trong `ALLOWED_ORIGINS`.
 - **Chiến lược Tên miền App Ôn tập (`[type=decision]`):** Giữ nguyên `https://www.daotaothuyenvien.com/ontap` làm địa chỉ chính thức duy nhất cho học viên truy cập để tập trung 100% sức mạnh SEO (Domain Authority) và kiếm tiền ổn định qua Google AdSense / Monetag mà không cần duyệt lại subdomain.
+
+
+## [2026-11-06] Cloudflare Custom Domain, Vercel Config, TinyMCE Local & R2 Graceful Fallback
+- **Cloudflare Custom Domain cho Worker & R2 (`[type=architecture]`):**
+  1. Khi gắn Custom Domain cho Cloudflare R2 bucket (`cdn.daotaothuyenvien.com`) hoặc Cloudflare Worker (`api.daotaothuyenvien.com`), Root Domain (`daotaothuyenvien.com`) bắt buộc phải được add vào danh sách Zone trên Cloudflare trước, nếu không Dashboard sẽ báo lỗi "That domain was not found on your account".
+  2. Cloudflare D1 và KV là tài nguyên hoàn toàn nội bộ (`env.DB`, `env.CONFIG_KV`), Worker truy cập trực tiếp qua C++ runtime binding, tuyệt đối KHÔNG cần mở domain hay chỉnh cài đặt DNS nào trên Cloudflare Dashboard.
+- **Biến Môi Trường Vercel (`[type=lesson]`):**
+  - Các biến môi trường bắt đầu bằng tiền tố `NEXT_PUBLIC_` (như `NEXT_PUBLIC_CLOUDFLARE_API_URL` hay `NEXT_PUBLIC_R2_PUBLIC_URL`) phải tạo dưới dạng **Config** (Plain Text), không được tạo dưới dạng **Secret** trên Vercel Dashboard, nếu không Vercel sẽ chặn với cảnh báo public framework variables cannot be secrets.
+- **TinyMCE Local Self-Hosted (`[type=pattern]`):**
+  - Để triệt tiêu hoàn toàn popup phiền phức đòi API Key của TinyMCE Cloud trên Root Portal, chỉ cần copy thư viện tĩnh vào `public/tinymce/` và trỏ `tinymceScriptSrc="/tinymce/tinymce.min.js"`, `skin_url: '/tinymce/skins/ui/oxide'`, `content_css: '/tinymce/skins/content/default/content.min.css'`.
+- **R2 Gradual Migration & 5s Graceful Fallback (`[type=architecture]`):**
+  - Khi chuyển đổi dần (`Gradual Migration`) ảnh và tài liệu bài viết sang Cloudflare R2 (`POST /api/v1/portal/upload`), luôn cài đặt `AbortController` với thời gian chờ tối đa 5000ms trong `lib/portalMediaService.ts`. Nếu Worker timeout hoặc gặp lỗi mạng, tự động lùi về Supabase Storage để người dùng đăng bài không bao giờ bị nghẽn gián đoạn, đồng thời bảo toàn 100% URL của các bài viết và tệp đính kèm lịch sử.

@@ -9,12 +9,19 @@
         "5-column answer sheet + mobile answer grid",
         "Electron tray context menu",
         "Dual-Theme Core (Light/Dark)",
-        "Editorial Post ISR < 50ms"
+        "Editorial Post ISR < 50ms",
+        "Cloudflare D1 Offline-First Snapshot",
+        "Cloudflare R2 Asset Delivery & Image Fallback",
+        "Cloudflare KV Config Store",
+        "Self-Hosted TinyMCE Local",
+        "Portal R2 Media Upload with 5s Supabase Graceful Fallback"
     ],
     "project": "TNDNB",
     "canonical_domain": "https://www.daotaothuyenvien.com",
     "ontap_web_url": "https://www.daotaothuyenvien.com/ontap",
-    "architecture": "Monorepo with Root Portal (Next.js), Web App (Vite), Desktop App (Electron+Vite), Cloudflare Edge Worker (Hono)",
+    "api_domain": "https://api.daotaothuyenvien.com",
+    "cdn_domain": "https://cdn.daotaothuyenvien.com",
+    "architecture": "Monorepo with Root Portal (Next.js), Web App (Vite), Desktop App (Electron+Vite), Cloudflare Edge Worker (Hono + D1 + R2 + KV)",
     "tech_stack": [
         "Next.js",
         "Vite",
@@ -24,6 +31,8 @@
         "Supabase",
         "Firebase",
         "Cloudflare D1",
-        "Cloudflare R2"
+        "Cloudflare R2",
+        "Cloudflare KV",
+        "Cloudflare Workers (Hono)"
     ]
 }
