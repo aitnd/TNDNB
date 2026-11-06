@@ -43,3 +43,17 @@
   - Để triệt tiêu hoàn toàn popup phiền phức đòi API Key của TinyMCE Cloud trên Root Portal, chỉ cần copy thư viện tĩnh vào `public/tinymce/` và trỏ `tinymceScriptSrc="/tinymce/tinymce.min.js"`, `skin_url: '/tinymce/skins/ui/oxide'`, `content_css: '/tinymce/skins/content/default/content.min.css'`.
 - **R2 Gradual Migration & 5s Graceful Fallback (`[type=architecture]`):**
   - Khi chuyển đổi dần (`Gradual Migration`) ảnh và tài liệu bài viết sang Cloudflare R2 (`POST /api/v1/portal/upload`), luôn cài đặt `AbortController` với thời gian chờ tối đa 5000ms trong `lib/portalMediaService.ts`. Nếu Worker timeout hoặc gặp lỗi mạng, tự động lùi về Supabase Storage để người dùng đăng bài không bao giờ bị nghẽn gián đoạn, đồng thời bảo toàn 100% URL của các bài viết và tệp đính kèm lịch sử.
+
+
+## [2026-11-06] Xử Lý Triệt Để Lỗi Console, TinyMCE GPL, Supabase JWT RS256, Cloudflare Worker KV Multi-Auth & R2 CDN Images
+- **Bản quyền TinyMCE Self-hosted v8 (`[type=lesson]`):**
+  - Từ TinyMCE 7 trở lên, khi tự host trong thư mục `public/tinymce/` dưới giấy phép GNU GPL v2+, component `<Editor />` bắt buộc phải có thuộc tính cấu hình `license_key: 'gpl'` và `promotion: false`. Nếu thiếu, trình soạn thảo sẽ bị khóa cứng (disabled), xuất hiện banner cảnh báo màu vàng và console sẽ bắn lỗi 404 tìm kiếm plugin `licensekeymanager`.
+- **Khử Lỗi Chữ Ký Supabase JWT RS256 (`[type=pattern]`):**
+  - Khi hệ thống xác thực người dùng bằng Firebase Auth và phân quyền bằng Firestore RBAC, tuyệt đối không được truyền Firebase ID Token vào `supabase.auth.setSession()`. Supabase mặc định chỉ hỗ trợ thuật toán đối xứng HS256 với secret của Supabase, trong khi Firebase ID Token được ký bằng khóa bất đối xứng RS256 của Google. Việc gọi `setSession()` sẽ văng ngoại lệ `signing method RS256 is invalid` và bắn 403 Forbidden tới `/auth/v1/user`. Cần loại bỏ hoàn toàn lời gọi này vì Supabase chỉ được dùng để đọc câu hỏi công khai qua anon key.
+- **Next.js Reverse Proxy cho Worker API (`[type=architecture]`):**
+  - Khi ứng dụng Frontend nhúng gọi các relative path như `/api/v1/...`, Next.js sẽ nhận request trực tiếp thay vì Cloudflare Worker. Để không phụ thuộc vào việc có build-time env URL hay không, cấu hình rewrite trong `next.config.mjs` chuyển tiếp `/api/v1/:path*` sang `https://api.daotaothuyenvien.com/api/v1/:path*`, kết hợp với fallback mặc định trong client code (`d1Client.ts`), tạo cơ chế phòng vệ 2 tầng vững chắc.
+- **Cloudflare Worker Multi-Auth & Trả Về 200 Cho Key Null (`[type=architecture]`):**
+  - Các route lưu cấu hình (`PUT /api/v1/config/:key`) trên Edge Worker cần hỗ trợ cả `ADMIN_API_SECRET` lẫn Firebase ID Token hợp lệ của Admin (project `thi-tnd`).
+  - Trong route `GET /api/v1/config/:key`, khi `CONFIG_KV.get(key)` trả về `null`, Worker nên trả về HTTP 200 `{ ok: true, data: null }` thay vì HTTP 404 để không làm đỏ console của trình duyệt.
+- **Chuẩn Hóa 100% Ảnh Câu Hỏi Sang Cloudflare R2 CDN (`[type=pattern]`):**
+  - Khi toàn bộ ảnh câu hỏi đã được tải lên Cloudflare R2, cần chuẩn hóa URL trong `dataService.ts` và bộ nhớ đệm IndexedDB (`offlineService.ts`) trỏ về `https://cdn.daotaothuyenvien.com/question-images/${q.id}.png`. Điều này khử triệt để các đường dẫn Supabase Storage cũ mà không cần can thiệp vào component giao diện thi trắc nghiệm (`ExamQuizScreen.tsx`).

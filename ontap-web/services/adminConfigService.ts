@@ -1,5 +1,6 @@
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { fetchD1Config, saveD1Config } from './d1Client';
-import { auth } from './firebaseClient';
+import { auth, db } from './firebaseClient';
 
 export const USAGE_CONFIG_DOC_ID = 'usage_config';
 export const SETTINGS_COLLECTION = 'settings';
@@ -274,10 +275,26 @@ const DEFAULT_CONFIG: UsageConfig = {
     showPortalMonetag: false
 };
 
-// 1. Get Config (Ruling 2.3: Cloudflare KV 100% Single Source of Truth — No Firestore fallback)
+// 1. Get Config (Dual-Storage: Cloudflare KV + Firestore fallback + localStorage)
 export const getUsageConfig = async (): Promise<UsageConfig> => {
     try {
-        let data = await fetchD1Config<Partial<UsageConfig>>(USAGE_CONFIG_DOC_ID);
+        let data: Partial<UsageConfig> | null = null;
+        try {
+            data = await fetchD1Config<Partial<UsageConfig>>(USAGE_CONFIG_DOC_ID);
+        } catch (err) {
+            console.warn('[Config] KV fetch failed, trying Firestore:', err);
+        }
+
+        if (!data && db) {
+            try {
+                const snap = await getDoc(doc(db, SETTINGS_COLLECTION, USAGE_CONFIG_DOC_ID));
+                if (snap.exists()) {
+                    data = snap.data() as Partial<UsageConfig>;
+                }
+            } catch (err) {
+                console.warn('[Config] Firestore fetch failed, trying localStorage:', err);
+            }
+        }
 
         if (data) {
             try {
@@ -334,36 +351,65 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
         }
         return DEFAULT_CONFIG;
     } catch (error) {
-        console.error('Error fetching usage config from Cloudflare KV:', error);
+        console.error('Error fetching usage config from Cloudflare KV/Firestore:', error);
         return DEFAULT_CONFIG; // Fail safe in-memory fallback
     }
 };
 
-// 2. Save Config (Ruling 2.3: Cloudflare KV 100% Single Source of Truth — NO Firestore fallback)
+// 2. Save Config (Dual-Storage: Cloudflare KV + Firestore)
 export const saveUsageConfig = async (config: UsageConfig): Promise<void> => {
+    let kvSuccess = false;
+    let firestoreSuccess = false;
+
     try {
         const token = await auth?.currentUser?.getIdToken().catch(() => undefined);
-        const ok = await saveD1Config(USAGE_CONFIG_DOC_ID, config, token);
+        kvSuccess = await saveD1Config(USAGE_CONFIG_DOC_ID, config, token);
+    } catch (err) {
+        console.warn('[Config] KV save failed, relying on Firestore:', err);
+    }
 
-        if (!ok) {
-            throw new Error('Không thể lưu cấu hình lên Cloudflare KV API. Vui lòng kiểm tra kết nối mạng và quyền quản trị.');
+    try {
+        if (db) {
+            await setDoc(doc(db, SETTINGS_COLLECTION, USAGE_CONFIG_DOC_ID), config, { merge: true });
+            firestoreSuccess = true;
         }
+    } catch (err) {
+        console.error('[Config] Firestore save failed:', err);
+    }
 
+    if (kvSuccess || firestoreSuccess) {
         try {
             if (typeof localStorage !== 'undefined') {
                 localStorage.setItem(USAGE_CONFIG_CACHE_KEY, JSON.stringify(config));
             }
         } catch {}
-    } catch (error) {
-        console.error('Error saving usage config to KV:', error);
-        throw error;
+        return;
     }
+
+    throw new Error('Không thể lưu cấu hình vào hệ thống. Vui lòng kiểm tra kết nối mạng và quyền quản trị.');
 };
 
-// 3. Get GitHub Config (Ruling 2.3: Cloudflare KV Single Source of Truth)
+// 3. Get GitHub Config (Dual-Storage: Cloudflare KV + Firestore + localStorage)
 export const getGitHubConfig = async (): Promise<GitHubConfig> => {
     try {
-        let data = await fetchD1Config<GitHubConfig>('github_config');
+        let data: GitHubConfig | null = null;
+        try {
+            data = await fetchD1Config<GitHubConfig>('github_config');
+        } catch (err) {
+            console.warn('[Config] KV getGitHubConfig failed, trying Firestore:', err);
+        }
+
+        if (!data && db) {
+            try {
+                const snap = await getDoc(doc(db, SETTINGS_COLLECTION, 'github_config'));
+                if (snap.exists()) {
+                    data = snap.data() as GitHubConfig;
+                }
+            } catch (err) {
+                console.warn('[Config] Firestore getGitHubConfig failed, trying localStorage:', err);
+            }
+        }
+
         if (data) {
             try {
                 if (typeof localStorage !== 'undefined') {
@@ -372,6 +418,7 @@ export const getGitHubConfig = async (): Promise<GitHubConfig> => {
             } catch {}
             return data;
         }
+
         if (typeof localStorage !== 'undefined') {
             const cached = localStorage.getItem(GITHUB_CONFIG_CACHE_KEY);
             if (cached) {
@@ -380,28 +427,40 @@ export const getGitHubConfig = async (): Promise<GitHubConfig> => {
         }
         return { owner: 'aitnd', repo: 'TNDNB' };
     } catch (error) {
-        console.error('Error fetching GitHub config from KV:', error);
+        console.error('Error fetching GitHub config:', error);
         return { owner: 'aitnd', repo: 'TNDNB' };
     }
 };
 
-// 4. Save GitHub Config (Ruling 2.3: Cloudflare KV Single Source of Truth)
+// 4. Save GitHub Config (Dual-Storage: Cloudflare KV + Firestore)
 export const saveGitHubConfig = async (config: GitHubConfig): Promise<void> => {
+    let kvSuccess = false;
+    let firestoreSuccess = false;
+
     try {
         const token = await auth?.currentUser?.getIdToken().catch(() => undefined);
-        const ok = await saveD1Config('github_config', config, token);
+        kvSuccess = await saveD1Config('github_config', config, token);
+    } catch (err) {
+        console.warn('[Config] KV saveGitHubConfig failed, relying on Firestore:', err);
+    }
 
-        if (!ok) {
-            throw new Error('Không thể lưu cấu hình GitHub lên Cloudflare KV API. Vui lòng kiểm tra kết nối mạng và quyền quản trị.');
+    try {
+        if (db) {
+            await setDoc(doc(db, SETTINGS_COLLECTION, 'github_config'), config, { merge: true });
+            firestoreSuccess = true;
         }
+    } catch (err) {
+        console.error('[Config] Firestore saveGitHubConfig failed:', err);
+    }
 
+    if (kvSuccess || firestoreSuccess) {
         try {
             if (typeof localStorage !== 'undefined') {
                 localStorage.setItem(GITHUB_CONFIG_CACHE_KEY, JSON.stringify(config));
             }
         } catch {}
-    } catch (error) {
-        console.error('Error saving GitHub config to KV:', error);
-        throw error;
+        return;
     }
+
+    throw new Error('Không thể lưu cấu hình GitHub lên hệ thống. Vui lòng kiểm tra kết nối mạng và quyền quản trị.');
 };

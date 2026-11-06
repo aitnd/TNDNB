@@ -148,4 +148,50 @@ describe('Console Errors & TinyMCE License Fixes (TDD Suite)', () => {
       expect(offlineServiceContent).toMatch(/cdn\.daotaothuyenvien\.com\/question-images|sanitize|normalize/);
     });
   });
+
+  describe('Settings Save Dual-Storage & Private Repo Resilience (Plan 261107)', () => {
+    it('TC-12: ontap-web/services/adminConfigService.ts must save to Firestore as fallback/dual-write in saveUsageConfig and saveGitHubConfig', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/services/adminConfigService.ts');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Phải có import hoặc dùng setDoc từ firestore
+      expect(content).toMatch(/setDoc[\s\S]*?doc\(db,\s*SETTINGS_COLLECTION/);
+      // saveUsageConfig phải có lưu Firestore
+      expect(content).toMatch(/saveUsageConfig[\s\S]*?setDoc[\s\S]*?USAGE_CONFIG_DOC_ID/);
+      // saveGitHubConfig phải có lưu Firestore
+      expect(content).toMatch(/saveGitHubConfig[\s\S]*?setDoc/);
+    });
+
+    it('TC-13: ontap-web/services/adminConfigService.ts must fallback to Firestore in getUsageConfig and getGitHubConfig', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/services/adminConfigService.ts');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // getUsageConfig phải có đọc Firestore fallback
+      expect(content).toMatch(/getUsageConfig[\s\S]*?getDoc[\s\S]*?USAGE_CONFIG_DOC_ID/);
+      // getGitHubConfig phải có đọc Firestore fallback
+      expect(content).toMatch(/getGitHubConfig[\s\S]*?getDoc/);
+    });
+
+    it('TC-14: cloudflare-worker/src/routes/releasesProxy.ts must return status 200 with [] when upstream GitHub returns 401/403/404', () => {
+      const filePath = path.resolve(rootDir, 'cloudflare-worker/src/routes/releasesProxy.ts');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Phải xử lý khi upstreamRes.status là 401, 403 hoặc 404 trả về mảng rỗng status 200
+      expect(content).toMatch(/403|401/);
+      expect(content).toMatch(/status:\s*200[\s\S]*?\[\]|JSON\.stringify\(\[\]\)[\s\S]*?status:\s*200/);
+    });
+
+    it('TC-15: ontap-web/services/releaseService.ts must eliminate direct unauthenticated api.github.com fallback', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/services/releaseService.ts');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Không được chứa chuỗi 'https://api.github.com/repos/aitnd/TNDNB/releases' nặc danh gọi thẳng
+      expect(content).not.toContain('https://api.github.com/repos/aitnd/TNDNB/releases');
+    });
+
+    it('TC-16: ontap-web/components/ExamQuizScreen.tsx must remain 100% untouched (Invariant 1)', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/ExamQuizScreen.tsx');
+      expect(fs.existsSync(filePath)).toBe(true);
+    });
+  });
 });

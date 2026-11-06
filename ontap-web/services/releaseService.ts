@@ -1,4 +1,4 @@
-import { getUsageConfig } from './adminConfigService';
+import { getUsageConfig, getGitHubConfig } from './adminConfigService';
 import { getCloudflareApiBase } from './d1Client';
 import { normalizeVersion } from '../utils/versionUtils';
 
@@ -19,27 +19,27 @@ interface RawGitHubRelease {
   assets?: Array<{ browser_download_url?: string }>;
 }
 
-const GITHUB_API_URL = 'https://api.github.com/repos/aitnd/TNDNB/releases';
-
 export async function getLatestAppRelease(): Promise<AppRelease | null> {
   const releases = await getGitHubReleases();
   return releases.length > 0 ? releases[0] : null;
 }
 
 export async function getGitHubReleases(): Promise<AppRelease[]> {
-  const endpoints = [
-    `${getCloudflareApiBase()}/releases/list`,
-    GITHUB_API_URL
-  ];
+  try {
+    const ghConfig = await getGitHubConfig().catch(() => null);
+    const headers: Record<string, string> = {
+      Accept: 'application/vnd.github.v3+json'
+    };
+    if (ghConfig?.token) {
+      headers['Authorization'] = `Bearer ${ghConfig.token}`;
+    }
 
-  for (const endpoint of endpoints) {
-    try {
-      const response = await fetch(endpoint, {
-        headers: { Accept: 'application/vnd.github.v3+json' }
-      });
+    const endpoint = `${getCloudflareApiBase()}/releases/list`;
+    const response = await fetch(endpoint, { headers });
 
-      if (response.ok) {
-        const data = (await response.json()) as RawGitHubRelease[];
+    if (response.ok) {
+      const data = (await response.json()) as RawGitHubRelease[];
+      if (Array.isArray(data) && data.length > 0) {
         return data
           .filter((release) => !release.draft && !release.prerelease)
           .map((release) => ({
@@ -60,9 +60,9 @@ export async function getGitHubReleases(): Promise<AppRelease[]> {
             return 0;
           });
       }
-    } catch (err) {
-      console.warn(`Lỗi gọi endpoint releases (${endpoint}), thử fallback kế tiếp:`, err);
     }
+  } catch (err) {
+    console.warn('[Release] Failed to fetch releases from edge proxy:', err);
   }
 
   // Fallback to app_links in config
@@ -80,7 +80,7 @@ export async function getGitHubReleases(): Promise<AppRelease[]> {
       ];
     }
   } catch (e) {
-    console.error('Error fetching fallback app_links:', e);
+    console.warn('[Release] Error fetching fallback app_links:', e);
   }
 
   return [];

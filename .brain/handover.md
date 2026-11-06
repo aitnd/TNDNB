@@ -1,31 +1,35 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 HANDOVER DOCUMENT — DỰ ÁN TNDNB
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Đang làm: Toàn bộ Kế hoạch Đại tu Giao diện & Hạ tầng Cloudflare Edge (Phases 01 - 06)
-🔢 Đến bước: Đã hoàn tất 100% Phase 01 đến Phase 06, nghiệm thu QA thành công và Push lên Git main.
+📍 Đang làm: Kế hoạch Khắc phục Lỗi Console, TinyMCE GPL, KV Config & Chuẩn hóa CDN R2
+🔢 Đến bước: Đã hoàn tất 100% Phase 01 đến Phase 05, nghiệm thu QA thành công và Push lên Git main.
 
 ✅ ĐÃ XONG:
-- Phase 01: Sửa lỗi font tiếng Việt, gắn link `/ontap` vào `Sidebar.tsx`, Dual-Theme `light`/`dark`, tối ưu bài viết ISR 60s.
-- Phase 02: App Shell, Split Window `WelcomeModal`, Bento Grid 12 cột cho Dashboard.
-- Phase 03: Học tập, thi thử `QuizScreen.tsx` 2 cột, bảo toàn 100% `ExamQuizScreen.tsx` (git diff = 0).
-- Phase 04: 15 màn hình quản trị, TinyMCE Self-hosted Local `public/tinymce/`, R2 Image Fallback `onError`, KV Config Store không fallback Firestore.
-- Phase 05: Cloudflare Worker `tndnb-edge-api`, D1 Remote (1.810 câu hỏi), R2 `tndnb-assets` (280+ ảnh), 2 Custom Domain `api.daotaothuyenvien.com` & `cdn.daotaothuyenvien.com`.
-- Phase 06: Worker endpoint `POST /api/v1/portal/upload` + client helper `lib/portalMediaService.ts` với 5s Graceful Fallback Supabase, tích hợp TinyMCE & form tạo/sửa bài viết.
-- QA Nghiệm thu: 101/101 tests PASS, TypeScript sạch lỗi, Vite build và Next.js build PASS.
-- Commit & Push: SHA `3e523281` trên nhánh `main`.
+- Phase 01: Chuẩn hóa TinyMCE Self-hosted v8 với `license_key: 'gpl'` và `promotion: false` trên trang tạo và sửa bài viết.
+- Phase 02: Tinh gọn xác thực AuthContext, triệt tiêu lỗi token Supabase JWT RS256 và 403 Forbidden.
+- Phase 03: Sửa link Footer sang `/tu-van-nghe-nghiep` và thêm 308 redirect trong `next.config.mjs`.
+- Phase 04: Nghiệm thu QA các Phase 01-03 (Vitest 5/5 passed, TypeScript sạch, Next.js build 57 routes passed).
+- Phase 05:
+  - Khắc phục lỗi 404 `/api/v1` bằng client fallback `https://api.daotaothuyenvien.com` và Next.js reverse proxy rewrite trong `next.config.mjs`.
+  - Khai thông lưu cấu hình Cloudflare KV: Worker `verifyAdminAuthorization` hỗ trợ xác thực Firebase ID Token (project `thi-tnd`), GET trả HTTP 200 `{ ok: true, data: null }` cho key rỗng.
+  - Chuẩn hóa 100% ảnh câu hỏi trong `dataService.ts` và IndexedDB cache `offlineService.ts` sang `https://cdn.daotaothuyenvien.com/question-images/${q.id}.png`.
+  - Bảo toàn tuyệt đối bất biến Invariant 1: `ontap-web/components/ExamQuizScreen.tsx` 0 bytes diff.
+- QA Nghiệm thu: 11/11 Vitest tests PASS, TypeScript 0 lỗi, Vite build và Next.js build 57 routes PASS.
+- Commit & Push: SHA `d7b74cb3` trên nhánh `main`.
 
 ⏳ CÒN LẠI:
-- Task 6.2 (Backlog tương lai): Chỉ khi nào dung lượng Supabase Storage thực tế vượt mốc 500 MB thì mới cần chạy script di chuyển các file bài viết lịch sử cũ sang R2. Hiện tại tất cả bài viết cũ vẫn đọc bình thường và bài viết mới đã tự động lưu sang R2.
-- Kiểm tra Vercel Production deployment: Vercel sẽ tự động deploy commit `3e523281`.
+- Triển khai Cloudflare Worker: Nếu có thay đổi Worker backend thì chạy `npx wrangler deploy` trong thư mục `cloudflare-worker/` (tùy chọn khi cần áp dụng ngay lên production).
+- Kiểm tra trang `/ontap/settings` trên Production sau khi Vercel hoàn tất build từ Git.
 
 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-- `ontap-web/components/ExamQuizScreen.tsx` là vùng bất khả xâm phạm (`git diff = 0`).
+- `ontap-web/components/ExamQuizScreen.tsx` giữ nguyên 100% (`git diff = 0`).
 - Đường dẫn `/ontap` trên Root Portal chỉ nằm ở `components/Sidebar.tsx`.
 - Domain chính thức: `daotaothuyenvien.com`, `api.daotaothuyenvien.com`, `cdn.daotaothuyenvien.com`.
+- Firebase Auth + Firestore RBAC là cơ chế xác thực chính danh cho Quản trị viên.
 
 📁 FILES QUAN TRỌNG:
-- Kế hoạch & Checklist: `docs/plans/261105-1836-ontap-web-ui-overhaul/plan.md`, `task.md`
-- Báo cáo QA: `docs/plans/261105-1836-ontap-web-ui-overhaul/project_qa_report.md`
-- Cloudflare Worker: `cloudflare-worker/src/index.ts`, `cloudflare-worker/src/routes/portalUpload.ts`
-- Client Media Service: `lib/portalMediaService.ts`
+- Kế hoạch & Checklist: `docs/plans/261106-1705-fix-console-errors-and-tinymce-license/plan.md`, `task.md`
+- Chi tiết Phase 05: `docs/plans/261106-1705-fix-console-errors-and-tinymce-license/phase-05-api-v1-and-r2-images-fix.md`
+- Bộ test TDD: `scripts/portal-console-and-tinymce-fix.test.ts`
+- Báo cáo QA: `C:/Users/HorizonServers/.gemini/antigravity/brain/38a7bda1-35b0-466b-9688-b1ebd49f27dc/project_qa_report.md`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -30,41 +30,60 @@ export async function handleReleasesProxyRoutes(
       Accept: 'application/vnd.github.v3+json',
       'User-Agent': 'TNDNB-Edge-Proxy/1.0'
     };
-    if (env.GITHUB_TOKEN) {
+    const clientAuth = request.headers.get('Authorization');
+    if (clientAuth && clientAuth.startsWith('Bearer ')) {
+      ghHeaders['Authorization'] = clientAuth;
+    } else if (env.GITHUB_TOKEN) {
       ghHeaders['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`;
     }
 
-    const upstreamRes = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/releases`,
-      { headers: ghHeaders }
-    );
+    try {
+      const upstreamRes = await fetch(
+        `https://api.github.com/repos/${owner}/${repo}/releases`,
+        { headers: ghHeaders }
+      );
 
-    if (!upstreamRes.ok) {
-      return new Response(JSON.stringify({ error: 'Upstream GitHub API error' }), {
-        status: upstreamRes.status,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json; charset=utf-8' }
+      // Khi upstream trả về lỗi (401, 403, 404...): trả về [] status 200 để client fallback an toàn, không bắn lỗi đỏ trên browser
+      if (!upstreamRes.ok) {
+        return new Response(JSON.stringify([]), {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120'
+          }
+        });
+      }
+
+      const rawReleases = (await upstreamRes.json()) as UpstreamRelease[];
+      const rewritten = (Array.isArray(rawReleases) ? rawReleases : []).map((rel) => ({
+        ...rel,
+        assets: Array.isArray(rel.assets)
+          ? rel.assets.map((asset) => ({
+              ...asset,
+              browser_download_url: `${url.origin}/releases/download/${encodeURIComponent(asset.name)}`
+            }))
+          : []
+      }));
+
+      return new Response(JSON.stringify(rewritten), {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300'
+        }
+      });
+    } catch {
+      return new Response(JSON.stringify([]), {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120'
+        }
       });
     }
-
-    const rawReleases = (await upstreamRes.json()) as UpstreamRelease[];
-    const rewritten = rawReleases.map((rel) => ({
-      ...rel,
-      assets: Array.isArray(rel.assets)
-        ? rel.assets.map((asset) => ({
-            ...asset,
-            browser_download_url: `${url.origin}/releases/download/${encodeURIComponent(asset.name)}`
-          }))
-        : []
-    }));
-
-    return new Response(JSON.stringify(rewritten), {
-      status: 200,
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json; charset=utf-8',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300'
-      }
-    });
   }
 
   // 2. Endpoint GET/HEAD /releases/download/:filename (Phục vụ electron-updater generic provider)
