@@ -1,25 +1,24 @@
-# 🧠 Tóm Tắt Ngữ Cảnh Hiện Tại (`recap_current.md`) — Cập nhật: 2026-11-07 (09:15)
+# 🧠 Tóm Tắt Ngữ Cảnh Hiện Tại (`recap_current.md`) — Cập nhật: 2026-11-07 (10:10)
 
-- **Dự án:** TNDNB (`d:\Antigravity\TNDNB`) — Nhánh `feat/mobile-dashboard-and-top-navbar-simplification` (Commit mới nhất: `e2a97dcd`).
-- **Pull Request:** https://github.com/aitnd/TNDNB/pull/new/feat/mobile-dashboard-and-top-navbar-simplification
-- **Mục tiêu hoàn thành đợt này:** Hoàn tất 100% 3 Phase trong kế hoạch [`261107-0620-mobile-dashboard-simplification-and-error-audit`](file:///d:/Antigravity/TNDNB/docs/plans/261107-0620-mobile-dashboard-simplification-and-error-audit/plan.md) và dọn dẹp Git:
-  1. **Phase 01 (Xử lý lỗi console & Form Đăng nhập):**
-     - Làm rõ lỗi `disconnected port` trong `CM.sendMessageTo` là do tiện ích Bitwarden của trình duyệt, không phải lỗi code web.
-     - Khắc phục triệt để lỗi React Hydration Mismatch (`Minified React error #418, #425, #423`) tại trang chủ `app/page.tsx` bằng cách tải động `FeaturedSlider` qua `dynamic(() => import(...), { ssr: false })`.
-     - Mặc định tích sẵn cả 2 ô checkbox: `rememberMe: true` (Ghi nhớ đăng nhập) và `saveThisAccount: true` (Lưu tài khoản này) trong `ontap-web/components/LoginScreen.tsx`.
-  2. **Phase 02 (Tối giản Mobile Dashboard & TopNavbar):**
-     - Loại bỏ popup cảnh báo đăng nhập 1 thiết bị phiền hà (`showSingleDeviceWarning`) trong `ontap-web/services/authSessionService.ts`, cho phép session tự xoay êm ái (silent rotation).
-     - Ngăn trình duyệt tự động hỏi quyền vị trí Geolocation khi mount `WeatherWidget.tsx`, chỉ truy vấn khi người dùng chủ động click thời tiết.
-     - Bố cục Mobile Dashboard: ẩn widget Thời tiết và Tiến độ học tập (`hidden lg:block`), đưa nút "Vào Ôn Tập / Thi Thử" (`PrimaryButton`) lên ngay sát dưới Thẻ học viên (`StudentCard`) giúp học viên 1 chạm vào thi ngay.
-     - Tối ưu TopNavbar: thiết kế nút Menu 3 gạch (`Menu` icon) ở góc phải cùng, mở sheet dropdown chứa thông tin tài khoản, hòm thư, lịch sử, khám phá, phiên bản và nút Đăng xuất màu đỏ.
-     - Với role học viên (`hoc_vien`) trên màn hình điện thoại: tinh giản tối đa, chỉ giữ đúng 4 nút: `[Ôn tập]`, `[Lớp của tôi]`, `[Chuông thông báo]` và `[Menu 3 gạch]`. Ẩn tất cả nút còn lại (`hidden md:flex`).
-  3. **Phase 03 (Thêm PWA Add to Home Screen Banner):**
-     - Tạo component `ontap-web/components/PwaInstallBanner.tsx` chuẩn PWA cài đặt ra màn hình chính (KHÔNG dùng file APK).
-     - Bắt sự kiện `beforeinstallprompt` trên trình duyệt Android/Chrome, mở modal 3 bước hướng dẫn cài đặt trên iOS Safari.
-     - Tự động ẩn khi người dùng đang chạy ở chế độ Standalone PWA hoặc khi người dùng đã bấm tắt trong vòng 7 ngày qua `localStorage`.
-  4. **Phase QA & Clean-up:**
-     - Bộ test Vitest: **27/27 tests PASS (100%)**.
-     - TypeScript Strict Typecheck: **0 errors** trên cả root và `ontap-web`.
-     - Production Build (`npm run build`): Build thành công Vite (`ontap-web`) và Next.js (57 routes).
-     - Bảo toàn tuyệt đối bất biến Invariant 1: `ontap-web/components/ExamQuizScreen.tsx` 0 bytes diff.
-     - Đã xóa sạch 2 nhánh cũ theo yêu cầu: `fix/console-cleanup` (local & remote origin) và `feature/phase-1-2-updates` (remote origin), đồng thời chạy `git fetch --prune`.
+- **Dự án:** TNDNB (`d:\Antigravity\TNDNB`) — Nhánh `feat/mobile-dashboard-and-top-navbar-simplification` (Commit mới nhất: `9d06d0a7`).
+- **Pull Request URL:** https://github.com/aitnd/TNDNB/pull/new/feat/mobile-dashboard-and-top-navbar-simplification
+- **Mục tiêu hoàn thành trong phiên làm việc:**
+  1. **Kế hoạch 1 (`261107-0620-mobile-dashboard-simplification-and-error-audit`):**
+     - Giải mã lỗi console Bitwarden extension và sửa triệt để React Hydration Mismatch bằng `dynamic(..., { ssr: false })` cho `FeaturedSlider`.
+     - Mặc định chọn cả 2 checkbox đăng nhập ("Ghi nhớ đăng nhập" và "Lưu tài khoản này").
+     - Loại bỏ popup cảnh báo đăng nhập 1 thiết bị, ngăn tự động hỏi Geolocation.
+     - Tối giản Mobile Dashboard: hiển thị Thẻ học viên và nút "Vào Ôn Tập / Thi Thử" to rõ ràng (1 chạm vào thi ngay).
+     - Tối ưu TopNavbar: gom Tài khoản và Đăng xuất vào Menu 3 gạch bên phải, khóa 4 nút cho học viên mobile (`[Ôn tập]`, `[Lớp của tôi]`, `[Chuông]`, `[Menu 3 gạch]`).
+     - Tích hợp banner cài đặt PWA Add to Home Screen (Web Manifest, iOS guide, auto-hide trên standalone).
+     - Xóa 2 nhánh cũ: `fix/console-cleanup` và `feature/phase-1-2-updates` kèm `git fetch --prune`.
+  2. **Kế hoạch 2 (`261107-0940-clean-console-and-guest-firestore-guard`):**
+     - Phân tích DevTools console trên trang thi thử `/ontap/thithu`: Lỗi đỏ `net::ERR_BLOCKED_BY_CLIENT` là do tiện ích uBlock Origin/Adblock; lỗi đỏ `200.js reading M_ID` là do Chrome extension của máy khách; cảnh báo vàng `FirebaseError: Missing or insufficient permissions` là do khách vãng lai bị Firestore Security Rules chặn đọc `settings`.
+     - Thêm Guest Auth Guard `auth?.currentUser` vào `getUsageConfig()` và `getGitHubConfig()` trong `ontap-web/services/adminConfigService.ts`. Khách vãng lai bỏ qua Firestore, nạp thẳng từ localStorage/default (Zero-Noise Console).
+     - Thêm 2 test TDD `TC-28` và `TC-29` vào `scripts/portal-console-and-tinymce-fix.test.ts`.
+
+- **Trạng thái Kiểm thử & Build:**
+  - Bộ test TDD: **29/29 tests PASS (100%)** trong 277ms.
+  - TypeScript Strict Typecheck: **0 errors** trên cả root và `ontap-web`.
+  - Production Build: Build thành công Vite (`ontap-web`) và Next.js (57 routes).
+  - Bất biến Invariant 1: `ontap-web/components/ExamQuizScreen.tsx` **0 bytes diff**.
+  - Git Commit: SHA `9d06d0a7` đã đẩy lên origin.

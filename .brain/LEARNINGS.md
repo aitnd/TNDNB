@@ -79,3 +79,7 @@
   - Với role học viên (`hoc_vien`) trên điện thoại: ẩn toàn bộ nút phụ (`hidden md:flex`), chỉ hiển thị đúng 4 nút duy nhất: `[Ôn tập]`, `[Lớp của tôi]`, `[Chuông thông báo]` và `[Menu 3 gạch]`.
 - **Quy Trình Xóa Nhánh Git Cũ & Dọn Dẹp Remote Cache An Toàn (`[type=pattern]`):**
   - Khi người dùng yêu cầu xóa các nhánh cũ: xóa local (`git branch -D <name>`), xóa remote (`git push origin --delete <name>`), và bắt buộc chạy `git fetch --prune` để dọn sạch toàn bộ tham chiếu `remotes/origin/...` đã bị xóa trên GitHub.
+
+- **Guest Auth Guard: Triệt Tiêu Cảnh Báo Firestore Console Cho Khách Vãng Lai (`[type=pattern]`):**
+  - Khi collection Firestore bị khóa bởi quy tắc phân quyền bảo mật (`allow read: if request.auth != null;`), các service client nạp cấu hình hệ thống (như `getUsageConfig()` hoặc `getGitHubConfig()`) phải có guard clause kiểm tra `auth?.currentUser` trước khi thực hiện `getDoc(doc(db, 'settings', ...))`.
+  - Nếu người dùng chưa đăng nhập (khách vãng lai), hàm lập tức chuyển thẳng sang cache `localStorage` hoặc giá trị mặc định tĩnh. Điều này ngăn chặn 100% request không hợp lệ gửi lên Firestore, triệt tiêu lỗi `Missing or insufficient permissions` trong tab Console (Zero-Noise Console) và giảm bớt quota truy vấn Firestore.
