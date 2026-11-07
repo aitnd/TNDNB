@@ -18,7 +18,8 @@
         "Mobile Streamlined Dashboard (Single Tap Exam Access)",
         "PWA Native Add-to-Home-Screen Support",
         "TopNavbar Hamburger Menu & Role-Based Action Isolation",
-        "Next.js Dynamic SSR-Safe Slider Component"
+        "Next.js Dynamic SSR-Safe Slider Component",
+        "Centered Focused WelcomeModal (Anti-AI-Slop)"
     ],
     "project": "TNDNB",
     "canonical_domain": "https://www.daotaothuyenvien.com",
@@ -38,5 +39,7 @@
         "Cloudflare R2",
         "Cloudflare KV",
         "Cloudflare Workers (Hono)"
-    ]
+    ],
+    "last_commit": "f60b54c6",
+    "updated_at": "2026-11-07T11:13:00+07:00"
 }

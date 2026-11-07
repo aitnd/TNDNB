@@ -83,3 +83,15 @@
 - **Guest Auth Guard: Triệt Tiêu Cảnh Báo Firestore Console Cho Khách Vãng Lai (`[type=pattern]`):**
   - Khi collection Firestore bị khóa bởi quy tắc phân quyền bảo mật (`allow read: if request.auth != null;`), các service client nạp cấu hình hệ thống (như `getUsageConfig()` hoặc `getGitHubConfig()`) phải có guard clause kiểm tra `auth?.currentUser` trước khi thực hiện `getDoc(doc(db, 'settings', ...))`.
   - Nếu người dùng chưa đăng nhập (khách vãng lai), hàm lập tức chuyển thẳng sang cache `localStorage` hoặc giá trị mặc định tĩnh. Điều này ngăn chặn 100% request không hợp lệ gửi lên Firestore, triệt tiêu lỗi `Missing or insufficient permissions` trong tab Console (Zero-Noise Console) và giảm bớt quota truy vấn Firestore.
+
+
+## [2026-11-07] Tái Thiết Kế WelcomeModal Đơn Thẻ Tối Giản, Khử Sạch AI-Slop & Bảo Toàn Invariant 1
+- **Khử Trùng Dứt Khoát Nội Dung Giả Định (Anti-AI-Slop Clean) (`[type=lesson]`):**
+  - Màn hình chào đón của ứng dụng học tập/sát hạch thuyền viên (`WelcomeModal.tsx`) tuyệt đối không được tự ý sinh ra các thông số marketing phóng đại (như "100%", "30 câu / đề", "24/7") hay các gạch đầu dòng tính năng chung chung do AI bịa đặt.
+  - Khi người dùng yêu cầu lược bỏ, cần mạnh dạn tháo dỡ toàn bộ cấu trúc lưới 2 cột phức tạp (`md:col-span-7` & `md:col-span-5`), đưa về Hero Layout Archetype `centred` (`max-w-lg text-center`) tối giản, tinh tế theo chuẩn Taste-Skill v2.5.0 và 62-rule Impeccable Craft Floor v4.8.0.
+  - Lấy biểu tượng bản sắc ngành Bánh lái 3D (`HelmIcon3D`) làm tâm điểm thị giác (Visual Anchor), giữ lời chào ấm cúng, cụm 2 nút hành động chính (`[Bắt đầu ôn tập]`, `[Đăng nhập học viên]`), liên kết đăng ký tài khoản và thông tin đơn vị đào tạo kèm hotline `0229 628 2969` (định dạng `tabular-nums` thẳng hàng).
+- **Kỷ Luật Bảo Toàn Bất Biến Invariant 1 (`[type=pattern]`):**
+  - Trong mọi tác vụ nâng cấp hoặc tái cấu trúc giao diện xung quanh (TopNavbar, Dashboard, WelcomeModal), tệp thi trắc nghiệm cốt lõi [`ontap-web/components/ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx) luôn được bảo vệ nghiêm ngặt với quy tắc `git diff === 0 bytes`.
+  - Mọi bộ test tự động (`scripts/ontap-dual-theme-and-sidebar.test.ts`) bắt buộc phải có assertion `execSync('git diff ontap-web/components/ExamQuizScreen.tsx') === ''` để ngăn chặn bất kỳ sự can thiệp ngoài ý muốn nào.
+- **Quy Trình Hoàn Tất Nhánh Phát Triển & Merge Sang Main (`[type=decision]`):**
+  - Sau khi vượt qua toàn bộ 52/52 bài kiểm thử Vitest và 0 lỗi TypeScript ở cả root và sub-project, nhánh tính năng `feat/mobile-dashboard-and-top-navbar-simplification` được merge trực tiếp vào `main` thông qua chiến lược `merge --no-ff`, kiểm thử lại toàn bộ trên `main` và đẩy lên `origin/main` an toàn.

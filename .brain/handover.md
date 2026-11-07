@@ -1,39 +1,48 @@
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 HANDOVER DOCUMENT — DỰ ÁN TNDNB
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Đang làm: Tối Giản Mobile Dashboard, PWA Banner & Zero-Noise Console cho Khách Vãng Lai
-🔢 Đến bước: Hoàn thành 100% cả 2 kế hoạch (`261107-0620` và `261107-0940`), QA 29/29 Tests PASS, Đẩy Git Remote PR.
+# 📋 TÀI LIỆU BÀN GIAO TIẾN ĐỘ DỰ ÁN (HANDOVER DOCUMENT)
 
-✅ ĐÃ XONG:
-- Giải quyết dứt điểm React Hydration Mismatch (`#418, #425, #423`) bằng dynamic import `FeaturedSlider` (`ssr: false`).
-- Mặc định tích sẵn cả 2 ô "Ghi nhớ đăng nhập" và "Lưu tài khoản này" trong `LoginScreen.tsx`.
-- Loại bỏ modal cảnh báo single-device phiền hà khi đăng nhập (`authSessionService.ts`).
-- Ngăn tự động hỏi quyền vị trí Geolocation khi mount `WeatherWidget.tsx`.
-- Tối giản Mobile Dashboard: Đưa Thẻ học viên và nút "Vào Ôn Tập / Thi Thử" lên hàng đầu (1 chạm vào thi), ẩn các widget phụ trên mobile (`hidden lg:block`).
-- Tối ưu TopNavbar: Gom Tài khoản và Đăng xuất vào Menu 3 gạch ở góc phải; role học viên mobile khóa chặt 4 nút: `[Ôn tập]`, `[Lớp của tôi]`, `[Chuông]` và `[Menu 3 gạch]`.
-- Thêm Banner PWA Cài đặt ra Màn hình chính (`PwaInstallBanner.tsx`) chuẩn Web Manifest, iOS guide, auto-hide trên standalone app.
-- Xóa sạch 2 nhánh cũ: `fix/console-cleanup` và `feature/phase-1-2-updates`, kèm `git fetch --prune`.
-- Phân tích DevTools Console trang thi thử: làm rõ lỗi Bitwarden và `200.js` là từ extension của máy khách; uBlock chặn analytics.
-- Bổ sung Guest Auth Guard `auth?.currentUser` vào `getUsageConfig()` và `getGitHubConfig()` trong `adminConfigService.ts`, triệt tiêu cảnh báo vàng Firestore `Missing or insufficient permissions` cho khách vãng lai (Zero-Noise Console).
-- Mở rộng bộ test TDD: thêm `TC-28` và `TC-29` (đạt 29/29 tests PASS 100%).
-- Nghiệm thu: 0 lỗi TypeScript, Production build thành công cả Vite và Next.js (57 routes).
-- Bảo toàn tuyệt đối bất biến Invariant 1: `ontap-web/components/ExamQuizScreen.tsx` 0 bytes diff.
-- Git: Commit `9d06d0a7` trên nhánh `feat/mobile-dashboard-and-top-navbar-simplification`, PR https://github.com/aitnd/TNDNB/pull/new/feat/mobile-dashboard-and-top-navbar-simplification.
+> **Dự án**: Cổng thông tin & Hệ thống Quản trị Đào tạo Thuyền viên Ninh Bình (TNDNB)  
+> **Thời điểm cập nhật**: 2026-11-07 11:12:50 (GMT+7)  
+> **Nhánh hiện tại**: `main` (Up to date với `origin/main`)  
+> **Commit mới nhất**: `f60b54c6` (Merge branch 'feat/mobile-dashboard-and-top-navbar-simplification' into main)  
 
-⏳ CÒN LẠI:
-- Merge Pull Request vào nhánh `main` khi quản trị viên phê duyệt trên GitHub.
-- Vercel tự động build & deploy lên production khi nhánh `main` nhận commit mới.
+---
 
-🔧 QUYẾT ĐỊNH QUAN TRỌNG:
-- `ontap-web/components/ExamQuizScreen.tsx` giữ nguyên 100% (`git diff = 0`).
-- Người dùng yêu cầu chuẩn PWA Add to Home Screen, không dùng file APK.
-- Khách vãng lai thi thử không được gửi request đọc Firestore `settings`, nạp trực tiếp từ `localStorage`/default để tối ưu 0ms và giữ console sạch bóng.
+## 1. Tình Trạng Hiện Tại & Công Việc Vừa Hoàn Thành
 
-📁 FILES QUAN TRỌNG:
-- Kế hoạch 1: `docs/plans/261107-0620-mobile-dashboard-simplification-and-error-audit/plan.md`
-- Kế hoạch 2: `docs/plans/261107-0940-clean-console-and-guest-firestore-guard/plan.md`
-- Component PWA: `ontap-web/components/PwaInstallBanner.tsx`
-- Component TopNavbar: `ontap-web/components/TopNavbar.tsx`
-- Cấu hình Service: `ontap-web/services/adminConfigService.ts`
-- Bộ test TDD: `scripts/portal-console-and-tinymce-fix.test.ts`
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phiên làm việc đã xử lý trọn vẹn và nghiệm thu hoàn hảo 3 đợt công việc quan trọng:
+
+1. **Đợt 1 — Tối giản Mobile Dashboard, TopNavbar & PWA Banner**:
+   - Khắc phục triệt để lỗi hydration mismatch của Swiper Slider (`dynamic(..., { ssr: false })`).
+   - Mặc định tích cả 2 tùy chọn ghi nhớ tài khoản trên `LoginScreen.tsx`.
+   - Loại bỏ popup cảnh báo thiết bị đơn, ngăn tự động hỏi Geolocation trên `WeatherWidget.tsx`.
+   - Tối giản Dashboard học viên mobile: hiển thị thẻ học viên và nút "Vào Ôn Tập / Thi Thử" to rõ ràng.
+   - Tối ưu TopNavbar: gom Tài khoản & Đăng xuất vào Hamburger menu bên phải, chỉ để 4 nút cho học viên mobile.
+   - Thêm component `PwaInstallBanner.tsx` hướng dẫn cài đặt Add to Home Screen cho PWA.
+
+2. **Đợt 2 — Zero-Noise Console & Guest Firestore Auth Guard**:
+   - Phân tích nguyên nhân lỗi console do extension uBlock Origin (`net::ERR_BLOCKED_BY_CLIENT`) và extension máy khách (`200.js reading M_ID`).
+   - Thêm Guest Auth Guard `auth?.currentUser` vào `getUsageConfig()` và `getGitHubConfig()` trong `ontap-web/services/adminConfigService.ts` để khách vãng lai không bị Firestore trả về lỗi đỏ `Missing or insufficient permissions`.
+
+3. **Đợt 3 — Khử Sạch Thông Số Tự Bịa & Tái Cấu Trúc WelcomeModal**:
+   - Loại bỏ hoàn toàn khối cột phải `md:col-span-5` chứa "THÔNG SỐ HỆ THỐNG HỌC LIỆU" (`100%`, `30 câu / đề`, `24/7`) và khối 3 bullet points tính năng theo 2 ảnh chỉ đạo của người dùng.
+   - Chuyển `WelcomeModal.tsx` sang Hero Layout Archetype `centred` (`max-w-lg text-center`) với Bánh lái 3D `HelmIcon3D` làm Visual Anchor, chuẩn Taste-Skill v2.5.0 và Impeccable Craft Floor v4.8.0.
+   - Kiểm thử TDD (11/11 tests PASS), nghiệm thu tổng lực `/check-project` (52/52 tests PASS, 0 lỗi TypeScript, 0 bytes diff `ExamQuizScreen.tsx`, Next.js 57 routes & Vite build hoàn tất).
+   - Đã merge thành công vào nhánh `main` và push lên GitHub remote (`origin/main`).
+
+---
+
+## 2. Các Bất Biến & Cam Kết Kỹ Thuật (Protected Invariants)
+
+- **Invariant 1 (Bất di bất dịch)**: [`ontap-web/components/ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx) giữ nguyên `0 bytes diff` (`git diff` trống tuyệt đối).
+- **Interface Contract**: `WelcomeModalProps` (`onStart`, `onLoginClick`, `onRegisterClick`) không bị thay đổi, đảm bảo tương thích 100% với `App.tsx`.
+- **Changelog kép**: Cập nhật bài học và quyết định kiến trúc vào `.brain/LEARNINGS.md`.
+
+---
+
+## 3. Các Tệp Tin Quan Trọng Nhất Đã Thay Đổi
+- [`ontap-web/components/WelcomeModal.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/WelcomeModal.tsx): Component thẻ đơn trung tâm mới.
+- [`scripts/ontap-dual-theme-and-sidebar.test.ts`](file:///d:/Antigravity/TNDNB/scripts/ontap-dual-theme-and-sidebar.test.ts): Bộ test suite TDD canh gác giao diện và Invariant 1.
+- [`docs/plans/261107-1035-remove-fake-stats-welcome-modal/`](file:///d:/Antigravity/TNDNB/docs/plans/261107-1035-remove-fake-stats-welcome-modal/): Thư mục kế hoạch, thiết kế, đặc tả UI và checklist task chính thức.
+- [`ontap-web/services/adminConfigService.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/adminConfigService.ts): Guest Auth Guard chặn lỗi console.
+- [`ontap-web/components/TopNavbar.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/TopNavbar.tsx): Hamburger Menu & 4 nút mobile.
+- [`ontap-web/components/Dashboard.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/Dashboard.tsx): Mobile Dashboard tinh gọn.
