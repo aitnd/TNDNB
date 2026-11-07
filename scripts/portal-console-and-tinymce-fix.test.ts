@@ -299,6 +299,34 @@ describe('Console Errors & TinyMCE License Fixes (TDD Suite)', () => {
       expect(content).toMatch(/<PwaInstallBanner[\s\S]*?<StudentCard/);
     });
   });
+
+  describe('Guest Firestore Guard & Clean Console (Plan 261107-0940)', () => {
+    it('TC-28: ontap-web/services/adminConfigService.ts must guard getUsageConfig Firestore fallback with auth?.currentUser', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/services/adminConfigService.ts');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      const usageConfigBlock = content.match(/export const getUsageConfig = async[\s\S]*?return\s*\{[\s\S]*?\.\.\.DEFAULT_CONFIG/);
+      expect(usageConfigBlock).toBeTruthy();
+
+      if (usageConfigBlock) {
+        const code = usageConfigBlock[0];
+        expect(code).toMatch(/if\s*\(!data\s*&&\s*db\s*&&\s*auth\?\.currentUser\)/);
+      }
+    });
+
+    it('TC-29: ontap-web/services/adminConfigService.ts must guard getGitHubConfig Firestore fallback with auth?.currentUser', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/services/adminConfigService.ts');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      const gitHubConfigBlock = content.match(/export const getGitHubConfig = async[\s\S]*?return\s*\{[\s\S]*?owner:\s*['"]aitnd['"]/);
+      expect(gitHubConfigBlock).toBeTruthy();
+
+      if (gitHubConfigBlock) {
+        const code = gitHubConfigBlock[0];
+        expect(code).toMatch(/if\s*\(!data\s*&&\s*db\s*&&\s*auth\?\.currentUser\)/);
+      }
+    });
+  });
 });
 
 
