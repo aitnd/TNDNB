@@ -57,3 +57,25 @@
   - Trong route `GET /api/v1/config/:key`, khi `CONFIG_KV.get(key)` trả về `null`, Worker nên trả về HTTP 200 `{ ok: true, data: null }` thay vì HTTP 404 để không làm đỏ console của trình duyệt.
 - **Chuẩn Hóa 100% Ảnh Câu Hỏi Sang Cloudflare R2 CDN (`[type=pattern]`):**
   - Khi toàn bộ ảnh câu hỏi đã được tải lên Cloudflare R2, cần chuẩn hóa URL trong `dataService.ts` và bộ nhớ đệm IndexedDB (`offlineService.ts`) trỏ về `https://cdn.daotaothuyenvien.com/question-images/${q.id}.png`. Điều này khử triệt để các đường dẫn Supabase Storage cũ mà không cần can thiệp vào component giao diện thi trắc nghiệm (`ExamQuizScreen.tsx`).
+
+
+## [2026-11-07] Phân Tích Lỗi Console, Khắc Phục React Hydration, Tối Giản Mobile Dashboard, PWA Banner & Gom Hamburger TopNavbar
+- **Phân Biệt Lỗi Extension Trình Duyệt vs Lỗi Code Web (`[type=lesson]`):**
+  - Tiện ích mở rộng của trình duyệt như Bitwarden Password Manager có thể ném ngoại lệ `Attempting to use a disconnected port object at CM.sendMessageTo (chrome-extension://nngceckbapebfimnlniiahkandclblb/...)` khi DOM form thay đổi hoặc port giao tiếp ngầm của extension bị đóng. Đây là lỗi cô lập 100% từ phía extension của máy khách, không ảnh hưởng đến logic của ứng dụng.
+- **Khắc Phục Triệt Để React Hydration Mismatch với Swiper / Slider SSR (`[type=pattern]`):**
+  - Các thư viện slider như Swiper tự động tính toán kích thước viewport, touch gestures và can thiệp DOM client. Khi render trên Next.js Server Components, DOM từ SSR khác biệt với DOM client tạo ra lỗi `Minified React error #418, #425, #423`.
+  - Giải pháp chuẩn: Dùng `next/dynamic` với `{ ssr: false }` kèm skeleton placeholder để trì hoãn render component slider sang phía client hoàn toàn.
+- **Mặc Định Form Đăng Nhập Tiện Lợi Cho Học Viên (`[type=decision]`):**
+  - Mặc định tích sẵn cả 2 ô `rememberMe: true` (Ghi nhớ đăng nhập) và `saveThisAccount: true` (Lưu tài khoản này) trong `LoginScreen.tsx` giúp học viên không phải thao tác thủ công mỗi lần đăng nhập.
+- **Trải Nghiệm Mobile: Tối Giản Dashboard & Tải Dữ Liệu Theo Nhu Cầu (`[type=pattern]`):**
+  - Loại bỏ các popup cảnh báo thiết bị phiền toái (`showSingleDeviceWarning`) giúp phiên làm việc xoay tua êm ái (silent session rotation).
+  - Không tự động yêu cầu quyền vị trí `navigator.geolocation` trong `WeatherWidget.tsx` khi mount trang. Chỉ hỏi quyền khi người dùng chủ động tương tác với tính năng thời tiết.
+  - Trên màn hình mobile, chỉ hiển thị Thẻ học viên (`StudentCard`) và nút to nổi bật "Vào Ôn Tập / Thi Thử" (`PrimaryButton`) ngay bên dưới. Các widget phụ (thời tiết, biểu đồ tiến độ) ẩn trên mobile (`hidden lg:block`).
+- **Phân Biệt Cài Đặt PWA vs Tải File APK (`[type=architecture]`):**
+  - Khi người dùng yêu cầu "tải app đưa ra màn hình chính", giải pháp chuẩn hóa cho Web App là Progressive Web App (PWA) cài đặt qua trình duyệt: bắt sự kiện `beforeinstallprompt` trên Chromium/Android và modal 3 bước hướng dẫn "Thêm vào MH chính" trên iOS Safari, tuyệt đối không tạo nút tải APK ngoài.
+  - Component PWA Banner cần tự động ẩn khi app đã chạy ở chế độ standalone (`display-mode: standalone` hoặc `window.navigator.standalone === true`) và lưu trạng thái tắt trong 7 ngày qua `localStorage`.
+- **Tối Ưu TopNavbar: Gom Hamburger Menu & Khóa 4 Nút Cho Role Học Viên Mobile (`[type=pattern]`):**
+  - Nút Tài khoản và nút Đăng xuất được gom gọn gàng vào nút Menu 3 gạch (`Menu` icon) ở góc phải cùng, mở sheet dropdown chứa đầy đủ thông tin, điều hướng và nút Đăng xuất màu đỏ.
+  - Với role học viên (`hoc_vien`) trên điện thoại: ẩn toàn bộ nút phụ (`hidden md:flex`), chỉ hiển thị đúng 4 nút duy nhất: `[Ôn tập]`, `[Lớp của tôi]`, `[Chuông thông báo]` và `[Menu 3 gạch]`.
+- **Quy Trình Xóa Nhánh Git Cũ & Dọn Dẹp Remote Cache An Toàn (`[type=pattern]`):**
+  - Khi người dùng yêu cầu xóa các nhánh cũ: xóa local (`git branch -D <name>`), xóa remote (`git push origin --delete <name>`), và bắt buộc chạy `git fetch --prune` để dọn sạch toàn bộ tham chiếu `remotes/origin/...` đã bị xóa trên GitHub.
