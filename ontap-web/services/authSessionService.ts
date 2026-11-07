@@ -309,7 +309,7 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
 /**
  * Hiện cảnh báo cho user biết mỗi tài khoản chỉ dùng 1 máy
  */
-const showSingleDeviceWarning = async () => {
+export const showSingleDeviceWarning = async () => {
     try {
         const { default: Swal } = await import('sweetalert2');
         Swal.fire({

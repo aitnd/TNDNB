@@ -261,7 +261,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                         <div className="flex items-center gap-2 mt-1">
                                             {userProfile?.role && <MiniRoleBadge role={userProfile.role} />}
                                             <span className="text-xs text-muted-foreground truncate">
-                                                {userProfile.email || userProfile.username || ''}
+                                                {userProfile.email || (userProfile as any).username || ''}
                                             </span>
                                         </div>
                                     </div>

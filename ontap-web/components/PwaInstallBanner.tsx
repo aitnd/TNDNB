@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Smartphone, X, Share, PlusSquare, Check } from 'lucide-react';
+import { Smartphone, X, Share, PlusSquare } from 'lucide-react';
 
 const DISMISS_KEY = 'ontap_pwa_prompt_dismissed_until';
 const DISMISS_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 ngày
