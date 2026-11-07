@@ -267,5 +267,38 @@ describe('Console Errors & TinyMCE License Fixes (TDD Suite)', () => {
       expect(content).toMatch(/hidden\s+md:flex[^"]*['"][\s\S]*?Thi trực tuyến|Thi trực tuyến[\s\S]*?hidden\s+md:flex/);
     });
   });
+
+  describe('Phase 03: Smart App Banner & PWA Add to Home Screen (Plan 261107-0620)', () => {
+    it('TC-23: ontap-web/components/PwaInstallBanner.tsx must handle standalone check, beforeinstallprompt, and iOS guide', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/PwaInstallBanner.tsx');
+      expect(fs.existsSync(filePath)).toBe(true);
+
+      const content = fs.readFileSync(filePath, 'utf8');
+      // Phải kiểm tra chế độ standalone để tự động ẩn khi app đã cài đặt
+      expect(content).toMatch(/display-mode:\s*standalone/);
+      // Phải xử lý sự kiện beforeinstallprompt cho Android
+      expect(content).toMatch(/beforeinstallprompt/);
+      // Phải có cơ chế hướng dẫn iOS Thêm vào màn hình chính
+      expect(content).toMatch(/Thêm vào màn hình chính|Thêm vào MH chính/);
+    });
+
+    it('TC-24: ontap-web/components/PwaInstallBanner.tsx must save 7-day dismiss memory into localStorage', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/PwaInstallBanner.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Phải lưu localStorage key ontap_pwa_prompt_dismissed_until khi đóng banner
+      expect(content).toMatch(/ontap_pwa_prompt_dismissed_until/);
+      expect(content).toMatch(/localStorage\.setItem/);
+    });
+
+    it('TC-27: ontap-web/components/Dashboard.tsx must import and render PwaInstallBanner above StudentCard', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/Dashboard.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      expect(content).toMatch(/import\s*\{\s*PwaInstallBanner\s*\}\s*from\s*['"]\.\/PwaInstallBanner['"]/);
+      expect(content).toMatch(/<PwaInstallBanner[\s\S]*?<StudentCard/);
+    });
+  });
 });
+
 

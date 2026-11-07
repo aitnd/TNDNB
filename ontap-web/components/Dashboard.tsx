@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserProfile } from '../types';
 import StudentCard from './StudentCard';
+import { PwaInstallBanner } from './PwaInstallBanner';
 import { triggerHaptic } from '../utils/nativeUX';
 import { useAppStore } from '../stores/useAppStore';
 
@@ -80,8 +81,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                 {/* === ROW 2: Main Content (Bento Asymmetric 12-Col) === */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
 
-                    {/* === CỘT TRÁI (4 col): StudentCard + Nút phụ + Tiến bộ === */}
+                    {/* === CỘT TRÁI (4 col): PWA Banner + StudentCard + Nút phụ + Tiến bộ === */}
                     <div className="lg:col-span-4 flex flex-col items-center gap-4">
+                        {/* Banner Gợi Ý Cài Đặt PWA / Thêm Ra Màn Hình Chính (Mobile) */}
+                        <PwaInstallBanner />
+
                         {/* Thẻ Giáo viên/Học viên */}
                         <div className="w-full">
                             <StudentCard user={userProfile} />

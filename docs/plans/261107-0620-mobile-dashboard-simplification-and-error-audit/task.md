@@ -16,7 +16,7 @@
 
 - [x] **Phase 01: Kiểm toán lỗi console 5 ảnh, sửa Hydration Next.js & Đặt mặc định tích 2 ô LoginScreen**
 - [x] **Phase 02: Tối giản UI Dashboard mobile, Menu 3 gạch ngang & Triệt tiêu hỏi quyền/cảnh báo**
-- [ ] **Phase 03: Smart App Banner & Gợi ý Thêm vào Màn hình chính (PWA Add to Home Screen)**
+- [x] **Phase 03: Smart App Banner & Gợi ý Thêm vào Màn hình chính (PWA Add to Home Screen)**
 
 ---
 
@@ -77,23 +77,23 @@
 ### Phase 03: Banner Cài Đặt Ứng Dụng PWA / Đưa Ra Màn Hình Chính (PWA Add to Home Screen)
 > Chi tiết kỹ thuật: [`phase-03-smart-app-banner-and-pwa-prompt.md`](file:///d:/Antigravity/TNDNB/docs/plans/261107-0620-mobile-dashboard-simplification-and-error-audit/phase-03-smart-app-banner-and-pwa-prompt.md)
 
-- [ ] **Task 1: Xây Dựng Component `PwaInstallBanner.tsx`**
-  - [ ] **Step 1.1 (TDD RED)**: Viết test cases `TC-23` & `TC-24` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) kiểm tra xử lý standalone, `beforeinstallprompt`, hướng dẫn iOS và ghi nhớ ẩn 7 ngày.
-  - [ ] **Step 1.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-23|TC-24"` xác nhận FAIL do component chưa tồn tại.
-  - [ ] **Step 1.3 (TDD GREEN)**: Tạo mới [`ontap-web/components/PwaInstallBanner.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/PwaInstallBanner.tsx) theo đúng thiết kế thuần PWA (không dùng APK).
-  - [ ] **Step 1.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-23|TC-24"` xác nhận PASS 100%.
-  - [ ] **Step 1.5 (Commit)**: `git commit -m "feat(pwa): create PwaInstallBanner with native prompt and iOS home screen guide"`.
+- [x] **Task 1: Xây Dựng Component `PwaInstallBanner.tsx`**
+  - [x] **Step 1.1 (TDD RED)**: Viết test cases `TC-23` & `TC-24` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) kiểm tra xử lý standalone, `beforeinstallprompt`, hướng dẫn iOS và ghi nhớ ẩn 7 ngày.
+  - [x] **Step 1.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-23|TC-24"` xác nhận FAIL do component chưa tồn tại.
+  - [x] **Step 1.3 (TDD GREEN)**: Tạo mới [`ontap-web/components/PwaInstallBanner.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/PwaInstallBanner.tsx) theo đúng thiết kế thuần PWA (không dùng APK).
+  - [x] **Step 1.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-23|TC-24"` xác nhận PASS 100%.
+  - [x] **Step 1.5 (Commit)**: `git commit -m "feat(pwa): create PwaInstallBanner with native prompt and iOS home screen guide"`.
 
-- [ ] **Task 2: Tích Hợp `PwaInstallBanner` Vào Mobile Dashboard**
-  - [ ] **Step 2.1 (TDD RED)**: Viết test case `TC-27` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) kiểm tra `<PwaInstallBanner />` render phía trên `StudentCard`.
-  - [ ] **Step 2.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-27"` xác nhận FAIL.
-  - [ ] **Step 2.3 (TDD GREEN)**: Cập nhật [`ontap-web/components/Dashboard.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/Dashboard.tsx) render `<PwaInstallBanner />`.
-  - [ ] **Step 2.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-27"` xác nhận PASS 100%.
-  - [ ] **Step 2.5 (Commit)**: `git commit -m "feat(dashboard): integrate PwaInstallBanner above student card"`.
+- [x] **Task 2: Tích Hợp `PwaInstallBanner` Vào Mobile Dashboard**
+  - [x] **Step 2.1 (TDD RED)**: Viết test case `TC-27` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) kiểm tra `<PwaInstallBanner />` render phía trên `StudentCard`.
+  - [x] **Step 2.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-27"` xác nhận FAIL.
+  - [x] **Step 2.3 (TDD GREEN)**: Cập nhật [`ontap-web/components/Dashboard.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/Dashboard.tsx) render `<PwaInstallBanner />`.
+  - [x] **Step 2.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-27"` xác nhận PASS 100%.
+  - [x] **Step 2.5 (Commit)**: `git commit -m "feat(dashboard): integrate PwaInstallBanner above student card"`.
 
-- [ ] **Task 3: Toàn Bộ Kiểm Thử TDD, TypeCheck & Kiểm Tra Bất Biến Invariant 1**
-  - [ ] **Step 3.1**: Chạy toàn bộ test suite `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts` (TC-01 -> TC-27 PASS 100%).
-  - [ ] **Step 3.2**: Chạy kiểm tra tĩnh TypeScript `npx tsc --noEmit` (0 lỗi).
-  - [ ] **Step 3.3**: Chạy build sản phẩm `npm run build` xác nhận không có lỗi đóng gói.
-  - [ ] **Step 3.4**: Kiểm tra bất biến Invariant 1: `git diff ontap-web/components/ExamQuizScreen.tsx` === 0 bytes.
-  - [ ] **Step 3.5 (Final Commit)**: `git commit -m "feat(pwa): finalize mobile dashboard simplification and PWA home screen prompt"`.
+- [x] **Task 3: Toàn Bộ Kiểm Thử TDD, TypeCheck & Kiểm Tra Bất Biến Invariant 1**
+  - [x] **Step 3.1**: Chạy toàn bộ test suite `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts` (TC-01 -> TC-27 PASS 100%).
+  - [x] **Step 3.2**: Chạy kiểm tra tĩnh TypeScript `npx tsc --noEmit` (0 lỗi).
+  - [x] **Step 3.3**: Chạy build sản phẩm `npm run build` xác nhận không có lỗi đóng gói.
+  - [x] **Step 3.4**: Kiểm tra bất biến Invariant 1: `git diff ontap-web/components/ExamQuizScreen.tsx` === 0 bytes.
+  - [x] **Step 3.5 (Final Commit)**: `git commit -m "feat(pwa): finalize mobile dashboard simplification and PWA home screen prompt"`.
