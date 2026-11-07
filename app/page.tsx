@@ -1,7 +1,17 @@
 import { supabase } from '../utils/supabaseClient'
 import Link from 'next/link'
 import Sidebar from '../components/Sidebar'
-import FeaturedSlider from '../components/FeaturedSlider'
+import dynamic from 'next/dynamic'
+
+// Triệt tiêu React Hydration Mismatch #418, #425, #423 do Swiper Slider render client-side
+const FeaturedSlider = dynamic(() => import('../components/FeaturedSlider'), {
+  ssr: false,
+  loading: () => (
+    <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <p style={{ color: '#888' }}>Đang tải Slider...</p>
+    </div>
+  )
+})
 import PostImage from '../components/PostImage'
 import styles from './page.module.css'
 

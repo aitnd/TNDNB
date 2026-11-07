@@ -27,7 +27,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
   const [resetEmail, setResetEmail] = useState('');
 
   // Biometric States
-  const [rememberMe, setRememberMe] = useState(false);
+  // Mặc định tích cả 2 ô để người dùng tiện lợi không phải thao tác thủ công
+  const [rememberMe, setRememberMe] = useState(true);
   const [canBioLogin, setCanBioLogin] = useState(false);
 
   // Saved Accounts States

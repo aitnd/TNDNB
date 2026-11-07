@@ -194,4 +194,23 @@ describe('Console Errors & TinyMCE License Fixes (TDD Suite)', () => {
       expect(fs.existsSync(filePath)).toBe(true);
     });
   });
+
+  describe('Phase 01: Hydration Mismatch & Login Screen Defaults (Plan 261107-0620)', () => {
+    it('TC-17: app/page.tsx must dynamically import FeaturedSlider with ssr: false to prevent hydration mismatch', () => {
+      const filePath = path.resolve(rootDir, 'app/page.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      expect(content).toMatch(/dynamic\(\s*\(\)\s*=>\s*import\(['"]\.\.\/components\/FeaturedSlider['"]\),\s*\{\s*ssr:\s*false/);
+      expect(content).not.toMatch(/^import\s+FeaturedSlider\s+from\s+['"]\.\.\/components\/FeaturedSlider['"]/m);
+    });
+
+    it('TC-18: ontap-web/components/LoginScreen.tsx must initialize rememberMe and saveThisAccount to true by default', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/LoginScreen.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      expect(content).toMatch(/const\s*\[rememberMe,\s*setRememberMe\]\s*=\s*useState\s*\(\s*true\s*\)/);
+      expect(content).toMatch(/const\s*\[saveThisAccount,\s*setSaveThisAccount\]\s*=\s*useState\s*\(\s*true\s*\)/);
+    });
+  });
 });
+

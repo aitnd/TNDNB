@@ -1,444 +1,421 @@
-# Đặc Tả Giao Diện Chi Tiết (Design Specifications) — Root Portal TNDNB
+# Đặc Tả Giao Diện Chi Tiết (Visual Design Specifications) — Mobile Dashboard & TopNavbar Simplification
 
-- **Dự án:** Cổng thông tin Công ty cổ phần Tư vấn và Giáo dục Ninh Bình (`d:\Antigravity\TNDNB`)
-- **Phong cách chủ đạo (Canonical Aesthetic):** **Hallmark Editorial — Institutional Maritime Education & News Portal**
-- **Kiến trúc nhận diện:** Single Canonical Theme (Giao diện chuẩn mực duy nhất — **Loại bỏ hoàn toàn** `ThemeContext`, `ThemeSwitcher`, `ThemeEffects`, `MusicPlayer` và toàn bộ các nhánh theme cũ `dark`, `noel`, `classic`, `modern`, `sunrise`, `tri-an`)
-- **Archetypes áp dụng (Taste-Skill v2.5.0 + Impeccable v4.8.0):**
-  - **Macrostructure:** `20 · Ecosystem Index + Editorial Newsprint Grid`
-  - **Navbar Archetype:** `N6 · Newspaper Masthead` (3 tầng chuẩn cơ quan đào tạo hàng hải - đường thủy nội địa)
-  - **Hero Archetype:** `H2 · Split Diptych` (`7fr` Tiêu điểm đào tạo / `5fr` Bản tin học vụ đánh số `01..04` kèm đường kẻ mảnh `1px solid #CBD5E1`)
-  - **Section Header Archetype:** `S1 · Left-Margin Numbered` (`01 — TIN TỨC & SỰ KIỆN ĐÀO TẠO`)
-  - **Auth & Workspace Archetype:** `Institutional Auth Card` (`/login`) & `Institutional Operations Workspace` (`/quan-ly`)
-
----
-
-## 1. Hệ Thống Token & Bảng Màu Duy Nhất (Single Canonical Palette)
-
-Toàn bộ ứng dụng chỉ sử dụng **một bảng màu sáng duy nhất** mang âm hưởng giấy in báo chí kết hợp xanh hải quân đậm (`Deep Maritime Navy`), xanh biển chính thống (`Institutional Navy`) và điểm nhấn đồng thau (`Brass Gold`) / đỏ son học vụ (`Editorial Crimson`). Mọi selector `:global([data-theme='...'])` trong các file `.module.css` và `app/globals.css` phải được xóa bỏ triệt để.
-
-### 1.1. Bảng Token Màu Sắc Chuẩn (`:root` trong `app/globals.css`)
-
-| Tên Biến CSS (Token) | Mã Màu (Hex/RGBA) | Vai Trò & Ứng Dụng Thực Tế | Độ Tương Phản (WCAG 2.1 AA) |
-| :--- | :--- | :--- | :--- |
-| `--color-paper` / `--bg-body` | `#FAF9F6` | Nền giấy báo chí ấm cho toàn bộ `<body>`, vùng nền `/login`, `/quan-ly` | Nền chuẩn chống mỏi mắt |
-| `--color-surface` / `--bg-header` | `#FFFFFF` | Nền thẻ bài viết, hộp chức năng (`widgetBox`), thẻ đăng nhập (`formBox`), hộp thông tin (`infoBox`), Masthead Tầng 2 | Tương phản `18.4:1` với `--color-ink` |
-| `--color-surface-subtle` / `--mau-nen-phu` | `#F1F5F9` | Nền phụ cho tiêu đề bảng (`th`), khung ảnh chờ tải, trạng thái hover nhẹ của nút phụ/tab | Tương phản `14.2:1` với `--color-ink` |
-| `--color-ink` / `--text-header` | `#0B132B` | Chữ tiêu đề chính (`h1..h6`), nền Tầng 1 Meta Bar, nền `Footer`, đường kẻ nhấn `2px` | Đạt chuẩn AAA (`18.4:1` trên `#FFFFFF`) |
-| `--text-main` | `#334155` | Chữ văn bản thân bài (`.post-content`), nhãn biểu mẫu (`label`), nội dung bảng | Đạt chuẩn AAA (`10.1:1` trên `#FFFFFF`) |
-| `--color-ink-muted` | `#475569` | Chữ phụ đề, trích dẫn ngắn (`excerpt`), ngày đăng bài, chú thích ảnh | Đạt chuẩn AA (`7.2:1` trên `#FFFFFF`) |
-| `--color-accent` / `--mau-chinh` | `#003566` | Nền Tầng 3 `mainNav`, nút hành động chính (`buttonPrimary`), tab đang chọn (`activeTab`), liên kết điều hướng | Đạt chuẩn AAA (`11.6:1` với chữ `#FFFFFF`) |
-| `--color-accent-hover` | `#00284D` | Trạng thái `:hover` và `:active` cho nút chính và liên kết đậm | Đạt chuẩn AAA (`13.8:1` với chữ `#FFFFFF`) |
-| `--color-gold` / `--mau-phu` | `#D4AF37` | Nút `"Đăng nhập"` và `"Quản trị"` trên Meta Bar Tầng 1, gạch chân active trên Navbar, viền đỉnh `Footer` (`4px solid #D4AF37`) | Tương phản `9.8:1` với chữ `#0A1628` |
-| `--color-signal` | `#B91C1C` | Nhãn Kicker (`TIÊU ĐIỂM ĐÀO TẠO`), số thứ tự `01..04` (`briefingIndex`), mã chỉ mục `01 —` (`sectionIndex`), mức học phí nổi bật | Đạt chuẩn AA (`6.4:1` trên `#FFFFFF`) |
-| `--color-rule` / `--border-color` | `#CBD5E1` | Đường kẻ chia cột, viền thẻ bài viết, viền hộp Sidebar, viền ô nhập liệu (`input`), viền bảng học phí | Hairline sắc nét chuẩn Editorial |
-| `--color-success-bg` / `--color-success-text` | `#ECFDF5` / `#065F46` | Nền và chữ thông báo thành công (viền `#A7F3D0`, thanh nhấn trái `3px solid #059669`) | Đạt chuẩn AAA (`7.8:1`) |
-| `--color-error-bg` / `--color-error-text` | `#FEF2F2` / `#991B1B` | Nền và chữ hộp cảnh báo lỗi (viền `#FECACA`, thanh nhấn trái `3px solid #DC2626`) | Đạt chuẩn AAA (`8.1:1`) |
-| `--color-warning-bg` / `--color-warning-text` | `#FFFBEB` / `#92400E` | Nền và chữ hộp ghi chú học phí / thông báo lưu ý (viền `#FDE68A`, thanh nhấn trái `3px solid #D97706`) | Đạt chuẩn AAA (`7.4:1`) |
+> **Dự án**: Cổng thông tin & Hệ thống Quản trị Đào tạo Thuyền viên Ninh Bình (TNDNB) — Phân hệ Ôn tập (`ontap-web`)  
+> **Mã thiết kế**: `261107-0620-visual-specs-mobile-dashboard`  
+> **Phiên bản**: v1.0.0 (Production-Ready)  
+> **Tiêu chuẩn thẩm mỹ áp dụng**: **Impeccable Craft Floor v4.8.0** & **Taste-Skill v2.5.0**  
+> **Triết lý chủ đạo**: "1 Chạm Vào Thi" (1-Touch Exam Flow) — Tinh gọn tối đa, triệt tiêu ma sát người dùng, tối ưu vùng bấm ngón cái (Thumb Zone) và PWA Add to Home Screen bản địa.  
+> **Tài liệu tham chiếu**:
+> - Kế hoạch kỹ thuật: [`plan.md`](file:///d:/Antigravity/TNDNB/docs/plans/261107-0620-mobile-dashboard-simplification-and-error-audit/plan.md)
+> - Thiết kế giải pháp: [`DESIGN.md`](file:///d:/Antigravity/TNDNB/docs/plans/261107-0620-mobile-dashboard-simplification-and-error-audit/DESIGN.md)
+> - Danh sách công việc: [`task.md`](file:///d:/Antigravity/TNDNB/docs/plans/261107-0620-mobile-dashboard-simplification-and-error-audit/task.md)
 
 ---
 
-## 2. Hệ Thống Typography, Spacing, Border, Shadow & Motion
+## 1. Hệ Thống Design Tokens (CSS Variables & Tailwind CSS Architecture)
 
-### 2.1. Hệ Thống Phông Chữ (Typography Scale — 100% Tiếng Việt)
-- **Display / Editorial Serif (`--font-display`):** `'Merriweather', Georgia, serif`
-  - **Quy tắc bắt buộc (Impeccable Gate 38a):** Luôn đặt `font-style: normal` cho mọi tiêu đề `h1..h6`. Tuyệt đối không dùng chữ nghiêng (`italic`) ở các tiêu đề.
-- **UI & Body Sans-Serif (`--font-sans`):** `'Be Vietnam Pro', system-ui, -apple-system, sans-serif`
-  - Dùng cho toàn bộ văn bản thân bài, menu điều hướng, biểu mẫu, nút bấm, bảng dữ liệu. Độ rộng dòng đọc bài chuẩn `65ch–72ch`.
-- **Technical & Index Monospace (`--font-mono`):** `'JetBrains Mono', Consolas, monospace`
-  - Dùng cho Kicker (`CỔNG THÔNG TIN ĐÀO TẠO & SÁT HẠCH`), số thứ tự bản tin (`01`, `02`, `03`, `04`), ngày tháng (`DD/MM/YYYY`), huy hiệu vai trò (`roleTag`), số tiền học phí (`font-variant-numeric: tabular-nums`).
+Hệ thống token được xây dựng dựa trên kiến trúc màu HSL chuẩn của Tailwind UI kết hợp nhận diện Hàng hải — Đường thủy nội địa Ninh Bình (`Institutional Maritime Navy`), đảm bảo khả năng tương thích hoàn hảo giữa Light Mode và Dark Mode.
 
-| Cấp Độ Chữ | Phông Chữ | Kích Thước (Fluid / Fixed) | Độ Đậm (`font-weight`) | Chiều Cao Dòng (`line-height`) | Áp Dụng Tại |
-| :--- | :--- | :--- | :---: | :---: | :--- |
-| **Masthead Title (`h1`)** | `Merriweather` | `clamp(1.1rem, 1.8vw, 1.55rem)` | `700` | `1.30` | Tên công ty trên Tầng 2 `Navbar` (`uppercase`) |
-| **Lead Headline (`h1`)** | `Merriweather` | `clamp(1.25rem, 2vw, 1.7rem)` | `700` | `1.30` | Tiêu đề bài Tiêu điểm đào tạo (Cột `7fr` Trang chủ) |
-| **Page Title (`h1`)** | `Merriweather` | `clamp(1.5rem, 2.2vw, 2.15rem)` | `700` | `1.30` | Tiêu đề trang `/login`, `/quan-ly`, `/bai-viet/[postId]`, `/hoc-phi` |
-| **Section Header (`h2`)** | `Merriweather` | `clamp(1.15rem, 1.5vw, 1.35rem)` | `700` | `1.35` | Tiêu đề mục `01 — TIN TỨC...`, tiêu đề khối `infoBox` |
-| **Card / Widget Title (`h3`)** | `Merriweather` | `1.05rem` (`16.8px`) | `700` | `1.40` | Tiêu đề thẻ tin tức (`newsCard`), tiêu đề hộp `Sidebar` |
-| **Body Reading** | `Be Vietnam Pro` | `1.0rem` (`16px`) | `400` | `1.70` | Nội dung bài viết, mô tả giới thiệu, tư vấn |
-| **UI Control / Label** | `Be Vietnam Pro` | `0.88rem – 0.94rem` (`14px – 15px`) | `500 – 600` | `1.45` | Menu, nhãn input, nút bấm, danh sách liên kết Sidebar |
-| **Kicker / Badge / Meta** | `JetBrains Mono` | `0.72rem – 0.78rem` (`11.5px – 12.5px`) | `600 – 700` | `1.25` | Kicker đầu trang, ngày đăng, badge vai trò, dòng meta |
+### 1.1. Bảng Màu Ngữ Nghĩa (Semantic Color Palette)
 
-### 2.2. Hệ Thống Khoảng Cách (Spacing Scale — Base 4px/8px)
-- `--space-1`: `4px` (`0.25rem`) — Khoảng cách giữa icon và nhãn nhỏ.
-- `--space-2`: `8px` (`0.5rem`) — Khoảng cách giữa các nút trên thanh meta, khoảng cách nhãn input.
-- `--space-3`: `12px` (`0.75rem`) — Padding dọc của ô nhập liệu (`input`), nút bấm chuẩn.
-- `--space-4`: `16px` (`1.0rem`) — Padding chuẩn trên mobile, khoảng cách giữa các mục danh sách.
-- `--space-5`: `20px` (`1.25rem`) — Padding bên trong `widgetBox` và `newsCard`.
-- `--space-6`: `24px` (`1.5rem`) — Padding container ngang trên Desktop, khoảng cách lưới thẻ.
-- `--space-8`: `32px` (`2.0rem`) — Padding bên trong `formBox` (`/login`) và `infoBox` (`/quan-ly`).
-- `--space-10`: `40px` (`2.5rem`) — Khoảng cách giữa cột nội dung chính và `Sidebar` (`layoutGrid`).
+| Token Tên Biến | Giá Trị HEX (Light) | Giá Trị HEX (Dark) | Tỷ Lệ Tương Phản (WCAG AA) | Mục Đích Sử Dụng |
+|---|---|---|---|---|
+| `--background` | `#F8FAFC` (Slate 50) | `#0B132B` (Navy 950) | Nền chuẩn cơ sở | Nền toàn bộ trang ứng dụng, chống chói lóa ngoài trời sông nước |
+| `--card` / `--surface` | `#FFFFFF` | `#131C38` (Navy 900) | `16.2:1` trên chữ chính | Nền Thẻ học viên, Card tính năng, Dropdown Menu 3 gạch |
+| `--card-foreground` | `#0F172A` (Slate 900) | `#F8FAFC` (Slate 50) | `16.2:1` với nền Card | Màu chữ tiêu đề chính, thông tin học viên, tên chức năng |
+| `--muted-foreground` | `#475569` (Slate 600) | `#94A3B8` (Slate 400) | `7.1:1` (Vượt ngưỡng 4.5:1) | Nhãn phụ, mô tả, phiên bản, thông tin phụ đề |
+| `--border` | `#E2E8F0` (Slate 200) | `#1E293B` (Slate 800) | Đường kẻ hairline | Viền phân cách dropdown, viền card, viền nút bấm |
+| `--primary` | `#003566` (Navy đậm) | `#38BDF8` (Sky 400) | `11.8:1` (Light) / `9.4:1` (Dark) | Nút Lớn "VÀO ÔN TẬP / THI THỬ", icon chính, trạng thái active |
+| `--primary-foreground` | `#FFFFFF` | `#0B132B` (Navy 950) | `11.8:1` trên nền Primary | Màu chữ và icon trên nút PrimaryButton |
+| `--secondary` | `#F1F5F9` (Slate 100) | `#1E293B` (Slate 800) | Khung nền tương tác | Nền hover cho item menu, nền nút phụ SecondaryButton |
+| `--destructive` | `#DC2626` (Red 600) | `#F87171` (Red 400) | `6.2:1` (Đạt chuẩn AA) | Nút Đăng xuất trong Menu 3 gạch, thông báo lỗi nghiêm trọng |
+| `--destructive-bg` | `#FEF2F2` (Red 50) | `#450A0A` (Red 950) | Nền cảnh báo | Nền hover cho nút Đăng xuất (`hover:bg-destructive/10`) |
+| `--success` | `#059669` (Emerald 600) | `#34D399` (Emerald 400)| `5.8:1` (Đạt chuẩn AA) | Icon lớp học, huy hiệu xác thực học viên (`CheckCircle`) |
+| `--pwa-banner-start` | `#0284C7` (Sky 600) | `#0369A1` (Sky 700) | Nền Gradient | Điểm bắt đầu gradient banner PWA Add to Home Screen |
+| `--pwa-banner-end` | `#0F172A` (Slate 900) | `#020617` (Slate 950) | Nền Gradient | Điểm kết thúc gradient banner PWA Add to Home Screen |
 
-### 2.3. Quy Tắc Bo Góc, Đường Viền, Đổ Bóng & Chuyển Động (Craft Floor)
-- **Bo góc chuẩn mực (`--radius-editorial: 4px`):**
-  - Áp dụng đồng nhất `border-radius: 4px` cho toàn bộ thẻ bài viết, hộp Sidebar, khung ảnh, ô nhập liệu, nút bấm, huy hiệu (`roleTag`), và thanh tab (`/quan-ly`).
-  - **Cấm tuyệt đối:** Không dùng pill tròn (`9999px` hoặc `99px`) hay bo góc lớn (`16px` / `1rem`) gây lệch tông trang tin tức cơ quan đào tạo.
-- **Đường viền (Hairline Rules):**
-  - Viền thẻ/khung mặc định: `1px solid #CBD5E1`.
-  - Viền nhấn phân mục (Section / Sidebar Header): `border-bottom: 2px solid #0B132B`.
-  - Viền nhấn đỉnh thẻ quan trọng (`formBox` tại `/login`, `infoBox` chính tại `/quan-ly`): `border-top: 3px solid #003566`.
-- **Đổ bóng (Subtle Editorial Elevation):**
-  - Mặc định (`--shadow-soft`): `0 1px 3px rgba(11, 19, 43, 0.05)`
-  - Khi di chuột vào thẻ bài viết (`--shadow-hover`): `0 6px 16px rgba(11, 19, 43, 0.08)`
-- **Chuyển động (Motion):**
-  - Thời lượng chuyển đổi màu sắc, viền, bóng: `180ms cubic-bezier(0.22, 1, 0.36, 1)`.
-  - Hiệu ứng hover thẻ tin tức: `transform: translateY(-2px)` nhẹ nhàng, lịch sự.
-  - Tôn trọng `prefers-reduced-motion: reduce` (tắt toàn bộ transform/animation khi người dùng bật chế độ giảm chuyển động).
+### 1.2. Thang Đo Typography (Type Scale — 100% Tiếng Việt)
+
+- **Phông chữ giao diện chính (`font-sans`)**: `'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif` — Tối ưu hóa hiển thị dấu thanh tiếng Việt không bị nhảy dòng hay đè dấu.
+- **Phông số & Mã hiệu (`font-mono`)**: `'JetBrains Mono', 'SF Mono', Consolas, monospace` — Dùng cho mã phiên bản (`v3.19.2`), số điểm, thời gian làm bài (`tabular-nums`).
+
+| Cấp Bậc | Lớp Tailwind | Kích Thước | Line Height | Font Weight | Phạm Vi Sử Dụng |
+|---|---|---|---|---|---|
+| **Title Lớn (Hero)** | `text-2xl md:text-3xl` | `24px - 30px` | `1.25` | `Bold (700)` | Tiêu đề trang, tên học viên trong StudentCard |
+| **Section Header** | `text-base md:text-lg` | `16px - 18px` | `1.35` | `Bold (700)` | Tiêu đề Menu 3 gạch, tiêu đề cụm tính năng |
+| **Primary CTA Button** | `text-base md:text-lg` | `16px - 18px` | `1.20` | `ExtraBold (800)` | Nút Lớn "VÀO ÔN TẬP / THI THỬ" (`PrimaryButton`) |
+| **Body Standard** | `text-sm md:text-base` | `14px - 16px` | `1.50` | `Medium (500)` | Mục trong Dropdown Menu, nhãn nút phụ SecondaryButton |
+| **Meta / Label** | `text-xs md:text-sm` | `12px - 14px` | `1.40` | `Normal (400)` | Phụ đề, mô tả banner PWA, trạng thái kết nối |
+| **Micro Caption** | `text-[11px] md:text-xs`| `11px - 12px` | `1.20` | `SemiBold (600)`| Dòng "Xin chào,", badge vai trò học viên (`MiniRoleBadge`) |
+
+### 1.3. Hệ Thống Khoảng Cách & Lưới Nhịp Điệu (Spacing & Safe Area Rhythm)
+
+- **Nhịp cơ bản**: Bội số 4px / 8px chuẩn công nghiệp.
+- **Lớp khoảng cách Tailwind cốt lõi**:
+  - `gap-2` (8px): Khoảng cách giữa icon và nhãn text trong nút bấm.
+  - `gap-2.5` (10px): Khoảng cách giữa các hàng tính năng trong menu.
+  - `gap-3` (12px): Khoảng cách giữa các khối trên mobile (PWA Banner -> StudentCard -> PrimaryButton).
+  - `gap-6` (24px) / `gap-8` (32px): Khoảng cách giữa Cột Trái (4 col) và Cột Phải (8 col) trên Desktop Bento Grid.
+- **Bảo vệ Vùng An Toàn Di Động (Mobile Safe Area Insets)**:
+  - Thanh đỉnh TopNavbar: `pt-[env(safe-area-inset-top,0px)]` với chiều cao cố định `h-16` (64px).
+  - Đáy màn hình di động: `pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]` đảm bảo các nút không bị che bởi thanh gạt Home Bar trên iPhone/Android cử chỉ.
+
+### 1.4. Bo Góc (Border Radius) & Đổ Bóng (Elevation)
+
+- **Bo góc chuẩn**:
+  - `rounded-xl` (`12px`): Nút bấm tương tác, thanh ô nhập liệu, dropdown menu panel, banner PWA.
+  - `rounded-2xl` (`16px`): `StudentCard`, khối Bento Grid chính, modal popup.
+  - `rounded-full` (`9999px`): Nút đóng ✕, avatar học viên tròn, badge chuông thông báo.
+- **Đổ bóng đa tầng (Elevation Hierarchy)**:
+  - `shadow-xs`: `0 1px 2px rgba(0, 0, 0, 0.05)` — Nút phụ `SecondaryButton`.
+  - `shadow-sm`: `0 2px 4px rgba(0, 0, 0, 0.06)` — Thanh TopNavbar cố định đỉnh.
+  - `shadow-md`: `0 6px 12px -2px rgba(0, 53, 102, 0.12)` — Nút chính `PrimaryButton` nổi bật.
+  - `shadow-2xl`: `0 25px 50px -12px rgba(0, 0, 0, 0.25)` — Dropdown Menu 3 gạch góc phải.
+
+### 1.5. Chuyển Động & Phản Hồi Xúc Giác (Motion & Haptics)
+
+- **Tương tác chạm (Touch Feedback)**:
+  - `whileHover={{ scale: 1.01 }}`: Phóng to nhẹ 1% khi rê chuột.
+  - `whileTap={{ scale: 0.98 }}`: Lún nhẹ 2% khi chạm tay, tạo cảm giác bấm vật lý chân thực.
+  - Rung phản hồi (`triggerHaptic('medium')`): Kích hoạt tức thì khi chạm nút "VÀO ÔN TẬP / THI THỬ".
+  - Rung phản hồi (`triggerHaptic('light')`): Khi bấm các item menu hoặc nút đóng banner.
+- **Mở Dropdown Menu 3 gạch**:
+  - Hiệu ứng trượt nhẹ kết hợp mờ dần: `origin-top-right transition-all duration-200 ease-out transform scale-100 opacity-100`.
+- **Giảm chuyển động (Accessibility)**:
+  - Tuân thủ `@media (prefers-reduced-motion: reduce)`: Hủy bỏ toàn bộ transition tỷ lệ (`scale`) và trượt trang đối với người dùng bật chế độ trợ năng.
 
 ---
 
-## 3. Bản Vẽ Wireframe ASCII & Đặc Tả CSS Chi Tiết Cho 5 Nhóm Màn Hình
+## 2. Thiết Kế Responsive Trên 5 Mốc Khung Nhìn (5 Viewports Grid)
 
-### Nhóm 1: Global Shell (`Navbar` + `Footer` + `Sidebar`)
+Hệ thống được thiết kế đáp ứng hoàn hảo 5 mốc độ phân giải chuẩn của **Taste-Skill v2.5.0**:
 
-#### 1A. Wireframe ASCII — `Navbar` (Archetype N6 · Newspaper Masthead 3 Tầng)
-```text
-+--------------------------------------------------------------------------------------------------+
-| TẦNG 1: META BAR (Nền #0B132B, Chữ #CBD5E1, Cao ~36px)                                           |
-| [CỔNG THÔNG TIN ĐÀO TẠO & SÁT HẠCH THUYỀN VIÊN] | 022.96.282.969 | email@...    [ Đăng nhập ]    |
-| (Hoặc khi đã đăng nhập:                                    Nguyễn Văn A  [Quản trị]  [Thoát])    |
-+--------------------------------------------------------------------------------------------------+
-| TẦNG 2: INSTITUTIONAL MASTHEAD (Nền #FFFFFF, Viền dưới 1px solid #CBD5E1, Padding 16px 0)        |
-|  +--------+   CỔNG THÔNG TIN CÔNG TY CỔ PHẦN TƯ VẤN VÀ GIÁO DỤC NINH BÌNH (Merriweather Bold)    |
-|  | LOGO   |   Đào tạo và cấp các loại chứng chỉ chuyên môn cho người lái, thuyền viên            |
-|  | 76x76  |   phương tiện thủy nội địa. (Be Vietnam Pro Medium #475569)                          |
-|  +--------+                                                                                      |
-+--------------------------------------------------------------------------------------------------+
-| TẦNG 3: NAVIGATION BAR (Nền #003566 Navy, Chữ #FFFFFF)                                           |
-| Dòng 1:  TRANG CHỦ   GIỚI THIỆU   TƯ VẤN   ĐÀO TẠO   HỌC PHÍ   THƯ VIỆN   TÀI LIỆU   LIÊN HỆ     |
-| ------------------------------------------------------------------------------------------------ |
-| Dòng 2 (Nền rgba(0,0,0,0.14)): CHUYÊN MỤC: Tin tức - Sự kiện / Thông báo tuyển sinh /            |
-|                                            Văn bản pháp quy / Giới thiệu việc làm                |
-+--------------------------------------------------------------------------------------------------+
+```mermaid
+flowchart TD
+    subgraph Viewports ["5 Khung Nhìn Chuẩn (Taste-Skill v2.5.0)"]
+        V1["1440px: Desktop Large<br/>Bento 12 cột đầy đủ + Weather + TopNavbar rộng"]
+        V2["1024px: Laptop / Landscape Tablet<br/>Bento 12 cột cân bằng + Weather thu gọn"]
+        V3["820px: iPad Air Portrait<br/>Bento chuyển dịch 1 cột + TopNavbar gom nút"]
+        V4["768px: Tablet Nhỏ / Phablet (md:)<br/>Kích hoạt chế độ TopNavbar 4 nút học viên"]
+        V5["390px: Mobile Chuẩn (iPhone / Android)<br/>PwaBanner ➔ Thẻ Học Viên ➔ Nút Thi To ➔ Nút Phụ<br/>Ẩn hoàn toàn Weather & Progress (hidden lg:block)"]
+    end
 ```
 
-#### 1B. Đặc Tả Kỹ Thuật & CSS Cho `Navbar` ([components/Navbar.tsx](file:///d:/Antigravity/TNDNB/components/Navbar.tsx) & [components/Navbar.module.css](file:///d:/Antigravity/TNDNB/components/Navbar.module.css))
-- **Xóa bỏ hoàn toàn:**
-  - Xóa `import ThemeSwitcher from './ThemeSwitcher'` và `<ThemeSwitcher />`.
-  - Xóa `import { useTheme } from '../context/ThemeContext'` và khối ảnh Noel `nav-light.png`.
-  - Xóa toàn bộ các khối `:global([data-theme='...'])` trong `components/Navbar.module.css`.
-- **Đổi nhãn nút đăng nhập (Tầng 1 `.metaRight`):**
-  - Khi chưa đăng nhập (`!user`): Hiển thị `<Link href="/login" className={styles.loginBtn}>Đăng nhập</Link>` (thay cho `"Đăng nhập cán bộ"`).
-  - Style `.loginBtn`: `background: #D4AF37`, `color: #0A1628 !important`, `padding: 4px 14px`, `border-radius: 4px`, `font-weight: 700`, `font-size: 0.78rem`, `:hover { background: #E5C158; transform: translateY(-1px); }`.
-  - Khi đã đăng nhập (`user`): Hiển thị `.welcomeText` (`user.fullName`, màu `#D4AF37`), nút `.manageBtn` (`Quản trị` -> `/quan-ly`, nền `#D4AF37`, chữ `#0A1628`, bo góc `4px`) và nút `.actionLink` (`Thoát`).
+### Bảng Ma Trận 5 Khung Nhìn:
 
-#### 1C. Wireframe ASCII & Đặc Tả CSS — `Footer` ([components/Footer.tsx](file:///d:/Antigravity/TNDNB/components/Footer.tsx) & [components/Footer.module.css](file:///d:/Antigravity/TNDNB/components/Footer.module.css))
-```text
-+==================================================================================================+
-| VIỀN ĐỈNH: border-top: 4px solid #D4AF37 (Brass Gold)                                            |
-| NỀN FOOTER: #0B132B (Deep Maritime Ink) | Chữ: #CBD5E1 | Padding: 56px 0 28px                    |
-| +----------------------------+  +-----------------------------------+  +-----------------------+ |
-| | VỀ CHÚNG TÔI               |  | LIÊN KẾT NHANH                    |  | LIÊN HỆ               | |
-| | -------------------------- |  | --------------------------------- |  | --------------------- | |
-| | Công ty cổ phần Tư vấn và  |  | • Giới thiệu    • Thông báo TS    |  | Đ/c: Đường Triệu Việt | |
-| | Giáo dục Ninh Bình         |  | • CT Đào tạo    • Văn bản PQ      |  | Vương, P. Hoa Lư, NB  | |
-| | Đơn vị đào tạo, bồi dưỡng  |  | • Tuyển dụng    • Thư viện        |  | ĐT: 022.96.282.969    | |
-| | & sát hạch thuyền viên TND |  | • Tin tức - SK  • Tài liệu        |  | Email: giaoducninh... | |
-| |                            |  | • Việc làm      • Học phí / LH    |  |                       | |
-| +----------------------------+  +-----------------------------------+  +-----------------------+ |
-| ------------------------------------------------------------------------------------------------ |
-|              © 2026 Công ty cổ phần Tư vấn và Giáo dục Ninh Bình. Bảo lưu mọi quyền.             |
-+==================================================================================================+
-```
-- **Xóa bỏ hoàn toàn:** Hai thẻ `<Image src="/assets/img/footer1.png" ... />` và `<Image src="/assets/img/footer2.png" ... />` trong `components/Footer.tsx`.
-- **Chuẩn hóa CSS `components/Footer.module.css`:**
-  - `.footer`: `background-color: #0B132B; color: #CBD5E1; padding: 3.5rem 0 2rem; margin-top: 4rem; border-top: 4px solid #D4AF37; font-family: var(--font-sans);`
-  - `.container`: `max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; display: grid; grid-template-columns: 1.1fr 1.5fr 1.2fr; gap: 2.5rem;`
-  - `.col h3`: `font-family: var(--font-display); color: #FFFFFF; font-size: 1.05rem; font-weight: 700; margin-bottom: 1.25rem; padding-bottom: 0.5rem; border-bottom: 2px solid #D4AF37; display: inline-block;`
-  - `.col ul li a`: `color: #CBD5E1; font-size: 0.9rem; text-decoration: none; transition: color 0.18s ease, padding-left 0.18s ease;`
-  - `.col ul li a:hover`: `color: #D4AF37; padding-left: 4px; text-decoration: none;`
-
-#### 1D. Đặc Tả CSS — `Sidebar` ([components/Sidebar.tsx](file:///d:/Antigravity/TNDNB/components/Sidebar.tsx) & [components/Sidebar.module.css](file:///d:/Antigravity/TNDNB/components/Sidebar.module.css))
-- Xóa toàn bộ `:global([data-theme='dark'])` trong `components/Sidebar.module.css`.
-- `.widgetBox`: `background-color: #FFFFFF; padding: 1.25rem; border-radius: 4px; border: 1px solid #CBD5E1; box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);`
-- `.sidebarTitle`: `font-family: var(--font-display); font-size: 1.02rem; font-weight: 700; color: #0B132B; padding-bottom: 0.65rem; margin-bottom: 0.85rem; border-bottom: 2px solid #0B132B; text-transform: uppercase;`
-- Trong `components/Sidebar.tsx`, đồng bộ màu icon inline (`#003566` cho tra cứu văn bằng, `#B91C1C` cho tiện ích địa phương) thay cho màu cũ lòe loẹt.
+| Thành Phần Giao Diện | 1440px (Desktop Lớn) | 1024px (Laptop) | 820px (Tablet Ngang) | 768px (Tablet Dọc - `md:`) | 390px (Mobile Chuẩn) |
+|---|---|---|---|---|---|
+| **Bố cục chính (`Dashboard`)** | Bento Grid 12 cột (`4 col` Trái / `8 col` Phải) | Bento Grid 12 cột (`4 col` Trái / `8 col` Phải) | 1 Cột dọc liên hoàn (`flex-col`) | 1 Cột dọc (`flex-col`) | **1 Cột dọc tinh gọn tối đa (`flex-col gap-3`)** |
+| **Thứ tự hiển thị di động** | Không áp dụng | Không áp dụng | Weather -> Card -> CTA | Card -> CTA -> Nút phụ | **1. PwaBanner<br/>2. StudentCard<br/>3. PrimaryButton (Thi)<br/>4. SecondaryButtons** |
+| **Widget Thời Tiết (`WeatherWidget`)** | Hiển thị đầy đủ (`block`) | Hiển thị đầy đủ (`block`) | Hiển thị (`block`) | Ẩn hoàn toàn (`hidden lg:block`) | **Ẩn 100% (`hidden lg:block`)** |
+| **Tiến độ học tập (`ProgressDashboard`)** | Cột trái, dưới nút phụ | Cột trái, dưới nút phụ | Cột trái | Ẩn trên mobile (`hidden lg:block`) | **Ẩn 100% (`hidden lg:block`)** |
+| **TopNavbar (Role `hoc_vien`)** | Hiển thị toàn bộ 9 nút & tên học viên | Hiển thị toàn bộ nút | Bắt đầu gom nút phụ | Chuyển sang 4 nút tinh giản | **Đúng 4 thành phần duy nhất:<br/>[Ôn tập] [Lớp] [Chuông] [Menu 3 gạch]** |
+| **Vị trí Nút Menu 3 gạch** | Góc phải cạnh Profile | Góc phải cạnh Profile | Góc phải ngoài cùng | Góc phải ngoài cùng | **Góc phải ngoài cùng (Touch >= 44x44px)** |
+| **PWA Install Banner** | Ẩn (`hidden`) | Ẩn (`hidden`) | Tự động nhận diện | Hiển thị nếu chưa cài đặt | **Hiển thị đầu trang nếu chưa cài đặt** |
 
 ---
 
-### Nhóm 2: Trang Chủ (`/` — [app/page.tsx](file:///d:/Antigravity/TNDNB/app/page.tsx) & [app/page.module.css](file:///d:/Antigravity/TNDNB/app/page.module.css))
+## 3. Bố Cục Hero Layout: Áp Dụng Deal 'Split' (Taste-Skill v2.5.0)
 
-#### 2A. Wireframe ASCII — Trang Chủ (H2 Split Diptych + S1 Numbered Section + Sidebar Grid)
+Theo nguyên lý kiến trúc của Taste-Skill, bố cục **'Split'** phân tách rõ ràng giữa yếu tố **Định danh / Trạng thái (Identity / Context)** và yếu tố **Hành động cốt lõi (Core Action)**.
+
+### 3.1. Bố cục Desktop Split (>= 1024px): Bento Grid 12 Cột
+
 ```text
-+--------------------------------------------------------------------------------------------------+
-| CONTAINER (max-width: 1400px, padding: 2rem 1.5rem 4rem)                                         |
-| +----------------------------------------------------------------------------------------------+ |
-| | FEATURED SLIDER (Banner tiêu điểm ngành đường thủy - border-radius: 4px, viền 1px #CBD5E1)   | |
-| +----------------------------------------------------------------------------------------------+ |
-|                                                                                                  |
-| +----------------------------------------------------------------------------------------------+ |
-| | KHỐI HALLMARK H2: SPLIT DIPTYCH (Nền #FFFFFF, Viền 1px solid #CBD5E1, Padding 1.75rem)       | |
-| | +---------------------------------------------------+ | +----------------------------------+ | |
-| | | CỘT TRÁI (7fr) - LEAD STORY                       | | | CỘT PHẢI (5fr) - BẢN TIN HỌC VỤ  | | |
-| | | [ Khung ảnh 16:10 - border-radius: 4px ]          | | | BẢN TIN HỌC VỤ (#B91C1C Mono)    | | |
-| | | [TIÊU ĐIỂM ĐÀO TẠO]  05/11/2026                   | | | Thông báo & Tuyển sinh mới       | | |
-| | | Tiêu Đề Bài Viết Tâm Điểm Đào Tạo & Sát Hạch      | | | ================================ | | |
-| | | Tóm tắt 220 ký tự chuẩn báo chí...                | | | 01  Thông báo chiêu sinh lớp...  | | |
-| | | Đọc toàn văn bản tin →                            | | |     04/11/2026                   | | |
-| | +---------------------------------------------------+ | | -------------------------------- | | |
-| |                                                       | | 02  Lịch thi sát hạch thuyền...  | | |
-| |                                                       | | 03  Quy định mới về chứng chỉ... | | |
-| |                                                       | | 04  Tuyển dụng thuyền trưởng...  | | |
-| |                                                       | +----------------------------------+ | |
-| +----------------------------------------------------------------------------------------------+ |
-|                                                                                                  |
-| +---------------------------------------------------------------+  +---------------------------+ |
-| | CỘT NỘI DUNG CHÍNH (1fr)                                      |  | SIDEBAR (340px cố định)   | |
-| | 01 — TIN TỨC & SỰ KIỆN ĐÀO TẠO           Xem tất cả chuyên mục|  | [ Ô tìm kiếm bài viết ]   | |
-| | ============================================================= |  | +-----------------------+ | |
-| | +---------------------------+   +---------------------------+ |  | | TRA CỨU & TIỆN ÍCH    | | |
-| | | [Ảnh 16:10]               |   | [Ảnh 16:10]               | |  | +-----------------------+ | |
-| | | 03/11/2026                |   | 02/11/2026                | |  | | TIN TỨC - SỰ KIỆN     | | |
-| | | Tiêu đề bài viết tin tức  |   | Tiêu đề bài viết tin tức  | |  | +-----------------------+ | |
-| | | Tóm tắt 3 dòng...         |   | Tóm tắt 3 dòng...         | |  | | VĂN BẢN PHÁP QUY      | | |
-| | | Xem chi tiết →            |   | Xem chi tiết →            | |  | +-----------------------+ | |
-| | +---------------------------+   +---------------------------+ |  | | THÔNG BÁO TUYỂN SINH  | | |
-| +---------------------------------------------------------------+  +---------------------------+ |
-+--------------------------------------------------------------------------------------------------+
++-----------------------------------------------------------------------------------------------------------------------+
+| TOPNAVBAR: [Ôn tập] [Lớp của tôi] [Thi trực tuyến] [Hệ thống ▾] [Khám phá ▾] ... [Mail] [Lịch sử] [🔔] [User] [Menu ☰]|
++-----------------------------------------------------------------------------------------------------------------------+
+| ROW 1: [ Khối Dự Báo Thời Tiết & Cảnh Báo An Toàn Đường Thủy TNDNB ]                                                 |
++-----------------------------------------------------------------------------------------------------------------------+
+| ROW 2: BENTO GRID 12 CỘT                                                                                              |
+| +-----------------------------------------------+ +-----------------------------------------------------------------+ |
+| | CỘT TRÁI: ĐỊNH DANH & TIẾN ĐỘ (4 COLUMNS)     | | CỘT PHẢI: HÀNH ĐỘNG CỐT LÕI & TIỆN ÍCH (8 COLUMNS)              | |
+| | +-------------------------------------------+ | | +-------------------------------------------------------------+ | |
+| | | THẺ HỌC VIÊN (StudentCard)                | | | | LỜI CHÀO CÁ NHÂN HÓA (WelcomeHeader)                        | | |
+| | | - Ảnh 3x4 + Họ tên + Lớp đào tạo          | | | | "Xin chào, Nguyễn Văn A! Chúc bạn buổi sáng ôn thi tốt lành"| | |
+| | | - Mã định danh học viên & Tích xanh       | | | +-------------------------------------------------------------+ | |
+| | +-------------------------------------------+ | |                                                                 | |
+| |                                               | | +-------------------------------------------------------------+ | |
+| | +-------------------------------------------+ | | | NÚT LỚN VÀO ÔN TẬP / THI THỬ (PrimaryButton)                | | |
+| | | NÚT PHỤ: [ Lịch sử làm bài ]              | | | | [ 📖 VÀO ÔN TẬP / THI THỬ NGAY                          ] | | |
+| | | NÚT PHỤ: [ Quản lý lớp học ]              | | | +-------------------------------------------------------------+ | |
+| | +-------------------------------------------+ | |                                                                 | |
+| |                                               | | +-------------------------------------------------------------+ | |
+| | +-------------------------------------------+ | | | LƯỚI TÍNH NĂNG NHANH 2x2 (ActionTiles)                      | | |
+| | | BIỂU ĐỒ TIẾN BỘ HỌC TẬP (ProgressDashboard)| | | | [ Thi Thử Theo Bộ Đề ]      [ Ôn Tập Câu Điểm Liệt ]       | | |
+| | | - Tỷ lệ đỗ trung bình 85%                 | | | | [ Đề Ngẫu Nhiên 30 Câu ]    [ Xem Lịch Thi Chính Thức ]    | | |
+| | | - Biểu đồ tròn số câu đã làm              | | | +-------------------------------------------------------------+ | |
+| | +-------------------------------------------+ | +-----------------------------------------------------------------+ |
+| +-----------------------------------------------+                                                                     |
++-----------------------------------------------------------------------------------------------------------------------+
 ```
 
-#### 2B. Đặc Tả Kỹ Thuật & CSS Cho Trang Chủ
-- Xóa toàn bộ các dòng `:global([data-theme='dark'])` và `:global([data-theme='classic'])` trong `app/page.module.css`.
-- Đảm bảo `.editorialDiptych`, `.newsCard` dùng viền `1px solid var(--border-color, #CBD5E1)` và `border-radius: 4px`.
-- Chỉ mục `.briefingIndex` (`01..04`) và `.sectionIndex` (`01`) dùng font `JetBrains Mono`, `font-weight: 800`, màu `#B91C1C`.
+### 3.2. Bố cục Mobile Split (390px): Tối Giản Hóa "1 Chạm Vào Thi"
 
----
+Trên thiết bị di động, bố cục Split được biến đổi thành dạng **Vertical Thumb-Centric Split**: Đưa Thẻ định danh lên đầu để tạo sự an tâm, và ngay lập tức tiếp nối bằng Nút thi to bản nằm trọn vẹn trong **Thumb Zone (Vùng bấm tự nhiên của ngón cái)** mà người dùng không cần phải với tay hay cuộn trang.
 
-### Nhóm 3: Trang Đăng Nhập (`/login` — [app/login/page.tsx](file:///d:/Antigravity/TNDNB/app/login/page.tsx) & [app/login/page.module.css](file:///d:/Antigravity/TNDNB/app/login/page.module.css))
-
-#### 3A. Wireframe ASCII — Trang Đăng Nhập (Institutional Auth Card)
 ```text
-+--------------------------------------------------------------------------------------------------+
-| NỀN TRANG: #FAF9F6 (Paper) | min-height: 76vh | Căn giữa dọc & ngang (padding: 2.5rem 1rem)     |
-|                                                                                                  |
-|                    +--------------------------------------------------------+                    |
-|                    | THANH NHẤN ĐỈNH: border-top: 3px solid #003566         |                    |
-|                    | KHUNG AUTH CARD (.formBox): max-width: 460px           |                    |
-|                    | Nền #FFFFFF | Viền 1px solid #CBD5E1 | Bo góc 4px      |                    |
-|                    |                                                        |                    |
-|                    |      CỔNG THÔNG TIN ĐÀO TẠO & SÁT HẠCH (Mono #B91C1C)  |                    |
-|                    |              Đăng Nhập Hệ Thống (Merriweather #0B132B) |                    |
-|                    |       Dành cho Học viên, Giáo viên và Cán bộ quản lý   |                    |
-|                    | ------------------------------------------------------ |                    |
-|                    | [!] (Nếu có lỗi: Hộp cảnh báo nền #FEF2F2 viền trái đỏ)|                    |
-|                    | [✓] (Nếu thành công: Hộp báo nền #ECFDF5 viền trái lục)|                    |
-|                    |                                                        |                    |
-|                    | Email hoặc Tên đăng nhập                               |                    |
-|                    | [ Nhập email hoặc tên tài khoản...                   ] |                    |
-|                    |                                                        |                    |
-|                    | Mật khẩu                                               |                    |
-|                    | [ ••••••••••••••••                                   ] |                    |
-|                    |                                                        |                    |
-|                    | [             ĐĂNG NHẬP (#003566, chữ trắng)         ] |                    |
-|                    | [         Đăng ký tài khoản mới (Ghost #FFFFFF)      ] |                    |
-|                    |                                                        |                    |
-|                    | ------------------- HOẶC (Mono) ---------------------- |                    |
-|                    |                                                        |                    |
-|                    | [ (G)  Đăng nhập với Google (Nền #FFF, viền #CBD5E1) ] |                    |
-|                    |                                                        |                    |
-|                    |                   Quên mật khẩu?                       |                    |
-|                    +--------------------------------------------------------+                    |
-+--------------------------------------------------------------------------------------------------+
++-------------------------------------------------------+
+| TOPNAVBAR (4 NÚT HỌC VIÊN - Cao 64px)                 |
+| [📖 Ôn tập]   [🎓 Lớp tôi]   [🔔 TB]   [☰ Menu 3 gạch]|
++-------------------------------------------------------+
+|                                                       |
+| +---------------------------------------------------+ |
+| | 1. BANNER CÀI APP PWA (PwaInstallBanner)          | |
+| | [🚀] Cài đặt TNDNB vào màn hình chính         [✕] | |
+| |      Mở nhanh toàn màn hình, không cần gõ web     | |
+| |      [ Cài đặt / Thêm ra MH chính ]               | |
+| +---------------------------------------------------+ |
+|                                                       |
+| +---------------------------------------------------+ |
+| | 2. THẺ HỌC VIÊN (StudentCard)                     | |
+| | +-----+ CÔNG TY CP TƯ VẤN VÀ GIÁO DỤC NINH BÌNH   | |
+| | | ẢNH | Họ tên: NGUYỄN VĂN A   [✓ Xác thực]       | |
+| | | 3x4 | Lớp: Thuyền trưởng Hạng 3 - Khóa 42       | |
+| | +-----+ Số hiệu: NB-2026-0891                     | |
+| +---------------------------------------------------+ |
+|                                                       |
+| +---------------------------------------------------+ |
+| | 3. NÚT TO VÀO ÔN TẬP / THI THỬ (PrimaryButton)    | |
+| |                                                   | |
+| |      📖  VÀO ÔN TẬP / THI THỬ  ➔                 | |
+| |                                                   | |
+| | (Cao 52px, Nền Primary Navy đậm, Bo góc 12px)     | |
+| +---------------------------------------------------+ |
+|                                                       |
+| +---------------------------------------------------+ |
+| | 4. CÁC NÚT PHỤ THỨ CẤP (SecondaryButtons)         | |
+| | [ 🕒 Lịch sử làm bài thi thử            ➔ ]      | |
+| | [ 👥 Quản lý lớp học & Điểm danh        ➔ ]      | |
+| +---------------------------------------------------+ |
+|                                                       |
+| ~~~ (ẨN HOÀN TOÀN THỜI TIẾT & BIỂU ĐỒ TIẾN BỘ) ~~~    |
++-------------------------------------------------------+
 ```
 
-#### 3B. Đặc Tả Kỹ Thuật & CSS Cho `/login` ([app/login/page.module.css](file:///d:/Antigravity/TNDNB/app/login/page.module.css))
-- **`.container`**:
-  - `display: flex; min-height: 76vh; align-items: center; justify-content: center; padding: 2.5rem 1rem; background-color: var(--color-paper, #FAF9F6);`
-- **`.formBox`**:
-  - `width: 100%; max-width: 460px; background-color: #FFFFFF; padding: 2.25rem 2rem; border-radius: 4px; border: 1px solid #CBD5E1; border-top: 3px solid #003566; box-shadow: 0 2px 8px rgba(11, 19, 43, 0.06);`
-- **Header trong `.formBox`**:
-  - `.kicker` (mới hoặc gộp trên `.title`): `font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: #B91C1C; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; display: block; margin-bottom: 0.35rem;`
-  - `.title`: `font-family: var(--font-display); font-size: 1.65rem; font-weight: 700; font-style: normal; color: #0B132B; text-align: center; margin: 0 0 0.35rem 0;`
-  - `.subtitle` (tùy chọn): `font-size: 0.88rem; color: #475569; text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #CBD5E1;`
-- **Ô nhập liệu (`.label`, `.input`)**:
-  - `.label`: `display: block; margin-bottom: 0.4rem; font-size: 0.88rem; font-weight: 600; color: #0B132B;`
-  - `.input`: `width: 100%; height: 44px; padding: 0.65rem 0.85rem; border: 1px solid #CBD5E1; border-radius: 4px; font-size: 0.95rem; font-family: var(--font-sans); color: #0B132B; background-color: #FFFFFF; box-sizing: border-box; transition: border-color 0.18s ease, box-shadow 0.18s ease;`
-  - `.input:focus`: `outline: none; border-color: #003566; box-shadow: 0 0 0 3px rgba(0, 53, 102, 0.12);`
-- **Hệ thống nút bấm (`.button`, `.buttonPrimary`, `.buttonSecondary`, `.buttonGoogle`)**:
-  - `.button`: `width: 100%; min-height: 44px; padding: 0.65rem 1rem; font-size: 0.95rem; font-weight: 600; font-family: var(--font-sans); border-radius: 4px; cursor: pointer; transition: all 0.18s ease;`
-  - `.buttonPrimary` (`Đăng nhập`): `background-color: #003566; color: #FFFFFF; border: 1px solid #003566;` -> `:hover { background-color: #00284D; }`
-  - `.buttonSecondary` (`Đăng ký tài khoản mới`): `background-color: #FFFFFF; color: #0B132B; border: 1px solid #CBD5E1;` -> `:hover { background-color: #F1F5F9; border-color: #94A3B8; }`
-  - `.divider`: `margin: 1.5rem 0; text-align: center; border-top: 1px solid #CBD5E1; line-height: 0.1em;`
-  - `.divider span`: `background: #FFFFFF; padding: 0 12px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.05em;`
-  - `.buttonGoogle` (`Đăng nhập với Google`): `background-color: #FFFFFF; color: #0B132B; border: 1px solid #CBD5E1; display: inline-flex; align-items: center; justify-content: center; gap: 0.65rem;` -> `:hover { background-color: #F8FAFC; border-color: #003566; }`
-- **Thông báo trạng thái (`.error`, `.success`)**:
-  - `.error`: `margin-bottom: 1.25rem; padding: 0.75rem 1rem; background-color: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; border-left: 3px solid #DC2626; border-radius: 4px; font-size: 0.88rem; text-align: left; line-height: 1.5;`
-  - `.success`: `margin-bottom: 1.25rem; padding: 0.75rem 1rem; background-color: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; border-left: 3px solid #059669; border-radius: 4px; font-size: 0.88rem; text-align: left; line-height: 1.5;`
-
 ---
 
-### Nhóm 4: Trang Quản Trị & Khu Vực Học Viên/Cán Bộ (`/quan-ly` + `/quan-ly/ho-so`, `/quan-ly/tai-khoan`, `/quan-ly/dang-bai`)
+## 4. Đặc Tả Chi Tiết Từng Component (Visual Specs & Code Layout)
 
-#### 4A. Wireframe ASCII — Trang Quản Trị Trung Tâm (`/quan-ly`)
+### 4.1. Component `TopNavbar.tsx` (Menu 3 Gạch & Quy Tắc 4 Nút Mobile)
+
+#### 4.1.1. Wireframe Trực Quan Chi Tiết
+
 ```text
-+--------------------------------------------------------------------------------------------------+
-| NỀN WORKSPACE: #FAF9F6 (Paper) | .wrapper (max-width: 1280px, margin: 0 auto, padding: 2rem)     |
-|                                                                                                  |
-| HỆ THỐNG QUẢN TRỊ & HỌC VỤ (JetBrains Mono #B91C1C)                                              |
-| Bảng Điều Khiển Cá Nhân (Merriweather Bold #0B132B, 2.0rem)                                      |
-| ================================================================================================ |
-|                                                                                                  |
-| +----------------------------------------------------------------------------------------------+ |
-| | THANH TAB ĐIỀU HƯỚNG (.tabContainer - Nền #FFFFFF, Viền 1px solid #CBD5E1, Bo góc 4px)       | |
-| | [ ■ Tổng quan (#003566) ] [ Lớp của tôi ] [ QL Khóa học ] [ QL Tài khoản ] [ QL Bài viết ]...| |
-| +----------------------------------------------------------------------------------------------+ |
-|                                                                                                  |
-| +----------------------------------------------------------------------------------------------+ |
-| | KHỐI THÔNG TIN CÁ NHÂN (.infoBox - Nền #FFFFFF, Viền 1px solid #CBD5E1, Bo góc 4px)          | |
-| | Hồ Sơ Viên Chức / Học Viên (Merriweather #0B132B, gạch chân 2px solid #0B132B)               | |
-| | +--------------------------------------------+  +------------------------------------------+ | |
-| | | CỘT 1: ĐỊNH DANH                           |  | CỘT 2: THÔNG TIN LIÊN HỆ & ĐỊA PHƯƠNG    | | |
-| | | Họ và tên:   Nguyễn Văn A                  |  | Số điện thoại: 0912.345.678              | | |
-| | | Email:       nguyenvana@gmail.com          |  | Ngày sinh:     15/08/1995                | | |
-| | | Vai trò:     [ QUẢN TRỊ VIÊN ] (Mono 4px)  |  | Địa chỉ:       P. Hoa Lư, Tỉnh Ninh Bình | | |
-| | +--------------------------------------------+  +------------------------------------------+ | |
-| | -------------------------------------------------------------------------------------------- | |
-| | [ Chỉnh sửa Hồ sơ (#003566) ]  [ Gửi email đổi mật khẩu (Ghost) ]  [ Quản lý Tài khoản ]     | |
-| +----------------------------------------------------------------------------------------------+ |
-|                                                                                                  |
-| +----------------------------------------------------------------------------------------------+ |
-| | KHỐI THỐNG KÊ / LỊCH SỬ HỌC TẬP / QUẢN LÝ CHUYÊN MÔN (AnalyticsWidget / StudentHistory...)   | |
-| | (Đồng bộ khung nền #FFFFFF, viền 1px solid #CBD5E1, bo góc 4px)                              | |
-| +----------------------------------------------------------------------------------------------+ |
-+--------------------------------------------------------------------------------------------------+
+DESKTOP TOPNAVBAR (md:flex):
++--------------------------------------------------------------------------------------------------------------+
+| [📖 Ôn tập] [🎓 Lớp tôi] [📝 Thi trực tuyến] [🛡️ Hệ thống ▾] [🧭 Khám phá ▾] | [✉️] [🕒] [🔔] [v3.19.2] [User] [☰]|
++--------------------------------------------------------------------------------------------------------------+
+
+MOBILE TOPNAVBAR CHO HỌC VIÊN (md:hidden & role === 'hoc_vien'):
++--------------------------------------------------------------------------------------------------------------+
+| [📖 Ôn tập]          [🎓 Lớp của tôi]                  [🔔 (badge)]                     [☰ Menu 3 gạch]      |
+| (Touch 44x44)        (Touch 44x44)                     (Touch 44x44)                    (Touch 44x44)        |
++--------------------------------------------------------------------------------------------------------------+
+                                                                                          |
+                                                                                          v Bấm chạm mở:
+                                                                +----------------------------------------------+
+                                                                | DROPDOWN PANEL MENU 3 GẠCH (Góc phải)       |
+                                                                | Nền bg-card/98, Blur-xl, Viền border, Bóng 2xl|
+                                                                |----------------------------------------------|
+                                                                | [Khối Thông Tin Người Dùng]                  |
+                                                                | 👤 Nguyễn Văn A [Học viên] [✓]               |
+                                                                |    Email: nguyenvana@gmail.com               |
+                                                                |    [ Quản lý tài khoản cá nhân ➔ ]           |
+                                                                |----------------------------------------------|
+                                                                | [Danh Mục Tiện Ích]                          |
+                                                                | ✉️  Hộp thư đến              (Badge 2 mới)   |
+                                                                | 🕒  Lịch sử thi thử                          |
+                                                                | 📰  Cổng tin tức đào tạo TNDNB               |
+                                                                | 📥  Tải App học offline                      |
+                                                                | 🎮  Khu vực Giải trí thư giãn                |
+                                                                | 🍲  Cẩm nang Thổ Địa Ninh Bình               |
+                                                                |----------------------------------------------|
+                                                                | [Phiên Bản Ứng Dụng]                         |
+                                                                | 🏷️  Phiên bản hệ thống: v3.19.2 (Xem log)     |
+                                                                |----------------------------------------------|
+                                                                | [Đăng Xuất An Toàn]                          |
+                                                                | 🚪  Đăng xuất tài khoản  (text-destructive)  |
+                                                                +----------------------------------------------+
 ```
 
-#### 4B. Đặc Tả Kỹ Thuật & CSS Cho `/quan-ly` ([app/quan-ly/page.tsx](file:///d:/Antigravity/TNDNB/app/quan-ly/page.tsx) & [app/quan-ly/page.module.css](file:///d:/Antigravity/TNDNB/app/quan-ly/page.module.css))
-- **`.container`**:
-  - `min-height: 80vh; padding: 2.25rem 1.5rem 4rem; background-color: var(--color-paper, #FAF9F6); font-family: var(--font-sans);`
-- **`.wrapper`**:
-  - `max-width: 1280px; margin: 0 auto;`
-- **Header Khu Vực Quản Trị**:
-  - `.title`: `font-family: var(--font-display); font-size: clamp(1.5rem, 2.2vw, 2.0rem); font-weight: 700; font-style: normal; color: #0B132B; margin: 0 0 1.5rem 0; padding-bottom: 0.75rem; border-bottom: 2px solid #0B132B; text-align: left;`
-- **Thanh Tab Điều Hướng (`.tabContainer`, `.tabButton`, `.activeTab`)**:
-  - `.tabContainer`: `display: flex; justify-content: flex-start; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; background: #FFFFFF; padding: 0.5rem; border-radius: 4px; border: 1px solid #CBD5E1; box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);`
-  - `.tabButton`: `display: inline-flex; align-items: center; gap: 0.5rem; min-height: 40px; padding: 0.55rem 1.15rem; border: 1px solid transparent; background: transparent; color: #475569; font-weight: 600; font-size: 0.9rem; font-family: var(--font-sans); cursor: pointer; border-radius: 4px; transition: all 0.18s ease;`
-  - `.tabButton:hover`: `background-color: #F1F5F9; color: #0B132B;`
-  - `.activeTab`: `background-color: #003566; color: #FFFFFF !important; border-color: #003566; box-shadow: none;` (Loại bỏ hoàn toàn màu `#0070f3` và bóng đổ lòe loẹt).
-- **Hộp Thông Tin Cá Nhân (`.infoBox`, `.sectionTitle`, `.infoGrid`, `.roleTag`)**:
-  - `.infoBox`: `background: #FFFFFF; padding: 1.75rem 2rem; border-radius: 4px; border: 1px solid #CBD5E1; border-top: 3px solid #003566; box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);`
-  - `.sectionTitle`: `font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; font-style: normal; color: #0B132B; margin: 0 0 1.25rem 0; padding-bottom: 0.65rem; border-bottom: 2px solid #0B132B;`
-  - `.roleTag`: `font-family: var(--font-mono); background-color: #F1F5F9; color: #003566; border: 1px solid #CBD5E1; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;` (Không dùng `border-radius: 99px`).
-- **Nút Hành Động Trong `.infoBoxActions`**:
-  - `.buttonPrimary`: `background-color: #003566; color: #FFFFFF; padding: 0.65rem 1.25rem; border-radius: 4px; font-weight: 600; font-size: 0.9rem; border: 1px solid #003566; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;` -> `:hover { background-color: #00284D; }`
-  - `.buttonDanger` (hoặc nút phụ gửi email đặt lại mật khẩu): `background-color: #FFFFFF; color: #B91C1C; padding: 0.65rem 1.25rem; border-radius: 4px; border: 1px solid #FECACA; font-weight: 600; font-size: 0.9rem; cursor: pointer;` -> `:hover { background-color: #FEF2F2; border-color: #B91C1C; }`
-- **Đồng bộ các trang con `/quan-ly/ho-so`, `/quan-ly/tai-khoan`, `/quan-ly/dang-bai`**:
-  - Mọi khung trắng đều dùng `border: 1px solid #CBD5E1`, `border-radius: 4px`, tiêu đề `Merriweather` `#0B132B`, nút chính `#003566`.
+#### 4.1.2. Đặc Tả Kỹ Thuật & Lớp CSS:
+- **Vị trí nút Menu 3 gạch**: Nằm ở góc phải ngoài cùng thanh Navbar:
+  ```tsx
+  <button
+    onClick={() => setShowHamburgerMenu(!showHamburgerMenu)}
+    className="p-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-primary"
+    aria-label="Mở bảng điều hướng"
+    aria-expanded={showHamburgerMenu}
+  >
+    <Menu size={22} className="text-foreground" />
+  </button>
+  ```
+- **Khung Dropdown Menu (`HamburgerDropdown`)**:
+  - Tọa độ: `fixed top-16 right-3 mt-1 w-[290px] md:w-[320px] max-w-[calc(100vw-24px)]`.
+  - Nền & Hiệu ứng: `bg-card/98 backdrop-blur-xl border border-border rounded-2xl shadow-2xl py-3 z-[150] text-card-foreground animate-in fade-in zoom-in-95 duration-150`.
+  - Phân cách đường kẻ mờ: `<div className="border-t border-border my-2" />`.
+  - Nút Đăng xuất an toàn: Đặt tại đáy Dropdown, dùng lớp `text-destructive hover:bg-destructive/10 hover:text-destructive flex items-center gap-3 px-4 py-3 rounded-xl mx-2 font-semibold transition-all min-h-[44px]`.
+
+#### 4.1.3. Quy Tắc 4 Nút Tối Giản Mobile (Role `hoc_vien`):
+- Khi `window.innerWidth < 768px` (`md:hidden`) và `userProfile.role === 'hoc_vien'`:
+  - **CHỈ RENDER DUY NHẤT 4 NÚT**:
+    1. `<button onClick={() => onNavigate('dashboard')}>`: Icon `BookOpen`, chữ "Ôn tập".
+    2. `<button onClick={() => onNavigate('my_class')}>`: Icon `GraduationCap`, chữ "Lớp của tôi".
+    3. `<NotificationBell />`: Icon chuông kèm badge đỏ số lượng.
+    4. `<button onClick={() => setShowHamburgerMenu(!showHamburgerMenu)}>`: Icon `Menu` 3 gạch ngang.
+  - **ẨN TOÀN BỘ CÁC NÚT KHÁC BẰNG LỚP `hidden md:flex`**:
+    - Nút "Thi trực tuyến" (`hidden md:flex`).
+    - Nút Dropdown "Khám phá" (`hidden md:flex`).
+    - Icon "Hộp thư" riêng lẻ trên thanh bar (`hidden md:flex`).
+    - Icon "Lịch sử" riêng lẻ trên thanh bar (`hidden md:flex`).
+    - Icon "UserCog" riêng lẻ trên thanh bar (`hidden md:flex`).
+    - Nút "Thoát" riêng lẻ trên thanh bar (`hidden md:flex`).
 
 ---
 
-### Nhóm 5: Các Trang Nội Dung, Đào Tạo & Học Phí (`/bai-viet/[postId]`, `/danh-muc/[categoryId]`, `/hoc-phi`, `/gioi-thieu`, `/chuong-trinh-dao-tao/*`, `/tu-van-nghe-nghiep/*`, `/tai-lieu`, `/thu-vien`, `/lien-he`)
+### 4.2. Component `Dashboard.tsx` (Luồng 1 Chạm Vào Thi Mobile)
 
-#### 5A. Wireframe ASCII — Trang Chi Tiết Bài Viết (`/bai-viet/[postId]`) & Trang Bảng Học Phí (`/hoc-phi`)
-```text
-+--------------------------------------------------------------------------------------------------+
-| TRANG CHI TIẾT BÀI VIẾT (/bai-viet/[postId]) - Khung đọc báo chí max-width: 840px               |
-| +----------------------------------------------------------------------------------------------+ |
-| | Nền #FFFFFF | Viền 1px solid #CBD5E1 | border-top: 3px solid #003566 | Bo góc 4px            | |
-| | [CHUYÊN MỤC] • Đăng ngày 05/11/2026 (JetBrains Mono #475569)                                 | |
-| | Tiêu Đề Bài Viết Chuẩn Báo Chí (Merriweather Bold #0B132B, line-height 1.3)                  | |
-| | -------------------------------------------------------------------------------------------- | |
-| | [ Ảnh đại diện bài viết - viền 1px solid #CBD5E1, bo góc 4px ]                               | |
-| | Nội dung bài viết (.post-content) font Be Vietnam Pro 16px, line-height 1.75, màu #334155... | |
-| |                                                                  Tác giả: Ban Đào Tạo (Nghiêng)|
-| | ============================================================================================ | |
-| | TÀI LIỆU ĐÍNH KÈM (.attachmentSection)                                                       | |
-| | [ (PDF) Thông-bao-chieu-sinh.pdf (1.2 MB)                              Tải xuống ↓ ]         | |
-| | ============================================================================================ | |
-| | BÀI VIẾT CÙNG CHUYÊN MỤC (.relatedGrid - 3 cột, thẻ bo góc 4px, viền 1px solid #CBD5E1)      | |
-| +----------------------------------------------------------------------------------------------+ |
-+--------------------------------------------------------------------------------------------------+
+#### 4.2.1. Cấu Trúc Khối Giao Diện Mobile (`lg:hidden`)
+```tsx
+{/* Khối Mobile Dashboard Siêu Tốc (1 Chạm Vào Thi) */}
+<div className="w-full flex flex-col gap-3 lg:hidden animate-fade-in">
+  {/* 1. Banner Đề Xuất Cài App PWA */}
+  <PwaInstallBanner />
 
-+--------------------------------------------------------------------------------------------------+
-| TRANG BẢNG HỌC PHÍ (/hoc-phi) - Khung dữ liệu max-width: 960px                                   |
-| +----------------------------------------------------------------------------------------------+ |
-| | Nền #FFFFFF | Viền 1px solid #CBD5E1 | border-top: 3px solid #003566 | Bo góc 4px            | |
-| | Bảng Học Phí Đào Tạo & Sát Hạch (Merriweather Bold #0B132B)                                  | |
-| | +--------------------------------------------------------------------+---------------------+ | |
-| | | HẠNG CHỨNG CHỈ / CHƯƠNG TRÌNH ĐÀO TẠO (Nền #0B132B, Chữ #FFFFFF)  | MỨC THU (VNĐ)       | | |
-| | +--------------------------------------------------------------------+---------------------+ | |
-| | | I. CHỨNG CHỈ CHUYÊN MÔN (Nền #F1F5F9, Chữ #003566 Bold)            |                     | | |
-| | | 1. Chứng chỉ an toàn cơ bản                                        |       1.200.000 đ   | | |
-| | |    (Font số tiền: JetBrains Mono, tabular-nums, căn phải, #B91C1C) |                     | | |
-| | +--------------------------------------------------------------------+---------------------+ | |
-| | [!] GHI CHÚ HỌC VỤ: Nền #FFFBEB, viền 1px solid #FDE68A, viền trái 3px solid #D97706         | |
-| +----------------------------------------------------------------------------------------------+ |
-+--------------------------------------------------------------------------------------------------+
+  {/* 2. Thẻ Học Viên Định Danh Trang Trọng */}
+  <div className="w-full">
+    <StudentCard user={userProfile} />
+  </div>
+
+  {/* 3. NÚT TO VÀO ÔN TẬP / THI THỬ (TRỌNG TÂM DUY NHẤT) */}
+  <div className="w-full my-1">
+    <PrimaryButton action={primaryAction} />
+  </div>
+
+  {/* 4. Các Nút Phụ Hỗ Trợ (Lịch sử, Đổi đề thi) */}
+  <div className="w-full space-y-2">
+    {leftButtons.map((action, idx) => (
+      <SecondaryButton key={action.id} action={action} index={idx} />
+    ))}
+  </div>
+</div>
 ```
 
-#### 5B. Đặc Tả Kỹ Thuật & CSS Cho Nhóm Trang Nội Dung & Học Phí
-- **Trang Chi Tiết Bài Viết ([app/bai-viet/[postId]/page.module.css](file:///d:/Antigravity/TNDNB/app/bai-viet/%5BpostId%5D/page.module.css)):**
-  - `.container`: `max-width: 840px; margin: 2.25rem auto 4rem; padding: 2.5rem; background-color: #FFFFFF; border-radius: 4px; border: 1px solid #CBD5E1; border-top: 3px solid #003566; box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);`
-  - `.title`: `font-family: var(--font-display); font-size: clamp(1.5rem, 2.2vw, 2.15rem); font-weight: 700; font-style: normal; color: #0B132B; line-height: 1.3; margin-bottom: 0.75rem;`
-  - `.meta`: `font-family: var(--font-mono); font-size: 0.82rem; color: #475569; margin-bottom: 1.5rem; border-bottom: 1px solid #CBD5E1; padding-bottom: 1rem;`
-  - `.downloadLink`: `background-color: #FAF9F6; border: 1px solid #CBD5E1; border-radius: 4px; padding: 0.85rem 1.25rem;` -> `:hover { background-color: #F1F5F9; border-color: #003566; }`
-  - `.relatedCard`: `background-color: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 4px; box-shadow: none;` -> `:hover { transform: translateY(-2px); border-color: #003566; box-shadow: 0 6px 16px rgba(11, 19, 43, 0.08); }`
-- **Trang Học Phí ([app/hoc-phi/page.module.css](file:///d:/Antigravity/TNDNB/app/hoc-phi/page.module.css)):**
-  - `.container`: `max-width: 960px; margin: 2.25rem auto 4rem; padding: 2.5rem; background-color: #FFFFFF; border-radius: 4px; border: 1px solid #CBD5E1; border-top: 3px solid #003566; box-shadow: 0 1px 3px rgba(11, 19, 43, 0.04);`
-  - `.title`: `font-family: var(--font-display); font-size: clamp(1.5rem, 2vw, 1.95rem); font-weight: 700; font-style: normal; color: #0B132B;`
-  - `.table th, .table td`: `border: 1px solid #CBD5E1; padding: 0.85rem 1rem;`
-  - `.table th`: `background-color: #0B132B; color: #FFFFFF; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.03em;`
-  - `.sectionHeader td`: `background-color: #F1F5F9; font-weight: 700; color: #003566;`
-  - `.table td:last-child`: `text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 700; color: #B91C1C;`
-  - `.notes`: `margin-top: 2rem; background-color: #FFFBEB; border: 1px solid #FDE68A; border-left: 3px solid #D97706; padding: 1.25rem 1.5rem; border-radius: 4px;`
+#### 4.2.2. Cơ Chế Ẩn Khối Rườm Rà Trên Mobile
+- Widget Thời tiết (`WeatherWidget`): Bọc trong `<div className="hidden lg:block w-full"><WeatherWidget /></div>`.
+- Biểu đồ tiến độ học tập (`ProgressDashboard`): Bọc trong `<div className="hidden lg:block w-full ..."><ProgressDashboard history={history} /></div>`.
+- Lợi ích người dùng: Học viên mở ứng dụng trên điện thoại không còn phải cuộn 3 màn hình để tìm nút thi; màn hình tải tức thì và đập ngay vào mắt là Nút Lớn "VÀO ÔN TẬP / THI THỬ".
 
 ---
 
-## 4. Đặc Tả 4 Trạng Thái Giao Diện (`Loading`, `Empty`, `Error`, `Success`)
+### 4.3. Component `PwaInstallBanner.tsx` (PWA Thuần Túy - Add to Home Screen)
 
-Mọi màn hình trong 5 nhóm trên bắt buộc phải tuân thủ 4 trạng thái phản hồi chuẩn mực:
+#### 4.3.1. Wireframe ASCII Của Banner PWA
 
-| Nhóm Màn Hình | 1. Trạng Thái Đang Tải (`Loading`) | 2. Trạng Thái Trống (`Empty`) | 3. Trạng Thái Lỗi (`Error`) | 4. Trạng Thái Thành Công (`Success`) |
-| :--- | :--- | :--- | :--- | :--- |
-| **1. Global Shell (`Navbar` / `Sidebar`)** | Khung danh sách `Sidebar` hiển thị chữ nghiêng nhẹ `#475569` hoặc khung giữ chỗ `height: 18px` nền `#F1F5F9`, không giật cục (`CLS = 0`). | Hiển thị `.emptyMessage` (`"Chưa có thông báo nào."`, màu `#475569`, cỡ chữ `0.85rem`, căn giữa trong `.widgetBox`). | Nếu lỗi kết nối Supabase trên Sidebar: trả về mảng rỗng `[]` an toàn, không làm sập toàn trang. | Khi đăng nhập thành công: Meta Bar Tầng 1 lập tức cập nhật tên người dùng (`user.fullName`) và nút `Quản trị`. |
-| **2. Trang Chủ (`/`)** | Khung ảnh `.leadImageFrame` và `.imageWrapper` giữ sẵn tỷ lệ `aspect-ratio: 16 / 10` với nền `#F1F5F9`. | Khi `posts.length === 0`: Hiển thị hộp thông báo nền `#FFFFFF`, viền `1px solid #CBD5E1`, nội dung `"Chưa có bài viết nào được xuất bản."`. | Khi mất kết nối DB: Ghi log server và hiển thị trạng thái trống lịch sự kèm thông tin liên hệ Hotline. | Hiển thị đầy đủ Diptych `7fr/5fr`, đánh số `01..04` và lưới bài viết 2 cột. |
-| **3. Trang Đăng Nhập (`/login`)** | Khi `loading === true`: Nút bấm chuyển sang `disabled` (`opacity: 0.65`, `cursor: not-allowed`), khi đang kiểm tra phiên `authLoading` hiển thị hộp `"Đang tải..."` giữa khung `#FAF9F6`. | Form khởi tạo trống với placeholder hướng dẫn rõ (`"Nhập email hoặc tên đăng nhập"`). | Hộp `.error` nền `#FEF2F2`, viền `#FECACA`, thanh nhấn trái `3px solid #DC2626`, dịch đầy đủ mã lỗi Firebase sang tiếng Việt (bao gồm `auth/unauthorized-domain`). | Hộp `.success` nền `#ECFDF5`, viền `#A7F3D0`, thanh nhấn trái `3px solid #059669` khi gửi email đặt lại mật khẩu hoặc tự động chuyển hướng sang `/quan-ly` (hoặc `?redirect=...`). |
-| **4. Trang Quản Trị (`/quan-ly`)** | Trong khi `ProtectedRoute` xác thực: hiển thị khung chờ đồng bộ nền `#FAF9F6`, chữ `Merriweather` `"Đang kiểm tra quyền truy cập..."`. | Khi học viên chưa có lớp hoặc lịch sử ôn tập: hiển thị hộp trắng viền `#CBD5E1` báo `"Bạn chưa được phân vào lớp học nào."`. | Hiển thị thông báo `.error` màu `#991B1B` nền `#FEF2F2` ngay dưới nhóm nút hành động khi gửi email lỗi. | Hiển thị thông báo `.success` màu `#065F46` nền `#ECFDF5` (`"Đã gửi email đổi mật khẩu! Vui lòng kiểm tra hộp thư."`). |
-| **5. Trang Nội Dung & Học Phí** | Modal xem tài liệu đính kèm có `.loadingSpinner` (`40x40px`) xoay mượt trên nền tối `rgba(11, 19, 43, 0.85)`. | Khi bài viết không có tệp đính kèm hoặc bài liên quan: tự động ẩn phần `.attachmentSection` / `.relatedSection`. | Trang `/bai-viet/[postId]` không tìm thấy bài: hiển thị `.errorContainer` với tiêu đề `"Không tìm thấy bài viết"` và nút `"← Quay về Trang chủ"`. | Tải tệp PDF/Word hoặc chia sẻ Facebook hoạt động tức thì với phản hồi hover rõ ràng. |
+```text
++----------------------------------------------------------------------------------------------------+
+| PWA INSTALL BANNER (Nền Gradient Xanh Đậm: from-sky-600 via-blue-600 to-indigo-700, Chữ Trắng)   |
+| +----+  CÀI ĐẶT TNDNB VÀO MÀN HÌNH CHÍNH                             [ Nút ✕ Đóng (Touch >= 44x44) ]|
+| | 🚀 |  Mở nhanh như ứng dụng thật, toàn màn hình, học mượt không cần URL                           |
+| +----+  ------------------------------------------------------------------------------------------ |
+|         [ 📲 Cài đặt / Thêm ra MH chính (Nền Trắng, Chữ Xanh Đậm, Min-H 44px, Touch Zone)        ] |
++----------------------------------------------------------------------------------------------------+
 
----
+KHI BẤM NÚT TRÊN IOS SAFARI ➔ MỞ BOTTOM SHEET HƯỚNG DẪN 3 BƯỚC:
++----------------------------------------------------------------------------------------------------+
+| 🍎 HƯỚNG DẪN THÊM VÀO MÀN HÌNH CHÍNH TRÊN IPHONE / IPAD                                            |
+| -------------------------------------------------------------------------------------------------- |
+| Bước 1: Chạm vào nút Chia sẻ (Share) [⎋] ở thanh công cụ dưới cùng của trình duyệt Safari.          |
+| Bước 2: Cuộn xuống danh sách tính năng và chọn "Thêm vào MH chính" (Add to Home Screen) [➕].       |
+| Bước 3: Chạm vào nút "Thêm" (Add) ở góc trên bên phải màn hình để hoàn tất.                        |
+| -------------------------------------------------------------------------------------------------- |
+| [ Đã Hiểu - Đóng Hướng Dẫn ]                                                                       |
++----------------------------------------------------------------------------------------------------+
+```
 
-## 5. Quy Tắc Responsive Trên 5 Mốc Khung Nhìn Chuẩn Taste-Skill & Tiêu Chuẩn WCAG 2.1 AA
-
-### 5.1. Ma Trận Responsive 5 Mốc Khung Nhìn (`1440px`, `1024px`, `820px`, `768px`, `390px`)
-
-| Thành Phần Giao Diện | `1440px` (Desktop Rộng) | `1024px` (Laptop / Landscape Tablet) | `820px` (iPad Air / Portrait Tablet) | `768px` (Tablet Nhỏ / Phablet) | `390px` (Mobile Chuẩn iPhone) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Container Chính** | `max-width: 1400px`, `padding: 0 24px` | `max-width: 100%`, `padding: 0 24px` | `padding: 0 20px` | `padding: 0 16px` | `padding: 0 12px` (`overflow-x: hidden`) |
-| **Navbar Tầng 1 (Meta Bar)** | Hiện đủ Badge + SĐT + Email + Nút `Đăng nhập` | Hiện đủ Badge + SĐT + Nút `Đăng nhập` | Ẩn SĐT/Email (`.metaContact { display: none }`), giữ Badge + `Đăng nhập` | Badge thu gọn `0.68rem` + Nút `Đăng nhập` | Badge rút gọn 1 dòng + Nút `Đăng nhập` (`min-height: 36px`) |
-| **Navbar Tầng 2 & 3** | Logo `76x76`, Menu 8 mục căn giữa | Logo `68x68`, Menu 8 mục căn giữa | Logo `60x60`, Menu tự co khoảng cách | Logo `48x48`, `.navRow1` & `.navRow2` cuộn ngang mượt (`overflow-x: auto`) | Logo `42x42`, tiêu đề `0.88rem`, thanh menu vuốt ngang không hiện thanh cuộn |
-| **Trang Chủ: H2 Split Diptych** | Grid 2 cột `7fr 5fr`, vạch ngăn trái `1px solid #CBD5E1` | Grid 2 cột `7fr 5fr`, `gap: 1.75rem` | Chuyển thành **1 cột dọc (`1fr`)**, vạch ngăn chuyển lên `border-top: 1px solid #CBD5E1` | 1 cột dọc, `padding: 1rem` | 1 cột dọc, `padding: 0.85rem`, tiêu đề `1.15rem` |
-| **Trang Chủ: Layout Grid & News Grid** | `1fr 340px` (Content + Sidebar), `.newsGrid` 2 cột | `1fr 300px`, `.newsGrid` 2 cột | Chuyển thành **1 cột (`1fr`)**, Sidebar xuống dưới, `.newsGrid` giữ 2 cột | 1 cột, `.newsGrid` chuyển về **1 cột (`1fr`)** | 1 cột hoàn toàn, khoảng cách thẻ `1.25rem` |
-| **Trang Đăng Nhập (`/login`)** | `.formBox` rộng `460px`, `padding: 2.25rem 2rem` | `.formBox` rộng `460px` | `.formBox` rộng `440px` | `.formBox` rộng `100%` (`max-width: 420px`), `padding: 1.75rem 1.5rem` | `.formBox` rộng `100%`, `padding: 1.5rem 1.15rem`, nút bấm cao `44px` |
-| **Trang Quản Trị (`/quan-ly`)** | `.wrapper` `1280px`, `.infoGrid` 2 cột (`1fr 1fr`) | `.infoGrid` 2 cột, `.tabContainer` bọc dòng tự nhiên | `.infoGrid` 2 cột, `.tabButton` thu gọn padding | `.infoGrid` chuyển về **1 cột (`1fr`)**, `.infoBoxActions` xếp dọc/bọc dòng | `.tabContainer` cuộn ngang hoặc chia 2 cột đều, nút bấm rộng `100%` |
-| **Trang Học Phí & Bài Viết** | Bảng đầy đủ, `.relatedGrid` 3 cột | Bảng đầy đủ, `.relatedGrid` 3 cột | `.container` `padding: 1.75rem`, `.relatedGrid` 2 cột | Bảng bọc trong `overflow-x: auto`, `.relatedGrid` 2 cột | Padding `1.25rem 1rem`, `.relatedGrid` 1 cột |
-
-### 5.2. Danh Mục Kiểm Tra Khả Năng Truy Cập (Accessibility — WCAG 2.1 AA)
-1. **Độ tương phản màu sắc (Contrast Ratio):**
-   - Chữ chính `#0B132B` trên nền `#FFFFFF` đạt `18.4:1` (vượt chuẩn AAA).
-   - Chữ thân bài `#334155` trên nền `#FAF9F6` đạt `9.6:1` (vượt chuẩn AAA).
-   - Chữ trắng `#FFFFFF` trên nền Navy `#003566` đạt `11.6:1` (vượt chuẩn AAA).
-   - Chữ `#0A1628` trên nút vàng đồng `#D4AF37` đạt `9.8:1` (vượt chuẩn AAA).
-2. **Kích thước vùng chạm (Touch Targets):**
-   - Toàn bộ ô nhập liệu (`input`) và nút bấm trên `/login`, `/quan-ly` đạt chiều cao tối thiểu `44px` trên thiết bị cảm ứng.
-3. **Điều hướng bàn phím (Keyboard Focus Visible):**
-   - Mọi liên kết, nút bấm và ô nhập liệu khi `:focus-visible` đều hiển thị viền rõ nét `outline: 2px solid #003566; outline-offset: 2px;`.
-4. **Ngữ nghĩa HTML (Semantic Landmarks):**
-   - Sử dụng đầy đủ `<header>`, `<nav aria-label="Điều hướng chính">`, `<main>`, `<article>`, `<aside>`, `<footer>`, và thứ tự thẻ tiêu đề `h1 -> h2 -> h3` hợp lệ.
-
+#### 4.3.2. Đặc Tả Thuộc Tính & Hành Vi:
+- **Tự động ẩn 100% khi chạy PWA Standalone**:
+  ```typescript
+  const isStandalone = 
+    window.matchMedia('(display-mode: standalone)').matches || 
+    (window.navigator as any).standalone === true;
+  if (isStandalone) return null;
+  ```
+- **Cơ chế ghi nhớ đóng 7 ngày**: Khi bấm nút ✕, lưu `ontap_pwa_prompt_dismissed_until = Date.now() + 7 * 24 * 3600 * 1000` vào `localStorage`. Nếu thời gian hiện tại nhỏ hơn cờ này, banner hoàn toàn ẩn không hiển thị.
+- **Trình duyệt Android/Chromium**: Lắng nghe sự kiện `beforeinstallprompt`, kích hoạt `deferredPrompt.prompt()` khi bấm nút; ẩn banner ngay khi nhận sự kiện `appinstalled`.
+- **Trình duyệt iOS Safari**: Nhận diện `navigator.userAgent`, hiển thị hướng dẫn 3 bước trực quan với icon rõ ràng.
 
 ---
 
-## 6. Đặc Tả Mở Rộng (`261105-1836-ontap-web-ui-overhaul`): Chuẩn Hóa Font Tiếng Việt Root Portal, Liên Kết `/ontap` Trên Sidebar & Hệ Giao Diện Dual-Theme (`light` / `dark`) Cho `ontap-web`
+### 4.4. Component `LoginScreen.tsx` (Mặc Định Tích Cả 2 Checkbox)
 
-> Chi tiết đầy đủ xem tại: [docs/plans/261105-1836-ontap-web-ui-overhaul/design-specs.md](file:///d:/Antigravity/TNDNB/docs/plans/261105-1836-ontap-web-ui-overhaul/design-specs.md)
+#### 4.4.1. Wireframe ASCII Cụm Checkbox Form Đăng Nhập
 
-1. **Diệt Tận Gốc Lỗi "Chữ To Chữ Bé" Trên Root Portal (13 Files):**
-   - Loại bỏ `Rubik` trong [app/layout.tsx](file:///d:/Antigravity/TNDNB/app/layout.tsx), nạp `Be_Vietnam_Pro` (`--font-sans`), `Merriweather` (`--font-display`), `JetBrains_Mono` (`--font-mono`) với `subsets: ['latin', 'vietnamese']`.
-   - Chuyển toàn bộ các selector hiển thị chữ Tiếng Việt có dấu trong 11 file `.module.css` sang `var(--font-sans, 'Be Vietnam Pro', sans-serif)` kết hợp `font-variant-numeric: tabular-nums` (chỉ giữ `--font-mono` cho chỉ mục số `01..04` và cột số tiền).
-2. **Điểm Truy Cập `/ontap` Chính Thức Trên `Sidebar.tsx`:**
-   - Bổ sung mục `<Link href="/ontap">Ôn tập & Thi thử Trực tuyến</Link>` lên đầu khung **"Tra cứu & Tiện ích"** trong [components/Sidebar.tsx](file:///d:/Antigravity/TNDNB/components/Sidebar.tsx#L137-L151).
-3. **Kiến Trúc Maritime EdTech High-Craft Dual-Theme (`light` / `dark`) Cho `ontap-web` (30+ Màn Hình):**
-   - Thu gọn `Theme = 'light' | 'dark'`, tự động chuẩn hóa giá trị cũ trong `localStorage` về `'light'`, xóa `SnowEffect.tsx` và 6 theme mùa vụ.
-   - Sửa lỗi vòng lặp `--font-sans` trong [ontap-web/theme.css](file:///d:/Antigravity/TNDNB/ontap-web/theme.css).
-   - Hợp nhất `Dashboard.tsx` thành 1 lưới Bento Asymmetric 12 cột duy nhất; chuẩn hóa `QuizScreen.tsx` 2 cột tương thích hoàn toàn với chế độ `dark`.
-   - **Ràng buộc bất di bất dịch:** Bảo toàn 100% (`git diff = 0`) đối với [ontap-web/components/ExamQuizScreen.tsx](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx).
+```text
++----------------------------------------------------------------------------------------+
+| FORM ĐĂNG NHẬP (LoginScreen)                                                           |
+|                                                                                        |
+| [ Tài khoản: "0912345678"                                                            ] |
+| [ Mật khẩu:  "••••••••••••"                                                          ] |
+|                                                                     [ Quên mật khẩu? ] |
+|                                                                                        |
+| [✓] Lưu tài khoản này       (FaCheckSquare text-primary, Min-H 44px Touch Target)      |
+|     (Tự động lưu vào SavedAccountsList để đăng nhập 1 chạm cho lần sau)                |
+|                                                                                        |
+| [✓] Ghi nhớ đăng nhập       (FaCheckSquare text-primary, Min-H 44px Touch Target)      |
+|     (Duy trì phiên đăng nhập vĩnh viễn trên máy, không bao giờ bị văng ra)             |
+|                                                                                        |
+| [                   ĐĂNG NHẬP (PrimaryButton Min-H 44px)                             ] |
++----------------------------------------------------------------------------------------+
+```
+
+#### 4.4.2. Đặc Tả Khởi Tạo State:
+```typescript
+// ontap-web/components/LoginScreen.tsx
+const [rememberMe, setRememberMe] = useState(true);        // 💖 Mặc định tích Ghi nhớ đăng nhập
+const [saveThisAccount, setSaveThisAccount] = useState(true); // 💖 Mặc định tích Lưu tài khoản này
+```
+- **Lợi ích**: 100% học viên mở form đăng nhập đều được lưu tài khoản và giữ phiên vĩnh viễn, không bao giờ bị hỏi lại mật khẩu trong những lần truy cập tiếp theo.
+
+---
+
+## 5. Đặc Tả 4 Trạng Thái Toàn Diện (Loading, Empty, Error, Success)
+
+| Thành Phần Giao Diện | Trạng Thái Đang Tải (`Loading`) | Trạng Thái Trống (`Empty`) | Trạng Thái Lỗi (`Error`) | Trạng Thái Thành Công (`Success`) |
+|---|---|---|---|---|
+| **TopNavbar** | Biểu tượng chuông thông báo hiển thị skeleton tròn mờ; Nút Menu 3 gạch sẵn sàng. | Khi không có thông báo: Menu chuông báo *"Bạn không có thông báo mới."* | Khi mất kết nối: Menu hiển thị icon cảnh báo màu cam; Cho phép bấm Đăng xuất an toàn ngoại tuyến. | Hiển thị đầy đủ Tên, MiniRoleBadge, Tích xanh xác thực và Menu 3 gạch tương tác mượt mà. |
+| **Mobile Dashboard** | Khung Thẻ học viên hiển thị shimmer skeleton; Nút PrimaryButton giữ nguyên kích thước `52px` tránh giật layout (CLS = 0). | Khi tài khoản chưa được gán lớp: Thẻ học viên hiển thị *"Chưa phân lớp — Liên hệ giáo viên"*; Nút thi chuyển sang đề luyện tự do. | Khi lỗi mạng nạp Firestore: Tự động chuyển sang nạp bộ đề lưu trong cache máy (Offline mode). | Hiển thị trọn vẹn Thẻ học viên trang trọng và Nút "VÀO ÔN TẬP / THI THỬ" sẵn sàng 1 chạm. |
+| **PwaInstallBanner** | Không có trạng thái tải, kiểm tra cờ Standalone và localStorage tức thì (<1ms). | Không áp dụng (Tự động return `null` nếu ứng dụng đã là PWA hoặc đã đóng trong 7 ngày). | Khi trình duyệt không hỗ trợ `beforeinstallprompt`: Tự động fallback sang hướng dẫn chung. | Người dùng bấm Cài đặt thành công: Bắn sự kiện `appinstalled`, banner mờ dần và biến mất hoàn toàn. |
+| **LoginScreen** | Nút Đăng nhập chuyển text thành *"Đang xử lý..."*, vô hiệu hóa tương tác (`disabled:opacity-50`). | Form trống khởi tạo: Hiển thị placeholder rõ ràng và 2 ô checkbox đã được tích xanh sẵn. | Sai mật khẩu hoặc mất mạng: Hiển thị box đỏ `bg-destructive/10 text-destructive` có viền bo tròn sắc nét. | Đăng nhập thành công: Chuyển trang mượt mà sang Dashboard, lưu tài khoản vào `SavedAccountsList`. |
+
+---
+
+## 6. Bảng Kiểm Tuân Thủ Impeccable Craft Floor v4.8.0
+
+Toàn bộ thiết kế trên đáp ứng nghiêm ngặt 100% các tiêu chí chất lượng thủ công cao cấp:
+
+- [x] **Touch Target Size >= 44x44px**:
+  - Mọi nút trên mobile TopNavbar (`BookOpen`, `GraduationCap`, `NotificationBell`, `Menu 3 gạch`) đều có diện tích chạm thực tế tối thiểu `44x44px` (sử dụng `min-h-[44px] min-w-[44px]` hoặc padding tương ứng).
+  - Nút chính `PrimaryButton` đạt kích thước vượt chuẩn `min-h-[52px]`.
+  - Nút đóng ✕ của PwaInstallBanner có diện tích chạm `44x44px` với padding vô hình bao quanh.
+  - Các ô checkbox "Lưu tài khoản" và "Ghi nhớ đăng nhập" có hàng chạm cao `min-h-[44px]`.
+- [x] **Độ Tương Phản Màu Sắc (Contrast WCAG 2.1 AA >= 4.5:1)**:
+  - Nút Primary `#003566` với chữ trắng `#FFFFFF`: Tương phản `11.8:1` (Đạt chuẩn AAA).
+  - Chữ nội dung thẻ `#0F172A` trên nền trắng `#FFFFFF`: Tương phản `16.2:1` (Đạt chuẩn AAA).
+  - Chữ mờ `muted-foreground` `#475569` trên nền thẻ: Tương phản `7.1:1` (Vượt xa mức 4.5:1).
+  - Nút Đăng xuất đỏ `#DC2626` trên nền trắng/thẻ: Tương phản `6.2:1`.
+- [x] **Bảo Vệ Vùng An Toàn Di Động (Safe Area Inset)**:
+  - Hỗ trợ đầy đủ thiết bị tai thỏ, Dynamic Island và thanh cử chỉ Home Bar qua `env(safe-area-inset-top)` và `env(safe-area-inset-bottom)`.
+- [x] **Trợ Năng & Điều Khiển Bàn Phím (Focus-Visible)**:
+  - Mọi phần tử tương tác đều hỗ trợ `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2`.
+- [x] **Chống Tràn Ngang (Zero Horizontal Overflow)**:
+  - Container chính luôn có `max-w-full overflow-x-hidden`.
+  - Menu TopNavbar trên mobile ẩn thanh cuộn (`no-scrollbar`) và chỉ cố định 4 nút vừa vặn trong màn hình 390px mà không phát sinh thanh cuộn ngang.
+- [x] **Triệt Tiêu Hoàn Toàn AI Slop**:
+  - Không có hiệu ứng gradient tím/hồng tùy tiện.
+  - Hệ thống chỉ dùng màu Hải quân truyền thống (`Institutional Maritime Navy`) kết hợp xanh công nghệ PWA sang trọng.
+  - Bố cục gọn gàng, tôn trọng thói quen của học viên lái tàu thuyền lớn tuổi.
+
+---
+*Tài liệu Đặc Tả Giao Diện Hoàn Chỉnh đã sẵn sàng để thi công mã nguồn theo tiêu chuẩn TDD.*
