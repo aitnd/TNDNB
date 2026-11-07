@@ -14,7 +14,11 @@
         "Cloudflare R2 Asset Delivery & Image Fallback",
         "Cloudflare KV Config Store",
         "Self-Hosted TinyMCE Local",
-        "Portal R2 Media Upload with 5s Supabase Graceful Fallback"
+        "Portal R2 Media Upload with 5s Supabase Graceful Fallback",
+        "Mobile Streamlined Dashboard (Single Tap Exam Access)",
+        "PWA Native Add-to-Home-Screen Support",
+        "TopNavbar Hamburger Menu & Role-Based Action Isolation",
+        "Next.js Dynamic SSR-Safe Slider Component"
     ],
     "project": "TNDNB",
     "canonical_domain": "https://www.daotaothuyenvien.com",

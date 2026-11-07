@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UserProfile } from '../types';
-import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, ChevronDown, Utensils, Gamepad2, Award, Compass, ShieldCheck, FileEdit } from 'lucide-react'; 
+import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, AlertTriangle, Settings, CheckCircle, Mail, Download, ChevronDown, Utensils, Gamepad2, Award, Compass, ShieldCheck, FileEdit, Menu, X } from 'lucide-react'; 
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
 import { MiniRoleBadge } from './Badges/MiniRoleBadge';
@@ -15,13 +15,29 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
     const [showChangelog, setShowChangelog] = React.useState(false);
     const [showLinksDropdown, setShowLinksDropdown] = React.useState(false);
     const [showSystemDropdown, setShowSystemDropdown] = React.useState(false);
+    const [showHamburgerMenu, setShowHamburgerMenu] = React.useState(false);
     const [latestVersion, setLatestVersion] = React.useState<string>('...');
+    const hamburgerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
         getLatestVersion()
             .then((ver) => setLatestVersion(ver && ver !== "0.0.0" ? ver : "3.19.2"))
             .catch(() => setLatestVersion('3.19.2'));
     }, []);
+
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (hamburgerRef.current && !hamburgerRef.current.contains(event.target as Node)) {
+                setShowHamburgerMenu(false);
+            }
+        };
+        if (showHamburgerMenu) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showHamburgerMenu]);
 
     return (
         <>
@@ -51,7 +67,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                             </button>
                             <button
                                 onClick={() => onNavigate('thi_truc_tuyen')}
-                                className="flex items-center gap-2 px-3 py-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors whitespace-nowrap min-h-[40px]"
+                                className="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors whitespace-nowrap min-h-[40px]"
                             >
                                 <FileEdit size={18} className="text-rose-600 dark:text-rose-400" />
                                 <span className="font-semibold text-sm md:text-base">Thi trực tuyến</span>
@@ -61,7 +77,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
 
                     {/* Dropdown "Hệ thống / Quản lý" (Dành cho Giáo viên, Quản lý, Lãnh đạo, Admin) */}
                     {userProfile && ['admin', 'lanh_dao', 'quan_ly', 'giao_vien'].includes(userProfile.role) && (
-                        <div className="relative">
+                        <div className="relative hidden md:flex">
                             <button
                                 onClick={() => setShowSystemDropdown(!showSystemDropdown)}
                                 onBlur={() => setTimeout(() => setShowSystemDropdown(false), 200)}
@@ -101,7 +117,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                     )}
 
                     {/* Dropdown "Khám phá" */}
-                    <div className="relative">
+                    <div className="relative hidden md:flex">
                         <button
                             onClick={() => setShowLinksDropdown(!showLinksDropdown)}
                             onBlur={() => setTimeout(() => setShowLinksDropdown(false), 200)}
@@ -141,7 +157,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                 </div>
 
                 {/* RIGHT: User Info & Logout */}
-                <div className="flex items-center gap-2 md:gap-3 ml-4 flex-shrink-0">
+                <div className="flex items-center gap-1.5 md:gap-3 ml-2 md:ml-4 flex-shrink-0">
                     
                     {userProfile ? (
                         <>
@@ -149,7 +165,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                             <div className="flex items-center gap-1 md:gap-2 mr-0 md:mr-1">
                                 <button
                                     onClick={() => onNavigate('mailbox')}
-                                    className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-secondary min-h-[40px] min-w-[40px] flex items-center justify-center"
+                                    className="hidden md:flex p-2 text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-secondary min-h-[40px] min-w-[40px] items-center justify-center"
                                     title="Hộp thư"
                                     aria-label="Hộp thư"
                                 >
@@ -157,7 +173,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 </button>
                                 <button
                                     onClick={() => onNavigate('history')}
-                                    className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-secondary min-h-[40px] min-w-[40px] flex items-center justify-center"
+                                    className="hidden md:flex p-2 text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-secondary min-h-[40px] min-w-[40px] items-center justify-center"
                                     title="Lịch sử thi thử"
                                     aria-label="Lịch sử"
                                 >
@@ -175,7 +191,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 </button>
                             </div>
 
-                            {/* User Account Button */}
+                            {/* User Account Button (Desktop) */}
                             <button 
                                 onClick={() => onNavigate('account')}
                                 className="hidden md:flex flex-col items-end justify-center hover:opacity-85 transition-opacity text-right cursor-pointer"
@@ -196,20 +212,16 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 </span>
                             </button>
 
-                            {/* Mobile Icon for Account */}
-                            <button onClick={() => onNavigate('account')} className="md:hidden text-foreground p-2 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-xl hover:bg-secondary" aria-label="Tài khoản">
-                                <UserCog size={20} />
-                            </button>
+                            <div className="h-6 w-[1px] bg-border mx-1 hidden md:block"></div>
 
-                            <div className="h-6 w-[1px] bg-border mx-1"></div>
-
+                            {/* Standalone Logout Button (Desktop) */}
                             <button
                                 onClick={onLogout}
-                                className="group flex items-center gap-2 text-destructive bg-destructive/10 hover:bg-destructive/15 px-3 py-2 rounded-xl transition-all border border-destructive/20 min-h-[40px]"
+                                className="group hidden md:flex items-center gap-2 text-destructive bg-destructive/10 hover:bg-destructive/15 px-3 py-2 rounded-xl transition-all border border-destructive/20 min-h-[40px]"
                                 title="Đăng xuất"
                             >
                                 <LogOut size={17} className="group-hover:translate-x-0.5 transition-transform" />
-                                <span className="hidden md:inline font-bold text-sm">Thoát</span>
+                                <span className="font-bold text-sm">Thoát</span>
                             </button>
                         </>
                     ) : (
@@ -220,6 +232,156 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                             Đăng nhập
                         </button>
                     )}
+
+                    {/* Hamburger Menu 3 gạch (Mobile & Quick Access) */}
+                    <div className="relative" ref={hamburgerRef}>
+                        <button
+                            onClick={() => setShowHamburgerMenu(!showHamburgerMenu)}
+                            className="p-2 rounded-xl text-foreground hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring transition-all min-h-[44px] min-w-[44px] flex items-center justify-center border border-border/60"
+                            aria-label="Menu"
+                            title="Menu tác vụ"
+                        >
+                            {showHamburgerMenu ? <X size={22} className="text-primary" /> : <Menu size={22} className="text-primary" />}
+                        </button>
+
+                        {/* Dropdown Panel */}
+                        {showHamburgerMenu && (
+                            <div className="fixed right-3 top-16 w-72 max-w-[calc(100vw-24px)] bg-card/98 backdrop-blur-xl border border-border rounded-2xl shadow-2xl py-3 z-[150] text-card-foreground animate-in fade-in zoom-in-95 duration-150">
+                                {/* Header thông tin người dùng */}
+                                {userProfile && (
+                                    <div className="px-4 py-3 border-b border-border mb-2 bg-muted/40 rounded-t-xl">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-bold text-base text-foreground truncate">
+                                                {userProfile.full_name || userProfile.fullName || 'Học viên'}
+                                            </span>
+                                            {userProfile?.role === 'hoc_vien' && (userProfile.isVerified || userProfile.courseId) && (
+                                                <CheckCircle size={15} className="text-emerald-500 shrink-0" />
+                                            )}
+                                        </div>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            {userProfile?.role && <MiniRoleBadge role={userProfile.role} />}
+                                            <span className="text-xs text-muted-foreground truncate">
+                                                {userProfile.email || (userProfile as any).username || ''}
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Menu Items */}
+                                <div className="space-y-0.5 px-2">
+                                    <button
+                                        onClick={() => { setShowHamburgerMenu(false); onNavigate('account'); }}
+                                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px]"
+                                    >
+                                        <UserCog size={18} className="text-primary" />
+                                        <span>Quản lý tài khoản</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => { setShowHamburgerMenu(false); onNavigate('mailbox'); }}
+                                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px]"
+                                    >
+                                        <Mail size={18} className="text-primary" />
+                                        <span>Hộp thư cá nhân</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => { setShowHamburgerMenu(false); onNavigate('history'); }}
+                                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px]"
+                                    >
+                                        <History size={18} className="text-primary" />
+                                        <span>Lịch sử thi thử</span>
+                                    </button>
+
+                                    {userProfile?.role === 'hoc_vien' && (
+                                        <button
+                                            onClick={() => { setShowHamburgerMenu(false); onNavigate('thi_truc_tuyen'); }}
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px]"
+                                        >
+                                            <FileEdit size={18} className="text-rose-600 dark:text-rose-400" />
+                                            <span>Kỳ thi trực tuyến</span>
+                                        </button>
+                                    )}
+
+                                    {/* Nhóm Khám Phá & Tiện Ích */}
+                                    <div className="border-t border-border my-2" />
+                                    <div className="px-3 py-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                                        Khám phá & Tiện ích
+                                    </div>
+
+                                    <a
+                                        href="/"
+                                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px]"
+                                    >
+                                        <Newspaper size={18} className="text-primary" />
+                                        <span>Cổng Tin tức & Thông báo</span>
+                                    </a>
+
+                                    <button
+                                        onClick={() => { setShowHamburgerMenu(false); onNavigate('download_app'); }}
+                                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px]"
+                                    >
+                                        <Download size={18} className="text-emerald-600 dark:text-emerald-400" />
+                                        <span>Tải App học offline</span>
+                                    </button>
+
+                                    {userProfile && (
+                                        <button
+                                            onClick={() => { setShowHamburgerMenu(false); onNavigate('giaitri'); }}
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px]"
+                                        >
+                                            <Gamepad2 size={18} className="text-indigo-500" />
+                                            <span>Khu giải trí & Trò chơi</span>
+                                        </button>
+                                    )}
+
+                                    <a
+                                        href="https://thodia.hlstudio.top"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px]"
+                                    >
+                                        <Utensils size={18} className="text-orange-500" />
+                                        <span>Thổ Địa Ninh Bình</span>
+                                    </a>
+
+                                    {/* Phiên bản hệ thống */}
+                                    <div className="border-t border-border my-2" />
+                                    <button
+                                        onClick={() => { setShowHamburgerMenu(false); setShowChangelog(true); }}
+                                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                                    >
+                                        <span>Phiên bản hệ thống</span>
+                                        <span className="tabular-nums font-mono text-primary">v{latestVersion}</span>
+                                    </button>
+
+                                    {/* Nút Đăng xuất */}
+                                    {userProfile ? (
+                                        <>
+                                            <div className="border-t border-border my-2" />
+                                            <button
+                                                onClick={() => { setShowHamburgerMenu(false); onLogout(); }}
+                                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-destructive hover:bg-destructive/10 transition-colors text-left font-bold text-sm min-h-[44px]"
+                                            >
+                                                <LogOut size={18} />
+                                                <span>Đăng xuất</span>
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="border-t border-border my-2" />
+                                            <button
+                                                onClick={() => { setShowHamburgerMenu(false); onNavigate('login'); }}
+                                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm min-h-[44px] justify-center shadow-sm"
+                                            >
+                                                <span>Đăng nhập</span>
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
             {showChangelog && <ChangelogModal onClose={() => setShowChangelog(false)} />}

@@ -79,19 +79,8 @@ const WeatherWidget: React.FC = () => {
       }
     };
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          fetchWeather(position.coords.latitude, position.coords.longitude);
-        },
-        (error) => {
-          console.warn('Geolocation denied or failed, using fallback.', error);
-          fetchWeather();
-        }
-      );
-    } else {
-      fetchWeather();
-    }
+    // Tắt tự động gọi navigator.geolocation khi mount trang để tránh popup xin quyền phiền toái
+    fetchWeather();
   }, []);
 
   if (loading) {

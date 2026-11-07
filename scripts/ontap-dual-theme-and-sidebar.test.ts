@@ -116,16 +116,34 @@ describe('Phase 01: Vietnamese Typography Fix, Portal Sidebar /ontap Link & onta
 })
 
 describe('Phase 02: App Shell, Split-Window WelcomeModal & Bento 12-Col Dashboard', () => {
-  it('Task 2.2: WelcomeModal.tsx áp dụng bố cục Split Window (md:col-span-7 & md:col-span-5), tabular-nums và xóa sạch viền neon blur-xl', () => {
+  it('Task 2.2: WelcomeModal.tsx áp dụng bố cục thẻ trung tâm tối giản, xóa sạch viền neon, thông số tự bịa và bullet points', () => {
     const welcomeModal = fs.readFileSync(
       path.resolve(rootDir, 'ontap-web/components/WelcomeModal.tsx'),
       'utf8'
     )
 
+    // Đảm bảo không còn hiệu ứng neon blur cũ
     expect(welcomeModal).not.toContain('via-blue-500 to-violet-500')
     expect(welcomeModal).not.toContain('blur-xl')
-    expect(welcomeModal).toContain('md:col-span-7')
-    expect(welcomeModal).toContain('md:col-span-5')
+
+    // Đảm bảo đã xóa sạch khối thông số tự tạo và bố cục split-window 2 cột cũ
+    expect(welcomeModal).not.toContain('Thông số Hệ thống Học liệu')
+    expect(welcomeModal).not.toContain('md:col-span-7')
+    expect(welcomeModal).not.toContain('md:col-span-5')
+
+    // Đảm bảo đã xóa sạch 3 bullet points tính năng theo phản hồi của người dùng
+    expect(welcomeModal).not.toContain('Ôn luyện theo từng môn')
+    expect(welcomeModal).not.toContain('Tự động lưu câu hay sai')
+    expect(welcomeModal).not.toContain('Hỗ trợ làm bài ngoại tuyến')
+
+    // Xác nhận áp dụng bố cục thẻ đơn tối giản max-w-lg và semantic tokens
+    expect(welcomeModal).toContain('max-w-lg')
+    expect(welcomeModal).toContain('bg-card')
+    expect(welcomeModal).toContain('border-border')
+    expect(welcomeModal).toContain('rounded-2xl')
+    expect(welcomeModal).toContain('HelmIcon3D')
+
+    // Xác nhận giữ định dạng tabular-nums cho hotline đào tạo
     expect(welcomeModal).toContain('tabular-nums')
   })
 

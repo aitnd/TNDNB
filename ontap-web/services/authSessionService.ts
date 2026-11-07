@@ -286,9 +286,9 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
         // 4. Tạo session mới
         const sessionId = await recordLoginSession(userId);
 
-        // 5. Hiện cảnh báo nếu đã đuổi session cũ
+        // 5. Silent session rotation: Việc đá session cũ vẫn diễn ra ngầm an toàn, không làm phiền học viên bằng modal cảnh báo
         if (hadOldSessions) {
-            showSingleDeviceWarning();
+            // showSingleDeviceWarning() đã được tắt để trải nghiệm đăng nhập mượt mà không bị ngắt quãng
         }
 
         // 6. Kiểm tra đổi máy đáng ngờ (chạy nền, không block)
@@ -309,7 +309,7 @@ export const enforceAndRecordSession = async (userId: string): Promise<string | 
 /**
  * Hiện cảnh báo cho user biết mỗi tài khoản chỉ dùng 1 máy
  */
-const showSingleDeviceWarning = async () => {
+export const showSingleDeviceWarning = async () => {
     try {
         const { default: Swal } = await import('sweetalert2');
         Swal.fire({

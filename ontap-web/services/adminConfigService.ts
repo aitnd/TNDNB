@@ -295,7 +295,7 @@ export const getUsageConfig = async (): Promise<UsageConfig> => {
             console.warn('[Config] KV fetch failed, trying Firestore:', err);
         }
 
-        if (!data && db) {
+        if (!data && db && auth?.currentUser) {
             try {
                 const snap = await getDoc(doc(db, SETTINGS_COLLECTION, USAGE_CONFIG_DOC_ID));
                 if (snap.exists()) {
@@ -410,7 +410,7 @@ export const getGitHubConfig = async (): Promise<GitHubConfig> => {
             console.warn('[Config] KV getGitHubConfig failed, trying Firestore:', err);
         }
 
-        if (!data && db) {
+        if (!data && db && auth?.currentUser) {
             try {
                 const snap = await getDoc(doc(db, SETTINGS_COLLECTION, 'github_config'));
                 if (snap.exists()) {

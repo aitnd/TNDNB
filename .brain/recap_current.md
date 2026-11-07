@@ -1,26 +1,24 @@
-# 🧠 Tóm Tắt Ngữ Cảnh Hiện Tại (`recap_current.md`) — Cập nhật: 2026-11-06 (23:25)
+# 🧠 Tóm Tắt Ngữ Cảnh Hiện Tại (`recap_current.md`) — Cập nhật: 2026-11-07 (10:10)
 
-- **Dự án:** TNDNB (`d:\Antigravity\TNDNB`) — Nhánh `main` (Commit mới nhất: `d7b74cb3`).
-- **Mục tiêu hoàn thành đợt này:** Hoàn tất trọn gói 5 Phase trong kế hoạch [`261106-1705-fix-console-errors-and-tinymce-license`](file:///d:/Antigravity/TNDNB/docs/plans/261106-1705-fix-console-errors-and-tinymce-license/plan.md):
-  1. **Phase 01:** Khôi phục hoạt động TinyMCE Self-hosted v8 với `license_key: 'gpl'` và `promotion: false` trên cả hai trang tạo mới (`tao-moi/page.tsx`) và sửa bài viết (`sua/[postId]/page.tsx`), làm sạch plugins trùng lặp.
-  2. **Phase 02:** Dọn dẹp triệt để `supabase.auth.setSession()` và import thừa trong `context/AuthContext.tsx`, xóa bỏ hoàn toàn lỗi console `signing method RS256 is invalid` và lỗi 403 Forbidden Supabase.
-  3. **Phase 03:** Sửa link Footer `/tu-van-nghe-nghiep` (thay thế `/tuyen-dung` cũ) và cấu hình chuyển hướng 308 bảo vệ trong `next.config.mjs`.
-  4. **Phase 04:** Kiểm thử nghiệm thu Phases 01-03: Vitest 5/5 passed, TypeScript 0 error, build Next.js 57 routes passed.
-  5. **Phase 05:** Chuẩn hóa toàn diện API Worker & CDN Images:
-     - Thêm client fallback mặc định về `https://api.daotaothuyenvien.com` trong `d1Client.ts` và `https://cdn.daotaothuyenvien.com` trong `imageHelper.ts`.
-     - Cấu hình Next.js reverse proxy rewrite `/api/v1/:path*` trỏ sang `https://api.daotaothuyenvien.com/api/v1/:path*` trong `next.config.mjs`.
-     - Cập nhật `FIREBASE_PROJECT_ID = "thi-tnd"` trong `cloudflare-worker/wrangler.toml`, nâng cấp xác thực `verifyAdminAuthorization` chấp nhận Firebase ID Token của Admin, sửa route GET `config.ts` trả HTTP 200 `{ ok: true, data: null }` khi key rỗng giúp mở khóa tính năng lưu cấu hình KV tại `/ontap/settings`.
-     - Chuẩn hóa 100% ảnh câu hỏi trong `dataService.ts` và bộ nhớ đệm IndexedDB `offlineService.ts` sang `https://cdn.daotaothuyenvien.com/question-images/${q.id}.png`, xóa sạch link Supabase Storage cũ.
-     - Bảo toàn tuyệt đối bất biến Invariant 1: `ontap-web/components/ExamQuizScreen.tsx` 0 bytes diff.
+- **Dự án:** TNDNB (`d:\Antigravity\TNDNB`) — Nhánh `feat/mobile-dashboard-and-top-navbar-simplification` (Commit mới nhất: `9d06d0a7`).
+- **Pull Request URL:** https://github.com/aitnd/TNDNB/pull/new/feat/mobile-dashboard-and-top-navbar-simplification
+- **Mục tiêu hoàn thành trong phiên làm việc:**
+  1. **Kế hoạch 1 (`261107-0620-mobile-dashboard-simplification-and-error-audit`):**
+     - Giải mã lỗi console Bitwarden extension và sửa triệt để React Hydration Mismatch bằng `dynamic(..., { ssr: false })` cho `FeaturedSlider`.
+     - Mặc định chọn cả 2 checkbox đăng nhập ("Ghi nhớ đăng nhập" và "Lưu tài khoản này").
+     - Loại bỏ popup cảnh báo đăng nhập 1 thiết bị, ngăn tự động hỏi Geolocation.
+     - Tối giản Mobile Dashboard: hiển thị Thẻ học viên và nút "Vào Ôn Tập / Thi Thử" to rõ ràng (1 chạm vào thi ngay).
+     - Tối ưu TopNavbar: gom Tài khoản và Đăng xuất vào Menu 3 gạch bên phải, khóa 4 nút cho học viên mobile (`[Ôn tập]`, `[Lớp của tôi]`, `[Chuông]`, `[Menu 3 gạch]`).
+     - Tích hợp banner cài đặt PWA Add to Home Screen (Web Manifest, iOS guide, auto-hide trên standalone).
+     - Xóa 2 nhánh cũ: `fix/console-cleanup` và `feature/phase-1-2-updates` kèm `git fetch --prune`.
+  2. **Kế hoạch 2 (`261107-0940-clean-console-and-guest-firestore-guard`):**
+     - Phân tích DevTools console trên trang thi thử `/ontap/thithu`: Lỗi đỏ `net::ERR_BLOCKED_BY_CLIENT` là do tiện ích uBlock Origin/Adblock; lỗi đỏ `200.js reading M_ID` là do Chrome extension của máy khách; cảnh báo vàng `FirebaseError: Missing or insufficient permissions` là do khách vãng lai bị Firestore Security Rules chặn đọc `settings`.
+     - Thêm Guest Auth Guard `auth?.currentUser` vào `getUsageConfig()` và `getGitHubConfig()` trong `ontap-web/services/adminConfigService.ts`. Khách vãng lai bỏ qua Firestore, nạp thẳng từ localStorage/default (Zero-Noise Console).
+     - Thêm 2 test TDD `TC-28` và `TC-29` vào `scripts/portal-console-and-tinymce-fix.test.ts`.
 
 - **Trạng thái Kiểm thử & Build:**
-  - Bộ test TDD (`scripts/portal-console-and-tinymce-fix.test.ts`): **11/11 tests PASS (100%)**.
-  - TypeScript Strict Typecheck: **0 errors**.
-  - Production Build (`npm run build`): Build thành công Vite (`ontap-web`) và Next.js (57 routes).
-  - Git: Đã Commit và Push lên GitHub `origin/main` (Commit SHA: `d7b74cb3`).
-
-- **Định danh Tên miền Chính thức:**
-  - Cổng thông tin: `https://www.daotaothuyenvien.com`
-  - Web Ôn tập: `https://www.daotaothuyenvien.com/ontap`
-  - Cloudflare Worker API: `https://api.daotaothuyenvien.com`
-  - Cloudflare R2 CDN: `https://cdn.daotaothuyenvien.com`
+  - Bộ test TDD: **29/29 tests PASS (100%)** trong 277ms.
+  - TypeScript Strict Typecheck: **0 errors** trên cả root và `ontap-web`.
+  - Production Build: Build thành công Vite (`ontap-web`) và Next.js (57 routes).
+  - Bất biến Invariant 1: `ontap-web/components/ExamQuizScreen.tsx` **0 bytes diff**.
+  - Git Commit: SHA `9d06d0a7` đã đẩy lên origin.
