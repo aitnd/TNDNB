@@ -69,7 +69,9 @@ const Dashboard: React.FC<DashboardProps> = ({
             <div className="relative z-10 w-full max-w-6xl">
                 {/* === ROW 1: Weather & Online Stats Banner (Stacked Vertically) === */}
                 <div className="w-full flex flex-col gap-2.5 mb-4">
-                    <WeatherWidget />
+                    <div className="hidden lg:block">
+                        <WeatherWidget />
+                    </div>
                     {['admin', 'quan_ly', 'lanh_dao'].includes(userRole) && (
                         <AdminStatsBar userRole={userRole} />
                     )}
@@ -85,6 +87,11 @@ const Dashboard: React.FC<DashboardProps> = ({
                             <StudentCard user={userProfile} />
                         </div>
 
+                        {/* Nút Thi Lớn Ưu Tiên Số 1 Cho Mobile: Xuất hiện ngay lập tức dưới Thẻ Học Viên */}
+                        <div className="w-full mt-3 mb-2 lg:hidden">
+                            <PrimaryButton action={primaryAction} />
+                        </div>
+
                         {/* Nút phụ dưới thẻ: Lịch sử + Quản lý Lớp */}
                         <div className="w-full space-y-2">
                             {leftButtons.map((action, idx) => (
@@ -93,7 +100,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                         </div>
 
                         {/* Thẻ tiến bộ học tập */}
-                        <div className="w-full bg-card text-card-foreground rounded-2xl p-5 border border-border shadow-xs">
+                        <div className="w-full bg-card text-card-foreground rounded-2xl p-5 border border-border shadow-xs hidden lg:block">
                             <h3 className="font-bold text-foreground mb-2 text-sm uppercase tracking-wide">Tiến bộ học tập</h3>
                             <ProgressDashboard history={history} />
                         </div>
@@ -122,8 +129,8 @@ const Dashboard: React.FC<DashboardProps> = ({
                                 userRole={userRole}
                             />
 
-                            {/* Nút CTA chính: Vào Ôn Tập */}
-                            <div className="mb-6">
+                            {/* Nút CTA chính: Vào Ôn Tập (Chỉ hiện ở cột phải trên desktop, mobile đã có ở cột trái) */}
+                            <div className="mb-6 hidden lg:block">
                                 <PrimaryButton action={primaryAction} />
                             </div>
 

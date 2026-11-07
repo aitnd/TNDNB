@@ -212,5 +212,60 @@ describe('Console Errors & TinyMCE License Fixes (TDD Suite)', () => {
       expect(content).toMatch(/const\s*\[saveThisAccount,\s*setSaveThisAccount\]\s*=\s*useState\s*\(\s*true\s*\)/);
     });
   });
+
+  describe('Phase 02: Mobile Dashboard Simplification & Hamburger Navbar (Plan 261107-0620)', () => {
+    it('TC-19: ontap-web/services/authSessionService.ts must eliminate showSingleDeviceWarning popup on session rotation', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/services/authSessionService.ts');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Không được gọi showSingleDeviceWarning() trong enforceAndRecordSession
+      expect(content).not.toMatch(/if\s*\(\s*hadOldSessions\s*\)\s*\{\s*showSingleDeviceWarning\(\);?\s*\}/);
+    });
+
+    it('TC-20: ontap-web/components/WeatherWidget.tsx must NOT automatically request geolocation in useEffect on mount', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/WeatherWidget.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // useEffect không được chứa lời gọi navigator.geolocation
+      expect(content).not.toMatch(/useEffect\s*\(\s*\(\)\s*=>\s*\{[\s\S]*?navigator\.geolocation\.getCurrentPosition/);
+      expect(content).toMatch(/useEffect\s*\(\s*\(\)\s*=>\s*\{[\s\S]*?fetchWeather\(\);/);
+    });
+
+    it('TC-21: ontap-web/components/Dashboard.tsx must hide WeatherWidget and ProgressDashboard on mobile using hidden lg:block', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/Dashboard.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // WeatherWidget và ProgressDashboard phải có class hidden lg:block
+      expect(content).toMatch(/className="[^"]*hidden lg:block[^"]*"[\s\S]*?<WeatherWidget/);
+      expect(content).toMatch(/className="[^"]*hidden lg:block[^"]*"[\s\S]*?<ProgressDashboard/);
+    });
+
+    it('TC-22: ontap-web/components/Dashboard.tsx must render PrimaryButton directly under StudentCard on mobile view (lg:hidden)', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/Dashboard.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Trên mobile view, PrimaryButton phải được render ngay sau StudentCard
+      expect(content).toMatch(/<StudentCard[\s\S]*?<div className="[^"]*lg:hidden[^"]*"[\s\S]*?<PrimaryButton/);
+    });
+
+    it('TC-25: ontap-web/components/TopNavbar.tsx must have a 3-line hamburger menu button containing account and logout', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/TopNavbar.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Phải import Menu từ lucide-react
+      expect(content).toMatch(/import\s*\{[^}]*Menu[^}]*\}\s*from\s*['"]lucide-react['"]/);
+      // Menu dropdown phải chứa onNavigate('account') và onLogout
+      expect(content).toMatch(/onNavigate\(['"]account['"]\)/);
+      expect(content).toMatch(/onLogout/);
+    });
+
+    it('TC-26: ontap-web/components/TopNavbar.tsx must strictly hide non-essential items on mobile for hoc_vien role', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/TopNavbar.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Nút Thi trực tuyến và Khám phá phải có class hidden md:flex hoặc tương đương để ẩn trên mobile
+      expect(content).toMatch(/hidden\s+md:flex[^"]*['"][\s\S]*?Thi trực tuyến|Thi trực tuyến[\s\S]*?hidden\s+md:flex/);
+    });
+  });
 });
 

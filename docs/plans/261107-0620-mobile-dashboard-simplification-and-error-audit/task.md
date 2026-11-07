@@ -15,7 +15,7 @@
 ## 📌 Trạng Thái Tổng Thể Các Phase
 
 - [x] **Phase 01: Kiểm toán lỗi console 5 ảnh, sửa Hydration Next.js & Đặt mặc định tích 2 ô LoginScreen**
-- [ ] **Phase 02: Tối giản UI Dashboard mobile, Menu 3 gạch ngang & Triệt tiêu hỏi quyền/cảnh báo**
+- [x] **Phase 02: Tối giản UI Dashboard mobile, Menu 3 gạch ngang & Triệt tiêu hỏi quyền/cảnh báo**
 - [ ] **Phase 03: Smart App Banner & Gợi ý Thêm vào Màn hình chính (PWA Add to Home Screen)**
 
 ---
@@ -44,33 +44,33 @@
 ### Phase 02: Tối Giản UI Dashboard & Top Navbar Mobile (1 Chạm Vào Thi, Menu 3 Gạch Ngang & Tắt Cảnh Báo)
 > Chi tiết kỹ thuật: [`phase-02-mobile-dashboard-simplification.md`](file:///d:/Antigravity/TNDNB/docs/plans/261107-0620-mobile-dashboard-simplification-and-error-audit/phase-02-mobile-dashboard-simplification.md)
 
-- [ ] **Task 1: Triệt Tiêu Modal Cảnh Báo Đăng Nhập trong `authSessionService.ts`**
-  - [ ] **Step 1.1 (TDD RED)**: Viết test case `TC-19` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) đảm bảo không gọi `showSingleDeviceWarning()` trong `enforceAndRecordSession`.
-  - [ ] **Step 1.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-19"` xác nhận FAIL.
-  - [ ] **Step 1.3 (TDD GREEN)**: Cập nhật [`ontap-web/services/authSessionService.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/authSessionService.ts) tắt bật popup modal khi xoay phiên đăng nhập.
-  - [ ] **Step 1.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-19"` xác nhận PASS 100%.
-  - [ ] **Step 1.5 (Commit)**: `git commit -m "fix(auth): disable noisy single-device warning modal for smooth login"`.
+- [x] **Task 1: Triệt Tiêu Modal Cảnh Báo Đăng Nhập trong `authSessionService.ts`**
+  - [x] **Step 1.1 (TDD RED)**: Viết test case `TC-19` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) đảm bảo không gọi `showSingleDeviceWarning()` trong `enforceAndRecordSession`.
+  - [x] **Step 1.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-19"` xác nhận FAIL.
+  - [x] **Step 1.3 (TDD GREEN)**: Cập nhật [`ontap-web/services/authSessionService.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/authSessionService.ts) tắt bật popup modal khi xoay phiên đăng nhập.
+  - [x] **Step 1.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-19"` xác nhận PASS 100%.
+  - [x] **Step 1.5 (Commit)**: `git commit -m "fix(auth): disable noisy single-device warning modal for smooth login"`.
 
-- [ ] **Task 2: Tắt Tự Động Xin Quyền Vị Trí trong `WeatherWidget.tsx`**
-  - [ ] **Step 2.1 (TDD RED)**: Viết test case `TC-20` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) đảm bảo `useEffect` không tự kích hoạt `navigator.geolocation.getCurrentPosition`.
-  - [ ] **Step 2.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-20"` xác nhận FAIL.
-  - [ ] **Step 2.3 (TDD GREEN)**: Sửa [`ontap-web/components/WeatherWidget.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/WeatherWidget.tsx) gọi trực tiếp `fetchWeather()` không hỏi vị trí trên mount.
-  - [ ] **Step 2.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-20"` xác nhận PASS 100%.
-  - [ ] **Step 2.5 (Commit)**: `git commit -m "fix(weather): prevent automatic GPS permission request on mount"`.
+- [x] **Task 2: Tắt Tự Động Xin Quyền Vị Trí trong `WeatherWidget.tsx`**
+  - [x] **Step 2.1 (TDD RED)**: Viết test case `TC-20` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) đảm bảo `useEffect` không tự kích hoạt `navigator.geolocation.getCurrentPosition`.
+  - [x] **Step 2.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-20"` xác nhận FAIL.
+  - [x] **Step 2.3 (TDD GREEN)**: Sửa [`ontap-web/components/WeatherWidget.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/WeatherWidget.tsx) gọi trực tiếp `fetchWeather()` không hỏi vị trí trên mount.
+  - [x] **Step 2.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-20"` xác nhận PASS 100%.
+  - [x] **Step 2.5 (Commit)**: `git commit -m "fix(weather): prevent automatic GPS permission request on mount"`.
 
-- [ ] **Task 3: Tối Giản Layout Mobile trong `Dashboard.tsx`**
-  - [ ] **Step 3.1 (TDD RED)**: Viết test cases `TC-21` & `TC-22` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) kiểm tra `hidden lg:block` cho Thời tiết & Tiến độ, và `PrimaryButton` render sát dưới `StudentCard`.
-  - [ ] **Step 3.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-21|TC-22"` xác nhận FAIL.
-  - [ ] **Step 3.3 (TDD GREEN)**: Cập nhật [`ontap-web/components/Dashboard.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/Dashboard.tsx) ẩn widget không cần thiết trên mobile và đưa nút Vào Ôn Tập lên vị trí đập vào mắt ngay lập tức.
-  - [ ] **Step 3.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-21|TC-22"` xác nhận PASS 100%.
-  - [ ] **Step 3.5 (Commit)**: `git commit -m "feat(dashboard): streamline mobile layout with instant CTA under student card"`.
+- [x] **Task 3: Tối Giản Layout Mobile trong `Dashboard.tsx`**
+  - [x] **Step 3.1 (TDD RED)**: Viết test cases `TC-21` & `TC-22` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) kiểm tra `hidden lg:block` cho Thời tiết & Tiến độ, và `PrimaryButton` render sát dưới `StudentCard`.
+  - [x] **Step 3.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-21|TC-22"` xác nhận FAIL.
+  - [x] **Step 3.3 (TDD GREEN)**: Cập nhật [`ontap-web/components/Dashboard.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/Dashboard.tsx) ẩn widget không cần thiết trên mobile và đưa nút Vào Ôn Tập lên vị trí đập vào mắt ngay lập tức.
+  - [x] **Step 3.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-21|TC-22"` xác nhận PASS 100%.
+  - [x] **Step 3.5 (Commit)**: `git commit -m "feat(dashboard): streamline mobile layout with instant CTA under student card"`.
 
-- [ ] **Task 4: Tối Giản TopNavbar: Menu 3 Gạch Ngang & 4 Nút Tối Giản Cho Role Học Viên**
-  - [ ] **Step 4.1 (TDD RED)**: Viết test cases `TC-25` & `TC-26` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) kiểm tra Hamburger menu icon `Menu` và ẩn các nút riêng lẻ trên mobile.
-  - [ ] **Step 4.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-25|TC-26"` xác nhận FAIL.
-  - [ ] **Step 4.3 (TDD GREEN)**: Cập nhật [`ontap-web/components/TopNavbar.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/TopNavbar.tsx): Gom tài khoản + đăng xuất vào menu 3 gạch; chỉ để 4 nút trên mobile cho role học viên (`[Ôn tập]`, `[Lớp của tôi]`, `[NotificationBell]`, `[Menu 3 gạch]`).
-  - [ ] **Step 4.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-25|TC-26"` xác nhận PASS 100%.
-  - [ ] **Step 4.5 (Commit)**: `git commit -m "feat(navbar): simplify mobile navbar with hamburger menu and 4-item student layout"`.
+- [x] **Task 4: Tối Giản TopNavbar: Menu 3 Gạch Ngang & 4 Nút Tối Giản Cho Role Học Viên**
+  - [x] **Step 4.1 (TDD RED)**: Viết test cases `TC-25` & `TC-26` trong [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) kiểm tra Hamburger menu icon `Menu` và ẩn các nút riêng lẻ trên mobile.
+  - [x] **Step 4.2 (TDD FAIL)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-25|TC-26"` xác nhận FAIL.
+  - [x] **Step 4.3 (TDD GREEN)**: Cập nhật [`ontap-web/components/TopNavbar.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/TopNavbar.tsx): Gom tài khoản + đăng xuất vào menu 3 gạch; chỉ để 4 nút trên mobile cho role học viên (`[Ôn tập]`, `[Lớp của tôi]`, `[NotificationBell]`, `[Menu 3 gạch]`).
+  - [x] **Step 4.4 (TDD PASS)**: Chạy `npx vitest run scripts/portal-console-and-tinymce-fix.test.ts -t "TC-25|TC-26"` xác nhận PASS 100%.
+  - [x] **Step 4.5 (Commit)**: `git commit -m "feat(navbar): simplify mobile navbar with hamburger menu and 4-item student layout"`.
 
 ---
 
