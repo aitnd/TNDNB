@@ -1,13 +1,14 @@
 # Tài Liệu Thiết Kế Kỹ Thuật Tổng Thể (Single Source of Truth — SDD & AWF v4.0 Design Specification)
 ## Dự Án TNDNB: Chuẩn Hóa Giao Diện Hallmark Editorial Toàn Root Portal, Đại Tu `ontap-web` Dual-Theme (`Light` / `Dark`), Sửa Lỗi Font Tiếng Việt, Và Nâng Cấp Hạ Tầng Cloudflare (R2 + D1 + Offline-First)
 
-> **Cập nhật lần cuối:** 06/11/2026  
+> **Cập nhật lần cuối:** 08/11/2026  
 > **Tiêu chuẩn áp dụng:** `AWF v4.0` + `Impeccable v4.8.0 (62-Rule Craft Floor)` + `Taste-Skill v2.5.0`  
 > **Các kế hoạch hợp nhất trong tài liệu Single Source of Truth này:**
 > 1. [`261105-1836-ontap-web-ui-overhaul`](file:///d:/Antigravity/TNDNB/docs/plans/261105-1836-ontap-web-ui-overhaul/DESIGN.md) — **(A)** Sửa triệt để lỗi Font Tiếng Việt "Chữ to chữ bé" trên 13 file Root Portal & sửa vòng lặp `--font-sans` trên `ontap-web`, **(B)** Gắn liên kết `/ontap` vào Sidebar Portal, và **(C)** Đại tu toàn diện 30+ màn hình `ontap-web` theo chuẩn **Maritime EdTech Dual-Theme (`light` / `dark`)** (Bảo toàn 100% `ExamQuizScreen.tsx`).
 > 2. [`261105-1408-portal-login-dashboard-restore`](file:///d:/Antigravity/TNDNB/docs/plans/261105-1408-portal-login-dashboard-restore/DESIGN.md) — Loại bỏ toàn bộ hệ thống theme cũ trên Root Portal, chuẩn hóa **1 giao diện duy nhất Hallmark Editorial** cho toàn bộ 14 nhóm trang Root Portal (`d:\Antigravity\TNDNB`), khôi phục `/login` & `/quan-ly`.
 > 3. [`261104-0856-cloudflare-r2-d1-offline-upgrade`](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/plan.md) — Tách Deployment Monorepo (`ontap-web` lên Cloudflare Pages, Root Portal trên Vercel) & Hạ tầng Cloudflare Worker + D1 + R2 Offline-First.
 > 4. [`phase-06-portal-r2-assets-design`](file:///d:/Antigravity/TNDNB/docs/plans/261105-1836-ontap-web-ui-overhaul/phase-06-portal-r2-assets-design.md) — Chuyển đổi dần ảnh bìa, ảnh TinyMCE & giáo trình tài liệu (PDF/Word) của Root Portal sang Cloudflare R2 (`tndnb-assets`) với cơ chế Graceful Fallback 5s sang Supabase Storage và bảo toàn 100% bài viết cũ.
+> 5. [`261108-2025-authoritative-changelog-and-recent-plans-sync`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/DESIGN.md) — Khôi phục bộ parser Markdown raw cục bộ (`parseChangelog.ts` qua Vite `?raw`), thiết lập kiến trúc Dual Changelog (`CHANGELOG.md` cho Người dùng và `CHANGELOG_DEV.md` cho Kỹ thuật Dev) với thanh Tab Switcher, và nâng cấp đồng bộ phiên bản toàn hệ thống Monorepo lên **`v3.22.0`**.
 
 ---
 
@@ -117,6 +118,39 @@ flowchart TD
   3. **Nhóm 3 (Learning Flow & Quiz):** Nâng cấp `LicenseSelectionScreen`, `NameInputScreen`, `ModeSelectionScreen`, `SubjectSelectionScreen`, `QuizScreen` (2 cột — sửa dứt điểm lỗi hardcode `bg-gray-50` ở Dark mode), `ResultsScreen`, `ExamResultsScreen`, sảnh chờ `ThiTrucTuyenPage`, `GiamKhaoSelectionScreen`. **Giữ nguyên 100% `ExamQuizScreen.tsx` (`git diff = 0`)**.
   4. **Nhóm 4 (15 Màn hình Quản lý & Tiện ích):** Đồng bộ `HistoryScreen`, `MyClassScreen`, `AccountScreen`, `LoginHistoryScreen`, `ClassManagementScreen`, `UserManagerScreen`, `OnlineExamManagementScreen`, `NotificationMgmtScreen`, `UsageConfigPanel`, `AnalyticsPage`, `MailboxScreen`, `DownloadAppPage`, `ChangelogModal`, `ChangelogScreen`, `EntertainmentScreen`.
 
+### 2.3. Kiến Trúc Authoritative Dual Changelog & Raw Markdown Parser (v3.22.0)
+- **Tài liệu đặc tả chi tiết:** [`docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/DESIGN.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/DESIGN.md)
+- **Khôi phục bộ Parser Markdown Cục Bộ (`parseChangelog.ts`):** Loại bỏ hoàn toàn việc gọi API mạng GitHub Releases (`getGitHubReleases`), nạp trực tiếp qua tính năng build-time của Vite `?raw` (`import changelogUserRaw from '../CHANGELOG.md?raw'`, `import changelogDevRaw from '../../CHANGELOG_DEV.md?raw'`). Đạt **0ms tốc độ hiển thị, 100% Offline-First PWA**, không phụ thuộc mạng hay rate-limit.
+- **Smart Regex Classifier:** Nhận diện linh hoạt các nhóm thay đổi bằng Regex:
+  - Tính năng mới: `/tính năng|feature|added|mới/i` $\rightarrow$ `Sparkles` (`text-emerald-500`)
+  - Giao diện & Trải nghiệm: `/giao diện|ui|ux|hiển thị|trải nghiệm|changed/i` $\rightarrow$ `Rocket` (`text-blue-500`)
+  - Sửa lỗi & Khắc phục: `/sửa lỗi|vá lỗi|khắc phục|fix|bug/i` $\rightarrow$ `Wrench` (`text-amber-500`)
+  - Bảo mật: `/bảo mật|security/i` $\rightarrow$ `Shield` (`text-red-500`)
+  - Kỹ thuật & Hạ tầng: `/kỹ thuật|dev|infra|hạ tầng|database|build|refactor/i` $\rightarrow$ `Code` (`text-purple-500`)
+  - Mặc định / Chung: $\rightarrow$ `List` (`text-slate-500`)
+- **Kiến Trúc Dual Changelog & Tab Switcher:**
+  - `CHANGELOG.md`: Phiên bản hướng tới Người Dùng / Học Viên (ngôn từ dễ hiểu, tập trung công năng).
+  - `CHANGELOG_DEV.md`: Phiên bản hướng tới Kỹ Thuật / Lập Trình Viên (chi tiết component, state, refactor, API).
+  - Tích hợp thanh Tab Switcher Segmented Control (`[👤 Người dùng]` và `[💻 Kỹ thuật (Dev)]`) trên cả `ChangelogScreen.tsx` và `ChangelogModal.tsx` với phản hồi xúc giác `triggerHaptic('light')`.
+- **Đồng Bộ Phiên Bản Toàn Hệ Thống Monorepo:** Nâng đồng loạt lên `v3.22.0` trên 4 gói (`package.json`, `ontap-web/package.json`, `ontap-win/package.json`, `cloudflare-worker/package.json`).
+
+### 2.4. Kiến Trúc Universal PWA Install Banner & Định Danh "Giáo dục Ninh Bình" (Phase 04)
+- **Tài liệu đặc tả chi tiết:** [`phase-04-global-pwa-install-banner.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/phase-04-global-pwa-install-banner.md)
+- **Chuẩn hóa Định Danh Thương Hiệu PWA ("Giáo dục Ninh Bình"):**
+  - Cập nhật cả 2 tệp `manifest.json` (`ontap-web/public/manifest.json` & `public/ontap/manifest.json`) với `"name": "Giáo dục Ninh Bình"` và `"short_name": "Giáo dục Ninh Bình"`.
+  - Bổ sung vào `ontap-web/index.html` các thẻ meta iOS WebKit: `apple-mobile-web-app-title="Giáo dục Ninh Bình"`, `application-name="Giáo dục Ninh Bình"`, `apple-mobile-web-app-capable="yes"`, và `apple-touch-icon`.
+- **Bắt Sự Kiện Module Top-Level (`window.__deferredPwaPrompt`):**
+  - Bắt sự kiện `beforeinstallprompt` ngay ở phạm vi module cấp cao nhất của `PwaInstallBanner.tsx` để giải quyết triệt để tình trạng bỏ lỡ sự kiện do component mount muộn hoặc chuyển trang.
+  - Khi học viên bấm nút `[✕]` đóng banner, component lưu timestamp 7 ngày vào `localStorage` và phát CustomEvent `'ontap-pwa-banner-dismissed'` để đồng bộ ẩn ngay lập tức tất cả banner ở các màn hình khác mà không cần reload trang.
+- **Điều Hướng Thông Minh 3 Kịch Bản (3-Way Smart Install Routing):**
+  1. *Android Chrome/Edge/Samsung Internet:* Kích hoạt Native Install Prompt (`deferredPrompt.prompt()`).
+  2. *iOS Safari:* Hiển thị Sheet hướng dẫn trực quan 3 bước (Bấm Chia sẻ ⎋ ➔ Chọn Thêm vào MH chính ➕ ➔ Nhấn Thêm).
+  3. *Android Fallback / In-App Browser (Zalo, Messenger, Facebook):* Hiển thị Sheet hướng dẫn 3 bước (Bấm Menu `⋮` góc trên phải ➔ Chọn "Thêm vào màn hình chính" hoặc "Mở bằng Chrome" ➔ Xác nhận Thêm).
+- **Quy Tắc Định Vị & Bảo Vệ Tập Trung Thi Cử (Placement & Anti-Distraction Floor):**
+  - Hiển thị tại: `WelcomeModal.tsx` (khách vãng lai), `LicenseSelectionScreen.tsx` (chọn hạng bằng), `Dashboard.tsx` (học viên đã đăng nhập).
+  - Tự động ẩn trên Desktop (`lg:hidden`) và ẩn khi app đang chạy ở chế độ Standalone (`display-mode: standalone`).
+  - **TUYỆT ĐỐI CẤM** nhúng vào `ExamQuizScreen.tsx` và `QuizScreen.tsx` để giữ không gian thi cử yên tĩnh, tập trung 100%.
+
 ---
 
 ## 3. Thiết Kế Cơ Sở Dữ Liệu & Xác Thực (`/login`, `/quan-ly` & Cloudflare D1)
@@ -177,3 +211,26 @@ flowchart TD
   1. Hệ thống ưu tiên đẩy file qua Worker `POST /api/v1/portal/upload` vào R2 `tndnb-assets` theo đúng phân loại (`portal/images/thumbnail_*`, `content_*`, `portal/documents/*`), nhận link công khai `GET /portal-assets/*` với `Cache-Control: immutable`.
   2. Trong trường hợp ngắt kết nối Worker hoặc timeout quá 5000ms, client helper tự động lùi về Supabase Storage (`post_images` / `post_files`), bài viết lưu thành công và không bao giờ báo lỗi gián đoạn.
   3. Toàn bộ các bài viết cũ lưu trên Supabase Storage vẫn nạp ảnh và tài liệu bình thường, đảm bảo tương thích ngược 100%.
+
+### Kịch bản 5: Nghiệm thu Hệ Thống Authoritative Dual Changelog & Nâng Cấp Phiên Bản v3.22.0
+- **Given:** Người dùng mở màn hình lịch sử cập nhật tại `/ontap` (`ChangelogScreen.tsx`) hoặc mở popup phiên bản mới (`ChangelogModal.tsx`).
+- **When:** Hệ thống khởi tạo component và người dùng bấm chuyển đổi Tab Switcher giữa `[👤 Người dùng]` và `[💻 Kỹ thuật (Dev)]`.
+- **Then:**
+  1. Header hiển thị đúng phiên bản mới nhất: `Phiên bản hiện tại: v3.22.0` (không còn hiển thị `v3.19.0`).
+  2. Tab Switcher phản hồi tức thì (0ms) không cần kết nối mạng hay gọi API bên ngoài.
+  3. Tab Người Dùng hiển thị đầy đủ 4 kế hoạch lớn: Màn hình thi Mobile First Fold, Banner làm bài dở có nút đóng `[✕]`, Welcome Modal tối giản, Zero-Noise Console cho khách vãng lai.
+  4. Tab Kỹ Thuật (Dev) hiển thị đầy đủ các chi tiết kiến trúc sâu (`ExamQuizScreen.tsx`, responsive `hidden md:flex`/`flex md:hidden`, `resumeSessionAvailable`, `auth?.currentUser`).
+  5. Toàn bộ 4 gói Monorepo đồng nhất phiên bản `"3.22.0"` và vượt qua 100% bộ kiểm thử tự động `scripts/version-sync.test.ts` và `scripts/changelog-parser.test.ts`.
+
+### Kịch bản 6: Nghiệm thu Gợi Ý Cài Đặt App PWA "Giáo dục Ninh Bình" Cho Khách & Học Viên Mobile
+- **Given:** Người dùng truy cập `/ontap` trên thiết bị di động (cả trường hợp khách chưa đăng nhập ở `WelcomeModal`, chọn hạng bằng ở `LicenseSelectionScreen`, và học viên tại `Dashboard`).
+- **When:** Người dùng xem màn hình và thực hiện thao tác bấm `[+ Thêm vào MH chính]` hoặc bấm `[✕]` đóng banner.
+- **Then:**
+  1. Banner hiển thị tiêu đề chuẩn nhận diện: `"Cài đặt Giáo dục Ninh Bình vào màn hình chính"`.
+  2. Khi cài đặt thành công ra màn hình chính điện thoại, biểu tượng ứng dụng mang đúng tên thương hiệu `"Giáo dục Ninh Bình"`.
+  3. Trên Android: Kích hoạt prompt cài đặt native. Trên iOS Safari: Hiển thị Sheet hướng dẫn 3 bước trực quan. Trên Android In-App Browser (Zalo, Facebook): Hiển thị hướng dẫn mở qua Chrome/Menu 3 chấm.
+  4. Khi bấm `[✕]`, banner ẩn ngay lập tức, lưu cờ 7 ngày và đồng bộ tức thì qua CustomEvent `'ontap-pwa-banner-dismissed'` để ẩn tất cả các banner khác trong phiên làm việc.
+  5. Banner tự động ẩn trên Desktop (`lg:hidden`) và ẩn khi app chạy trong chế độ `standalone`.
+  6. Trong phòng thi (`ExamQuizScreen.tsx` và `QuizScreen.tsx`), banner TUYỆT ĐỐI không xuất hiện, đảm bảo sự tập trung 100% cho thí sinh.
+
+

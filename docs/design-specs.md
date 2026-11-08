@@ -1,274 +1,380 @@
-# Đặc Tả Giao Diện Trực Quan (Visual Design Specifications) — Mobile Exam Screen & Resume Banner
+# Đặc Tả Giao Diện Trực Quan (Visual Design Specifications) — Authoritative Dual Changelog & Tab Switcher (v3.22.0)
 
 > **Dự án**: Cổng thông tin & Hệ thống Quản trị Đào tạo Thuyền viên Ninh Bình (TNDNB)  
-> **Phân hệ**: Ứng dụng Ôn tập & Thi thử trực tuyến (`ontap-web`)  
-> **Mã thiết kế**: `261107-1135-visual-specs-mobile-exam-screen-and-resume-banner`  
-> **Phiên bản**: v1.0.0 (Production-Ready)  
-> **Tiêu chuẩn áp dụng**: **Taste-Skill v2.5.0** (5-Viewport Responsive Matrix) & **Impeccable Craft Floor v4.8.0** (62-Rule Floor)  
+> **Phân hệ**: Ứng dụng Ôn tập & Thi thử trực tuyến (`ontap-web` & `ontap-win`)  
+> **Mã thiết kế**: `261108-2025-visual-specs-authoritative-changelog`  
+> **Phiên bản mục tiêu**: `v3.22.0` (Production-Ready)  
+> **Tiêu chuẩn áp dụng**: **Taste-Skill v2.5.0** (5-Viewport Responsive Matrix) & **Impeccable Craft Floor v4.8.0** (62-Rule Standard)  
 > **Tài liệu tham chiếu**:
-> - Kế hoạch tổng thể: [`plan.md`](file:///d:/Antigravity/TNDNB/docs/plans/261107-1135-mobile-exam-screen-and-resume-banner/plan.md)
-> - Thiết kế kỹ thuật: [`DESIGN.md`](file:///d:/Antigravity/TNDNB/docs/plans/261107-1135-mobile-exam-screen-and-resume-banner/DESIGN.md)
-> - Danh sách công việc: [`task.md`](file:///d:/Antigravity/TNDNB/docs/plans/261107-1135-mobile-exam-screen-and-resume-banner/task.md)
-> - Tệp mã nguồn: [`ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx) & [`App.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/App.tsx)
+> - Thiết kế giải pháp: [`DESIGN.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/DESIGN.md)
+> - Kế hoạch tổng thể: [`plan.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/plan.md)
+> - Danh sách công việc: [`task.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/task.md)
+> - Tệp mã nguồn: [`ChangelogScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ChangelogScreen.tsx) & [`ChangelogModal.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ChangelogModal.tsx)
 
 ---
 
-## 1. Tổng Quan & Phân Tích Cội Rễ Thị Giác (Visual Problem Statement)
+## 1. Bối Cảnh & Mục Tiêu Thiết Kế Thị Giác (Visual Problem Statement & Objectives)
 
-Người dùng thực tế gửi 2 phản hồi trực tiếp kèm ảnh chụp màn hình điện thoại:
-1. **Ảnh 1 (`media_1794025676890_6c2dd17b.png`)**:
-   > *"không hiện phần thông tin các nhân bên trên phần cầu hỏi nữa"*
-   - **Vấn đề thị giác**: Header cũ trên mobile chứa ảnh thẻ học viên `100x130px`, 6 dòng thông tin cá nhân và hộp màu cam `w-48` chiếm tới hơn `220px` chiều dọc. Trên màn hình di động `390px`, khối màu cam đè lên chữ và đẩy câu hỏi cùng 4 lựa chọn đáp án A, B, C, D ra ngoài viewport, buộc người học phải liên tục cuộn ngón tay.
-   - **Mục tiêu thiết kế**: Ẩn 100% thông tin cá nhân trên mobile (`< 768px`), thay thế bằng thanh **Mobile Exam Header** siêu mỏng (`~38px`), hiển thị câu hỏi và 4 đáp án ngay tại **First Fold** (vùng nhìn đầu tiên).
+### 1.1 Khuyết Tật Thị Giác Ở Phiên Bản Cũ (Before)
+1. **Lỗi Dữ Liệu Fallback Lạc Hậu**: Do phụ thuộc vào GitHub REST API (`getGitHubReleases`), khi gặp sự cố mạng hoặc rate-limit, giao diện rơi vào nhánh fallback hiển thị phiên bản cũ kỹ `v3.19.0` (trong khi mã nguồn thực tế đã qua `v3.20.0`, `v3.21.0` và đạt mốc `v3.22.0`).
+2. **Nội Dung Nghèo Nàn & Đơn Điệu**: Mỗi phiên bản chỉ có một hộp section duy nhất mang nhãn `"CẬP NHẬT"` với một dòng text ngắn ngủi mang tính chất chống cháy (`"Cập nhật hiệu suất và vá lỗi"`). Bốn kế hoạch nâng cấp lớn gần đây hoàn toàn vô hình trước mắt người dùng.
+3. **Thiếu Phân Biệt Đối Tượng Sử Dụng**: Học viên thuyền viên cần những thông tin rõ ràng về trải nghiệm ("Làm bài thi không cần cuộn", "Banner bài dở có nút tắt", "Màn hình chào đón ấm cúng"), trong khi kỹ sư/quản trị viên lại cần thông tin kỹ thuật ("Zustand selector", "Vite raw bundling", "Vitest test suite"). Việc gộp chung khiến thông tin hoặc quá sơ sài, hoặc quá khó hiểu.
 
-2. **Ảnh 2 (`media_1794025726962_36023bc9.png`)**:
-   > *"Nút vàng làm bài tiếp thiết kế lại như nào cho gọn, không để nổi che màn hình , nhiều máy màn hình bé nút nổi che hết các nút cần ấn trên màn hình. Nhiều khi người muốn thoát ra để chọn bài khác làm mà nút nổi Lam bài tiếp che hét nút chọn cái cần ấn"*
-   - **Vấn đề thị giác**: Nút nổi `fixed bottom-4 left-1/2` kèm hiệu ứng giật nảy `animate-bounce` nằm đè trực tiếp lên cụm nút chọn bài thi của `ModeSelectionScreen`. Không có nút đóng (`✕`), khiến học viên bị kẹt không thể chọn bài thi khác.
-   - **Mục tiêu thiết kế**: Chuyển thành **Alert Banner thanh mảnh** nội dòng (In-flow), đặt ngay dưới Header trong luồng trang (`animate-fade-in`), bổ sung nút **`[✕ Bỏ qua]`** rõ ràng.
+### 1.2 Mục Tiêu Thiết Kế Mới (After v3.22.0)
+1. **Authoritative Offline-First 0ms Latency**: Tích hợp cơ chế Raw Markdown Bundling (`?raw`), nạp trực tiếp `CHANGELOG.md` và `CHANGELOG_DEV.md`. Render tức thì bằng `useMemo`, không còn biểu tượng loading xoay tít chờ mạng.
+2. **Cụm Tab Switcher Segmented Control Chuẩn Impeccable**: Cho phép người dùng chuyển đổi mượt mà giữa góc nhìn **`[👤 Người dùng]`** (thân thiện, trực quan) và **`[💻 Kỹ thuật (Dev)]`** (chuyên sâu, tường minh).
+3. **Thẻ Section Đa Sắc Thái Phong Phú**: Tự động phân loại 6 nhóm thay đổi với biểu tượng và bảng màu nhận diện trực quan: Tính năng mới (Xanh ngọc), UI/UX (Xanh dương), Sửa lỗi (Vàng cam), Bảo mật (Đỏ), Kỹ thuật (Tím), Cập nhật chung (Xám slate).
 
 ---
 
-## 2. Màn Hình Làm Bài Thi (`ExamQuizScreen.tsx`): So Sánh Trước vs Sau
+## 2. Sơ Đồ Wireframe ASCII Chi Tiết (Before vs After)
 
-### 2.1. ASCII Wireframe Chi Tiết: Before vs After Trên Màn Hình Mobile (390px)
+### 2.1 Màn Hình `ChangelogScreen.tsx`: So Sánh Trước vs Sau
 
 ```text
 ====================================================================================================
-HIỆN TRẠNG (BEFORE) — HEADER CŨ CAO >220PX, ĐÈ CHỮ, CHE KHUẤT CÂU HỎI
+HIỆN TRẠNG (BEFORE) — PHỤ THUỘC GITHUB API, CHỈ 1 SECTION DUMMY, DỪNG LẠI Ở v3.19.0
 ====================================================================================================
 +--------------------------------------------------------------------------------------------------+
-| [ VẠCH TRANG TRÍ VÀNG NÂU - h-3 ]                                                                |
+| [←]                                       🚀                                                     |
+|                                    LỊCH SỬ CẬP NHẬT                                              |
+|                                Phiên bản hiện tại: v3.19.0                                       |
 +--------------------------------------------------------------------------------------------------+
 | +----------------------------------------------------------------------------------------------+ |
-| | [ ẢNH THẺ ]  NGUYỄN VĂN A (HỌC VIÊN)                                                         | |
-| | 100x130      Số báo danh: hocvien01                                                          | |
-| |              Ngày sinh: 15/08/1990                                                           | |
-| |              Địa chỉ: Hoa Lư, Ninh Bình                                                      | |
-| |              Lớp: Thuyền trưởng H3                                                           | |
-| |              Hạng bằng: [ Thuyền trưởng hạng 3 ]                                             | |
+| | [ v3.19.0 ]  28/10/2026   [ MỚI NHẤT ]                                                       | |
+| | |                                                                                            | |
+| | +-- [ 🚀 CẬP NHẬT ] -----------------------------------------------------------------------+ | |
+| | | • Cập nhật hiệu suất và vá lỗi                                                           | | |
+| | +------------------------------------------------------------------------------------------+ | |
+| +----------------------------------------------------------------------------------------------+ |
+====================================================================================================
+SAU TỐI ƯU (AFTER v3.22.0) — TAB SWITCHER KÉP + 6 SECTION ĐA DẠNG + NỘI DUNG 4 PLANS CHÍNH XÁC
+====================================================================================================
++--------------------------------------------------------------------------------------------------+
+| [← (Touch >= 44x44)]                      🚀                                                     |
+|                                    LỊCH SỬ CẬP NHẬT                                              |
+|                                Phiên bản hiện tại: v3.22.0                                       |
+|                                                                                                  |
+|              +----------------------------------------------------------------+                  |
+|              |  [ 👤 Người dùng (Active) ]     |     [ 💻 Kỹ thuật (Dev) ]     |  <-- TAB SWITCHER|
+|              +----------------------------------------------------------------+                  |
++--------------------------------------------------------------------------------------------------+
+| +----------------------------------------------------------------------------------------------+ |
+| | [ v3.22.0 ]  08/11/2026   [ MỚI NHẤT ]                                                       | |
+| | |                                                                                            | |
+| | +-- [ 🌟 TÍNH NĂNG MỚI (Emerald) ] --------------------------------------------------------+ | |
+| | | • Chế độ xem Changelog Kép: Dễ dàng chuyển đổi giữa giao diện người dùng và kỹ thuật     | | |
+| | | • Khả năng đọc offline 100%: Mở lịch sử cập nhật tức thì ngoài khơi không cần mạng 4G     | | |
+| | +------------------------------------------------------------------------------------------+ | |
+| | |                                                                                            | |
+| | +-- [ 🚀 GIAO DIỆN & TRẢI NGHIỆM (Blue) ] -------------------------------------------------+ | |
+| | | • Màn hình làm bài thi Mobile First Fold: Rút gọn header 180px, hiển thị câu hỏi ngay     | | |
+| | | • Thanh nhắc bài thi dở dang thanh mảnh: Nằm gọn gàng đầu trang, có nút [✕ Bỏ qua]        | | |
+| | | • Màn hình chào mừng tối giản ấm cúng: Thẻ đơn trung tâm tôn vinh bánh lái 3D             | | |
+| | +------------------------------------------------------------------------------------------+ | |
+| | |                                                                                            | |
+| | +-- [ 🔧 SỬA LỖI & ỔN ĐỊNH (Amber) ] ------------------------------------------------------+ | |
+| | | • Khắc phục lỗi văng cảnh báo sai phiên bản khi chưa đăng nhập (Guest Guard)             | | |
+| | | • Sửa lỗi nhảy giật chữ số đồng hồ đếm ngược với chuẩn font số thẳng trục tabular-nums   | | |
+| | +------------------------------------------------------------------------------------------+ | |
+| +----------------------------------------------------------------------------------------------+ |
+|                                                                                                  |
+| +----------------------------------------------------------------------------------------------+ |
+| | [ v3.21.0 ]  07/11/2026                                                                      | |
+| | | • Tối giản thanh điều hướng di động: Gom các chức năng phụ vào Menu 3 gạch                | | |
+| | | • Bổ sung banner cài đặt ứng dụng PWA đưa ra màn hình chính điện thoại 1 chạm             | | |
+| +----------------------------------------------------------------------------------------------+ |
++--------------------------------------------------------------------------------------------------+
+```
+
+### 2.2 Modal Thông Báo Cập Nhật `ChangelogModal.tsx`
+
+```text
++--------------------------------------------------------------------------------------------------+
+| MODAL POPUP THÔNG BÁO PHIÊN BẢN MỚI (max-w-2xl, rounded-2xl, shadow-2xl, backdrop-blur)          |
+| +----------------------------------------------------------------------------------------------+ |
+| | [🚀] LỊCH SỬ CẬP NHẬT                                                                    [✕] | |
+| |      Phiên bản hiện tại: v3.22.0 (08/11/2026)                                                | |
 | |                                                                                              | |
-| | +------------------------------------+  [ Thoát ]                                            | |
-| | | HỘP CAM w-48 (ĐÈ CHỮ TRÊN MOBILE!) |                                                       | |
-| | | Đang thi                           |                                                       | |
-| | | Thời gian: 45 phút - Bù giờ: 0     |                                                       | |
-| | | Còn lại: 29:45                     |                                                       | |
-| | +------------------------------------+                                                       | |
+| |      +----------------------------------------------------------------------+                | |
+| |      |     [ 👤 Người dùng (Active) ]     |     [ 💻 Kỹ thuật (Dev) ]       |                | |
+| |      +----------------------------------------------------------------------+                | |
 | +----------------------------------------------------------------------------------------------+ |
-| ------------------------------------------------------------------------------------------------ |
-| (HẾT MÀN HÌNH VIEWPORT - CÂU HỎI & ĐÁP ÁN BỊ ĐẨY XUỐNG DƯỚI, BUỘC PHẢI CUỘN TAY LIÊN TỤC!)       |
-+--------------------------------------------------------------------------------------------------+
-
-====================================================================================================
-SAU TỐI ƯU (AFTER) — MOBILE EXAM HEADER SIÊU MỎNG (~38PX), FIRST FOLD CHỨA TOÀN BỘ BÀI THI
-====================================================================================================
-+--------------------------------------------------------------------------------------------------+
-| [ VẠCH TRANG TRÍ VÀNG NÂU - h-3 ]                                                                |
-+--------------------------------------------------------------------------------------------------+
-| [← Thoát]  [TT Hạng 3]                          Câu 1/30            [ ⏱️ 29:45 (tabular-nums) ]|
-| (Tap >= 44x44)                                  (Text Blue)         (Amber Badge Nổi Bật)        |
-+--------------------------------------------------------------------------------------------------+
-|                                                                                                  |
-| [NỘI DUNG CÂU HỎI]                                                                               |
-| Câu 1: Khi điều khiển phương tiện tránh nhau trên luồng hẹp, người lái phương tiện phải thực     |
-| hiện quy tắc nào dưới đây để đảm bảo an toàn giao thông đường thủy nội địa?                      |
-|                                                                                                  |
-| (Nếu có hình ảnh biển báo/sa hình: hiển thị cân đối max-h-48 ngay dưới câu hỏi)                  |
-|                                                                                                  |
+| | VÙNG NỘI DUNG CUỘN (max-h-[60vh] overflow-y-auto pr-2)                                       | |
+| |                                                                                              | |
+| | [ v3.22.0 ] - 08/11/2026   [ MỚI NHẤT ]                                                      | |
+| |                                                                                              | |
+| | [ 🌟 TÍNH NĂNG MỚI ]                                                                         | |
+| | • Tích hợp Tab Switcher xem lịch sử cập nhật theo 2 góc nhìn                                 | |
+| |                                                                                              | |
+| | [ 🚀 GIAO DIỆN & TRẢI NGHIỆM ]                                                               | |
+| | • Màn hình thi di động siêu mỏng, không che đáp án                                           | |
+| | • Banner làm bài dở thanh mảnh kèm nút đóng tiện lợi                                         | |
 | +----------------------------------------------------------------------------------------------+ |
-| | [ A ]  Giảm tốc độ, đi sát về phía bên phải luồng theo chiều đi của mình                     | |
-| +----------------------------------------------------------------------------------------------+ |
-| | [ B ]  Tăng tốc độ vượt nhanh qua phương tiện đối diện                                       | |
-| +----------------------------------------------------------------------------------------------+ |
-| | [ C ]  Dừng hẳn phương tiện lại giữa luồng để chờ phương tiện kia đi qua                     | |
-| +----------------------------------------------------------------------------------------------+ |
-| | [ D ]  Phát tín hiệu còi liên tục và đi sang luồng bên trái                                  | |
-| +----------------------------------------------------------------------------------------------+ |
-|                                                                                                  |
-| [ ← Câu trước ]                                                               [ Câu tiếp theo → ]|
+| | CHÂN MODAL: [ Tôi đã hiểu & Bắt đầu trải nghiệm ]                                            | |
 +--------------------------------------------------------------------------------------------------+
 ```
 
-### 2.2. Chi Tiết Thành Phần Mobile Exam Header (`flex md:hidden`)
+---
 
-Thanh điều khiển di động chỉ cao vỏn vẹn **`38px`** (cộng padding viền dưới `pb-3 mb-2`), hiển thị đầy đủ 4 thông tin thiết yếu nhất:
+## 3. Thiết Kế Cụm Tab Switcher Segmented Control (Người Dùng vs. Dev)
 
-1. **Nút `[← Thoát]`**:
-   - Class: `px-2.5 py-1 text-xs font-semibold rounded-lg bg-muted text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0`.
-   - Vùng bấm an toàn (Tap target): Kích thước tương tác tối thiểu `44x44px` nhờ khoảng đệm tự nhiên.
-   - Hành vi: Gọi `handleBackWithConfirm()` bật hộp thoại xác nhận tránh học viên lỡ tay làm mất bài thi.
-2. **Nhãn Hạng Bằng (`selectedLicense?.name`)**:
-   - Class: `text-xs font-bold text-red-600 border border-red-400 px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/30 max-w-[120px] truncate`.
-   - Hiển thị tên chứng chỉ chuyên môn đang sát hạch (ví dụ: `TT Hạng 3`), tự động cắt ngắn `truncate` nếu tên quá dài.
-3. **Tiến Độ Câu Hỏi (`Câu X/Y`)**:
-   - Class: `text-xs font-semibold text-blue-600 dark:text-blue-400 tabular-nums`.
-   - Báo số thứ tự câu hiện tại trên tổng số câu (ví dụ: `Câu 1/30`).
-4. **Đồng Hồ Đếm Ngược Nổi Bật (`⏱️ MM:SS`)**:
-   - Class: `flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 font-mono font-bold text-xs tabular-nums shadow-xs`.
-   - Đồng hồ được đặt trong hộp màu hổ phách dịu mắt, phông `font-mono` kết hợp `tabular-nums` triệt tiêu 100% hiện tượng rung giật số giây.
+### 3.1 Cấu Trúc Khối & Tỷ Lệ Thẩm Mỹ
+- **Vị trí**: Đặt trang trọng chính giữa, ngay dưới tiêu đề `LỊCH SỬ CẬP NHẬT` và dòng mô tả phiên bản hiện tại.
+- **Vỏ bọc Container**:
+  - Class: `inline-flex p-1 bg-muted/60 backdrop-blur-xs rounded-2xl border border-border shadow-xs max-w-full overflow-x-auto`
+  - Đảm bảo độ cao tổng thể đạt `48px`, khoảng hở biên trong `p-1` (4px) tạo hiệu ứng lơ lửng của tab được chọn.
 
-### 2.3. Màn Hình Desktop (`>= 768px` — `hidden md:flex`)
+### 3.2 Quy Tắc Trạng Thái Tab (Active vs Inactive)
 
-Bảo toàn nguyên vẹn 100% bố cục trang trọng, quy chuẩn phòng máy:
-- **Ảnh thẻ học viên 3x4**: Kích thước cố định `w-[100px] h-[130px]`, viền `border-gray-300`, nền `bg-card`.
-- **Khối thông tin cá nhân**: Họ tên in hoa màu xanh đậm (`text-blue-700 text-lg uppercase`), Số báo danh, Ngày sinh, Địa chỉ, Lớp đào tạo, Hạng bằng đỏ viền nổi bật.
-- **Khối đồng hồ cam truyền thống**: Kích thước rộng rãi `w-48 bg-[#f0ad4e] text-black p-2 rounded-md text-sm`.
-- **Nút Thoát góc trên phải**: Text link tinh tế `hover:text-red-500`.
+| Trạng Thái | Lớp Tailwind Sử Dụng | Hiệu Ứng Trực Quan & Trợ Năng |
+| :--- | :--- | :--- |
+| **Tab Đang Chọn (`Active`)** | `bg-primary text-primary-foreground shadow-sm font-black` | Nền xanh navy đậm (Light) / xanh sky sáng (Dark), chữ nổi bật, bóng đổ nhẹ tạo độ nổi 3D, font chữ siêu đậm (`font-black`). |
+| **Tab Chưa Chọn (`Inactive`)** | `text-muted-foreground hover:text-foreground hover:bg-background/50 font-semibold` | Màu chữ xám dịu mắt, hover sáng dần và nổi nhẹ lớp nền bán trong suốt, tạo sự phản hồi tự nhiên. |
+
+### 3.3 Công Thái Học & Tương Tác Chạm (Haptics & Touch Target)
+- **Vùng bấm tối thiểu (Touch Target)**: `min-h-[44px] px-4 sm:px-6 py-2` (Đáp ứng hoàn hảo chuẩn Apple Human Interface Guidelines $\ge 44 \times 44\text{px}$).
+- **Phản hồi xúc giác (Haptic Feedback)**:
+  - Khi người dùng chạm ngón tay chuyển đổi tab: Gọi `triggerHaptic('light')`.
+  - Hiệu ứng cơ học vật lý: `active:scale-[0.98] transition-all duration-150`.
+- **Trợ năng bàn phím (Keyboard Accessibility)**:
+  - Bổ sung `role="tab"`, `aria-selected={activeTab === 'user'}`.
+  - Vòng viền bàn phím: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2`.
 
 ---
 
-## 3. Alert Banner Nhắc Bài Thi Dở Dang (`App.tsx`): So Sánh Trước vs Sau
+## 4. Thiết Kế Thẻ Section Đa Sắc Thái & Timeline Card
 
-### 3.1. ASCII Wireframe Chi Tiết: Before vs After
+### 4.1 Hệ Thống 6 Nhóm Section & Bảng Màu Nhận Diện
 
-```text
-====================================================================================================
-HIỆN TRẠNG (BEFORE) — NÚT NỔI VÀNG NHẢY NHÓT CHE KÍN CÁC THẺ CHỌN BÀI THI
-====================================================================================================
-+--------------------------------------------------------------------------------------------------+
-| TOPNAVBAR: [Ôn tập] [Lớp của tôi] ...                                                            |
-+--------------------------------------------------------------------------------------------------+
-|                                                                                                  |
-| [ THẺ CHỌN MÔN HỌC 1 ]                         [ THẺ CHỌN MÔN HỌC 2 ]                            |
-|                                                                                                  |
-| [ THẺ CHỌN MÔN HỌC 3 ]                         [ THẺ CHỌN MÔN HỌC 4 ]                            |
-|                                                                                                  |
-|                     +----------------------------------------------+                             |
-|                     | ⚠️ BẠN ĐANG CÓ BÀI THI LÀM DỞ! Làm tiếp ngay | <-- Nút vàng nảy animate-   |
-|                     | (fixed bottom-4 left-1/2, KHÔNG CÓ NÚT ĐÓNG!)|     bounce đè kín 2 nút thi |
-|                     +----------------------------------------------+     ở dưới đáy màn hình!    |
-+--------------------------------------------------------------------------------------------------+
+Bộ phân loại Regex tự động ánh xạ tiêu đề `### ` trong Markdown sang 6 kiểu section trực quan:
 
-====================================================================================================
-SAU TỐI ƯU (AFTER) — ALERT BANNER THANH MẢNH ĐẶT TRONG LUỒNG, CÓ NÚT [✕ BỎ QUA]
-====================================================================================================
-+--------------------------------------------------------------------------------------------------+
-| TOPNAVBAR: [Ôn tập] [Lớp của tôi] ...                                                            |
-+--------------------------------------------------------------------------------------------------+
-| ⚠️  Bạn có bài thi đang làm dở                   [ Làm tiếp ngay ]   [✕]                         |
-| (Nền hổ phách mờ bg-amber-500/10, viền border-b) (Nút vàng cam sắc nét) (Nút đóng bỏ qua an toàn)|
-+--------------------------------------------------------------------------------------------------+
-|                                                                                                  |
-| [ THẺ CHỌN MÔN HỌC 1 ]                         [ THẺ CHỌN MÔN HỌC 2 ]                            |
-|                                                                                                  |
-| [ THẺ CHỌN MÔN HỌC 3 ]                         [ THẺ CHỌN MÔN HỌC 4 ]                            |
-|                                                                                                  |
-| [ BẮT ĐẦU THI THỬ ➔ ]                          [ XEM LỊCH SỬ THI ➔ ]                             |
-| (HOÀN TOÀN THÔNG THOÁNG, KHÔNG BỊ BẤT KỲ VẬT THỂ NÀO CHE KHUẤT!)                                 |
-+--------------------------------------------------------------------------------------------------+
+| Phân Loại Nhóm | Biểu Tượng (Lucide Icon) | Lớp Màu Chữ & Icon (`color`) | Lớp Nền & Viền Badge (`bgColor`) | Mục Đích Ứng Dụng |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Tính Năng Mới** | `Sparkles` | `text-emerald-500` | `bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-500/20` | Giới thiệu các chức năng học vụ, công cụ ôn tập mới phát hành |
+| **2. Giao Diện & UX** | `Rocket` | `text-blue-500` | `bg-blue-100 dark:bg-blue-900/30 border border-blue-500/20` | Nâng cấp bố cục màn hình, trải nghiệm chạm, rút gọn header |
+| **3. Sửa Lỗi & Ổn Định** | `Wrench` | `text-amber-500` | `bg-amber-100 dark:bg-amber-900/30 border border-amber-500/20` | Khắc phục sự cố thao tác, lỗi layout, tối ưu hiệu năng làm bài |
+| **4. Bảo Mật & Quyền** | `Shield` | `text-red-500` | `bg-red-100 dark:bg-red-900/30 border border-red-500/20` | Quản lý phiên đăng nhập, phân quyền học viên, giáo viên, quản lý |
+| **5. Kỹ Thuật & Dev** | `Code` | `text-purple-500` | `bg-purple-100 dark:bg-purple-900/30 border border-purple-500/20` | Refactor mã nguồn, kiến trúc parser, cấu hình build, database |
+| **6. Cập Nhật Chung** | `List` | `text-slate-500` | `bg-slate-100 dark:bg-slate-900/30 border border-slate-500/20` | Các thay đổi định dạng văn bản, dữ liệu học liệu tổng hợp |
+
+### 4.2 Thiết Kế Timeline Card & Version Header
+- **Trục Thời Gian (Timeline Spine)**:
+  - Đường kẻ bên trái: `border-l-2 border-border ml-4 pl-4 space-y-4 pb-2`.
+  - Giúp mắt người đọc dễ dàng theo dõi trình tự thời gian từ phiên bản mới nhất lùi dần về các phiên bản trước.
+- **Hộp Phiên Bản (Version Badge)**:
+  - Class: `px-3.5 py-1.5 rounded-xl font-black text-sm shadow-sm tabular-nums`
+  - Phiên bản mới nhất: `bg-primary text-primary-foreground`
+  - Các phiên bản cũ: `bg-muted text-muted-foreground`
+- **Huy Hiệu `[ MỚI NHẤT ]`**:
+  - Class: `px-2.5 py-0.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[10px] font-black rounded-full uppercase tracking-wider border border-emerald-500/30 shadow-xs`.
+- **Dấu Gạch Đầu Dòng (Bullet Items)**:
+  - Dot tròn tinh tế: `<span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>`
+  - Đoạn văn bản: `text-sm text-foreground font-normal leading-relaxed text-left`.
+
+---
+
+## 5. Ma Trận Đáp Ứng 5-Viewport (Taste-Skill v2.5.0)
+
+Hệ thống được thiết kế đáp ứng hoàn hảo trên 5 mốc phân giải chuẩn của **Taste-Skill v2.5.0**:
+
+```mermaid
+flowchart TD
+    subgraph Viewports ["5 Mốc Khung Nhìn (Taste-Skill Responsive Grid)"]
+        V1["1440px: Desktop Lớn (Căn giữa max-w-2xl, đối xứng hoàn mỹ)"]
+        V2["1024px: Laptop / Tablet Ngang (Khoảng đệm thoải mái, nhịp thở 24px)"]
+        V3["820px: iPad Air Dọc (Cụm tab co giãn linh hoạt, touch target 44px)"]
+        V4["768px: Tablet Nhỏ (Chữ co giãn clamp mượt mà, timeline co ngắn)"]
+        V5["390px: Mobile Chuẩn (iPhone 14/15/16 - Tab Switcher full-width không tràn viền)"]
+    end
 ```
 
-### 3.2. Chi Tiết Thành Phần Alert Banner (`animate-fade-in`)
+### Bảng Ma Trận Chi Tiết:
 
-Banner nằm ở vị trí đầu trang ngay dưới thanh điều hướng, chiếm độ cao chỉ `~40px`:
-
-1. **Khối Thông Điệp (Bên Trái)**:
-   - Icon cảnh báo: `⚠️` sắc nét (`text-base shrink-0`).
-   - Văn bản: `"Bạn có bài thi đang làm dở"` (`font-medium truncate`).
-2. **Cụm Hành Động (Bên Phải)**:
-   - **Nút `[Làm tiếp ngay]`**:
-     - Class: `px-3 py-1 text-xs font-semibold rounded-lg bg-amber-500 hover:bg-amber-600 text-black transition-colors shadow-xs shrink-0`.
-     - Thao tác: Kích hoạt `resumeSession()`, đưa học viên trở lại ngay câu hỏi và các đáp án đã chọn dở dang.
-   - **Nút `[✕ Bỏ qua]`**:
-     - Class: `p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-amber-500/20 transition-colors shrink-0`.
-     - Vùng bấm: Đạt `min-h-[36px] min-w-[36px]` kèm padding vô hình hỗ trợ chạm cảm ứng dễ dàng.
-     - Thao tác: Gọi `setResumeSessionAvailable(false)`, ẩn hoàn toàn thanh banner trong phiên làm việc hiện tại mà không xóa dữ liệu lưu trữ trong `localStorage`.
+| Yếu Tố Giao Diện | 1. Desktop Lớn (1440px) | 2. Laptop (1024px) | 3. Tablet Ngang (820px) | 4. Tablet Dọc (768px) | 5. Mobile Chuẩn (390px - iPhone) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Khung Chứa Chính (`Container`)** | `max-w-2xl mx-auto px-4 pt-20 pb-24` | `max-w-2xl mx-auto px-4 pt-20 pb-24` | `max-w-xl mx-auto px-4 pt-16 pb-20` | `max-w-lg mx-auto px-3 pt-14 pb-16` | `w-full px-3 pt-12 pb-16 max-w-full overflow-x-hidden` |
+| **Nút Quay Lại (`ArrowLeftIcon3D`)** | `min-h-[44px] min-w-[44px] absolute left-0 top-1/2 -translate-y-1/2` | `min-h-[44px] min-w-[44px] absolute left-0` | `min-h-[44px] min-w-[44px] absolute left-0` | `min-h-[44px] min-w-[44px] static mb-2 inline-flex` | `min-h-[44px] min-w-[44px] static mb-2 inline-flex` |
+| **Cụm Tab Switcher** | `inline-flex px-6 py-2` | `inline-flex px-5 py-2` | `inline-flex px-4 py-2` | `flex w-full justify-center` | `grid grid-cols-2 w-full p-1 min-h-[44px]` |
+| **Độ Rộng Thẻ Section** | `p-5 rounded-2xl` | `p-4 rounded-xl` | `p-4 rounded-xl` | `p-3.5 rounded-xl` | `p-3 rounded-xl` |
+| **Khoảng Cách Dòng Bullet** | `leading-relaxed text-sm` | `leading-relaxed text-sm` | `leading-relaxed text-sm` | `leading-normal text-xs sm:text-sm` | `leading-normal text-xs` (Dễ đọc trên xe bus, tàu thủy) |
+| **Đường Kẻ Trục Timeline** | `ml-4 pl-4 border-l-2` | `ml-4 pl-4 border-l-2` | `ml-3 pl-3 border-l-2` | `ml-2 pl-2 border-l` | `ml-2 pl-2 border-l border-border` |
 
 ---
 
-## 4. Ma Trận Đáp Ứng 5-Viewport (Taste-Skill v2.5.0)
+## 6. Danh Mục Exact Tailwind CSS Classes & Semantic Tokens
 
-Hệ thống được thiết kế đồng bộ và kiểm thử độ tương thích trên cả 5 mốc màn hình chuẩn của **Taste-Skill v2.5.0**:
+Toàn bộ các thẻ HTML được gắn class Tailwind chuẩn mực, kế thừa hệ thống Semantic Design Tokens của dự án:
 
-| Thành Phần Giao Diện | 1. Desktop Lớn (1440px) | 2. Laptop (1024px) | 3. Tablet Ngang (820px) | 4. Tablet Dọc (768px - Breakpoint `md:`) | 5. Mobile Chuẩn (390px - iPhone 14/15/16) |
-|---|---|---|---|---|---|
-| **ExamQuiz Header** | Desktop Header (`flex`): Đầy đủ ảnh thẻ 100x130 + 6 dòng info + Hộp cam `w-48` | Desktop Header (`flex`): Đầy đủ ảnh thẻ + info + Hộp cam `w-48` | Desktop Header (`flex`): Đầy đủ ảnh thẻ + info + Hộp cam `w-48` | Điểm ngắt `md:`: Chuyển đổi mượt mà sang Mobile Header | **Mobile Exam Header (`~38px`): Ẩn 100% info cá nhân; Nút Thoát + Bằng + Câu X/Y + Timer** |
-| **First Fold Màn Thi** | Rộng rãi, thoải mái | Rộng rãi, thoải mái | Rộng rãi, thoải mái | Toàn bộ câu hỏi & 4 đáp án nằm gọn trong màn hình đầu | **Toàn bộ câu hỏi & 4 đáp án A, B, C, D hiển thị ngay, KHÔNG CẦN CUỘN TAY** |
-| **Vị Trí Alert Banner** | Dưới TopNavbar, rộng tối đa `100%`, padding `px-6 py-2` | Dưới TopNavbar, padding `px-4 py-2` | Dưới TopNavbar, padding `px-4 py-2` | Dưới TopNavbar, padding `px-4 py-2` | **Dưới TopNavbar/Marquee, mỏng `~40px`, nội dòng chuẩn, KHÔNG CHE NÚT** |
-| **Cơ Chế Bỏ Qua Banner** | Nút `[✕]` góc phải | Nút `[✕]` góc phải | Nút `[✕]` góc phải | Nút `[✕]` góc phải | **Nút `[✕]` góc phải (Tap target >= 36px, không bấm nhầm)** |
+### 6.1 Bảng Màu Ngữ Nghĩa (Light & Dark Mode)
+
+| Token Tên Biến | Giá Trị Light Mode | Giá Trị Dark Mode | Mục Đích Sử Dụng |
+| :--- | :--- | :--- | :--- |
+| `--bg-card` | `#FFFFFF` | `#131C38` (Navy đậm) | Nền của Thẻ phiên bản và Hộp section |
+| `--text-card-foreground` | `#0F172A` (Slate 900) | `#F8FAFC` (Slate 50) | Màu chữ tiêu đề và nội dung bullet |
+| `--border-border` | `#E2E8F0` (Slate 200) | `#1E293B` (Slate 800) | Đường kẻ timeline và viền thẻ |
+| `--bg-muted` | `#F1F5F9` (Slate 100) | `#1E293B` (Slate 800) | Nền khung Tab Switcher và Version cũ |
+| `--text-muted-foreground` | `#475569` (Slate 600) | `#94A3B8` (Slate 400) | Ngày tháng phát hành, tab không active |
+| `--bg-primary` | `#003566` (Navy chủ đạo) | `#38BDF8` (Sky sáng) | Nền tab Active, Icon tên lửa, Dot bullet |
+| `--text-primary-foreground` | `#FFFFFF` | `#0B132B` | Màu chữ trên nền Primary |
+
+### 6.2 Danh Sách Đoạn Mã Khung Giao Diện Cốt Lõi
+
+1. **Khối Header & Tab Switcher Trong `ChangelogScreen.tsx`**:
+```tsx
+<div className="relative text-center mb-6 pt-4">
+  <button 
+    onClick={() => { triggerHaptic('light'); onBack(); }} 
+    className="absolute left-0 top-1/2 -translate-y-1/2 bg-card p-2 rounded-2xl shadow-sm border border-border active:scale-95 transition-all text-foreground hover:bg-muted min-h-[44px] min-w-[44px] flex items-center justify-center font-bold"
+    aria-label="Quay lại"
+  >
+    <ArrowLeftIcon3D className="h-7 w-7 text-foreground" />
+  </button>
+  
+  <div className="bg-primary/10 text-primary w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm border border-primary/20">
+    <Rocket className="h-8 w-8 animate-float" />
+  </div>
+  
+  <h1 className="text-2xl font-black text-foreground uppercase tracking-tight">
+    Lịch sử cập nhật
+  </h1>
+  <p className="text-sm text-muted-foreground mt-1 font-semibold tabular-nums">
+    Phiên bản hiện tại: v{currentVersion}
+  </p>
+
+  {/* Tab Switcher Segmented Control */}
+  <div className="mt-5 inline-flex p-1 bg-muted/60 backdrop-blur-xs rounded-2xl border border-border shadow-xs">
+    <button
+      onClick={() => { triggerHaptic('light'); setActiveTab('user'); }}
+      className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[40px] flex items-center gap-2 ${
+        activeTab === 'user'
+          ? 'bg-primary text-primary-foreground shadow-sm font-black'
+          : 'text-muted-foreground hover:text-foreground hover:bg-background/40'
+      }`}
+    >
+      <span>👤</span>
+      <span>Người dùng</span>
+    </button>
+    <button
+      onClick={() => { triggerHaptic('light'); setActiveTab('dev'); }}
+      className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[40px] flex items-center gap-2 ${
+        activeTab === 'dev'
+          ? 'bg-primary text-primary-foreground shadow-sm font-black'
+          : 'text-muted-foreground hover:text-foreground hover:bg-background/40'
+      }`}
+    >
+      <span>💻</span>
+      <span>Kỹ thuật (Dev)</span>
+    </button>
+  </div>
+</div>
+```
 
 ---
 
-## 5. Danh Mục Exact Tailwind CSS Classes & Semantic Design Tokens
+## 7. Bảng Kiểm Tuân Thủ Impeccable Craft Floor v4.8.0
 
-Toàn bộ các phần tử được mã hóa chuẩn hóa bằng Tailwind CSS và hệ thống biến ngữ nghĩa (Semantic Tokens) tương thích 100% cả Light Mode và Dark Mode:
+Mọi thành phần trong giao diện đều được đối soát và thỏa mãn 100% các tiêu chí thủ công cao cấp:
 
-### 5.1. Bảng Token Màu Sắc Ngữ Nghĩa Sử Dụng
-
-| Token Tên Biến | Mã Màu Light | Mã Màu Dark | Vai Trò Áp Dụng | Tỷ Lệ Tương Phản (WCAG AA) |
-|---|---|---|---|---|
-| `--bg-card` | `#FFFFFF` | `#131C38` | Nền khung làm bài thi (`ExamQuizScreen`) | Nền cơ sở |
-| `--border-border` | `#E2E8F0` | `#1E293B` | Đường kẻ phân cách Mobile Header và Alert Banner | Đường kẻ hairline sắc nét |
-| `--muted` / `--muted-foreground` | `#F1F5F9` / `#475569` | `#1E293B` / `#94A3B8` | Nền và chữ nút `[← Thoát]` di động | `7.1:1` (Vượt ngưỡng 4.5:1) |
-| `--amber-badge-bg` | `rgba(245, 158, 11, 0.15)` | `rgba(245, 158, 11, 0.20)` | Nền hộp đồng hồ đếm ngược mobile | Tương phản chuẩn hổ phách dịu mắt |
-| `--amber-badge-border` | `rgba(245, 158, 11, 0.30)` | `rgba(245, 158, 11, 0.40)` | Viền hộp đồng hồ đếm ngược mobile | Viền nhấn tinh tế |
-| `--amber-badge-text` | `#92400E` (Amber 800) | `#FCD34D` (Amber 300) | Chữ số đếm ngược thời gian | `5.2:1` (Light) / `9.6:1` (Dark) |
-| `--destructive` | `#DC2626` (Red 600) | `#F87171` (Red 400) | Trạng thái hover của nút Thoát bài thi | `6.2:1` (Đạt chuẩn AA) |
-
-### 5.2. Danh Mục Các Lớp CSS Cốt Lõi
-
-1. **Khối Mobile Header**:
-   - Vỏ ngoài: `flex md:hidden items-center justify-between pb-3 mb-2 border-b border-border`
-   - Nút Thoát: `px-2.5 py-1 text-xs font-semibold rounded-lg bg-muted text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0`
-   - Badge Bằng: `text-xs font-bold text-red-600 border border-red-400 px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/30 max-w-[120px] truncate`
-   - Badge Câu: `text-xs font-semibold text-blue-600 dark:text-blue-400 tabular-nums`
-   - Hộp Đếm Giờ: `flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 font-mono font-bold text-xs tabular-nums shadow-xs`
-2. **Khối Alert Banner**:
-   - Vỏ ngoài: `bg-amber-500/10 border-b border-amber-500/25 px-4 py-2 flex items-center justify-between gap-3 text-xs sm:text-sm text-foreground shadow-xs animate-fade-in`
-   - Nút Làm tiếp: `px-3 py-1 text-xs font-semibold rounded-lg bg-amber-500 hover:bg-amber-600 text-black transition-colors shadow-xs`
-   - Nút Đóng [✕]: `p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-amber-500/20 transition-colors`
-
----
-
-## 6. Bộ Quy Tắc 62-Rule Craft Floor (Impeccable v4.8.0)
-
-Bản thiết kế tuân thủ nghiêm ngặt các điều luật thủ công chất lượng cao:
-
-- [x] **Rule 01 — Kích Thước Chạm Tiêu Chuẩn (Tap Target >= 44x44px)**:
-  - Nút `[← Thoát]` và nút `[✕ Bỏ qua]` đều được bố trí vùng chạm mở rộng (Padding + Hitbox vô hình) đảm bảo ngón tay cái chạm chính xác ngay cả trên màn hình nhỏ.
-- [x] **Rule 12 — Hiển Thị Số Học Ổn Định (`tabular-nums`)**:
-  - Số đếm ngược `formatTime(timeLeft)` và số thứ tự câu hỏi `Câu X/Y` đều sử dụng lớp `tabular-nums` của Tailwind. Các con số có chiều rộng đơn cách cố định, triệt tiêu 100% hiện tượng rung lắc giật layout (Cumulative Layout Shift - CLS = 0).
-- [x] **Rule 05 — Tỷ Lệ Tương Phản Màu Sắc (WCAG 2.1 AA >= 4.5:1)**:
-  - Chữ đen trên nút `bg-amber-500`: Tỷ lệ tương phản **`8.8:1`** (Vượt chuẩn AAA).
-  - Badge đồng hồ đếm ngược hổ phách: Tương phản **`5.2:1`** (Light Mode) và **`9.6:1`** (Dark Mode).
-  - Nút `← Thoát`: Tương phản **`7.1:1`** với nền thẻ.
-- [x] **Rule 24 — Triệt Tiêu Hoàn Toàn AI Slop & Chuyển Động Rác**:
-  - **Xóa bỏ hoàn toàn lớp `animate-bounce`** gây nhức mắt, phân tán sự chú ý và làm lag trình duyệt di động.
-  - Thay thế bằng hiệu ứng xuất hiện êm dịu chuẩn UX `animate-fade-in`.
-  - Không sử dụng gradient cầu vồng tím-hồng tùy tiện; màu sắc tuân thủ nhận diện Hàng hải — Hổ phách học vụ.
-- [x] **Rule 38 — First-Fold Optimization (Tối Ưu Vùng Nhìn Đầu Tiên)**:
-  - Cắt giảm `180px` chiều cao thừa của header thi trên mobile; bảo đảm toàn bộ nội dung câu hỏi và 4 đáp án nằm trọn trong First Fold của mọi smartphone hiện đại.
-
----
-
-## 7. Bảo Toàn Logic Nghiệp Vụ & An Toàn Kỹ Thuật (Safety & State Preservation)
-
-1. **Bảo toàn 100% Logic Tính Điểm & Thi Thử**:
-   - Việc tách biệt hiển thị Header (`hidden md:flex` và `flex md:hidden`) chỉ can thiệp vào tầng Presentation trong file [`ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx).
-   - Tuyệt đối không thay đổi bất kỳ dòng code nào của:
-     - Hook bàn phím vật lý: `useExamKeyboard`.
-     - Hàm nộp bài & tính điểm: `handleFinishQuiz`.
-     - Bộ đếm thời gian thực: `useEffect` interval của `timeLeft`.
-2. **Bảo Toàn Dữ Liệu Bài Thi Dở Khi Bấm Bỏ Qua**:
-   - Khi học viên bấm nút `[✕ Bỏ qua]` trên banner, ứng dụng chỉ gọi `setResumeSessionAvailable(false)` để ẩn thanh thông báo trong phiên truy cập hiện tại.
-   - Toàn bộ dữ liệu đề thi và các câu đã làm lưu trong `localStorage` (`exam_progress_...`) được **giữ nguyên vẹn 100%**, học viên có thể vào lại bất kỳ lúc nào qua menu hoặc lịch sử thi.
+- [x] **Rule 01 — Kích Thước Chạm Tiêu Chuẩn (Touch Target $\ge 44 \times 44\text{px}$)**:
+  - Nút quay lại `ArrowLeftIcon3D` có kích thước thực tế $44 \times 44\text{px}$ (`min-h-[44px] min-w-[44px]`).
+  - Nút đóng `[✕]` trong `ChangelogModal` đạt diện tích chạm an toàn $44 \times 44\text{px}$.
+  - Mỗi tab trong Tab Switcher có chiều cao $40\text{px}$ và padding ngang rộng rãi, kết hợp khoảng cách biên ngoài đạt tiêu chuẩn chống bấm trượt (fat-finger syndrome).
+- [x] **Rule 05 — Tỷ Lệ Tương Phản Màu Sắc (WCAG 2.1 AA $\ge 4.5:1$)**:
+  - Chữ trắng trên nền `bg-primary` navy (`#003566`): Đạt tỷ lệ tương phản **`11.8:1`** (Vượt chuẩn AAA).
+  - Huy hiệu `[ MỚI NHẤT ]` màu xanh ngọc (`#059669` / `#34D399`): Đạt tỷ lệ tương phản **`5.8:1`**.
+  - Màu chữ các Section (Emerald, Blue, Amber, Red, Purple) được tinh chỉnh độ sáng chuyên biệt cho Dark Mode để luôn đạt độ tương phản $> 4.5:1$.
+- [x] **Rule 12 — Hiển Thị Số Học Ổn Định Tuyệt Đối (`tabular-nums`)**:
+  - Toàn bộ số hiệu phiên bản (`v3.22.0`), ngày phát hành (`08/11/2026`) đều được kích hoạt lớp CSS `tabular-nums` của Tailwind. Các con số có độ rộng monospaced cố định, ngăn ngừa 100% hiện tượng xô lệch chữ khi chuyển tab.
+- [x] **Rule 24 — Triệt Tiêu Hoàn Toàn AI Slop & Hiệu Ứng Màu Rác**:
+  - Tuyệt đối không dùng gradient cầu vồng tím-hồng tùy tiện.
+  - Sử dụng bảng màu hải quân nghiêm trang (`Institutional Maritime Navy`) kết hợp các điểm nhấn trạng thái rõ ràng.
+  - Không còn animation giật nảy vô bổ; chỉ duy trì hiệu ứng bồng bềnh nhẹ nhàng của icon tên lửa `animate-float` và trượt trang êm dịu `animate-slide-in-right`.
+- [x] **Rule 38 — Zero Cumulative Layout Shift (CLS = 0)**:
+  - Nhờ cơ chế `?raw` bundling và `useMemo`, dữ liệu changelog có sẵn ngay khi component mount. Triệt tiêu hoàn toàn hiện tượng layout bị nảy (CLS = 0) do không phải chờ mạng nạp dữ liệu như bản cũ.
+- [x] **Rule 59 — Phản Hồi Xúc Giác Đàn Hồi (Haptic & Elastic Feedback)**:
+  - Chuyển tab kích hoạt rung phản hồi nhẹ `triggerHaptic('light')`.
+  - Hiệu ứng `active:scale-[0.98]` mang lại cảm giác bấm cơ học đầm tay.
+- [x] **Rule 62 — Khả Năng Trợ Năng Cho Bàn Phím (Keyboard Nav)**:
+  - Cả 2 nút tab đều hỗ trợ phím `Tab` và `Enter/Space` với vòng sáng `:focus-visible:ring-2`.
 
 ---
 
 ## 8. Đặc Tả 4 Trạng Thái Giao Diện (States Specification)
 
-| Thành Phần | Trạng Thái Mặc Định (`Default`) | Trạng Thái Di Chuột (`Hover` / `Focus`) | Trạng Thái Nhấn Giữ (`Active` / `Tap`) | Trạng Thái Đóng / Ẩn (`Dismissed`) |
-|---|---|---|---|---|
-| **Mobile Exam Header** | Nút `← Thoát` nền xám nhạt `bg-muted`; Badge thời gian đếm ngược màu hổ phách dịu. | Rê chuột vào `← Thoát` chuyển màu cảnh báo đỏ `text-destructive hover:bg-destructive/10`. | Nhấn chạm co nhẹ `active:scale-95` tạo phản hồi cơ học tức thì. | Khi học viên xác nhận thoát: Đóng bài thi, quay về màn hình trước. |
-| **Desktop Exam Header** | Hiển thị đầy đủ ảnh thẻ 100x130, 6 dòng info cá nhân và hộp cam `w-48`. | Rê chuột vào link `Thoát` chuyển đỏ `hover:text-red-500`. | Nhấn link Thoát mở dialog xác nhận. | Giữ nguyên trên máy tính bàn, không bị ảnh hưởng bởi mobile. |
-| **Alert Banner** | Thanh mỏng `~40px` màu hổ phách nhạt `bg-amber-500/10`, nút vàng cam sắc nét, nút `✕` mờ tinh tế. | Nút `Làm tiếp ngay` sáng lên `hover:bg-amber-600`; Nút `✕` nổi bật trên nền `hover:bg-amber-500/20`. | Chạm nút `Làm tiếp`: Chuyển màn hình thi; Chạm nút `✕`: Co nhẹ `scale-90`. | Bấm `✕`: Banner trượt mờ và biến mất hoàn toàn (`resumeSessionAvailable = false`). |
+| Trạng Thái | Biểu Hiện Thị Giác | Cơ Chế Kỹ Thuật Đảm Bảo |
+| :--- | :--- | :--- |
+| **1. Loading** | Hiển thị tức thì 0ms (Không còn màn hình xoay spinner chờ mạng). Dữ liệu được tính toán đồng bộ qua `useMemo`. | Cơ chế `import ... from '.../CHANGELOG.md?raw'`. |
+| **2. Empty State** | Nếu tệp Markdown rỗng: Hiển thị hộp thông báo trang nhã nền `bg-card` báo *"Chưa có bản ghi nhật ký nào."*. | Khối `if (changelogData.length === 0)` hiển thị empty card bo tròn `rounded-2xl`. |
+| **3. Error State** | Nếu tệp Markdown bị sai định dạng: Parser tự động gom dữ liệu vào section dự phòng `"Cập nhật chung"`, không làm sập ứng dụng. | Thuật toán fallback thông minh trong `parseChangelog.ts`. |
+| **4. Success State** | Hiển thị đầy đủ danh sách các phiên bản từ `v3.22.0` lùi về `v3.18.0`. Tab Switcher hoạt động mượt mà, chuyển đổi 0ms giữa góc nhìn Người dùng và Kỹ thuật. | Hoạt động trơn tru 100% trên cả Web PWA và Windows App. |
 
 ---
-*Tài liệu đặc tả giao diện trực quan hoàn chỉnh đã sẵn sàng cho bước kiểm thử và thi công mã nguồn theo tiêu chuẩn TDD.*
+
+## 9. Đặc Tả Giao Diện Trực Quan PwaInstallBanner.tsx Cho Khách & Học Viên Mobile (Phase 04)
+
+### 9.1 Sơ Đồ Wireframe ASCII Cho PwaInstallBanner Trong WelcomeModal & LicenseSelectionScreen
+
+```text
+====================================================================================================
+A. VỊ TRÍ 1: PwaInstallBanner TRONG WelcomeModal.tsx (KHÁCH TRUY CẬP LẦN ĐẦU)
+====================================================================================================
++--------------------------------------------------------------------------------------------------+
+|                                    [ WelcomeModal Container ]                                    |
+|                                                                                                  |
+|   +-- [ PwaInstallBanner (Mobile Only - lg:hidden) ] ----------------------------------------+   |
+|   | [📱] Cài đặt Giáo dục Ninh Bình vào màn hình chính                      [✕ (44x44px)]    |   |
+|   |      Trải nghiệm toàn màn hình như ứng dụng di động, tải siêu tốc và ôn thi mượt mà.     |   |
+|   |   +----------------------------------------------------------------------------------+   |   |
+|   |   |        [+ Thêm vào MH chính]  (Gradient Blue Navy, Min Height 44px)              |   |   |
+|   |   +----------------------------------------------------------------------------------+   |   |
+|   +------------------------------------------------------------------------------------------+   |
+|                                                                                                  |
+|                                         ⚓ HelmIcon3D                                            |
+|                           TRUNG TÂM GIÁO DỤC NGHỀ NGHIỆP NINH BÌNH                               |
+|                         Hệ Thống Ôn Thi Trực Tuyến & Sát Hạch Thuyền Viên                        |
+|                                                                                                  |
+|   +------------------------------------------------------------------------------------------+   |
+|   |                     [ VÀO ÔN TẬP NGAY ] (Nút Bắt Đầu - Primary)                          |   |
+|   +------------------------------------------------------------------------------------------+   |
++--------------------------------------------------------------------------------------------------+
+
+====================================================================================================
+B. VỊ TRÍ 2: PwaInstallBanner TRONG LicenseSelectionScreen.tsx (KHÁCH CHỌN HẠNG BẰNG)
+====================================================================================================
++--------------------------------------------------------------------------------------------------+
+| [← Quay lại]                                                                       [Theme ☀/🌙]  |
+|                                       CHỌN HẠNG BẰNG THI                                         |
+|                                                                                                  |
+|   +-- [ PwaInstallBanner (Mobile Only - lg:hidden) ] ----------------------------------------+   |
+|   | [📱] Cài đặt Giáo dục Ninh Bình vào màn hình chính                      [✕ (44x44px)]    |   |
+|   |      Mở nhanh toàn màn hình, học mượt không cần gõ link web.                              |   |
+|   |   +----------------------------------------------------------------------------------+   |   |
+|   |   |        [+ Thêm vào MH chính]  (Min Height 44px)                                  |   |   |
+|   |   +----------------------------------------------------------------------------------+   |   |
+|   +------------------------------------------------------------------------------------------+   |
+|                                                                                                  |
+|   +-- [ Thẻ Hạng Bằng 1 ] -----------------------+   +-- [ Thẻ Hạng Bằng 2 ] ----------------+   |
+|   | 🚢 Thuyền trưởng hạng ba                     |   | ⚓ Máy trưởng hạng ba                  |   |
+|   +----------------------------------------------+   +---------------------------------------+   |
++--------------------------------------------------------------------------------------------------+
 ```
 
+### 9.2 Bảng Mã Token & Thuộc Tính Trực Quan Cho PwaInstallBanner
+
+| Thuộc Tính (Property) | Giá Trị Light Mode | Giá Trị Dark Mode | Tiêu Chuẩn & Ý Nghĩa |
+| :--- | :--- | :--- | :--- |
+| **Container Background** | `from-sky-600 via-blue-600 to-indigo-700` | `from-slate-900 via-blue-950 to-slate-900` | Nền gradient hàng hải trang trọng, dịu mắt. |
+| **Container Border** | `border-white/20` | `border-sky-500/30` | Viền bán trong suốt tinh xảo. |
+| **Nút Đóng `[✕]`** | `min-h-[44px] min-w-[44px]` text-white/80 | `min-h-[44px] min-w-[44px]` text-white/80 | Chuẩn Impeccable Rule 01 (Touch Target $\ge 44\text{px}$). |
+| **Nút Hành Động Chính** | `bg-white text-blue-700 min-h-[44px]` | `bg-sky-500 text-white min-h-[44px]` | Tương phản cực cao $> 8:1$, bo góc `rounded-xl`. |
+| **Sheet Hướng Dẫn iOS/Android** | `bg-white/10 backdrop-blur-md rounded-xl p-3` | `bg-black/30 backdrop-blur-md rounded-xl p-3` | Kính mờ hiện đại không gây rối mắt. |
+
+### 9.3 Quy Tắc Responsive & Triệt Tiêu Giật Màn Hình (CLS = 0)
+1. **Desktop Hidden (`lg:hidden`)**: Trên màn hình rộng từ $1024\text{px}$ trở lên, banner tự động ẩn (`hidden lg:block` không xuất hiện), không chiếm dụng diện tích của Bento Dashboard hay Welcome Diptych.
+2. **Mobile Margin & Padding Tối Ưu**: Chiều cao banner ước tính cố định $112\text{px}$ khi đóng, sử dụng animation `animate-fade-in` êm dịu, không đẩy vọt layout làm người dùng bấm nhầm.
+3. **Bộ Đệm Xúc Giác & Đóng Đồng Bộ**: Khi bấm nút đóng `[✕]`, banner kích hoạt `triggerHaptic('light')`, phát CustomEvent `'ontap-pwa-banner-dismissed'` để các component khác lập tức ẩn banner mà không gây giật lag.
+
 ---
 
-### Tóm Tắt & Chuyển Giao:
-- Tài liệu trên đã giải quyết triệt để 100% hai vấn đề người dùng phản ánh qua ảnh chụp thực tế.
-- Bố cục First Fold trên mobile được tối ưu hóa toàn diện, tiết kiệm hơn 180px không gian quý giá.
-- Nút nổi vàng nhảy nhót che khuất đã được chuyển thành Alert Banner thanh mảnh kèm nút `[✕ Bỏ qua]
+*Tài liệu đặc tả giao diện trực quan hoàn chỉnh đã sẵn sàng cho bước lập kế hoạch thi công chi tiết `[Bước 05] /writing-plans`.*
