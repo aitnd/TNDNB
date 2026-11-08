@@ -110,3 +110,17 @@
   - Giải pháp chuẩn UX: Thay thế bằng Alert Banner thanh mảnh đặt dưới thanh Header trong luồng trang (`animate-fade-in`), có nút `[Làm tiếp ngay]` nhỏ gọn và nút **`[✕ Bỏ qua]`** gọi `setResumeSessionAvailable(false)` giúp học viên chủ động ẩn thông báo khi muốn chọn bài khác mà không xóa mất dữ liệu `localStorage`.
 - **Đồng Bộ Bộ Kiểm Thử TDD Canh Gác Responsive & Dismiss (`[type=pattern]`):**
   - Thêm `TC-30` (kiểm tra không còn `fixed bottom-4`, không còn `animate-bounce`, có `setResumeSessionAvailable(false)`) và `TC-31` (kiểm tra `hidden md:flex`, `flex md:hidden`, `handleBackWithConfirm`, `tabular-nums`) vào [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) đảm bảo mọi đợt refactor sau không tái phát sinh lỗi.
+
+## [2026-11-09] Khôi Phục Changelog Gốc Tốc Độ Cao, Nâng Cấp v3.22.0 & Hoàn Thiện PWA "Giáo dục Ninh Bình"
+- **Khắc Phục Race Condition của Sự Kiện PWA `beforeinstallprompt` (`[type=pattern]`):**
+  - Trình duyệt Chromium/Android bắn sự kiện `beforeinstallprompt` trong 1-2 giây đầu tiên ngay khi tải trang. Nếu component banner cài đặt (`PwaInstallBanner.tsx`) chỉ được mount có điều kiện sau khi người dùng đăng nhập (`Dashboard.tsx`), sự kiện đã bị bỏ lỡ vĩnh viễn, dẫn đến việc nút "Cài đặt ngay" không bao giờ kích hoạt được prompt gốc.
+  - Giải pháp triệt để: Đăng ký `window.addEventListener('beforeinstallprompt', ...)` ngay ở module top-level bên ngoài vòng đời React và lưu trữ đối tượng sự kiện vào `window.__deferredPwaPrompt`. Bất kỳ component nào mount sau đều có thể truy cập ngay lập tức.
+- **Đồng Bộ Trạng Thái Đóng PWA Banner Toàn Hệ Thống Bằng `CustomEvent` (`[type=pattern]`):**
+  - Khi người dùng đóng banner PWA trên một component (ví dụ `WelcomeModal.tsx`), nếu họ chuyển màn hình sang `LicenseSelectionScreen.tsx` hoặc `Dashboard.tsx` trong cùng phiên làm việc, banner không được phép hiện lại gây phiền toái.
+  - Giải pháp: Kết hợp lưu thời hạn 7 ngày vào `localStorage` (`ontap_pwa_banner_dismissed_until`) đồng thời phát sự kiện `window.dispatchEvent(new CustomEvent('ontap-pwa-banner-dismissed'))`. Mọi component banner đang hiển thị trên các tầng giao diện khác sẽ lập tức ẩn đi đồng bộ.
+- **Nhúng Markdown Qua Vite `?raw` & Khai Báo Ambient Types Trong Monorepo (`[type=lesson]`):**
+  - Khi nhúng trực tiếp file `CHANGELOG.md?raw` để hiển thị tức thì (0ms) mà không phụ thuộc vào GitHub API từ xa, TypeScript trong cấu hình monorepo Next.js + Vite sẽ báo lỗi `TS2307: Cannot find module '../CHANGELOG.md?raw'`.
+  - Khắc phục chuẩn xác: Tạo file ambient declaration `types/raw-modules.d.ts` với `declare module '*.md?raw' { const content: string; export default content; }` và `declare module '*?raw' { const content: string; export default content; }`, giúp TypeScript biên dịch an toàn 0 lỗi.
+- **Kỷ Luật Bảo Toàn Tuyệt Đối Logic Windows Electron Updater & Đồng Bộ Đề Thi (`[type=architecture]`):**
+  - Trong tệp `ontap-win/components/ChangelogModal.tsx`, các dòng 16–287 chứa toàn bộ logic kiểm tra cập nhật qua GitHub Releases của Electron (`window.electron.onUpdateAvailable`, `onDownloadProgress`, `onUpdateDownloaded`) cùng cơ chế Đồng bộ Gói Đề Thi Supabase ngoại tuyến.
+  - Khi đồng bộ giao diện hiển thị Dual-Tab Markdown với bản Web, chỉ được phép sửa đổi phẫu thuật (surgical edit) khu vực render giao diện ở nửa cuối tệp (dòng 289–338), tuyệt đối không đụng chạm hay xóa bỏ nửa trên logic cập nhật desktop.
