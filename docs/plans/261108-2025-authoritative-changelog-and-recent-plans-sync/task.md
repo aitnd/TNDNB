@@ -4,7 +4,7 @@
 > **Kế hoạch tổng thể**: [`plan.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/plan.md)  
 > **Phiên bản mục tiêu**: **v3.22.0**  
 > **Quy trình thực thi**: Subagent-Driven Development (SDD) & Enriched TDD (`RED -> GREEN -> REFACTOR -> PASS`)  
-> **Trạng thái**: Đã hoàn tất Independent Plan Review — Sẵn sàng bắt đầu thi công `[Bước 06] /code`
+> **Trạng thái**: Đã mở rộng 5 Phase — Sẵn sàng bắt đầu thi công `[Bước 06] /code`
 
 ---
 
@@ -54,11 +54,35 @@
 
 ---
 
-## Phase 04: Kiểm Thử TDD Tự Động & Quy Trình Nghiệm Thu Toàn Diện
-*Đặc tả kỹ thuật: [`phase-04-verification-and-tests.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/phase-04-verification-and-tests.md)*
+## Phase 04: Tối Ưu Gợi Ý Cài Đặt App PWA "Giáo Dục Ninh Bình" Cho Cả Khách Chưa Đăng Nhập & Học Viên Trên Mobile
+*Đặc tả kỹ thuật: [`phase-04-global-pwa-install-banner.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/phase-04-global-pwa-install-banner.md)*
 
-- [ ] **Step 4.1**: Chạy toàn bộ test suites tự động bằng lệnh `npx vitest run scripts/` (yêu cầu 100% test files PASS).
-- [ ] **Step 4.2**: Chạy kiểm tra kiểu dữ liệu TypeScript bằng `npx tsc --noEmit` và `cd ontap-web && npx tsc --noEmit` (yêu cầu 0 lỗi).
-- [ ] **Step 4.3**: Đóng gói Production Vite bằng `cd ontap-web && npm run build` (yêu cầu build thành công thư mục `dist/`).
-- [ ] **Step 4.4**: Đóng gói Portal Next.js bằng `npm run build:portal` (yêu cầu 57 static routes PASS).
-- [ ] **Step 4.5**: Tạo commit nghiệm thu Phase 04 và lập báo cáo QA hoàn tất.
+- [x] **Step 4.1 [RED]**: Viết test cases `TC-CP07`, `TC-CP08`, `TC-CP09`, `TC-CP10`, `TC-CP11` trong [`scripts/pwa-install-banner.test.ts`](file:///d:/Antigravity/TNDNB/scripts/pwa-install-banner.test.ts) kiểm tra:
+  - Cấu hình `"Giáo dục Ninh Bình"` trong [`ontap-web/public/manifest.json`](file:///d:/Antigravity/TNDNB/ontap-web/public/manifest.json) & [`public/ontap/manifest.json`](file:///d:/Antigravity/TNDNB/public/ontap/manifest.json).
+  - Meta tags iOS Safari & WebKit trong [`ontap-web/index.html`](file:///d:/Antigravity/TNDNB/ontap-web/index.html).
+  - Banner ở các vị trí công khai ([`WelcomeModal.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/WelcomeModal.tsx), [`LicenseSelectionScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/LicenseSelectionScreen.tsx), [`Dashboard.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/Dashboard.tsx)).
+  - Ngăn cấm tuyệt đối ở màn hình thi cử ([`ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx), [`QuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/QuizScreen.tsx)).
+  - Tiêu đề banner `"Cài đặt Giáo dục Ninh Bình vào màn hình chính"` và cơ chế 3 luồng cài đặt (Native prompt, iOS Safari 3 bước, Android fallback 3 bước).
+- [x] **Step 4.2 [FAIL]**: Chạy `npx vitest run scripts/pwa-install-banner.test.ts` và xác nhận test FAIL theo đúng chuẩn TDD.
+- [x] **Step 4.3 [GREEN]**: Cập nhật `"name": "Giáo dục Ninh Bình"` và `"short_name": "Giáo dục Ninh Bình"` trong [`ontap-web/public/manifest.json`](file:///d:/Antigravity/TNDNB/ontap-web/public/manifest.json) và [`public/ontap/manifest.json`](file:///d:/Antigravity/TNDNB/public/ontap/manifest.json).
+- [x] **Step 4.4 [GREEN]**: Bổ sung meta tags iOS WebKit & application-name trong [`ontap-web/index.html`](file:///d:/Antigravity/TNDNB/ontap-web/index.html).
+- [x] **Step 4.5 [GREEN]**: Nâng cấp [`ontap-web/components/PwaInstallBanner.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/PwaInstallBanner.tsx):
+  - Đổi tiêu đề thành `"Cài đặt Giáo dục Ninh Bình vào màn hình chính"`.
+  - Bắt `beforeinstallprompt` ở module top-level gán vào `(window as any).__deferredPwaPrompt`.
+  - Hiển thị universal mobile cho cả Android và iOS (không chặn hiển thị khi `deferredPrompt` là null).
+  - Tích hợp 2 modal hướng dẫn trực quan: iOS Safari (3 bước) và Android Fallback (3 bước qua Menu `⋮`).
+- [x] **Step 4.6 [GREEN]**: Tích hợp `<PwaInstallBanner />` vào [`ontap-web/components/WelcomeModal.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/WelcomeModal.tsx) và [`ontap-web/components/LicenseSelectionScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/LicenseSelectionScreen.tsx).
+- [x] **Step 4.7 [GREEN]**: Bổ sung ghi chú tính năng PWA Banner cho Khách & Học viên vào `## [3.22.0]` trong [`CHANGELOG.md`](file:///d:/Antigravity/TNDNB/CHANGELOG.md) và [`CHANGELOG_DEV.md`](file:///d:/Antigravity/TNDNB/CHANGELOG_DEV.md).
+- [x] **Step 4.8 [PASS]**: Chạy `npx vitest run scripts/pwa-install-banner.test.ts` và xác nhận PASS 100%.
+- [x] **Step 4.9 [COMMIT]**: Tạo commit lưu mốc mã nguồn Phase 04.
+
+---
+
+## Phase 05: Kiểm Thử TDD Tự Động & Quy Trình Nghiệm Thu Toàn Diện
+*Đặc tả kỹ thuật: [`phase-05-verification-and-tests.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/phase-05-verification-and-tests.md)*
+
+- [ ] **Step 5.1**: Chạy toàn bộ test suites tự động bằng lệnh `npx vitest run scripts/` (yêu cầu 100% test files PASS).
+- [ ] **Step 5.2**: Chạy kiểm tra kiểu dữ liệu TypeScript bằng `npx tsc --noEmit` và `cd ontap-web && npx tsc --noEmit` (yêu cầu 0 lỗi).
+- [ ] **Step 5.3**: Đóng gói Production Vite bằng `cd ontap-web && npm run build` (yêu cầu build thành công thư mục `dist/`).
+- [ ] **Step 5.4**: Đóng gói Portal Next.js bằng `npm run build:portal` (yêu cầu 57 static routes PASS).
+- [ ] **Step 5.5**: Tạo commit nghiệm thu Phase 05 và lập báo cáo QA hoàn tất.

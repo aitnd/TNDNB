@@ -1,7 +1,7 @@
 ## [3.22.0] - 2026-11-08
 ### 🌟 Tính năng mới (New Features)
 - **Nhật ký Thay đổi Kép (Người dùng & Kỹ thuật):** Khôi phục màn hình Lịch sử cập nhật tốc độ tức thì (hoạt động cả khi mất mạng), bổ sung thanh chuyển đổi linh hoạt giữa góc nhìn **👤 Người dùng** và **💻 Kỹ thuật (Dev)** cùng toàn bộ lịch sử hơn 45 phiên bản từ những ngày đầu xây dựng hệ thống.
-- **Cài đặt Ứng dụng Nhanh trên Điện thoại (Smart App Banner):** Tích hợp thanh gợi ý cài đặt ứng dụng (PWA) ngay trên trình duyệt di động Android và hướng dẫn trực quan cho iOS Safari, tự động ẩn thông minh trong 7 ngày khi người dùng bấm đóng.
+- **Cài đặt Ứng dụng Nhanh "Giáo dục Ninh Bình" (Smart PWA Banner):** Đổi tên ứng dụng khi cài đặt ra màn hình chính thành thương hiệu trang trọng **"Giáo dục Ninh Bình"**; mở rộng thanh gợi ý cài đặt cho cả khách truy cập lần đầu (WelcomeModal), người dùng chọn hạng bằng (LicenseSelectionScreen) và học viên (Dashboard); hỗ trợ bắt sự kiện cài đặt sớm ngay khi tải trang cùng hướng dẫn 3 bước trực quan cho iOS Safari và trình duyệt nhúng Android (Zalo, Messenger, Facebook).
 - **Lưu Trữ Cấu Hình Hệ Thống Kép Bền Vững:** Nâng cấp tính năng lưu cài đặt quản trị (`/ontap/settings`) đồng thời trên cả máy chủ tốc độ cao Cloudflare KV và cơ sở dữ liệu dự phòng Firestore, đảm bảo cấu hình không bao giờ bị thất lạc.
 - **Lối Tắt Ôn Tập Trực Tiếp Trên Cổng Thông Tin:** Bổ sung mục truy cập nhanh **Ôn tập & Thi thử** ngay trên thanh công cụ của Cổng thông tin chính và trang Quản lý đào tạo.
 

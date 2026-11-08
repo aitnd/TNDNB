@@ -10,6 +10,7 @@ import {
     ArrowLeftIcon3D 
 } from './icons';
 import { triggerHaptic } from '../utils/nativeUX';
+import { PwaInstallBanner } from './PwaInstallBanner';
 
 interface LicenseSelectionScreenProps {
   licenses: License[];
@@ -47,6 +48,9 @@ const LicenseSelectionScreen: React.FC<LicenseSelectionScreenProps> = ({ license
         <h1 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">Chọn Hạng Bằng</h1>
         <p className="text-sm md:text-base text-muted-foreground mt-2 font-medium px-4">Vui lòng chọn hạng bằng muốn ôn tập và thi thử.</p>
       </div>
+
+      {/* PWA Banner cho khách chọn hạng bằng */}
+      <PwaInstallBanner />
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
         {licenses.map(license => {

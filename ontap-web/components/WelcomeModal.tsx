@@ -1,5 +1,6 @@
 import React from 'react';
 import { HelmIcon3D } from './icons';
+import { PwaInstallBanner } from './PwaInstallBanner';
 
 export interface WelcomeModalProps {
   onStart: () => void;
@@ -11,6 +12,11 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ onStart, onLoginClick, onRe
   return (
     <div className="min-h-[78vh] flex items-center justify-center px-4 py-8">
       <div className="max-w-lg w-full bg-card text-card-foreground border border-border rounded-2xl shadow-lg p-6 sm:p-8 md:p-10 text-center flex flex-col items-center">
+        {/* PWA Install Banner cho khách vãng lai trên thiết bị di động */}
+        <div className="w-full">
+          <PwaInstallBanner />
+        </div>
+
         {/* Biểu tượng bánh lái 3D */}
         <HelmIcon3D className="h-20 w-20 text-primary mb-4" />
 

@@ -1,21 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Smartphone, X, Share, PlusSquare } from 'lucide-react';
+import { Smartphone, X, Share, PlusSquare, MoreVertical } from 'lucide-react';
+import { triggerHaptic } from '../utils/nativeUX';
 
 const DISMISS_KEY = 'ontap_pwa_prompt_dismissed_until';
 const DISMISS_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 ngày
+const DISMISS_EVENT = 'ontap-pwa-banner-dismissed';
+
+// 1. Module-Level Capture: Bắt sự kiện beforeinstallprompt ngay khi script nạp vào trình duyệt
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e: Event) => {
+    e.preventDefault();
+    (window as any).__deferredPwaPrompt = e;
+    window.dispatchEvent(new CustomEvent('pwa-prompt-available'));
+  });
+}
 
 export const PwaInstallBanner: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIos, setIsIos] = useState(false);
   const [showIosGuide, setShowIosGuide] = useState(false);
+  const [showAndroidGuide, setShowAndroidGuide] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // 1. Kiểm tra môi trường client
     if (typeof window === 'undefined') return;
 
-    // 2. Tự động ẩn 100% nếu ứng dụng đang chạy ở chế độ PWA Standalone
+    // Kiểm tra chế độ PWA Standalone
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
       (window.navigator as any).standalone === true;
@@ -25,79 +36,99 @@ export const PwaInstallBanner: React.FC = () => {
       return;
     }
 
-    // 3. Kiểm tra xem người dùng đã bấm đóng banner trong vòng 7 ngày qua chưa
+    // Kiểm tra cờ ẩn 7 ngày
     try {
       const dismissedUntil = localStorage.getItem(DISMISS_KEY);
       if (dismissedUntil && Date.now() < Number(dismissedUntil)) {
         return;
       }
     } catch {
-      // Bỏ qua lỗi localStorage nếu trình duyệt ở chế độ private mode
+      // Bỏ qua lỗi localStorage
     }
 
-    // 4. Nhận diện thiết bị iOS / iPadOS Safari
+    // Nhận diện iOS
     const userAgent = window.navigator.userAgent || '';
     const isIosDevice = /iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
     setIsIos(isIosDevice);
 
-    if (isIosDevice) {
-      // Trên iOS Safari không có sự kiện beforeinstallprompt, hiển thị banner cho phép mở hướng dẫn
+    // Đọc prompt có sẵn từ module top-level
+    if ((window as any).__deferredPwaPrompt) {
+      setDeferredPrompt((window as any).__deferredPwaPrompt);
+      setIsVisible(true);
+    } else if (isIosDevice) {
+      setIsVisible(true);
+    } else {
+      // Fallback hiển thị cho Android / Mobile để hướng dẫn qua menu nếu không có prompt
       setIsVisible(true);
     }
 
-    // 5. Lắng nghe sự kiện beforeinstallprompt cho Android / Chromium (Chrome, Edge, Cốc Cốc)
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setIsVisible(true);
+    // Lắng nghe sự kiện prompt đến sau
+    const onPromptAvailable = () => {
+      if ((window as any).__deferredPwaPrompt) {
+        setDeferredPrompt((window as any).__deferredPwaPrompt);
+        setIsVisible(true);
+      }
     };
 
-    // 6. Lắng nghe khi cài đặt thành công
+    // Lắng nghe đồng bộ đóng banner từ các component khác
+    const onBannerDismissed = () => {
+      setIsVisible(false);
+    };
+
     const handleAppInstalled = () => {
       setIsInstalled(true);
       setIsVisible(false);
       setDeferredPrompt(null);
+      (window as any).__deferredPwaPrompt = null;
     };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('pwa-prompt-available', onPromptAvailable);
+    window.addEventListener(DISMISS_EVENT, onBannerDismissed);
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('pwa-prompt-available', onPromptAvailable);
+      window.removeEventListener(DISMISS_EVENT, onBannerDismissed);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
-  // Xử lý khi bấm nút "Cài đặt / Thêm ra MH chính"
   const handleInstallClick = async () => {
+    triggerHaptic('light');
+
     if (isIos) {
-      // iOS: Mở hướng dẫn chi tiết
       setShowIosGuide(true);
+      setShowAndroidGuide(false);
       return;
     }
 
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
+    const promptToUse = deferredPrompt || (window as any).__deferredPwaPrompt;
+    if (promptToUse) {
+      promptToUse.prompt();
+      const choiceResult = await promptToUse.userChoice;
       if (choiceResult.outcome === 'accepted') {
         setIsVisible(false);
+        (window as any).__deferredPwaPrompt = null;
       }
       setDeferredPrompt(null);
     } else {
-      // Fallback nếu trình duyệt không hỗ trợ prompt trực tiếp
-      setShowIosGuide(true);
+      // Android fallback / In-app WebView: Mở hướng dẫn Android 3 bước
+      setShowAndroidGuide(true);
+      setShowIosGuide(false);
     }
   };
 
-  // Xử lý khi bấm nút đóng ✕ (Lưu cờ ẩn 7 ngày vào localStorage)
   const handleDismiss = () => {
+    triggerHaptic('light');
     try {
       const hideUntil = Date.now() + DISMISS_DURATION_MS;
       localStorage.setItem(DISMISS_KEY, String(hideUntil));
     } catch {
-      // Bỏ qua lỗi lưu storage
+      // Bỏ qua lỗi
     }
     setIsVisible(false);
+    // Phát sự kiện đồng bộ ẩn tất cả các banner khác
+    window.dispatchEvent(new CustomEvent(DISMISS_EVENT));
   };
 
   if (!isVisible || isInstalled) {
@@ -110,7 +141,7 @@ export const PwaInstallBanner: React.FC = () => {
         {/* Nút đóng ✕ */}
         <button
           onClick={handleDismiss}
-          className="absolute top-2 right-2 p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="absolute top-2 right-2 p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center font-bold"
           aria-label="Đóng thông báo"
         >
           <X size={18} />
@@ -122,10 +153,10 @@ export const PwaInstallBanner: React.FC = () => {
           </div>
           <div>
             <h3 className="font-bold text-sm text-white leading-tight">
-              Cài đặt TNDNB vào màn hình chính
+              Cài đặt Giáo dục Ninh Bình vào màn hình chính
             </h3>
             <p className="text-xs text-white/90 mt-1 leading-relaxed">
-              Mở nhanh toàn màn hình, học mượt không cần nhập địa chỉ web.
+              Trải nghiệm toàn màn hình như ứng dụng di động, tải siêu tốc và ôn thi mượt mà hơn.
             </p>
           </div>
         </div>
@@ -147,19 +178,45 @@ export const PwaInstallBanner: React.FC = () => {
             <div className="font-semibold flex items-center gap-1.5 text-amber-200">
               <span>🍎 Hướng dẫn Thêm vào màn hình chính trên iPhone/iPad:</span>
             </div>
-            <ol className="list-decimal list-inside space-y-1 text-white/95 pl-1">
+            <ol className="list-decimal list-inside space-y-1.5 text-white/95 pl-1 leading-relaxed">
               <li>
-                Chạm vào biểu tượng <Share className="inline w-3.5 h-3.5 mx-1" /> <strong>Chia sẻ</strong> ở thanh dưới trình duyệt.
+                Chạm vào biểu tượng <Share className="inline w-3.5 h-3.5 mx-1" /> <strong>Chia sẻ</strong> ở thanh dưới trình duyệt Safari.
               </li>
               <li>
                 Cuộn xuống chọn <strong>&ldquo;Thêm vào MH chính&rdquo;</strong> (Add to Home Screen).
               </li>
               <li>
-                Chạm vào <strong>&ldquo;Thêm&rdquo;</strong> ở góc trên bên phải để hoàn tất.
+                Chạm vào <strong>&ldquo;Thêm&rdquo;</strong> ở góc trên bên phải để xác nhận tên <strong>Giáo dục Ninh Bình</strong>.
               </li>
             </ol>
             <button
               onClick={() => setShowIosGuide(false)}
+              className="mt-2 text-[11px] underline text-white/80 hover:text-white block text-center w-full py-1"
+            >
+              Đã hiểu, thu gọn hướng dẫn
+            </button>
+          </div>
+        )}
+
+        {/* Modal/Sheet Hướng Dẫn Android Fallback / In-App Browser */}
+        {showAndroidGuide && (
+          <div className="mt-3 pt-3 border-t border-white/20 text-xs text-white space-y-2 animate-in fade-in">
+            <div className="font-semibold flex items-center gap-1.5 text-amber-200">
+              <span>🤖 Hướng dẫn cài đặt ứng dụng trên Android:</span>
+            </div>
+            <ol className="list-decimal list-inside space-y-1.5 text-white/95 pl-1 leading-relaxed">
+              <li>
+                Chạm vào biểu tượng Menu 3 chấm <MoreVertical className="inline w-3.5 h-3.5 mx-1" /> ở góc trên bên phải trình duyệt.
+              </li>
+              <li>
+                Chọn <strong>&ldquo;Cài đặt ứng dụng&rdquo;</strong> hoặc <strong>&ldquo;Thêm vào màn hình chính&rdquo;</strong> (hoặc chọn <em>Mở bằng Chrome</em> nếu đang ở Zalo/Facebook).
+              </li>
+              <li>
+                Nhấn <strong>&ldquo;Cài đặt&rdquo;</strong> hoặc <strong>&ldquo;Thêm&rdquo;</strong> để hoàn tất đưa icon <strong>Giáo dục Ninh Bình</strong> ra màn hình.
+              </li>
+            </ol>
+            <button
+              onClick={() => setShowAndroidGuide(false)}
               className="mt-2 text-[11px] underline text-white/80 hover:text-white block text-center w-full py-1"
             >
               Đã hiểu, thu gọn hướng dẫn
