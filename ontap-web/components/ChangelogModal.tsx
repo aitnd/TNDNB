@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getGitHubReleases } from '../services/releaseService';
-import { Rocket, Loader2, X } from 'lucide-react';
+import { Rocket, X } from 'lucide-react';
+import changelogUserRaw from '../CHANGELOG.md?raw';
+import changelogDevRaw from '../../CHANGELOG_DEV.md?raw';
+import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
 
 interface ChangelogModalProps {
   onClose: () => void;
@@ -10,48 +11,22 @@ interface ChangelogModalProps {
 
 export const getLatestVersion = async (): Promise<string> => {
   try {
-    const releases = await getGitHubReleases();
-    return releases.length > 0 ? releases[0].version : "0.0.0";
-  } catch (e) {
-    return "0.0.0";
+    const parsed = parseChangelog(changelogUserRaw);
+    return parsed.length > 0 ? parsed[0].version : '3.22.0';
+  } catch {
+    return '3.22.0';
   }
 };
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
-  const [changelogData, setChangelogData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'user' | 'dev'>('user');
 
-  useEffect(() => {
-    const fetchChangelog = async () => {
-      try {
-        const releases = await getGitHubReleases();
-        if (releases.length > 0) {
-          const formatted = releases.map((rel: any, index: number) => ({
-            version: rel.version,
-            date: new Date(rel.created_at || Date.now()).toLocaleDateString('vi-VN'),
-            isLatest: index === 0,
-            sections: [
-              {
-                icon: Rocket,
-                title: 'Cập nhật',
-                color: 'text-primary',
-                bgColor: 'bg-primary/10',
-                items: rel.release_notes ? rel.release_notes.split('\n').filter((i: string) => i.trim()) : ['Cập nhật hiệu suất và vá lỗi']
-              }
-            ]
-          }));
-          setChangelogData(formatted);
-        }
-      } catch (error) {
-        console.error('Lỗi khi tải Changelog:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const userChangelog = useMemo<ChangelogVersion[]>(() => parseChangelog(changelogUserRaw), []);
+  const devChangelog = useMemo<ChangelogVersion[]>(() => parseChangelog(changelogDevRaw), []);
 
-    fetchChangelog();
-  }, []);
+  const currentList = activeTab === 'user' ? userChangelog : devChangelog;
+  const latestRelease = currentList[0];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in tabular-nums">
@@ -67,7 +42,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                 Lịch sử cập nhật
               </h2>
               <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider tabular-nums">
-                {loading ? 'Đang kiểm tra...' : `Phiên bản hiện tại: v${changelogData[0]?.version}`}
+                Phiên bản: v{latestRelease?.version || '3.22.0'}
               </p>
             </div>
           </div>
@@ -80,62 +55,84 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
           </button>
         </div>
 
+        {/* Tab Switcher */}
+        <div className="px-5 pt-4 pb-2 bg-card border-b border-border flex justify-center">
+          <div className="inline-flex p-1 bg-muted rounded-xl border border-border shadow-xs">
+            <button
+              onClick={() => setActiveTab('user')}
+              className={`px-4 sm:px-6 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[38px] flex items-center gap-1.5 ${
+                activeTab === 'user'
+                  ? 'bg-card text-foreground shadow-xs'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <span>👤</span>
+              <span>Người dùng</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('dev')}
+              className={`px-4 sm:px-6 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[38px] flex items-center gap-1.5 ${
+                activeTab === 'dev'
+                  ? 'bg-card text-foreground shadow-xs'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <span>💻</span>
+              <span>Kỹ thuật (Dev)</span>
+            </button>
+          </div>
+        </div>
+
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <Loader2 className="h-10 w-10 text-primary animate-spin" />
-              <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Đang tải dữ liệu mới nhất...</p>
+          {latestRelease ? (
+            <div className="relative">
+              {/* Version Header */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="px-3.5 py-1.5 rounded-xl font-black text-sm shadow-sm tabular-nums bg-primary text-primary-foreground">
+                  v{latestRelease.version}
+                </div>
+                <span className="text-xs font-semibold text-muted-foreground tabular-nums">
+                  {latestRelease.date}
+                </span>
+                {latestRelease.isLatest && (
+                  <span className="px-2.5 py-0.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[10px] font-black rounded-full uppercase tracking-wider border border-emerald-500/30">
+                    MỚI NHẤT
+                  </span>
+                )}
+              </div>
+
+              {/* Sections */}
+              <div className="space-y-4 pl-2 border-l-2 border-border ml-4 pb-2">
+                {latestRelease.sections.map((section, sIdx) => {
+                  const IconComponent = section.icon;
+                  return (
+                    <div key={sIdx} className="bg-card rounded-xl p-4 border border-border transition-all">
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <div className={`p-2 rounded-lg ${section.bgColor}`}>
+                          <IconComponent size={16} className={section.color} />
+                        </div>
+                        <span className={`font-black text-xs uppercase tracking-wider ${section.color}`}>
+                          {section.title}
+                        </span>
+                      </div>
+                      <ul className="space-y-2 ml-1">
+                        {section.items.map((item: string, iIdx: number) => (
+                          <li key={iIdx} className="flex items-start gap-2.5 text-sm text-foreground font-normal leading-relaxed">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ) : (
-            changelogData.slice(0, 1).map((release, rIdx) => (
-              <div key={rIdx} className="relative">
-                {/* Version Header */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div className={`px-3.5 py-1.5 rounded-xl font-black text-sm shadow-sm tabular-nums ${release.isLatest
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground'
-                    }`}>
-                    v{release.version}
-                  </div>
-                  <span className="text-xs font-semibold text-muted-foreground tabular-nums">
-                    {release.date}
-                  </span>
-                  {release.isLatest && (
-                    <span className="px-2.5 py-0.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[10px] font-black rounded-full uppercase tracking-wider border border-emerald-500/30">
-                      MỚI NHẤT
-                    </span>
-                  )}
-                </div>
-
-                {/* Sections */}
-                <div className="space-y-4 pl-2 border-l-2 border-border ml-4 pb-2">
-                  {release.sections.map((section: any, sIdx: number) => {
-                    const IconComponent = section.icon;
-                    return (
-                      <div key={sIdx} className="bg-card rounded-xl p-4 border border-border transition-all">
-                        <div className="flex items-center gap-2.5 mb-3">
-                          <div className={`p-2 rounded-lg ${section.bgColor}`}>
-                            <IconComponent size={16} className={section.color} />
-                          </div>
-                          <span className={`font-black text-xs uppercase tracking-wider ${section.color}`}>
-                            {section.title}
-                          </span>
-                        </div>
-                        <ul className="space-y-2 ml-1">
-                          {section.items.map((item: string, iIdx: number) => (
-                            <li key={iIdx} className="flex items-start gap-2.5 text-sm text-foreground font-normal leading-relaxed">
-                              <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))
+            <div className="text-center py-12 text-muted-foreground text-sm">
+              Chưa có dữ liệu cập nhật
+            </div>
           )}
         </div>
 

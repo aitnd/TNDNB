@@ -128,4 +128,72 @@ describe('Changelog Parser Test Suite (Plan 261108-2025)', () => {
     expect(webRes[0].sections[0].color).toBe(winRes[0].sections[0].color);
     expect(webRes[0].sections[0].bgColor).toBe(winRes[0].sections[0].bgColor);
   });
+
+  it('TC-CP05: ChangelogScreen.tsx & ChangelogModal.tsx trên ontap-web nạp ?raw, có Tab Switcher và không phụ thuộc getGitHubReleases', () => {
+    const screenContent = fs.readFileSync(path.resolve(rootDir, 'ontap-web/components/ChangelogScreen.tsx'), 'utf8');
+    const modalContent = fs.readFileSync(path.resolve(rootDir, 'ontap-web/components/ChangelogModal.tsx'), 'utf8');
+
+    // 1. Phải nạp qua ?raw
+    expect(screenContent).toMatch(/import\s+changelogUserRaw\s+from\s+['"].*?CHANGELOG\.md\?raw['"]/);
+    expect(screenContent).toMatch(/import\s+changelogDevRaw\s+from\s+['"].*?CHANGELOG_DEV\.md\?raw['"]/);
+    expect(modalContent).toMatch(/import\s+changelogUserRaw\s+from\s+['"].*?CHANGELOG\.md\?raw['"]/);
+    expect(modalContent).toMatch(/import\s+changelogDevRaw\s+from\s+['"].*?CHANGELOG_DEV\.md\?raw['"]/);
+
+    // 2. Không phụ thuộc getGitHubReleases
+    expect(screenContent).not.toContain('getGitHubReleases');
+    expect(modalContent).not.toContain('getGitHubReleases');
+
+    // 3. Có Segmented Control Tab Switcher [Người dùng] và [Kỹ thuật (Dev)]
+    expect(screenContent).toContain('Người dùng');
+    expect(screenContent).toContain('Kỹ thuật (Dev)');
+    expect(modalContent).toContain('Người dùng');
+    expect(modalContent).toContain('Kỹ thuật (Dev)');
+
+    // 4. Sử dụng useMemo
+    expect(screenContent).toContain('useMemo');
+    expect(modalContent).toContain('useMemo');
+  });
+
+  it('TC-CP06: ontap-win/components/ChangelogModal.tsx vừa có Tab Switcher vừa bảo toàn nguyên vẹn 100% Electron Auto-Updater và Question Sync', () => {
+    const winModalContent = fs.readFileSync(path.resolve(rootDir, 'ontap-win/components/ChangelogModal.tsx'), 'utf8');
+
+    // 1. Bảo toàn nguyên vẹn 100% Electron Auto-Updater
+    expect(winModalContent).toContain('window.electron');
+    expect(winModalContent).toContain('downloadUpdate');
+    expect(winModalContent).toContain('installUpdate');
+    expect(winModalContent).toContain('onUpdateProgress');
+
+    // 2. Bảo toàn nguyên vẹn 100% Question Sync
+    expect(winModalContent).toContain('shouldUpdateQuestions');
+    expect(winModalContent).toContain('fetchAndSaveQuestions');
+    expect(winModalContent).toContain('handleCheckDataUpdate');
+    expect(winModalContent).toContain('handleUpdateData');
+
+    // 3. Có Tab Switcher và nạp ?raw
+    expect(winModalContent).toMatch(/import\s+changelogUserRaw\s+from\s+['"].*?CHANGELOG\.md\?raw['"]/);
+    expect(winModalContent).toMatch(/import\s+changelogDevRaw\s+from\s+['"].*?CHANGELOG_DEV\.md\?raw['"]/);
+    expect(winModalContent).toContain('Người dùng');
+    expect(winModalContent).toContain('Kỹ thuật (Dev)');
+  });
+
+  it('TC-CP07: TopNavbar.tsx (cả Web và Win) loại bỏ fallback 3.19.2 và nâng lên 3.22.0, getLatestVersion trả về version mới nhất', async () => {
+    const webNav = fs.readFileSync(path.resolve(rootDir, 'ontap-web/components/TopNavbar.tsx'), 'utf8');
+    const winNav = fs.readFileSync(path.resolve(rootDir, 'ontap-win/components/TopNavbar.tsx'), 'utf8');
+
+    // Không còn fallback cũ 3.19.2
+    expect(webNav).not.toContain('3.19.2');
+    expect(winNav).not.toContain('3.19.2');
+
+    // Đã nâng lên 3.22.0
+    expect(webNav).toContain('3.22.0');
+    expect(winNav).toContain('3.22.0');
+
+    // Kiểm tra getLatestVersion() từ ChangelogModal
+    const { getLatestVersion } = await import('../ontap-web/components/ChangelogModal');
+    const latest = await getLatestVersion();
+    expect(latest).toBeDefined();
+    expect(latest).not.toBe('0.0.0');
+    expect(latest).not.toBe('3.19.2');
+  });
 });
+

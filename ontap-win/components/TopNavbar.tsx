@@ -23,8 +23,8 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
     React.useEffect(() => {
         getLatestAppRelease().then(release => {
             if (release) setLatestVersion(release.version);
-            else setLatestVersion('3.19.2');
-        }).catch(() => setLatestVersion('3.19.2'));
+            else setLatestVersion('3.22.0');
+        }).catch(() => setLatestVersion('3.22.0'));
     }, []);
 
     return (

@@ -6,6 +6,9 @@ import { shouldUpdateQuestions } from '../services/dataService';
 import { fetchAndSaveQuestions } from '../services/syncService';
 import { getGitHubReleases } from '../services/UpdateService';
 import { isVersionLower } from '../utils/versionUtils';
+import changelogUserRaw from '../CHANGELOG.md?raw';
+import changelogDevRaw from '../../CHANGELOG_DEV.md?raw';
+import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
 
 interface ChangelogModalProps {
   onClose: () => void;
@@ -13,8 +16,13 @@ interface ChangelogModalProps {
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = React.useState<'user' | 'dev'>('user');
+  const userChangelog = React.useMemo<ChangelogVersion[]>(() => parseChangelog(changelogUserRaw), []);
+  const devChangelog = React.useMemo<ChangelogVersion[]>(() => parseChangelog(changelogDevRaw), []);
+  const currentChangelog = activeTab === 'user' ? userChangelog : devChangelog;
+
   const [currentVersion, setCurrentVersion] = React.useState<string>('...');
-  const [latestVersion, setLatestVersion] = React.useState<string>('...');
+  const [latestVersion, setLatestVersion] = React.useState<string>(userChangelog[0]?.version || '3.22.0');
   const [appReleases, setAppReleases] = React.useState<any[]>([]);
   const [updateStatus, setUpdateStatus] = React.useState<'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'error'>('idle');
   const [downloadProgress, setDownloadProgress] = React.useState<number>(0);
@@ -288,17 +296,45 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
 
         {/* Changelog Content */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
-          <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
-            📋 Lịch sử cập nhật
-          </h3>
-          {appReleases.slice(0, 1).map((release, rIdx) => (
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+              📋 Lịch sử cập nhật
+            </h3>
+            {/* Segmented Control Tab Switcher */}
+            <div className="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs">
+              <button
+                onClick={() => setActiveTab('user')}
+                className={`px-3 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
+                  activeTab === 'user'
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>👤</span>
+                <span>Người dùng</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('dev')}
+                className={`px-3 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
+                  activeTab === 'dev'
+                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <span>💻</span>
+                <span>Kỹ thuật (Dev)</span>
+              </button>
+            </div>
+          </div>
+
+          {currentChangelog.slice(0, 1).map((release, rIdx) => (
             <div key={rIdx} className="relative">
               {/* Version Header */}
               <div className="flex items-center gap-3 mb-4">
-                <div className={`px-3 py-1.5 rounded-full font-bold text-sm ${release.isLatest ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300'}`}>
+                <div className={`px-3 py-1.5 rounded-full font-bold text-sm tabular-nums ${release.isLatest ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300'}`}>
                   v{release.version}
                 </div>
-                <span className="text-sm text-gray-500 dark:text-gray-400">{release.date}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400 tabular-nums">{release.date}</span>
                 {release.isLatest && (
                   <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold rounded-full">
                     MỚI NHẤT
@@ -328,11 +364,6 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                   );
                 })}
               </div>
-
-              {/* Divider */}
-              {rIdx < appReleases.length - 1 && (
-                <div className="border-t border-dashed border-gray-200 dark:border-slate-700 mt-6"></div>
-              )}
             </div>
           ))}
         </div>
