@@ -95,3 +95,18 @@
   - Mọi bộ test tự động (`scripts/ontap-dual-theme-and-sidebar.test.ts`) bắt buộc phải có assertion `execSync('git diff ontap-web/components/ExamQuizScreen.tsx') === ''` để ngăn chặn bất kỳ sự can thiệp ngoài ý muốn nào.
 - **Quy Trình Hoàn Tất Nhánh Phát Triển & Merge Sang Main (`[type=decision]`):**
   - Sau khi vượt qua toàn bộ 52/52 bài kiểm thử Vitest và 0 lỗi TypeScript ở cả root và sub-project, nhánh tính năng `feat/mobile-dashboard-and-top-navbar-simplification` được merge trực tiếp vào `main` thông qua chiến lược `merge --no-ff`, kiểm thử lại toàn bộ trên `main` và đẩy lên `origin/main` an toàn.
+
+
+## [2026-11-08] Tối Ưu First-Fold Màn Hình Thi Mobile & Khử Triệt Để FAB Che Màn Hình
+- **Tối Ưu First-Fold Màn Hình Thi Sát Hạch Mobile (`[type=pattern]`):**
+  - Trên thiết bị di động có chiều cao giới hạn (~600px - 840px), việc hiển thị ảnh thẻ học viên 100x130, thông tin cá nhân (SBD, ngày sinh, địa chỉ, lớp, bằng) và hộp cam `w-48` chiếm tới hơn 220px chiều dọc, đè chữ và đẩy nội dung câu hỏi cùng 4 lựa chọn đáp án A, B, C, D ra ngoài viewport.
+  - Kỹ thuật chuẩn: Tách 2 tầng Presentation bằng responsive breakpoint `md:` (`768px`) trong [`ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx):
+    - Desktop Header (`hidden md:flex`): Bảo toàn 100% thẻ thông tin học viên trang trọng cho máy tính bàn phòng máy thi.
+    - Mobile Exam Header (`flex md:hidden`): Rút gọn thành thanh điều khiển siêu mỏng (~38px) gồm nút `[← Thoát]` có popup confirm, huy hiệu tên bằng, số thứ tự `Câu X/Y` và đồng hồ đếm ngược `⏱️ MM:SS` định dạng `font-mono tabular-nums`.
+    - Toàn bộ nội dung câu hỏi và 4 đáp án A, B, C, D hiển thị ngay tại First Fold, học viên thao tác 1 chạm mà không cần vuốt cuộn màn hình.
+- **Thay Thế Nút Nổi FAB Bằng Alert Banner Nội Dòng (`[type=lesson]`):**
+  - Nút nổi `fixed bottom-4 left-1/2` kèm hiệu ứng giật nảy `animate-bounce` là một antipattern (AI-Slop) nguy hiểm trên thiết bị di động vì nó bay lơ lửng đè trực tiếp lên các nút bấm và thẻ chọn bài thi ở đáy màn hình.
+  - Khi người dùng muốn thoát ra chọn bài khác, việc thiếu nút đóng (`✕`) khiến họ bị kẹt, không thể thao tác.
+  - Giải pháp chuẩn UX: Thay thế bằng Alert Banner thanh mảnh đặt dưới thanh Header trong luồng trang (`animate-fade-in`), có nút `[Làm tiếp ngay]` nhỏ gọn và nút **`[✕ Bỏ qua]`** gọi `setResumeSessionAvailable(false)` giúp học viên chủ động ẩn thông báo khi muốn chọn bài khác mà không xóa mất dữ liệu `localStorage`.
+- **Đồng Bộ Bộ Kiểm Thử TDD Canh Gác Responsive & Dismiss (`[type=pattern]`):**
+  - Thêm `TC-30` (kiểm tra không còn `fixed bottom-4`, không còn `animate-bounce`, có `setResumeSessionAvailable(false)`) và `TC-31` (kiểm tra `hidden md:flex`, `flex md:hidden`, `handleBackWithConfirm`, `tabular-nums`) vào [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts) đảm bảo mọi đợt refactor sau không tái phát sinh lỗi.

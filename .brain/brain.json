@@ -19,7 +19,9 @@
         "PWA Native Add-to-Home-Screen Support",
         "TopNavbar Hamburger Menu & Role-Based Action Isolation",
         "Next.js Dynamic SSR-Safe Slider Component",
-        "Centered Focused WelcomeModal (Anti-AI-Slop)"
+        "Centered Focused WelcomeModal (Anti-AI-Slop)",
+        "Mobile Exam Screen First-Fold Optimization",
+        "In-Flow Resume Session Alert Banner with Dismiss Action"
     ],
     "project": "TNDNB",
     "canonical_domain": "https://www.daotaothuyenvien.com",
@@ -40,6 +42,6 @@
         "Cloudflare KV",
         "Cloudflare Workers (Hono)"
     ],
-    "last_commit": "f60b54c6",
-    "updated_at": "2026-11-07T11:13:00+07:00"
+    "last_commit": "43aa9df6",
+    "updated_at": "2026-11-08T20:17:00+07:00"
 }
