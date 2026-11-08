@@ -5,7 +5,7 @@
 > **Người lập**: Senior Product Manager & Lead Architect (Đã hiệu chỉnh qua Independent Review)  
 > **Ngày cập nhật**: 08/11/2026  
 > **Phiên bản mục tiêu**: **v3.22.0**  
-> **Trạng thái**: Đã mở rộng 5 Phase — Sẵn sàng thực thi `[Bước 06] /code`
+> **Trạng thái**: ✅ **Hoàn thành 100% (5/5 Phases) — Sẵn sàng bàn giao Release v3.22.0**
 
 ---
 
@@ -84,8 +84,8 @@ flowchart TD
 | **Phase 01** | Khôi phục Bộ Parser Markdown Gốc & Hỗ trợ đọc File Raw Kép | `ontap-web/utils/parseChangelog.ts`, `ontap-win/utils/parseChangelog.ts` | ✅ **Hoàn thành** (`c3d806c3`) |
 | **Phase 02** | Tích hợp Tab Switcher (Người Dùng vs. Dev) & Bảo toàn Windows Updater | `ChangelogScreen.tsx`, `ChangelogModal.tsx`, `TopNavbar.tsx` (Web & Win) | ✅ **Hoàn thành** (`c03b20ec`) |
 | **Phase 03** | Soạn Markdown Kép (Đủ 8 Plans), Khôi phục 41 Bản Lịch Sử & Bump `v3.22.0` | 4 file `package.json`, `CHANGELOG.md` (x3), `CHANGELOG_DEV.md`, `update_changelogs.js` | ✅ **Hoàn thành** (`8ffbd14c`) |
-| **Phase 04** | Tối Ưu Gợi Ý Cài Đặt App PWA "Giáo dục Ninh Bình" Cho Khách Chưa Đăng Nhập & Mobile | `manifest.json` (x2), `index.html`, `PwaInstallBanner.tsx`, `WelcomeModal.tsx`, `LicenseSelectionScreen.tsx`, `Dashboard.tsx` | ✅ **Hoàn thành** |
-| **Phase 05** | Kiểm thử TDD Tự động (`TC-CP01` ➔ `TC-CP11`) & Nghiệm thu Toàn diện | `scripts/version-sync.test.ts`, `scripts/changelog-parser.test.ts`, `scripts/pwa-install-banner.test.ts` | ⏳ Sẵn sàng |
+| **Phase 04** | Tối Ưu Gợi Ý Cài Đặt App PWA "Giáo dục Ninh Bình" Cho Khách Chưa Đăng Nhập & Mobile | `manifest.json` (x2), `index.html`, `PwaInstallBanner.tsx`, `WelcomeModal.tsx`, `LicenseSelectionScreen.tsx`, `Dashboard.tsx` | ✅ **Hoàn thành** (`56c01d85`) |
+| **Phase 05** | Kiểm thử TDD Tự động (`TC-CP01` ➔ `TC-CP11`) & Nghiệm thu Toàn diện | Toàn bộ 13 test suites, tsc, production builds (Vite & Next.js) | ✅ **Hoàn thành** |
 
 ---
 

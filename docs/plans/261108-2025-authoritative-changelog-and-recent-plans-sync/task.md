@@ -81,8 +81,8 @@
 ## Phase 05: Kiểm Thử TDD Tự Động & Quy Trình Nghiệm Thu Toàn Diện
 *Đặc tả kỹ thuật: [`phase-05-verification-and-tests.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/phase-05-verification-and-tests.md)*
 
-- [ ] **Step 5.1**: Chạy toàn bộ test suites tự động bằng lệnh `npx vitest run scripts/` (yêu cầu 100% test files PASS).
-- [ ] **Step 5.2**: Chạy kiểm tra kiểu dữ liệu TypeScript bằng `npx tsc --noEmit` và `cd ontap-web && npx tsc --noEmit` (yêu cầu 0 lỗi).
-- [ ] **Step 5.3**: Đóng gói Production Vite bằng `cd ontap-web && npm run build` (yêu cầu build thành công thư mục `dist/`).
-- [ ] **Step 5.4**: Đóng gói Portal Next.js bằng `npm run build:portal` (yêu cầu 57 static routes PASS).
-- [ ] **Step 5.5**: Tạo commit nghiệm thu Phase 05 và lập báo cáo QA hoàn tất.
+- [x] **Step 5.1**: Chạy toàn bộ test suites tự động bằng lệnh `npx vitest run scripts/` (yêu cầu 100% test files PASS - 13/13 files, 90/90 tests PASS).
+- [x] **Step 5.2**: Chạy kiểm tra kiểu dữ liệu TypeScript bằng `npx tsc --noEmit` ở Root, `ontap-web` và `ontap-win` (yêu cầu 0 lỗi - Đạt 0 lỗi).
+- [x] **Step 5.3**: Đóng gói Production Vite bằng `cd ontap-web && npm run build` (xuất thành công sang `public/ontap/` với PWA "Giáo dục Ninh Bình" và Changelog v3.22.0).
+- [x] **Step 5.4**: Đóng gói Portal Next.js bằng `npm run build:portal` (yêu cầu 57 static routes PASS - 57/57 routes PASS 100%).
+- [x] **Step 5.5**: Tạo commit nghiệm thu Phase 05 và lập báo cáo QA hoàn tất.
