@@ -63,6 +63,7 @@ const AppContent: React.FC = () => {
   const setUserName = useAppStore(state => state.setUserName);
   const userProfile = useAppStore(state => state.userProfile);
   const resumeSessionAvailable = useAppStore(state => state.resumeSessionAvailable);
+  const setResumeSessionAvailable = useAppStore(state => state.setResumeSessionAvailable);
   const isMobileApp = useAppStore(state => state.isMobileApp);
 
   const persistSession = useCallback((
@@ -408,14 +409,6 @@ const AppContent: React.FC = () => {
       <SweetAlertPopup />
       <Toaster position="top-right" richColors expand closeButton />
 
-      {resumeSessionAvailable && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black px-6 py-3 rounded-full shadow-xl z-50 animate-bounce cursor-pointer hover:bg-yellow-500 font-bold flex items-center gap-2"
-          onClick={resumeSession}>
-          <span>⚠️ Bạn đang có bài thi làm dở!</span>
-          <span className="underline">Làm tiếp ngay</span>
-        </div>
-      )}
-      
       {!isMobileApp && (
         <ErrorBoundary name="TopNavAndMarquee">
           <TopNavbar
@@ -429,6 +422,30 @@ const AppContent: React.FC = () => {
 
       {isMobileApp && (
         <MobileHeader userProfile={userProfile} />
+      )}
+
+      {resumeSessionAvailable && (
+        <div className="bg-amber-500/10 border-b border-amber-500/25 px-4 py-2 flex items-center justify-between gap-3 text-xs sm:text-sm text-foreground shadow-xs animate-fade-in">
+          <div className="flex items-center gap-2 truncate">
+            <span className="text-base shrink-0">⚠️</span>
+            <span className="font-medium truncate">Bạn có bài thi đang làm dở</span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={resumeSession}
+              className="px-3 py-1 text-xs font-semibold rounded-lg bg-amber-500 hover:bg-amber-600 text-black transition-colors shadow-xs"
+            >
+              Làm tiếp ngay
+            </button>
+            <button
+              onClick={() => setResumeSessionAvailable(false)}
+              className="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-amber-500/20 transition-colors"
+              title="Bỏ qua"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
       )}
 
       <AppRoutes

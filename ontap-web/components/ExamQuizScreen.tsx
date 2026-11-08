@@ -176,7 +176,8 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
         <div className="w-full max-w-7xl mx-auto font-sans text-black shadow-lg animate-slide-in-right rounded-md" style={{ '--content-scale': scale } as React.CSSProperties}>
             <div className="h-3 bg-yellow-700 rounded-t-md border-b-2 border-yellow-900"></div>
             <div className="bg-card p-4">
-                <div className="flex justify-between items-start pb-4 border-b border-gray-300">
+                {/* 1. Desktop Header: Giữ nguyên vẹn 100% cho màn hình máy tính (md:flex) */}
+                <div className="hidden md:flex justify-between items-start pb-4 border-b border-gray-300">
                     <div className="flex gap-4 items-start">
                         <img
                             src={userProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`}
@@ -199,9 +200,31 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                             <p className="font-bold">Đang thi</p>
                             <p>Thời gian: 45 phút</p>
                             <p>Bù giờ: 0 phút</p>
-                            <p>Còn lại: <span className="font-bold">{formatTime(timeLeft)}</span></p>
+                            <p>Còn lại: <span className="font-bold tabular-nums">{formatTime(timeLeft)}</span></p>
                         </div>
                         <button onClick={handleBackWithConfirm} className="text-sm text-muted-foreground hover:text-red-500 font-semibold">Thoát</button>
+                    </div>
+                </div>
+
+                {/* 2. Mobile Exam Header: Siêu mỏng (~38px), ẩn thông tin cá nhân, đưa câu hỏi lên First Fold */}
+                <div className="flex md:hidden items-center justify-between pb-3 mb-2 border-b border-border">
+                    <button
+                        onClick={handleBackWithConfirm}
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-muted text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+                    >
+                        ← Thoát
+                    </button>
+                    <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-red-600 border border-red-400 px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/30 max-w-[120px] truncate">
+                            {selectedLicense?.name || 'Sát hạch'}
+                        </span>
+                        <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 tabular-nums">
+                            Câu {currentQuestionIndex + 1}/{quiz.questions.length}
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 font-mono font-bold text-xs tabular-nums shadow-xs">
+                        <span>⏱️</span>
+                        <span>{formatTime(timeLeft)}</span>
                     </div>
                 </div>
 
