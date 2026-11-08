@@ -327,6 +327,32 @@ describe('Console Errors & TinyMCE License Fixes (TDD Suite)', () => {
       }
     });
   });
+
+  describe('Mobile Exam Screen & Resume Session Banner (Plan 261107-1135)', () => {
+    it('TC-30: ontap-web/App.tsx must eliminate fixed bottom-4 bouncing resume button and provide dismissable banner', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/App.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // 1. Không còn lớp fixed bottom-4 và animate-bounce che màn hình
+      expect(content).not.toContain('fixed bottom-4 left-1/2');
+      expect(content).not.toContain('animate-bounce');
+
+      // 2. Phải có cơ chế đóng/bỏ qua bằng setResumeSessionAvailable(false)
+      expect(content).toContain('setResumeSessionAvailable');
+      expect(content).toMatch(/setResumeSessionAvailable\s*\(\s*false\s*\)/);
+    });
+
+    it('TC-31: ontap-web/components/ExamQuizScreen.tsx must have separate desktop and mobile exam headers', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/ExamQuizScreen.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Phải có lớp ẩn/hiện đáp ứng thiết bị
+      expect(content).toContain('hidden md:flex');
+      expect(content).toContain('flex md:hidden');
+      expect(content).toContain('handleBackWithConfirm');
+      expect(content).toContain('tabular-nums');
+    });
+  });
 });
 
 

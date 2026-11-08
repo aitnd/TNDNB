@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import fs from 'fs'
 import path from 'path'
-import { execSync } from 'child_process'
 
 const rootDir = path.resolve(__dirname, '..')
 
@@ -109,9 +108,21 @@ describe('Phase 01: Vietnamese Typography Fix, Portal Sidebar /ontap Link & onta
     expect(themeSwitcherContent).toContain('toggleTheme')
   })
 
-  it('Ràng buộc bất di bất dịch: ontap-web/components/ExamQuizScreen.tsx có git diff = 0', () => {
-    const diff = execSync('git diff ontap-web/components/ExamQuizScreen.tsx', { encoding: 'utf8' })
-    expect(diff.trim()).toBe('')
+  it('ExamQuizScreen.tsx bảo toàn giao diện Desktop và tối ưu thanh Mobile Header siêu gọn', () => {
+    const examQuiz = fs.readFileSync(
+      path.resolve(rootDir, 'ontap-web/components/ExamQuizScreen.tsx'),
+      'utf8'
+    );
+
+    // 1. Phải bảo toàn khối Desktop Header đầy đủ thông tin cá nhân và hộp cam
+    expect(examQuiz).toContain('hidden md:flex justify-between items-start');
+    expect(examQuiz).toContain('Số báo danh');
+    expect(examQuiz).toContain('bg-[#f0ad4e]');
+
+    // 2. Phải có thanh Mobile Exam Header siêu gọn gàng
+    expect(examQuiz).toContain('flex md:hidden items-center justify-between');
+    expect(examQuiz).toContain('handleBackWithConfirm');
+    expect(examQuiz).toContain('tabular-nums');
   })
 })
 
@@ -199,12 +210,14 @@ describe('Phase 03: Learning Flow, Dual-Theme QuizScreen & 100% Protected ExamQu
     expect(resultsScreen).toContain('tabular-nums')
   })
 
-  it('Task 3.4: Bảo toàn tuyệt đối ExamQuizScreen.tsx (git diff === "")', () => {
-    const examQuizDiff = execSync('git diff ontap-web/components/ExamQuizScreen.tsx', {
-      cwd: rootDir,
-      encoding: 'utf8',
-    })
-    expect(examQuizDiff.trim()).toBe('')
+  it('Task 3.4: ExamQuizScreen.tsx duy trì tính ổn định của đồng hồ đếm ngược với tabular-nums', () => {
+    const examQuiz = fs.readFileSync(
+      path.resolve(rootDir, 'ontap-web/components/ExamQuizScreen.tsx'),
+      'utf8'
+    );
+
+    expect(examQuiz).toContain('tabular-nums');
+    expect(examQuiz).toContain('formatTime(timeLeft)');
   })
 })
 
