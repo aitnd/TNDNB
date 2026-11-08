@@ -71,7 +71,7 @@ describe('Changelog Parser Test Suite (Plan 261108-2025)', () => {
     expect(versions.length).toBeGreaterThanOrEqual(4);
 
     const latest = versions[0];
-    expect(latest.version).toBe('3.21.0');
+    expect(latest.version).toBe('3.22.0');
     expect(latest.isLatest).toBe(true);
     expect(latest.sections.length).toBeGreaterThan(0);
     expect(latest.sections[0].items.length).toBeGreaterThan(0);

@@ -36,21 +36,21 @@
 ## Phase 03: Soạn Thảo Nội Dung Markdown Kép (Đủ 8 Plans), Khôi Phục 41 Bản Lịch Sử & Nâng Cấp v3.22.0
 *Đặc tả kỹ thuật: [`phase-03-markdown-content-and-version-bump.md`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/phase-03-markdown-content-and-version-bump.md)*
 
-- [ ] **Step 3.1 [RED]**: Cập nhật [`scripts/version-sync.test.ts`](file:///d:/Antigravity/TNDNB/scripts/version-sync.test.ts) kiểm tra phiên bản `3.22.0` trên 4 `package.json`, mục `[3.22.0]` trên 4 file `CHANGELOG`, và tổng số phiên bản lịch sử `>= 40` bản.
-- [ ] **Step 3.2 [FAIL]**: Chạy `npx vitest run scripts/version-sync.test.ts` và xác nhận test FAIL.
-- [ ] **Step 3.3 [GREEN]**: Cập nhật `"version": "3.22.0"` trong:
+- [x] **Step 3.1 [RED]**: Cập nhật [`scripts/version-sync.test.ts`](file:///d:/Antigravity/TNDNB/scripts/version-sync.test.ts) kiểm tra phiên bản `3.22.0` trên 4 `package.json`, mục `[3.22.0]` trên 4 file `CHANGELOG`, và tổng số phiên bản lịch sử `>= 40` bản.
+- [x] **Step 3.2 [FAIL]**: Chạy `npx vitest run scripts/version-sync.test.ts` và xác nhận test FAIL.
+- [x] **Step 3.3 [GREEN]**: Cập nhật `"version": "3.22.0"` trong:
   - [`package.json`](file:///d:/Antigravity/TNDNB/package.json)
   - [`ontap-web/package.json`](file:///d:/Antigravity/TNDNB/ontap-web/package.json)
   - [`ontap-win/package.json`](file:///d:/Antigravity/TNDNB/ontap-win/package.json)
   - [`cloudflare-worker/package.json`](file:///d:/Antigravity/TNDNB/cloudflare-worker/package.json)
-- [ ] **Step 3.4 [GREEN]**: Soạn thảo mục `## [3.22.0] - 2026-11-08` (đủ 8 plans, chia 3 nhóm `###`), sửa lỗi font tiếng Việt `[3.19.1]`, và khôi phục 41 phiên bản lịch sử (`3.19.0` ➔ `3.6.0` từ `db8b2070:CHANGELOG.md`) đồng bộ vào:
+- [x] **Step 3.4 [GREEN]**: Soạn thảo mục `## [3.22.0] - 2026-11-08` (đủ 8 plans, chia 3 nhóm `###`), sửa lỗi font tiếng Việt `[3.19.1]`, và khôi phục 41 phiên bản lịch sử (`3.19.0` ➔ `3.6.0` từ `db8b2070:CHANGELOG.md`) đồng bộ vào:
   - [`CHANGELOG.md`](file:///d:/Antigravity/TNDNB/CHANGELOG.md)
   - [`ontap-web/CHANGELOG.md`](file:///d:/Antigravity/TNDNB/ontap-web/CHANGELOG.md)
   - [`ontap-win/CHANGELOG.md`](file:///d:/Antigravity/TNDNB/ontap-win/CHANGELOG.md)
-- [ ] **Step 3.5 [GREEN]**: Soạn thảo mục kỹ thuật `## [3.22.0] - 2026-11-08` (đủ 8 plans, chia 4 nhóm `###`) trong [`CHANGELOG_DEV.md`](file:///d:/Antigravity/TNDNB/CHANGELOG_DEV.md).
-- [ ] **Step 3.6 [GREEN]**: Cập nhật script [`update_changelogs.js`](file:///d:/Antigravity/TNDNB/update_changelogs.js) đồng bộ mục `3.22.0`.
-- [ ] **Step 3.7 [PASS]**: Chạy `npx vitest run scripts/version-sync.test.ts` và xác nhận 100% tests PASS.
-- [ ] **Step 3.8 [COMMIT]**: Tạo commit lưu mốc mã nguồn Phase 03.
+- [x] **Step 3.5 [GREEN]**: Soạn thảo mục kỹ thuật `## [3.22.0] - 2026-11-08` (đủ 8 plans, chia 4 nhóm `###`) trong [`CHANGELOG_DEV.md`](file:///d:/Antigravity/TNDNB/CHANGELOG_DEV.md).
+- [x] **Step 3.6 [GREEN]**: Cập nhật script [`update_changelogs.js`](file:///d:/Antigravity/TNDNB/update_changelogs.js) đồng bộ mục `3.22.0`.
+- [x] **Step 3.7 [PASS]**: Chạy `npx vitest run scripts/version-sync.test.ts` và xác nhận 100% tests PASS (kèm 12/12 files trong `scripts/` PASS, tsc sạch).
+- [x] **Step 3.8 [COMMIT]**: Tạo commit lưu mốc mã nguồn Phase 03.
 
 ---
 
