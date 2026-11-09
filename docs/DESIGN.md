@@ -259,3 +259,41 @@ flowchart TD
 
 
 
+
+---
+
+## 5. Thiết Kế Tinh Gọn TopNavbar & Chốt Chặn AdSense Role Gating (Kế hoạch `261109-0950-remove-navbar-logout-button`)
+
+> **Tài liệu đặc tả chi tiết:** [docs/plans/261109-0950-remove-navbar-logout-button/DESIGN.md](file:///d:/Antigravity/TNDNB/docs/plans/261109-0950-remove-navbar-logout-button/DESIGN.md)
+> **Mode vận hành:** `Operate` (SaaS EdTech Dashboard & Exam Platform)
+
+### 5.1. Data & State Contract (`useAppStore.ts`, `adminConfigService.ts`, `usageService.ts`)
+- **State Gatekeeper `isAuthReady` ([ontap-web/stores/useAppStore.ts](file:///d:/Antigravity/TNDNB/ontap-web/stores/useAppStore.ts)):**
+  - Bổ sung `isAuthReady: boolean` (mặc định `false`) và `setIsAuthReady: (ready: boolean) => void` vào `AppStore`.
+  - Trong [useAppInitialization.ts](file:///d:/Antigravity/TNDNB/ontap-web/hooks/useAppInitialization.ts), chỉ gọi `setIsAuthReady(true)` sau khi `onAuthStateChanged` xác định người dùng là Guest (`firebaseUser === null`) hoặc đã nạp xong `userProfile` của người dùng đăng nhập vào store.
+- **Ma Trận Phân Loại 8 Nhóm Vai Trò Trong `getUserRoleConfig(config, userProfile)` ([ontap-web/services/usageService.ts](file:///d:/Antigravity/TNDNB/ontap-web/services/usageService.ts)):**
+  1. `guest`: `!userProfile` (chỉ hợp lệ khi `isAuthReady === true`) $\rightarrow$ `config.guest` (`type: 'guest'`).
+  2. `admin`: `role === 'admin'` $\rightarrow$ `config.admin` (`type: 'admin'`).
+  3. `leader`: `role === 'lanh_dao'` $\rightarrow$ `config.leader || config.manager` (`type: 'leader'`).
+  4. `manager`: `role === 'quan_ly'` $\rightarrow$ `config.manager` (`type: 'manager'`).
+  5. `teacher`: `role === 'giao_vien'` $\rightarrow$ `config.teacher` (`type: 'teacher'`).
+  6. `vip_user`: `Boolean(userProfile.isVip)` $\rightarrow$ `config.vip_user` (`type: 'vip'`).
+  7. `verified_user`: `(userProfile.class && userProfile.class.length > 0) || Boolean(userProfile.isVerified) || Boolean(userProfile.courseId)` $\rightarrow$ `config.verified_user` (`type: 'verified'`).
+  8. `free_user`: Đã đăng nhập nhưng chưa thuộc các nhóm trên $\rightarrow$ `config.free_user` (`type: 'free'`).
+
+### 5.2. Thiết Kế UI `TopNavbar.tsx` & Phòng Thủ Kép Chống AdSense Auto-Ads
+- **Tinh gọn vùng bên phải `TopNavbar.tsx` ([ontap-web/components/TopNavbar.tsx](file:///d:/Antigravity/TNDNB/ontap-web/components/TopNavbar.tsx)):**
+  - Loại bỏ hoàn toàn vách ngăn dọc (`<div className="h-6 w-[1px] bg-border mx-1 hidden md:block"></div>`) và nút `[Thoát]` màu đỏ nằm lộ thiên trên thanh điều hướng Desktop.
+  - Gom duy nhất hành động `Đăng xuất` vào cuối danh sách Hamburger Menu (`showHamburgerMenu`), đồng nhất trải nghiệm giữa Desktop và Mobile.
+- **Phòng thủ 2 tầng triệt tiêu Google Auto-Ads (`✕ Ứng dụng ôn tập`) cho tài khoản được miễn quảng cáo:**
+  1. **Tầng CSS (`ADSENSE_HIDE_ALL_CSS` trong [adBlockerStyles.ts](file:///d:/Antigravity/TNDNB/ontap-web/services/adBlockerStyles.ts)):** Áp dụng đồng thời `display: none !important`, `visibility: hidden !important`, `opacity: 0 !important`, `pointer-events: none !important`, `max-height: 0 !important`, `max-width: 0 !important`, `transform: scale(0) !important`, `z-index: -9999 !important` lên toàn bộ selector `.adsbygoogle`, `.adsbygoogle-noablate`, `.google-auto-placed`, `[data-ad-client]`, `[data-ad-status]`, `div[id^="google-anno"]`, `div[id^="google_ads"]`, `iframe[id^="google_ads"]`, `iframe[id^="aswift"]`, `#google-vignette` để đánh bại inline `style="display: block !important"` của Google.
+  2. **Tầng DOM & Async Guard ([AdSenseLoader.tsx](file:///d:/Antigravity/TNDNB/ontap-web/components/AdSenseLoader.tsx)):**
+     - Khi `!isAuthReady`: Gọi `injectHideAdsCompletely()` và dừng ngay, tuyệt đối không gọi `checkConfig()`.
+     - Sử dụng cờ `let isCancelled = false` trong `useEffect` để hủy bỏ lượt chạy `async` cũ nếu `userProfile` thay đổi trong lúc chờ `await getUsageConfig()`.
+     - Hàm `purgeAllAdSenseDomAndScripts()` xóa sạch thẻ `<script>` và `.remove()` toàn bộ các phần tử DOM Auto-Ads đã chèn vào trang khi `showAdSense === false`.
+
+### 5.3. Kịch Bản Kiểm Thử & Nghiệm Thu Bổ Sung (`TC-32`, `TC-33`, `TC-34`)
+- **`TC-32` (TopNavbar Cleanup):** Xác nhận `TopNavbar.tsx` không còn nút `Thoát` độc lập ngoài thanh bar và bảo toàn nút `Đăng xuất` trong Hamburger Menu.
+- **`TC-33` (AdSense Auth Gate & DOM Purge):** Xác nhận `AdSenseLoader.tsx` chặn bằng `isAuthReady`, kiểm soát bất đồng bộ bằng `isCancelled`, và gọi `purgeAllAdSenseDomAndScripts()` khi `showAdSense === false`.
+- **`TC-34` (CSS Override & Role Mapping):** Xác nhận `ADSENSE_HIDE_ALL_CSS` chứa đủ các thuộc tính khóa hiển thị `.adsbygoogle-noablate` và `getUserRoleConfig` ánh xạ chính xác `lanh_dao` $\rightarrow$ `config.leader` cùng điều kiện `Boolean(userProfile.courseId)` cho `verified_user`.
+- **Ràng buộc bất biến:** Bảo toàn 100% `ontap-web/components/ExamQuizScreen.tsx` (`0 bytes diff`).
