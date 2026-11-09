@@ -18,6 +18,21 @@ export const getLatestVersion = async (): Promise<string> => {
   }
 };
 
+const renderInlineMarkdown = (text: string) => {
+  if (!text) return text;
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+      return (
+        <strong key={index} className="font-bold text-foreground">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+};
+
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'user' | 'dev'>('user');
@@ -120,7 +135,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                         {section.items.map((item: string, iIdx: number) => (
                           <li key={iIdx} className="flex items-start gap-2.5 text-sm text-foreground font-normal leading-relaxed">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
-                            <span>{item}</span>
+                            <span>{renderInlineMarkdown(item)}</span>
                           </li>
                         ))}
                       </ul>

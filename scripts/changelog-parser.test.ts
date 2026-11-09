@@ -195,5 +195,72 @@ describe('Changelog Parser Test Suite (Plan 261108-2025)', () => {
     expect(latest).not.toBe('0.0.0');
     expect(latest).not.toBe('3.19.2');
   });
+
+  // ==========================================
+  // Plan 261109-0650: RBAC & Concise Copy Tests
+  // ==========================================
+  const FORBIDDEN_DEV_KEYWORDS = [
+    'WelcomeModal',
+    'LicenseSelectionScreen',
+    'ExamQuizScreen',
+    'Dashboard',
+    '/ontap/settings',
+    'Cloudflare KV',
+    'Cloudflare R2',
+    'Cloudflare D1',
+    'Firestore',
+    'Dexie',
+    'IndexedDB',
+    'Monorepo',
+    'Next.js',
+    'Vercel',
+    'TinyMCE',
+    'Zero-Noise Console',
+    'First Fold Focus',
+    'Hallmark Editorial',
+    'resumeSessionAvailable',
+    'deferredPrompt',
+  ];
+
+  it('TC-RBAC01: CHANGELOG.md (Người dùng) tại mục [3.22.0] và [3.21.0] tuyệt đối KHÔNG chứa bất kỳ từ khóa Dev nội bộ nào', () => {
+    const userLog = fs.readFileSync(path.resolve(rootDir, 'CHANGELOG.md'), 'utf8');
+    const relevantMatch = userLog.match(/## \[3\.22\.0\][\s\S]*?(?=## \[3\.19\.3\])/);
+    expect(relevantMatch, 'Phải tìm thấy nội dung mục 3.22.0 và 3.21.0').not.toBeNull();
+
+    const relevantContent = relevantMatch![0];
+    FORBIDDEN_DEV_KEYWORDS.forEach((keyword) => {
+      expect(
+        relevantContent.includes(keyword),
+        `Từ khóa DEV nội bộ "${keyword}" không được phép xuất hiện trong CHANGELOG.md người dùng`
+      ).toBe(false);
+    });
+  });
+
+  it('TC-RBAC02: Nội dung CHANGELOG.md đồng bộ chính xác trên cả 4 vị trí (root, ontap-web, ontap-win, public/ontap)', () => {
+    const rootLog = fs.readFileSync(path.resolve(rootDir, 'CHANGELOG.md'), 'utf8');
+    const webLog = fs.readFileSync(path.resolve(rootDir, 'ontap-web/CHANGELOG.md'), 'utf8');
+    const winLog = fs.readFileSync(path.resolve(rootDir, 'ontap-win/CHANGELOG.md'), 'utf8');
+    const portalLog = fs.readFileSync(path.resolve(rootDir, 'public/ontap/CHANGELOG.md'), 'utf8');
+
+    expect(webLog).toBe(rootLog);
+    expect(winLog).toBe(rootLog);
+    expect(portalLog).toBe(rootLog);
+  });
+
+  it('TC-RBAC04: Cả 4 component đều tích hợp hàm renderInlineMarkdown hoặc chuyển đổi **text** thành <strong>', () => {
+    const filesToCheck = [
+      path.resolve(rootDir, 'ontap-web/components/ChangelogModal.tsx'),
+      path.resolve(rootDir, 'ontap-web/components/ChangelogScreen.tsx'),
+      path.resolve(rootDir, 'ontap-win/components/ChangelogModal.tsx'),
+      path.resolve(rootDir, 'ontap-win/components/ChangelogScreen.tsx'),
+    ];
+
+    filesToCheck.forEach((filePath) => {
+      const code = fs.readFileSync(filePath, 'utf8');
+      expect(code, `File ${filePath} phải có logic render inline markdown`).toMatch(
+        /renderInlineMarkdown|<strong|renderFormattedItem/
+      );
+    });
+  });
 });
 

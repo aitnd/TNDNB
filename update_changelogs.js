@@ -3,25 +3,13 @@ const fs = require('fs');
 const date = '2026-11-08';
 
 const newEntryUser = `## [3.22.0] - ${date}
-### 🌟 Tính năng mới (New Features)
-- **Nhật ký Thay đổi Kép (Người dùng & Kỹ thuật):** Khôi phục màn hình Lịch sử cập nhật tốc độ tức thì (hoạt động cả khi mất mạng), bổ sung thanh chuyển đổi linh hoạt giữa góc nhìn **👤 Người dùng** và **💻 Kỹ thuật (Dev)** cùng toàn bộ lịch sử hơn 45 phiên bản từ những ngày đầu xây dựng hệ thống.
-- **Cài đặt Ứng dụng Nhanh "Giáo dục Ninh Bình" (Smart PWA Banner):** Đổi tên ứng dụng khi cài đặt ra màn hình chính thành thương hiệu trang trọng **"Giáo dục Ninh Bình"**; mở rộng thanh gợi ý cài đặt cho cả khách truy cập lần đầu (WelcomeModal), người dùng chọn hạng bằng (LicenseSelectionScreen) và học viên (Dashboard); hỗ trợ bắt sự kiện cài đặt sớm ngay khi tải trang cùng hướng dẫn 3 bước trực quan cho iOS Safari và trình duyệt nhúng Android (Zalo, Messenger, Facebook).
-- **Lưu Trữ Cấu Hình Hệ Thống Kép Bền Vững:** Nâng cấp tính năng lưu cài đặt quản trị (\`/ontap/settings\`) đồng thời trên cả máy chủ tốc độ cao Cloudflare KV và cơ sở dữ liệu dự phòng Firestore, đảm bảo cấu hình không bao giờ bị thất lạc.
-- **Lối Tắt Ôn Tập Trực Tiếp Trên Cổng Thông Tin:** Bổ sung mục truy cập nhanh **Ôn tập & Thi thử** ngay trên thanh công cụ của Cổng thông tin chính và trang Quản lý đào tạo.
 
-### 🚀 Giao diện & Trải nghiệm (UI/UX Overhaul)
-- **Tối Ưu Màn Hình Làm Bài Thi Trên Điện Thoại (First Fold Focus):** Ẩn toàn bộ phần thông tin cá nhân (ảnh thẻ, số báo danh, lớp, địa chỉ) khi đang làm bài trên điện thoại; thay bằng thanh tiêu đề siêu gọn hiển thị đồng hồ đếm ngược và tiến độ câu hỏi, giúp câu hỏi và 4 đáp án A, B, C, D hiện ngay trên màn hình đầu tiên mà không cần cuộn trang (trên máy tính giữ nguyên giao diện phòng thi chuẩn).
-- **Thanh Nhắc Làm Bài Thi Dở Thông Minh (Resume Session Banner):** Thay thế nút vàng nổi "Làm bài tiếp" từng che khuất màn hình điện thoại nhỏ bằng thanh thông báo gọn gàng ngay dưới đầu trang, bổ sung nút **✕ Bỏ qua** để học viên thoải mái thoát ra chọn đề thi hoặc môn học khác.
-- **Tối Giản Bảng Điều Khiển Di Động & Menu 3 Gạch:** Đưa Thẻ học viên lên vị trí đầu tiên và nút lớn **"VÀO ÔN TẬP / THI THỬ"** ngay bên dưới; gom các nút phụ (Tài khoản, Đăng xuất, Đổi giao diện) vào Menu 3 gạch ngang gọn gàng ở góc phải màn hình.
-- **Tinh Giản Hộp Thoại Chào Mừng (Welcome Modal):** Thiết kế lại hộp thoại giới thiệu trang trọng với biểu tượng bánh lái tàu 3D ở chính giữa, loại bỏ các thông số quảng cáo rườm rà và giữ nguyên thông tin liên hệ chính thức của nhà trường.
-- **Đồng Bộ Phông Chữ Tiếng Việt & Giao Diện Sáng/Tối:** Chuẩn hóa phông chữ tiếng Việt sắc nét trên toàn bộ Cổng thông tin (khắc phục triệt để hiện tượng chữ to chữ bé ở các ký tự có dấu phức tạp) và nâng cấp giao diện Ôn tập sang tông màu Hàng hải hiện đại (hỗ trợ cả chế độ Sáng và Tối).
-- **Chuẩn Hóa Giao Diện Cổng Thông Tin Chính:** Khóa giao diện chuẩn **Hallmark Editorial** trang trọng, loại bỏ các hiệu ứng tuyết rơi và nhạc nền tự phát gây phân tâm người đọc.
-
-### 🔧 Sửa lỗi & Ổn định hệ thống (Bug Fixes & Stability)
-- **Tối Ưu Trải Nghiệm Đăng Nhập Thuận Tiện:** Mặc định tích sẵn 2 ô **☑ Ghi nhớ đăng nhập** và **☑ Lưu tài khoản này**; tắt hộp thoại cảnh báo đăng nhập thiết bị mới gây gián đoạn và bỏ yêu cầu tự động xin quyền vị trí GPS khi vừa vào trang.
-- **Tăng Tốc Độ Tải Bài Viết & Khắc Phục Lỗi Hiển Thị Trang Chủ:** Tối ưu hóa đường truyền tải tin tức đạt tốc độ tức thì (\`< 50ms\`) và khắc phục triệt để lỗi nháy giao diện trên thanh trượt tin nổi bật.
-- **Khôi Phục Trình Soạn Thảo Văn Bản & Liên Kết Chân Trang:** Mở khóa đầy đủ chức năng trình soạn thảo bài viết TinyMCE cho quản trị viên và sửa lỗi liên kết trang Tuyển dụng ở chân trang.
-- **Vận Hành Êm Ái Cho Khách Vãng Lai (Zero-Noise Console):** Tự động dùng cấu hình mặc định an toàn khi học viên làm bài thử không cần đăng nhập, loại bỏ hoàn toàn các thông báo lỗi kết nối ngầm.
+### Nâng cấp Trải nghiệm Thi thử Di động & Tối ưu Hệ thống (Web & App Win)
+- **Tối ưu phòng thi trên điện thoại:** Thu gọn phần thông tin cá nhân khi đang làm bài, giúp câu hỏi và 4 đáp án hiển thị trọn vẹn ngay trên màn hình mà không cần cuộn trang.
+- **Nhắc làm bài dở gọn gàng:** Thay nút nổi che màn hình bằng thanh nhắc nhỏ ở đầu trang, có nút bỏ qua để học viên thoải mái chọn đề thi khác.
+- **Cài đặt ứng dụng nhanh:** Hỗ trợ cài đặt ứng dụng **"Giáo dục Ninh Bình"** ra màn hình chính điện thoại kèm hướng dẫn chi tiết cho cả iPhone và Android.
+- **Giao diện bảng điều khiển mới:** Đưa Thẻ học viên và nút **"Vào Ôn Tập / Thi Thử"** lên đầu trang, gom các mục phụ vào menu góc phải gọn gàng.
+- **Đăng nhập & Vận hành mượt mà:** Tự động ghi nhớ tài khoản đăng nhập, tăng tốc độ mở trang tin tức và đồng bộ phông chữ tiếng Việt rõ nét trên mọi thiết bị.
 
 `;
 

@@ -10,6 +10,21 @@ import changelogUserRaw from '../CHANGELOG.md?raw';
 import changelogDevRaw from '../../CHANGELOG_DEV.md?raw';
 import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
 
+const renderInlineMarkdown = (text: string) => {
+  if (!text) return text;
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+      return (
+        <strong key={index} className="font-semibold text-gray-900 dark:text-white">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+};
+
 interface ChangelogModalProps {
   onClose: () => void;
 }
@@ -356,7 +371,7 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
                         {section.items.map((item, iIdx) => (
                           <li key={iIdx} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
                             <span className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500 mt-2 flex-shrink-0"></span>
-                            <span>{item}</span>
+                            <span>{renderInlineMarkdown(item)}</span>
                           </li>
                         ))}
                       </ul>

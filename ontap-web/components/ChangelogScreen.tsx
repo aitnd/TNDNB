@@ -10,6 +10,21 @@ interface ChangelogScreenProps {
   onBack: () => void;
 }
 
+const renderInlineMarkdown = (text: string) => {
+  if (!text) return text;
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+      return (
+        <strong key={index} className="font-bold text-foreground">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+};
+
 const ChangelogScreen: React.FC<ChangelogScreenProps> = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState<'user' | 'dev'>('user');
 
@@ -106,7 +121,7 @@ const ChangelogScreen: React.FC<ChangelogScreenProps> = ({ onBack }) => {
                         {section.items.map((item: string, iIdx: number) => (
                           <li key={iIdx} className="flex items-start gap-2.5 text-sm text-foreground font-normal leading-relaxed">
                             <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
-                            <span>{item}</span>
+                            <span>{renderInlineMarkdown(item)}</span>
                           </li>
                         ))}
                       </ul>
