@@ -212,17 +212,6 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                 </span>
                             </button>
 
-                            <div className="h-6 w-[1px] bg-border mx-1 hidden md:block"></div>
-
-                            {/* Standalone Logout Button (Desktop) */}
-                            <button
-                                onClick={onLogout}
-                                className="group hidden md:flex items-center gap-2 text-destructive bg-destructive/10 hover:bg-destructive/15 px-3 py-2 rounded-xl transition-all border border-destructive/20 min-h-[40px]"
-                                title="Đăng xuất"
-                            >
-                                <LogOut size={17} className="group-hover:translate-x-0.5 transition-transform" />
-                                <span className="font-bold text-sm">Thoát</span>
-                            </button>
                         </>
                     ) : (
                         <button

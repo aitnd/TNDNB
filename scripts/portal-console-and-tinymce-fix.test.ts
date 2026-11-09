@@ -353,6 +353,23 @@ describe('Console Errors & TinyMCE License Fixes (TDD Suite)', () => {
       expect(content).toContain('tabular-nums');
     });
   });
+
+  describe('Navbar Logout Cleanup & AdSense Role Gating Fix (Plan 261109-0950)', () => {
+    it('TC-32: ontap-web/components/TopNavbar.tsx must NOT render standalone desktop "Thoát" button outside Hamburger Menu', () => {
+      const filePath = path.resolve(rootDir, 'ontap-web/components/TopNavbar.tsx');
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // 1. Không còn comment hay khối Standalone Logout Button (Desktop)
+      expect(content).not.toContain('Standalone Logout Button (Desktop)');
+
+      // 2. Không còn nhãn <span>Thoát</span> ngoài thanh bar
+      expect(content).not.toMatch(/<span[^>]*>\s*Thoát\s*<\/span>/);
+
+      // 3. Phải bảo toàn nút Đăng xuất bên trong Hamburger Menu
+      expect(content).toMatch(/setShowHamburgerMenu\(false\);\s*onLogout\(\);/);
+      expect(content).toMatch(/<span>\s*Đăng xuất\s*<\/span>/);
+    });
+  });
 });
 
 
