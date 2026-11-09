@@ -51,10 +51,27 @@ export const ADSENSE_SELECTIVE_BLOCK_CSS = `
 
 // CSS ẩn hoàn toàn tất cả AdSense — dùng khi admin TẮT quảng cáo (không phải block click)
 export const ADSENSE_HIDE_ALL_CSS = `
-    .adsbygoogle, ins.adsbygoogle, .google-auto-placed {
+    .adsbygoogle,
+    ins.adsbygoogle,
+    .adsbygoogle-noablate,
+    .google-auto-placed,
+    [data-ad-client],
+    [data-ad-status],
+    div[id^="google-anno"],
+    div[id^="google_ads"],
+    iframe[id^="google_ads"],
+    iframe[id^="aswift"],
+    #google-vignette {
         display: none !important;
         visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
         height: 0 !important;
+        max-height: 0 !important;
         width: 0 !important;
+        max-width: 0 !important;
+        overflow: hidden !important;
+        z-index: -9999 !important;
+        transform: scale(0) !important;
     }
 `;

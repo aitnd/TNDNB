@@ -81,6 +81,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
   const score = useAppStore(state => state.score);
   const userName = useAppStore(state => state.userName);
   const userProfile = useAppStore(state => state.userProfile);
+  const isAuthReady = useAppStore(state => state.isAuthReady);
 
   React.useEffect(() => {
     if (userProfile && !userName) {
@@ -108,7 +109,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
 
   return (
     <>
-      <AdSenseLoader userProfile={userProfile} />
+      <AdSenseLoader userProfile={userProfile} isAuthReady={isAuthReady} />
       <BadgeListener />
 
       <Routes location={location} key={location.pathname}>

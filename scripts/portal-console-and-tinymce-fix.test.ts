@@ -369,6 +369,42 @@ describe('Console Errors & TinyMCE License Fixes (TDD Suite)', () => {
       expect(content).toMatch(/setShowHamburgerMenu\(false\);\s*onLogout\(\);/);
       expect(content).toMatch(/<span>\s*Đăng xuất\s*<\/span>/);
     });
+
+    it('TC-33a: useAppStore and useAppInitialization must provide and update isAuthReady flag', () => {
+      const storePath = path.resolve(rootDir, 'ontap-web/stores/useAppStore.ts');
+      const storeContent = fs.readFileSync(storePath, 'utf8');
+      expect(storeContent).toMatch(/isAuthReady:\s*boolean/);
+      expect(storeContent).toMatch(/setIsAuthReady:\s*\(ready:\s*boolean\)\s*=>\s*void/);
+
+      const initPath = path.resolve(rootDir, 'ontap-web/hooks/useAppInitialization.ts');
+      const initContent = fs.readFileSync(initPath, 'utf8');
+      expect(initContent).toMatch(/setIsAuthReady\(true\)/);
+    });
+
+    it('TC-34: adBlockerStyles.ts and usageService.ts must enforce strict Auto-Ads hiding and accurate role mapping', () => {
+      const cssPath = path.resolve(rootDir, 'ontap-web/services/adBlockerStyles.ts');
+      const cssContent = fs.readFileSync(cssPath, 'utf8');
+      expect(cssContent).toMatch(/\.adsbygoogle-noablate/);
+      expect(cssContent).toMatch(/div\[id\^="google-anno"\]/);
+      expect(cssContent).toMatch(/opacity:\s*0\s*!important/);
+      expect(cssContent).toMatch(/pointer-events:\s*none\s*!important/);
+
+      const usagePath = path.resolve(rootDir, 'ontap-web/services/usageService.ts');
+      const usageContent = fs.readFileSync(usagePath, 'utf8');
+      expect(usageContent).toMatch(/role\s*===\s*['"]lanh_dao['"][\s\S]*?config\.leader/);
+      expect(usageContent).toMatch(/userProfile\.courseId/);
+    });
+
+    it('TC-33b: ontap-web/components/AdSenseLoader.tsx must guard with isAuthReady, use isCancelled flag, and provide purgeAllAdSenseDomAndScripts', () => {
+      const loaderPath = path.resolve(rootDir, 'ontap-web/components/AdSenseLoader.tsx');
+      const loaderContent = fs.readFileSync(loaderPath, 'utf8');
+
+      expect(loaderContent).toMatch(/isAuthReady\?:?\s*boolean/);
+      expect(loaderContent).toMatch(/if\s*\(!isAuthReady\)/);
+      expect(loaderContent).toMatch(/isCancelled/);
+      expect(loaderContent).toMatch(/purgeAllAdSenseDomAndScripts/);
+      expect(loaderContent).toMatch(/google-auto-placed/);
+    });
   });
 });
 

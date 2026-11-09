@@ -63,6 +63,8 @@ interface AppStore {
     setResumeSessionAvailable: (available: boolean) => void;
     isMobileApp: boolean;
     setIsMobileApp: (isMobile: boolean) => void;
+    isAuthReady: boolean;
+    setIsAuthReady: (ready: boolean) => void;
 
     // Phase 03 Features
     incorrectQuestionIds: string[];
@@ -103,6 +105,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
     userProfile: null,
     resumeSessionAvailable: false,
     isMobileApp: false,
+    isAuthReady: false,
 
     // Setters
     setAppState: (appState) => set({ appState }),
@@ -117,6 +120,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
     setUserProfile: (userProfile) => set({ userProfile }),
     setResumeSessionAvailable: (resumeSessionAvailable) => set({ resumeSessionAvailable }),
     setIsMobileApp: (isMobileApp) => set({ isMobileApp }),
+    setIsAuthReady: (ready: boolean) => set({ isAuthReady: ready }),
 
     // Helpers
     resetQuizState: () => set({

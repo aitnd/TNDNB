@@ -16,7 +16,7 @@ const getConfig = async (): Promise<UsageConfig> => {
 };
 
 // --- HELPER: Determine User Role Config ---
-export const getUserRoleConfig = (config: UsageConfig, userProfile: any | null): { param: RoleConfig, type: 'guest' | 'free' | 'verified' | 'vip' | 'teacher' | 'manager' | 'admin' } => {
+export const getUserRoleConfig = (config: UsageConfig, userProfile: any | null): { param: RoleConfig, type: 'guest' | 'free' | 'verified' | 'vip' | 'teacher' | 'manager' | 'leader' | 'admin' } => {
     if (!userProfile) return { param: config.guest, type: 'guest' };
 
     const role = userProfile.role;
@@ -26,8 +26,13 @@ export const getUserRoleConfig = (config: UsageConfig, userProfile: any | null):
         return { param: config.admin, type: 'admin' };
     }
 
-    // Manager (Quan Ly, Lanh Dao)
-    if (['lanh_dao', 'quan_ly'].includes(role)) {
+    // Leader (Lanh Dao)
+    if (role === 'lanh_dao') {
+        return { param: config.leader || config.manager, type: 'leader' };
+    }
+
+    // Manager (Quan Ly)
+    if (role === 'quan_ly') {
         return { param: config.manager, type: 'manager' };
     }
 
@@ -41,8 +46,8 @@ export const getUserRoleConfig = (config: UsageConfig, userProfile: any | null):
         return { param: config.vip_user, type: 'vip' };
     }
 
-    // Verified (Class member)
-    if (userProfile.class && userProfile.class.length > 0 || userProfile.isVerified) {
+    // Verified (Class member / Course member / Verified flag)
+    if ((userProfile.class && userProfile.class.length > 0) || userProfile.isVerified || Boolean(userProfile.courseId)) {
         return { param: config.verified_user, type: 'verified' };
     }
 

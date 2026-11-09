@@ -7,16 +7,24 @@ import { ADSENSE_SELECTIVE_BLOCK_CSS, ADSENSE_HIDE_ALL_CSS } from '../services/a
 
 interface AdSenseLoaderProps {
     userProfile: any | null;
+    isAuthReady?: boolean;
 }
 
-const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
+const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile, isAuthReady = false }) => {
     useEffect(() => {
+        if (!isAuthReady) {
+            injectHideAdsCompletely();
+            return;
+        }
+
+        let isCancelled = false;
         let observer: IntersectionObserver | null = null;
         let popunderHandler: ((e: MouseEvent) => void) | null = null;
 
         const checkConfig = async () => {
             try {
                 const config: UsageConfig = await getUsageConfig();
+                if (isCancelled) return;
                 
                 // Cập nhật giới hạn từ Firebase config vào state local
                 setAdSenseLimits(config.adsenseMaxClicks ?? 2, config.adsenseCooldownMinutes ?? 30);
@@ -58,7 +66,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
                         observer.observe(document.body);
                     }
                 } else {
-                    removeScripts();
+                    purgeAllAdSenseDomAndScripts();
                     injectHideAdsCompletely(); // Admin TẮT → ẩn hoàn toàn
                 }
 
@@ -75,6 +83,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         checkConfig();
 
         return () => {
+            isCancelled = true;
             observer?.disconnect();
             // Dọn dẹp popunder listener
             if (popunderHandler) {
@@ -82,7 +91,7 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
             }
             // blur handler được quản lý bởi effect riêng bên dưới
         };
-    }, [userProfile]); // Re-check when user changes (e.g. login/logout)
+    }, [userProfile, isAuthReady]); // Re-check when user changes (e.g. login/logout)
 
     // 🛡️ Phát hiện click quảng cáo AdSense bằng document.activeElement
     // Khi user click vào iframe quảng cáo → window mất focus (blur)
@@ -173,11 +182,18 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile }) => {
         document.head.appendChild(script);
     };
 
-    const removeScripts = () => {
+    const purgeAllAdSenseDomAndScripts = () => {
         ['adsense-script', 'adsterra-script', 'monetag-script'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.remove();
         });
+        document.querySelectorAll(
+            'script[src*="adsbygoogle"], .adsbygoogle, ins.adsbygoogle, .adsbygoogle-noablate, .google-auto-placed, [data-ad-client], [data-ad-status], div[id^="google-anno"], div[id^="google_ads"], iframe[id^="google_ads"], iframe[id^="aswift"], iframe[src*="googlesyndication"], #google-vignette'
+        ).forEach(el => el.remove());
+    };
+
+    const removeScripts = () => {
+        purgeAllAdSenseDomAndScripts();
     };
 
     // === QUẢN LÝ STYLE ADSENSE ===

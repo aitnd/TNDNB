@@ -33,6 +33,7 @@ export const useAppInitialization = () => {
   const setUserProfile = useAppStore(state => state.setUserProfile);
   const setResumeSessionAvailable = useAppStore(state => state.setResumeSessionAvailable);
   const setIsMobileApp = useAppStore(state => state.setIsMobileApp);
+  const setIsAuthReady = useAppStore(state => state.setIsAuthReady);
 
   // Lắng nghe cấu hình bảo mật realtime từ Firestore
   useEffect(() => {
@@ -296,6 +297,7 @@ export const useAppInitialization = () => {
               }
               setUserProfile(profile);
               setUserName(profile.full_name || firebaseUser.displayName || '');
+              setIsAuthReady(true);
             }
           }, (error) => {
             console.warn('⚠️ [App] Profile onSnapshot error:', error.message);
@@ -338,6 +340,8 @@ export const useAppInitialization = () => {
           return;
         }
 
+        setIsAuthReady(true);
+
         import('../services/fcmClient').then(({ initializeFCM }) => {
           initializeFCM(firebaseUser.uid);
         });
@@ -370,6 +374,7 @@ export const useAppInitialization = () => {
         }
         setUserProfile(null);
         setUserName('');
+        setIsAuthReady(true);
       }
     });
 
@@ -380,7 +385,7 @@ export const useAppInitialization = () => {
         unsubProfileRef.current = null;
       }
     };
-  }, [licenses, setCurrentQuiz, setSelectedLicense, setSelectedSubject, setUserAnswers, setUserName, setUserProfile]);
+  }, [licenses, setCurrentQuiz, setIsAuthReady, setSelectedLicense, setSelectedSubject, setUserAnswers, setUserName, setUserProfile]);
 
   // 💖 KIỂM TRA TRẠNG THÁI PHIÊN ĐĂNG NHẬP 💖
   useEffect(() => {
