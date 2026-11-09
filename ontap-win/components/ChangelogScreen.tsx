@@ -4,12 +4,15 @@ import { ArrowLeftIcon3D } from './icons';
 import changelogUserRaw from '../CHANGELOG.md?raw';
 import changelogDevRaw from '../../CHANGELOG_DEV.md?raw';
 import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
+import { useAppStore } from '../stores/useAppStore';
 
 const triggerHaptic = (_type: string) => {};
 
 interface ChangelogScreenProps {
   onBack: () => void;
 }
+
+const DEV_ROLES = ['admin', 'quan_ly', 'lanh_dao'];
 
 const renderInlineMarkdown = (text: string) => {
   if (!text) return text;
@@ -27,12 +30,15 @@ const renderInlineMarkdown = (text: string) => {
 };
 
 const ChangelogScreen: React.FC<ChangelogScreenProps> = ({ onBack }) => {
+  const userProfile = useAppStore(state => state.userProfile);
+  const canViewDevChangelog = Boolean(userProfile?.role && DEV_ROLES.includes(userProfile.role));
   const [activeTab, setActiveTab] = useState<'user' | 'dev'>('user');
 
   const userChangelog = useMemo<ChangelogVersion[]>(() => parseChangelog(changelogUserRaw), []);
   const devChangelog = useMemo<ChangelogVersion[]>(() => parseChangelog(changelogDevRaw), []);
 
-  const currentList = activeTab === 'user' ? userChangelog : devChangelog;
+  const effectiveTab = canViewDevChangelog ? activeTab : 'user';
+  const currentList = effectiveTab === 'user' ? userChangelog : devChangelog;
   const currentVersion = currentList[0]?.version || '3.22.0';
 
   return (
@@ -55,32 +61,34 @@ const ChangelogScreen: React.FC<ChangelogScreenProps> = ({ onBack }) => {
       </div>
 
       {/* Segmented Control Tab Switcher */}
-      <div className="flex justify-center mb-6">
-        <div className="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs">
-          <button
-            onClick={() => { triggerHaptic('light'); setActiveTab('user'); }}
-            className={`px-4 sm:px-6 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[40px] flex items-center gap-1.5 ${
-              activeTab === 'user'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <span>👤</span>
-            <span>Người dùng</span>
-          </button>
-          <button
-            onClick={() => { triggerHaptic('light'); setActiveTab('dev'); }}
-            className={`px-4 sm:px-6 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[40px] flex items-center gap-1.5 ${
-              activeTab === 'dev'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <span>💻</span>
-            <span>Kỹ thuật (Dev)</span>
-          </button>
+      {canViewDevChangelog && (
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs">
+            <button
+              onClick={() => { triggerHaptic('light'); setActiveTab('user'); }}
+              className={`px-4 sm:px-6 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[40px] flex items-center gap-1.5 ${
+                effectiveTab === 'user'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <span>👤</span>
+              <span>Người dùng</span>
+            </button>
+            <button
+              onClick={() => { triggerHaptic('light'); setActiveTab('dev'); }}
+              className={`px-4 sm:px-6 py-2 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[40px] flex items-center gap-1.5 ${
+                effectiveTab === 'dev'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <span>💻</span>
+              <span>Kỹ thuật (Dev)</span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-xl p-6">
         <div className="space-y-8">

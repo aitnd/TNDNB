@@ -4,6 +4,19 @@ import path from 'path';
 
 const rootDir = path.resolve(__dirname, '..');
 
+// Polyfill localStorage in Node.js test environment if needed
+if (typeof globalThis.localStorage === 'undefined') {
+  const store = new Map<string, string>();
+  globalThis.localStorage = {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => { store.set(key, String(value)); },
+    removeItem: (key: string) => { store.delete(key); },
+    clear: () => { store.clear(); },
+    key: (index: number) => Array.from(store.keys())[index] ?? null,
+    length: 0,
+  } as any;
+}
+
 describe('Changelog Parser Test Suite (Plan 261108-2025)', () => {
   it('TC-CP01: parseChangelog phân tích chính xác semver header, ngày tháng, và đa section', async () => {
     const { parseChangelog, getSectionConfig } = await import('../ontap-web/utils/parseChangelog');
@@ -261,6 +274,33 @@ describe('Changelog Parser Test Suite (Plan 261108-2025)', () => {
         /renderInlineMarkdown|<strong|renderFormattedItem/
       );
     });
+  });
+
+  it('TC-RBAC03: Phân quyền RBAC - Cả 4 component đều kiểm tra vai trò admin, quan_ly, lanh_dao trước khi render Tab Switcher', () => {
+    const filesToCheck = [
+      path.resolve(rootDir, 'ontap-web/components/ChangelogModal.tsx'),
+      path.resolve(rootDir, 'ontap-web/components/ChangelogScreen.tsx'),
+      path.resolve(rootDir, 'ontap-win/components/ChangelogModal.tsx'),
+      path.resolve(rootDir, 'ontap-win/components/ChangelogScreen.tsx'),
+    ];
+
+    filesToCheck.forEach((filePath) => {
+      const code = fs.readFileSync(filePath, 'utf8');
+      expect(code, `File ${filePath} phải dùng useAppStore để lấy userProfile`).toContain('useAppStore');
+      expect(code, `File ${filePath} phải kiểm tra quyền xem Dev changelog`).toMatch(/canViewDevChangelog|DEV_ROLES/);
+      expect(code, `File ${filePath} phải kiểm tra vai trò admin`).toContain('admin');
+      expect(code, `File ${filePath} phải kiểm tra vai trò quan_ly`).toContain('quan_ly');
+      expect(code, `File ${filePath} phải kiểm tra vai trò lanh_dao`).toContain('lanh_dao');
+    });
+  });
+
+  it('TC-RBAC05: Ràng buộc Bất biến 2 - ontap-win/components/ChangelogModal.tsx bảo toàn 100% Electron Updater & Question Sync', () => {
+    const winModalCode = fs.readFileSync(path.resolve(rootDir, 'ontap-win/components/ChangelogModal.tsx'), 'utf8');
+    expect(winModalCode).toContain('window.electron');
+    expect(winModalCode).toContain('shouldUpdateQuestions');
+    expect(winModalCode).toContain('fetchAndSaveQuestions');
+    expect(winModalCode).toContain('handleCheckDataUpdate');
+    expect(winModalCode).toContain('handleUpdateData');
   });
 });
 

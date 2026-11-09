@@ -9,6 +9,9 @@ import { isVersionLower } from '../utils/versionUtils';
 import changelogUserRaw from '../CHANGELOG.md?raw';
 import changelogDevRaw from '../../CHANGELOG_DEV.md?raw';
 import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
+import { useAppStore } from '../stores/useAppStore';
+
+const DEV_ROLES = ['admin', 'quan_ly', 'lanh_dao'];
 
 const renderInlineMarkdown = (text: string) => {
   if (!text) return text;
@@ -31,10 +34,13 @@ interface ChangelogModalProps {
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
+  const userProfile = useAppStore(state => state.userProfile);
+  const canViewDevChangelog = Boolean(userProfile?.role && DEV_ROLES.includes(userProfile.role));
   const [activeTab, setActiveTab] = React.useState<'user' | 'dev'>('user');
   const userChangelog = React.useMemo<ChangelogVersion[]>(() => parseChangelog(changelogUserRaw), []);
   const devChangelog = React.useMemo<ChangelogVersion[]>(() => parseChangelog(changelogDevRaw), []);
-  const currentChangelog = activeTab === 'user' ? userChangelog : devChangelog;
+  const effectiveTab = canViewDevChangelog ? activeTab : 'user';
+  const currentChangelog = effectiveTab === 'user' ? userChangelog : devChangelog;
 
   const [currentVersion, setCurrentVersion] = React.useState<string>('...');
   const [latestVersion, setLatestVersion] = React.useState<string>(userChangelog[0]?.version || '3.22.0');
@@ -316,30 +322,32 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
               📋 Lịch sử cập nhật
             </h3>
             {/* Segmented Control Tab Switcher */}
-            <div className="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs">
-              <button
-                onClick={() => setActiveTab('user')}
-                className={`px-3 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
-                  activeTab === 'user'
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <span>👤</span>
-                <span>Người dùng</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('dev')}
-                className={`px-3 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
-                  activeTab === 'dev'
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <span>💻</span>
-                <span>Kỹ thuật (Dev)</span>
-              </button>
-            </div>
+            {canViewDevChangelog && (
+              <div className="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs">
+                <button
+                  onClick={() => setActiveTab('user')}
+                  className={`px-3 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
+                    effectiveTab === 'user'
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <span>👤</span>
+                  <span>Người dùng</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('dev')}
+                  className={`px-3 py-1 rounded-lg font-bold text-xs transition-all flex items-center gap-1 ${
+                    effectiveTab === 'dev'
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <span>💻</span>
+                  <span>Kỹ thuật (Dev)</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {currentChangelog.slice(0, 1).map((release, rIdx) => (

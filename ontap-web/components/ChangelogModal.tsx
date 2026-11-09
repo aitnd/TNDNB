@@ -4,10 +4,13 @@ import { Rocket, X } from 'lucide-react';
 import changelogUserRaw from '../CHANGELOG.md?raw';
 import changelogDevRaw from '../../CHANGELOG_DEV.md?raw';
 import { parseChangelog, ChangelogVersion } from '../utils/parseChangelog';
+import { useAppStore } from '../stores/useAppStore';
 
 interface ChangelogModalProps {
   onClose: () => void;
 }
+
+const DEV_ROLES = ['admin', 'quan_ly', 'lanh_dao'];
 
 export const getLatestVersion = async (): Promise<string> => {
   try {
@@ -35,12 +38,15 @@ const renderInlineMarkdown = (text: string) => {
 
 const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
+  const userProfile = useAppStore(state => state.userProfile);
+  const canViewDevChangelog = Boolean(userProfile?.role && DEV_ROLES.includes(userProfile.role));
   const [activeTab, setActiveTab] = useState<'user' | 'dev'>('user');
 
   const userChangelog = useMemo<ChangelogVersion[]>(() => parseChangelog(changelogUserRaw), []);
   const devChangelog = useMemo<ChangelogVersion[]>(() => parseChangelog(changelogDevRaw), []);
 
-  const currentList = activeTab === 'user' ? userChangelog : devChangelog;
+  const effectiveTab = canViewDevChangelog ? activeTab : 'user';
+  const currentList = effectiveTab === 'user' ? userChangelog : devChangelog;
   const latestRelease = currentList[0];
 
   return (
@@ -71,32 +77,34 @@ const ChangelogModal: React.FC<ChangelogModalProps> = ({ onClose }) => {
         </div>
 
         {/* Tab Switcher */}
-        <div className="px-5 pt-4 pb-2 bg-card border-b border-border flex justify-center">
-          <div className="inline-flex p-1 bg-muted rounded-xl border border-border shadow-xs">
-            <button
-              onClick={() => setActiveTab('user')}
-              className={`px-4 sm:px-6 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[38px] flex items-center gap-1.5 ${
-                activeTab === 'user'
-                  ? 'bg-card text-foreground shadow-xs'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <span>👤</span>
-              <span>Người dùng</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('dev')}
-              className={`px-4 sm:px-6 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[38px] flex items-center gap-1.5 ${
-                activeTab === 'dev'
-                  ? 'bg-card text-foreground shadow-xs'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <span>💻</span>
-              <span>Kỹ thuật (Dev)</span>
-            </button>
+        {canViewDevChangelog && (
+          <div className="px-5 pt-4 pb-2 bg-card border-b border-border flex justify-center">
+            <div className="inline-flex p-1 bg-muted rounded-xl border border-border shadow-xs">
+              <button
+                onClick={() => setActiveTab('user')}
+                className={`px-4 sm:px-6 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[38px] flex items-center gap-1.5 ${
+                  effectiveTab === 'user'
+                    ? 'bg-card text-foreground shadow-xs'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <span>👤</span>
+                <span>Người dùng</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('dev')}
+                className={`px-4 sm:px-6 py-1.5 rounded-lg font-bold text-xs sm:text-sm transition-all min-h-[38px] flex items-center gap-1.5 ${
+                  effectiveTab === 'dev'
+                    ? 'bg-card text-foreground shadow-xs'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <span>💻</span>
+                <span>Kỹ thuật (Dev)</span>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
