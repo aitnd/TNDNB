@@ -9,6 +9,7 @@
 > 3. [`261104-0856-cloudflare-r2-d1-offline-upgrade`](file:///d:/Antigravity/TNDNB/docs/plans/261104-0856-cloudflare-r2-d1-offline-upgrade/plan.md) — Tách Deployment Monorepo (`ontap-web` lên Cloudflare Pages, Root Portal trên Vercel) & Hạ tầng Cloudflare Worker + D1 + R2 Offline-First.
 > 4. [`phase-06-portal-r2-assets-design`](file:///d:/Antigravity/TNDNB/docs/plans/261105-1836-ontap-web-ui-overhaul/phase-06-portal-r2-assets-design.md) — Chuyển đổi dần ảnh bìa, ảnh TinyMCE & giáo trình tài liệu (PDF/Word) của Root Portal sang Cloudflare R2 (`tndnb-assets`) với cơ chế Graceful Fallback 5s sang Supabase Storage và bảo toàn 100% bài viết cũ.
 > 5. [`261108-2025-authoritative-changelog-and-recent-plans-sync`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/DESIGN.md) — Khôi phục bộ parser Markdown raw cục bộ (`parseChangelog.ts` qua Vite `?raw`), thiết lập kiến trúc Dual Changelog (`CHANGELOG.md` cho Người dùng và `CHANGELOG_DEV.md` cho Kỹ thuật Dev) với thanh Tab Switcher, và nâng cấp đồng bộ phiên bản toàn hệ thống Monorepo lên **`v3.22.0`**.
+> 6. [`261109-0650-changelog-rbac-and-concise-copy`](file:///d:/Antigravity/TNDNB/docs/plans/261109-0650-changelog-rbac-and-concise-copy/DESIGN.md) — Phân quyền hiển thị tab Kỹ thuật Dev theo RBAC (`admin`, `quan_ly`, `lanh_dao`), viết lại bản tin Người dùng súc tích sạch bóng từ khóa Dev, và render inline markdown `**in đậm**` thành thẻ `<strong>` an toàn.
 
 ---
 
@@ -151,6 +152,19 @@ flowchart TD
   - Tự động ẩn trên Desktop (`lg:hidden`) và ẩn khi app đang chạy ở chế độ Standalone (`display-mode: standalone`).
   - **TUYỆT ĐỐI CẤM** nhúng vào `ExamQuizScreen.tsx` và `QuizScreen.tsx` để giữ không gian thi cử yên tĩnh, tập trung 100%.
 
+### 2.5. Phân Quyền Vai Trò (RBAC) Cho Tab Kỹ Thuật & Render Inline Markdown (Kế hoạch 261109-0650)
+- **Tài liệu đặc tả chi tiết:** [`docs/plans/261109-0650-changelog-rbac-and-concise-copy/DESIGN.md`](file:///d:/Antigravity/TNDNB/docs/plans/261109-0650-changelog-rbac-and-concise-copy/DESIGN.md)
+- **Phân Quyền RBAC Cho Tab Dev:**
+  - Định nghĩa nhóm vai trò được phép xem thông tin kỹ thuật hạ tầng (`CHANGELOG_DEV.md`): `DEV_CHANGELOG_ROLES = ['admin', 'quan_ly', 'lanh_dao'] as const;`.
+  - Truy xuất `userProfile` từ `useAppStore`, kiểm tra `canViewDevChangelog = Boolean(userProfile?.role && DEV_CHANGELOG_ROLES.includes(userProfile.role as any));`.
+  - Khi `canViewDevChangelog === false`: Ẩn hoàn toàn cụm nút chuyển tab `[👤 Người dùng]` / `[💻 Kỹ thuật (Dev)]`, khóa cứng `effectiveTab = 'user'`, bảo đảm an toàn thông tin nội bộ trước học viên, giáo viên và khách vãng lai.
+- **Chuẩn Hóa Bản Tin Người Dùng Súc Tích:**
+  - Viết lại toàn bộ mục `[3.22.0]` và `[3.21.0]` trong `CHANGELOG.md` theo chuẩn `[3.19.0]`, loại bỏ 100% từ khóa Dev (`WelcomeModal`, `LicenseSelectionScreen`, `Cloudflare`, `Firestore`, `Dexie`, `IndexedDB`, `Monorepo`, `TinyMCE`, `Zero-Noise Console`,...).
+  - Mỗi ý là 1 câu tiếng Việt tự nhiên, giải thích rõ ràng lợi ích thực tế cho việc ôn thi của học viên.
+- **Render Inline Markdown An Toàn 100% (`renderInlineMarkdown`):**
+  - Chuyển đổi cú pháp `**in đậm**` thành thẻ `<strong className="font-bold text-foreground">...</strong>` (trên Windows là `font-semibold text-gray-900 dark:text-white`).
+  - Phân tách bằng Regex `text.split(/(\*\*.*?\*\*)/g)`, không dùng `dangerouslySetInnerHTML`, phòng chống triệt để lỗ hổng XSS.
+
 ---
 
 ## 3. Thiết Kế Cơ Sở Dữ Liệu & Xác Thực (`/login`, `/quan-ly` & Cloudflare D1)
@@ -232,5 +246,16 @@ flowchart TD
   4. Khi bấm `[✕]`, banner ẩn ngay lập tức, lưu cờ 7 ngày và đồng bộ tức thì qua CustomEvent `'ontap-pwa-banner-dismissed'` để ẩn tất cả các banner khác trong phiên làm việc.
   5. Banner tự động ẩn trên Desktop (`lg:hidden`) và ẩn khi app chạy trong chế độ `standalone`.
   6. Trong phòng thi (`ExamQuizScreen.tsx` và `QuizScreen.tsx`), banner TUYỆT ĐỐI không xuất hiện, đảm bảo sự tập trung 100% cho thí sinh.
+
+### Kịch bản 7: Nghiệm thu Phân Quyền RBAC Tab Kỹ Thuật, Bản Tin Súc Tích & Render Inline Markdown (Kế hoạch 261109-0650)
+- **Given:** Người dùng mở màn hình Lịch sử cập nhật (`ChangelogScreen.tsx`) hoặc popup phiên bản mới (`ChangelogModal.tsx`).
+- **When:** Hệ thống khởi tạo component và kiểm tra `userProfile` từ `useAppStore`.
+- **Then:**
+  1. Với khách chưa đăng nhập (`userProfile === null`), học viên (`hoc_vien`) và giáo viên (`giao_vien`): Cụm nút chuyển tab `[👤 Người dùng]` / `[💻 Kỹ thuật (Dev)]` hoàn toàn không xuất hiện trên giao diện, chỉ hiển thị bản tin Người dùng (`CHANGELOG.md`).
+  2. Với quản trị viên (`admin`), quản lý đào tạo (`quan_ly`) và lãnh đạo (`lanh_dao`): Cụm Tab Switcher hiển thị đầy đủ, cho phép chuyển đổi 0ms sang xem `CHANGELOG_DEV.md`.
+  3. Mục `[3.22.0]` và `[3.21.0]` trong `CHANGELOG.md` tuyệt đối không chứa từ khóa Dev nội bộ (`WelcomeModal`, `LicenseSelectionScreen`, `Cloudflare`, `Firestore`, `Dexie`, `IndexedDB`, `Monorepo`, `TinyMCE`, `Zero-Noise Console`,...).
+  4. Các đoạn cú pháp `**in đậm**` được hiển thị bằng thẻ `<strong>` trang nhã, không còn ký tự dấu sao thô trên màn hình.
+  5. Bảo toàn 100% 2 Ràng buộc Bất biến: `ExamQuizScreen.tsx` đạt `0 bytes diff` và `ontap-win/components/ChangelogModal.tsx` bảo toàn nguyên vẹn dòng 16–287.
+
 
 

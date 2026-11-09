@@ -52,12 +52,13 @@ describe('Version Synchronization & Authoritative Changelog Verification (v3.22.
     expect(winChangelog, 'ontap-win/CHANGELOG.md phải khớp hoàn toàn với CHANGELOG.md').toBe(rootChangelog);
   });
 
-  it('TC-VS05: CHANGELOG.md mục [3.22.0] phải chia đủ 3 section màu sắc (Tính năng, Giao diện, Sửa lỗi)', () => {
+  it('TC-VS05: CHANGELOG.md mục [3.22.0] súc tích, tập trung trải nghiệm người dùng', () => {
     const content = fs.readFileSync(path.resolve(rootDir, 'CHANGELOG.md'), 'utf8');
     const v3220Section = content.split('## [3.21.0]')[0];
-    expect(v3220Section).toContain('### 🌟 Tính năng mới');
-    expect(v3220Section).toContain('### 🚀 Giao diện & Trải nghiệm');
-    expect(v3220Section).toContain('### 🔧 Sửa lỗi & Ổn định hệ thống');
+    expect(v3220Section).toContain('### Nâng cấp Trải nghiệm Thi thử Di động & Tối ưu Hệ thống');
+    expect(v3220Section).toContain('**Tối ưu phòng thi trên điện thoại:**');
+    expect(v3220Section).toContain('**Nhắc làm bài dở gọn gàng:**');
+    expect(v3220Section).toContain('**Cài đặt ứng dụng nhanh:**');
   });
 
   it('TC-VS06: CHANGELOG_DEV.md mục [3.22.0] phải chia đủ 4 section kỹ thuật (Kiến trúc, UI, Bảo mật, Test)', () => {
