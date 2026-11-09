@@ -1,42 +1,44 @@
 # 📋 TÀI LIỆU BÀN GIAO TIẾN ĐỘ DỰ ÁN (HANDOVER DOCUMENT)
 
 > **Dự án**: Cổng thông tin & Hệ thống Quản trị Đào tạo Thuyền viên Ninh Bình (TNDNB)  
-> **Thời điểm cập nhật**: 2026-11-08 20:16:30 (GMT+7)  
+> **Thời điểm cập nhật**: 2026-11-09 11:55:00 (GMT+7)  
 > **Nhánh hiện tại**: `main` (Up to date với `origin/main`)  
-> **Commit mới nhất**: `43aa9df6` (Merge branch 'feat/mobile-exam-screen-and-resume-banner' into main)  
+> **Commit mới nhất**: `833ec627` (chore(brain): update current recap for plan 261109-0950)  
 
 ---
 
 ## 1. Tình Trạng Hiện Tại & Công Việc Vừa Hoàn Thành
 
-Phiên làm việc đã giải quyết triệt để 2 vấn đề giao diện trực quan theo 2 ảnh phản hồi của người dùng:
+Phiên làm việc đã hoàn thành 100% 3 Phase của kế hoạch **`261109-0950-remove-navbar-logout-button`**, giải quyết trọn vẹn 2 yêu cầu của người dùng:
 
-1. **Màn hình làm bài thi trên Mobile (`ExamQuizScreen.tsx`)**:
-   - Ẩn hoàn toàn thông tin cá nhân (ảnh thẻ 100x130, SBD, ngày sinh, địa chỉ, lớp, bằng) và hộp cam đếm ngược cồng kềnh trên điện thoại bằng `flex md:hidden`.
-   - Thay thế bằng **Mobile Exam Header** siêu mỏng (~38px):
-     - Nút `[← Thoát]` có popup confirm tránh học viên bấm nhầm.
-     - Huy hiệu nhãn bằng `selectedLicense?.name` (`truncate`).
-     - Tiến độ `Câu X/Y`.
-     - Đồng hồ đếm ngược `⏱️ MM:SS` dạng badge hổ phách với `font-mono tabular-nums`.
-   - **Hiệu quả**: Giải phóng hơn 180px chiều cao; câu hỏi và trọn vẹn 4 đáp án A, B, C, D hiển thị ngay tại First Fold (không cần cuộn tay).
-   - **Desktop (`hidden md:flex`)**: Giữ nguyên vẹn 100% bố cục trang trọng đầy đủ ảnh thẻ và thông tin cá nhân cho máy tính bàn.
+1. **Dọn dẹp nút Thoát độc lập trên TopNavbar Desktop (`TopNavbar.tsx`)**:
+   - Gỡ bỏ hoàn toàn nút Thoát Desktop và vách ngăn dọc nằm cạnh Avatar.
+   - Thống nhất trải nghiệm: Đăng xuất được đặt an toàn và duy nhất ở mục cuối cùng trong **Menu Hamburger 3 gạch `[≡]`** trên cả Desktop lẫn Mobile.
+   - Tránh việc người dùng vô tình bấm nhầm vào nút thoát khi đang thao tác các tính năng trên thanh điều hướng.
 
-2. **Banner nhắc làm bài thi dở dang (`App.tsx`)**:
-   - Xóa bỏ hoàn toàn nút nổi màu vàng `fixed bottom-4 left-1/2` kèm hiệu ứng giật nảy `animate-bounce` che kín các nút chọn bài.
-   - Thay thế bằng **Alert Banner thanh mảnh** đặt dưới Header trong luồng trang chuẩn (`animate-fade-in`).
-   - Có nút **`[Làm tiếp ngay]`** và nút **`[✕ Bỏ qua]`** (`setResumeSessionAvailable(false)`) giúp học viên thoải mái tắt thông báo khi muốn chọn bài khác mà không xóa mất dữ liệu `localStorage`.
+2. **Khắc phục triệt để lỗi AdSense Auto-Ads hiển thị cho Admin & Học viên lớp (`AdSenseLoader.tsx`, `useAppStore.ts`, `useAppInitialization.ts`, `adBlockerStyles.ts`, `usageService.ts`)**:
+   - **Auth Initialization Race Condition:** Bổ sung cờ `isAuthReady: boolean` vào store, chỉ bật `true` khi Firebase Auth và Firestore đã tải xong hồ sơ hoặc xác nhận rõ ràng là khách vãng lai (`currentUser === null`). Ngăn chặn `AdSenseLoader` nhận nhầm Admin là khách vãng lai trong 300ms–1000ms đầu khi vừa tải trang.
+   - **Async Closure Race Condition:** Bổ sung cờ hủy `let isCancelled = false;` trong cleanup hook để hủy toàn bộ các promise ngầm và callback của `IntersectionObserver` khi người dùng chuyển đổi trạng thái auth.
+   - **Đè bẹp Google Auto-Ads Inline `!important`:** Tăng cường `ADSENSE_HIDE_ALL_CSS` với đa thuộc tính `opacity: 0 !important; pointer-events: none !important; max-height: 0 !important; transform: scale(0) !important; z-index: -9999 !important;` và hàm `purgeAllAdSenseDomAndScripts()` quét sạch DOM và script của quảng cáo khi role không được phép hiển thị.
+   - **Chuẩn hóa Role Mapping:** Điều chỉnh vai trò `lanh_dao` sang `config.leader || config.manager` và bổ sung điều kiện `courseId` đối với học viên chính thức (`verified_user`).
 
 3. **Kiểm thử & Nghiệm thu**:
-   - Bộ test Vitest: Bổ sung `TC-30` và `TC-31`, toàn bộ **54/54 tests PASSED 100%**.
-   - Type Check: **0 lỗi** ở cả root và `ontap-web`.
-   - Build Verify: Next.js 57 routes static & Vite build 15.24s hoàn thành xuất sắc.
-   - Đã merge thành công vào nhánh `main` và push lên GitHub remote (`origin/main`).
+   - Toàn bộ **13/13 test suites (99/99 tests PASSED 100%)** với 4 test mới (`TC-32`, `TC-33a`, `TC-33b`, `TC-34`).
+   - Typecheck Strict: **0 lỗi** trên toàn bộ `ontap-web`.
+   - ESLint: **0 errors, 0 warnings**.
+   - Build Verify: `npm --prefix ontap-web run build` thành công trong 16.58s xuất bản sang `public/ontap/`.
+   - Bảo toàn tuyệt đối Invariant `ExamQuizScreen.tsx` (**0 bytes diff**).
+   - Git: Đã push toàn bộ 4 commits lên GitHub remote (`origin/main`).
 
 ---
 
 ## 2. Các Tệp Tin Trọng Tâm Vừa Chỉnh Sửa
-- [`ontap-web/components/ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx): Phân tách Desktop/Mobile Header.
-- [`ontap-web/App.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/App.tsx): Alert Banner nội dòng thay thế nút nổi FAB.
-- [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts): Thêm `TC-30` và `TC-31`.
-- [`scripts/ontap-dual-theme-and-sidebar.test.ts`](file:///d:/Antigravity/TNDNB/scripts/ontap-dual-theme-and-sidebar.test.ts): Cập nhật kiểm tra cấu trúc Semantic & Responsive.
-- [`docs/plans/261107-1135-mobile-exam-screen-and-resume-banner/`](file:///d:/Antigravity/TNDNB/docs/plans/261107-1135-mobile-exam-screen-and-resume-banner/): Thư mục kế hoạch, thiết kế, đặc tả UI và checklist task chính thức.
+- [`ontap-web/components/TopNavbar.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/TopNavbar.tsx): Dọn dẹp nút Thoát độc lập Desktop.
+- [`ontap-web/stores/useAppStore.ts`](file:///d:/Antigravity/TNDNB/ontap-web/stores/useAppStore.ts): Bổ sung `isAuthReady`.
+- [`ontap-web/hooks/useAppInitialization.ts`](file:///d:/Antigravity/TNDNB/ontap-web/hooks/useAppInitialization.ts): Kích hoạt `setIsAuthReady(true)` sau khi auth ổn định.
+- [`ontap-web/components/AdSenseLoader.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/AdSenseLoader.tsx): Auth gate, cleanup token `isCancelled`, và `purgeAllAdSenseDomAndScripts()`.
+- [`ontap-web/services/adBlockerStyles.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/adBlockerStyles.ts): Đa tầng CSS kháng inline `display: block !important`.
+- [`ontap-web/services/usageService.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/usageService.ts): Chuẩn hóa role mapping `lanh_dao` và `verified_user`.
+- [`ontap-web/routes/AppRoutes.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/routes/AppRoutes.tsx): Truyền `isAuthReady` vào `<AdSenseLoader />`.
+- [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts): Thêm `TC-32`, `TC-33a`, `TC-33b`, `TC-34`.
+- [`docs/plans/261109-0950-remove-navbar-logout-button/`](file:///d:/Antigravity/TNDNB/docs/plans/261109-0950-remove-navbar-logout-button/): Hồ sơ kế hoạch, thiết kế và các phases đã tick `[x]` 100%.

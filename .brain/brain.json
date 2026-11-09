@@ -21,7 +21,9 @@
         "Next.js Dynamic SSR-Safe Slider Component",
         "Centered Focused WelcomeModal (Anti-AI-Slop)",
         "Mobile Exam Screen First-Fold Optimization",
-        "In-Flow Resume Session Alert Banner with Dismiss Action"
+        "In-Flow Resume Session Alert Banner with Dismiss Action",
+        "AdSense Role-Gated Loading with Auth State Guard & DOM Purge",
+        "TopNavbar Unified Logout via Hamburger Menu"
     ],
     "project": "TNDNB",
     "canonical_domain": "https://www.daotaothuyenvien.com",
@@ -42,6 +44,6 @@
         "Cloudflare KV",
         "Cloudflare Workers (Hono)"
     ],
-    "last_commit": "43aa9df6",
-    "updated_at": "2026-11-08T20:17:00+07:00"
+    "last_commit": "833ec627",
+    "updated_at": "2026-11-09T11:55:00+07:00"
 }
