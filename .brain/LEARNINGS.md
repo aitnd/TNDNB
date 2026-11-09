@@ -124,3 +124,7 @@
 - **Kỷ Luật Bảo Toàn Tuyệt Đối Logic Windows Electron Updater & Đồng Bộ Đề Thi (`[type=architecture]`):**
   - Trong tệp `ontap-win/components/ChangelogModal.tsx`, các dòng 16–287 chứa toàn bộ logic kiểm tra cập nhật qua GitHub Releases của Electron (`window.electron.onUpdateAvailable`, `onDownloadProgress`, `onUpdateDownloaded`) cùng cơ chế Đồng bộ Gói Đề Thi Supabase ngoại tuyến.
   - Khi đồng bộ giao diện hiển thị Dual-Tab Markdown với bản Web, chỉ được phép sửa đổi phẫu thuật (surgical edit) khu vực render giao diện ở nửa cuối tệp (dòng 289–338), tuyệt đối không đụng chạm hay xóa bỏ nửa trên logic cập nhật desktop.
+- **Phân Quyền RBAC Cho Tab Kỹ Thuật & Quy Chuẩn Ngôn Ngữ Bản Tin Người Dùng (`[type=decision]`):**
+  - Thanh chuyển đổi Tab `[👤 Người dùng]` / `[💻 Kỹ thuật (Dev)]` chỉ được phép hiển thị khi `userProfile?.role` thuộc nhóm quản trị/lãnh đạo (`['admin', 'quan_ly', 'lanh_dao']`). Đối với khách vãng lai (`null`), học viên (`hoc_vien`) và giáo viên (`giao_vien`), thanh chuyển đổi phải ẩn hoàn toàn và ép cứng `effectiveTab = 'user'`.
+  - Nội dung `CHANGELOG.md` dành cho người dùng bắt buộc viết ngắn gọn 1 câu/ý theo chuẩn bản `3.19.0`, tuyệt đối không để lộ tên file, tên component hay hạ tầng kỹ thuật nội bộ (`WelcomeModal`, `LicenseSelectionScreen`, `Cloudflare`, `Firestore`, `Dexie`, `TinyMCE`...).
+  - Khi render từng dòng từ Markdown thô, cần bọc qua hàm `renderInlineMarkdown` chuyển đổi `**Tiêu đề:**` thành thẻ `<strong>` của React (không dùng `dangerouslySetInnerHTML`) để tránh hiện nguyên văn dấu sao `**` thô trên màn hình.
