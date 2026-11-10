@@ -69,6 +69,12 @@
   flex-shrink: 0;
 }
 
+.authPlaceholder {
+  min-height: 24px;
+  min-width: 68px;
+  display: inline-block;
+}
+
 .userActions {
   display: flex;
   align-items: center;

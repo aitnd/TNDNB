@@ -45,11 +45,25 @@ const dichTenVaiTro = (role?: string): string => {
   }
 }
 
+export const getValidAvatarUrl = (photoURL?: string | null, role?: string): string => {
+  const defaultByRole = role === 'hoc_vien' ? '/assets/img/avatar1.webp' : '/assets/img/avatar.webp';
+  if (!photoURL || typeof photoURL !== 'string') return defaultByRole;
+  const trimmed = photoURL.trim();
+  if (trimmed === '' || trimmed.includes('default_avatar.png') || trimmed.includes('default-avatar.png')) {
+    return defaultByRole;
+  }
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/assets/img/')) {
+    return trimmed;
+  }
+  return defaultByRole;
+};
+
 function QuanLyDashboard() {
   const { user } = useAuth()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [resetMsg, setResetMsg] = useState<string | null>(null)
   const [resetError, setResetError] = useState<string | null>(null)
+  const [avatarError, setAvatarError] = useState(false)
 
   const canManagePosts = Boolean(user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role))
   const canManageReviews = Boolean(user && ['admin', 'quan_ly', 'lanh_dao', 'giao_vien'].includes(user.role))
@@ -124,12 +138,13 @@ function QuanLyDashboard() {
                   <div className={styles.avatarColumn}>
                     <div className={styles.avatarFrame}>
                       <Image
-                        src={user.photoURL || '/assets/img/default-avatar.png'}
+                        src={avatarError ? (user.role === 'hoc_vien' ? '/assets/img/avatar1.webp' : '/assets/img/avatar.webp') : getValidAvatarUrl(user.photoURL, user.role)}
                         alt={user.fullName || 'Avatar'}
                         width={120}
                         height={120}
                         className={styles.avatarImg}
                         unoptimized
+                        onError={() => setAvatarError(true)}
                       />
                     </div>
                     <span className={styles.roleTag}>{dichTenVaiTro(user.role)}</span>

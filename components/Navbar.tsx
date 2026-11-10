@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '../context/AuthContext'
@@ -11,8 +12,13 @@ import { FaUserCog, FaSignOutAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
+  const [isMounted, setIsMounted] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const handleLogout = async () => {
     try {
@@ -41,7 +47,9 @@ export default function Navbar() {
           </div>
 
           <div className={styles.metaRight}>
-            {user ? (
+            {!isMounted || authLoading ? (
+              <span className={styles.authPlaceholder} aria-hidden="true" />
+            ) : user ? (
               <div className={styles.userActions}>
                 <span className={styles.welcomeText}>{user.fullName}</span>
                 <Link href="/quan-ly" className={styles.manageBtn}>
@@ -107,7 +115,6 @@ export default function Navbar() {
                 <Link href="/danh-muc/tuyen-sinh">Thông báo tuyển sinh</Link>
                 <span className={styles.catDivider}>/</span>
                 <Link href="/danh-muc/van-ban-phap-quy">Văn bản pháp quy</Link>
-                <span className={styles.catDivider}>/</span>
                 <Link href="/danh-muc/gioi-thieu-viec-lam">Giới thiệu việc làm</Link>
               </div>
             </div>
