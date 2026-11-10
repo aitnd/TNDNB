@@ -1,7 +1,7 @@
 # Tài Liệu Thiết Kế Kỹ Thuật Tổng Thể (Single Source of Truth — SDD & AWF v4.0 Design Specification)
 ## Dự Án TNDNB: Chuẩn Hóa Giao Diện Hallmark Editorial Toàn Root Portal, Đại Tu `ontap-web` Dual-Theme (`Light` / `Dark`), Sửa Lỗi Font Tiếng Việt, Và Nâng Cấp Hạ Tầng Cloudflare (R2 + D1 + Offline-First)
 
-> **Cập nhật lần cuối:** 08/11/2026  
+> **Cập nhật lần cuối:** 10/11/2026  
 > **Tiêu chuẩn áp dụng:** `AWF v4.0` + `Impeccable v4.8.0 (62-Rule Craft Floor)` + `Taste-Skill v2.5.0`  
 > **Các kế hoạch hợp nhất trong tài liệu Single Source of Truth này:**
 > 1. [`261105-1836-ontap-web-ui-overhaul`](file:///d:/Antigravity/TNDNB/docs/plans/261105-1836-ontap-web-ui-overhaul/DESIGN.md) — **(A)** Sửa triệt để lỗi Font Tiếng Việt "Chữ to chữ bé" trên 13 file Root Portal & sửa vòng lặp `--font-sans` trên `ontap-web`, **(B)** Gắn liên kết `/ontap` vào Sidebar Portal, và **(C)** Đại tu toàn diện 30+ màn hình `ontap-web` theo chuẩn **Maritime EdTech Dual-Theme (`light` / `dark`)** (Bảo toàn 100% `ExamQuizScreen.tsx`).
@@ -10,6 +10,7 @@
 > 4. [`phase-06-portal-r2-assets-design`](file:///d:/Antigravity/TNDNB/docs/plans/261105-1836-ontap-web-ui-overhaul/phase-06-portal-r2-assets-design.md) — Chuyển đổi dần ảnh bìa, ảnh TinyMCE & giáo trình tài liệu (PDF/Word) của Root Portal sang Cloudflare R2 (`tndnb-assets`) với cơ chế Graceful Fallback 5s sang Supabase Storage và bảo toàn 100% bài viết cũ.
 > 5. [`261108-2025-authoritative-changelog-and-recent-plans-sync`](file:///d:/Antigravity/TNDNB/docs/plans/261108-2025-authoritative-changelog-and-recent-plans-sync/DESIGN.md) — Khôi phục bộ parser Markdown raw cục bộ (`parseChangelog.ts` qua Vite `?raw`), thiết lập kiến trúc Dual Changelog (`CHANGELOG.md` cho Người dùng và `CHANGELOG_DEV.md` cho Kỹ thuật Dev) với thanh Tab Switcher, và nâng cấp đồng bộ phiên bản toàn hệ thống Monorepo lên **`v3.22.0`**.
 > 6. [`261109-0650-changelog-rbac-and-concise-copy`](file:///d:/Antigravity/TNDNB/docs/plans/261109-0650-changelog-rbac-and-concise-copy/DESIGN.md) — Phân quyền hiển thị tab Kỹ thuật Dev theo RBAC (`admin`, `quan_ly`, `lanh_dao`), viết lại bản tin Người dùng súc tích sạch bóng từ khóa Dev, và render inline markdown `**in đậm**` thành thẻ `<strong>` an toàn.
+> 7. [`261110-1015-portal-ad-role-gating-and-management`](file:///d:/Antigravity/TNDNB/docs/plans/261110-1015-portal-ad-role-gating-and-management/DESIGN.md) — Thiết lập chốt chặn quảng cáo 3 khóa (**Route Gate**, **Role Gate RBAC**, **Auth Ready Guard chống FOUA**) kèm động cơ dọn sạch DOM (`purgeAllAdSenseDomAndScripts`) trên Root Portal (`PortalAdLoader.tsx`), xóa lỗi 404 `default_avatar.png` trên `/quan-ly` và triệt tiêu lỗi React Hydration Mismatch `#418`/`#423` trên `Navbar.tsx`.
 
 ---
 
@@ -297,3 +298,35 @@ flowchart TD
 - **`TC-33` (AdSense Auth Gate & DOM Purge):** Xác nhận `AdSenseLoader.tsx` chặn bằng `isAuthReady`, kiểm soát bất đồng bộ bằng `isCancelled`, và gọi `purgeAllAdSenseDomAndScripts()` khi `showAdSense === false`.
 - **`TC-34` (CSS Override & Role Mapping):** Xác nhận `ADSENSE_HIDE_ALL_CSS` chứa đủ các thuộc tính khóa hiển thị `.adsbygoogle-noablate` và `getUserRoleConfig` ánh xạ chính xác `lanh_dao` $\rightarrow$ `config.leader` cùng điều kiện `Boolean(userProfile.courseId)` cho `verified_user`.
 - **Ràng buộc bất biến:** Bảo toàn 100% `ontap-web/components/ExamQuizScreen.tsx` (`0 bytes diff`).
+
+---
+
+## 6. Thiết Kế Chặn Quảng Cáo Theo Vai Trò (Role Gate) & Tuyến Đường (Route Gate) Trên Root Portal, Dọn Sạch Console & Hydration Mismatch (Kế hoạch `261110-1015-portal-ad-role-gating-and-management`)
+
+> **Tài liệu đặc tả chi tiết:** [`docs/plans/261110-1015-portal-ad-role-gating-and-management/DESIGN.md`](file:///d:/Antigravity/TNDNB/docs/plans/261110-1015-portal-ad-role-gating-and-management/DESIGN.md)
+> **Mode vận hành:** `Operate` Mode (`/quan-ly`, `/login`) & `Read` Mode (Editorial Review cho cán bộ trên toàn Portal)
+
+### 6.1. Đại Số Boolean Chốt Chặn 3 Lớp (Triple-Lock Gating) Trong `PortalAdLoader.tsx`
+- **Tích hợp Context & Router ([app/components/PortalAdLoader.tsx](file:///d:/Antigravity/TNDNB/app/components/PortalAdLoader.tsx)):**
+  - Kết nối `usePathname()` từ `next/navigation` và `useAuth()` từ [`context/AuthContext.tsx`](file:///d:/Antigravity/TNDNB/context/AuthContext.tsx).
+  - Áp dụng công thức đại số Boolean quyết định nạp/chặn quảng cáo:
+    - `isAdminRoute = Boolean(pathname?.startsWith('/quan-ly') || pathname?.startsWith('/login'))`
+    - `isPrivilegedUser = Boolean(user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role))`
+    - `isAuthReady = !authLoading`
+    - `shouldAllowAds = isAuthReady && !isAdminRoute && !isPrivilegedUser`
+- **Cơ chế Chống FOUA & Động cơ Dọn sạch DOM (`purgeAllAdSenseDomAndScripts`):**
+  - Khi `!isAuthReady`: Gọi ngay `injectHideAdSenseCompletely()` gắn `ADSENSE_HIDE_ALL_CSS` từ frame đầu tiên, tạm hoãn tải mọi script quảng cáo cho đến khi xác thực hoàn tất.
+  - Khi `!shouldAllowAds` (truy cập `/quan-ly`, `/login` hoặc đăng nhập tài khoản `admin`, `quan_ly`, `lanh_dao`): Kích hoạt `purgeAllAdSenseDomAndScripts()` xóa sạch toàn bộ thẻ `<script>`, phần tử `.adsbygoogle`, `.adsbygoogle-noablate`, `.google-auto-placed`, `iframe[id^="google_ads"]`, `iframe[id^="aswift"]`, `#google-vignette` cũng như các container của Adsterra & Monetag.
+
+### 6.2. Hệ Thống Avatar Fallback 3 Tầng & Chống React Hydration Mismatch (`#418`, `#423`)
+- **Phòng thủ 3 tầng chống lỗi 404 `default_avatar.png` trên `/quan-ly` ([app/quan-ly/page.tsx](file:///d:/Antigravity/TNDNB/app/quan-ly/page.tsx)):**
+  1. Hàm chuẩn hóa `getValidAvatarUrl(user.photoURL, user.role)` tự động thay thế các chuỗi rỗng hoặc chuỗi legacy lỗi (`default_avatar.png`, `/assets/img/default-avatar.png`) bằng `/assets/img/avatar.webp` (cho cán bộ/giáo viên) hoặc `/assets/img/avatar1.webp` (cho học viên).
+  2. Sự kiện `onError` trên thẻ `<Image>` tự động lùi về ảnh mặc định theo vai trò nếu URL ảnh từ xa gặp sự cố.
+  3. Cung cấp đủ 3 tệp vật lý dự phòng: [`public/default_avatar.png`](file:///d:/Antigravity/TNDNB/public/default_avatar.png), [`public/assets/img/default-avatar.png`](file:///d:/Antigravity/TNDNB/public/assets/img/default-avatar.png), và [`public/assets/img/default_avatar.png`](file:///d:/Antigravity/TNDNB/public/assets/img/default_avatar.png).
+- **Đồng bộ Hydration SSR $\rightarrow$ CSR trên Thanh Điều Hướng ([components/Navbar.tsx](file:///d:/Antigravity/TNDNB/components/Navbar.tsx)):**
+  - Bổ sung state `const [isMounted, setIsMounted] = useState(false)` (bật `true` trong `useEffect`).
+  - Khi `!isMounted || authLoading`, vùng `styles.metaRight` kết xuất placeholder đồng nhất 100% giữa Server và Client, triệt tiêu hoàn toàn lỗi React `#418` và `#423`.
+
+### 6.3. Bộ Kiểm Thử TDD Tự Động (`scripts/portal-ad-gate.test.ts` — `TC-GATE01` $\rightarrow$ `TC-GATE06`)
+- Bao phủ 6 kịch bản kiểm thử tự động: `TC-GATE01` (Route Gate `/quan-ly` & `/login`), `TC-GATE02` (Role Gate `admin`, `quan_ly`, `lanh_dao`), `TC-GATE03` (Auth Ready Guard chống FOUA), `TC-GATE04` (`purgeAllAdSenseDomAndScripts` & `ADSENSE_HIDE_ALL_CSS`), `TC-GATE05` (`getValidAvatarUrl` & 3 tệp ảnh vật lý dự phòng), và `TC-GATE06` (`isMounted` Hydration Guard trên `Navbar.tsx`).
+
