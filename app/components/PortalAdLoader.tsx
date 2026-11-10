@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../services/firebaseClient';
 import { ADSENSE_SELECTIVE_BLOCK_CSS, ADSENSE_HIDE_ALL_CSS } from '../../ontap-web/services/adBlockerStyles';
@@ -13,8 +15,21 @@ import { ADSENSE_SELECTIVE_BLOCK_CSS, ADSENSE_HIDE_ALL_CSS } from '../../ontap-w
  * - showPortalMonetag
  * 
  * 🛡️ IVT Shield: Phát hiện click quảng cáo bằng document.activeElement (blur + iframe check)
+ * 🛡️ Triple-Lock Gating: Route Gate (/quan-ly, /login), Role Gate (admin, quan_ly, lanh_dao), Auth Ready Guard
  */
 const PortalAdLoader: React.FC = () => {
+    const pathname = usePathname();
+    const { user, loading: authLoading } = useAuth();
+
+    const isAdminRoute = Boolean(
+        pathname?.startsWith('/quan-ly') || pathname?.startsWith('/login')
+    );
+    const isPrivilegedUser = Boolean(
+        user && ['admin', 'quan_ly', 'lanh_dao'].includes(user.role)
+    );
+    const isAuthReady = !authLoading;
+    const shouldAllowAds = isAuthReady && !isAdminRoute && !isPrivilegedUser;
+
     const [adSenseEnabled, setAdSenseEnabled] = useState<boolean | null>(null);
     const [adsterraEnabled, setAdsterraEnabled] = useState<boolean | null>(null);
     const [monetagEnabled, setMonetagEnabled] = useState<boolean | null>(null);
@@ -59,6 +74,19 @@ const PortalAdLoader: React.FC = () => {
 
     // === 1. GOOGLE ADSENSE LOGIC ===
     useEffect(() => {
+        if (!isAuthReady) {
+            injectHideAdSenseCompletely();
+            return;
+        }
+
+        if (!shouldAllowAds) {
+            purgeAllAdSenseDomAndScripts();
+            injectHideAdSenseCompletely();
+            removeAdsterraScript();
+            removeMonetagScript();
+            return;
+        }
+
         if (adSenseEnabled === null) return;
 
         if (adSenseEnabled) {
@@ -73,10 +101,10 @@ const PortalAdLoader: React.FC = () => {
             }
         } else {
             // Admin TẮT AdSense → ẩn hoàn toàn + gỡ script
-            removeAdSenseScript();
+            purgeAllAdSenseDomAndScripts();
             injectHideAdSenseCompletely();
         }
-    }, [adSenseEnabled, isAdSenseBlocked]);
+    }, [isAuthReady, shouldAllowAds, adSenseEnabled, isAdSenseBlocked]);
 
     // === IVT SHIELD: HELPER FUNCTIONS ===
     const getCooldownMs = useCallback(() => adsenseCooldownMinutes * 60 * 1000, [adsenseCooldownMinutes]);
@@ -166,6 +194,10 @@ const PortalAdLoader: React.FC = () => {
 
     // === 2. ADSTERRA LOGIC ===
     useEffect(() => {
+        if (!shouldAllowAds) {
+            removeAdsterraScript();
+            return;
+        }
         if (adsterraEnabled === null) return;
 
         if (adsterraEnabled) {
@@ -173,10 +205,14 @@ const PortalAdLoader: React.FC = () => {
         } else {
             removeAdsterraScript();
         }
-    }, [adsterraEnabled]);
+    }, [shouldAllowAds, adsterraEnabled]);
 
     // === 3. MONETAG LOGIC ===
     useEffect(() => {
+        if (!shouldAllowAds) {
+            removeMonetagScript();
+            return;
+        }
         if (monetagEnabled === null) return;
 
         if (monetagEnabled) {
@@ -184,12 +220,36 @@ const PortalAdLoader: React.FC = () => {
         } else {
             removeMonetagScript();
         }
-    }, [monetagEnabled]);
+    }, [shouldAllowAds, monetagEnabled]);
 
     return null; // Component chỉ xử lý logic, không render UI
 };
 
 // === SCRIPT LOAD / REMOVE HELPERS ===
+
+export const purgeAllAdSenseDomAndScripts = () => {
+    ['portal-adsense-script', 'portal-adsterra-script', 'portal-monetag-script', 'adsense-script', 'adsterra-script', 'monetag-script'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+    });
+
+    document.querySelectorAll(
+        'script[src*="adsbygoogle"], script[src*="googlesyndication"], script[src*="doubleclick"], ' +
+        'script[src*="effectivegatecpm.com"], script[src*="quge5.com"], script[src*="monetag"]'
+    ).forEach((node) => node.remove());
+
+    document.querySelectorAll(
+        '.adsbygoogle, ins.adsbygoogle, .adsbygoogle-noablate, .google-auto-placed, ' +
+        '[data-ad-client], [data-ad-status], div[id^="google-anno"], div[id^="google_ads"], ' +
+        'iframe[id^="google_ads"], iframe[id^="aswift"], iframe[src*="googlesyndication"], ' +
+        'iframe[src*="doubleclick"], #google-vignette'
+    ).forEach((node) => node.remove());
+
+    document.querySelectorAll(
+        '[id^="adsterra"], [class*="adsterra"], #pl28592472, ' +
+        'iframe[src*="quge5"], iframe[src*="monetag"], [id*="monetag"], [class*="monetag"]'
+    ).forEach((node) => node.remove());
+};
 
 const loadAdSenseScript = () => {
     if (document.getElementById('portal-adsense-script')) return;
