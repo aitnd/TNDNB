@@ -1,44 +1,41 @@
 # 📋 TÀI LIỆU BÀN GIAO TIẾN ĐỘ DỰ ÁN (HANDOVER DOCUMENT)
 
 > **Dự án**: Cổng thông tin & Hệ thống Quản trị Đào tạo Thuyền viên Ninh Bình (TNDNB)  
-> **Thời điểm cập nhật**: 2026-11-09 11:55:00 (GMT+7)  
+> **Thời điểm cập nhật**: 2026-11-10 14:15:00 (GMT+7)  
 > **Nhánh hiện tại**: `main` (Up to date với `origin/main`)  
-> **Commit mới nhất**: `833ec627` (chore(brain): update current recap for plan 261109-0950)  
+> **Commit mới nhất**: `81827f8e` (chore(release): complete verification and documentation for portal ad gating plan 261110-1015)  
 
 ---
 
 ## 1. Tình Trạng Hiện Tại & Công Việc Vừa Hoàn Thành
 
-Phiên làm việc đã hoàn thành 100% 3 Phase của kế hoạch **`261109-0950-remove-navbar-logout-button`**, giải quyết trọn vẹn 2 yêu cầu của người dùng:
+Phiên làm việc đã hoàn thành 100% 3 Phase của kế hoạch **`261110-1015-portal-ad-role-gating-and-management`**, giải quyết triệt để 2 vấn đề trọng yếu:
 
-1. **Dọn dẹp nút Thoát độc lập trên TopNavbar Desktop (`TopNavbar.tsx`)**:
-   - Gỡ bỏ hoàn toàn nút Thoát Desktop và vách ngăn dọc nằm cạnh Avatar.
-   - Thống nhất trải nghiệm: Đăng xuất được đặt an toàn và duy nhất ở mục cuối cùng trong **Menu Hamburger 3 gạch `[≡]`** trên cả Desktop lẫn Mobile.
-   - Tránh việc người dùng vô tình bấm nhầm vào nút thoát khi đang thao tác các tính năng trên thanh điều hướng.
+1. **Đồng bộ tính năng Quản lý Cài đặt Quảng cáo sang Root Portal (`app/components/PortalAdLoader.tsx`)**:
+   - Khắc phục hiện tượng tài khoản Quản trị viên (`admin`, `quan_ly`, `lanh_dao`) đăng nhập tại `daotaothuyenvien.com/quan-ly` nhưng vẫn thấy banner Google Auto-Ads.
+   - **Route Gate:** Sử dụng `usePathname()`, tự động khóa và dọn sạch 100% quảng cáo khi truy cập vào `/quan-ly`, `/quan-ly/*` và `/login`.
+   - **Role Gate:** Sử dụng `useAuth()`, miễn trừ quảng cáo toàn diện cho cán bộ quản lý/lãnh đạo trên toàn bộ website.
+   - **Auth Ready Guard:** Không nạp script quảng cáo khi Auth đang tải (`loading: true`), chống hiện tượng chớp quảng cáo FOUA trong 300ms–800ms đầu.
+   - **Động cơ Purge DOM:** Bổ sung `purgeAllAdSenseDomAndScripts()` và stylesheet phong tỏa `ADSENSE_HIDE_ALL_CSS` quét sạch mọi iframe, ins, và lớp tự sinh của Google.
 
-2. **Khắc phục triệt để lỗi AdSense Auto-Ads hiển thị cho Admin & Học viên lớp (`AdSenseLoader.tsx`, `useAppStore.ts`, `useAppInitialization.ts`, `adBlockerStyles.ts`, `usageService.ts`)**:
-   - **Auth Initialization Race Condition:** Bổ sung cờ `isAuthReady: boolean` vào store, chỉ bật `true` khi Firebase Auth và Firestore đã tải xong hồ sơ hoặc xác nhận rõ ràng là khách vãng lai (`currentUser === null`). Ngăn chặn `AdSenseLoader` nhận nhầm Admin là khách vãng lai trong 300ms–1000ms đầu khi vừa tải trang.
-   - **Async Closure Race Condition:** Bổ sung cờ hủy `let isCancelled = false;` trong cleanup hook để hủy toàn bộ các promise ngầm và callback của `IntersectionObserver` khi người dùng chuyển đổi trạng thái auth.
-   - **Đè bẹp Google Auto-Ads Inline `!important`:** Tăng cường `ADSENSE_HIDE_ALL_CSS` với đa thuộc tính `opacity: 0 !important; pointer-events: none !important; max-height: 0 !important; transform: scale(0) !important; z-index: -9999 !important;` và hàm `purgeAllAdSenseDomAndScripts()` quét sạch DOM và script của quảng cáo khi role không được phép hiển thị.
-   - **Chuẩn hóa Role Mapping:** Điều chỉnh vai trò `lanh_dao` sang `config.leader || config.manager` và bổ sung điều kiện `courseId` đối với học viên chính thức (`verified_user`).
+2. **Dọn sạch Console F12 Trên Cổng Quản Lý**:
+   - **Lỗi 404 Avatar Fallback:** Khởi tạo 3 tệp ảnh vật lý dự phòng trong `public/` (`default_avatar.png`, `assets/img/default-avatar.png`, `assets/img/default_avatar.png`), đồng thời xây dựng helper `getValidAvatarUrl(user.photoURL, user.role)` và sự kiện `onError` fallback về `/assets/img/avatar.webp` trên thẻ `<Image>` tại [`app/quan-ly/page.tsx`](file:///d:/Antigravity/TNDNB/app/quan-ly/page.tsx).
+   - **Lỗi React Hydration Mismatch (`#418`, `#423`):** Bổ sung `isMounted` guard và `.authPlaceholder` vào [`components/Navbar.tsx`](file:///d:/Antigravity/TNDNB/components/Navbar.tsx) và [`components/Navbar.module.css`](file:///d:/Antigravity/TNDNB/components/Navbar.module.css), đảm bảo SSR và CSR render đồng nhất lần đầu.
 
-3. **Kiểm thử & Nghiệm thu**:
-   - Toàn bộ **13/13 test suites (99/99 tests PASSED 100%)** với 4 test mới (`TC-32`, `TC-33a`, `TC-33b`, `TC-34`).
-   - Typecheck Strict: **0 lỗi** trên toàn bộ `ontap-web`.
-   - ESLint: **0 errors, 0 warnings**.
-   - Build Verify: `npm --prefix ontap-web run build` thành công trong 16.58s xuất bản sang `public/ontap/`.
-   - Bảo toàn tuyệt đối Invariant `ExamQuizScreen.tsx` (**0 bytes diff**).
+3. **Kiểm thử & Nghiệm thu Tổng Lực**:
+   - Toàn bộ **14/14 test suites (105/105 tests PASSED 100%)** trong `scripts/` (bao gồm 6 bài test mới trong `scripts/portal-ad-gate.test.ts`).
+   - Typecheck Strict: **0 lỗi** trên toàn bộ hệ thống (`npx tsc --noEmit`).
+   - Build Verify: `npm run build:portal` thành công 57/57 static routes và `npm --prefix ontap-web run build` thành công trong 14.97s ra `public/ontap/`.
+   - Bảo toàn tuyệt đối Invariant `ExamQuizScreen.tsx` và `QuizScreen.tsx` (**0 bytes diff**).
    - Git: Đã push toàn bộ 4 commits lên GitHub remote (`origin/main`).
 
 ---
 
 ## 2. Các Tệp Tin Trọng Tâm Vừa Chỉnh Sửa
-- [`ontap-web/components/TopNavbar.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/TopNavbar.tsx): Dọn dẹp nút Thoát độc lập Desktop.
-- [`ontap-web/stores/useAppStore.ts`](file:///d:/Antigravity/TNDNB/ontap-web/stores/useAppStore.ts): Bổ sung `isAuthReady`.
-- [`ontap-web/hooks/useAppInitialization.ts`](file:///d:/Antigravity/TNDNB/ontap-web/hooks/useAppInitialization.ts): Kích hoạt `setIsAuthReady(true)` sau khi auth ổn định.
-- [`ontap-web/components/AdSenseLoader.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/AdSenseLoader.tsx): Auth gate, cleanup token `isCancelled`, và `purgeAllAdSenseDomAndScripts()`.
-- [`ontap-web/services/adBlockerStyles.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/adBlockerStyles.ts): Đa tầng CSS kháng inline `display: block !important`.
-- [`ontap-web/services/usageService.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/usageService.ts): Chuẩn hóa role mapping `lanh_dao` và `verified_user`.
-- [`ontap-web/routes/AppRoutes.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/routes/AppRoutes.tsx): Truyền `isAuthReady` vào `<AdSenseLoader />`.
-- [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts): Thêm `TC-32`, `TC-33a`, `TC-33b`, `TC-34`.
-- [`docs/plans/261109-0950-remove-navbar-logout-button/`](file:///d:/Antigravity/TNDNB/docs/plans/261109-0950-remove-navbar-logout-button/): Hồ sơ kế hoạch, thiết kế và các phases đã tick `[x]` 100%.
+- [`app/components/PortalAdLoader.tsx`](file:///d:/Antigravity/TNDNB/app/components/PortalAdLoader.tsx): Route Gate, Role Gate, Auth Ready Guard, DOM Purge Engine.
+- [`app/quan-ly/page.tsx`](file:///d:/Antigravity/TNDNB/app/quan-ly/page.tsx): Helper `getValidAvatarUrl` an toàn và `onError` fallback cho Avatar.
+- [`components/Navbar.tsx`](file:///d:/Antigravity/TNDNB/components/Navbar.tsx): `isMounted` guard khử lỗi Hydration Mismatch.
+- [`components/Navbar.module.css`](file:///d:/Antigravity/TNDNB/components/Navbar.module.css): Class `.authPlaceholder`.
+- [`public/default_avatar.png`](file:///d:/Antigravity/TNDNB/public/default_avatar.png), [`public/assets/img/default-avatar.png`](file:///d:/Antigravity/TNDNB/public/assets/img/default-avatar.png), [`public/assets/img/default_avatar.png`](file:///d:/Antigravity/TNDNB/public/assets/img/default_avatar.png): Tệp ảnh vật lý dự phòng.
+- [`scripts/portal-ad-gate.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-ad-gate.test.ts): Bộ test suite TDD 6 test cases.
+- [`docs/plans/261110-1015-portal-ad-role-gating-and-management/`](file:///d:/Antigravity/TNDNB/docs/plans/261110-1015-portal-ad-role-gating-and-management/): Toàn bộ hồ sơ kế hoạch kép, thiết kế và các phases đã tick `[x]` 100%.

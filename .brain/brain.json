@@ -23,7 +23,9 @@
         "Mobile Exam Screen First-Fold Optimization",
         "In-Flow Resume Session Alert Banner with Dismiss Action",
         "AdSense Role-Gated Loading with Auth State Guard & DOM Purge",
-        "TopNavbar Unified Logout via Hamburger Menu"
+        "TopNavbar Unified Logout via Hamburger Menu",
+        "Portal AdSense Triple-Lock Gating with Route & Role Filter, Auth State Guard, and DOM Purge Engine",
+        "SSR-Safe Navbar Hydration Guard with Layout Placeholder (.authPlaceholder)"
     ],
     "project": "TNDNB",
     "canonical_domain": "https://www.daotaothuyenvien.com",
@@ -44,6 +46,6 @@
         "Cloudflare KV",
         "Cloudflare Workers (Hono)"
     ],
-    "last_commit": "833ec627",
-    "updated_at": "2026-11-09T11:55:00+07:00"
+    "last_commit": "81827f8e",
+    "updated_at": "2026-11-10T14:15:00+07:00"
 }

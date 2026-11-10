@@ -1,18 +1,20 @@
-# 🧠 Tóm Tắt Ngữ Cảnh Hiện Tại (`recap_current.md`) — Cập nhật: 2026-11-09 (Kế hoạch 261109-0950)
+# 🧠 Tóm Tắt Ngữ Cảnh Hiện Tại (`recap_current.md`) — Cập nhật: 2026-11-10 (Kế hoạch 261110-1015)
 
-- **Dự án:** TNDNB (`d:\Antigravity\TNDNB`) — Nhánh chính `main` (Commit mới nhất: `fd11b8f2` đã đẩy thành công lên `origin/main`).
-- **Mục tiêu hoàn thành trong kế hoạch `261109-0950-remove-navbar-logout-button` (3 Phase — `daa4986d`, `850f50e3`, `269a7e90`, `fd11b8f2`):**
-  1. **Phase 01 (`daa4986d`):** Dọn dẹp nút `Thoát` độc lập trên thanh TopNavbar Desktop ([`ontap-web/components/TopNavbar.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/TopNavbar.tsx)), loại bỏ vách ngăn dọc thừa, gom trọn vẹn hành động Đăng xuất vào bên trong Hamburger Menu 3 gạch (`showHamburgerMenu`).
-  2. **Phase 02 (`850f50e3`):** Khắc phục triệt để lỗi hiển thị AdSense Auto-Ads (`✕ Ứng dụng ôn tập`) khi đăng nhập tài khoản Admin / Học viên lớp:
-     - Thêm cờ `isAuthReady` vào [`useAppStore.ts`](file:///d:/Antigravity/TNDNB/ontap-web/stores/useAppStore.ts) và chỉ bật `true` trong [`useAppInitialization.ts`](file:///d:/Antigravity/TNDNB/ontap-web/hooks/useAppInitialization.ts) khi Firebase Auth & Firestore đã tải xong hồ sơ, ngăn `AdSenseLoader` nhận nhầm Admin là khách vãng lai ở 300ms–1000ms đầu.
-     - Thêm cờ hủy `isCancelled` trong [`AdSenseLoader.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/AdSenseLoader.tsx) triệt tiêu hoàn toàn Async Race Condition và Undead `IntersectionObserver`.
-     - Thêm hàm `purgeAllAdSenseDomAndScripts()` và nâng cấp `ADSENSE_HIDE_ALL_CSS` ([`adBlockerStyles.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/adBlockerStyles.ts)) với đa thuộc tính (`opacity: 0`, `pointer-events: none`, `transform: scale(0)`, `max-height: 0`, `z-index: -9999`) để đè bẹp inline `display: block !important` của Google Auto-Ads.
-     - Tách riêng `lanh_dao` sang `config.leader` và bổ sung `Boolean(userProfile.courseId)` vào nhận diện `verified_user` trong [`usageService.ts`](file:///d:/Antigravity/TNDNB/ontap-web/services/usageService.ts).
-  3. **Phase 03 (`269a7e90`):**
-     - Bổ sung 4 bài kiểm thử TDD (`TC-32`, `TC-33a`, `TC-33b`, `TC-34`) vào [`scripts/portal-console-and-tinymce-fix.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-console-and-tinymce-fix.test.ts).
-     - Vượt qua **13/13 test suites (99/99 tests PASS 100%)** trong 628ms.
-     - TypeScript Strict Typecheck: **0 errors**.
-     - Đóng gói Vite `ontap-web` thành công ra [`public/ontap/`](file:///d:/Antigravity/TNDNB/public/ontap/) (16.84s).
-     - Bảo toàn tuyệt đối 100% Invariant [`ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx) (`0 bytes diff`).
-     - Đã đẩy toàn bộ commits lên `origin/main`, working tree sạch 100%.
-  4. **Thẩm định F12 Console:** Phối hợp cùng `product-manager` thẩm định 4 cảnh báo F12 Console (lidar.js unload, auth/invalid-credential log cũ, Recharts width/height transient frame), xác nhận 100% là cảnh báo hiển thị vô hại (Non-blocking / Cosmetic Noise), hệ thống chạy cực kỳ mượt mà.
+- **Dự án:** TNDNB (`d:\Antigravity\TNDNB`) — Nhánh chính `main` (Commit mới nhất: `81827f8e` đã đẩy thành công lên `origin/main`).
+- **Mục tiêu hoàn thành trong kế hoạch `261110-1015-portal-ad-role-gating-and-management` (3 Phases — 4 Commits: `79e1d190`, `f67b43ad`, `747b7204`, `81827f8e`):**
+  1. **Phase 01 (`79e1d190`):** Đồng bộ Triple-Lock Gating & Động cơ dọn sạch DOM vào [`app/components/PortalAdLoader.tsx`](file:///d:/Antigravity/TNDNB/app/components/PortalAdLoader.tsx):
+     - Route Gate: Chặn 100% quảng cáo trên [`/quan-ly`](file:///d:/Antigravity/TNDNB/app/quan-ly/page.tsx), `/quan-ly/*` và `/login`.
+     - Role Gate: Miễn trừ 100% quảng cáo trên toàn bộ cổng Portal cho tài khoản cán bộ quản trị/quản lý (`admin`, `quan_ly`, `lanh_dao`).
+     - Auth Ready Guard: Trì hoãn nạp script và tiêm stylesheet `ADSENSE_HIDE_ALL_CSS` trong 300ms–800ms đầu khi Firebase Auth đang xác thực (`loading === true`), triệt tiêu hoàn toàn hiện tượng chớp quảng cáo FOUA.
+     - Động cơ dọn sạch `purgeAllAdSenseDomAndScripts()`: Tiêu diệt toàn bộ script quảng cáo, iframe `aswift`, iframe `google_ads`, `#google-vignette`, `ins.adsbygoogle`, lớp `.google-auto-placed`, và DOM của Adsterra/Monetag khi chuyển trang SPA sang trang quản trị.
+  2. **Phase 02 (`f67b43ad`, `747b7204`):** Dọn sạch Console F12:
+     - Khắc phục triệt để lỗi 404 avatar fallback: Tạo 3 tệp ảnh vật lý dự phòng [`public/default_avatar.png`](file:///d:/Antigravity/TNDNB/public/default_avatar.png), [`public/assets/img/default-avatar.png`](file:///d:/Antigravity/TNDNB/public/assets/img/default-avatar.png), [`public/assets/img/default_avatar.png`](file:///d:/Antigravity/TNDNB/public/assets/img/default_avatar.png) (7,612 bytes).
+     - Nâng cấp [`app/quan-ly/page.tsx`](file:///d:/Antigravity/TNDNB/app/quan-ly/page.tsx) với helper `getValidAvatarUrl` an toàn và sự kiện `onError={() => setAvatarError(true)}` trên thẻ `<Image>`.
+     - Khắc phục triệt để lỗi React Hydration Mismatch (`#418`, `#423`) trên [`components/Navbar.tsx`](file:///d:/Antigravity/TNDNB/components/Navbar.tsx) bằng `isMounted` guard và placeholder `.authPlaceholder` trong [`components/Navbar.module.css`](file:///d:/Antigravity/TNDNB/components/Navbar.module.css), đảm bảo SSR và CSR render đồng nhất lần đầu.
+  3. **Phase 03 (`81827f8e`):** Nghiệm thu tổng lực 4 tầng ([`scripts/portal-ad-gate.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-ad-gate.test.ts)):
+     - Toàn bộ **14/14 test suites PASS 100% (105/105 tests green)** trong 640ms.
+     - Bảo toàn tuyệt đối 100% Invariant phòng thi [`ontap-web/components/ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx) và `QuizScreen.tsx` (**0 bytes diff**).
+     - Typecheck strict: `npx tsc --noEmit` đạt **0 lỗi TypeScript**.
+     - Đóng gói Next.js Portal (`npm run build:portal`): Thành công **57/57 routes** không có lỗi SSR bailout.
+     - Đóng gói Web Ôn Tập (`npm --prefix ontap-web run build`): Thành công trong **14.97s** ra `public/ontap/`.
+     - Git: Đã commit và đẩy an toàn toàn bộ 4 mốc mã nguồn lên GitHub `origin/main` (tới commit `81827f8e`), working tree sạch 100%.
