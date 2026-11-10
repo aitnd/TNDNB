@@ -82,6 +82,7 @@ const PortalAdLoader: React.FC = () => {
         if (!shouldAllowAds) {
             purgeAllAdSenseDomAndScripts();
             injectHideAdSenseCompletely();
+            removeAdSenseScript();
             removeAdsterraScript();
             removeMonetagScript();
             return;

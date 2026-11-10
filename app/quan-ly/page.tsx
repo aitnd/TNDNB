@@ -45,7 +45,7 @@ const dichTenVaiTro = (role?: string): string => {
   }
 }
 
-export const getValidAvatarUrl = (photoURL?: string | null, role?: string): string => {
+const getValidAvatarUrl = (photoURL?: string | null, role?: string): string => {
   const defaultByRole = role === 'hoc_vien' ? '/assets/img/avatar1.webp' : '/assets/img/avatar.webp';
   if (!photoURL || typeof photoURL !== 'string') return defaultByRole;
   const trimmed = photoURL.trim();
