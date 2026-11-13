@@ -1,41 +1,55 @@
-# 📋 TÀI LIỆU BÀN GIAO TIẾN ĐỘ DỰ ÁN (HANDOVER DOCUMENT)
+# 📋 TÀI LIỆU BÀN GIAO DỰ ÁN (HANDOVER DOCUMENT)
 
-> **Dự án**: Cổng thông tin & Hệ thống Quản trị Đào tạo Thuyền viên Ninh Bình (TNDNB)  
-> **Thời điểm cập nhật**: 2026-11-10 14:15:00 (GMT+7)  
-> **Nhánh hiện tại**: `main` (Up to date với `origin/main`)  
-> **Commit mới nhất**: `81827f8e` (chore(release): complete verification and documentation for portal ad gating plan 261110-1015)  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Đang làm: Dự án TNDNB (`d:\Antigravity\TNDNB`)
+🔢 Tiến độ: Hoàn tất 100% Kế hoạch `261112-2215-exam-dark-mode-color-contrast` (5/5 Phases)
+🏷️ Nhánh Git: `main` (Mới nhất: `cd2657bd` - đã merge từ `fix/exam-dark-mode-color-contrast`)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
+## ✅ ĐÃ XONG:
+1. **Nâng cấp toàn diện tương phản Dark Mode (>11:1) WCAG 2.1 AA:**
+   - Hoàn tất trên cả Web và Windows App: `ontap-web/components/ExamQuizScreen.tsx`, `ontap-win/components/ExamQuizScreen.tsx`.
+   - Bổ sung màu `slate-850: '#172033'` vào `ontap-win/tailwind.config.js`.
+   - Đáp án, nhãn phương án, phiếu trả lời, câu liệt, câu đã trả lời đồng bộ màu sắc độ tương phản cao, dễ đọc khi ôn tập ban đêm.
+2. **Cơ chế Theme Sáng Mặc Định Cho Mọi Phiên Mới:**
+   - Lưu trữ qua `sessionStorage` (`ontap_theme_session`), loại bỏ `prefers-color-scheme: dark`.
+   - Dọn sạch các khóa theme cũ trong `localStorage` và bảo vệ chống lỗi môi trường ẩn danh bằng `try/catch`.
+3. **Gọn hóa giao diện người dùng:**
+   - Gỡ bỏ hoàn toàn nút đổi giao diện nổi cố định góc dưới bên phải (`fixed bottom-4 right-4`).
+   - Tích hợp ThemeSwitcher vào Hamburger Menu 3 gạch `[≡]` trên Desktop (`TopNavbar.tsx`) và Mobile Drawer (`MobileBottomNav.tsx`).
+4. **Phòng thủ Electron Runtime Guard:**
+   - Thay `require()` bằng ESM static import trong `ontap-web/App.tsx`.
+   - Helper `isElectronRuntime()` trong `deployConfig.ts` chỉ phát hiện qua `window.electron` hoặc `file:`.
+   - Bộ unit test `scripts/ontap-electron-runtime-guard.test.ts` (5/5 tests PASS).
+5. **Nâng cấp khả năng tiếp cận (Accessibility):**
+   - Checkbox trắc nghiệm: `ariaLabel` + `focus-visible:ring-2`.
+   - `ZoomBar`: kích thước chạm tối thiểu `44x44px`, font `tabular-nums`.
+   - `PwaInstallBanner`: màu nền gradient tương phản > 5.5:1.
+6. **Kiểm thử & Đóng gói:**
+   - 15/15 test suites Vitest PASS (113/113 tests).
+   - 0 lỗi TypeScript strict (`npx tsc --noEmit`).
+   - Đóng gói thành công 57 routes Next.js và Vite ontap-web.
+   - Nhánh `fix/exam-dark-mode-color-contrast` đã được merge sạch vào `main` (commit `cd2657bd`).
 
-## 1. Tình Trạng Hiện Tại & Công Việc Vừa Hoàn Thành
+## ⏳ CÒN LẠI:
+- Không còn task tồn đọng trong kế hoạch này.
+- User đã tự push lên Vercel để triển khai thực tế.
 
-Phiên làm việc đã hoàn thành 100% 3 Phase của kế hoạch **`261110-1015-portal-ad-role-gating-and-management`**, giải quyết triệt để 2 vấn đề trọng yếu:
+## 🔧 QUYẾT ĐỊNH QUAN TRỌNG:
+- **Theme Session Scope:** Khóa `'ontap_theme_session'` trong `sessionStorage` thay vì `localStorage` để mọi phiên truy cập mới đều bắt đầu bằng theme Sáng theo quy tắc nghiệp vụ.
+- **Menu Integration:** Giấu nút đổi theme vào menu 3 gạch thay vì để nút nổi trôi nổi trên màn hình gây che khuất bảng điều khiển và nội dung bài thi.
+- **Electron Guard:** Không tin cậy `navigator.userAgent` để phát hiện runtime Electron vì các trình duyệt Chromium tùy biến có thể để lộ chuỗi này.
 
-1. **Đồng bộ tính năng Quản lý Cài đặt Quảng cáo sang Root Portal (`app/components/PortalAdLoader.tsx`)**:
-   - Khắc phục hiện tượng tài khoản Quản trị viên (`admin`, `quan_ly`, `lanh_dao`) đăng nhập tại `daotaothuyenvien.com/quan-ly` nhưng vẫn thấy banner Google Auto-Ads.
-   - **Route Gate:** Sử dụng `usePathname()`, tự động khóa và dọn sạch 100% quảng cáo khi truy cập vào `/quan-ly`, `/quan-ly/*` và `/login`.
-   - **Role Gate:** Sử dụng `useAuth()`, miễn trừ quảng cáo toàn diện cho cán bộ quản lý/lãnh đạo trên toàn bộ website.
-   - **Auth Ready Guard:** Không nạp script quảng cáo khi Auth đang tải (`loading: true`), chống hiện tượng chớp quảng cáo FOUA trong 300ms–800ms đầu.
-   - **Động cơ Purge DOM:** Bổ sung `purgeAllAdSenseDomAndScripts()` và stylesheet phong tỏa `ADSENSE_HIDE_ALL_CSS` quét sạch mọi iframe, ins, và lớp tự sinh của Google.
+## ⚠️ LƯU Ý CHO SESSION SAU:
+- Khi kiểm thử phòng thi trắc nghiệm, luôn bảo toàn tính bất biến của file `ExamQuizScreen.tsx` và chạy kiểm thử `scripts/ontap-dual-theme-and-sidebar.test.ts` cùng `deployConfig.test.ts`.
 
-2. **Dọn sạch Console F12 Trên Cổng Quản Lý**:
-   - **Lỗi 404 Avatar Fallback:** Khởi tạo 3 tệp ảnh vật lý dự phòng trong `public/` (`default_avatar.png`, `assets/img/default-avatar.png`, `assets/img/default_avatar.png`), đồng thời xây dựng helper `getValidAvatarUrl(user.photoURL, user.role)` và sự kiện `onError` fallback về `/assets/img/avatar.webp` trên thẻ `<Image>` tại [`app/quan-ly/page.tsx`](file:///d:/Antigravity/TNDNB/app/quan-ly/page.tsx).
-   - **Lỗi React Hydration Mismatch (`#418`, `#423`):** Bổ sung `isMounted` guard và `.authPlaceholder` vào [`components/Navbar.tsx`](file:///d:/Antigravity/TNDNB/components/Navbar.tsx) và [`components/Navbar.module.css`](file:///d:/Antigravity/TNDNB/components/Navbar.module.css), đảm bảo SSR và CSR render đồng nhất lần đầu.
-
-3. **Kiểm thử & Nghiệm thu Tổng Lực**:
-   - Toàn bộ **14/14 test suites (105/105 tests PASSED 100%)** trong `scripts/` (bao gồm 6 bài test mới trong `scripts/portal-ad-gate.test.ts`).
-   - Typecheck Strict: **0 lỗi** trên toàn bộ hệ thống (`npx tsc --noEmit`).
-   - Build Verify: `npm run build:portal` thành công 57/57 static routes và `npm --prefix ontap-web run build` thành công trong 14.97s ra `public/ontap/`.
-   - Bảo toàn tuyệt đối Invariant `ExamQuizScreen.tsx` và `QuizScreen.tsx` (**0 bytes diff**).
-   - Git: Đã push toàn bộ 4 commits lên GitHub remote (`origin/main`).
-
----
-
-## 2. Các Tệp Tin Trọng Tâm Vừa Chỉnh Sửa
-- [`app/components/PortalAdLoader.tsx`](file:///d:/Antigravity/TNDNB/app/components/PortalAdLoader.tsx): Route Gate, Role Gate, Auth Ready Guard, DOM Purge Engine.
-- [`app/quan-ly/page.tsx`](file:///d:/Antigravity/TNDNB/app/quan-ly/page.tsx): Helper `getValidAvatarUrl` an toàn và `onError` fallback cho Avatar.
-- [`components/Navbar.tsx`](file:///d:/Antigravity/TNDNB/components/Navbar.tsx): `isMounted` guard khử lỗi Hydration Mismatch.
-- [`components/Navbar.module.css`](file:///d:/Antigravity/TNDNB/components/Navbar.module.css): Class `.authPlaceholder`.
-- [`public/default_avatar.png`](file:///d:/Antigravity/TNDNB/public/default_avatar.png), [`public/assets/img/default-avatar.png`](file:///d:/Antigravity/TNDNB/public/assets/img/default-avatar.png), [`public/assets/img/default_avatar.png`](file:///d:/Antigravity/TNDNB/public/assets/img/default_avatar.png): Tệp ảnh vật lý dự phòng.
-- [`scripts/portal-ad-gate.test.ts`](file:///d:/Antigravity/TNDNB/scripts/portal-ad-gate.test.ts): Bộ test suite TDD 6 test cases.
-- [`docs/plans/261110-1015-portal-ad-role-gating-and-management/`](file:///d:/Antigravity/TNDNB/docs/plans/261110-1015-portal-ad-role-gating-and-management/): Toàn bộ hồ sơ kế hoạch kép, thiết kế và các phases đã tick `[x]` 100%.
+## 📁 FILES QUAN TRỌNG:
+- `ontap-web/components/ExamQuizScreen.tsx`
+- `ontap-win/components/ExamQuizScreen.tsx`
+- `ontap-web/contexts/ThemeContext.tsx`
+- `ontap-web/components/ThemeSwitcher.tsx`
+- `ontap-web/components/TopNavbar.tsx`
+- `ontap-web/components/MobileBottomNav.tsx`
+- `ontap-web/utils/deployConfig.ts`
+- `docs/plans/261112-2215-exam-dark-mode-color-contrast/plan.md`
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

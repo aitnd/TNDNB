@@ -25,7 +25,11 @@
         "AdSense Role-Gated Loading with Auth State Guard & DOM Purge",
         "TopNavbar Unified Logout via Hamburger Menu",
         "Portal AdSense Triple-Lock Gating with Route & Role Filter, Auth State Guard, and DOM Purge Engine",
-        "SSR-Safe Navbar Hydration Guard with Layout Placeholder (.authPlaceholder)"
+        "SSR-Safe Navbar Hydration Guard with Layout Placeholder (.authPlaceholder)",
+        "WCAG 2.1 AA Dark Mode Exam Screen Contrast (>11:1)",
+        "Session-Scoped Default Light Theme with Storage Fallback",
+        "Unified Hamburger Menu Theme Switcher (Desktop & Mobile)",
+        "Electron Runtime Guard for Modern Browsers"
     ],
     "project": "TNDNB",
     "canonical_domain": "https://www.daotaothuyenvien.com",
@@ -46,6 +50,6 @@
         "Cloudflare KV",
         "Cloudflare Workers (Hono)"
     ],
-    "last_commit": "81827f8e",
-    "updated_at": "2026-11-10T14:15:00+07:00"
+    "last_commit": "cd2657bd",
+    "updated_at": "2026-11-13T16:55:00+07:00"
 }

@@ -167,3 +167,35 @@
   - Giải pháp: Sử dụng cờ `const [isMounted, setIsMounted] = useState(false)` và `useEffect(() => setIsMounted(true), [])`. Trong lần render đầu tiên (khi `!isMounted`), render một placeholder nhẹ `.authPlaceholder` có kích thước tối thiểu tương đương (`min-height: 24px; min-width: 68px`) trên cả SSR và CSR. Sau khi mount xong, render giao diện auth thực tế. Cách này loại bỏ hoàn toàn lỗi hydration mismatch mà không làm giật khung giao diện (Zero Layout Shift).
 - **Phân Quyền Tool Của Subagent Trong Antigravity (`[type=lesson]`):**
   - Khi ủy thác công việc cho Subagent bằng `define_subagent` và `invoke_subagent`, nếu Subagent cần sửa code hoặc chạy lệnh bash/powershell, bắt buộc phải cấp quyền `EnableWriteTools: true`. Các Subagent định nghĩa sẵn của hệ thống (`frontend-developer`, `research`) thường ở chế độ chỉ đọc; khi bị xung đột tên đã tồn tại, cần đặt tên mới mang tính chuyên biệt (ví dụ `senior-frontend-coder`) và mô tả rõ vai trò để Subagent có đầy đủ công cụ chỉnh sửa tệp tin.
+
+
+## [2026-11-13] Nâng Cấp Tương Phản Dark Mode, Giao Diện Sáng Mặc Định Theo Phiên & Tích Hợp Nút Đổi Giao Diện Vào Menu 3 Gạch (Kế hoạch 261112-2215)
+- **Chuẩn Hóa Độ Tương Phản WCAG 2.1 AA Trong Giao Diện Tối (Dark Mode) (`[type=architecture]`):**
+  - Màn hình phòng thi [`ontap-web/components/ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ExamQuizScreen.tsx) và [`ontap-win/components/ExamQuizScreen.tsx`](file:///d:/Antigravity/TNDNB/ontap-win/components/ExamQuizScreen.tsx) trước đây dùng các màu nền/chữ chưa tối ưu trong dark mode (`text-slate-700`, `bg-slate-100`, `text-slate-400`), dẫn đến tỉ lệ tương phản < 4.5:1 khiến học viên khó đọc khi làm bài sát hạch.
+  - Giải pháp triệt để:
+    1. Thiết lập bảng màu Dark Mode chuẩn mực: Nền thẻ câu hỏi `dark:bg-slate-850`, văn bản nội dung `dark:text-slate-100` (đạt tỉ lệ > 11:1), nhãn phương án A/B/C/D `dark:text-slate-200`, đường viền `dark:border-slate-700/80`.
+    2. Cập nhật bảng cấu hình Tailwind Windows App ([`ontap-win/tailwind.config.js`](file:///d:/Antigravity/TNDNB/ontap-win/tailwind.config.js)) bổ sung `slate-850: '#172033'` đồng bộ với Web.
+    3. Trạng thái phương án khi chọn/đúng/sai: Đã chọn (`dark:bg-blue-950/40 dark:border-blue-500 dark:text-blue-200`), đúng (`dark:bg-emerald-950/40 dark:border-emerald-500 dark:text-emerald-200`), sai (`dark:bg-rose-950/40 dark:border-rose-500 dark:text-rose-200`).
+    4. Thành phần phiếu trả lời câu hỏi (Answer Sheet Grid): Đánh số câu `dark:bg-slate-800 dark:text-slate-200`, câu đã làm `dark:bg-blue-900/60 dark:text-blue-100`, câu liệt cảnh báo `dark:bg-amber-950/40 dark:border-amber-500/80 dark:text-amber-200`.
+- **Cơ Chế Giao Diện Sáng Mặc Định Theo Phiên (Session-Scoped Default Light) (`[type=pattern]`):**
+  - Trước đây hệ thống tự động đọc `localStorage.getItem('theme')` và fallback sang `prefers-color-scheme: dark` của hệ điều hành, dẫn đến người dùng mới mở trình duyệt vào phòng thi thường bị chuyển sang nền tối bất ngờ ngoài mong muốn.
+  - Chuẩn hóa kiến trúc tại [`ontap-web/contexts/ThemeContext.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/contexts/ThemeContext.tsx):
+    1. Lưu trạng thái giao diện trong `sessionStorage` với khóa `'ontap_theme_session'` thay vì `localStorage`. Mọi tab/phiên duyệt web mới luôn khởi tạo mặc định là `light`.
+    2. Loại bỏ hoàn toàn fallback tự động sang `window.matchMedia('(prefers-color-scheme: dark)')`.
+    3. Thêm hàm dọn dẹp `clearLegacyThemeStorage()` xóa bỏ các khóa cũ `'theme'`, `'ontap_theme'` trong `localStorage` nhằm tránh can thiệp phiên mới.
+    4. Bọc toàn bộ các thao tác `sessionStorage`/`localStorage` trong `try/catch` để ứng dụng không bị crash khi chạy trong môi trường bảo mật nghiêm ngặt (incognito, iframe, `SecurityError`).
+- **Gọn Hóa Nút Đổi Theme Vào Hamburger Menu 3 Gạch Desktop & Mobile (`[type=pattern]`):**
+  - Gỡ bỏ hoàn toàn nút chuyển giao diện dạng nổi cố định (`fixed bottom-4 right-4 z-40`) trên [`ontap-web/App.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/App.tsx) vốn gây cản trở và che khuất nội dung trang web trên màn hình nhỏ.
+  - Tái cấu trúc component [`ThemeSwitcher.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ThemeSwitcher.tsx) hỗ trợ prop `variant="menu-item"`:
+    1. Trên Desktop: Tích hợp vào menu thả xuống 3 gạch `[≡]` tại [`ontap-web/components/TopNavbar.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/TopNavbar.tsx), hiển thị cho cả khách vãng lai và học viên đã đăng nhập.
+    2. Trên Mobile: Tích hợp vào drawer menu "Khác / Thêm" của [`ontap-web/components/MobileBottomNav.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/MobileBottomNav.tsx) dưới dạng hàng chuyển đổi giao diện tinh tế, có icon Mặt trời/Mặt trăng và nhãn trạng thái trực quan.
+- **Bảo Vệ Runtime Electron Trong Môi Trường Web & Trình Duyệt Nhân Electron (`[type=lesson]`):**
+  - Trang thi thử `/ontap/thithu` từng xuất hiện lỗi `Uncaught ReferenceError: require is not defined` khi người dùng mở bằng các trình duyệt hoặc Webview sử dụng nhân Chromium/Electron có cắm sẵn thuộc tính trong `navigator.userAgent`.
+  - Khắc phục triệt để:
+    1. Thay thế câu lệnh CommonJS `require('./components/WindowsLoginScreen')` bằng ESM static import trong [`ontap-web/App.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/App.tsx).
+    2. Tạo hàm nhận diện chuẩn `isElectronRuntime()` trong [`ontap-web/utils/deployConfig.ts`](file:///d:/Antigravity/TNDNB/ontap-web/utils/deployConfig.ts): Chỉ xác nhận là Electron khi có `window.electron?.isElectron` hoặc `protocol === 'file:'`, tuyệt đối không phán đoán qua chuỗi `navigator.userAgent`.
+    3. Đồng bộ kiểm tra an toàn tại [`ontap-win/App.tsx`](file:///d:/Antigravity/TNDNB/ontap-win/App.tsx) và [`ontap-win/routes/AppRoutes.tsx`](file:///d:/Antigravity/TNDNB/ontap-win/routes/AppRoutes.tsx), bổ sung bộ unit test tự động [`scripts/ontap-electron-runtime-guard.test.ts`](file:///d:/Antigravity/TNDNB/scripts/ontap-electron-runtime-guard.test.ts) (5/5 tests PASS).
+- **Chuẩn Hóa Khả Năng Tiếp Cận (Accessibility & Touch Targets) Cho Phòng Thi (`[type=lesson]`):**
+  - Nút checkbox trắc nghiệm `SquareCheckbox` được bổ sung thuộc tính `ariaLabel` (ví dụ: `Câu 1 đáp án A: ...`) và vòng lấy nét `focus-visible:ring-2 focus-visible:ring-blue-500` cho người dùng điều hướng bàn phím / screen reader.
+  - Thanh phóng to cỡ chữ [`ZoomBar.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/ZoomBar.tsx) được nâng cấp vùng chạm tối thiểu `44x44px` (`min-h-[44px] min-w-[44px]`), font số cố định `tabular-nums` chống giật layout khi co giãn tỷ lệ từ 90% đến 125%.
+  - Khung thông báo cài đặt ứng dụng [`PwaInstallBanner.tsx`](file:///d:/Antigravity/TNDNB/ontap-web/components/PwaInstallBanner.tsx) chuyển nền gradient sang `from-blue-700 via-blue-800 to-indigo-900` với chữ `text-white`, đạt chuẩn tương phản > 5.5:1.
