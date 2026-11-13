@@ -192,10 +192,6 @@ const AdSenseLoader: React.FC<AdSenseLoaderProps> = ({ userProfile, isAuthReady 
         ).forEach(el => el.remove());
     };
 
-    const removeScripts = () => {
-        purgeAllAdSenseDomAndScripts();
-    };
-
     // === QUẢN LÝ STYLE ADSENSE ===
 
     /** 🛡️ IVT Shield CHẶN → pointer-events: none (quảng cáo vẫn hiện, giữ Impression) */

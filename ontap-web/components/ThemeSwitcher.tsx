@@ -1,6 +1,11 @@
 import React from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
+export interface ThemeSwitcherProps {
+  variant?: 'icon' | 'menu-item';
+  className?: string;
+}
+
 const SunIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -29,17 +34,59 @@ const MoonIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) =
   </svg>
 );
 
-const ThemeSwitcher: React.FC = () => {
+const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ variant = 'icon', className = '' }) => {
   const { theme, toggleTheme } = useTheme();
 
   const isDark = theme === 'dark';
   const label = isDark ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối';
 
+  if (variant === 'menu-item') {
+    return (
+      <button
+        onClick={toggleTheme}
+        type="button"
+        role="switch"
+        aria-checked={isDark}
+        aria-label={label}
+        title={label}
+        className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-foreground hover:bg-secondary transition-colors text-left font-medium text-sm min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${className}`.trim()}
+      >
+        <span className="flex items-center gap-3 min-w-0">
+          {isDark ? (
+            <SunIcon className="w-[18px] h-[18px] text-amber-400 shrink-0 transition-transform duration-200" />
+          ) : (
+            <MoonIcon className="w-[18px] h-[18px] text-primary shrink-0 transition-transform duration-200" />
+          )}
+          <span className="truncate">Giao diện</span>
+        </span>
+        <span className="flex items-center gap-2 shrink-0">
+          <span className="text-xs font-semibold text-muted-foreground">
+            {isDark ? 'Tối' : 'Sáng'}
+          </span>
+          <span
+            aria-hidden="true"
+            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors duration-200 ${
+              isDark
+                ? 'bg-sky-500 border-sky-400'
+                : 'bg-slate-300 border-slate-400/70'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-xs transition-transform duration-200 ${
+                isDark ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </span>
+        </span>
+      </button>
+    );
+  }
+
   return (
     <button
       onClick={toggleTheme}
       type="button"
-      className="inline-flex items-center justify-center min-w-[40px] min-h-[40px] w-10 h-10 rounded-xl border border-border bg-secondary/70 hover:bg-secondary text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-sm"
+      className={`inline-flex items-center justify-center min-w-[40px] min-h-[40px] w-10 h-10 rounded-xl border border-border bg-secondary/70 hover:bg-secondary text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-sm ${className}`.trim()}
       aria-label={label}
       title={label}
     >

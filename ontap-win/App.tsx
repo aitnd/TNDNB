@@ -13,8 +13,6 @@ import { BadgeService } from './services/badgeService';
 import { License, Subject, Quiz, UserAnswers } from './types';
 import { scheduleLocalReminder } from './utils/reminder';
 
-const isElectron = typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron');
-
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();

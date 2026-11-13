@@ -4,6 +4,7 @@ import { BookOpen, Newspaper, History, UserCog, LogOut, GraduationCap, School, A
 import ChangelogModal, { getLatestVersion } from './ChangelogModal';
 import NotificationBell from './NotificationBell';
 import { MiniRoleBadge } from './Badges/MiniRoleBadge';
+import ThemeSwitcher from './ThemeSwitcher';
 
 interface TopNavbarProps {
     userProfile: UserProfile | null;
@@ -228,6 +229,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                             onClick={() => setShowHamburgerMenu(!showHamburgerMenu)}
                             className="p-2 rounded-xl text-foreground hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring transition-all min-h-[44px] min-w-[44px] flex items-center justify-center border border-border/60"
                             aria-label="Menu"
+                            aria-expanded={showHamburgerMenu}
                             title="Menu tác vụ"
                         >
                             {showHamburgerMenu ? <X size={22} className="text-primary" /> : <Menu size={22} className="text-primary" />}
@@ -235,7 +237,7 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
 
                         {/* Dropdown Panel */}
                         {showHamburgerMenu && (
-                            <div className="fixed right-3 top-16 w-72 max-w-[calc(100vw-24px)] bg-card/98 backdrop-blur-xl border border-border rounded-2xl shadow-2xl py-3 z-[150] text-card-foreground animate-in fade-in zoom-in-95 duration-150">
+                            <div className="fixed right-3 top-16 w-72 max-w-[calc(100vw-24px)] max-h-[calc(100vh-5rem)] overflow-y-auto bg-card/98 backdrop-blur-xl border border-border rounded-2xl shadow-2xl py-3 z-[150] text-card-foreground animate-in fade-in zoom-in-95 duration-150">
                                 {/* Header thông tin người dùng */}
                                 {userProfile && (
                                     <div className="px-4 py-3 border-b border-border mb-2 bg-muted/40 rounded-t-xl">
@@ -333,6 +335,10 @@ const TopNavbar: React.FC<TopNavbarProps> = ({ userProfile, onNavigate, onLogout
                                         <Utensils size={18} className="text-orange-500" />
                                         <span>Thổ Địa Ninh Bình</span>
                                     </a>
+
+                                    {/* Giao diện Sáng / Tối */}
+                                    <div className="border-t border-border my-2" />
+                                    <ThemeSwitcher variant="menu-item" />
 
                                     {/* Phiên bản hệ thống */}
                                     <div className="border-t border-border my-2" />

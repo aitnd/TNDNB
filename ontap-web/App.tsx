@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Toaster } from 'sonner';
-import ThemeSwitcher from './components/ThemeSwitcher';
 import SweetAlertPopup from './components/SweetAlertPopup';
 import TopNavbar from './components/TopNavbar';
 import AlertMarquee from './components/AlertMarquee';
@@ -17,7 +16,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { checkUsage, incrementUsage, showLimitAlert } from './services/usageService';
 import { Quiz, License, Subject, UserAnswers } from './types';
 import { scheduleLocalReminder } from './utils/reminder';
-import { getRuntimeServiceWorkerUrl } from './utils/deployConfig';
+import { getRuntimeServiceWorkerUrl, isElectronRuntime } from './utils/deployConfig';
+import WindowsLoginScreen from './components/WindowsLoginScreen';
 
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
@@ -366,7 +366,9 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const isElectron = !!(window as any).electron?.isElectron || window.location.protocol === 'file:' || navigator.userAgent.toLowerCase().includes('electron');
+  // Chỉ bật luồng Windows App khi có bridge preload Electron hoặc chạy giao thức file:,
+  // tránh nhận nhầm webview / IDE browser qua HTTP/HTTPS có chữ "Electron" trong userAgent.
+  const isElectron = isElectronRuntime();
 
   if (isLocked) {
     return (
@@ -394,8 +396,8 @@ const AppContent: React.FC = () => {
   }
 
   // --- Strict Windows App Login screen ---
+  // Dùng ESM static import thay cho CommonJS require() để bundle Vite trên trình duyệt không crash.
   if (isElectron && !userProfile) {
-    const WindowsLoginScreen = require('./components/WindowsLoginScreen').default;
     return (
       <div className={`min-h-screen bg-slate-900 text-white font-sans ${isMobileApp ? 'pb-16' : 'pt-0'}`}>
         <Toaster position="top-right" richColors expand closeButton />
@@ -479,9 +481,6 @@ const App: React.FC = () => {
     <ThemeProvider>
       <AppContent />
       <Analytics />
-      <div className="fixed bottom-4 right-4 z-50">
-        <ThemeSwitcher />
-      </div>
     </ThemeProvider>
   );
 };

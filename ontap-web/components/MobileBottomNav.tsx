@@ -3,6 +3,7 @@ import { FaHome, FaUserCog, FaBars, FaHistory, FaSchool, FaUserGraduate, FaExcla
 
 import { UserProfile } from '../types';
 import { triggerHaptic } from '../utils/nativeUX';
+import ThemeSwitcher from './ThemeSwitcher';
 
 interface MobileBottomNavProps {
     userProfile: UserProfile | null;
@@ -112,16 +113,17 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
             {/* OVERLAY EXTENDED MENU */}
             <div
                 ref={menuRef}
+                aria-hidden={!isMenuOpen}
                 className={`fixed bottom-20 right-4 z-[10000] transition-all duration-300 origin-bottom-right ${
-                    isMenuOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'
+                    isMenuOpen ? 'opacity-100 scale-100 visible pointer-events-auto' : 'opacity-0 scale-95 invisible pointer-events-none'
                 }`}>
-                <div className="bg-card text-card-foreground border border-border shadow-2xl rounded-2xl p-4 w-56 flex flex-col gap-2">
-                    {userProfile ? (
-                        <>
-                            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b border-border pb-2">
-                                Menu mở rộng
-                            </div>
+                <div className="bg-card text-card-foreground border border-border shadow-2xl rounded-2xl p-4 w-64 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-6.5rem)] overflow-y-auto flex flex-col gap-2">
+                    <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider border-b border-border pb-2">
+                        Menu mở rộng
+                    </div>
 
+                    {userProfile && (
+                        <>
                             {menuItems.map((item, idx) => {
                                 const Icon = item.icon;
                                 return (
@@ -142,21 +144,27 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                             })}
 
                             <div className="h-px bg-border my-1" />
-
-                            <button
-                                onClick={() => {
-                                    triggerHaptic('light');
-                                    onLogout();
-                                    setIsMenuOpen(false);
-                                }}
-                                className="flex items-center gap-3 w-full p-2.5 rounded-xl hover:bg-destructive/10 text-destructive transition-colors min-h-[44px]"
-                            >
-                                <div className="p-2 rounded-lg bg-destructive/15">
-                                    <FaSignOutAlt />
-                                </div>
-                                <span className="text-sm font-semibold">Đăng xuất</span>
-                            </button>
                         </>
+                    )}
+
+                    <ThemeSwitcher variant="menu-item" />
+
+                    <div className="h-px bg-border my-1" />
+
+                    {userProfile ? (
+                        <button
+                            onClick={() => {
+                                triggerHaptic('light');
+                                onLogout();
+                                setIsMenuOpen(false);
+                            }}
+                            className="flex items-center gap-3 w-full p-2.5 rounded-xl hover:bg-destructive/10 text-destructive transition-colors min-h-[44px]"
+                        >
+                            <div className="p-2 rounded-lg bg-destructive/15">
+                                <FaSignOutAlt />
+                            </div>
+                            <span className="text-sm font-semibold">Đăng xuất</span>
+                        </button>
                     ) : (
                         <button
                             onClick={() => {
@@ -213,6 +221,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ userProfile, currentS
                         onClick={toggleMenu}
                         className={`relative flex flex-col items-center justify-center w-full py-2 min-h-[44px] transition-all duration-200 group ${isMenuOpen ? '-translate-y-0.5' : ''}`}
                         aria-label="Thêm thao tác"
+                        aria-expanded={isMenuOpen}
                     >
                         {isMenuOpen ? (
                             <FaTimes className="text-xl mb-1 text-primary transition-colors" />

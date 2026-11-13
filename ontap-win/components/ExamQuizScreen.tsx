@@ -26,10 +26,11 @@ const formatTime = (seconds: number): string => {
 };
 
 // Square Checkbox Component matching the reference design
-const SquareCheckbox = ({ checked, onChange }: { checked: boolean, onChange: () => void }) => (
+const SquareCheckbox = ({ checked, onChange, ariaLabel }: { checked: boolean, onChange: () => void, ariaLabel?: string }) => (
     <div
         role="checkbox"
         aria-checked={checked}
+        aria-label={ariaLabel}
         tabIndex={0}
         onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -38,10 +39,14 @@ const SquareCheckbox = ({ checked, onChange }: { checked: boolean, onChange: () 
             }
         }}
         onClick={onChange}
-        className={`w-[14px] h-[14px] border border-[#999] inline-block cursor-pointer bg-white relative ${checked ? 'bg-[#333]' : ''}`}
+        className={`w-[14px] h-[14px] border inline-block cursor-pointer bg-card relative rounded-[2px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
+            checked
+                ? 'border-primary dark:border-sky-400 bg-primary/10 dark:bg-sky-950/50'
+                : 'border-slate-400 dark:border-slate-500 hover:border-slate-600 dark:hover:border-slate-400'
+        }`}
     >
         {checked && (
-            <div className="absolute top-[2px] left-[2px] w-[8px] h-[8px] bg-[#333]"></div>
+            <div className="absolute top-[2px] left-[2px] w-[8px] h-[8px] bg-primary dark:bg-sky-400 rounded-[2px] shadow-sm"></div>
         )}
     </div>
 );
@@ -172,52 +177,52 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
     }
 
     return (
-        <div className="w-full max-w-7xl mx-auto font-sans text-black shadow-lg animate-slide-in-right rounded-md" style={{ '--content-scale': scale } as React.CSSProperties}>
+        <div className="w-full max-w-7xl mx-auto font-sans text-foreground shadow-lg animate-slide-in-right rounded-md" style={{ '--content-scale': scale } as React.CSSProperties}>
             <div className="h-3 bg-yellow-700 rounded-t-md border-b-2 border-yellow-900"></div>
-            <div className="bg-white p-4">
-                <div className="flex justify-between items-start pb-4 border-b border-gray-300">
+            <div className="bg-card p-4">
+                <div className="flex justify-between items-start pb-4 border-b border-border dark:border-slate-700">
                     <div className="flex gap-4 items-start">
                         <img
                             src={userProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`}
                             alt="Avatar"
-                            className="w-[100px] h-[130px] border border-gray-300 object-cover p-1 bg-white"
+                            className="w-[100px] h-[130px] border border-border dark:border-slate-700 object-cover p-1 bg-card rounded-[2px]"
                             onError={(e) => {
                                 (e.target as HTMLImageElement).src = 'https://i.postimg.cc/8PDn1wfM/favicon.png';
                             }} loading="lazy" />
                         <div className="text-sm space-y-1">
-                            <p className="font-bold text-blue-700 text-lg uppercase">{userProfile?.full_name || userProfile?.fullName || userName || 'Học viên'}</p>
-                            <p>Số báo danh: <span className="font-semibold text-gray-800">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
-                            <p>Ngày sinh: <span className="font-semibold text-gray-800">{formatDate(userProfile?.birthDate)}</span></p>
-                            <p>Địa chỉ: <span className="font-semibold text-gray-800">{userProfile?.address || '---'}</span></p>
-                            <p>Lớp: <span className="font-semibold text-gray-800">{userProfile?.class || userProfile?.courseName || '---'}</span></p>
-                            <p>Hạng bằng: <span className="font-bold text-red-600 border border-red-500 px-1 rounded bg-red-50">{selectedLicense?.name || '---'}</span></p>
+                            <p className="font-bold text-blue-700 dark:text-sky-400 text-lg uppercase">{userProfile?.full_name || userProfile?.fullName || userName || 'Học viên'}</p>
+                            <p className="text-muted-foreground">Số báo danh: <span className="font-semibold text-foreground">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
+                            <p className="text-muted-foreground">Ngày sinh: <span className="font-semibold text-foreground">{formatDate(userProfile?.birthDate)}</span></p>
+                            <p className="text-muted-foreground">Địa chỉ: <span className="font-semibold text-foreground">{userProfile?.address || '---'}</span></p>
+                            <p className="text-muted-foreground">Lớp: <span className="font-semibold text-foreground">{userProfile?.class || userProfile?.courseName || '---'}</span></p>
+                            <p className="text-muted-foreground">Hạng bằng: <span className="font-bold text-red-600 dark:text-red-400 border border-red-500/50 dark:border-red-800 px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/40">{selectedLicense?.name || '---'}</span></p>
                         </div>
                     </div>
                     <div className="flex items-start gap-4">
-                        <div className="bg-[#f0ad4e] text-black p-2 rounded-md text-sm w-48">
+                        <div className="bg-[#f0ad4e] text-black p-2 rounded-md text-sm w-48 shadow-sm">
                             <p className="font-bold">Đang thi</p>
                             <p>Thời gian: 45 phút</p>
                             <p>Bù giờ: 0 phút</p>
-                            <p>Còn lại: <span className="font-bold">{formatTime(timeLeft)}</span></p>
+                            <p>Còn lại: <span className="font-bold tabular-nums">{formatTime(timeLeft)}</span></p>
                         </div>
-                        <button onClick={handleBackWithConfirm} className="text-sm text-gray-600 hover:text-red-500 font-semibold">Thoát</button>
+                        <button onClick={handleBackWithConfirm} className="text-sm text-muted-foreground hover:text-destructive font-semibold transition-colors">Thoát</button>
                     </div>
                 </div>
 
                 <div className="flex mt-4 gap-4">
                     {/* Left Column: Question Content (Read-only) */}
-                    <div className="flex-1 border border-gray-400 rounded-md p-4 flex flex-col justify-between min-h-[500px]">
+                    <div className="flex-1 border border-border dark:border-slate-700 bg-card rounded-md p-4 flex flex-col justify-between min-h-[500px]">
                         <div>
-                            <p className="font-bold mb-4 border-b border-dashed border-gray-400 pb-2">Nội dung câu hỏi</p>
-                            <p className="font-bold text-red-600 mb-2">Câu :{currentQuestionIndex + 1}</p>
-                            <p className="mb-4 font-semibold" style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{currentQuestion.text}</p>
+                            <p className="font-bold mb-4 border-b border-dashed border-border dark:border-slate-700 pb-2 text-foreground">Nội dung câu hỏi</p>
+                            <p className="font-bold text-red-600 dark:text-red-400 mb-2 tabular-nums">Câu {currentQuestionIndex + 1}:</p>
+                            <p className="mb-4 font-semibold text-foreground leading-relaxed" style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{currentQuestion.text}</p>
 
                             {currentQuestion.image && (
                                 <div className="mb-4 flex justify-start">
                                     <img
                                         src={getLocalImageSrc(currentQuestion) || currentQuestion.image}
                                         alt="Hình ảnh câu hỏi"
-                                        className="max-w-full h-auto max-h-60 object-contain border border-gray-300 rounded-md"
+                                        className="max-w-full h-auto max-h-60 object-contain border border-border dark:border-slate-700 rounded-md bg-white/5 dark:bg-slate-900/40 p-1"
                                         onError={(e) => handleImageError(e, currentQuestion.image)} loading="lazy" />
                                 </div>
                             )}
@@ -225,21 +230,21 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                             <div className="space-y-4">
                                 {currentQuestion.answers.map((answer, index) => (
                                     <div key={answer.id} className="flex items-start">
-                                        <span className="font-bold mr-2 text-gray-700 min-w-[20px]">{String.fromCharCode(65 + index)}.</span>
-                                        <p style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{answer.text}</p>
+                                        <span className="font-bold mr-2 text-muted-foreground min-w-[20px]">{String.fromCharCode(65 + index)}.</span>
+                                        <p className="text-foreground leading-relaxed" style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{answer.text}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
                         <div className="flex justify-center gap-4 mt-8">
-                            <button onClick={() => setCurrentQuestionIndex(p => Math.max(0, p - 1))} disabled={currentQuestionIndex === 0} className="bg-[#f0ad4e] text-black px-4 py-2 rounded-md border border-gray-400 flex items-center font-semibold hover:bg-yellow-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                            <button onClick={() => setCurrentQuestionIndex(p => Math.max(0, p - 1))} disabled={currentQuestionIndex === 0} className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md border border-border dark:border-slate-700 flex items-center font-semibold hover:bg-muted dark:hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 mr-1"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                                 Trở lại
                             </button>
                             {currentQuestionIndex < quiz.questions.length - 1 && (
-                                <button onClick={() => setCurrentQuestionIndex(p => Math.min(quiz.questions.length - 1, p + 1))} className="bg-[#f0ad4e] text-black px-4 py-2 rounded-md border border-gray-400 flex items-center font-semibold hover:bg-yellow-500 transition-colors">
+                                <button onClick={() => setCurrentQuestionIndex(p => Math.min(quiz.questions.length - 1, p + 1))} className="bg-primary dark:bg-sky-500 text-primary-foreground dark:text-slate-950 px-4 py-2 rounded-md flex items-center font-semibold hover:bg-primary/90 dark:hover:bg-sky-400 transition-colors shadow-sm">
                                     Tiếp tục
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 ml-1"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                                 </button>
                             )}
                         </div>
@@ -247,41 +252,61 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
 
                     {/* Right Column: Answer Sheet (Interactive) */}
                     <div className="w-[200px] flex-none flex flex-col">
-                        <div className="border border-gray-300 rounded-md">
+                        <div className="border border-border dark:border-slate-700 rounded-md overflow-hidden bg-card shadow-sm">
                             <table className="w-full border-collapse text-xs">
-                                <thead className="sticky top-0 bg-[#f0ad4e] z-10">
+                                <thead className="sticky top-0 bg-[#f0ad4e] text-black z-10">
                                     <tr>
-                                        <th className="border border-gray-400 p-2">Câu</th>
-                                        <th className="border border-gray-400 p-2">a</th>
-                                        <th className="border border-gray-400 p-2">b</th>
-                                        <th className="border border-gray-400 p-2">c</th>
-                                        <th className="border border-gray-400 p-2">d</th>
+                                        <th className="border border-border dark:border-slate-700 p-2 font-bold">Câu</th>
+                                        <th className="border border-border dark:border-slate-700 p-2 text-center font-bold">A</th>
+                                        <th className="border border-border dark:border-slate-700 p-2 text-center font-bold">B</th>
+                                        <th className="border border-border dark:border-slate-700 p-2 text-center font-bold">C</th>
+                                        <th className="border border-border dark:border-slate-700 p-2 text-center font-bold">D</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {quiz.questions.map((q, index) => (
-                                        <tr key={q.id} className={currentQuestionIndex === index ? 'bg-cyan-200' : 'hover:bg-gray-50'}>
-                                            <td
-                                                className={`border border-gray-400 p-2 font-bold text-center cursor-pointer whitespace-nowrap ${currentQuestionIndex === index ? 'text-black' : 'text-gray-500'}`}
-                                                onClick={() => setCurrentQuestionIndex(index)}
+                                    {quiz.questions.map((q, index) => {
+                                        const isCurrent = currentQuestionIndex === index;
+                                        return (
+                                            <tr
+                                                key={q.id}
+                                                className={`transition-colors ${
+                                                    isCurrent
+                                                        ? 'bg-sky-100 dark:bg-sky-950/60'
+                                                        : 'hover:bg-muted/40 dark:hover:bg-slate-800/40'
+                                                }`}
                                             >
-                                                Câu {index + 1}
-                                            </td>
-                                            {q.answers.slice(0, 4).map((a) => (
-                                                <td key={a.id} className="border border-gray-400 p-2 text-center">
-                                                    <SquareCheckbox
-                                                        checked={userAnswers[q.id] === a.id}
-                                                        onChange={() => handleAnswerSelect(q.id, a.id)}
-                                                    />
+                                                <td
+                                                    className={`border border-border dark:border-slate-700/80 p-2 text-center cursor-pointer whitespace-nowrap transition-colors ${
+                                                        isCurrent
+                                                            ? 'font-bold text-blue-700 dark:text-sky-300'
+                                                            : 'text-muted-foreground hover:text-foreground'
+                                                    }`}
+                                                    onClick={() => setCurrentQuestionIndex(index)}
+                                                >
+                                                    Câu {index + 1}
                                                 </td>
-                                            ))}
-                                        </tr>
-                                    ))}
+                                                {[0, 1, 2, 3].map((idx) => {
+                                                    const a = q.answers[idx];
+                                                    return (
+                                                        <td key={idx} className="border border-border dark:border-slate-700/80 p-2 text-center">
+                                                            {a && (
+                                                                <SquareCheckbox
+                                                                    checked={userAnswers[q.id] === a.id}
+                                                                    onChange={() => handleAnswerSelect(q.id, a.id)}
+                                                                    ariaLabel={`Câu ${index + 1} đáp án ${String.fromCharCode(65 + idx)}`}
+                                                                />
+                                                            )}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
-                        <div className="text-center mt-4 pt-2 border-t border-gray-200">
-                            <button onClick={handleFinishQuiz} className="bg-[#337ab7] text-white px-8 py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors w-full">Nộp bài</button>
+                        <div className="text-center mt-4 pt-2 border-t border-border dark:border-slate-700">
+                            <button onClick={handleFinishQuiz} className="bg-primary dark:bg-sky-500 text-primary-foreground dark:text-slate-950 px-8 py-2 rounded-md font-semibold hover:bg-primary/90 dark:hover:bg-sky-400 transition-colors w-full shadow-sm">Nộp bài</button>
                         </div>
                     </div>
                 </div>

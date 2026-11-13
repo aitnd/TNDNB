@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import type { Theme } from '../types';
 
+export const SESSION_THEME_KEY = 'ontap_theme_session';
+
 export interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
@@ -14,20 +16,40 @@ function normalizeStoredTheme(raw: string | null): Theme {
   return 'light';
 }
 
-function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'light';
-  const saved = localStorage.getItem('ontap_theme') || localStorage.getItem('theme');
-  if (saved) {
+export function getInitialTheme(storage?: Pick<Storage, 'getItem'> | null): Theme {
+  try {
+    const targetStorage =
+      storage !== undefined
+        ? storage
+        : typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined'
+          ? window.sessionStorage
+          : null;
+    if (!targetStorage) return 'light';
+    const saved = targetStorage.getItem(SESSION_THEME_KEY);
     return normalizeStoredTheme(saved);
+  } catch {
+    return 'light';
   }
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    return 'dark';
+}
+
+export function clearLegacyThemeStorage(storage?: Pick<Storage, 'removeItem'> | null): void {
+  try {
+    const localStorage =
+      storage !== undefined
+        ? storage
+        : typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+          ? window.localStorage
+          : null;
+    if (!localStorage) return;
+    localStorage.removeItem('ontap_theme');
+    localStorage.removeItem('theme');
+  } catch {
+    // Bỏ qua nếu trình duyệt chặn localStorage trong chế độ riêng tư hoặc iframe
   }
-  return 'light';
 }
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>(() => getInitialTheme());
 
   const applyTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
@@ -35,13 +57,17 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       document.documentElement.setAttribute('data-theme', newTheme);
       document.documentElement.classList.toggle('dark', newTheme === 'dark');
     }
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('ontap_theme', newTheme);
-      localStorage.setItem('theme', newTheme);
+    try {
+      if (typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined') {
+        window.sessionStorage.setItem(SESSION_THEME_KEY, newTheme);
+      }
+    } catch {
+      // Bỏ qua nếu sessionStorage bị khóa
     }
   }, []);
 
   useEffect(() => {
+    clearLegacyThemeStorage();
     const initial = getInitialTheme();
     applyTheme(initial);
   }, [applyTheme]);

@@ -137,11 +137,11 @@ export const PwaInstallBanner: React.FC = () => {
 
   return (
     <div className="w-full lg:hidden mb-3 animate-fade-in">
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-700 p-4 text-white shadow-md border border-white/20">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 p-4 text-white shadow-md border border-white/20">
         {/* Nút đóng ✕ */}
         <button
           onClick={handleDismiss}
-          className="absolute top-2 right-2 p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center font-bold"
+          className="absolute top-2 right-2 p-2 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center font-bold"
           aria-label="Đóng thông báo"
         >
           <X size={18} />
@@ -155,7 +155,7 @@ export const PwaInstallBanner: React.FC = () => {
             <h3 className="font-bold text-sm text-white leading-tight">
               Cài đặt Giáo dục Ninh Bình vào màn hình chính
             </h3>
-            <p className="text-xs text-white/90 mt-1 leading-relaxed">
+            <p className="text-xs text-white mt-1 leading-relaxed">
               Trải nghiệm toàn màn hình như ứng dụng di động, tải siêu tốc và ôn thi mượt mà hơn.
             </p>
           </div>

@@ -26,10 +26,11 @@ const formatTime = (seconds: number): string => {
 };
 
 // Square Checkbox Component matching the reference design
-const SquareCheckbox = ({ checked, onChange }: { checked: boolean, onChange: () => void }) => (
+const SquareCheckbox = ({ checked, onChange, ariaLabel }: { checked: boolean, onChange: () => void, ariaLabel?: string }) => (
     <div
         role="checkbox"
         aria-checked={checked}
+        aria-label={ariaLabel}
         tabIndex={0}
         onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -38,10 +39,14 @@ const SquareCheckbox = ({ checked, onChange }: { checked: boolean, onChange: () 
             }
         }}
         onClick={onChange}
-        className={`w-[14px] h-[14px] border border-[#999] inline-block cursor-pointer bg-card relative ${checked ? 'bg-[#333]' : ''}`}
+        className={`w-[14px] h-[14px] border inline-block cursor-pointer bg-card relative rounded-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ${
+            checked
+                ? 'border-primary dark:border-sky-400 bg-primary/10 dark:bg-sky-950/50'
+                : 'border-slate-400 dark:border-slate-500 hover:border-slate-600 dark:hover:border-slate-400'
+        }`}
     >
         {checked && (
-            <div className="absolute top-[2px] left-[2px] w-[8px] h-[8px] bg-[#333]"></div>
+            <div className="absolute top-[2px] left-[2px] w-[8px] h-[8px] bg-primary dark:bg-sky-400 rounded-xs shadow-xs"></div>
         )}
     </div>
 );
@@ -173,41 +178,41 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
     }
 
     return (
-        <div className="w-full max-w-7xl mx-auto font-sans text-black shadow-lg animate-slide-in-right rounded-md" style={{ '--content-scale': scale } as React.CSSProperties}>
+        <div className="w-full max-w-7xl mx-auto font-sans text-foreground shadow-lg animate-slide-in-right rounded-md" style={{ '--content-scale': scale } as React.CSSProperties}>
             <div className="h-3 bg-yellow-700 rounded-t-md border-b-2 border-yellow-900"></div>
             <div className="bg-card p-4">
                 {/* 1. Desktop Header: Giữ nguyên vẹn 100% cho màn hình máy tính (md:flex) */}
-                <div className="hidden md:flex justify-between items-start pb-4 border-b border-gray-300">
+                <div className="hidden md:flex justify-between items-start pb-4 border-b border-border dark:border-slate-700">
                     <div className="flex gap-4 items-start">
                         <img
                             src={userProfile?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`}
                             alt="Avatar"
-                            className="w-[100px] h-[130px] border border-gray-300 object-cover p-1 bg-card"
+                            className="w-[100px] h-[130px] border border-border dark:border-slate-700 object-cover p-1 bg-card rounded-xs"
                             onError={(e) => {
                                 (e.target as HTMLImageElement).src = 'https://i.postimg.cc/8PDn1wfM/favicon.png';
                             }} loading="lazy" />
                         <div className="text-sm space-y-1">
-                            <p className="font-bold text-blue-700 text-lg uppercase">{userProfile?.full_name || userProfile?.fullName || userName || 'Học viên'}</p>
-                            <p>Số báo danh: <span className="font-semibold text-foreground">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
-                            <p>Ngày sinh: <span className="font-semibold text-foreground">{formatDate(userProfile?.birthDate)}</span></p>
-                            <p>Địa chỉ: <span className="font-semibold text-foreground">{userProfile?.address || '---'}</span></p>
-                            <p>Lớp: <span className="font-semibold text-foreground">{userProfile?.class || userProfile?.courseName || '---'}</span></p>
-                            <p>Hạng bằng: <span className="font-bold text-red-600 border border-red-500 px-1 rounded bg-red-50">{selectedLicense?.name || '---'}</span></p>
+                            <p className="font-bold text-blue-700 dark:text-sky-400 text-lg uppercase">{userProfile?.full_name || userProfile?.fullName || userName || 'Học viên'}</p>
+                            <p className="text-muted-foreground">Số báo danh: <span className="font-semibold text-foreground">{(userProfile?.email || '').split('@')[0] || '---'}</span></p>
+                            <p className="text-muted-foreground">Ngày sinh: <span className="font-semibold text-foreground">{formatDate(userProfile?.birthDate)}</span></p>
+                            <p className="text-muted-foreground">Địa chỉ: <span className="font-semibold text-foreground">{userProfile?.address || '---'}</span></p>
+                            <p className="text-muted-foreground">Lớp: <span className="font-semibold text-foreground">{userProfile?.class || userProfile?.courseName || '---'}</span></p>
+                            <p className="text-muted-foreground">Hạng bằng: <span className="font-bold text-red-600 dark:text-red-400 border border-red-500/50 dark:border-red-800 px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/40">{selectedLicense?.name || '---'}</span></p>
                         </div>
                     </div>
                     <div className="flex items-start gap-4">
-                        <div className="bg-[#f0ad4e] text-black p-2 rounded-md text-sm w-48">
+                        <div className="bg-[#f0ad4e] text-black p-2 rounded-md text-sm w-48 shadow-xs">
                             <p className="font-bold">Đang thi</p>
                             <p>Thời gian: 45 phút</p>
                             <p>Bù giờ: 0 phút</p>
                             <p>Còn lại: <span className="font-bold tabular-nums">{formatTime(timeLeft)}</span></p>
                         </div>
-                        <button onClick={handleBackWithConfirm} className="text-sm text-muted-foreground hover:text-red-500 font-semibold">Thoát</button>
+                        <button onClick={handleBackWithConfirm} className="text-sm text-muted-foreground hover:text-destructive font-semibold transition-colors">Thoát</button>
                     </div>
                 </div>
 
                 {/* 2. Mobile Exam Header: Siêu mỏng (~38px), ẩn thông tin cá nhân, đưa câu hỏi lên First Fold */}
-                <div className="flex md:hidden items-center justify-between pb-3 mb-2 border-b border-border">
+                <div className="flex md:hidden items-center justify-between pb-3 mb-2 border-b border-border dark:border-slate-800">
                     <button
                         onClick={handleBackWithConfirm}
                         className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-muted text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
@@ -215,10 +220,10 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                         ← Thoát
                     </button>
                     <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-red-600 border border-red-400 px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/30 max-w-[120px] truncate">
+                        <span className="text-xs font-bold text-red-600 dark:text-red-400 border border-red-400/60 dark:border-red-800 px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950/40 max-w-[120px] truncate">
                             {selectedLicense?.name || 'Sát hạch'}
                         </span>
-                        <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 tabular-nums">
+                        <span className="text-xs font-semibold text-blue-600 dark:text-sky-400 tabular-nums">
                             Câu {currentQuestionIndex + 1}/{quiz.questions.length}
                         </span>
                     </div>
@@ -230,21 +235,21 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
 
                 <div className={`flex mt-4 gap-4 ${isMobileApp ? 'flex-col' : 'flex-col md:flex-row'}`}>
                     {/* Left Column: Question Content */}
-                    <div className="flex-1 border border-gray-400 rounded-md p-4 flex flex-col justify-between min-h-[400px] md:min-h-[500px]">
+                    <div className="flex-1 border border-border dark:border-slate-700 bg-card rounded-md p-4 flex flex-col justify-between min-h-[400px] md:min-h-[500px]">
                         <div>
-                            <p className="font-bold mb-4 border-b border-dashed border-gray-400 pb-2 flex justify-between">
+                            <p className="font-bold mb-4 border-b border-dashed border-border dark:border-slate-700 pb-2 flex justify-between text-foreground">
                                 <span>Nội dung câu hỏi</span>
-                                <span className={`text-blue-600 ${isMobileApp ? 'block' : 'block md:hidden'}`}>Câu {currentQuestionIndex + 1}/{quiz.questions.length}</span>
+                                <span className={`text-blue-600 dark:text-sky-400 font-semibold tabular-nums ${isMobileApp ? 'block' : 'block md:hidden'}`}>Câu {currentQuestionIndex + 1}/{quiz.questions.length}</span>
                             </p>
-                            <p className={`font-bold text-red-600 mb-2 ${isMobileApp ? 'hidden' : 'hidden md:block'}`}>Câu :{currentQuestionIndex + 1}</p>
-                            <p className="mb-4 font-semibold" style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}>{currentQuestion.text}</p>
+                            <p className={`font-bold text-red-600 dark:text-red-400 mb-2 tabular-nums ${isMobileApp ? 'hidden' : 'hidden md:block'}`}>Câu {currentQuestionIndex + 1}:</p>
+                            <p className="mb-4 font-semibold text-foreground leading-relaxed" style={{ fontSize: 'calc(1.125rem * var(--content-scale, 1))' }}>{currentQuestion.text}</p>
 
                             {currentQuestion.image && (
                                 <div className="mb-4 flex justify-center">
                                     <img
                                         src={currentQuestion.image}
                                         alt="Hình ảnh câu hỏi"
-                                        className="max-w-full h-auto max-h-48 md:max-h-60 object-contain border border-gray-300 rounded-md" loading="lazy" />
+                                        className="max-w-full h-auto max-h-48 md:max-h-60 object-contain border border-border dark:border-slate-700 rounded-md bg-white/5 dark:bg-slate-900/40 p-1" loading="lazy" />
                                 </div>
                             )}
 
@@ -255,18 +260,20 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                                         <div 
                                             key={answer.id} 
                                             onClick={() => handleAnswerSelect(currentQuestion.id, answer.id)}
-                                            className={`flex items-start p-3 md:p-2 rounded-xl transition-all border-2 cursor-pointer md:cursor-default md:pointer-events-none ${
+                                            className={`flex items-start p-3 md:p-2.5 rounded-xl transition-all border-2 cursor-pointer md:cursor-default md:pointer-events-none ${
                                                 isSelected 
-                                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                                                : 'border-transparent'
+                                                ? 'border-blue-500 dark:border-sky-500 bg-blue-50/80 dark:bg-sky-950/30 shadow-xs' 
+                                                : 'border-transparent hover:bg-muted/40 dark:hover:bg-slate-800/40'
                                             }`}
                                         >
-                                            <div className={`flex-none w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 ${
-                                                isSelected ? 'bg-blue-600 text-white' : 'bg-gray-200 text-foreground'
+                                            <div className={`flex-none w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 transition-colors ${
+                                                isSelected
+                                                    ? 'bg-blue-600 dark:bg-sky-500 text-white dark:text-slate-950 shadow-xs'
+                                                    : 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200'
                                             }`}>
                                                 {String.fromCharCode(65 + index)}
                                             </div>
-                                            <p className={`${isSelected ? 'font-bold text-blue-700' : 'text-foreground'}`} style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{answer.text}</p>
+                                            <p className={`${isSelected ? 'font-bold text-blue-700 dark:text-sky-300' : 'text-foreground font-medium'} leading-relaxed`} style={{ fontSize: 'calc(1rem * var(--content-scale, 1))' }}>{answer.text}</p>
                                         </div>
                                     );
                                 })}
@@ -278,7 +285,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                             <button 
                                 onClick={() => { triggerHaptic('light'); setCurrentQuestionIndex(p => Math.max(0, p - 1)); }} 
                                 disabled={currentQuestionIndex === 0} 
-                                className="flex-1 bg-gray-100 text-black px-4 py-3 rounded-xl border border-gray-300 flex items-center justify-center font-bold hover:bg-gray-200 disabled:opacity-30"
+                                className="flex-1 bg-secondary text-secondary-foreground px-4 py-3 rounded-xl border border-border dark:border-slate-700 flex items-center justify-center font-bold hover:bg-muted dark:hover:bg-slate-800 disabled:opacity-30 transition-all shadow-xs"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 mr-1"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                                 Câu trước
@@ -286,7 +293,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                             {currentQuestionIndex < quiz.questions.length - 1 ? (
                                 <button 
                                     onClick={() => { triggerHaptic('light'); setCurrentQuestionIndex(p => Math.min(quiz.questions.length - 1, p + 1)); }} 
-                                    className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl flex items-center justify-center font-bold shadow-lg"
+                                    className="flex-1 bg-primary dark:bg-sky-500 text-primary-foreground dark:text-slate-950 px-4 py-3 rounded-xl flex items-center justify-center font-bold hover:bg-primary/90 dark:hover:bg-sky-400 shadow-md transition-all"
                                 >
                                     Câu tiếp
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 ml-1"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
@@ -294,7 +301,7 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                             ) : (
                                 <button 
                                     onClick={() => { triggerHaptic('medium'); handleFinishQuiz(); }} 
-                                    className="flex-1 bg-green-600 text-white px-4 py-3 rounded-xl flex items-center justify-center font-bold shadow-lg"
+                                    className="flex-1 bg-emerald-600 text-white px-4 py-3 rounded-xl flex items-center justify-center font-bold hover:bg-emerald-700 shadow-md transition-all"
                                 >
                                     Nộp bài
                                 </button>
@@ -304,50 +311,70 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
 
                     {/* Right Column (Hide Table on Mobile if too crowded, or show as grid) */}
                     <div className={`w-[200px] flex-none flex-col ${isMobileApp ? 'hidden' : 'hidden md:flex'}`}>
-                        <div className="border border-gray-300 rounded-md overflow-hidden">
+                        <div className="border border-border dark:border-slate-700 rounded-md overflow-hidden bg-card shadow-xs">
                             <table className="w-full border-collapse text-xs">
-                                    <thead className="sticky top-0 bg-[#f0ad4e] z-10">
+                                    <thead className="sticky top-0 bg-[#f0ad4e] text-black z-10">
                                         <tr>
-                                            <th className="border border-gray-400 p-2">Câu</th>
-                                            <th className="border border-gray-400 p-2 text-center">A</th>
-                                            <th className="border border-gray-400 p-2 text-center">B</th>
-                                            <th className="border border-gray-400 p-2 text-center">C</th>
-                                            <th className="border border-gray-400 p-2 text-center">D</th>
+                                            <th className="border border-border dark:border-slate-700 p-2 font-bold">Câu</th>
+                                            <th className="border border-border dark:border-slate-700 p-2 text-center font-bold">A</th>
+                                            <th className="border border-border dark:border-slate-700 p-2 text-center font-bold">B</th>
+                                            <th className="border border-border dark:border-slate-700 p-2 text-center font-bold">C</th>
+                                            <th className="border border-border dark:border-slate-700 p-2 text-center font-bold">D</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {quiz.questions.map((q, index) => (
-                                            <tr key={q.id} className={currentQuestionIndex === index ? 'bg-cyan-200' : 'hover:bg-gray-50'}>
-                                                <td
-                                                    className={`border border-gray-400 p-2 font-bold text-center cursor-pointer whitespace-nowrap ${currentQuestionIndex === index ? 'text-black' : 'text-muted-foreground'}`}
-                                                    onClick={() => setCurrentQuestionIndex(index)}
+                                        {quiz.questions.map((q, index) => {
+                                            const isCurrent = currentQuestionIndex === index;
+                                            return (
+                                                <tr
+                                                    key={q.id}
+                                                    className={`transition-colors ${
+                                                        isCurrent
+                                                            ? 'bg-sky-100 dark:bg-sky-950/60'
+                                                            : 'hover:bg-muted/40 dark:hover:bg-slate-800/40'
+                                                    }`}
                                                 >
-                                                    Câu {index + 1}
-                                                </td>
-                                                {[0, 1, 2, 3].map((idx) => {
-                                                    const a = q.answers[idx];
-                                                    return (
-                                                        <td key={idx} className="border border-gray-400 p-2 text-center">
-                                                            {a && (
-                                                                <SquareCheckbox
-                                                                    checked={userAnswers[q.id] === a.id}
-                                                                    onChange={() => handleAnswerSelect(q.id, a.id)}
-                                                                />
-                                                            )}
-                                                        </td>
-                                                    );
-                                                })}
-                                            </tr>
-                                        ))}
+                                                    <td
+                                                        className={`border border-border dark:border-slate-700/80 p-2 text-center cursor-pointer whitespace-nowrap transition-colors ${
+                                                            isCurrent
+                                                                ? 'font-bold text-blue-700 dark:text-sky-300'
+                                                                : 'text-muted-foreground hover:text-foreground'
+                                                        }`}
+                                                        onClick={() => setCurrentQuestionIndex(index)}
+                                                    >
+                                                        Câu {index + 1}
+                                                    </td>
+                                                    {[0, 1, 2, 3].map((idx) => {
+                                                        const a = q.answers[idx];
+                                                        return (
+                                                            <td key={idx} className="border border-border dark:border-slate-700/80 p-2 text-center">
+                                                                {a && (
+                                                                    <SquareCheckbox
+                                                                        checked={userAnswers[q.id] === a.id}
+                                                                        onChange={() => handleAnswerSelect(q.id, a.id)}
+                                                                        ariaLabel={`Câu ${index + 1} đáp án ${String.fromCharCode(65 + idx)}`}
+                                                                    />
+                                                                )}
+                                                            </td>
+                                                        );
+                                                    })}
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="text-center mt-4 pt-2 border-t border-gray-200">
-                                <button onClick={handleFinishQuiz} className="bg-[#337ab7] text-white px-8 py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors w-full">Nộp bài</button>
+                            <div className="text-center mt-4 pt-2 border-t border-border dark:border-slate-700">
+                                <button
+                                    onClick={handleFinishQuiz}
+                                    className="bg-primary dark:bg-sky-500 text-primary-foreground dark:text-slate-950 px-8 py-2 rounded-md font-semibold hover:bg-primary/90 dark:hover:bg-sky-400 transition-colors w-full shadow-xs"
+                                >
+                                    Nộp bài
+                                </button>
                             </div>
                     </div>
 
-                    <div className={`flex-wrap gap-2 justify-center p-2 bg-gray-50 rounded-xl border border-gray-200 ${isMobileApp ? 'flex' : 'flex md:hidden'}`}>
+                    <div className={`flex-wrap gap-2 justify-center p-2.5 bg-muted/30 dark:bg-slate-900/40 rounded-xl border border-border dark:border-slate-800 ${isMobileApp ? 'flex' : 'flex md:hidden'}`}>
                          {quiz.questions.map((q, index) => {
                                  const isAnswered = !!userAnswers[q.id];
                                  const isCurrent = currentQuestionIndex === index;
@@ -356,8 +383,11 @@ const ExamQuizScreen: React.FC<ExamQuizScreenProps> = ({
                                         key={q.id}
                                         onClick={() => { triggerHaptic('light'); setCurrentQuestionIndex(index); }}
                                         className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs transition-all ${
-                                            isCurrent ? 'bg-blue-600 text-white ring-2 ring-blue-300 scale-110' :
-                                            isAnswered ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-card text-muted-foreground border border-gray-200'
+                                            isCurrent
+                                                ? 'bg-primary dark:bg-sky-500 text-primary-foreground dark:text-slate-950 ring-2 ring-primary/40 scale-110 shadow-sm'
+                                                : isAnswered
+                                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-700'
+                                                    : 'bg-card text-muted-foreground border border-border dark:border-slate-700 hover:bg-muted/50'
                                         }`}
                                      >
                                          {index + 1}

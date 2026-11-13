@@ -115,8 +115,9 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({
   }
 
   // --- STRICT WINDOWS APP LOGIC ---
-  // @ts-ignore
-  const isElectron = window.electron?.isElectron || window.location.protocol === 'file:' || navigator.userAgent.toLowerCase().includes('electron');
+  // Chỉ nhận diện Electron khi có bridge preload (dev/prod) hoặc giao thức file: (prod),
+  // tránh nhận nhầm trình duyệt / webview HTTP có chứa "Electron" trong userAgent.
+  const isElectron = Boolean((window as any).electron?.isElectron) || window.location.protocol === 'file:';
 
   if (isElectron && !userProfile) {
     return (

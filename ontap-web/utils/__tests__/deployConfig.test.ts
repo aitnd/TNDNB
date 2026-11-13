@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { resolveDeployTargetConfig } from '../deployConfig';
+import { resolveDeployTargetConfig, isElectronRuntime } from '../deployConfig';
 
 describe('Monorepo Dual-Target Deployment Config (ontap-web)', () => {
   it('trả về cấu hình Cloudflare Pages Standalone (base="/", outDir="dist") khi CF_PAGES="1" hoặc VITE_DEPLOY_TARGET="cloudflare"', () => {
@@ -42,5 +42,12 @@ describe('Monorepo Dual-Target Deployment Config (ontap-web)', () => {
 
     const headersContent = fs.readFileSync(headersPath, 'utf8');
     expect(headersContent).toContain('Service-Worker-Allowed: /');
+  });
+
+  it('isElectronRuntime chỉ trả về true khi có window.electron.isElectron hoặc protocol file:', () => {
+    expect(isElectronRuntime({ electron: undefined, location: { protocol: 'http:' } })).toBe(false);
+    expect(isElectronRuntime({ electron: undefined, location: { protocol: 'https:' } })).toBe(false);
+    expect(isElectronRuntime({ electron: { isElectron: true }, location: { protocol: 'http:' } })).toBe(true);
+    expect(isElectronRuntime({ electron: undefined, location: { protocol: 'file:' } })).toBe(true);
   });
 });

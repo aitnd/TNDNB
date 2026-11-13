@@ -40,3 +40,20 @@ export function getRuntimeServiceWorkerUrl(): string {
   }
   return '/ontap/sw-pwa.js';
 }
+
+export interface ElectronRuntimeSnapshot {
+  electron?: { isElectron?: boolean };
+  location?: { protocol?: string };
+}
+
+/**
+ * Chỉ xác định môi trường Electron desktop khi có bridge preload `window.electron.isElectron`
+ * hoặc đang chạy bằng giao thức `file:`. Không dựa vào `navigator.userAgent` để tránh nhận nhầm
+ * trình duyệt / webview nhúng (IDE webview, in-app browser) đang mở URL HTTP/HTTPS.
+ */
+export function isElectronRuntime(win?: ElectronRuntimeSnapshot | null): boolean {
+  const target =
+    win ?? (typeof window !== 'undefined' ? (window as unknown as ElectronRuntimeSnapshot) : undefined);
+  if (!target) return false;
+  return Boolean(target.electron?.isElectron) || target.location?.protocol === 'file:';
+}

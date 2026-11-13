@@ -243,5 +243,167 @@ describe('Phase 04: Management, Student/Admin Portals & Utility Screens Dual-The
   })
 })
 
+describe('ExamQuizScreen Dark Mode Color Contrast (WCAG 2.1 AA)', () => {
+  it('TC-35: ExamQuizScreen.tsx chuẩn hóa Semantic Tokens và độ tương phản Dark Mode (WCAG 2.1 AA)', () => {
+    const examQuiz = fs.readFileSync(
+      path.resolve(rootDir, 'ontap-web/components/ExamQuizScreen.tsx'),
+      'utf8'
+    )
 
+    // 1. Wrapper container không còn hardcode text-black, chuyển sang text-foreground
+    expect(examQuiz).not.toMatch(/className="[^"]*max-w-7xl[^"]*text-black/)
+    expect(examQuiz).toMatch(/className="[^"]*max-w-7xl[^"]*text-foreground/)
 
+    // 2. Tên học viên và số câu hỏi hỗ trợ dark:text-sky-400 và dark:text-red-400
+    expect(examQuiz).toContain('dark:text-sky-400')
+    expect(examQuiz).toContain('dark:text-red-400')
+
+    // 3. Nội dung câu hỏi có class text-foreground rõ ràng
+    expect(examQuiz).toMatch(/<p\s+className="[^"]*text-foreground[^"]*"[^>]*>\s*\{currentQuestion\.text\}/)
+
+    // 4. Vòng tròn đáp án chưa chọn không được dùng cặp mờ lóa bg-gray-200 text-foreground
+    expect(examQuiz).not.toContain('bg-gray-200 text-foreground')
+    expect(examQuiz).toContain('dark:bg-slate-800')
+
+    // 5. SquareCheckbox tick không được dùng bg-[#333] mà dùng dark:bg-sky-400
+    expect(examQuiz).not.toMatch(/SquareCheckbox[\s\S]*?bg-\[#333\]/)
+    expect(examQuiz).toContain('dark:bg-sky-400')
+
+    // 6. Nút Câu trước hỗ trợ dark mode không hardcode bg-gray-100 text-black
+    expect(examQuiz).not.toMatch(/Câu trước[\s\S]*?bg-gray-100\s+text-black|bg-gray-100\s+text-black[\s\S]*?Câu trước/)
+    expect(examQuiz).toContain('bg-secondary')
+
+    // 7. Answer Sheet trong ontap-web/components/ExamQuizScreen.tsx hỗ trợ Dark Mode
+    expect(examQuiz).toContain('dark:bg-sky-950/60')
+    expect(examQuiz).toContain('dark:text-sky-300')
+    expect(examQuiz).not.toContain('bg-cyan-200')
+
+    // 8. Nút chính Dark Mode đạt độ tương phản cao (bg-sky-500 + text-slate-950)
+    expect(examQuiz).toContain('dark:bg-sky-500')
+    expect(examQuiz).toContain('dark:text-slate-950')
+    expect(examQuiz).not.toContain('dark:bg-sky-600 text-primary-foreground dark:text-white')
+
+    // 9. Đồng bộ ontap-win/components/ExamQuizScreen.tsx với Tailwind v3.4 & Dark Mode tokens
+    const examQuizWin = fs.readFileSync(
+      path.resolve(rootDir, 'ontap-win/components/ExamQuizScreen.tsx'),
+      'utf8'
+    )
+    expect(examQuizWin).not.toContain('bg-[#333]')
+    expect(examQuizWin).not.toContain('bg-cyan-200')
+    expect(examQuizWin).not.toContain('rounded-xs')
+    expect(examQuizWin).not.toContain('shadow-xs')
+    expect(examQuizWin).not.toMatch(/className="[^"]*max-w-7xl[^"]*text-black/)
+    expect(examQuizWin).toMatch(/className="[^"]*max-w-7xl[^"]*text-foreground/)
+    expect(examQuizWin).toContain('dark:bg-sky-400')
+    expect(examQuizWin).toContain('dark:bg-sky-950/60')
+    expect(examQuizWin).toContain('dark:bg-sky-500')
+    expect(examQuizWin).toContain('dark:text-slate-950')
+    expect(examQuizWin).not.toContain('dark:bg-sky-600 text-primary-foreground dark:text-white')
+
+    // 10. ontap-win/tailwind.config.js cấu hình darkMode hỗ trợ [data-theme="dark"]
+    const winTailwindConfig = fs.readFileSync(
+      path.resolve(rootDir, 'ontap-win/tailwind.config.js'),
+      'utf8'
+    )
+    expect(winTailwindConfig).toContain('darkMode')
+    expect(winTailwindConfig).toContain('[data-theme="dark"]')
+  })
+})
+
+describe('Phase 05: ThemeSwitcher in Hamburger Menu & Default Light Per-Session (Plan 261112-2215)', () => {
+  it('TC-37: Mặc định tất cả phiên mới là Theme Sáng (sessionStorage + bỏ prefers-color-scheme + dọn localStorage cũ + chịu lỗi SecurityError)', async () => {
+    const themeCtxPath = path.resolve(rootDir, 'ontap-web/contexts/ThemeContext.tsx')
+    const themeCtxContent = fs.readFileSync(themeCtxPath, 'utf8')
+    const indexHtmlContent = fs.readFileSync(path.resolve(rootDir, 'ontap-web/index.html'), 'utf8')
+
+    // 1. HTML gốc luôn đặt data-theme="light"
+    expect(indexHtmlContent).toContain('data-theme="light"')
+
+    // 2. ThemeContext không còn đọc prefers-color-scheme: dark và dùng sessionStorage key ontap_theme_session
+    expect(themeCtxContent).not.toContain('prefers-color-scheme')
+    expect(themeCtxContent).not.toMatch(/localStorage\.getItem\(['"]ontap_theme['"]\)/)
+    expect(themeCtxContent).not.toMatch(/localStorage\.getItem\(['"]theme['"]\)/)
+    expect(themeCtxContent).toContain('ontap_theme_session')
+    expect(themeCtxContent).toContain('sessionStorage')
+    expect(themeCtxContent).toMatch(/localStorage\.removeItem\(['"]ontap_theme['"]\)/)
+    expect(themeCtxContent).toMatch(/localStorage\.removeItem\(['"]theme['"]\)/)
+    expect(themeCtxContent).toContain('toggleTheme')
+
+    // 3. Kiểm thử hành vi runtime cho Review Focus #1 (SecurityError) & #2 (localStorage cũ còn lưu dark)
+    const mod = await import('../ontap-web/contexts/ThemeContext')
+    expect(typeof mod.getInitialTheme).toBe('function')
+    expect(typeof mod.clearLegacyThemeStorage).toBe('function')
+
+    // Phiên mới (sessionStorage trống) -> luôn là 'light'
+    const emptySession = { getItem: () => null }
+    expect(mod.getInitialTheme(emptySession)).toBe('light')
+
+    // Cùng phiên đã chọn 'dark' -> giữ 'dark' khi F5
+    const darkSession = { getItem: (k: string) => (k === 'ontap_theme_session' ? 'dark' : null) }
+    expect(mod.getInitialTheme(darkSession)).toBe('dark')
+
+    // Giá trị lạ hoặc hỏng -> fallback 'light'
+    const invalidSession = { getItem: () => 'noel' }
+    expect(mod.getInitialTheme(invalidSession)).toBe('light')
+
+    // Review Focus #1: sessionStorage ném SecurityError trong iframe/private mode -> không crash, trả về 'light'
+    const throwingSession = {
+      getItem: () => {
+        throw new Error('SecurityError: Failed to read sessionStorage')
+      },
+    }
+    expect(mod.getInitialTheme(throwingSession)).toBe('light')
+
+    // Review Focus #2: clearLegacyThemeStorage xóa sạch cả ontap_theme và theme, chịu được SecurityError
+    const removedKeys: string[] = []
+    mod.clearLegacyThemeStorage({
+      removeItem: (k: string) => {
+        removedKeys.push(k)
+      },
+    })
+    expect(removedKeys).toEqual(['ontap_theme', 'theme'])
+
+    expect(() =>
+      mod.clearLegacyThemeStorage({
+        removeItem: () => {
+          throw new Error('SecurityError')
+        },
+      })
+    ).not.toThrow()
+  })
+
+  it('TC-36: Di chuyển ThemeSwitcher vào menu 3 gạch góc trên phải (TopNavbar & MobileBottomNav) và gỡ bỏ hoàn toàn nút nổi góc dưới phải ở App.tsx', () => {
+    const appContent = fs.readFileSync(path.resolve(rootDir, 'ontap-web/App.tsx'), 'utf8')
+    const themeSwitcherContent = fs.readFileSync(path.resolve(rootDir, 'ontap-web/components/ThemeSwitcher.tsx'), 'utf8')
+    const topNavbarContent = fs.readFileSync(path.resolve(rootDir, 'ontap-web/components/TopNavbar.tsx'), 'utf8')
+    const mobileBottomNavContent = fs.readFileSync(path.resolve(rootDir, 'ontap-web/components/MobileBottomNav.tsx'), 'utf8')
+    const footerContent = fs.readFileSync(path.resolve(rootDir, 'ontap-web/components/Footer.tsx'), 'utf8')
+
+    // 1. App.tsx: xóa sạch import ThemeSwitcher (Review Focus #3: noUnusedLocals) và gỡ khối fixed bottom-4 right-4
+    expect(appContent).not.toContain('ThemeSwitcher')
+    expect(appContent).not.toContain('fixed bottom-4 right-4')
+
+    // 2. ThemeSwitcher.tsx: hỗ trợ variant?: 'icon' | 'menu-item' (mặc định 'icon' cho Footer.tsx), có role="switch", aria-checked, min-h-[44px], focus-visible:ring-2
+    expect(themeSwitcherContent).toContain("variant?: 'icon' | 'menu-item'")
+    expect(themeSwitcherContent).toContain("variant = 'icon'")
+    expect(themeSwitcherContent).toContain('role="switch"')
+    expect(themeSwitcherContent).toContain('aria-checked={isDark}')
+    expect(themeSwitcherContent).toContain('min-h-[44px]')
+    expect(themeSwitcherContent).toContain('focus-visible:ring-2')
+    expect(themeSwitcherContent).toContain('toggleTheme')
+    expect(footerContent).toContain('<ThemeSwitcher />')
+
+    // 3. TopNavbar.tsx: nhúng <ThemeSwitcher variant="menu-item" /> bên trong dropdown showHamburgerMenu cho cả khách và thành viên (Review Focus #4)
+    expect(topNavbarContent).toMatch(/import\s+ThemeSwitcher\s+from\s+['"]\.\/ThemeSwitcher['"]/)
+    const hamburgerBlockMatch = topNavbarContent.match(/\{showHamburgerMenu\s*&&\s*\([\s\S]*?<ThemeSwitcher\s+variant=['"]menu-item['"]\s*\/>[\s\S]*?\)\}/)
+    expect(hamburgerBlockMatch).toBeTruthy()
+    expect(topNavbarContent).toContain('aria-expanded={showHamburgerMenu}')
+
+    // 4. MobileBottomNav.tsx: nhúng <ThemeSwitcher variant="menu-item" /> bên trong menu mở rộng cho cả khách và thành viên (Review Focus #4)
+    expect(mobileBottomNavContent).toMatch(/import\s+ThemeSwitcher\s+from\s+['"]\.\/ThemeSwitcher['"]/)
+    expect(mobileBottomNavContent).toMatch(/<ThemeSwitcher\s+variant=['"]menu-item['"]\s*\/>/)
+    // Đảm bảo ThemeSwitcher nằm ngoài nhánh chỉ dành cho userProfile để khách (!userProfile) vẫn bấm được
+    const beforeGuestLoginBtn = mobileBottomNavContent.split('Đăng nhập ngay')[0]
+    expect(beforeGuestLoginBtn).toContain('variant="menu-item"')
+  })
+})
